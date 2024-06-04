@@ -1,11 +1,12 @@
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form"
 
 
-export default function AddDeplomaForm(){
+export default function AddDeplomaForm({updateStudentNames}: Props){
     const {register, handleSubmit} = useForm();
 
     function submitAndMakePDF(data: FieldValues){
-        console.log(data);
+        console.log(data.names);
+        updateStudentNames(data.names);
     }
 
     return (
@@ -23,4 +24,8 @@ export default function AddDeplomaForm(){
         </form>
         </> 
     )
+}
+
+type Props = {
+    updateStudentNames: (names: string[]) => void;
 }
