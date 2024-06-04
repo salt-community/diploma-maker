@@ -1,0 +1,10 @@
+version: '3.2'
+services:
+  sql-server-db:
+    container_name: diploma-maker-development-sql-server-db
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    ports:
+      - '1433:1433'
+    environment:
+      SA_PASSWORD: 'Password_2_Change_4_Real_Cases_&'
+      ACCEPT_EULA: 'Y'
