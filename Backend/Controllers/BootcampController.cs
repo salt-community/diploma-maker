@@ -60,6 +60,21 @@ public class BootcampController : ControllerBase
         return responseDto;
     }
 
+
+    // DELETE: api/Bootcamp/5
+    [HttpDelete("{guidId}")]
+    public async Task<IActionResult> DeleteBootcamp(string guidId)
+    {
+        var bootcamp = await _service.DeleteBootcampByGuidId(guidId);
+        if (bootcamp == null)
+        {
+            return NotFound();
+        }
+
+        return Ok();
+    }
+
+
     // // PUT: api/Bootcamp/5
     // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     // [HttpPut("{id}")]
@@ -91,25 +106,6 @@ public class BootcampController : ControllerBase
     //     return NoContent();
     // }
 
-    // // DELETE: api/Bootcamp/5
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeleteBootcamp(int id)
-    // {
-    //     var bootcamp = await _context.Bootcamp.FindAsync(id);
-    //     if (bootcamp == null)
-    //     {
-    //         return NotFound();
-    //     }
 
-    //     _context.Bootcamp.Remove(bootcamp);
-    //     await _context.SaveChangesAsync();
-
-    //     return NoContent();
-    // }
-
-    // private bool BootcampExists(int id)
-    // {
-    //     return _context.Bootcamp.Any(e => e.Id == id);
-    // }
 }
 
