@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend.Models;
+using AutoMapper;
 
 namespace Backend.Controllers;
 
@@ -9,11 +10,26 @@ namespace Backend.Controllers;
 public class BootcampController : ControllerBase
 {
     private readonly DiplomaMakingContext _context;
+    private readonly IMapper _mapper;
 
-    public BootcampController(DiplomaMakingContext context)
+    public BootcampController(DiplomaMakingContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
+
+    // POST: api/Bootcamp
+    [HttpPost]
+    public async Task<ActionResult<BootcampResponseDto>> PostBootcamp(BootcampRequestDto requestDto)
+    {
+        var bootcamp = _mapper.Map<Bootcamp>(requestDto);
+        _context.Bootcamp.Add(bootcamp);
+        await _context.SaveChangesAsync();
+        var responseDto = _mapper.Map<BootcampResponseDto>(bootcamp);
+
+        return CreatedAtAction("GetBootcamp", new { id = bootcamp.Id }, responseDto);
+    }
+
 
     // GET: api/Bootcamp
     [HttpGet]
@@ -65,17 +81,6 @@ public class BootcampController : ControllerBase
         }
 
         return NoContent();
-    }
-
-    // POST: api/Bootcamp
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public async Task<ActionResult<Bootcamp>> PostBootcamp(Bootcamp bootcamp)
-    {
-        _context.Bootcamp.Add(bootcamp);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetBootcamp", new { id = bootcamp.Id }, bootcamp);
     }
 
     // DELETE: api/Bootcamp/5
