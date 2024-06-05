@@ -29,6 +29,9 @@ namespace Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<Guid>("GuidId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -55,6 +58,9 @@ namespace Backend.Migrations
                     b.Property<string>("BootcampName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("GuidId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("StudentName")
                         .IsRequired()

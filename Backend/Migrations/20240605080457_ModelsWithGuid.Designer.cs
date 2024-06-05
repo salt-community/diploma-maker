@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240605073700_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240605080457_ModelsWithGuid")]
+    partial class ModelsWithGuid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,6 +31,9 @@ namespace Backend.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("GuidId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -58,6 +61,9 @@ namespace Backend.Migrations
                     b.Property<string>("BootcampName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("GuidId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("StudentName")
                         .IsRequired()
