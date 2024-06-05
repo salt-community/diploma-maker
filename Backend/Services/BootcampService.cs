@@ -32,14 +32,17 @@ public class BootcampService
 
     public async Task<List<Bootcamp>> GetBootcamps()
     {
-        return await _context.Bootcamp.ToListAsync();
+        return await _context.Bootcamp
+            .Include(b => b.Diplomas)
+            .ToListAsync();
     }
 
 
     public async Task<Bootcamp?> GetBootcampByGuidId(string guidId)
     {
-        var bootcamp = await _context.Bootcamp.
-            FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId);
+        var bootcamp = await _context.Bootcamp
+            .Include(b => b.Diplomas)
+            .FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId);
         return bootcamp;
 
     }
