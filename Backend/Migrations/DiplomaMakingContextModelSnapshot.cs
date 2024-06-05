@@ -52,12 +52,8 @@ namespace Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BootcampId")
+                    b.Property<int>("BootcampId")
                         .HasColumnType("int");
-
-                    b.Property<string>("BootcampName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("GraduationDate")
                         .HasColumnType("datetime2");
@@ -78,9 +74,13 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.Diploma", b =>
                 {
-                    b.HasOne("Backend.Models.Bootcamp", null)
+                    b.HasOne("Backend.Models.Bootcamp", "Bootcamp")
                         .WithMany("Diplomas")
-                        .HasForeignKey("BootcampId");
+                        .HasForeignKey("BootcampId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bootcamp");
                 });
 
             modelBuilder.Entity("Backend.Models.Bootcamp", b =>
