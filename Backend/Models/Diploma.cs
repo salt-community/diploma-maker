@@ -5,6 +5,6 @@ namespace Backend.Models;
 public class Diploma
 {
     public int Id { get; set; }
-    public required string ClassName{ get; set; }
+    public required string BootcampName{ get; set; }
     public required string StudentName { get; set; }
 }

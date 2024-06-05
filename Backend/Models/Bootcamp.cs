@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 namespace Backend.Models;
 
-public class BootcampClass
+public class Bootcamp
 {
     public int Id { get; set; }
     public required string Name { get; set; }
