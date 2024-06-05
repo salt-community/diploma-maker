@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240605080855_AddDateToDiploma")]
-    partial class AddDateToDiploma
+    [Migration("20240605095235_UpdateDatetime")]
+    partial class UpdateDatetime
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,7 +62,7 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("GraduationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("GuidId")

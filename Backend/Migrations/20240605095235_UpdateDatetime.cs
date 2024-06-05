@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class AddDateToDiploma : Migration
+    public partial class UpdateDatetime : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,7 +34,7 @@ namespace Backend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GuidId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BootcampName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    GraduationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StudentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BootcampId = table.Column<int>(type: "int", nullable: true)
                 },

@@ -59,7 +59,7 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("GraduationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("GuidId")
