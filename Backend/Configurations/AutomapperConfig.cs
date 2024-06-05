@@ -7,5 +7,6 @@ public class AutomapperConfig : Profile
     public AutomapperConfig()
     {
         CreateMap<BootcampRequestDto, Bootcamp>().ReverseMap();
+        CreateMap<BootcampResponseDto, Bootcamp>().ReverseMap();
     }
 }
