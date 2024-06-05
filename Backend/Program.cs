@@ -1,6 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<DiplomaMakingContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DiplomaMakingContext") ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
 
 // Add services to the container.
 
