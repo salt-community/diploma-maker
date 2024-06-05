@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateDatetime : Migration
+    public partial class AddBootcampToDiploma : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,10 +33,9 @@ namespace Backend.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GuidId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BootcampName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GraduationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StudentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BootcampId = table.Column<int>(type: "int", nullable: true)
+                    BootcampId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,7 +44,8 @@ namespace Backend.Migrations
                         name: "FK_Diploma_Bootcamp_BootcampId",
                         column: x => x.BootcampId,
                         principalTable: "Bootcamp",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

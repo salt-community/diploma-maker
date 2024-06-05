@@ -31,7 +31,7 @@ public class BootcampController : ControllerBase
             var responseDto = _mapper.Map<BootcampResponseDto>(bootcamp);
             return CreatedAtAction(nameof(GetBootcamps), new { id = bootcamp.Id }, responseDto);
         }
-        catch(ArgumentException)
+        catch (ArgumentException)
         {
             return Conflict(new { message = "A bootcamp with the same name already exists." });
         }
@@ -43,22 +43,39 @@ public class BootcampController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Bootcamp>>> GetBootcamps()
     {
-        return await _service.GetBootcamps();
+        var bootcamps = await _service.GetBootcamps();
+        var bootcampResponseDtos = _mapper.Map<List<BootcampResponseDto>>(bootcamps);
+        return Ok(bootcampResponseDtos);
     }
 
-    // // GET: api/Bootcamp/5
-    // [HttpGet("{id}")]
-    // public async Task<ActionResult<Bootcamp>> GetBootcamp(int id)
-    // {
-    //     var bootcamp = await _context.Bootcamp.FindAsync(id);
+    // GET: api/Bootcamp/5
+    [HttpGet("{guidId}")]
+    public async Task<ActionResult<BootcampResponseDto>> GetBootcampByGuidId(string guidId)
+    {
+        var bootcamp = await _service.GetBootcampByGuidId(guidId);
+        if (bootcamp == null)
+            return NotFound();
+        var responseDto = _mapper.Map<BootcampResponseDto>(bootcamp);
 
-    //     if (bootcamp == null)
-    //     {
-    //         return NotFound();
-    //     }
+        return responseDto;
+    }
 
-    //     return bootcamp;
-    // }
+
+    // DELETE: api/Bootcamp/5
+    [HttpDelete("{guidId}")]
+    public async Task<IActionResult> DeleteBootcamp(string guidId)
+    {   
+        try
+        {
+            var bootcamp = await _service.DeleteBootcampByGuidId(guidId);
+        }
+        catch(ArgumentException)
+        {
+            return NotFound("Bootcamp not found");
+        }
+        return Ok();
+    }
+
 
     // // PUT: api/Bootcamp/5
     // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -91,25 +108,6 @@ public class BootcampController : ControllerBase
     //     return NoContent();
     // }
 
-    // // DELETE: api/Bootcamp/5
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeleteBootcamp(int id)
-    // {
-    //     var bootcamp = await _context.Bootcamp.FindAsync(id);
-    //     if (bootcamp == null)
-    //     {
-    //         return NotFound();
-    //     }
 
-    //     _context.Bootcamp.Remove(bootcamp);
-    //     await _context.SaveChangesAsync();
-
-    //     return NoContent();
-    // }
-
-    // private bool BootcampExists(int id)
-    // {
-    //     return _context.Bootcamp.Any(e => e.Id == id);
-    // }
 }
 
