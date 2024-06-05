@@ -8,4 +8,6 @@ public class BootcampResponseDto
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
     public DateTime StartDate { get; set; }
+
+    // public List<Diploma> Diplomas { get; set; } = [];
 }
