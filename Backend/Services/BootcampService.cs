@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Models;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Backend.Services;
 
@@ -32,5 +33,15 @@ public class BootcampService
     public async Task<List<Bootcamp>> GetBootcamps()
     {
         return await _context.Bootcamp.ToListAsync();
+    }
+
+
+    public async Task<Bootcamp?> GetBootcampByGuidId(string guidId)
+    {
+        var bootcamp = await _context.Bootcamp.
+            FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId) 
+            ?? throw new ArgumentException("Bootcamp does not exist");
+        return bootcamp;
+        
     }
 }

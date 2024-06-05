@@ -31,7 +31,7 @@ public class BootcampController : ControllerBase
             var responseDto = _mapper.Map<BootcampResponseDto>(bootcamp);
             return CreatedAtAction(nameof(GetBootcamps), new { id = bootcamp.Id }, responseDto);
         }
-        catch(ArgumentException)
+        catch (ArgumentException)
         {
             return Conflict(new { message = "A bootcamp with the same name already exists." });
         }
@@ -43,22 +43,22 @@ public class BootcampController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Bootcamp>>> GetBootcamps()
     {
-        return await _service.GetBootcamps();
+        var bootcamps = await _service.GetBootcamps();
+        var bootcampResponseDtos = _mapper.Map<List<BootcampResponseDto>>(bootcamps);
+        return Ok(bootcampResponseDtos);
     }
 
-    // // GET: api/Bootcamp/5
-    // [HttpGet("{id}")]
-    // public async Task<ActionResult<Bootcamp>> GetBootcamp(int id)
-    // {
-    //     var bootcamp = await _context.Bootcamp.FindAsync(id);
+    // GET: api/Bootcamp/5
+    [HttpGet("{guidId}")]
+    public async Task<ActionResult<BootcampResponseDto>> GetBootcampByGuidId(string guidId)
+    {
+        var bootcamp = await _service.GetBootcampByGuidId(guidId);
+        if (bootcamp == null)
+            return NotFound();
+        var responseDto = _mapper.Map<BootcampResponseDto>(bootcamp);
 
-    //     if (bootcamp == null)
-    //     {
-    //         return NotFound();
-    //     }
-
-    //     return bootcamp;
-    // }
+        return responseDto;
+    }
 
     // // PUT: api/Bootcamp/5
     // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
