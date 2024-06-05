@@ -48,15 +48,16 @@ public class BootcampService
     {
         var bootcamp = await _context.Bootcamp.
             FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId);
+
         _ = _context.Bootcamp.Remove(bootcamp);
         await _context.SaveChangesAsync();
         return bootcamp;
     }
 
-    // private bool BootcampExists(int id)
-    // {
-    //     return _context.Bootcamp.Any(e => e.Id == id);
-    // }
+    private bool BootcampExists(int id)
+    {
+        return _context.Bootcamp.Any(e => e.Id == id);
+    }
 
 
 }

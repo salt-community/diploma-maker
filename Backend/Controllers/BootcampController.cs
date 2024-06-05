@@ -64,13 +64,15 @@ public class BootcampController : ControllerBase
     // DELETE: api/Bootcamp/5
     [HttpDelete("{guidId}")]
     public async Task<IActionResult> DeleteBootcamp(string guidId)
-    {
-        var bootcamp = await _service.DeleteBootcampByGuidId(guidId);
-        if (bootcamp == null)
+    {   
+        try
         {
-            return NotFound();
+            var bootcamp = await _service.DeleteBootcampByGuidId(guidId);
         }
-
+        catch(ArgumentException)
+        {
+            return NotFound("Bootcamp not found");
+        }
         return Ok();
     }
 
