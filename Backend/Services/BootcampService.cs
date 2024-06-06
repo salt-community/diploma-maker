@@ -51,7 +51,8 @@ public class BootcampService
     public async Task<Bootcamp> DeleteBootcampByGuidId(string guidId)
     {
         var bootcamp = await _context.Bootcamp.
-            FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId);
+            FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId)
+            ?? throw new ArgumentException("Bootcamp does not exist");
 
         _ = _context.Bootcamp.Remove(bootcamp);
         await _context.SaveChangesAsync();

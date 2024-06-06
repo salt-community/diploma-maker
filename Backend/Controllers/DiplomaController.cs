@@ -43,23 +43,35 @@ public class DiplomaController : ControllerBase
     {
 
         var diplomas = await _service.GetDiplomas();
-        var bootcampResponseDtos = _mapper.Map<List<DiplomaRequestDto>>(diplomas);
-        return Ok(bootcampResponseDtos);
+        var diplomaResponseDtos = _mapper.Map<List<DiplomaResponseDto>>(diplomas);
+        return Ok(diplomaResponseDtos);
     }
 
-    // // GET: api/Diploma/5
-    // [HttpGet("{id}")]
-    // public async Task<ActionResult<Diploma>> GetDiploma(int id)
-    // {
-    //     var diploma = await _context.Diploma.FindAsync(id);
+    // GET: api/Diploma/David
+    [HttpGet("{keyword}")]
+    public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomaByKeyword(string keyword)
+    {
+        var diplomas = await _service.GetDiplomasByKeyword(keyword);
+        var diplomaResponseDtos = _mapper.Map<List<DiplomaResponseDto>>(diplomas);
+        return Ok(diplomaResponseDtos);
+    }
 
-    //     if (diploma == null)
-    //     {
-    //         return NotFound();
-    //     }
+    // DELETE: api/Diploma/5
+    [HttpDelete("{guidId}")]
+    public async Task<IActionResult> DeleteDiploma(string guidId)
+    {
+        try
+        {
+            await _service.DeleteDiplomaByGuidId(guidId);
+        }
+        catch(BootcampNotFoundException)
+        {
+            return NotFound("Bootcamp not found");
+        }
 
-    //     return diploma;
-    // }
+        return NoContent();
+    }
+
 
     // // PUT: api/Diploma/5
     // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -88,25 +100,6 @@ public class DiplomaController : ControllerBase
     //             throw;
     //         }
     //     }
-
-    //     return NoContent();
-    // }
-
-    // // POST: api/Diploma
-    // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-
-    // // DELETE: api/Diploma/5
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeleteDiploma(int id)
-    // {
-    //     var diploma = await _context.Diploma.FindAsync(id);
-    //     if (diploma == null)
-    //     {
-    //         return NotFound();
-    //     }
-
-    //     _context.Diploma.Remove(diploma);
-    //     await _context.SaveChangesAsync();
 
     //     return NoContent();
     // }

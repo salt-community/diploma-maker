@@ -47,21 +47,27 @@ public class DiplomaService
 
     }
 
-    // public async Task<List<Diploma>> GetBootcamps()
-    // {
-    //     return await _context.Diploma
-    //         .Include(b => b.Diplomas)
-    //         .ToListAsync();
-    // }
-    // public async Task<Diploma> DeleteBootcampByGuidId(string guidId)
-    // {
-    //     var bootcamp = await _context.Diploma.
-    //         FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId);
+    public async Task<List<Diploma>> GetDiplomasByKeyword(string keyword){
+        keyword = keyword.ToLower();
+        var diplomas = await _context.Diploma
+            .Include(d => d.Bootcamp)
+            .Where(d => d.StudentName.ToLower().Contains(keyword) 
+                || d.Bootcamp.Name.ToLower().Contains(keyword))
+            .ToListAsync();
+        return diplomas;
+    }
 
-    //     _ = _context.Diploma.Remove(bootcamp);
-    //     await _context.SaveChangesAsync();
-    //     return bootcamp;
-    // }
+
+    public async Task<Diploma> DeleteDiplomaByGuidId(string guidId)
+    {
+        var diploma = await _context.Diploma.
+            FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId)
+            ?? throw new BootcampNotFoundException("this bootcamp does not exist");
+
+        _ = _context.Diploma.Remove(diploma);
+        await _context.SaveChangesAsync();
+        return diploma;
+    }
 }
 
 public class BootcampNotFoundException : Exception
