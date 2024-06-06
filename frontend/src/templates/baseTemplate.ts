@@ -14,7 +14,7 @@ export const getTemplate = (): Template => ({
         fontName: "NotoSerifJP-Regular",
         alignment: "center",
       },
-      "name copy": {
+      namecopy: {
         type: "text",
         position: { x: 83.89, y: 98.63 },
         width: 48.13,
@@ -24,7 +24,7 @@ export const getTemplate = (): Template => ({
         fontColor: "#ffffff",
         fontName: "NotoSerifJP-Regular",
       },
-      "name copy 2": {
+      namecopy2: {
         type: "text",
         position: { x: 74.76, y: 113.4 },
         width: 66.4,
@@ -41,9 +41,9 @@ export const getTemplate = (): Template => ({
   sampledata: [
     {
       name: "has successfully completed\nthe Fullstack .Net Bootcamp of 2024-02-05 at School of Applied Technology.",
-      "name copy": "This certifies that\n",
-      "name copy 2": "Xinnan Luo",
+      namecopy: "This certifies that\n",
+      namecopy2: "Xinnan Luo",
     },
   ],
-  columns: ["name", "name copy", "name copy 2"],
+  columns: ["name", "namecopy", "namecopy2"],
 });
