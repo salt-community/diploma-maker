@@ -10,11 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@pdfme/common": "^4.0.2",
+    "@pdfme/generator": "^4.0.2",
+    "@pdfme/ui": "^4.0.2",
     "@react-pdf/renderer": "^3.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.5",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.23.1",
+    "signature_pad": "^5.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
