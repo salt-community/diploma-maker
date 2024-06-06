@@ -5,7 +5,7 @@ public class BootcampResponseDto
 {
     public Guid GuidId { get; set; } = Guid.NewGuid();
     public required string Name { get; set; }
-    public string StartDate { get; set; } = DateTime.Now.ToString("MM/dd/yyyy");
+    public DateTime StartDate{ get; set; } = DateTime.Now.Date;
 
     public List<DiplomaResponseDto> Diplomas { get; set; } = [];
 }

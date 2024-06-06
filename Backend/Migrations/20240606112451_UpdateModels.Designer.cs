@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240606103536_UpdateModels")]
+    [Migration("20240606112451_UpdateModels")]
     partial class UpdateModels
     {
         /// <inheritdoc />
