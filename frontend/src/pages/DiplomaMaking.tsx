@@ -30,7 +30,11 @@ const initTemplate = () => {
 };
 
 export default function DiplimaMaking(){
-    const [studentNames, setStudentNames] = useState<string[]>([]);
+    const [studentNames, setStudentNames] = useState<string[]>([
+      "matilda",
+      "xian",
+      "tom",
+    ]);
 
     const uiRef = useRef<HTMLDivElement | null>(null);
     const ui = useRef<Form | Viewer | null>(null);
