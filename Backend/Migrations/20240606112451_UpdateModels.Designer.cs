@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240605183009_AddBootcampToDiploma")]
-    partial class AddBootcampToDiploma
+    [Migration("20240606112451_UpdateModels")]
+    partial class UpdateModels
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

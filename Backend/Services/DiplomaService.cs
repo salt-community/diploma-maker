@@ -15,18 +15,36 @@ public class DiplomaService
         _context = context;
     }
 
-    public async Task<Diploma> PostDiploma(Diploma diploma)
+    public async Task<Diploma> PostDiploma(DiplomaRequestDto requestDto)
     {
-        var existingDiploma = await _context.Diploma
-            .FirstOrDefaultAsync(d => d.StudentName == d.StudentName 
-                && d.Bootcamp.GuidId == diploma.Bootcamp.GuidId);
-        if (existingDiploma != null)
-            throw new ArgumentException("This student in has already earned a diploma in this bootcamp");
 
+        var bootcamp = await _context.Bootcamp
+            .FirstOrDefaultAsync(b => b.GuidId.ToString() == requestDto.BootcampGuidId)
+            ?? throw new BootcampNotFoundException("Bootcamp you are trying to add this diploma to, does not exist");
+        
+        var existingDiploma = await _context.Diploma
+            .FirstOrDefaultAsync(d => d.StudentName == requestDto.StudentName
+            && d.Bootcamp.GuidId == bootcamp.GuidId);
+        if (existingDiploma != null)
+            throw new DiplomaExistsException("This student has already earned a diploma in this bootcamp");
+
+        var diploma = new Diploma
+        { 
+            StudentName = requestDto.StudentName, 
+            GraduationDate = requestDto.GraduationDate,
+            Bootcamp = bootcamp 
+        };
         _context.Diploma.Add(diploma);
         await _context.SaveChangesAsync();
 
         return diploma;
+    }
+
+    public async Task<List<Diploma>> GetDiplomas(){
+        return await _context.Diploma
+            .Include(d => d.Bootcamp)
+            .ToListAsync();
+
     }
 
     // public async Task<List<Diploma>> GetBootcamps()
@@ -44,4 +62,14 @@ public class DiplomaService
     //     await _context.SaveChangesAsync();
     //     return bootcamp;
     // }
+}
+
+public class BootcampNotFoundException : Exception
+{
+    public BootcampNotFoundException(string message) : base(message) { }
+}
+
+public class DiplomaExistsException : Exception
+{
+    public DiplomaExistsException(string message) : base(message) { }
 }

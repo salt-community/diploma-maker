@@ -24,6 +24,7 @@ public class BootcampService
         if (existingBootcamp != null)
             throw new ArgumentException("Bootcamp with this name exists");
 
+        bootcamp.GuidId = Guid.NewGuid();
         _context.Bootcamp.Add(bootcamp);
         await _context.SaveChangesAsync();
 

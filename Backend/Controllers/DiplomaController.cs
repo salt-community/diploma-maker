@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Backend.Models;
+using AutoMapper;
+using Backend.Services;
 
 namespace Backend.Controllers;
 
@@ -13,28 +9,43 @@ namespace Backend.Controllers;
 [ApiController]
 public class DiplomaController : ControllerBase
 {
-    private readonly DiplomaMakingContext _context;
+    private readonly DiplomaService _service;
+    private readonly IMapper _mapper;   
 
-    public DiplomaController(DiplomaMakingContext context)
+    public DiplomaController(DiplomaService service, IMapper mapper)
     {
-        _context = context;
+        _service = service;
+        _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<ActionResult<Diploma>> PostDiploma(Diploma diploma)
+    public async Task<ActionResult<DiplomaResponseDto>> PostDiploma(DiplomaRequestDto requestDto)
     {
-        _context.Diploma.Add(diploma);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetDiploma", new { id = diploma.Id }, diploma);
+        try
+        {
+            var diploma = await _service.PostDiploma(requestDto);
+            var responseDto = _mapper.Map<DiplomaResponseDto>(diploma);
+            return CreatedAtAction(nameof(GetDiplomas), new { id = diploma.Id }, diploma);
+        }
+        catch(BootcampNotFoundException)
+        {
+            return NotFound("Bootcamp you are trying to add this diploma to, does not exist");
+        }
+        catch(DiplomaExistsException)
+        {
+            return Conflict(new { message = "This student has already earned a diploma in this bootcamp" });
+        }
     }
 
-    // // GET: api/Diploma
-    // [HttpGet]
-    // public async Task<ActionResult<IEnumerable<Diploma>>> GetDiploma()
-    // {
-    //     return await _context.Diploma.ToListAsync();
-    // }
+    // GET: api/Diploma
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomas()
+    {
+
+        var diplomas = await _service.GetDiplomas();
+        var bootcampResponseDtos = _mapper.Map<List<DiplomaRequestDto>>(diplomas);
+        return Ok(bootcampResponseDtos);
+    }
 
     // // GET: api/Diploma/5
     // [HttpGet("{id}")]
