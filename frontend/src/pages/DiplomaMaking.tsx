@@ -85,6 +85,14 @@ export default function DiplimaMaking(){
       localStorage.setItem("mode", value);
     };
 
+    const onSaveInputs = () => {
+      if (ui.current) {
+        const inputs = ui.current.getInputs();
+        localStorage.setItem("inputs", JSON.stringify(inputs));
+        console.log("saved changes!");
+      }
+    };
+
     return (
         <>
           {/* <PDFGenerator names={studentNames}/> */}
@@ -117,14 +125,14 @@ export default function DiplimaMaking(){
                 />
                 <label htmlFor="viewer">Viewer</label>
               </div>
-              <label style={{ width: 180 }}>
+              {/* <label style={{ width: 180 }}>
                 Load Template
                 <input
                   type="file"
                   accept="application/json"
                   onChange={(e) => handleLoadTemplate(e, ui.current)}
                 />
-              </label>
+              </label> */}
               <button onClick={() => generatePDF(ui.current)}>Generate PDF</button>
             </header>
             <div
@@ -132,7 +140,10 @@ export default function DiplimaMaking(){
               style={{ width: "100%", height: `calc(100vh - 68px)` }}
             />
           </div>
-          <AddDeplomaForm updateStudentNames = {UpdateStudentNames}/>
+          <section>
+            <button onClick={onSaveInputs}>Save Changes</button>
+            <AddDeplomaForm updateStudentNames = {UpdateStudentNames}/>
+          </section>
         </>
     )
 }
