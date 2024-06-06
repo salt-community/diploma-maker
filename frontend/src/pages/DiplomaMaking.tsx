@@ -14,19 +14,39 @@ import {
 
 type Mode = "form" | "viewer";
 
-const initTemplate = () => {
-  let template: Template = getTemplate();
-  try {
-    const templateString = localStorage.getItem("template");
-    const templateJson = templateString
-      ? JSON.parse(templateString)
-      : getTemplate();
-    checkTemplate(templateJson);
-    template = templateJson as Template;
-  } catch {
-    localStorage.removeItem("template");
-  }
-  return template;
+// FOR ONE TEMPLATE
+// const initTemplate = () => {
+//   let template: Template = getTemplate();
+//   try {
+//     const templateString = localStorage.getItem("template");
+//     const templateJson = templateString
+//       ? JSON.parse(templateString)
+//       : getTemplate();
+//     checkTemplate(templateJson);
+//     template = templateJson as Template;
+//   } catch {
+//     localStorage.removeItem("template");
+//   }
+//   return template;
+// };
+
+// FOR MULTIBLE INSTANCED TEMPLATES
+const initTemplates = (studentNames: string[]): Template[] => {
+  return studentNames.map((studentName, index) => {
+    let template: Template = getTemplate();
+    try {
+      const templateString = localStorage.getItem(`template_${index}`);
+      const templateJson = templateString
+        ? JSON.parse(templateString)
+        : getTemplate();
+      checkTemplate(templateJson);
+      template = templateJson as Template;
+    } catch {
+      localStorage.removeItem(`template_${index}`);
+    }
+    template.sampledata = [{ studentName }];
+    return template;
+  });
 };
 
 export default function DiplimaMaking(){
@@ -35,45 +55,84 @@ export default function DiplimaMaking(){
       "xian",
       "tom",
     ]);
+    const [templates, setTemplates] = useState<Template[]>(initTemplates(studentNames));
+    const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
 
     const uiRef = useRef<HTMLDivElement | null>(null);
-    const ui = useRef<Form | Viewer | null>(null);
+    // const ui = useRef<Form | Viewer | null>(null);
+    const uiInstance = useRef<Form | Viewer | null>(null);
 
     const [mode, setMode] = useState<Mode>(
       (localStorage.getItem("mode") as Mode) ?? "form"
     );
 
     useEffect(() => {
-      const template = initTemplate();
+      setTemplates(initTemplates(studentNames));
+    }, [studentNames]);
+
+    // FOR ONE TEMPLATE
+    // useEffect(() => {
+    //   const template = initTemplate();
+    //   let inputs = template.sampledata ?? [{}];
+    //   try {
+    //     const inputsString = localStorage.getItem("inputs");
+    //     const inputsJson = inputsString
+    //       ? JSON.parse(inputsString)
+    //       : template.sampledata ?? [{}];
+    //     inputs = inputsJson;
+    //   } catch {
+    //     localStorage.removeItem("inputs");
+    //   }
+  
+    //   getFontsData().then((font) => {
+    //     if (uiRef.current) {
+    //       ui.current = new (mode === "form" ? Form : Viewer)({
+    //         domContainer: uiRef.current,
+    //         template,
+    //         inputs,
+    //         options: { font },
+    //         plugins: getPlugins(),
+    //       });
+    //     }
+    //   });
+
+    // FOR MULTIBLE INSTANCED TEMPLATES
+    useEffect(() => {
+      const template = templates[currentTemplateIndex];
       let inputs = template.sampledata ?? [{}];
       try {
-        const inputsString = localStorage.getItem("inputs");
+        const inputsString = localStorage.getItem(`inputs_${currentTemplateIndex}`);
         const inputsJson = inputsString
           ? JSON.parse(inputsString)
           : template.sampledata ?? [{}];
         inputs = inputsJson;
       } catch {
-        localStorage.removeItem("inputs");
+        localStorage.removeItem(`inputs_${currentTemplateIndex}`);
       }
   
       getFontsData().then((font) => {
         if (uiRef.current) {
-          ui.current = new (mode === "form" ? Form : Viewer)({
+          if (uiInstance.current) {
+            uiInstance.current.destroy();
+          }
+          uiInstance.current = new (mode === "form" ? Form : Viewer)({
             domContainer: uiRef.current,
             template,
             inputs,
             options: { font },
             plugins: getPlugins(),
           });
+  
         }
       });
   
       return () => {
-        if (ui.current) {
-          ui.current.destroy();
+        if (uiInstance.current) {
+          uiInstance.current.destroy();
+          uiInstance.current = null;
         }
       };
-    }, [uiRef, mode]);
+    }, [uiRef, mode, currentTemplateIndex, templates]);
 
     const changeModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value as Mode;
