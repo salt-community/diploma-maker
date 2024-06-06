@@ -79,13 +79,13 @@ export default function DiplimaMaking(){
         setStudentNames(names);
     }
 
-    const onChangeMode = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const changeModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value as Mode;
       setMode(value);
       localStorage.setItem("mode", value);
     };
 
-    const onSaveInputs = () => {
+    const saveInputsHandler = () => {
       if (ui.current) {
         const inputs = ui.current.getInputs();
         localStorage.setItem("inputs", JSON.stringify(inputs));
@@ -110,7 +110,7 @@ export default function DiplimaMaking(){
               <div>
                 <input
                   type="radio"
-                  onChange={onChangeMode}
+                  onChange={changeModeHandler}
                   id="form"
                   value="form"
                   checked={mode === "form"}
@@ -118,7 +118,7 @@ export default function DiplimaMaking(){
                 <label htmlFor="form">Form</label>
                 <input
                   type="radio"
-                  onChange={onChangeMode}
+                  onChange={changeModeHandler}
                   id="viewer"
                   value="viewer"
                   checked={mode === "viewer"}
@@ -141,7 +141,7 @@ export default function DiplimaMaking(){
             />
           </div>
           <section>
-            <button onClick={onSaveInputs}>Save Changes</button>
+            <button onClick={saveInputsHandler}>Save Changes</button>
             <AddDeplomaForm updateStudentNames = {UpdateStudentNames}/>
           </section>
         </>
