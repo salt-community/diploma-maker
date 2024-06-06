@@ -43,7 +43,11 @@ export default function DiplimaMaking(){
         setStudentNames(names);
     }
 
-    
+    const onChangeMode = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value as Mode;
+      setMode(value);
+      localStorage.setItem("mode", value);
+    };
 
     return (
         <>
