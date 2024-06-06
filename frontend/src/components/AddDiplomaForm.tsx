@@ -22,8 +22,7 @@ export default function AddDeplomaForm({updateStudentNames}: Props){
             </select>
             <input {...register("date-of-bootcamp")} type="date" />
             <textarea {...register("names")} />
-            <button>Choose</button>
-            <input type="submit" value="Generate"/>
+            <button>Apply Names</button>
         </form>
         </> 
     )

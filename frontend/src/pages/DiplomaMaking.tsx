@@ -3,14 +3,14 @@ import AddDeplomaForm from "../components/AddDiplomaForm";
 import { Template, checkTemplate } from "@pdfme/common";
 import { getTemplate } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
+import { displayMode } from "../util/types";
 import {
   getFontsData,
   getPlugins,
-  generatePDFFromTemplate,
+  generatePDF,
+  generateCombinedPDF,
 } from "../util/helper";
-import { displayMode } from "../util/types";
 
-//Creates one template for each student name
 const initTemplates = (studentNames: string[]): Template[] => {
   return studentNames.map((studentName, idx) => {
     let template: Template = getTemplate(); 
@@ -125,9 +125,18 @@ export const DiplomaMaking = () => {
       if (uiInstance.current) {
         const inputs = uiInstance.current.getInputs();
         const template = templates[currentTemplateIndex];
-        await generatePDFFromTemplate(template, inputs);
+        await generatePDF(template, inputs);
       }
     };
+
+    const generateCombinedPDFHandler = async () => {
+      const inputsArray = templates.map((_, index) => {
+        const inputsString = localStorage.getItem(`inputs_${index}`);
+        return inputsString ? JSON.parse(inputsString) : templates[index].sampledata ?? [{}];
+      });
+  
+      await generateCombinedPDF(templates, inputsArray);
+    }
 
     return (
         <>
@@ -140,8 +149,6 @@ export const DiplomaMaking = () => {
                 marginRight: 120,
               }}
             >
-              <strong>Form, Viewer</strong>
-              <span style={{ margin: "0 1rem" }}>:</span>
               <div>
                 <input
                   type="radio"
@@ -161,6 +168,8 @@ export const DiplomaMaking = () => {
                 <label htmlFor="viewer">Viewer</label>
               </div>
               <button onClick={generatePDFHandler}>Generate PDF</button>
+              <button onClick={generateCombinedPDFHandler}>Generate PDFs</button>
+              <button onClick={saveInputsHandler}>Save Changes</button>
             </header>
             <div
               ref={uiRef}
@@ -175,7 +184,6 @@ export const DiplomaMaking = () => {
             </div>
           </section>
           <section>
-            <button onClick={saveInputsHandler}>Save Changes</button>
             <AddDeplomaForm updateStudentNames = {(e) => updateStudentNamesHandler(e)}/>
           </section>
         </>

@@ -109,24 +109,7 @@ export const getPlugins = () => {
   }
 }
 
-export const generatePDF = async (currentRef: Designer | Form | Viewer | null) => {
-  if (!currentRef) return;
-  const template = currentRef.getTemplate();
-  const inputs = typeof (currentRef as Viewer | Form).getInputs === "function" ? (currentRef as Viewer | Form).getInputs() : template.sampledata ?? [];
-  const font = await getFontsData();
-
-  const pdf = await generate({
-    template,
-    inputs,
-    options: { font },
-    plugins: getPlugins(),
-  });
-
-  const blob = new Blob([pdf.buffer], { type: "application/pdf" });
-  window.open(URL.createObjectURL(blob));
-};
-
-export const generatePDFFromTemplate = async (template: Template, inputs: any) => {
+export const generatePDF = async (template: Template, inputs: any) => {
   if(!template) return;
   const font = await getFontsData();
 
@@ -140,6 +123,26 @@ export const generatePDFFromTemplate = async (template: Template, inputs: any) =
   const blob = new Blob([pdf.buffer], { type: "application/pdf" });
   window.open(URL.createObjectURL(blob));
 };
+
+export const generateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
+  const font = await getFontsData();
+
+  const combinedTemplate: Template = {
+    ...templates[0],
+    schemas: templates.flatMap(template => template.schemas),
+    sampledata: inputsArray.flat(),
+  };
+
+  const pdf = await generate({
+    template: combinedTemplate,
+    inputs: combinedTemplate.sampledata,
+    options: { font },
+    plugins: getPlugins(),
+  });
+
+  const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+  window.open(URL.createObjectURL(blob));
+}
 
 export const isJsonString = (str: string) => {
   try {
