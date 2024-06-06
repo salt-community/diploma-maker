@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddDeplomaForm from "../components/AddDiplomaForm";
 import PDFGenerator from "../components/PDFGenerator";
 import { Template, checkTemplate } from "@pdfme/common";
@@ -38,6 +38,38 @@ export default function DiplimaMaking(){
     const [mode, setMode] = useState<Mode>(
       (localStorage.getItem("mode") as Mode) ?? "form"
     );
+
+    useEffect(() => {
+      const template = initTemplate();
+      let inputs = template.sampledata ?? [{}];
+      try {
+        const inputsString = localStorage.getItem("inputs");
+        const inputsJson = inputsString
+          ? JSON.parse(inputsString)
+          : template.sampledata ?? [{}];
+        inputs = inputsJson;
+      } catch {
+        localStorage.removeItem("inputs");
+      }
+  
+      getFontsData().then((font) => {
+        if (uiRef.current) {
+          ui.current = new (mode === "form" ? Form : Viewer)({
+            domContainer: uiRef.current,
+            template,
+            inputs,
+            options: { font },
+            plugins: getPlugins(),
+          });
+        }
+      });
+  
+      return () => {
+        if (ui.current) {
+          ui.current.destroy();
+        }
+      };
+    }, [uiRef, mode]);
 
     const UpdateStudentNames = (names: string[]) => {
         setStudentNames(names);
