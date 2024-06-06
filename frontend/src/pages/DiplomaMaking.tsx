@@ -140,6 +140,18 @@ export default function DiplimaMaking(){
       localStorage.setItem("mode", value);
     };
 
+    const prevTemplateInstanceHandler = () => {
+      setCurrentTemplateIndex((prevIndex) =>
+        prevIndex === 0 ? templates.length - 1 : prevIndex - 1
+      );
+    };
+  
+    const nextTemplateInstanceHandler = () => {
+      setCurrentTemplateIndex((prevIndex) =>
+        prevIndex === templates.length - 1 ? 0 : prevIndex + 1
+      );
+    };
+
     const saveInputsHandler = () => {
       if (ui.current) {
         const inputs = ui.current.getInputs();
@@ -203,6 +215,13 @@ export default function DiplimaMaking(){
               ref={uiRef}
               style={{ width: "100%", height: `calc(100vh - 68px)` }}
             />
+            <div style={{ display: "flex", justifyContent: "center", margin: "1rem 0" }}>
+              <button onClick={prevTemplateInstanceHandler}>Previous</button>
+              <span style={{ margin: "0 1rem" }}>
+                Template {currentTemplateIndex + 1} of {templates.length}
+              </span>
+              <button onClick={nextTemplateInstanceHandler}>Next</button>
+            </div>
           </div>
           <section>
             <button onClick={saveInputsHandler}>Save Changes</button>
