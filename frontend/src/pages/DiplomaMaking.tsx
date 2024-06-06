@@ -46,16 +46,22 @@ export default function DiplomaMaking(){
 
     useEffect(() => {
       const template = initTemplate();
-      let inputs = template.sampledata ?? [{}];
-      try {
-        const inputsString = localStorage.getItem("inputs");
-        const inputsJson = inputsString
-          ? JSON.parse(inputsString)
-          : template.sampledata ?? [{}];
-        inputs = inputsJson;
-      } catch {
-        localStorage.removeItem("inputs");
-      }
+      let inputs = SaltInfo ? [{
+        
+          "course-date": `has successfully completed\nthe ${SaltInfo.classname} Bootcamp of ${SaltInfo.datebootcamp} at School of Applied Technology.`,
+          "intro": "This certifies that\n",
+          "name": `${SaltInfo.names}`,
+        
+      }] : template.sampledata ;
+      // try {
+      //   const inputsString = localStorage.getItem("inputs");
+      //   const inputsJson = inputsString
+      //     ? JSON.parse(inputsString)
+      //     : template.sampledata ?? [{}];
+      //   inputs = inputsJson;
+      // } catch {
+      //   localStorage.removeItem("inputs");
+      // }
   
       getFontsData().then((font) => {
         if (uiRef.current) {
@@ -74,7 +80,7 @@ export default function DiplomaMaking(){
           ui.current.destroy();
         }
       };
-    }, [uiRef, mode]);
+    }, [uiRef, mode, SaltInfo]);
 
     const UpdateSaltInfo = (data: SaltData) => {
         setSaltInfo(data);
