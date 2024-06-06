@@ -152,11 +152,20 @@ export default function DiplimaMaking(){
       );
     };
 
+    // SAVE FOR ONE TEMPLATE
+    // const saveInputsHandler = () => {
+    //   if (ui.current) {
+    //     const inputs = ui.current.getInputs();
+    //     localStorage.setItem("inputs", JSON.stringify(inputs));
+    //     console.log("saved changes!");
+    //   }
+    // };
+
+    // SAVE FOR MULTIBLE INSTANCED TEMPLATES
     const saveInputsHandler = () => {
-      if (ui.current) {
-        const inputs = ui.current.getInputs();
-        localStorage.setItem("inputs", JSON.stringify(inputs));
-        console.log("saved changes!");
+      if (uiInstance.current) {
+        const inputs = uiInstance.current.getInputs();
+        localStorage.setItem(`inputs_${currentTemplateIndex}`, JSON.stringify(inputs));
       }
     };
 
