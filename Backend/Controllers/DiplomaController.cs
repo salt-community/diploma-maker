@@ -56,6 +56,23 @@ public class DiplomaController : ControllerBase
         return Ok(diplomaResponseDtos);
     }
 
+    // DELETE: api/Diploma/5
+    [HttpDelete("{guidId}")]
+    public async Task<IActionResult> DeleteDiploma(string guidId)
+    {
+        try
+        {
+            await _service.DeleteDiplomaByGuidId(guidId);
+        }
+        catch(BootcampNotFoundException)
+        {
+            return NotFound("Bootcamp not found");
+        }
+
+        return NoContent();
+    }
+
+
     // // PUT: api/Diploma/5
     // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     // [HttpPut("{id}")]
@@ -83,25 +100,6 @@ public class DiplomaController : ControllerBase
     //             throw;
     //         }
     //     }
-
-    //     return NoContent();
-    // }
-
-    // // POST: api/Diploma
-    // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-
-    // // DELETE: api/Diploma/5
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeleteDiploma(int id)
-    // {
-    //     var diploma = await _context.Diploma.FindAsync(id);
-    //     if (diploma == null)
-    //     {
-    //         return NotFound();
-    //     }
-
-    //     _context.Diploma.Remove(diploma);
-    //     await _context.SaveChangesAsync();
 
     //     return NoContent();
     // }
