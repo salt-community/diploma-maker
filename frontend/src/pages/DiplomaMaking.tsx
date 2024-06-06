@@ -34,7 +34,7 @@ const initTemplate = () => {
   return template;
 };
 
-export default function DiplimaMaking(){
+export default function DiplomaMaking(){
     const [SaltInfo, setSaltInfo] = useState<SaltData>();
 
     const uiRef = useRef<HTMLDivElement | null>(null);
