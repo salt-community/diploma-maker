@@ -17,10 +17,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 builder.Services.AddAutoMapper(typeof(AutomapperConfig));
 builder.Services.AddScoped<BootcampService>();
+builder.Services.AddScoped<DiplomaService>();
 
 var app = builder.Build();
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services);
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

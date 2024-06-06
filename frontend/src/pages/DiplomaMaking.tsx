@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import AddDeplomaForm from "../components/AddDiplomaForm";
+import AddDiplomaForm from "../components/AddDiplomaForm";
 import { Template, checkTemplate } from "@pdfme/common";
 import { getTemplate } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
@@ -10,6 +10,27 @@ import {
   generatePDF,
   generateCombinedPDF,
 } from "../util/helper";
+
+type SaltData = {
+  classname: string;
+  datebootcamp: string;
+  names: string;
+};
+
+const initTemplate = () => {
+  let template: Template = getTemplate();
+  try {
+    const templateString = localStorage.getItem("template");
+    const templateJson = templateString
+      ? JSON.parse(templateString)
+      : getTemplate();
+    checkTemplate(templateJson);
+    template = templateJson as Template;
+  } catch {
+    localStorage.removeItem("template");
+  }
+  return template;
+};
 
 const initTemplates = (studentNames: string[]): Template[] => {
   return studentNames.map((studentName, idx) => {
@@ -33,7 +54,9 @@ const initTemplates = (studentNames: string[]): Template[] => {
   });
 };
 
-export const DiplomaMaking = () => {
+export default function DiplimaMaking(){
+    const [SaltInfo, setSaltInfo] = useState<SaltData>();
+    const [studentNames, setStudentNames] = useState<string[]>([]);
     const [displayMode, setDisplayMode] = useState<displayMode>("form");
     const [studentNames, setStudentNames] = useState<string[]>([
       "Xinnan Luo",
@@ -87,6 +110,54 @@ export const DiplomaMaking = () => {
         }
       };
     }, [uiRef, displayMode, currentTemplateIndex, templates]);
+
+    useEffect(() => {
+      const template = initTemplate();
+      let inputs = SaltInfo ? [{
+        
+          "course-date": `has successfully completed\nthe ${SaltInfo.classname} Bootcamp of ${SaltInfo.datebootcamp} at School of Applied Technology.`,
+          "intro": "This certifies that\n",
+          "name": `${SaltInfo.names}`,
+        
+      }] : template.sampledata ;
+      // try {
+      //   const inputsString = localStorage.getItem("inputs");
+      //   const inputsJson = inputsString
+      //     ? JSON.parse(inputsString)
+      //     : template.sampledata ?? [{}];
+      //   inputs = inputsJson;
+      // } catch {
+      //   localStorage.removeItem("inputs");
+      // }
+  
+      getFontsData().then((font) => {
+        if (uiRef.current) {
+          if (uiInstance.current) {
+            uiInstance.current.destroy();
+          }
+          uiInstance.current = new (displayMode === "form" ? Form : Viewer)({
+            domContainer: uiRef.current,
+            template, // <-- Current active Template Loads in here
+            // @ts-ignore
+            inputs,
+            options: { font },
+            plugins: getPlugins(),
+          });
+  
+        }
+      });
+  
+      return () => {
+        if (uiInstance.current) {
+          uiInstance.current.destroy();
+          uiInstance.current = null;
+        }
+      };
+    }, [uiRef, displayMode, currentTemplateIndex, templates, SaltInfo]);
+
+    const UpdateSaltInfo = (data: SaltData) => {
+        setSaltInfo(data);
+    }
 
     const updateStudentNamesHandler = (input: string) => {
       
