@@ -12,5 +12,5 @@ public class Diploma
     public DateTime GraduationDate{ get; set; }
     public required string StudentName { get; set; }
     [JsonIgnore]
-    public required Bootcamp Bootcamp {get; set;}
+    public Bootcamp Bootcamp {get; set;}
 }
