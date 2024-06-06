@@ -75,10 +75,6 @@ export default function DiplimaMaking(){
       };
     }, [uiRef, mode]);
 
-    const UpdateStudentNames = (names: string[]) => {
-        setStudentNames(names);
-    }
-
     const changeModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value as Mode;
       setMode(value);
@@ -91,6 +87,15 @@ export default function DiplimaMaking(){
         localStorage.setItem("inputs", JSON.stringify(inputs));
         console.log("saved changes!");
       }
+    };
+
+    const updateStudentNamesHandler = (input: string) => {
+      if(input == ""){
+        setStudentNames(["Xian Lau"])
+        return
+      }
+      const names = input.split('\n').map(name => name.trim()).filter(name => name !== "");
+      setStudentNames(names);
     };
 
     return (
@@ -142,7 +147,7 @@ export default function DiplimaMaking(){
           </div>
           <section>
             <button onClick={saveInputsHandler}>Save Changes</button>
-            <AddDeplomaForm updateStudentNames = {UpdateStudentNames}/>
+            <AddDeplomaForm updateStudentNames = {(e) => updateStudentNamesHandler(e)}/>
           </section>
         </>
     )
