@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Backend.Models;
 using AutoMapper;
 using Backend.Services;
@@ -29,23 +23,29 @@ public class DiplomaController : ControllerBase
     {
         try
         {
-            var diploma = _mapper.Map<Diploma>(requestDto);
-            await _service.PostDiploma(diploma, requestDto.BootcampGuidId);
+            var diploma = await _service.PostDiploma(requestDto);
             var responseDto = _mapper.Map<DiplomaResponseDto>(diploma);
-            return CreatedAtAction("GetDiploma", new { id = diploma.Id }, diploma);
+            return CreatedAtAction(nameof(GetDiplomas), new { id = diploma.Id }, diploma);
         }
-        catch(ArgumentException)
+        catch(BootcampNotFoundException)
+        {
+            return NotFound("Bootcamp you are trying to add this diploma to, does not exist");
+        }
+        catch(DiplomaExistsException)
         {
             return Conflict(new { message = "This student has already earned a diploma in this bootcamp" });
         }
     }
 
-    // // GET: api/Diploma
-    // [HttpGet]
-    // public async Task<ActionResult<IEnumerable<Diploma>>> GetDiploma()
-    // {
-    //     return await _context.Diploma.ToListAsync();
-    // }
+    // GET: api/Diploma
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomas()
+    {
+
+        var diplomas = await _service.GetDiplomas();
+        var bootcampResponseDtos = _mapper.Map<List<DiplomaRequestDto>>(diplomas);
+        return Ok(bootcampResponseDtos);
+    }
 
     // // GET: api/Diploma/5
     // [HttpGet("{id}")]

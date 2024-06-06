@@ -9,5 +9,5 @@ public class DiplomaResponseDto
     [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
     public DateTime GraduationDate{ get; set; }
     public required string StudentName { get; set; }
-    public required BootcampRequestDto Bootcamp {get; set;}
+    public required Guid BootcampGuidId {get; set;}
 }
