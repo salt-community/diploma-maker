@@ -124,7 +124,21 @@ export const generatePDF = async (currentRef: Designer | Form | Viewer | null) =
 
   const blob = new Blob([pdf.buffer], { type: "application/pdf" });
   window.open(URL.createObjectURL(blob));
+};
 
+export const generatePDFFromTemplate = async (template: Template, inputs: any) => {
+  if(!template) return;
+  const font = await getFontsData();
+
+  const pdf = await generate({
+    template,
+    inputs,
+    options: { font },
+    plugins: getPlugins(),
+  });
+
+  const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+  window.open(URL.createObjectURL(blob));
 };
 
 export const isJsonString = (str: string) => {

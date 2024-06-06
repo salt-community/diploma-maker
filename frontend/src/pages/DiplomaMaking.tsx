@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import AddDeplomaForm from "../components/AddDiplomaForm";
-import PDFGenerator from "../components/PDFGenerator";
 import { Template, checkTemplate } from "@pdfme/common";
 import { getTemplate } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
 import {
   getFontsData,
-  handleLoadTemplate,
-  generatePDF,
   getPlugins,
-  isJsonString,
+  generatePDFFromTemplate,
 } from "../util/helper";
 
 type Mode = "form" | "viewer";
@@ -30,21 +27,25 @@ type Mode = "form" | "viewer";
 //   return template;
 // };
 
-// FOR MULTIBLE INSTANCED TEMPLATES
+// FOR MULTIBLE INSTANCED TEMPLATES RUNS ON START OR WHEN STUDENTNAMES UPDATES
 const initTemplates = (studentNames: string[]): Template[] => {
-  return studentNames.map((studentName, index) => {
-    let template: Template = getTemplate();
+  return studentNames.map((studentName, idx) => {
+    let template: Template = getTemplate(); // New Empty Template Instance
     try {
-      const templateString = localStorage.getItem(`template_${index}`);
+      const templateString = localStorage.getItem(`template_${idx}`); // Checks if template with this index already exists in localstorage
+
       const templateJson = templateString
-        ? JSON.parse(templateString)
-        : getTemplate();
+        ? JSON.parse(templateString) //If the templateString exists in localstorage, then use it
+        : getTemplate(); // Else create a new template instance
+
       checkTemplate(templateJson);
       template = templateJson as Template;
+      // template.sampledata = [{ studentName }];
+
     } catch {
-      localStorage.removeItem(`template_${index}`);
+      localStorage.removeItem(`template_${idx}`);
     }
-    template.sampledata = [{ studentName }];
+
     return template;
   });
 };
@@ -59,8 +60,8 @@ export default function DiplimaMaking(){
     const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
 
     const uiRef = useRef<HTMLDivElement | null>(null);
-    // const ui = useRef<Form | Viewer | null>(null);
     const uiInstance = useRef<Form | Viewer | null>(null);
+    // const ui = useRef<Form | Viewer | null>(null);
 
     const [mode, setMode] = useState<Mode>(
       (localStorage.getItem("mode") as Mode) ?? "form"
@@ -178,6 +179,14 @@ export default function DiplimaMaking(){
       setStudentNames(names);
     };
 
+    const generatePDFHandler = async () => {
+      if (uiInstance.current) {
+        const inputs = uiInstance.current.getInputs();
+        const template = templates[currentTemplateIndex];
+        await generatePDFFromTemplate(template, inputs);
+      }
+    };
+
     return (
         <>
           {/* <PDFGenerator names={studentNames}/> */}
@@ -218,7 +227,7 @@ export default function DiplimaMaking(){
                   onChange={(e) => handleLoadTemplate(e, ui.current)}
                 />
               </label> */}
-              <button onClick={() => generatePDF(ui.current)}>Generate PDF</button>
+              <button onClick={generatePDFHandler}>Generate PDF</button>
             </header>
             <div
               ref={uiRef}
