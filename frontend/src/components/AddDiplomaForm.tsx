@@ -7,9 +7,9 @@ type FormData = {
 };
 
 type Props = {
+    // updateStudentNames: (names: string) => void;
     SetFormInfo: (data: any) => void;
 }
-
 
 export default function AddDiplomaForm({SetFormInfo}: Props){
     const {register, handleSubmit} = useForm<FormData>();
@@ -29,8 +29,7 @@ export default function AddDiplomaForm({SetFormInfo}: Props){
             </select>
             <input {...register("datebootcamp")} type="date" />
             <textarea {...register("names")} />
-            <button>Choose</button>
-            <input type="submit" value="Generate"/>
+            <button>Apply Names</button>
         </form>
         </> 
     )
