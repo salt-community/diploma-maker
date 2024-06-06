@@ -28,19 +28,20 @@ type Mode = "form" | "viewer";
 // };
 
 // FOR MULTIBLE INSTANCED TEMPLATES RUNS ON START OR WHEN STUDENTNAMES UPDATES
+// This creates a new Template for each student name field and goes into sampledata of that specific instance to update the studentname field (namecopy2 field)
 const initTemplates = (studentNames: string[]): Template[] => {
   return studentNames.map((studentName, idx) => {
-    let template: Template = getTemplate(); // New Empty Template Instance
+    let template: Template = getTemplate(); 
     try {
-      const templateString = localStorage.getItem(`template_${idx}`); // Checks if template with this index already exists in localstorage
+      const templateString = localStorage.getItem(`template_${idx}`);
 
       const templateJson = templateString
-        ? JSON.parse(templateString) //If the templateString exists in localstorage, then use it
-        : getTemplate(); // Else create a new template instance
+        ? JSON.parse(templateString)
+        : getTemplate();
 
       checkTemplate(templateJson);
       template = templateJson as Template;
-      // template.sampledata = [{ studentName }];
+      template.sampledata[0].namecopy2 = studentName;
 
     } catch {
       localStorage.removeItem(`template_${idx}`);
