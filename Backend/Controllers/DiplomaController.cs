@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend.Models;
+using AutoMapper;
+using Backend.Services;
 
 namespace Backend.Controllers;
 
@@ -13,20 +15,29 @@ namespace Backend.Controllers;
 [ApiController]
 public class DiplomaController : ControllerBase
 {
-    private readonly DiplomaMakingContext _context;
+    private readonly DiplomaService _service;
+    private readonly IMapper _mapper;   
 
-    public DiplomaController(DiplomaMakingContext context)
+    public DiplomaController(DiplomaService service, IMapper mapper)
     {
-        _context = context;
+        _service = service;
+        _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<ActionResult<Diploma>> PostDiploma(Diploma diploma)
+    public async Task<ActionResult<DiplomaResponseDto>> PostDiploma(DiplomaRequestDto requestDto)
     {
-        _context.Diploma.Add(diploma);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetDiploma", new { id = diploma.Id }, diploma);
+        try
+        {
+            var diploma = _mapper.Map<Diploma>(requestDto);
+            await _service.PostDiploma(diploma, requestDto.BootcampGuidId);
+            var responseDto = _mapper.Map<DiplomaResponseDto>(diploma);
+            return CreatedAtAction("GetDiploma", new { id = diploma.Id }, diploma);
+        }
+        catch(ArgumentException)
+        {
+            return Conflict(new { message = "This student has already earned a diploma in this bootcamp" });
+        }
     }
 
     // // GET: api/Diploma
