@@ -1,9 +1,6 @@
 import './App.css'
 import {Routes, Route, } from "react-router-dom";
-import PDFGenerator from './components/PDFGenerator.tsx';
-import DiplomaMaking from './pages/DiplomaMaking.tsx';
-
-
+import { DiplomaMaking } from './pages/DiplomaMaking';
 
 function App() {
   return (

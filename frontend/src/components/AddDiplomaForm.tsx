@@ -1,5 +1,8 @@
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form"
 
+type Props = {
+    updateStudentNames: (names: string) => void;
+}
 
 export default function AddDeplomaForm({updateStudentNames}: Props){
     const {register, handleSubmit} = useForm();
@@ -26,6 +29,3 @@ export default function AddDeplomaForm({updateStudentNames}: Props){
     )
 }
 
-type Props = {
-    updateStudentNames: (names: string[]) => void;
-}

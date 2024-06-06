@@ -8,27 +8,9 @@ import {
   getPlugins,
   generatePDFFromTemplate,
 } from "../util/helper";
+import { displayMode } from "../util/types";
 
-type Mode = "form" | "viewer";
-
-// FOR ONE TEMPLATE
-// const initTemplate = () => {
-//   let template: Template = getTemplate();
-//   try {
-//     const templateString = localStorage.getItem("template");
-//     const templateJson = templateString
-//       ? JSON.parse(templateString)
-//       : getTemplate();
-//     checkTemplate(templateJson);
-//     template = templateJson as Template;
-//   } catch {
-//     localStorage.removeItem("template");
-//   }
-//   return template;
-// };
-
-// FOR MULTIBLE INSTANCED TEMPLATES RUNS ON START OR WHEN STUDENTNAMES UPDATES
-// This creates a new Template for each student name field and goes into sampledata of that specific instance to update the studentname field (namecopy2 field)
+//Creates one template for each student name
 const initTemplates = (studentNames: string[]): Template[] => {
   return studentNames.map((studentName, idx) => {
     let template: Template = getTemplate(); 
@@ -41,7 +23,7 @@ const initTemplates = (studentNames: string[]): Template[] => {
 
       checkTemplate(templateJson);
       template = templateJson as Template;
-      template.sampledata[0].namecopy2 = studentName;
+      // template.sampledata[0].namecopy2 = studentName;
 
     } catch {
       localStorage.removeItem(`template_${idx}`);
@@ -51,63 +33,32 @@ const initTemplates = (studentNames: string[]): Template[] => {
   });
 };
 
-export default function DiplimaMaking(){
+export const DiplomaMaking = () => {
+    const [displayMode, setDisplayMode] = useState<displayMode>("form");
     const [studentNames, setStudentNames] = useState<string[]>([
-      "matilda",
-      "xian",
-      "tom",
+      "Xinnan Luo",
     ]);
     const [templates, setTemplates] = useState<Template[]>(initTemplates(studentNames));
     const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
 
     const uiRef = useRef<HTMLDivElement | null>(null);
     const uiInstance = useRef<Form | Viewer | null>(null);
-    // const ui = useRef<Form | Viewer | null>(null);
-
-    const [mode, setMode] = useState<Mode>(
-      (localStorage.getItem("mode") as Mode) ?? "form"
-    );
 
     useEffect(() => {
       setTemplates(initTemplates(studentNames));
     }, [studentNames]);
 
-    // FOR ONE TEMPLATE
-    // useEffect(() => {
-    //   const template = initTemplate();
-    //   let inputs = template.sampledata ?? [{}];
-    //   try {
-    //     const inputsString = localStorage.getItem("inputs");
-    //     const inputsJson = inputsString
-    //       ? JSON.parse(inputsString)
-    //       : template.sampledata ?? [{}];
-    //     inputs = inputsJson;
-    //   } catch {
-    //     localStorage.removeItem("inputs");
-    //   }
-  
-    //   getFontsData().then((font) => {
-    //     if (uiRef.current) {
-    //       ui.current = new (mode === "form" ? Form : Viewer)({
-    //         domContainer: uiRef.current,
-    //         template,
-    //         inputs,
-    //         options: { font },
-    //         plugins: getPlugins(),
-    //       });
-    //     }
-    //   });
-
-    // FOR MULTIBLE INSTANCED TEMPLATES
     useEffect(() => {
-      const template = templates[currentTemplateIndex];
+      const template: Template = templates[currentTemplateIndex];
       let inputs = template.sampledata ?? [{}];
       try {
         const inputsString = localStorage.getItem(`inputs_${currentTemplateIndex}`);
         const inputsJson = inputsString
           ? JSON.parse(inputsString)
           : template.sampledata ?? [{}];
+
         inputs = inputsJson;
+
       } catch {
         localStorage.removeItem(`inputs_${currentTemplateIndex}`);
       }
@@ -117,9 +68,10 @@ export default function DiplimaMaking(){
           if (uiInstance.current) {
             uiInstance.current.destroy();
           }
-          uiInstance.current = new (mode === "form" ? Form : Viewer)({
+          uiInstance.current = new (displayMode === "form" ? Form : Viewer)({
             domContainer: uiRef.current,
-            template,
+            template, // <-- Current active Template Loads in here
+            // @ts-ignore
             inputs,
             options: { font },
             plugins: getPlugins(),
@@ -134,12 +86,20 @@ export default function DiplimaMaking(){
           uiInstance.current = null;
         }
       };
-    }, [uiRef, mode, currentTemplateIndex, templates]);
+    }, [uiRef, displayMode, currentTemplateIndex, templates]);
 
-    const changeModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value as Mode;
-      setMode(value);
-      localStorage.setItem("mode", value);
+    const updateStudentNamesHandler = (input: string) => {
+      if(input == ""){
+        setStudentNames(["Xinnan Luo"]);
+        return;
+      }
+      const names = input.split('\n').map(name => name.trim()).filter(name => name !== "");
+      setStudentNames(names);
+    };
+
+    const changeDisplayModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value as displayMode;
+      setDisplayMode(value);
     };
 
     const prevTemplateInstanceHandler = () => {
@@ -154,30 +114,11 @@ export default function DiplimaMaking(){
       );
     };
 
-    // SAVE FOR ONE TEMPLATE
-    // const saveInputsHandler = () => {
-    //   if (ui.current) {
-    //     const inputs = ui.current.getInputs();
-    //     localStorage.setItem("inputs", JSON.stringify(inputs));
-    //     console.log("saved changes!");
-    //   }
-    // };
-
-    // SAVE FOR MULTIBLE INSTANCED TEMPLATES
     const saveInputsHandler = () => {
       if (uiInstance.current) {
         const inputs = uiInstance.current.getInputs();
         localStorage.setItem(`inputs_${currentTemplateIndex}`, JSON.stringify(inputs));
       }
-    };
-
-    const updateStudentNamesHandler = (input: string) => {
-      if(input == ""){
-        setStudentNames(["Xian Lau"])
-        return
-      }
-      const names = input.split('\n').map(name => name.trim()).filter(name => name !== "");
-      setStudentNames(names);
     };
 
     const generatePDFHandler = async () => {
@@ -190,8 +131,7 @@ export default function DiplimaMaking(){
 
     return (
         <>
-          {/* <PDFGenerator names={studentNames}/> */}
-          <div>
+          <section>
             <header
               style={{
                 display: "flex",
@@ -205,34 +145,26 @@ export default function DiplimaMaking(){
               <div>
                 <input
                   type="radio"
-                  onChange={changeModeHandler}
+                  onChange={changeDisplayModeHandler}
                   id="form"
                   value="form"
-                  checked={mode === "form"}
+                  checked={displayMode === "form"}
                 />
                 <label htmlFor="form">Form</label>
                 <input
                   type="radio"
-                  onChange={changeModeHandler}
+                  onChange={changeDisplayModeHandler}
                   id="viewer"
                   value="viewer"
-                  checked={mode === "viewer"}
+                  checked={displayMode === "viewer"}
                 />
                 <label htmlFor="viewer">Viewer</label>
               </div>
-              {/* <label style={{ width: 180 }}>
-                Load Template
-                <input
-                  type="file"
-                  accept="application/json"
-                  onChange={(e) => handleLoadTemplate(e, ui.current)}
-                />
-              </label> */}
               <button onClick={generatePDFHandler}>Generate PDF</button>
             </header>
             <div
               ref={uiRef}
-              style={{ width: "100%", height: `calc(100vh - 68px)` }}
+              style={{ width: "100%", height: `calc(95vh - 68px)` }}
             />
             <div style={{ display: "flex", justifyContent: "center", margin: "1rem 0" }}>
               <button onClick={prevTemplateInstanceHandler}>Previous</button>
@@ -241,7 +173,7 @@ export default function DiplimaMaking(){
               </span>
               <button onClick={nextTemplateInstanceHandler}>Next</button>
             </div>
-          </div>
+          </section>
           <section>
             <button onClick={saveInputsHandler}>Save Changes</button>
             <AddDeplomaForm updateStudentNames = {(e) => updateStudentNamesHandler(e)}/>
