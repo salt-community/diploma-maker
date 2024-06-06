@@ -47,6 +47,16 @@ public class DiplomaService
 
     }
 
+    public async Task<List<Diploma>> GetDiplomasByKeyword(string keyword){
+        keyword = keyword.ToLower();
+        var diplomas = await _context.Diploma
+            .Include(d => d.Bootcamp)
+            .Where(d => d.StudentName.ToLower().Contains(keyword) 
+                || d.Bootcamp.Name.ToLower().Contains(keyword))
+            .ToListAsync();
+        return diplomas;
+    }
+
     // public async Task<List<Diploma>> GetBootcamps()
     // {
     //     return await _context.Diploma

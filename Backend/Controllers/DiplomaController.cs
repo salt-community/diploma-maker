@@ -43,23 +43,18 @@ public class DiplomaController : ControllerBase
     {
 
         var diplomas = await _service.GetDiplomas();
-        var bootcampResponseDtos = _mapper.Map<List<DiplomaRequestDto>>(diplomas);
-        return Ok(bootcampResponseDtos);
+        var diplomaResponseDtos = _mapper.Map<List<DiplomaResponseDto>>(diplomas);
+        return Ok(diplomaResponseDtos);
     }
 
-    // // GET: api/Diploma/5
-    // [HttpGet("{id}")]
-    // public async Task<ActionResult<Diploma>> GetDiploma(int id)
-    // {
-    //     var diploma = await _context.Diploma.FindAsync(id);
-
-    //     if (diploma == null)
-    //     {
-    //         return NotFound();
-    //     }
-
-    //     return diploma;
-    // }
+    // GET: api/Diploma/David
+    [HttpGet("{keyword}")]
+    public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomaByKeyword(string keyword)
+    {
+        var diplomas = await _service.GetDiplomasByKeyword(keyword);
+        var diplomaResponseDtos = _mapper.Map<List<DiplomaResponseDto>>(diplomas);
+        return Ok(diplomaResponseDtos);
+    }
 
     // // PUT: api/Diploma/5
     // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

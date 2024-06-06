@@ -7,5 +7,5 @@ public class DiplomaResponseDto
 
     public DateTime GraduationDate{ get; set; } = DateTime.Now.Date;
     public required string StudentName { get; set; }
-    public required Guid BootcampGuidId {get; set;}
+    public required BootcampInDiplomaDto Bootcamp {get; set;}
 }
