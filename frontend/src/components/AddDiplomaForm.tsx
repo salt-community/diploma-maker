@@ -7,11 +7,8 @@ type FormData = {
 };
 
 type Props = {
+    // updateStudentNames: (names: string) => void;
     SetFormInfo: (data: any) => void;
-}
-
-type Props = {
-    updateStudentNames: (names: string) => void;
 }
 
 export default function AddDiplomaForm({SetFormInfo}: Props){
