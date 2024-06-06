@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import AddDeplomaForm from "../components/AddDiplomaForm";
-import PDFGenerator from "../components/PDFGenerator";
+import AddDiplomaForm from "../components/AddDiplomaForm";
 import { Template, checkTemplate } from "@pdfme/common";
 import { getTemplate } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
@@ -13,6 +12,12 @@ import {
 } from "../util/helper";
 
 type Mode = "form" | "viewer";
+
+type SaltData = {
+  classname: string;
+  datebootcamp: string;
+  names: string;
+};
 
 const initTemplate = () => {
   let template: Template = getTemplate();
@@ -30,7 +35,7 @@ const initTemplate = () => {
 };
 
 export default function DiplimaMaking(){
-    const [studentNames, setStudentNames] = useState<string[]>([]);
+    const [SaltInfo, setSaltInfo] = useState<SaltData>();
 
     const uiRef = useRef<HTMLDivElement | null>(null);
     const ui = useRef<Form | Viewer | null>(null);
@@ -71,8 +76,8 @@ export default function DiplimaMaking(){
       };
     }, [uiRef, mode]);
 
-    const UpdateStudentNames = (names: string[]) => {
-        setStudentNames(names);
+    const UpdateSaltInfo = (data: SaltData) => {
+        setSaltInfo(data);
     }
 
     const onChangeMode = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,7 +133,7 @@ export default function DiplimaMaking(){
               style={{ width: "100%", height: `calc(100vh - 68px)` }}
             />
           </div>
-          <AddDeplomaForm updateStudentNames = {UpdateStudentNames}/>
+          <AddDiplomaForm SetFormInfo = {UpdateSaltInfo}/>
         </>
     )
 }

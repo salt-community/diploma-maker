@@ -1,12 +1,22 @@
-import { useForm, SubmitHandler, FieldValues } from "react-hook-form"
+import { useForm, FieldValues } from "react-hook-form"
+
+type FormData = {
+    classname: string;
+    datebootcamp: string;
+    names: string;
+};
+
+type Props = {
+    SetFormInfo: (data: any) => void;
+}
 
 
-export default function AddDeplomaForm({updateStudentNames}: Props){
-    const {register, handleSubmit} = useForm();
+export default function AddDiplomaForm({SetFormInfo}: Props){
+    const {register, handleSubmit} = useForm<FormData>();
 
     function submitAndMakePDF(data: FieldValues){
-        console.log(data.names);
-        updateStudentNames(data.names);
+        console.log(data);
+        SetFormInfo(data);
     }
 
     return (
@@ -17,7 +27,7 @@ export default function AddDeplomaForm({updateStudentNames}: Props){
                 <option value="java-autumn-2023">Java Autumn 2023</option>
                 <option value="js-spring-2024">JavaScript Spring 2024</option>
             </select>
-            <input {...register("date-of-bootcamp")} type="date" />
+            <input {...register("datebootcamp")} type="date" />
             <textarea {...register("names")} />
             <button>Choose</button>
             <input type="submit" value="Generate"/>
@@ -26,6 +36,3 @@ export default function AddDeplomaForm({updateStudentNames}: Props){
     )
 }
 
-type Props = {
-    updateStudentNames: (names: string[]) => void;
-}
