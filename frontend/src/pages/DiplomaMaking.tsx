@@ -23,7 +23,7 @@ const initTemplates = (studentNames: string[]): Template[] => {
 
       checkTemplate(templateJson);
       template = templateJson as Template;
-      // template.sampledata[0].namecopy2 = studentName;
+      template.sampledata[0].namecopy2 = studentName;
 
     } catch {
       localStorage.removeItem(`template_${idx}`);
@@ -89,6 +89,7 @@ export const DiplomaMaking = () => {
     }, [uiRef, displayMode, currentTemplateIndex, templates]);
 
     const updateStudentNamesHandler = (input: string) => {
+      
       if(input == ""){
         setStudentNames(["Xinnan Luo"]);
         return;
