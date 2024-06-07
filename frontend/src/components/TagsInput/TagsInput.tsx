@@ -1,4 +1,4 @@
-import { useState, FC, KeyboardEvent } from 'react';
+import { useState, FC } from 'react';
 import './TagsInput.css';
 
 interface TagsInputProps {
@@ -28,7 +28,7 @@ const TagsInput: FC<TagsInputProps> = (props) => {
         className="taginputbox"
         type="text"
         onKeyUp={event => event.key === "Enter" ? addTags(event) : null}
-        placeholder="Press enter to add tags"
+        placeholder="Press enter to add name"
       />
       <ul id="tags">
         {tags.map((tag, index) => (
