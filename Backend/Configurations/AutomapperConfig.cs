@@ -11,5 +11,6 @@ public class AutomapperConfig : Profile
         CreateMap<BootcampInDiplomaDto, Bootcamp>().ReverseMap();
         CreateMap<DiplomaRequestDto, Diploma>().ReverseMap();
         CreateMap<DiplomaResponseDto, Diploma>().ReverseMap();
+        CreateMap<DiplomaInBootcampDto, Diploma>().ReverseMap();
     }
 }

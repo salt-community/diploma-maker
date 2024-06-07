@@ -7,5 +7,5 @@ public class BootcampResponseDto
     public required string Name { get; set; }
     public DateTime StartDate{ get; set; } = DateTime.Now.Date;
 
-    public List<DiplomaResponseDto> Diplomas { get; set; } = [];
+    public List<DiplomaInBootcampDto> Diplomas { get; set; } = [];
 }
