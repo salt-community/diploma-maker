@@ -7,15 +7,16 @@ type FormData = {
 };
 
 type Props = {
-    // updateStudentNames: (names: string) => void;
+    updateStudentNames: (names: string) => void;
     SetFormInfo: (data: any) => void;
 }
 
-export default function AddDiplomaForm({SetFormInfo}: Props){
+export default function AddDiplomaForm({updateStudentNames, SetFormInfo}: Props){
     const {register, handleSubmit} = useForm<FormData>();
 
     function submitAndMakePDF(data: FieldValues){
-        console.log(data);
+        console.log(data.names);
+        updateStudentNames(data.names);
         SetFormInfo(data);
     }
 
@@ -29,7 +30,7 @@ export default function AddDiplomaForm({SetFormInfo}: Props){
             </select>
             <input {...register("datebootcamp")} type="date" />
             <textarea {...register("names")} />
-            <button>Apply Names</button>
+            <button onClick={(e) => submitAndMakePDF(e)}>Apply Names</button>
         </form>
         </> 
     )
