@@ -48,7 +48,7 @@ public class DiplomaController : ControllerBase
     }
 
     // GET: api/Diploma/David
-    [HttpGet("{keyword}")]
+    [HttpGet(" ")]
     public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomaByKeyword(string keyword)
     {
         var diplomas = await _service.GetDiplomasByKeyword(keyword);
