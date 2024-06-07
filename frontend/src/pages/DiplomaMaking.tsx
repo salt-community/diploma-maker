@@ -190,9 +190,9 @@ export default function DiplimaMaking(){
     }
 
     return (
-      <div className="flex w-full h-screen justify-between">
-        <section className="flex-1 flex flex-col">
-          <header className="flex items-center justify-between mb-4">
+      <div className="flex w-full h-screen justify-between mt-2">
+        <section className="flex-1 flex flex-col justify-start gap-1 ml-5">
+          <header className="flex items-center justify-start gap-3 mb-2">
             <div>
               <input
                 type="radio"
@@ -211,9 +211,9 @@ export default function DiplimaMaking(){
               />
               <label htmlFor="viewer">Viewer</label>
             </div>
-            <button onClick={generatePDFHandler}>Generate PDF</button>
-            <button onClick={generateCombinedPDFHandler}>Generate PDFs</button>
-            <button onClick={saveInputsHandler}>Save Changes</button>
+            <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generatePDFHandler}>Generate PDF</button>
+            <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generateCombinedPDFHandler}>Generate PDFs</button>
+            <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={saveInputsHandler}>Save Changes</button>
           </header>
           <div
             ref={uiRef}

@@ -1,9 +1,9 @@
 import { useForm, FieldValues } from "react-hook-form";
 
 type FormData = {
-    classname: string;
-    datebootcamp: string;
-    names: string[];
+  classname: string;
+  datebootcamp: string;
+  names: string;
 };
 
 type Props = {
@@ -13,16 +13,10 @@ type Props = {
 export default function AddDiplomaForm({ SetFormInfo }: Props) {
   const { register, handleSubmit } = useForm<FormData>();
 
-    function submitAndMakePDF(data: FieldValues){
-        console.log(data.names);
-        const formData: FormData = {
-            classname: data.classname,
-            datebootcamp: data.datebootcamp,
-            names: data.names.split('\n').map(name => name.trim()).filter(name => name !== "")
-        }
-        console.log(formData);
-        SetFormInfo(formData);
-    }
+  function submitAndMakePDF(data: FieldValues) {
+    console.log(data);
+    SetFormInfo(data);
+  }
 
   return (
     <form
@@ -60,7 +54,7 @@ export default function AddDiplomaForm({ SetFormInfo }: Props) {
 
       <div>
         <label htmlFor="names" className="block text-sm font-medium text-gray-700">
-          Student Names
+          Students Names
         </label>
         <textarea
           id="names"
