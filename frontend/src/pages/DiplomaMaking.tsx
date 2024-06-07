@@ -14,8 +14,14 @@ import AddDiplomaForm from "../components/AddDiplomaForm";
 type SaltData = {
   classname: string;
   datebootcamp: string;
-  names: string;
+  names: string[];
 };
+
+const saltInitData = {
+  classname: ".Net Fullstack",
+  datebootcamp: "2024-06-08",
+  names: ["Xinnan Luo"]
+}
 
 // const initTemplate = () => {
 //   let template: Template = getTemplate();
@@ -32,19 +38,23 @@ type SaltData = {
 //   return template;
 // };
 
-const initTemplates = (studentNames: string[]): Template[] => {
-  return studentNames.map((studentName, idx) => {
-    let template: Template = getTemplate(); 
+const initTemplates = (saltData: SaltData): Template[] => {
+  return saltData.names.map((studentName, idx) => {
+    let template: Template = getTemplate();
     try {
       const templateString = localStorage.getItem(`template_${idx}`);
-
       const templateJson = templateString
         ? JSON.parse(templateString)
         : getTemplate();
 
       checkTemplate(templateJson);
       template = templateJson as Template;
-      template.sampledata[0].name = studentName;
+      // @ts-ignore
+      template.sampledata[0] = {
+        name: studentName,
+        "course-date": `has successfully completed\nthe ${saltData.classname} Bootcamp of ${saltData.datebootcamp} at School of Applied Technology.`,
+        intro: "This certifies that\n",
+      };
 
     } catch {
       localStorage.removeItem(`template_${idx}`);
@@ -55,22 +65,18 @@ const initTemplates = (studentNames: string[]): Template[] => {
 };
 
 export default function DiplimaMaking(){
-    const [SaltInfo, setSaltInfo] = useState<SaltData>();
-    // const [studentNames, setStudentNames] = useState<string[]>([]);
+    const [SaltInfo, setSaltInfo] = useState<SaltData>(saltInitData);
     const [displayMode, setDisplayMode] = useState<displayMode>("form");
-    const [studentNames, setStudentNames] = useState<string[]>([
-      "Xinnan Luo",
-    ]);
-    const [templates, setTemplates] = useState<Template[]>(initTemplates(studentNames));
+    const [templates, setTemplates] = useState<Template[]>(initTemplates(SaltInfo));
     const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
+    
 
     const uiRef = useRef<HTMLDivElement | null>(null);
-    const ui = useRef<Form | Viewer | null>(null);
     const uiInstance = useRef<Form | Viewer | null>(null);
 
     useEffect(() => {
-      setTemplates(initTemplates(studentNames));
-    }, [studentNames]);
+      setTemplates(initTemplates(SaltInfo));
+    }, [SaltInfo]);
 
     useEffect(() => {
       const template: Template = templates[currentTemplateIndex];
@@ -94,7 +100,7 @@ export default function DiplimaMaking(){
           }
           uiInstance.current = new (displayMode === "form" ? Form : Viewer)({
             domContainer: uiRef.current,
-            template, // <-- Current active Template Loads in here
+            template,
             // @ts-ignore
             inputs,
             options: { font },
@@ -141,16 +147,6 @@ export default function DiplimaMaking(){
     const UpdateSaltInfo = (data: SaltData) => {
         setSaltInfo(data);
     }
-
-    const updateStudentNamesHandler = (input: string) => {
-      
-      if(input == ""){
-        setStudentNames(["Xinnan Luo"]);
-        return;
-      }
-      const names = input.split('\n').map(name => name.trim()).filter(name => name !== "");
-      setStudentNames(names);
-    };
 
     const changeDisplayModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value as displayMode;
@@ -239,10 +235,7 @@ export default function DiplimaMaking(){
             </div>
           </section>
           <section>
-            <AddDiplomaForm updateStudentNames={updateStudentNamesHandler} SetFormInfo={UpdateSaltInfo}/>
-            <p>{SaltInfo?.classname}</p>
-            <p>{SaltInfo?.datebootcamp}</p>
-            <p>{SaltInfo?.names}</p>
+            <AddDiplomaForm SetFormInfo={UpdateSaltInfo}/>
           </section>
         </>
     )
