@@ -31,7 +31,7 @@ const TagsInput = ({selectedTags}: Props) => {
         className="taginputbox"
         type="text"
         onKeyDown={addTags}
-        placeholder="Press enter to add tags"
+        placeholder="Press enter to add name"
       />
       <ul id="tags">
         {currentTags.map((tag, index) => (
