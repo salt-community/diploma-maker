@@ -3,21 +3,21 @@ export type displayMode = "form" | "viewer";
 // diplomas
 
 export type DiplomaRequest = {
-    id: string;
+    guidId: string;
     graduationDate: Date;
     studentName: string;
     bootcampId: string;
 }
 
 export type DiplomaResponse = {
-    id: string;
+    guidId: string;
     graduationDate: Date;
     studentName: string;
     bootcamp: BootcampInDiploma;
 }
 
 export type DiplomaInBootcamp = {
-    id: string;
+    guidId: string;
     graduationDate: Date;
     studentName: string;
 }
@@ -25,17 +25,17 @@ export type DiplomaInBootcamp = {
 // bootcamps
 
 export type BootcampInDiploma = {
-    id: string;
+    guidId: string;
     name: string;
     startDate: Date;
 }
 export type BootcampRequest = {
-    id: string;
+    guidId: string;
     name: string;
     startDate: Date;
 }
 export type BootcampResponse = {
-    id: string;
+    guidId: string;
     name: string;
     startDate: Date;
     diplomas: DiplomaInBootcamp;
