@@ -1,24 +1,23 @@
-import { useState } from 'react';
+import { useState, FC, KeyboardEvent } from 'react';
 import './TagsInput.css';
 
-type Props = {
-  tags: string[];
+interface TagsInputProps {
   selectedTags: (tags: string[]) => void;
 }
 
-const TagsInput = ({tags, selectedTags}: Props) => {
-  const [currentTags, setCurrentTags] = useState<string[]>(tags);
+const TagsInput: FC<TagsInputProps> = (props) => {
+  const [tags, setTags] = useState<string[]>([]);
 
   const removeTags = (indexToRemove: number): void => {
-    setCurrentTags([...currentTags.filter((_, index) => index !== indexToRemove)]);
+    setTags([...tags.filter((_, index) => index !== indexToRemove)]);
   };
 
   const addTags = (event: React.KeyboardEvent<HTMLInputElement>): void => {
     const target = event.target as HTMLInputElement;
     if (target.value !== "") {
-      const newTags = [...currentTags, target.value];
-      setCurrentTags(newTags);
-      selectedTags(newTags);
+      const newTags = [...tags, target.value];
+      setTags(newTags);
+      props.selectedTags(newTags);
       target.value = "";
     }
   };
@@ -32,7 +31,7 @@ const TagsInput = ({tags, selectedTags}: Props) => {
         placeholder="Press enter to add tags"
       />
       <ul id="tags">
-        {currentTags.map((tag, index) => (
+        {tags.map((tag, index) => (
           <li onClick={() => removeTags(index)} key={index} className="tag">
             <span className="tag-title">{tag}</span>
             <svg className="tag-close-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
