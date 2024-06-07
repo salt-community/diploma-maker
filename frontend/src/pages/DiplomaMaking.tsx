@@ -51,9 +51,9 @@ const initTemplates = (saltData: SaltData): Template[] => {
       template = templateJson as Template;
       // @ts-ignore
       template.sampledata[0] = {
-        name: studentName,
+        "name": studentName,
         "course-date": `has successfully completed\nthe ${saltData.classname} Bootcamp of ${saltData.datebootcamp} at School of Applied Technology.`,
-        intro: "This certifies that\n",
+        "intro": "This certifies that\n",
       };
 
     } catch {
@@ -211,7 +211,6 @@ export default function DiplimaMaking(){
               />
               <label htmlFor="viewer">Viewer</label>
             </div>
-            {/* Optional buttons can be added here */}
             <button onClick={generatePDFHandler}>Generate PDF</button>
             <button onClick={generateCombinedPDFHandler}>Generate PDFs</button>
             <button onClick={saveInputsHandler}>Save Changes</button>
@@ -220,7 +219,6 @@ export default function DiplimaMaking(){
             ref={uiRef}
             style={{ width: "100%", height: "calc(95vh - 68px)" }}
           />
-          {/* Optional navigation buttons can be added here */}
           <div className="flex justify-center mt-4">
             <button onClick={prevTemplateInstanceHandler}>Previous</button>
             <span className="mx-4">

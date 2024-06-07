@@ -15,7 +15,6 @@ export default function AddDiplomaForm({ SetFormInfo }: Props) {
 
     function submitAndMakePDF(data: FieldValues){
         console.log(data.names);
-        // updateStudentNames(data.names);
         const formData: FormData = {
             classname: data.classname,
             datebootcamp: data.datebootcamp,
