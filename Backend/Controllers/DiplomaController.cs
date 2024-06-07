@@ -25,7 +25,7 @@ public class DiplomaController : ControllerBase
         {
             var diploma = await _service.PostDiploma(requestDto);
             var responseDto = _mapper.Map<DiplomaResponseDto>(diploma);
-            return CreatedAtAction(nameof(GetDiplomas), new { id = diploma.Id }, diploma);
+            return CreatedAtAction(nameof(GetDiplomaByKeyword), new { id = diploma.Id }, diploma);
         }
         catch(BootcampNotFoundException)
         {
@@ -37,18 +37,18 @@ public class DiplomaController : ControllerBase
         }
     }
 
-    // GET: api/Diploma
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomas()
-    {
+    // // GET: api/Diploma
+    // [HttpGet]
+    // public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomas()
+    // {
 
-        var diplomas = await _service.GetDiplomas();
-        var diplomaResponseDtos = _mapper.Map<List<DiplomaResponseDto>>(diplomas);
-        return Ok(diplomaResponseDtos);
-    }
+    //     var diplomas = await _service.GetDiplomas();
+    //     var diplomaResponseDtos = _mapper.Map<List<DiplomaResponseDto>>(diplomas);
+    //     return Ok(diplomaResponseDtos);
+    // }
 
     // GET: api/Diploma/David
-    [HttpGet("{keyword}")]
+    [HttpGet(" ")]
     public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomaByKeyword(string keyword)
     {
         var diplomas = await _service.GetDiplomasByKeyword(keyword);
