@@ -6,7 +6,7 @@ export type DiplomaRequest = {
     // guidId: string;
     graduationDate?: Date;
     studentName: string;
-    bootcampId: string;
+    bootcampGuidId: string;
 }
 
 export type DiplomaResponse = {
