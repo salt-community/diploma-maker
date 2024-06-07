@@ -1,24 +1,27 @@
-import { useState, FC } from 'react';
+import { useState } from 'react';
 import './TagsInput.css';
 
-interface TagsInputProps {
+type Props = {
   selectedTags: (tags: string[]) => void;
 }
 
-const TagsInput: FC<TagsInputProps> = (props) => {
-  const [tags, setTags] = useState<string[]>([]);
+const TagsInput = ({selectedTags}: Props) => {
+  const [currentTags, setCurrentTags] = useState<string[]>([]);
 
   const removeTags = (indexToRemove: number): void => {
-    setTags([...tags.filter((_, index) => index !== indexToRemove)]);
+    const newTags = currentTags.filter((_, index) => index !== indexToRemove);
+    setCurrentTags(newTags);
+    selectedTags(newTags);
   };
 
   const addTags = (event: React.KeyboardEvent<HTMLInputElement>): void => {
     const target = event.target as HTMLInputElement;
-    if (target.value !== "") {
-      const newTags = [...tags, target.value];
-      setTags(newTags);
-      props.selectedTags(newTags);
+    if (event.key === 'Enter' && target.value !== "") {
+      const newTags = [...currentTags, target.value];
+      setCurrentTags(newTags);
+      selectedTags(newTags);
       target.value = "";
+      event.preventDefault();
     }
   };
 
@@ -27,11 +30,11 @@ const TagsInput: FC<TagsInputProps> = (props) => {
       <input
         className="taginputbox"
         type="text"
-        onKeyUp={event => event.key === "Enter" ? addTags(event) : null}
-        placeholder="Press enter to add name"
+        onKeyDown={addTags}
+        placeholder="Press enter to add tags"
       />
       <ul id="tags">
-        {tags.map((tag, index) => (
+        {currentTags.map((tag, index) => (
           <li onClick={() => removeTags(index)} key={index} className="tag">
             <span className="tag-title">{tag}</span>
             <svg className="tag-close-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
@@ -42,6 +45,6 @@ const TagsInput: FC<TagsInputProps> = (props) => {
       </ul>
     </div>
   );
-}
+};
 
 export default TagsInput;

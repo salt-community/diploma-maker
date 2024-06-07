@@ -22,6 +22,7 @@ export default function AddDiplomaForm({ SetFormInfo }: Props) {
             datebootcamp: data.datebootcamp,
             names: names
         }
+        console.log(formData.names);
         SetFormInfo(formData);
     }
 
@@ -77,7 +78,7 @@ export default function AddDiplomaForm({ SetFormInfo }: Props) {
             className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           /> */}
           <TagsInput 
-            selectedTags={(names: string[]) => setNames(names)}  
+            selectedTags={(names: string[]) => setNames(names)} 
           />
         </div>
   
