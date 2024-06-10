@@ -10,14 +10,14 @@ export async function getDiplomasByKeyword(keyword: string): Promise<DiplomaResp
     return result;
 }
 
-// export async function getDiplomaById(guidId: string): Promise<DiplomaResponse> {
-//     const response = await fetch(`http://localhost:5258/api/diploma/${guidId}`);
-//     if (!response.ok) {
-//         throw new Error('Failed to get diploma!');
-//     }
-//     const result = await response.json() as DiplomaResponse;
-//     return result;
-// }
+export async function getDiplomaById(guidId: string): Promise<DiplomaResponse> {
+    const response = await fetch(`http://localhost:5258/api/diploma/${guidId}`);
+    if (!response.ok) {
+        throw new Error('Failed to get diploma!');
+    }
+    const result = await response.json() as DiplomaResponse;
+    return result;
+}
 
 export async function postDiploma(diplomaRequest: DiplomaRequest): Promise<void> {
     const formattedRequest = {

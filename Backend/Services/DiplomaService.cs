@@ -57,6 +57,15 @@ public class DiplomaService
         return diplomas;
     }
 
+    public async Task<Diploma?> GetDiplomaByGuidId(string guidId)
+    {
+        var diploma = await _context.Diploma
+            .Include(d => d.Bootcamp)
+            .FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId);
+        return diploma;
+    }
+
+
 
     public async Task<Diploma> DeleteDiplomaByGuidId(string guidId)
     {
