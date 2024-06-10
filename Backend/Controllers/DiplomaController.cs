@@ -37,15 +37,15 @@ public class DiplomaController : ControllerBase
         }
     }
 
-    // // GET: api/Diploma
-    // [HttpGet]
-    // public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomas()
-    // {
+    // GET: api/Diploma
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomas()
+    {
 
-    //     var diplomas = await _service.GetDiplomas();
-    //     var diplomaResponseDtos = _mapper.Map<List<DiplomaResponseDto>>(diplomas);
-    //     return Ok(diplomaResponseDtos);
-    // }
+        var diplomas = await _service.GetDiplomas();
+        var diplomaResponseDtos = _mapper.Map<List<DiplomaResponseDto>>(diplomas);
+        return Ok(diplomaResponseDtos);
+    }
 
     // GET: api/Diploma/David
     [HttpGet(" ")]
