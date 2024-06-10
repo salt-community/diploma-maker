@@ -1,11 +1,11 @@
 import {Routes, Route, } from "react-router-dom";
-import DiplimaMaking from './pages/DiplomaMaking';
+import DiplomaMaking from './pages/DiplomaMaking';
 
 function App() {
   return (
     
       <Routes>
-        <Route path="/" element={<DiplimaMaking/>} />
+        <Route path="/" element={<DiplomaMaking/>} />
       </Routes>
   );
 }

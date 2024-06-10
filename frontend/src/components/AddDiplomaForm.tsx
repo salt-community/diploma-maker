@@ -3,9 +3,9 @@ import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
 
 type FormData = {
-    classname: string;
-    datebootcamp: string;
-    names: string[];
+  classname: string;
+  datebootcamp: string;
+  names: string;
 };
 
 type Props = {
