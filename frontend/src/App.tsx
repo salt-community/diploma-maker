@@ -1,6 +1,6 @@
 import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/DiplomaMaking';
-import { VertificationPage } from "./pages/VertificationPage";
+import { VertificationPage } from "./pages/VerificationPage";
 
 function App() {
   return (
