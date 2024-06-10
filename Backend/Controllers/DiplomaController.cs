@@ -39,7 +39,7 @@ public class DiplomaController : ControllerBase
 
     // GET: api/Diploma
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomas()
+    public async Task<ActionResult<IEnumerable<DiplomaResponseDto>>> GetDiplomas()
     {
 
         var diplomas = await _service.GetDiplomas();
@@ -49,11 +49,23 @@ public class DiplomaController : ControllerBase
 
     // GET: api/Diploma/David
     [HttpGet(" ")]
-    public async Task<ActionResult<IEnumerable<Diploma>>> GetDiplomaByKeyword(string keyword)
+    public async Task<ActionResult<IEnumerable<DiplomaResponseDto>>> GetDiplomaByKeyword(string keyword)
     {
         var diplomas = await _service.GetDiplomasByKeyword(keyword);
         var diplomaResponseDtos = _mapper.Map<List<DiplomaResponseDto>>(diplomas);
         return Ok(diplomaResponseDtos);
+    }
+
+    // GET: api/Diploma/5
+    [HttpGet("{guidId}")]
+    public async Task<ActionResult<DiplomaResponseDto>> GetDiplomaByGuidId(string guidId)
+    {
+        var diploma = await _service.GetDiplomaByGuidId(guidId);
+        if (diploma == null)
+            return NotFound();
+        var responseDto = _mapper.Map<DiplomaResponseDto>(diploma);
+
+        return responseDto;
     }
 
     // DELETE: api/Diploma/5
