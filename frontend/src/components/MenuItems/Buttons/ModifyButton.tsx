@@ -1,3 +1,5 @@
+import './ModifyButton.css'
+
 type Props = {
     classNameOverride?: string,
     text: string

@@ -1,3 +1,5 @@
+import './RemoveButton.css'
+
 type Props = {
     classNameOverride?: string,
     text: string

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import './OverviewPage.css';
 import { overviewPageItemsMockData } from '../Data/Mockdata';
-import { ModifyButton } from '../components/MenuItems/ModifyButton';
-import { RemoveButton } from '../components/MenuItems/RemoveButton';
+import { ModifyButton } from '../components/MenuItems/Buttons/ModifyButton';
+import { RemoveButton } from '../components/MenuItems/Buttons/RemoveButton';
+import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 
 export const OverviewPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -86,13 +87,17 @@ export const OverviewPage = () => {
                     </section>
                     <section className="overview-page__sidebar-menu-section">
                         <h3>Bootcamps</h3>
-                        <div className="overview-page__select-container select-wrapper">
-                            <select className="overview-page__select-box">
-                                <option value=".Net Fullstack">Dotnet</option>
-                                <option value="Java Fullstack">Java</option>
-                                <option value="Javascript Fullstack">JavaScript</option>
-                            </select>
-                        </div>
+                        <SelectOptions 
+                            containerClassOverride='overview-page__select-container'
+                            selectClassOverride='overview-page__select-box'
+                            options={
+                                [
+                                    { value: '.Net Fullstack', label: '.Net Fullstack 2023' },
+                                    { value: 'Java Fullstack', label: 'Java Fullstack 2024' },
+                                    { value: 'Javascript Fullstack', label: 'Javascript Fullstack 2024' }
+                                ]
+                            }
+                        />
                     </section>
                 </div>
             </section>
