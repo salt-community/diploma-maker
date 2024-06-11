@@ -2,8 +2,9 @@ import { useForm, FieldValues } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
 import { BootcampResponse } from "../util/types";
-import { deleteBootcampById } from "../services/bootcampService";
-import { EditText, EditTextarea } from 'react-edit-text';
+import BootcampManagement from "./BootcampManagement";
+
+
 
 type FormData = {
   classname: string;
@@ -74,16 +75,7 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
             Manage
           </button>
           {(isManageBootcamp && bootcamps) &&(
-            <div className="group relative">
-              {
-                bootcamps!.map((bootcamp, index) => 
-                  <p className="block text-lg font-medium text-gray-700">
-                    <EditText defaultValue={bootcamp.name}/>
-                    <button type="button" onClick={() => deleteBootcamp(index)} className="left-full ml-2 text-red-500 ">delete</button>
-                </p>
-                )
-              }
-          </div>
+            <BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp}/>
           )}
         </div>
   
