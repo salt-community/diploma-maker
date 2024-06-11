@@ -118,32 +118,6 @@ export default function DiplimaMaking(){
       };
     }, [uiRef, displayMode, currentTemplateIndex, templates]);
 
-    // useEffect(() => {
-    //   const template = initTemplate();
-    //   let inputs = SaltInfo ? [{
-    //       "course-date": `has successfully completed\nthe ${SaltInfo.classname} Bootcamp of ${SaltInfo.datebootcamp} at School of Applied Technology.`,
-    //       "intro": "This certifies that\n",
-    //       "name": `${SaltInfo.names}`,
-    //   }] : template.sampledata ;
-      
-    //   getFontsData().then((font) => {
-    //     if (uiRef.current) {
-    //       ui.current = new (displayMode === "form" ? Form : Viewer)({
-    //         domContainer: uiRef.current,
-    //         template,
-    //         inputs,
-    //         options: { font },
-    //         plugins: getPlugins(),
-    //       });
-    //     }
-    //   });
-    //   return () => {
-    //     if (ui.current) {
-    //       ui.current.destroy();
-    //     }
-    //   };
-    // }, [uiRef, displayMode, SaltInfo]);
-
     const UpdateSaltInfo = (data: SaltData) => {
         setSaltInfo(data);
     }
