@@ -5,7 +5,7 @@ import { ModifyButton } from '../components/MenuItems/Buttons/ModifyButton';
 import { RemoveButton } from '../components/MenuItems/Buttons/RemoveButton';
 import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
-import { PaginationFooter } from '../components/MenuItems/PaginationFooter';
+import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
 
 export const OverviewPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -49,7 +49,7 @@ export const OverviewPage = () => {
                         </button>
                     ))}
                 </div>
-                <PaginationFooter 
+                <PaginationMenu 
                     containerClassOverride='overview-page__footer'
                     buttonClassOverride='overview-page__pagination-button'
                     textContainerClassOverride='overview-page__pagination-info'

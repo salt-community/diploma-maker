@@ -1,4 +1,4 @@
-import './PaginationFooter.css'
+import './PaginationMenu.css'
 
 type Props = {
     containerClassOverride?: string,
@@ -10,7 +10,7 @@ type Props = {
     handleNextPage: () => void
 };
 
-export const PaginationFooter = ({ currentPage, totalPages, handlePrevPage, handleNextPage, containerClassOverride, buttonClassOverride, textContainerClassOverride }: Props) => {
+export const PaginationMenu = ({ currentPage, totalPages, handlePrevPage, handleNextPage, containerClassOverride, buttonClassOverride, textContainerClassOverride }: Props) => {
     return (
         <footer className={containerClassOverride}>
             <button className={"iconbtn " + buttonClassOverride} onClick={handlePrevPage}>
