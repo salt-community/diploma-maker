@@ -1,31 +1,15 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './OverviewPage.css';
+import { overviewPageItemsMockData } from '../Data/Mockdata';
+
+
 
 export const OverviewPage = () => {
-    const itemsPerPage = 8
-    const items = [
-        { title: 'Li lau', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'John Doe', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Jane Smith', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Alice Johnson', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Robert Brown', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Emily Davis', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Michael Wilson', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Sarah Lee', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'David Martin', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Linda Thompson', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'James Anderson', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Patricia Harris', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Charles Clark', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Barbara Lewis', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Christopher Walker', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Jessica Hall', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Daniel Robinson', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
-        { title: 'Karen Young', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" }
-    ];
-
     const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = Math.ceil(items.length / itemsPerPage);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const itemsPerPage = 8;
+    const startIndex = (currentPage - 1) * itemsPerPage;
 
     const handlePrevPage = () => {
         setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
@@ -34,9 +18,18 @@ export const OverviewPage = () => {
     const handleNextPage = () => {
         setCurrentPage(prev => (prev < totalPages ? prev + 1 : prev));
     };
+    
+    const items = overviewPageItemsMockData;
+    const visibleItems = items.filter(item => 
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
+    const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
 
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const selectedItems = items.slice(startIndex, startIndex + itemsPerPage);
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+        setCurrentPage(1);
+    };
 
     return (
         <main className="overview-page">
@@ -75,7 +68,13 @@ export const OverviewPage = () => {
                     <section className="overview-page__sidebar-menu-section">
                         <h3>Filtering</h3>
                         <div className="overview-page__header input-wrapper">
-                            <input className="overview-page__search-input" type="text" placeholder="search" />
+                            <input 
+                                className="overview-page__search-input" 
+                                type="text" 
+                                placeholder="search" 
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                            />
                             <svg className='input-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
