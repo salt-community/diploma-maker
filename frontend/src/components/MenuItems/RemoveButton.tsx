@@ -3,7 +3,7 @@ type Props = {
     text: string
 }
 
-const RemoveButton = ({classNameOverride, text}: Props) => {
+export const RemoveButton = ({classNameOverride, text}: Props) => {
     return (
         <button className={"btn remove-btn " + classNameOverride}>
             <span className="btn-title">{text}</span>
@@ -13,5 +13,3 @@ const RemoveButton = ({classNameOverride, text}: Props) => {
         </button>
     );
 };
-
-export default RemoveButton;
