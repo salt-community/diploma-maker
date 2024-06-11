@@ -3,6 +3,7 @@ import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
 import { BootcampResponse } from "../util/types";
 import { deleteBootcampById } from "../services/bootcampService";
+import { EditText, EditTextarea } from 'react-edit-text';
 
 type FormData = {
   classname: string;
@@ -77,9 +78,8 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
               {
                 bootcamps!.map((bootcamp, index) => 
                   <p className="block text-lg font-medium text-gray-700">
-                    {bootcamp.name}
+                    <EditText defaultValue={bootcamp.name}/>
                     <button type="button" onClick={() => deleteBootcamp(index)} className="left-full ml-2 text-red-500 ">delete</button>
-                    <button type="button" className="left-full ml-2 text-blue-500 ">edit</button>
                 </p>
                 )
               }
