@@ -1,7 +1,129 @@
 .overview-page{
     min-height: 100vh;
+    background-color: #2e2e38;
+
+    display: grid;
+    grid-template-columns: .7fr .3fr;
+    
+}
+
+.overview-page__listmodule{
+    position: relative;
+    padding: 3% 10% 5% 10%;
+    max-height: 90vh;
+}
+    .overview-page__listmodule-cardcontainer{
+        width: 100%;
+        height: 100%;
+
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: 1fr 1fr;
+        gap: 1rem;
+    }
+        .listmodule__item{
+            position: relative;
+            overflow: hidden;
+            border-radius: .5rem;
+            opacity: .9;
+            transition: all .25s ease-in-out;
+        }
+            .listmodule__item:hover{
+                filter: saturate(110%);
+                opacity: 1;
+                transition: all .25s ease-in-out;
+            }
+            .overview-page__item--title{
+                position: absolute;
+                left: 50%;
+                top: 60%;
+                transform: translateY(-50%) translateX(-50%);
+
+                font-size: .7rem;
+                color: #fff;
+                z-index: 1;
+            } 
+            .overview-page__item--bg{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+    .overview-page__footer{
+        position: absolute;
+        bottom: 1%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 22%;
+        max-width: 200px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+
+        color: #dddde6;
+    }
+        .overview-page__pagination-info{
+            background-color: #171722;
+            height: 2.5rem;
+            width: 6rem;
+            cursor: default;
+
+            font-size: .85rem;
+            font-family: inherit;
+            font-weight: 400;
+            border-radius: .5rem;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+.overview-page__sidebar{
+    padding: 7% 7% 0 0;
+    max-height: 90vh;
+}
+    .overview-page__sidebar-menu{
+        background-color: #171721;
+        width: 100%;
+        height: 100%;
+
+        border-radius: 1rem;
+    }
+        .overview-page__sidebar-menu-header{
+            padding: 5% 7%;
+
+            display: flex;
+            align-items: center;
+            gap: 1.3rem;
+
+            border-bottom: 1px solid #ababba5b;
+        }
+            .overview-page__sidebar-menu-header button{
+                color: #fffff1;
+                font-size: 1.6rem;
+                font-weight: 400;
+            }
+        .overview-page__sidebar-menu-section{
+            padding: 3% 7%;
+            min-height: fit-content;
+            border-bottom: 1px solid #ababba5b;
+        }
+            .overview-page__sidebar-menu-section h3{
+                color: #fffff1;
+                font-size: 1.1rem;
+                font-weight: 400;
+            }
+
+
+
+/* .overview-page{
+    min-height: 100vh;
     padding: 2% 0% 0% 0%;
-    background-color: #181823;
+    background-color: #2e2e38;
 
     display: grid;
     grid-template-columns: .30fr .70fr;
@@ -112,7 +234,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-            }
+            } */
 
 
 
@@ -213,7 +335,7 @@ button {
     align-items: center;
     width: 100%;
     max-width: 400px;
-    margin: 0.5rem 0.2rem;
+    margin: 0.5rem 0;
     box-sizing: border-box;
     position: relative;
 }
@@ -232,8 +354,8 @@ button {
 }
 
 .input-wrapper input:focus {
-    border-color: #373747;
-    background-color: #373747;
+    border-color: #20202a;
+    background-color: #20202a;
     color: #ffffff;
     outline: none;
 }
@@ -243,13 +365,13 @@ button {
     left: 1rem;
     width: 1.2rem;
     height: 1.2rem;
-    fill: currentColor;
+    stroke: blue;
     transition: fill 0.2s ease-in-out;
     pointer-events: none;
 }
 
 .input-wrapper:focus-within .input-icon {
-    fill: #000;
+    stroke: blue;
 }
 
 @media (min-width: 768px) {
@@ -308,16 +430,15 @@ button {
 .select-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
     width: 100%;
     max-width: 400px;
-    margin: 0.5rem 0.2rem;
+    margin: 0.5rem 0;
     box-sizing: border-box;
     position: relative;
 }
 
 .select-wrapper select {
-    width: 50%;
+    width: 100%;
     padding: 0.6em 1.2em;
     font-size: 1rem;
     font-family: inherit;
@@ -341,7 +462,7 @@ button {
 
 .select-wrapper::after {
     content: '▾'; /* Custom arrow */
-    width: 30%;
+    width: 5%;
     position: absolute;
     right: 1rem;
     pointer-events: none;
