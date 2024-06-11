@@ -22,6 +22,7 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
   const { register, handleSubmit } = useForm<FormData>();
   const [names, setNames] = useState<string[]>([]);
   const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false);
+  const[selectedBootcamp, setSelectedBootcamp] = useState<BootcampResponse>()
 
     const submitAndMakePDF = (data: FieldValues) => {
         const formData: FormData = {
@@ -79,7 +80,7 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
           )}
         </div>
   
-        <div>
+        <div className="dateofbootcamp">
           <label htmlFor="datebootcamp" className="block text-sm font-medium text-gray-700">
             Date of Bootcamp
           </label>
@@ -88,6 +89,20 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
             {...register("datebootcamp")}
             type="date"
             className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            defaultValue={"2024-01-01"}
+          />
+        </div>
+
+        <div className="dateofgraduation">
+          <label htmlFor="datebootcamp" className="block text-sm font-medium text-gray-700">
+            Date of Graduation
+          </label>
+          <input
+            id="datebootcamp"
+            {...register("datebootcamp")}
+            type="date"
+            className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            defaultValue={"2024-01-01"}
           />
         </div>
   
@@ -113,6 +128,9 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
             Apply
           </button>
         </div>
+        {/* {bootcamps &&
+          <p>{new Date(bootcamps[0].startDate).toLocaleDateString()}</p>
+        } */}
       </form>
     );
   }
