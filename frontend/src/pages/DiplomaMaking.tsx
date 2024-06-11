@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Template, checkTemplate } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
-import { displayMode } from "../util/types";
+import { BootcampResponse, displayMode } from "../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -10,7 +10,9 @@ import {
   generateCombinedPDF,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
+import { deleteBootcampById } from "../services/bootcampService";
 import { generate } from "@pdfme/generator";
+
 
 type SaltData = {
   classname: string;
@@ -24,7 +26,8 @@ const saltInitData: SaltData = {
   names: ["Xinnan Luo"]
 };
 
-export default function DiplomaMaking() {
+
+export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
   const [SaltInfo, setSaltInfo] = useState<SaltData>(saltInitData);
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
@@ -144,8 +147,9 @@ export default function DiplomaMaking() {
         </div>
       </section>
       <section className="flex-1 flex flex-col">
-        <AddDiplomaForm SetFormInfo={UpdateSaltInfo} />
+        <AddDiplomaForm SetFormInfo={UpdateSaltInfo} deleteBootcamp={deleteBootcamp} />
       </section>
     </div>
   );
 }
+
