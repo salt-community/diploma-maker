@@ -136,37 +136,3 @@
                 font-size: 1.1rem;
                 font-weight: 400;
             }
-
-
-.iconbtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    box-sizing: border-box;
-    border-radius: .5rem;
-    
-    color: white;
-    border: 1px solid transparent;
-    background-color: #171721;
-    
-    cursor: pointer;
-    transition: all .2s ease-in-out;
-}
-
-.iconbtn svg {
-    width: 1.2rem;
-    height: 1.2rem;
-    transition: fill .2s ease-in-out;
-}
-.iconbtn:hover svg{
-    transition: fill .2s ease-in-out;
-}
-
-.iconbtn:hover {
-    border-color: #fa633e;
-    background-color: #f6522b;
-    color: #000;
-    transition: all .2s ease-in-out;
-}

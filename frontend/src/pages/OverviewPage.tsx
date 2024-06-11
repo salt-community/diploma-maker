@@ -5,6 +5,7 @@ import { ModifyButton } from '../components/MenuItems/Buttons/ModifyButton';
 import { RemoveButton } from '../components/MenuItems/Buttons/RemoveButton';
 import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
+import { PaginationFooter } from '../components/MenuItems/PaginationFooter';
 
 export const OverviewPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -48,21 +49,15 @@ export const OverviewPage = () => {
                         </button>
                     ))}
                 </div>
-                <footer className="overview-page__footer">
-                    <button className="overview-page__pagination-button iconbtn" onClick={handlePrevPage}>
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 7L10 12L15 17" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                    </button>
-                    <span className="overview-page__pagination-info">
-                        Page {currentPage} of {totalPages}
-                    </span>
-                    <button className="overview-page__pagination-button iconbtn" onClick={handleNextPage}>
-                        <svg viewBox="0 0 24 24" style={{transform: 'rotate(180deg)'}} fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 7L10 12L15 17" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                    </button>
-                </footer>
+                <PaginationFooter 
+                    containerClassOverride='overview-page__footer'
+                    buttonClassOverride='overview-page__pagination-button'
+                    textContainerClassOverride='overview-page__pagination-info'
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    handleNextPage={handleNextPage}
+                    handlePrevPage={handlePrevPage}
+                />
             </section>
             <section className='overview-page__sidebar'>
                 <div className='overview-page__sidebar-menu'>
