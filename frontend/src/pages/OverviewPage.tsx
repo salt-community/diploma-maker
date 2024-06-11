@@ -1,75 +1,98 @@
+import { useState } from 'react';
 import './OverviewPage.css';
 
 export const OverviewPage = () => {
-    return(
+    const itemsPerPage = 8
+    const items = [
+        { title: 'Li lau', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'John Doe', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Jane Smith', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Alice Johnson', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Robert Brown', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Emily Davis', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Michael Wilson', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Sarah Lee', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'David Martin', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Linda Thompson', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'James Anderson', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Patricia Harris', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Charles Clark', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Barbara Lewis', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Christopher Walker', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Jessica Hall', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Daniel Robinson', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" },
+        { title: 'Karen Young', src: "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" }
+    ];
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = Math.ceil(items.length / itemsPerPage);
+
+    const handlePrevPage = () => {
+        setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
+    };
+
+    const handleNextPage = () => {
+        setCurrentPage(prev => (prev < totalPages ? prev + 1 : prev));
+    };
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const selectedItems = items.slice(startIndex, startIndex + itemsPerPage);
+
+    return (
         <main className="overview-page">
-            <header className="overview-page__header input-wrapper">
-                <input className="overview-page__search-input" type="text" placeholder="search" />
-                <svg className='input-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </header>
-            <section className="overview-page__select">
-                <h2 className="overview-page__section-title">Bootcamps</h2>
-                <div className="overview-page__select-container select-wrapper">
-                    <select className="overview-page__select-box">
-                        <option value=".Net Fullstack">Dotnet</option>
-                        <option value="Java Fullstack">Java</option>
-                        <option value="Javascript Fullstack">JavaScript</option>
-                    </select>
-                </div>
-            </section>
-            <section className="overview-page__browse">
-                <div className="overview-page__item-container">
-                    <article className="overview-page__item">
-                        <p className='overview-page__item--title'>Li lau</p>
-                        <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                    </article>
-                    <article className="overview-page__item">
-                        <p className='overview-page__item--title'>Luan karlsson</p>
-                        <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                    </article>
-                    <article className="overview-page__item">
-                        <p className='overview-page__item--title'>Willy Wonka</p>
-                        <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                    </article>
-                    <article className="overview-page__item">
-                        <p className='overview-page__item--title'>Tom Ryder</p>
-                        <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                    </article>
-                    <article className="overview-page__item">
-                        <p className='overview-page__item--title'>Page sage</p>
-                        <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                    </article>
-                    <article className="overview-page__item">
-                        <p className='overview-page__item--title'>Marco Pierre White</p>
-                        <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                    </article>
-                    <article className="overview-page__item">
-                        <p className='overview-page__item--title'>Junior JR</p>
-                        <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                    </article>
-                    <article className="overview-page__item">
-                        <p className='overview-page__item--title'>Tommy Lee</p>
-                        <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                    </article>
+            <section className='overview-page__listmodule'>
+                <div className='overview-page__listmodule-cardcontainer'>
+                    {selectedItems.map((item, index) => (
+                        <button key={index} className='listmodule__item'>
+                            <p className='overview-page__item--title'>{item.title}</p>
+                            <img className='overview-page__item--bg' src={item.src} alt={item.title} />
+                        </button>
+                    ))}
                 </div>
                 <footer className="overview-page__footer">
-                    <button className="overview-page__pagination-button iconbtn">
+                    <button className="overview-page__pagination-button iconbtn" onClick={handlePrevPage}>
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 7L10 12L15 17" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 7L10 12L15 17" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                     </button>
                     <span className="overview-page__pagination-info">
-                        Page 1 of 5
+                        Page {currentPage} of {totalPages}
                     </span>
-                    <button className="overview-page__pagination-button iconbtn">
+                    <button className="overview-page__pagination-button iconbtn" onClick={handleNextPage}>
                         <svg viewBox="0 0 24 24" style={{transform: 'rotate(180deg)'}} fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 7L10 12L15 17" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M15 7L10 12L15 17" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                     </button>
                 </footer>
             </section>
+            <section className='overview-page__sidebar'>
+                <div className='overview-page__sidebar-menu'>
+                    <header className="overview-page__sidebar-menu-header">
+                        <button>
+                            Browse
+                        </button>
+                    </header>
+                    <section className="overview-page__sidebar-menu-section">
+                        <h3>Filtering</h3>
+                        <div className="overview-page__header input-wrapper">
+                            <input className="overview-page__search-input" type="text" placeholder="search" />
+                            <svg className='input-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </div>
+                    </section>
+                    <section className="overview-page__sidebar-menu-section">
+                        <h3>Bootcamps</h3>
+                        <div className="overview-page__select-container select-wrapper">
+                            <select className="overview-page__select-box">
+                                <option value=".Net Fullstack">Dotnet</option>
+                                <option value="Java Fullstack">Java</option>
+                                <option value="Javascript Fullstack">JavaScript</option>
+                            </select>
+                        </div>
+                    </section>
+                </div>
+            </section>
         </main>
-    )
-}
+    );
+};
