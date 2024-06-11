@@ -6,7 +6,6 @@
     grid-template-columns: .7fr .3fr;
     
 }
-
 .overview-page__listmodule{
     position: relative;
     padding: 3% 10% 5% 10%;
@@ -70,7 +69,6 @@
                     visibility: visible;
                     transition: opacity 0.3s ease;
                 }
-
     .overview-page__footer{
         position: absolute;
         bottom: 1%;
@@ -140,53 +138,35 @@
             }
 
 
-
-.input-wrapper {
+.iconbtn {
     display: flex;
     align-items: center;
-    width: 100%;
-    max-width: 400px;
-    margin: 0.5rem 0;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
     box-sizing: border-box;
-    position: relative;
-}
-
-.input-wrapper input {
-    width: 100%;
-    padding: 0.6em 1.2em 0.6em 2.6em; /* Adjust padding for icon space */
-    font-size: 1rem;
-    font-family: inherit;
-    font-weight: 500;
-    border-radius: 3rem;
-    border: 1px solid transparent;
-    background-color: #20202a;
+    border-radius: .5rem;
+    
     color: white;
-    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+    background-color: #171721;
+    
+    cursor: pointer;
+    transition: all .2s ease-in-out;
 }
 
-.input-wrapper input:focus {
-    border-color: #20202a;
-    background-color: #20202a;
-    color: #ffffff;
-    outline: none;
-}
-
-.input-wrapper svg.input-icon {
-    position: absolute;
-    left: 1rem;
+.iconbtn svg {
     width: 1.2rem;
     height: 1.2rem;
-    stroke: blue;
-    transition: fill 0.2s ease-in-out;
-    pointer-events: none;
+    transition: fill .2s ease-in-out;
+}
+.iconbtn:hover svg{
+    transition: fill .2s ease-in-out;
 }
 
-.input-wrapper:focus-within .input-icon {
-    stroke: blue;
-}
-
-@media (min-width: 768px) {
-.input-wrapper {
-    max-width: 600px;
-}
+.iconbtn:hover {
+    border-color: #fa633e;
+    background-color: #f6522b;
+    color: #000;
+    transition: all .2s ease-in-out;
 }

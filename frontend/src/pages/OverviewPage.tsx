@@ -4,6 +4,7 @@ import { overviewPageItemsMockData } from '../Data/Mockdata';
 import { ModifyButton } from '../components/MenuItems/Buttons/ModifyButton';
 import { RemoveButton } from '../components/MenuItems/Buttons/RemoveButton';
 import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
+import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
 
 export const OverviewPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -72,18 +73,12 @@ export const OverviewPage = () => {
                     </header>
                     <section className="overview-page__sidebar-menu-section">
                         <h3>Filtering</h3>
-                        <div className="overview-page__header input-wrapper">
-                            <input 
-                                className="overview-page__search-input" 
-                                type="text" 
-                                placeholder="search" 
-                                value={searchQuery}
-                                onChange={handleSearchChange}
-                            />
-                            <svg className='input-icon' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                        </div>
+                        <SearchInput 
+                            containerClassOverride='overview-page__header input-wrapper'
+                            inputClassOverride='overview-page__search-input'
+                            searchQuery={searchQuery}
+                            handleSearchChange={handleSearchChange}
+                        />
                     </section>
                     <section className="overview-page__sidebar-menu-section">
                         <h3>Bootcamps</h3>

@@ -13,7 +13,7 @@ type Props = {
 
 export const SelectOptions = ({ options, containerClassOverride, selectClassOverride }: Props) => {
     return (
-        <div className={"select-wrapper" + containerClassOverride}>
+        <div className={"select-wrapper " + containerClassOverride}>
             <select className={selectClassOverride}>
                 {options.map(option => (
                     <option key={option.value} value={option.value}>
