@@ -10,6 +10,7 @@ import {
   generateCombinedPDF,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
+import { deleteBootcampById } from "../services/bootcampService";
 
 type SaltData = {
   classname: string;
@@ -66,9 +67,10 @@ const initTemplates = (saltData: SaltData): Template[] => {
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
+  deleteBootcamp: (i: number) => Promise<void>;
 }
 
-export default function DiplimaMaking({bootcamps}: Props){
+export default function DiplimaMaking({bootcamps, deleteBootcamp}: Props){
     const [SaltInfo, setSaltInfo] = useState<SaltData>(saltInitData);
     const [displayMode, setDisplayMode] = useState<displayMode>("form");
     const [templates, setTemplates] = useState<Template[]>(initTemplates(SaltInfo));
@@ -232,7 +234,7 @@ export default function DiplimaMaking({bootcamps}: Props){
           </div>
         </section>
         <section className="flex-1 flex flex-col">
-          <AddDiplomaForm SetFormInfo={UpdateSaltInfo} bootcamps={bootcamps} />
+          <AddDiplomaForm SetFormInfo={UpdateSaltInfo} bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} />
         </section>
       </div>
     );

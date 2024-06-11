@@ -2,6 +2,7 @@ import { useForm, FieldValues } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
 import { BootcampResponse } from "../util/types";
+import { deleteBootcampById } from "../services/bootcampService";
 
 type FormData = {
   classname: string;
@@ -12,11 +13,13 @@ type FormData = {
 type Props = {
   SetFormInfo: (data: any) => void;
   bootcamps: BootcampResponse[] | null;
+  deleteBootcamp: (i: number) => Promise<void>;
 };
 
-export default function AddDiplomaForm({ SetFormInfo, bootcamps }: Props) {
+export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp }: Props) {
   const { register, handleSubmit } = useForm<FormData>();
   const [names, setNames] = useState<string[]>([]);
+  const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false);
 
     const submitAndMakePDF = (data: FieldValues) => {
         const formData: FormData = {
@@ -34,6 +37,10 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps }: Props) {
       }
     };
 
+    function showBootcamps(){
+      setIsManageBootcamp(!isManageBootcamp);
+    }
+
     return (
       <form
         onSubmit={(e) => {
@@ -43,14 +50,14 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps }: Props) {
         onKeyDown={handleKeyDown}
         className="space-y-4 p-6 bg-white rounded shadow-md"
       >
-        <div>
+        <div className="select-bootcamp">
           <label htmlFor="classname" className="block text-sm font-medium text-gray-700">
             Class Name
           </label>
           <select
             id="classname"
             {...register("classname")}
-            className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 w-3/4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
             
           {
@@ -62,6 +69,22 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps }: Props) {
           }
             
           </select>
+          <button type="button" onClick={showBootcamps} className="w-1/4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Manage
+          </button>
+          {(isManageBootcamp && bootcamps) &&(
+            <div className="group relative">
+              {
+                bootcamps!.map((bootcamp, index) => 
+                  <p className="block text-lg font-medium text-gray-700">
+                    {bootcamp.name}
+                    <button type="button" onClick={() => deleteBootcamp(index)} className="left-full ml-2 text-red-500 ">delete</button>
+                    <button type="button" className="left-full ml-2 text-blue-500 ">edit</button>
+                </p>
+                )
+              }
+          </div>
+          )}
         </div>
   
         <div>

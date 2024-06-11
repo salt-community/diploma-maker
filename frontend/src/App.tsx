@@ -3,7 +3,7 @@ import DiplomaMaking from './pages/DiplomaMaking';
 import { VertificationPage } from "./pages/VerificationPage";
 import { useState } from "react";
 import { BootcampResponse } from "./util/types";
-import { getBootcamps } from "./services/bootcampService";
+import { deleteBootcampById, getBootcamps } from "./services/bootcampService";
 
 
 
@@ -19,10 +19,17 @@ function App() {
     getBootcampsFromBackend();
   }
 
+  async function deleteBootcamp(i: number){
+    const guid = bootcamps![i].guidId;
+    deleteBootcampById(guid);
+    const newBootcamps = await getBootcamps();
+    setBootcamps(newBootcamps);
+  }
+
   return (
     
       <Routes>
-        <Route path="/" element={<DiplomaMaking bootcamps={bootcamps!}/>} />
+        <Route path="/" element={<DiplomaMaking bootcamps={bootcamps!} deleteBootcamp={deleteBootcamp}/>} />
         <Route path={`/:guidId`} element = {<VertificationPage />} />
       </Routes>
   );
