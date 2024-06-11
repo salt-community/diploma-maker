@@ -13,10 +13,14 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp }: Props)
         <div className="group relative">
             {
                 bootcamps!.map((bootcamp, index) =>
-                    <p className="block text-lg font-medium text-gray-700">
+                    <div className="block font-medium text-gray-700">
+                        <label className="font-bold"> Name: </label>
                         <EditText defaultValue={bootcamp.name} />
+                        <label className="font-bold"> Start Date: </label>
+                        <EditText defaultValue={new Date(bootcamp.startDate).toLocaleDateString()} />
                         <button type="button" onClick={() => deleteBootcamp(index)} className="left-full ml-2 text-red-500 ">delete</button>
-                    </p>
+                        <hr />
+                    </div>
                 )
             }
         </div>
