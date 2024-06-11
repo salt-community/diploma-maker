@@ -6,11 +6,13 @@ import { RemoveButton } from '../components/MenuItems/Buttons/RemoveButton';
 import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
+import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
 
 export const OverviewPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
 
+    const items = overviewPageItemsMockData;
     const itemsPerPage = 8;
     const startIndex = (currentPage - 1) * itemsPerPage;
 
@@ -22,7 +24,6 @@ export const OverviewPage = () => {
         setCurrentPage(prev => (prev < totalPages ? prev + 1 : prev));
     };
     
-    const items = overviewPageItemsMockData;
     const visibleItems = items.filter(item => 
         item.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -88,6 +89,10 @@ export const OverviewPage = () => {
                                 ]
                             }
                         />
+                    </section>
+                    <section className="overview-page__sidebar-menu-section">
+                        <h3>Generate</h3>
+                        <PublishButton text='Generate PDFs'/>
                     </section>
                 </div>
             </section>
