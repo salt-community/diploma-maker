@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Template, checkTemplate } from "@pdfme/common";
 import { getTemplate } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
-import { displayMode } from "../util/types";
+import { BootcampResponse, displayMode } from "../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -64,7 +64,11 @@ const initTemplates = (saltData: SaltData): Template[] => {
   });
 };
 
-export default function DiplimaMaking(){
+type Props = {
+  bootcamps: BootcampResponse[] | null;
+}
+
+export default function DiplimaMaking({bootcamps}: Props){
     const [SaltInfo, setSaltInfo] = useState<SaltData>(saltInitData);
     const [displayMode, setDisplayMode] = useState<displayMode>("form");
     const [templates, setTemplates] = useState<Template[]>(initTemplates(SaltInfo));
@@ -228,7 +232,7 @@ export default function DiplimaMaking(){
           </div>
         </section>
         <section className="flex-1 flex flex-col">
-          <AddDiplomaForm SetFormInfo={UpdateSaltInfo} />
+          <AddDiplomaForm SetFormInfo={UpdateSaltInfo} bootcamps={bootcamps} />
         </section>
       </div>
     );

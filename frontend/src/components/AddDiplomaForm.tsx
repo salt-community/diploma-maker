@@ -1,6 +1,7 @@
 import { useForm, FieldValues } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
+import { BootcampResponse } from "../util/types";
 
 type FormData = {
   classname: string;
@@ -10,9 +11,10 @@ type FormData = {
 
 type Props = {
   SetFormInfo: (data: any) => void;
+  bootcamps: BootcampResponse[] | null;
 };
 
-export default function AddDiplomaForm({ SetFormInfo }: Props) {
+export default function AddDiplomaForm({ SetFormInfo, bootcamps }: Props) {
   const { register, handleSubmit } = useForm<FormData>();
   const [names, setNames] = useState<string[]>([]);
 
@@ -50,9 +52,15 @@ export default function AddDiplomaForm({ SetFormInfo }: Props) {
             {...register("classname")}
             className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
-            <option value=".Net Fullstack">Dotnet</option>
-            <option value="Java Fullstack">Java</option>
-            <option value="Javascript Fullstack">JavaScript</option>
+            
+          {
+            bootcamps &&(
+              bootcamps!.map((bootcamp => 
+                <option value={bootcamp.name}>{bootcamp.name}</option>
+              ))
+            )
+          }
+            
           </select>
         </div>
   
