@@ -52,13 +52,25 @@
             }
             .overview-page__item--menu{
                 position: absolute;
-                bottom: 0;
+                bottom: 1%;
                 width: 100%;
 
                 display: flex;
                 align-items: center;
                 justify-content: center;
             }
+                .overview-page__item--menu {
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: opacity 0.3s ease-in-out;
+                }
+                
+                .listmodule__item:hover .overview-page__item--menu {
+                    opacity: 1;
+                    visibility: visible;
+                    transition: opacity 0.3s ease;
+                }
+
     .overview-page__footer{
         position: absolute;
         bottom: 1%;
@@ -183,7 +195,6 @@
     transform: rotate(180deg);
     transition: all 1s ease-out;
 }
-              
 
 /* .overview-page{
     min-height: 100vh;
