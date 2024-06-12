@@ -28,7 +28,8 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
     const submitAndMakePDF = (data: FieldValues) => {
         const formData: FormData = {
             classname: data.classname,
-            datebootcamp: data.datebootcamp,
+            datestart: data.datestart,
+            dategraduate: data.dategraduate,
             names: names
         }
         console.log(formData.names);

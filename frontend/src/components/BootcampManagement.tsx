@@ -12,6 +12,11 @@ type Props = {
 }
 
 export default function BootcampManagement({ bootcamps, deleteBootcamp, register, isManageBootcamp, setIsManageBootcamp }: Props) {
+
+  function formatDate(date: Date){
+    var newDate = new Date(date).toISOString().split('T')[0]
+    return newDate
+  }
   return (
     <>
       <div
@@ -44,25 +49,26 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, register
                         <td className="pr-3"><EditText defaultValue={bootcamp.name} /></td>
                         <td className="pr-3">
                           <input
-                            id="datebootcamp"
-                            {...register("datebootcamp")}
+                            id={bootcamp.guidId}
+                            {...register(`bootcamps[${index}].datestart`)}
                             type="date"
                             className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            defaultValue={"2024-01-01"}
+                            defaultValue={formatDate(bootcamp.startDate)}
                           />
                         </td>
                         <td className="pr-3">
                           <input
-                            id="dategraduation"
-                            {...register("datebootcamp")}
+                            id={bootcamp.guidId + "1"}
+                            {...register(`bootcamps[${index}].dategraduate`)}
                             type="date"
                             className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            defaultValue={"2024-01-01"}
+                            defaultValue={formatDate(bootcamp.graduationDate)}
                           />
                         </td>
                         <td>
                           <button type="button" onClick={() => deleteBootcamp(index)} className="left-full ml-2 text-red-500 ">delete</button>
                         </td>
+                        <td>{new Date(bootcamp.startDate).toISOString().split('T')[0]}</td>
                       </tr>
                     )
 
