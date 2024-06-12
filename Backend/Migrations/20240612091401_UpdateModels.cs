@@ -19,7 +19,8 @@ namespace Backend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GuidId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    GraduationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,7 +34,6 @@ namespace Backend.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GuidId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GraduationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StudentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BootcampId = table.Column<int>(type: "int", nullable: false)
                 },

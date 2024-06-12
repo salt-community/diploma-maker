@@ -29,6 +29,9 @@ namespace Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("GraduationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("GuidId")
                         .HasColumnType("uniqueidentifier");
 
@@ -54,9 +57,6 @@ namespace Backend.Migrations
 
                     b.Property<int>("BootcampId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("GraduationDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("GuidId")
                         .HasColumnType("uniqueidentifier");

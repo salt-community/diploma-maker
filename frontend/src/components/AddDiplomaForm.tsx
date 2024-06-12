@@ -1,4 +1,4 @@
-import { useForm, FieldValues } from "react-hook-form";
+import { useForm, FieldValues, UseFormRegister } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
 import { BootcampResponse } from "../util/types";
@@ -19,7 +19,8 @@ type Props = {
 };
 
 export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp }: Props) {
-  const { register, handleSubmit } = useForm<FormData>();
+  // const {register, handleSubmit } = useForm<FormData>();
+  const {register, handleSubmit} = useForm();
   const [names, setNames] = useState<string[]>([]);
   const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false);
   const[selectedBootcamp, setSelectedBootcamp] = useState<BootcampResponse>()
@@ -76,34 +77,14 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
             Manage
           </button>
           {(isManageBootcamp && bootcamps) &&(
-            <BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp}/>
+            <BootcampManagement 
+              bootcamps={bootcamps} 
+              deleteBootcamp={deleteBootcamp} 
+              register={register} 
+              isManageBootcamp={isManageBootcamp} 
+              setIsManageBootcamp={setIsManageBootcamp}
+            />
           )}
-        </div>
-  
-        <div className="dateofbootcamp">
-          <label htmlFor="datebootcamp" className="block text-sm font-medium text-gray-700">
-            Date of Bootcamp
-          </label>
-          <input
-            id="datebootcamp"
-            {...register("datebootcamp")}
-            type="date"
-            className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            defaultValue={"2024-01-01"}
-          />
-        </div>
-
-        <div className="dateofgraduation">
-          <label htmlFor="datebootcamp" className="block text-sm font-medium text-gray-700">
-            Date of Graduation
-          </label>
-          <input
-            id="datebootcamp"
-            {...register("datebootcamp")}
-            type="date"
-            className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            defaultValue={"2024-01-01"}
-          />
         </div>
   
         <div>

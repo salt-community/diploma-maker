@@ -31,7 +31,6 @@ public class DiplomaService
         var diploma = new Diploma
         { 
             StudentName = requestDto.StudentName, 
-            GraduationDate = requestDto.GraduationDate,
             Bootcamp = bootcamp 
         };
         _context.Diploma.Add(diploma);

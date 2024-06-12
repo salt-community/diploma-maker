@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240606112451_UpdateModels")]
+    [Migration("20240612091401_UpdateModels")]
     partial class UpdateModels
     {
         /// <inheritdoc />
@@ -31,6 +31,9 @@ namespace Backend.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("GraduationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("GuidId")
                         .HasColumnType("uniqueidentifier");
@@ -57,9 +60,6 @@ namespace Backend.Migrations
 
                     b.Property<int>("BootcampId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("GraduationDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("GuidId")
                         .HasColumnType("uniqueidentifier");
