@@ -15,6 +15,12 @@ export const OverviewPage = () => {
     const items = overviewPageItemsMockData;
     const itemsPerPage = 8;
     const startIndex = (currentPage - 1) * itemsPerPage;
+    
+    const visibleItems = items.filter(item => 
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    const selectedItems = visibleItems.slice(startIndex, startIndex + 8);
+    const totalPages = Math.ceil(visibleItems.length / 8);
 
     const handlePrevPage = () => {
         setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
@@ -23,17 +29,23 @@ export const OverviewPage = () => {
     const handleNextPage = () => {
         setCurrentPage(prev => (prev < totalPages ? prev + 1 : prev));
     };
-    
-    const visibleItems = items.filter(item => 
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
-    const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
         setCurrentPage(1);
     };
+
+    const modifyHandler = () => {
+        
+    }
+
+    const deleteHandler = () => {
+        
+    }
+
+    const generatePDFsHandler = () => {
+        
+    }
 
     return (
         <main className="overview-page">
@@ -44,8 +56,8 @@ export const OverviewPage = () => {
                             <p className='overview-page__item--title'>{item.title}</p>
                             <img className='overview-page__item--bg' src={item.src} alt={item.title} />
                             <section className='overview-page__item--menu'>
-                                    <ModifyButton text='Modify'/>
-                                    <RemoveButton text='Remove'/>
+                                    <ModifyButton text='Modify' onClick={modifyHandler}/>
+                                    <RemoveButton text='Remove' onClick={deleteHandler}/>
                             </section>
                         </button>
                     ))}
@@ -92,7 +104,7 @@ export const OverviewPage = () => {
                     </section>
                     <section className="overview-page__sidebar-menu-section">
                         <h3>Generate</h3>
-                        <PublishButton text='Generate PDFs'/>
+                        <PublishButton text='Generate PDFs' onClick={generatePDFsHandler}/>
                     </section>
                 </div>
             </section>

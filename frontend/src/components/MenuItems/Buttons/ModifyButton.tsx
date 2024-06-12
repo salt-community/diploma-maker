@@ -2,12 +2,13 @@ import './ModifyButton.css'
 
 type Props = {
     classNameOverride?: string,
-    text: string
+    text: string,
+    onClick: () => void
 }
 
-export const ModifyButton = ({classNameOverride, text}: Props) => {
+export const ModifyButton = ({classNameOverride, text, onClick}: Props) => {
     return (
-        <button className={"btn modify-btn " + classNameOverride}>
+        <button onClick={onClick} className={"btn modify-btn " + classNameOverride}>
             <span className="btn-title">{text}</span>
             <svg className="btn-close-icon" version="1.1" id="Uploaded to svgrepo.com" height="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
                 <path d="M27.5,14h-2.731c-0.228-1.003-0.624-1.94-1.156-2.785l1.933-1.933c0.195-0.195,0.195-0.512,0-0.707

@@ -1,12 +1,13 @@
 import './PublishButton.css'
 
 type Props = {
-    text: string
+    text: string,
+    onClick: () => void
 }
 
-export const PublishButton = ( { text }: Props ) => {
+export const PublishButton = ( { text, onClick }: Props ) => {
     return(
-        <button className='btn--orange'>
+        <button onClick={onClick} className='btn--orange'>
             {text}
         </button>
     )
