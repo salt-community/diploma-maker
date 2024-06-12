@@ -32,7 +32,7 @@ function App() {
       <Routes>
         <Route path="/" element={<DiplomaMaking bootcamps={bootcamps!} deleteBootcamp={deleteBootcamp}/>} />
         <Route path={`/:guidId`} element = {<VertificationPage />} />
-        <Route path={"/overview"} element={<OverviewPage />} />
+        <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps}/>} />
       </Routes>
     </>
   );
