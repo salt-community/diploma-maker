@@ -77,7 +77,13 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
             Manage
           </button>
           {(isManageBootcamp && bootcamps) &&(
-            <BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} register={register}/>
+            <BootcampManagement 
+              bootcamps={bootcamps} 
+              deleteBootcamp={deleteBootcamp} 
+              register={register} 
+              isManageBootcamp={isManageBootcamp} 
+              setIsManageBootcamp={setIsManageBootcamp}
+            />
           )}
         </div>
   
