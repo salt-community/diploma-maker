@@ -4,8 +4,8 @@ import { VertificationPage } from "./pages/VerificationPage";
 import { useState } from "react";
 import { BootcampResponse } from "./util/types";
 import { deleteBootcampById, getBootcamps } from "./services/bootcampService";
-
-
+import { OverviewPage } from "./pages/OverviewPage";
+import { NavBar } from "./pages/shared/Navbar";
 
 function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
@@ -27,11 +27,14 @@ function App() {
   }
 
   return (
-    
+    <>
+      <NavBar />
       <Routes>
         <Route path="/" element={<DiplomaMaking bootcamps={bootcamps!} deleteBootcamp={deleteBootcamp}/>} />
         <Route path={`/:guidId`} element = {<VertificationPage />} />
+        <Route path={"/overview"} element={<OverviewPage />} />
       </Routes>
+    </>
   );
 }
 
