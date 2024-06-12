@@ -888,6 +888,10 @@ video {
   padding-bottom: 0.75rem;
 }
 
+.pr-3 {
+  padding-right: 0.75rem;
+}
+
 .text-center {
   text-align: center;
 }

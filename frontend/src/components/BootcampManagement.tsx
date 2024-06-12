@@ -87,14 +87,15 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, register
       <th>Bootcamp name</th>
       <th>Start date</th>
       <th>Graduation date</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     {
         bootcamps!.map((bootcamp, index) =>
           <tr>
-            <td><EditText defaultValue={bootcamp.name} /></td>
-            <td>
+            <td className="pr-3"><EditText defaultValue={bootcamp.name} /></td>
+            <td className="pr-3">
             <input
           id="datebootcamp"
           {...register("datebootcamp")}
@@ -103,7 +104,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, register
           defaultValue={"2024-01-01"}
         />
             </td>
-            <td>
+            <td className="pr-3">
             <input
           id="dategraduation"
           {...register("datebootcamp")}
@@ -111,6 +112,9 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, register
           className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           defaultValue={"2024-01-01"}
         />
+            </td>
+            <td>
+            <button type="button" onClick={() => deleteBootcamp(index)} className="left-full ml-2 text-red-500 ">delete</button>
             </td>
           </tr>
         )
