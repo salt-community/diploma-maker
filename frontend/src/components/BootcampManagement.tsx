@@ -1,5 +1,5 @@
 import { FieldValues, UseFormRegister, useForm } from "react-hook-form";
-import { BootcampResponse } from "../util/types"
+import { BootcampRequest, BootcampResponse } from "../util/types"
 import { EditText, EditTextarea } from 'react-edit-text';
 import { Dispatch, SetStateAction, useState } from "react";
 
@@ -9,13 +9,18 @@ type Props = {
   register: UseFormRegister<FieldValues>;
   isManageBootcamp: boolean;
   setIsManageBootcamp: Dispatch<SetStateAction<boolean>>;
+  addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 }
 
-export default function BootcampManagement({ bootcamps, deleteBootcamp, register, isManageBootcamp, setIsManageBootcamp }: Props) {
+export default function BootcampManagement({ bootcamps, deleteBootcamp, register, isManageBootcamp, setIsManageBootcamp, addNewBootcamp }: Props) {
 
   function formatDate(date: Date){
     var newDate = new Date(date).toISOString().split('T')[0]
     return newDate
+  }
+
+  function addDiploma(){
+    var bootcampName = 
   }
   return (
     <>
@@ -76,16 +81,16 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, register
                   <br />
                   <tr>
                     <td>
-                      <input type="text" placeholder="Bootcamp name" className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                      <input type="text" {...register("newname")} placeholder="Bootcamp name" className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
                     </td>
                     <td>
-                      <input type="date" className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                      <input type="date" {...register("newstartdate")}className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
                     </td>
                     <td>
-                      <input type="date" className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                      <input type="date" {...register("newgraduatedate")}className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
                     </td>
                     <td>
-                      <button type="button" className="left-full ml-2 text-green-500 ">Add</button>
+                      <button type="button" onClick={addDiploma} className="left-full ml-2 text-green-500 ">Add</button>
                     </td>
                   </tr>
                 </tbody>

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Template, checkTemplate } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, displayMode } from "../util/types";
+import { BootcampRequest, BootcampResponse, displayMode } from "../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -28,9 +28,10 @@ const saltInitData: SaltData = {
 type Props = {
   bootcamps: BootcampResponse[] | null;
   deleteBootcamp: (i: number) => Promise<void>;
+  addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 }
 
-export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
+export default function DiplomaMaking({bootcamps, deleteBootcamp, addNewBootcamp}: Props) {
   const [SaltInfo, setSaltInfo] = useState<SaltData>(saltInitData);
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
@@ -150,7 +151,7 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
         </div>
       </section>
       <section className="flex-1 flex flex-col">
-        <AddDiplomaForm SetFormInfo={UpdateSaltInfo} deleteBootcamp={deleteBootcamp} bootcamps={bootcamps}/>
+        <AddDiplomaForm SetFormInfo={UpdateSaltInfo} deleteBootcamp={deleteBootcamp} bootcamps={bootcamps} addNewBootcamp= {addNewBootcamp}/>
       </section>
     </div>
   );
