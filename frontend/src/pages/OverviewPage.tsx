@@ -10,10 +10,11 @@ import { BootcampResponse, DiplomaInBootcamp } from '../util/types';
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 
 type Props = {
-    bootcamps: BootcampResponse[] | null
+    bootcamps: BootcampResponse[] | null,
+    deleteDiploma: (id: string) => Promise<void>;
 }
 
-export const OverviewPage = ({ bootcamps }: Props) => {
+export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -52,8 +53,8 @@ export const OverviewPage = ({ bootcamps }: Props) => {
         
     };
 
-    const deleteHandler = () => {
-        
+    const deleteHandler = (id: string) => {
+        deleteDiploma(id);
     };
 
     const generatePDFsHandler = () => {
@@ -65,12 +66,12 @@ export const OverviewPage = ({ bootcamps }: Props) => {
             <section className='overview-page__listmodule'>
                 <div className='overview-page__listmodule-cardcontainer'>
                     {selectedItems && selectedItems.length > 0 ? selectedItems.map((item, index) => (
-                        <button key={index} className='listmodule__item'>
+                        <button key={item.guidId} className='listmodule__item'>
                             <p className='overview-page__item--title'>{item.studentName}</p>
                             <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
                             <section className='overview-page__item--menu'>
                                 <ModifyButton text='Modify' onClick={modifyHandler} />
-                                <RemoveButton text='Remove' onClick={deleteHandler} />
+                                <RemoveButton text='Remove' onClick={() => deleteHandler(item.guidId)} />
                             </section>
                         </button>
                     )) :
