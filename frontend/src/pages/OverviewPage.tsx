@@ -41,15 +41,15 @@ export const OverviewPage = ({ bootcamps }: Props) => {
     };
 
     const modifyHandler = () => {
-        // Modify handler logic
+        
     };
 
     const deleteHandler = () => {
-        // Delete handler logic
+        
     };
 
     const generatePDFsHandler = () => {
-        // Generate PDFs handler logic
+        
     };
 
     return (
@@ -99,11 +99,10 @@ export const OverviewPage = ({ bootcamps }: Props) => {
                             containerClassOverride='overview-page__select-container'
                             selectClassOverride='overview-page__select-box'
                             options={
-                                [
-                                    { value: '.Net Fullstack', label: '.Net Fullstack 2023' },
-                                    { value: 'Java Fullstack', label: 'Java Fullstack 2024' },
-                                    { value: 'Javascript Fullstack', label: 'Javascript Fullstack 2024' }
-                                ]
+                                bootcamps?.map(bootcamp => ({
+                                    value: bootcamp.guidId,
+                                    label: bootcamp.name
+                                })) || []
                             }
                         />
                     </section>
