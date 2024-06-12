@@ -1,20 +1,21 @@
-import './SelectOptions.css'
+import './SelectOptions.css';
 
 type Option = {
-    value: string
-    label: string
+    value: string;
+    label: string;
 };
 
 type Props = {
-    containerClassOverride?: string,
-    selectClassOverride?: string,
-    options: Option[]
+    containerClassOverride?: string;
+    selectClassOverride?: string;
+    options: Option[];
+    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
-export const SelectOptions = ({ options, containerClassOverride, selectClassOverride }: Props) => {
+export const SelectOptions = ({ options, containerClassOverride, selectClassOverride, onChange }: Props) => {
     return (
-        <div className={"select-wrapper " + containerClassOverride}>
-            <select className={selectClassOverride}>
+        <div className={"select-wrapper " + (containerClassOverride || '')}>
+            <select onChange={onChange} className={selectClassOverride}>
                 {options.map(option => (
                     <option key={option.value} value={option.value}>
                         {option.label}
