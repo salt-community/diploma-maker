@@ -77,36 +77,23 @@ public class BootcampController : ControllerBase
     }
 
 
-    // // PUT: api/Bootcamp/5
-    // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    // [HttpPut("{id}")]
-    // public async Task<IActionResult> PutBootcamp(int id, Bootcamp bootcamp)
-    // {
-    //     if (id != bootcamp.Id)
-    //     {
-    //         return BadRequest();
-    //     }
+    // PUT: api/Bootcamp/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{guidId}")]
+    public async Task<IActionResult> PutBootcamp(string guidId, BootcampRequestDto requestDto)
+    {
+        if (guidId != requestDto.GuidId.ToString())
+        {
+            return BadRequest();
+        }
+        try{
+            _service.PutBootcamp(guidId, requestDto);
+        }catch(DbUpdateException){
+            
+        }
 
-    //     _context.Entry(bootcamp).State = EntityState.Modified;
-
-    //     try
-    //     {
-    //         await _context.SaveChangesAsync();
-    //     }
-    //     catch (DbUpdateConcurrencyException)
-    //     {
-    //         if (!BootcampExists(id))
-    //         {
-    //             return NotFound();
-    //         }
-    //         else
-    //         {
-    //             throw;
-    //         }
-    //     }
-
-    //     return NoContent();
-    // }
+        return Ok();
+    }
 
 
 }
