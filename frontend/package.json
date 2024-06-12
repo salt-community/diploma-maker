@@ -16,6 +16,7 @@
     "@react-pdf/renderer": "^3.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-edit-text": "^5.1.1",
     "react-hook-form": "^7.51.5",
     "react-qr-code": "^2.0.14",
     "react-query": "^3.39.3",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/react-edit-text": "^5.0.4",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react-swc": "^3.5.0",

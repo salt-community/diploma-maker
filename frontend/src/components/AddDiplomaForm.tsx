@@ -1,6 +1,10 @@
 import { useForm, FieldValues } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
+import { BootcampResponse } from "../util/types";
+import BootcampManagement from "./BootcampManagement";
+
+
 
 type FormData = {
   classname: string;
@@ -10,11 +14,15 @@ type FormData = {
 
 type Props = {
   SetFormInfo: (data: any) => void;
+  bootcamps: BootcampResponse[] | null;
+  deleteBootcamp: (i: number) => Promise<void>;
 };
 
-export default function AddDiplomaForm({ SetFormInfo }: Props) {
+export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp }: Props) {
   const { register, handleSubmit } = useForm<FormData>();
   const [names, setNames] = useState<string[]>([]);
+  const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false);
+  const[selectedBootcamp, setSelectedBootcamp] = useState<BootcampResponse>()
 
     const submitAndMakePDF = (data: FieldValues) => {
         const formData: FormData = {
@@ -32,6 +40,10 @@ export default function AddDiplomaForm({ SetFormInfo }: Props) {
       }
     };
 
+    function showBootcamps(){
+      setIsManageBootcamp(!isManageBootcamp);
+    }
+
     return (
       <form
         onSubmit={(e) => {
@@ -41,22 +53,34 @@ export default function AddDiplomaForm({ SetFormInfo }: Props) {
         onKeyDown={handleKeyDown}
         className="space-y-4 p-6 bg-white rounded shadow-md"
       >
-        <div>
+        <div className="select-bootcamp">
           <label htmlFor="classname" className="block text-sm font-medium text-gray-700">
             Class Name
           </label>
           <select
             id="classname"
             {...register("classname")}
-            className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 w-3/4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
-            <option value=".Net Fullstack">Dotnet</option>
-            <option value="Java Fullstack">Java</option>
-            <option value="Javascript Fullstack">JavaScript</option>
+            
+          {
+            bootcamps &&(
+              bootcamps!.map((bootcamp => 
+                <option value={bootcamp.name}>{bootcamp.name}</option>
+              ))
+            )
+          }
+            
           </select>
+          <button type="button" onClick={showBootcamps} className="w-1/4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Manage
+          </button>
+          {(isManageBootcamp && bootcamps) &&(
+            <BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp}/>
+          )}
         </div>
   
-        <div>
+        <div className="dateofbootcamp">
           <label htmlFor="datebootcamp" className="block text-sm font-medium text-gray-700">
             Date of Bootcamp
           </label>
@@ -65,6 +89,20 @@ export default function AddDiplomaForm({ SetFormInfo }: Props) {
             {...register("datebootcamp")}
             type="date"
             className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            defaultValue={"2024-01-01"}
+          />
+        </div>
+
+        <div className="dateofgraduation">
+          <label htmlFor="datebootcamp" className="block text-sm font-medium text-gray-700">
+            Date of Graduation
+          </label>
+          <input
+            id="datebootcamp"
+            {...register("datebootcamp")}
+            type="date"
+            className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            defaultValue={"2024-01-01"}
           />
         </div>
   
@@ -90,6 +128,9 @@ export default function AddDiplomaForm({ SetFormInfo }: Props) {
             Apply
           </button>
         </div>
+        {/* {bootcamps &&
+          <p>{new Date(bootcamps[0].startDate).toLocaleDateString()}</p>
+        } */}
       </form>
     );
   }
