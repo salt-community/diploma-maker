@@ -45,6 +45,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, register
                 <tbody>
                   {
                     bootcamps!.map((bootcamp, index) =>
+                      // Display existing bootcamps
                       <tr>
                         <td className="pr-3"><EditText defaultValue={bootcamp.name} /></td>
                         <td className="pr-3">
@@ -66,13 +67,27 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, register
                           />
                         </td>
                         <td>
-                          <button type="button" onClick={() => deleteBootcamp(index)} className="left-full ml-2 text-red-500 ">delete</button>
+                          <button type="button" onClick={() => deleteBootcamp(index)} className="left-full ml-2 text-red-500 ">Delete</button>
                         </td>
-                        <td>{new Date(bootcamp.startDate).toISOString().split('T')[0]}</td>
                       </tr>
                     )
-
                   }
+                  {/* Add new bootcamp */}
+                  <br />
+                  <tr>
+                    <td>
+                      <input type="text" placeholder="Bootcamp name" className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                    </td>
+                    <td>
+                      <input type="date" className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                    </td>
+                    <td>
+                      <input type="date" className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                    </td>
+                    <td>
+                      <button type="button" className="left-full ml-2 text-green-500 ">Add</button>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
