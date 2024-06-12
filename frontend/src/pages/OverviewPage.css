@@ -12,6 +12,7 @@
     max-height: 90vh;
 }
     .overview-page__listmodule-cardcontainer{
+        position: relative;
         width: 100%;
         height: 100%;
 
@@ -19,6 +20,12 @@
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: 1fr 1fr;
         gap: 1rem;
+    }
+    .overview-page__listmodule-cardcontainer .spinner{
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
     }
         .listmodule__item{
             position: relative;

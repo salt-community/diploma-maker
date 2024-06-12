@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './OverviewPage.css';
 import { ModifyButton } from '../components/MenuItems/Buttons/ModifyButton';
 import { RemoveButton } from '../components/MenuItems/Buttons/RemoveButton';
@@ -8,6 +8,7 @@ import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
 import { BootcampResponse, DiplomaInBootcamp } from '../util/types';
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
+import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -18,6 +19,13 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (bootcamps) {
+            setLoading(false);
+        }
+    }, [bootcamps]);
 
     const items = bootcamps?.flatMap(bootcamp => bootcamp.diplomas) || []; // Flatmap instead of map to flatten [][] into []
     const itemsPerPage = 8;
@@ -54,7 +62,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     };
 
     const deleteHandler = (id: string) => {
+        setLoading(true);
         deleteDiploma(id);
+        setLoading(false);
     };
 
     const generatePDFsHandler = () => {
@@ -64,19 +74,22 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     return (
         <main className="overview-page">
             <section className='overview-page__listmodule'>
-                <div className='overview-page__listmodule-cardcontainer'>
-                    {selectedItems && selectedItems.length > 0 ? selectedItems.map((item, index) => (
-                        <button key={item.guidId} className='listmodule__item'>
-                            <p className='overview-page__item--title'>{item.studentName}</p>
-                            <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                            <section className='overview-page__item--menu'>
-                                <ModifyButton text='Modify' onClick={modifyHandler} />
-                                <RemoveButton text='Remove' onClick={() => deleteHandler(item.guidId)} />
-                            </section>
-                        </button>
-                    )) :
+            <div className='overview-page__listmodule-cardcontainer'>
+                    {loading ? (
+                        <SpinnerDefault classOverride="spinner"/>
+                    ) : (
+                        selectedItems.length > 0 ? selectedItems.map((item, index) => (
+                            <button key={item.guidId} className='listmodule__item'>
+                                <p className='overview-page__item--title'>{item.studentName}</p>
+                                <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
+                                <section className='overview-page__item--menu'>
+                                    <ModifyButton text='Modify' onClick={modifyHandler} />
+                                    <RemoveButton text='Remove' onClick={() => deleteHandler(item.guidId)} />
+                                </section>
+                            </button>
+                        )) : 
                         <Popup404 text='No Diplomas Generated Yet For This Bootcamp'/>
-                    }
+                    )}
                 </div>
                 <PaginationMenu
                     containerClassOverride='overview-page__footer'
