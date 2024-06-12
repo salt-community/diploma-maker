@@ -21,7 +21,7 @@ function App() {
 
   async function deleteBootcamp(i: number){
     const guid = bootcamps![i].guidId;
-    deleteBootcampById(guid);
+    await deleteBootcampById(guid);
     const newBootcamps = await getBootcamps();
     setBootcamps(newBootcamps);
   }

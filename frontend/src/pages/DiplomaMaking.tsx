@@ -25,7 +25,10 @@ const saltInitData: SaltData = {
   datebootcamp: "2024-06-08",
   names: ["Xinnan Luo"]
 };
-
+type Props = {
+  bootcamps: BootcampResponse[] | null;
+  deleteBootcamp: (i: number) => Promise<void>;
+}
 
 export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
   const [SaltInfo, setSaltInfo] = useState<SaltData>(saltInitData);
@@ -147,7 +150,7 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
         </div>
       </section>
       <section className="flex-1 flex flex-col">
-        <AddDiplomaForm SetFormInfo={UpdateSaltInfo} deleteBootcamp={deleteBootcamp} />
+        <AddDiplomaForm SetFormInfo={UpdateSaltInfo} deleteBootcamp={deleteBootcamp} bootcamps={bootcamps}/>
       </section>
     </div>
   );
