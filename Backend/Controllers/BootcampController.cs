@@ -83,13 +83,20 @@ public class BootcampController : ControllerBase
     public async Task<IActionResult> PutBootcamp(string guidId, BootcampRequestDto requestDto)
     {
         if (guidId != requestDto.GuidId.ToString())
+            {
+                return BadRequest("The provided ID does not match the ID in the request body.");
+            }
+        try
         {
-            return BadRequest();
+            var res =  await _service.PutBootcampAsync(requestDto);
+            if (!res)
+            {
+                return NotFound("Bootcamp not found.");
+            }
         }
-        try{
-            _service.PutBootcamp(guidId, requestDto);
-        }catch(DbUpdateException){
-            
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
         }
 
         return Ok();
