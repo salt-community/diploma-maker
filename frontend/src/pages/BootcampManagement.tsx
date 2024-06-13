@@ -13,12 +13,19 @@ type Props = {
 
 export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp }: Props) {
   const {register, handleSubmit} = useForm();
-  const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(true); 
+  const [showConfirmAlert, setShowConfirmAlert] = useState<number>(-1); 
+  const [isConfirmDelete, setIsConfirmDelete] = useState<boolean>(false);
   const navigate = useNavigate();
 
   function formatDate(date: Date){
     var newDate = new Date(date).toISOString().split('T')[0]
     return newDate
+  }
+
+  async function handleDeleteBootcamp(i: number){
+    await deleteBootcamp(i);
+    alert("Successfully deleted!")
+    setShowConfirmAlert(-1);
   }
 
 
@@ -74,7 +81,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                           />
                         </td>
                         <td>
-                          <button type="button" onClick={() => deleteBootcamp(index)} className="left-full ml-2 text-red-500 ">Delete</button>
+                          <button type="button" onClick={() => setShowConfirmAlert(index)} className="left-full ml-2 text-red-500 ">Delete</button>
                         </td>
                       </tr>
                     )
@@ -104,6 +111,36 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
         </div>
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+
+      {/* confirm alert */}
+      {showConfirmAlert >= 0  && 
+      <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur confirm-dialog ">
+      <div className="relative px-4 min-h-screen md:flex md:items-center md:justify-center">
+          <div className=" opacity-25 w-full h-full absolute z-10 inset-0"></div>
+          <div className="bg-white rounded-lg md:max-w-md md:mx-auto p-4 fixed inset-x-0 bottom-0 z-50 mb-4 mx-4 md:relative shadow-lg">
+              <div className="md:flex items-center">
+                  <div className="rounded-full border border-gray-300 flex items-center justify-center w-16 h-16 flex-shrink-0 mx-auto">
+                  <i className="bx bx-error text-3xl">
+                  &#9888;
+                  </i>
+                  </div>
+                  <div className="mt-4 md:mt-0 md:ml-6 text-center md:text-left">
+                  <p className="font-bold">Warning!</p>
+                  <p className="text-sm text-gray-700 mt-1">By deleting this, you will lose <b className="text-red-600">ALL OF THE DIPLOMAS</b> assosiated with this bootcamp. This action cannot be undone.
+                  </p>
+                  </div>
+              </div>
+              <div className="text-center md:text-right mt-4 md:flex md:justify-end">
+                  <button onClick={() => handleDeleteBootcamp(showConfirmAlert)} id="confirm-delete-btn" className="block w-full md:inline-block md:w-auto px-4 py-3 md:py-2 bg-red-200 text-red-700 rounded-lg font-semibold text-sm md:ml-2 md:order-2">
+                      Delete Permenently
+                  </button>
+                  <button onClick={() => setShowConfirmAlert(-1)} id="confirm-cancel-btn" className="block w-full md:inline-block md:w-auto px-4 py-3 md:py-2 bg-gray-200 rounded-lg font-semibold text-sm mt-4 md:mt-0 md:order-1">
+                  Cancel
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>}
     </>
   )
 
