@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Template, checkTemplate } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, displayMode } from "../util/types";
+import { BootcampResponse, SaltData, displayMode } from "../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -12,13 +12,7 @@ import {
 import AddDiplomaForm from "../components/AddDiplomaForm";
 import { deleteBootcampById } from "../services/bootcampService";
 import { generate } from "@pdfme/generator";
-
-
-type SaltData = {
-  classname: string;
-  datebootcamp: string;
-  names: string[];
-};
+import { Navigate, useLocation, useParams } from "react-router-dom";
 
 const saltDefaultData: SaltData = {
   classname: ".Net Fullstack",
@@ -29,34 +23,32 @@ const saltDefaultData: SaltData = {
 type Props = {
   bootcamps: BootcampResponse[] | null;
   deleteBootcamp: (i: number) => Promise<void>;
-}
+};
 
-export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
+export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
   const [SaltInfo, setSaltInfo] = useState<SaltData>(saltDefaultData);
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);
-  
   const uiRef = useRef<HTMLDivElement | null>(null);
   const uiInstance = useRef<Form | Viewer | null>(null);
 
   useEffect(() => {
     if (bootcamps) {
-      if(bootcamps[selectedBootcampIndex].diplomas.length == 0){
+      if (bootcamps[selectedBootcampIndex].diplomas.length === 0) {
         setSaltInfo(saltDefaultData);
-      }
-      else{
-          setSaltInfo({
-            classname: bootcamps[selectedBootcampIndex].name,
-            datebootcamp: bootcamps[selectedBootcampIndex].graduationDate.toString().slice(0, 10),
-            names: bootcamps[selectedBootcampIndex].diplomas.map(diploma => diploma.studentName)
+      } else {
+        setSaltInfo({
+          classname: bootcamps[selectedBootcampIndex].name,
+          datebootcamp: bootcamps[selectedBootcampIndex].graduationDate.toString().slice(0, 10),
+          names: bootcamps[selectedBootcampIndex].diplomas.map(diploma => diploma.studentName)
         });
       }
     }
   }, [bootcamps, selectedBootcampIndex]);
 
-  useEffect(() => {    
-    const template: Template = getTemplate();  
+  useEffect(() => {
+    const template: Template = getTemplate();
     const inputs = [makeTemplateInput(SaltInfo.names[currentTemplateIndex], SaltInfo.classname, SaltInfo.datebootcamp)];
 
     getFontsData().then((font) => {
@@ -84,7 +76,7 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
 
   const UpdateSaltInfo = (data: SaltData) => {
     setSaltInfo(data);
-    setCurrentTemplateIndex(0); 
+    setCurrentTemplateIndex(0);
   };
 
   const changeDisplayModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,9 +164,9 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
           deleteBootcamp={deleteBootcamp} 
           bootcamps={bootcamps} 
           setSelectedBootcampIndex={setSelectedBootcampIndex}
+          SaltInfo={SaltInfo}
         />
       </section>
     </div>
   );
 }
-

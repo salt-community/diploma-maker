@@ -1,7 +1,7 @@
 import { useForm, FieldValues, UseFormRegister } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
-import { BootcampResponse } from "../util/types";
+import { BootcampResponse, SaltData } from "../util/types";
 import BootcampManagement from "./BootcampManagement";
 
 
@@ -17,9 +17,10 @@ type Props = {
   bootcamps: BootcampResponse[] | null;
   deleteBootcamp: (i: number) => Promise<void>;
   setSelectedBootcampIndex: (index: number) => void;
+  SaltInfo: SaltData;
 };
 
-export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp, setSelectedBootcampIndex }: Props) {
+export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp, setSelectedBootcampIndex, SaltInfo }: Props) {
   // const {register, handleSubmit } = useForm<FormData>();
   const {register, handleSubmit} = useForm();
   const [names, setNames] = useState<string[]>([]);
@@ -100,6 +101,7 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
           /> */}
           <TagsInput 
             selectedTags={(names: string[]) => setNames(names)} 
+            tags={SaltInfo.names}
           />
         </div>
   
