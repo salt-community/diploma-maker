@@ -20,7 +20,6 @@ type Props = {
 };
 
 export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp, addNewBootcamp }: Props) {
-  // const {register, handleSubmit } = useForm<FormData>();
   const {register, handleSubmit} = useForm();
   const [names, setNames] = useState<string[]>([]);
   const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false);
@@ -31,10 +30,15 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
             classname: data.classname,
             datestart: data.datestart,
             dategraduate: data.dategraduate,
-            names: names
+            names: names,
         }
         console.log(formData.names);
         SetFormInfo(formData);
+        
+        const newBootcamp: BootcampRequest = {name: data.newname, startDate: data.newstartdate, graduationDate: data.newgraduatedate};
+        addNewBootcamp(newBootcamp);
+        
+        
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
@@ -85,7 +89,7 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
               register={register} 
               isManageBootcamp={isManageBootcamp} 
               setIsManageBootcamp={setIsManageBootcamp}
-              addNewBootcamp= {addNewBootcamp}
+              addNewBootcamp ={addNewBootcamp}
             />
           )}
         </div>
@@ -99,6 +103,7 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
             {...register("names")}
             className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           /> */}
+          
           <TagsInput 
             selectedTags={(names: string[]) => setNames(names)} 
           />

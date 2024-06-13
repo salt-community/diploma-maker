@@ -2,6 +2,7 @@ import { FieldValues, UseFormRegister, useForm } from "react-hook-form";
 import { BootcampRequest, BootcampResponse } from "../util/types"
 import { EditText, EditTextarea } from 'react-edit-text';
 import { Dispatch, SetStateAction, useState } from "react";
+import AddNewBootcampForm from "./AddNewBootcampForm";
 
 type Props = {
   bootcamps: BootcampResponse[];
@@ -19,9 +20,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, register
     return newDate
   }
 
-  function addDiploma(){
-    var bootcampName = 
-  }
+
   return (
     <>
       <div
@@ -56,19 +55,21 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, register
                         <td className="pr-3">
                           <input
                             id={bootcamp.guidId}
-                            {...register(`bootcamps[${index}].datestart`)}
+                            {...register(`datestart${index}`)}
                             type="date"
                             className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             defaultValue={formatDate(bootcamp.startDate)}
+                            key={bootcamp.guidId}
                           />
                         </td>
                         <td className="pr-3">
                           <input
                             id={bootcamp.guidId + "1"}
-                            {...register(`bootcamps[${index}].dategraduate`)}
+                            {...register(`dategraduate${index}`)}
                             type="date"
                             className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             defaultValue={formatDate(bootcamp.graduationDate)}
+                            key={bootcamp.guidId}
                           />
                         </td>
                         <td>
@@ -77,24 +78,9 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, register
                       </tr>
                     )
                   }
-                  {/* Add new bootcamp */}
-                  <br />
-                  <tr>
-                    <td>
-                      <input type="text" {...register("newname")} placeholder="Bootcamp name" className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                    </td>
-                    <td>
-                      <input type="date" {...register("newstartdate")}className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                    </td>
-                    <td>
-                      <input type="date" {...register("newgraduatedate")}className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                    </td>
-                    <td>
-                      <button type="button" onClick={addDiploma} className="left-full ml-2 text-green-500 ">Add</button>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
+              <AddNewBootcampForm addNewBootcamp={addNewBootcamp}/>
             </div>
             {/*footer*/}
             <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
