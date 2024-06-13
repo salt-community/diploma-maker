@@ -3,6 +3,7 @@ import { BootcampRequest, BootcampResponse } from "../util/types"
 import { EditText, EditTextarea } from 'react-edit-text';
 import { Dispatch, SetStateAction, useState } from "react";
 import AddNewBootcampForm from "../components/AddNewBootcampForm";
+import { Navigate, useNavigate } from "react-router-dom";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -11,9 +12,9 @@ type Props = {
 }
 
 export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp }: Props) {
-  const[selectedBootcamp, setSelectedBootcamp] = useState<BootcampResponse>();
   const {register, handleSubmit} = useForm();
-  const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false); 
+  const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(true); 
+  const navigate = useNavigate();
 
   function formatDate(date: Date){
     var newDate = new Date(date).toISOString().split('T')[0]
@@ -80,21 +81,21 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                   }
                 </tbody>
               </table>
-              <AddNewBootcampForm addNewBootcamp={addNewBootcamp}/>
+              <AddNewBootcampForm addNewBootcamp={addNewBootcamp} bootcamps={bootcamps}/>
             </div>
             {/*footer*/}
             <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
               <button
                 className="background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => setIsManageBootcamp(false)}
+                onClick={() => navigate(-1)}
               >
                 Close
               </button>
               <button
                 className="bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 uppercase text-sm font-medium text-white px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
-                onClick={() => setIsManageBootcamp(false)}
+                onClick={() => navigate(-1)}
               >
                 Save Changes
               </button>
