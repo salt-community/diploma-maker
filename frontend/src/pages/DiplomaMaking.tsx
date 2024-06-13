@@ -20,7 +20,7 @@ type SaltData = {
   names: string[];
 };
 
-const saltInitData: SaltData = {
+const saltDefaultData: SaltData = {
   classname: ".Net Fullstack",
   datebootcamp: "2024-06-08",
   names: ["Xinnan Luo"]
@@ -32,7 +32,7 @@ type Props = {
 }
 
 export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
-  const [SaltInfo, setSaltInfo] = useState<SaltData>(saltInitData);
+  const [SaltInfo, setSaltInfo] = useState<SaltData>(saltDefaultData);
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);
@@ -42,13 +42,18 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
 
   useEffect(() => {
     if (bootcamps) {
-      setSaltInfo({
-          classname: bootcamps[selectedBootcampIndex].name,
-          datebootcamp: bootcamps[selectedBootcampIndex].graduationDate.toString(),
-          names: bootcamps[selectedBootcampIndex].diplomas.map(diploma => diploma.studentName)
-      });
+      if(bootcamps[selectedBootcampIndex].diplomas.length == 0){
+        setSaltInfo(saltDefaultData);
+      }
+      else{
+          setSaltInfo({
+            classname: bootcamps[selectedBootcampIndex].name,
+            datebootcamp: bootcamps[selectedBootcampIndex].graduationDate.toString().slice(0, 10),
+            names: bootcamps[selectedBootcampIndex].diplomas.map(diploma => diploma.studentName)
+        });
+      }
     }
-  }, [bootcamps]);
+  }, [bootcamps, selectedBootcampIndex]);
 
   useEffect(() => {    
     const template: Template = getTemplate();  
