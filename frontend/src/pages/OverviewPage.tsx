@@ -1,26 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './OverviewPage.css';
-import { overviewPageItemsMockData } from '../Data/Mockdata';
 import { ModifyButton } from '../components/MenuItems/Buttons/ModifyButton';
 import { RemoveButton } from '../components/MenuItems/Buttons/RemoveButton';
 import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
+import { BootcampResponse, DiplomaInBootcamp } from '../util/types';
+import { Popup404 } from '../components/MenuItems/Popups/Popup404';
+import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 
-export const OverviewPage = () => {
+type Props = {
+    bootcamps: BootcampResponse[] | null,
+    deleteDiploma: (id: string) => Promise<void>;
+}
+
+export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
+    const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    const items = overviewPageItemsMockData;
+    useEffect(() => {
+        if (bootcamps) {
+            setLoading(false);
+        }
+    }, [bootcamps]);
+
+    const items = bootcamps?.flatMap(bootcamp => bootcamp.diplomas) || []; // Flatmap instead of map to flatten [][] into []
     const itemsPerPage = 8;
     const startIndex = (currentPage - 1) * itemsPerPage;
-    
-    const visibleItems = items.filter(item => 
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+
+    const visibleItems = items.filter((item: DiplomaInBootcamp) =>
+        item.studentName.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (!selectedBootcamp || bootcamps?.some(bootcamp => bootcamp.guidId === selectedBootcamp && bootcamp.diplomas.includes(item)))
     );
-    const selectedItems = visibleItems.slice(startIndex, startIndex + 8);
-    const totalPages = Math.ceil(visibleItems.length / 8);
+
+    const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
+    const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
 
     const handlePrevPage = () => {
         setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
@@ -35,34 +52,46 @@ export const OverviewPage = () => {
         setCurrentPage(1);
     };
 
+    const handleBootcampChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedBootcamp(e.target.value);
+        setCurrentPage(1);
+    };
+
     const modifyHandler = () => {
         
-    }
+    };
 
-    const deleteHandler = () => {
-        
-    }
+    const deleteHandler = (id: string) => {
+        setLoading(true);
+        deleteDiploma(id);
+        setLoading(false);
+    };
 
     const generatePDFsHandler = () => {
         
-    }
+    };
 
     return (
         <main className="overview-page">
             <section className='overview-page__listmodule'>
-                <div className='overview-page__listmodule-cardcontainer'>
-                    {selectedItems.map((item, index) => (
-                        <button key={index} className='listmodule__item'>
-                            <p className='overview-page__item--title'>{item.title}</p>
-                            <img className='overview-page__item--bg' src={item.src} alt={item.title} />
-                            <section className='overview-page__item--menu'>
-                                    <ModifyButton text='Modify' onClick={modifyHandler}/>
-                                    <RemoveButton text='Remove' onClick={deleteHandler}/>
-                            </section>
-                        </button>
-                    ))}
+            <div className='overview-page__listmodule-cardcontainer'>
+                    {loading ? (
+                        <SpinnerDefault classOverride="spinner"/>
+                    ) : (
+                        selectedItems.length > 0 ? selectedItems.map((item, index) => (
+                            <button key={item.guidId} className='listmodule__item'>
+                                <p className='overview-page__item--title'>{item.studentName}</p>
+                                <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
+                                <section className='overview-page__item--menu'>
+                                    <ModifyButton text='Modify' onClick={modifyHandler} />
+                                    <RemoveButton text='Remove' onClick={() => deleteHandler(item.guidId)} />
+                                </section>
+                            </button>
+                        )) : 
+                        <Popup404 text='No Diplomas Generated Yet For This Bootcamp'/>
+                    )}
                 </div>
-                <PaginationMenu 
+                <PaginationMenu
                     containerClassOverride='overview-page__footer'
                     buttonClassOverride='overview-page__pagination-button'
                     textContainerClassOverride='overview-page__pagination-info'
@@ -81,7 +110,7 @@ export const OverviewPage = () => {
                     </header>
                     <section className="overview-page__sidebar-menu-section">
                         <h3>Filtering</h3>
-                        <SearchInput 
+                        <SearchInput
                             containerClassOverride='overview-page__header input-wrapper'
                             inputClassOverride='overview-page__search-input'
                             searchQuery={searchQuery}
@@ -90,21 +119,22 @@ export const OverviewPage = () => {
                     </section>
                     <section className="overview-page__sidebar-menu-section">
                         <h3>Bootcamps</h3>
-                        <SelectOptions 
+                        <SelectOptions
                             containerClassOverride='overview-page__select-container'
                             selectClassOverride='overview-page__select-box'
-                            options={
-                                [
-                                    { value: '.Net Fullstack', label: '.Net Fullstack 2023' },
-                                    { value: 'Java Fullstack', label: 'Java Fullstack 2024' },
-                                    { value: 'Javascript Fullstack', label: 'Javascript Fullstack 2024' }
-                                ]
-                            }
+                            options={[
+                                { value: "", label: "All Bootcamps" },
+                                ...(bootcamps?.map(bootcamp => ({
+                                    value: bootcamp.guidId,
+                                    label: bootcamp.name
+                                })) || [])
+                            ]}
+                            onChange={handleBootcampChange}
                         />
                     </section>
                     <section className="overview-page__sidebar-menu-section">
                         <h3>Generate</h3>
-                        <PublishButton text='Generate PDFs' onClick={generatePDFsHandler}/>
+                        <PublishButton text='Generate PDFs' onClick={generatePDFsHandler} />
                     </section>
                 </div>
             </section>
