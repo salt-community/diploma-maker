@@ -2,18 +2,18 @@ import { FieldValues, UseFormRegister, useForm } from "react-hook-form";
 import { BootcampRequest, BootcampResponse } from "../util/types"
 import { EditText, EditTextarea } from 'react-edit-text';
 import { Dispatch, SetStateAction, useState } from "react";
-import AddNewBootcampForm from "./AddNewBootcampForm";
+import AddNewBootcampForm from "../components/AddNewBootcampForm";
 
 type Props = {
-  bootcamps: BootcampResponse[];
+  bootcamps: BootcampResponse[] | null;
   deleteBootcamp: (i: number) => Promise<void>;
-  register: UseFormRegister<FieldValues>;
-  isManageBootcamp: boolean;
-  setIsManageBootcamp: Dispatch<SetStateAction<boolean>>;
   addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 }
 
-export default function BootcampManagement({ bootcamps, deleteBootcamp, register, isManageBootcamp, setIsManageBootcamp, addNewBootcamp }: Props) {
+export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp }: Props) {
+  const[selectedBootcamp, setSelectedBootcamp] = useState<BootcampResponse>();
+  const {register, handleSubmit} = useForm();
+  const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false);
 
   function formatDate(date: Date){
     var newDate = new Date(date).toISOString().split('T')[0]
