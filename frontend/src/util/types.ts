@@ -38,5 +38,5 @@ export type BootcampResponse = {
     name: string;
     startDate: Date;
     graduationDate: Date;
-    diplomas: DiplomaInBootcamp;
+    diplomas: DiplomaInBootcamp[];
 }

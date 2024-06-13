@@ -25,6 +25,7 @@ const saltInitData: SaltData = {
   datebootcamp: "2024-06-08",
   names: ["Xinnan Luo"]
 };
+
 type Props = {
   bootcamps: BootcampResponse[] | null;
   deleteBootcamp: (i: number) => Promise<void>;
@@ -34,9 +35,20 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
   const [SaltInfo, setSaltInfo] = useState<SaltData>(saltInitData);
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
+  const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);
   
   const uiRef = useRef<HTMLDivElement | null>(null);
   const uiInstance = useRef<Form | Viewer | null>(null);
+
+  useEffect(() => {
+    if (bootcamps) {
+      setSaltInfo({
+          classname: bootcamps[selectedBootcampIndex].name,
+          datebootcamp: bootcamps[selectedBootcampIndex].graduationDate.toString(),
+          names: bootcamps[selectedBootcampIndex].diplomas.map(diploma => diploma.studentName)
+      });
+    }
+  }, [bootcamps]);
 
   useEffect(() => {    
     const template: Template = getTemplate();  
