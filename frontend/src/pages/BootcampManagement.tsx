@@ -9,12 +9,12 @@ type Props = {
   bootcamps: BootcampResponse[] | null;
   deleteBootcamp: (i: number) => Promise<void>;
   addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
+  updateBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 }
 
-export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp }: Props) {
+export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp }: Props) {
   const {register, handleSubmit} = useForm();
   const [showConfirmAlert, setShowConfirmAlert] = useState<number>(-1); 
-  const [isConfirmDelete, setIsConfirmDelete] = useState<boolean>(false);
   const navigate = useNavigate();
 
   function formatDate(date: Date){
@@ -28,9 +28,23 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
     setShowConfirmAlert(-1);
   }
 
+  async function handleUpdateBootcamp(data: FieldValues){
+    alert("Successfully updated! ")
+    for(let i=0; i<bootcamps!.length; i++){
+      const newBootcamp: BootcampRequest = {
+        guidId: bootcamps![i].guidId,
+        name: data[`name${i}`],
+        startDate: data[`datestart${i}`],
+        graduationDate: data[`dategraduate${i}`]
+      };
+      await updateBootcamp(newBootcamp);
+    }
+    alert("Successfully updated! ")
+  }
+
 
   return (
-    <>
+    <form onSubmit={(e) => {e.preventDefault(); handleSubmit(handleUpdateBootcamp)}}>
       <div
         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none font-medium text-gray-700 "
       >
@@ -59,7 +73,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                     bootcamps!.map((bootcamp, index) =>
                       // Display existing bootcamps
                       <tr>
-                        <td className="pr-3"><EditText defaultValue={bootcamp.name} /></td>
+                        <td className="pr-3"  {...register(`name${index}`)}><EditText defaultValue={bootcamp.name} /></td>
                         <td className="pr-3">
                           <input
                             id={bootcamp.guidId}
@@ -101,8 +115,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
               </button>
               <button
                 className="bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 uppercase text-sm font-medium text-white px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={() => navigate(-1)}
+                type="submit"
               >
                 Save Changes
               </button>
@@ -141,7 +154,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
           </div>
       </div>
   </div>}
-    </>
+    </form>
   )
 
 

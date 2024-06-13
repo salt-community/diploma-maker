@@ -33,6 +33,12 @@ function App() {
     setBootcamps(newBootcamps);
   }
 
+  async function updateBootcamp(bootcamp: BootcampRequest){
+    await updateBootcamp(bootcamp);
+    const newBootcamps = await getBootcamps();
+    setBootcamps(newBootcamps);
+  }
+
   return (
     <>
       <NavBar />
@@ -40,7 +46,7 @@ function App() {
         <Route path="/" element={<DiplomaMaking bootcamps={bootcamps!} deleteBootcamp={deleteBootcamp} addNewBootcamp= {addNewBootcamp}/>} />
         <Route path={`/:guidId`} element = {<VertificationPage />} />
         <Route path={"/overview"} element={<OverviewPage />} />
-        <Route path="/bootcamp-management" element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp}/>} /> 
+        <Route path="/bootcamp-management" element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
       </Routes>
     </>
   );

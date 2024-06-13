@@ -49,6 +49,8 @@ export async function updateBootcamp(bootcampRequest: BootcampRequest): Promise<
     })
     if (!response.ok)
         throw new Error("Failed to update bootcamp!")
+    else 
+        console.log("!!!!!!!!!!")
 }
 
 export async function deleteBootcampById(guidId: string): Promise<void> {
