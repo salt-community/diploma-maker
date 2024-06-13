@@ -13,7 +13,7 @@ type Props = {
 export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp }: Props) {
   const[selectedBootcamp, setSelectedBootcamp] = useState<BootcampResponse>();
   const {register, handleSubmit} = useForm();
-  const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false);
+  const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false); 
 
   function formatDate(date: Date){
     var newDate = new Date(date).toISOString().split('T')[0]
