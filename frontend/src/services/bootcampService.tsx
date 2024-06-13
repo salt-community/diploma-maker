@@ -21,7 +21,8 @@ export async function getBootcampById(guidId: string): Promise<BootcampResponse>
 export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<void> {
     const formattedRequest = {
         ...bootcampRequest,
-        startDate: bootcampRequest.startDate? bootcampRequest.startDate.toISOString(): undefined
+        startDate: bootcampRequest.startDate? bootcampRequest.startDate.toISOString(): undefined,
+        graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
     const response = await fetch (`http://localhost:5258/api/bootcamp`,{
         method: 'POST',
@@ -33,6 +34,21 @@ export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<vo
     }
     if (!response.ok)
         throw new Error("Failed to post new bootcamp!")
+}
+
+export async function updateBootcamp(bootcampRequest: BootcampRequest): Promise<void>{
+    const formattedRequest = {
+        ...bootcampRequest,
+        startDate: bootcampRequest.startDate? bootcampRequest.startDate.toISOString(): undefined,
+        graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
+    };
+    const response = await fetch(`http://localhost:5258/api/bootcamp/${bootcampRequest.guidId!}`,{
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formattedRequest)
+    })
+    if (!response.ok)
+        throw new Error("Failed to update bootcamp!")
 }
 
 export async function deleteBootcampById(guidId: string): Promise<void> {
