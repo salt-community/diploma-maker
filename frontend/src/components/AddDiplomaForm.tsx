@@ -1,8 +1,9 @@
 import { useForm, FieldValues, UseFormRegister } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
-import { BootcampResponse } from "../util/types";
-import BootcampManagement from "./BootcampManagement";
+import { BootcampRequest, BootcampResponse } from "../util/types";
+import BootcampManagement from "../pages/BootcampManagement";
+import { Link } from "react-router-dom";
 
 
 
@@ -16,23 +17,28 @@ type Props = {
   SetFormInfo: (data: any) => void;
   bootcamps: BootcampResponse[] | null;
   deleteBootcamp: (i: number) => Promise<void>;
+  addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 };
 
-export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp }: Props) {
-  // const {register, handleSubmit } = useForm<FormData>();
+export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp, addNewBootcamp }: Props) {
   const {register, handleSubmit} = useForm();
   const [names, setNames] = useState<string[]>([]);
-  const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false);
-  const[selectedBootcamp, setSelectedBootcamp] = useState<BootcampResponse>()
+
 
     const submitAndMakePDF = (data: FieldValues) => {
         const formData: FormData = {
             classname: data.classname,
-            datebootcamp: data.datebootcamp,
-            names: names
+            datestart: data.datestart,
+            dategraduate: data.dategraduate,
+            names: names,
         }
         console.log(formData.names);
         SetFormInfo(formData);
+        
+        const newBootcamp: BootcampRequest = {name: data.newname, startDate: data.newstartdate, graduationDate: data.newgraduatedate};
+        addNewBootcamp(newBootcamp);
+        
+        
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
@@ -40,10 +46,6 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
         e.preventDefault();
       }
     };
-
-    function showBootcamps(){
-      setIsManageBootcamp(!isManageBootcamp);
-    }
 
     return (
       <form
@@ -71,20 +73,13 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
               ))
             )
           }
-            
           </select>
-          <button type="button" onClick={showBootcamps} className="w-1/4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Manage
-          </button>
-          {(isManageBootcamp && bootcamps) &&(
-            <BootcampManagement 
-              bootcamps={bootcamps} 
-              deleteBootcamp={deleteBootcamp} 
-              register={register} 
-              isManageBootcamp={isManageBootcamp} 
-              setIsManageBootcamp={setIsManageBootcamp}
-            />
-          )}
+          
+          <Link to="/bootcamp-management">
+            <button type="button" className="w-1/4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              Manage
+            </button>
+          </Link>
         </div>
   
         <div>
@@ -96,6 +91,7 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
             {...register("names")}
             className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           /> */}
+          
           <TagsInput 
             selectedTags={(names: string[]) => setNames(names)} 
           />

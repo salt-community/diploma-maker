@@ -2,10 +2,11 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/DiplomaMaking';
 import { VertificationPage } from "./pages/VerificationPage";
 import { useState } from "react";
-import { BootcampResponse } from "./util/types";
-import { deleteBootcampById, getBootcamps } from "./services/bootcampService";
+import { BootcampRequest, BootcampResponse } from "./util/types";
+import { deleteBootcampById, getBootcamps, postBootcamp, updateBootcamp as updateBootcampService } from "./services/bootcampService";
 import { OverviewPage } from "./pages/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar";
+import BootcampManagement from "./pages/BootcampManagement";
 import { deleteDiplomaById } from "./services/diplomaService";
 
 function App() {
@@ -36,12 +37,25 @@ function App() {
     setBootcamps(newBootcamps);
   }
 
+  async function addNewBootcamp(bootcamp: BootcampRequest){
+    await postBootcamp(bootcamp);
+    const newBootcamps = await getBootcamps();
+    setBootcamps(newBootcamps);
+  }
+
+  async function updateBootcamp(bootcamp: BootcampRequest){
+    await updateBootcampService(bootcamp);
+    const newBootcamps = await getBootcamps();
+    setBootcamps(newBootcamps);
+  }
+
   return (
     <>
       <NavBar />
       <Routes>
-        <Route path="/" element={<DiplomaMaking bootcamps={bootcamps!} deleteBootcamp={deleteBootcamp}/>} />
+        <Route path="/" element={<DiplomaMaking bootcamps={bootcamps!} deleteBootcamp={deleteBootcamp} addNewBootcamp= {addNewBootcamp}/>} />
         <Route path={`/:guidId`} element = {<VertificationPage />} />
+        <Route path="/bootcamp-management" element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteDiploma={deleteDiploma}/>} />
       </Routes>
     </>
