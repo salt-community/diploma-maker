@@ -3,7 +3,7 @@ import DiplomaMaking from './pages/DiplomaMaking';
 import { VertificationPage } from "./pages/VerificationPage";
 import { useState } from "react";
 import { BootcampRequest, BootcampResponse } from "./util/types";
-import { deleteBootcampById, getBootcamps, postBootcamp } from "./services/bootcampService";
+import { deleteBootcampById, getBootcamps, postBootcamp, updateBootcamp as updateBootcampService } from "./services/bootcampService";
 import { OverviewPage } from "./pages/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar";
 import BootcampManagement from "./pages/BootcampManagement";
@@ -34,7 +34,7 @@ function App() {
   }
 
   async function updateBootcamp(bootcamp: BootcampRequest){
-    await updateBootcamp(bootcamp);
+    await updateBootcampService(bootcamp);
     const newBootcamps = await getBootcamps();
     setBootcamps(newBootcamps);
   }

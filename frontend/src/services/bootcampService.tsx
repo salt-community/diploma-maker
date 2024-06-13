@@ -42,6 +42,7 @@ export async function updateBootcamp(bootcampRequest: BootcampRequest): Promise<
         startDate: bootcampRequest.startDate? bootcampRequest.startDate.toISOString(): undefined,
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
+    console.log(formattedRequest);
     const response = await fetch(`http://localhost:5258/api/bootcamp/${bootcampRequest.guidId!}`,{
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -49,8 +50,6 @@ export async function updateBootcamp(bootcampRequest: BootcampRequest): Promise<
     })
     if (!response.ok)
         throw new Error("Failed to update bootcamp!")
-    else 
-        console.log("!!!!!!!!!!")
 }
 
 export async function deleteBootcampById(guidId: string): Promise<void> {

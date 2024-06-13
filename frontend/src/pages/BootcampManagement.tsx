@@ -29,13 +29,13 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   }
 
   async function handleUpdateBootcamp(data: FieldValues){
-    alert("Successfully updated! ")
+    console.log("Updating...", data)
     for(let i=0; i<bootcamps!.length; i++){
       const newBootcamp: BootcampRequest = {
         guidId: bootcamps![i].guidId,
         name: data[`name${i}`],
-        startDate: data[`datestart${i}`],
-        graduationDate: data[`dategraduate${i}`]
+        startDate:  new Date(data[`datestart${i}`]),
+        graduationDate:  new Date (data[`dategraduate${i}`])
       };
       await updateBootcamp(newBootcamp);
     }
@@ -44,7 +44,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
 
 
   return (
-    <form onSubmit={(e) => {e.preventDefault(); handleSubmit(handleUpdateBootcamp)}}>
+    <form onSubmit={handleSubmit(handleUpdateBootcamp)}>
       <div
         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none font-medium text-gray-700 "
       >
@@ -72,7 +72,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                   {
                     bootcamps!.map((bootcamp, index) =>
                       // Display existing bootcamps
-                      <tr>
+                      <tr key={bootcamp.guidId}>
                         <td className="pr-3"  {...register(`name${index}`)}><EditText defaultValue={bootcamp.name} /></td>
                         <td className="pr-3">
                           <input
