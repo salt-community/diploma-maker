@@ -162,7 +162,12 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp}: Props) {
         </div>
       </section>
       <section className="flex-1 flex flex-col">
-        <AddDiplomaForm SetFormInfo={UpdateSaltInfo} deleteBootcamp={deleteBootcamp} bootcamps={bootcamps}/>
+        <AddDiplomaForm 
+          SetFormInfo={UpdateSaltInfo} 
+          deleteBootcamp={deleteBootcamp} 
+          bootcamps={bootcamps} 
+          setSelectedBootcampIndex={setSelectedBootcampIndex}
+        />
       </section>
     </div>
   );

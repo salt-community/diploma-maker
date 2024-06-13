@@ -16,9 +16,10 @@ type Props = {
   SetFormInfo: (data: any) => void;
   bootcamps: BootcampResponse[] | null;
   deleteBootcamp: (i: number) => Promise<void>;
+  setSelectedBootcampIndex: (index: number) => void;
 };
 
-export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp }: Props) {
+export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp, setSelectedBootcampIndex }: Props) {
   // const {register, handleSubmit } = useForm<FormData>();
   const {register, handleSubmit} = useForm();
   const [names, setNames] = useState<string[]>([]);
@@ -62,12 +63,13 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp 
             id="classname"
             {...register("classname")}
             className="mt-1 w-3/4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            onChange={(e) => {setSelectedBootcampIndex(e.target.selectedIndex)}}
           >
             
           {
             bootcamps &&(
-              bootcamps!.map((bootcamp => 
-                <option value={bootcamp.name}>{bootcamp.name}</option>
+              bootcamps!.map(((bootcamp, index) => 
+                <option key={index} value={bootcamp.name}>{bootcamp.name}</option>
               ))
             )
           }
