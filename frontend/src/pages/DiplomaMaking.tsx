@@ -33,6 +33,8 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
   const uiRef = useRef<HTMLDivElement | null>(null);
   const uiInstance = useRef<Form | Viewer | null>(null);
 
+  const [readDataFromDb, setreadDataFromDb] = useState<boolean>(true);
+
   useEffect(() => {
     if (bootcamps) {
       if (bootcamps[selectedBootcampIndex].diplomas.length === 0) {
@@ -43,9 +45,10 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
           datebootcamp: bootcamps[selectedBootcampIndex].graduationDate.toString().slice(0, 10),
           names: bootcamps[selectedBootcampIndex].diplomas.map(diploma => diploma.studentName)
         });
+        setreadDataFromDb(false);
       }
     }
-  }, [bootcamps, selectedBootcampIndex]);
+  }, [bootcamps]);
 
   useEffect(() => {
     const template: Template = getTemplate();
