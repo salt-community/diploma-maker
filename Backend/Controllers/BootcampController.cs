@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Backend.Models;
 using Backend.Services;
 using AutoMapper;
-
-
 namespace Backend.Controllers;
 
 [Route("api/[controller]")]
@@ -27,80 +25,74 @@ public class BootcampController : ControllerBase
         try
         {
             var bootcamp = _mapper.Map<Bootcamp>(requestDto);
-            await _service.PostBootcamp(bootcamp);
-            var responseDto = _mapper.Map<BootcampResponseDto>(bootcamp);
-            return CreatedAtAction(nameof(GetBootcamps), new { id = bootcamp.Id }, responseDto);
+            Bootcamp createdBootcamp = await _service.PostBootcamp(bootcamp);
+            var responseDto = _mapper.Map<BootcampResponseDto>(createdBootcamp);
+            return CreatedAtAction(nameof(GetBootcamps), new { id = createdBootcamp.Id }, responseDto);
         }
-        catch (ArgumentException)
+        catch (DbUpdateException)
         {
-            return Conflict(new { message = "A bootcamp with the same name already exists." });
+            return BadRequest(new { message = "Name of that specific Bootcamp already exits" });
         }
 
     }
-
 
     // GET: api/Bootcamp
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Bootcamp>>> GetBootcamps()
     {
-        var bootcamps = await _service.GetBootcamps();
+        List<Bootcamp> bootcamps = await _service.GetBootcamps();
         var bootcampResponseDtos = _mapper.Map<List<BootcampResponseDto>>(bootcamps);
         return Ok(bootcampResponseDtos);
     }
 
     // GET: api/Bootcamp/5
     [HttpGet("{guidId}")]
-    public async Task<ActionResult<BootcampResponseDto>> GetBootcampByGuidId(string guidId)
+    public async Task<ActionResult<BootcampResponseDto>> GetBootcampByGuidId(Guid guidId)
     {
         var bootcamp = await _service.GetBootcampByGuidId(guidId);
-        if (bootcamp == null)
-            return NotFound();
-        var responseDto = _mapper.Map<BootcampResponseDto>(bootcamp);
-
-        return responseDto;
+        return bootcamp == null ?
+            NotFound(new { message = "Bootcamp with that specific ID does not exist" }) :
+            _mapper.Map<BootcampResponseDto>(bootcamp);
     }
+
 
 
     // DELETE: api/Bootcamp/5
     [HttpDelete("{guidId}")]
-    public async Task<IActionResult> DeleteBootcamp(string guidId)
-    {   
+    public async Task<IActionResult> DeleteBootcamp(Guid guidId)
+    {
         try
         {
-            var bootcamp = await _service.DeleteBootcampByGuidId(guidId);
+            await _service.DeleteBootcampByGuidId(guidId);
+            return Ok();
         }
-        catch(ArgumentException)
+        catch (ArgumentException e)
         {
-            return NotFound("Bootcamp not found");
+            return NotFound(e.Message);
         }
-        return Ok();
+
     }
 
 
     // PUT: api/Bootcamp/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{guidId}")]
-    public async Task<IActionResult> PutBootcamp(string guidId, BootcampRequestDto requestDto)
+    public async Task<ActionResult<Bootcamp>> PutBootcamp(Guid guidId, [FromBody] BootcampRequestDto requestDto)
     {
-        if (guidId != requestDto.GuidId.ToString())
-            {
-                return BadRequest("The provided ID does not match the ID in the request body.");
-            }
         try
         {
-            var res =  await _service.PutBootcampAsync(requestDto);
-            if (!res)
-            {
-                return NotFound("Bootcamp not found.");
-            }
+            var bootcamp = await _service.PutBootcampAsync(guidId, requestDto);
+            return Ok(bootcamp);
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
-            return StatusCode(500, ex.Message);
+            return NotFound(ex.Message);
         }
-
-        return Ok();
+        catch (DbUpdateException)
+        {
+            return BadRequest("Failed to save changes. Bootcamp name needs to be unique.");
+        }
     }
+
 
 
 }

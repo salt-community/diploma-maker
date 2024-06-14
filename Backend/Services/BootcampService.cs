@@ -1,95 +1,70 @@
-using Microsoft.EntityFrameworkCore;
-using Backend.Models;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+    using Microsoft.EntityFrameworkCore;
+    using Backend.Models;
+    using AutoMapper;
+    using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Backend.Services;
+    namespace Backend.Services;
 
-public class BootcampService
-{
-    private readonly DiplomaMakingContext _context;
-    private readonly IMapper _mapper;
-
-
-    public BootcampService(DiplomaMakingContext context, IMapper mapper)
+    public class BootcampService
     {
-        _context = context;
-        _mapper = mapper;
-    }
+        private readonly DiplomaMakingContext _context;
 
-    public async Task<Bootcamp> PostBootcamp(Bootcamp bootcamp)
-    {
-        var existingBootcamp = await _context.Bootcamp
-            .FirstOrDefaultAsync(b => b.Name == bootcamp.Name);
-        if (existingBootcamp != null)
-            throw new ArgumentException("Bootcamp with this name exists");
-
-        bootcamp.GuidId = Guid.NewGuid();
-        _context.Bootcamp.Add(bootcamp);
-        await _context.SaveChangesAsync();
-
-        return bootcamp;
-    }
-
-    public async Task<List<Bootcamp>> GetBootcamps()
-    {
-        return await _context.Bootcamp
-            .Include(b => b.Diplomas)
-            .ToListAsync();
-    }
-
-
-    public async Task<Bootcamp?> GetBootcampByGuidId(string guidId)
-    {
-        var bootcamp = await _context.Bootcamp
-            .Include(b => b.Diplomas)
-            .FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId);
-        return bootcamp;
-
-    }
-
-    public async Task<Bootcamp> DeleteBootcampByGuidId(string guidId)
-    {
-        var bootcamp = await _context.Bootcamp.
-            FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId)
-            ?? throw new ArgumentException("Bootcamp does not exist");
-
-        _ = _context.Bootcamp.Remove(bootcamp);
-        await _context.SaveChangesAsync();
-        return bootcamp;
-    }
-
-   public async Task<bool> PutBootcampAsync(BootcampRequestDto requestDto) 
-   {
-    try
-    {
-        var bootcamp = await _context.Bootcamp
-            .FirstOrDefaultAsync(b => b.GuidId == requestDto.GuidId);
-    
-        if (bootcamp == null)
+        public BootcampService(DiplomaMakingContext context)
         {
-            return false;
+            _context = context;
         }
 
-        bootcamp.Name = requestDto.Name;
-        bootcamp.StartDate = requestDto.StartDate;
-        bootcamp.GraduationDate = requestDto.GraduationDate;
+        public async Task<Bootcamp> PostBootcamp(Bootcamp bootcamp)
+        {
+            _context.Bootcamp.Add(bootcamp);
+            await _context.SaveChangesAsync();
+            return bootcamp;
+        }
 
+        public async Task<List<Bootcamp>> GetBootcamps() =>
+                await _context.Bootcamp
+                .Include(b => b.Diplomas)
+                .ToListAsync();
+
+        public async Task<Bootcamp?> GetBootcampByGuidId(Guid guidId) => 
+                await _context.Bootcamp
+                .Include(b => b.Diplomas)
+                .FirstOrDefaultAsync(b => b.GuidId == guidId);
+
+    public async Task<Bootcamp> DeleteBootcampByGuidId(Guid guidId)
+    {
+        var bootcamp = await _context.Bootcamp.FirstOrDefaultAsync(b => b.GuidId == guidId);
+        if (bootcamp == null)
+        {
+            throw new ArgumentException("The specifc ID for Bootcamp does not exist");
+        }
+        _context.Remove(bootcamp);
         await _context.SaveChangesAsync();
+
+        return bootcamp;
     }
-    catch (DbUpdateException ex)
+
+
+    public async Task<Bootcamp> PutBootcampAsync(Guid GuidID, BootcampRequestDto requestDto) 
     {
-        throw new DbUpdateException("Failed to save changes", ex);
+        try
+        {
+            var bootcamp = await _context.Bootcamp
+                .FirstOrDefaultAsync(b => b.GuidId == GuidID) ?? throw new ArgumentException("The specifc ID for Bootcamp does not exist");
+
+            bootcamp.Name = requestDto.Name;
+            bootcamp.StartDate = requestDto.StartDate;
+            bootcamp.GraduationDate = requestDto.GraduationDate;
+
+           await _context.SaveChangesAsync();
+           return bootcamp;
+        }
+        catch (DbUpdateException ex)
+        {
+            throw new DbUpdateException("Failed to save changes Bootcamp name needs to be unique");
+        }
+   
     }
 
-    return true;
-}
 
-
-    private bool BootcampExists(int id)
-    {
-        return _context.Bootcamp.Any(e => e.Id == id);
     }
-
-
-}
