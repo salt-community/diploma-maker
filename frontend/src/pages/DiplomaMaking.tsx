@@ -137,7 +137,7 @@ export default function DiplomaMaking({ bootcamps }: Props) {
   };
 
   return (
-    <div className="flex w-full h-screen justify-between mt-2">
+    <div className="flex w-full h-screen justify-between pt-10 dark: bg-darkbg">
       <section className="flex-1 flex flex-col justify-start gap-1 ml-5">
         <header className="flex items-center justify-start gap-3 mb-2">
           <div>

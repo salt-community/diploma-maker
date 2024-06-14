@@ -18,7 +18,9 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   const navigate = useNavigate();
 
   function formatDate(date: Date){
-    var newDate = new Date(date).toISOString().split('T')[0]
+    const dateConverted = new Date(date);
+    dateConverted.setDate(dateConverted.getDate() + 1);
+    var newDate = new Date(dateConverted).toISOString().split('T')[0]
     return newDate
   }
 
@@ -71,7 +73,14 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                     bootcamps!.map((bootcamp, index) =>
                       // Display existing bootcamps
                       <tr key={bootcamp.guidId}>
-                        <td className="pr-3"  {...register(`name${index}`)}><EditText defaultValue={bootcamp.name} /></td>
+                      <td className="pr-3">
+                        <input
+                          type="text"
+                          {...register(`name${index}`)}
+                          defaultValue = {bootcamp.name} 
+                          className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        />
+                      </td>
                         <td className="pr-3">
                           <input
                             id={bootcamp.guidId}
