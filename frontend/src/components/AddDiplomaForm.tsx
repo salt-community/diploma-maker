@@ -9,14 +9,14 @@ type Props = {
   bootcamps: BootcampResponse[] | null;
   saltData: SaltData;
   updateSaltData: (data: SaltData) => void;
-  deleteBootcamp: (i: number) => Promise<void>;
+  // deleteBootcamp: (i: number) => Promise<void>;
   setSelectedBootcampIndex: (index: number) => void;
+  // addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 };
 
-export default function AddDiplomaForm({ updateSaltData, bootcamps, deleteBootcamp, setSelectedBootcampIndex, saltData }: Props) {
+export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData }: Props) {
   const {register, handleSubmit} = useForm();
   const [names, setNames] = useState<string[]>([]);
-  const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false);
 
     const updateSaltDataHandler = (data: FieldValues) => {
         const newSaltData: SaltData = {
@@ -26,11 +26,6 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, deleteBootca
             names: names,
         }
         updateSaltData(newSaltData);
-        
-        const newBootcamp: BootcampRequest = {name: data.newname, startDate: data.newstartdate, graduationDate: data.newgraduatedate};
-        addNewBootcamp(newBootcamp);
-        
-        
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
