@@ -28,14 +28,14 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);
-  
+
   const uiRef = useRef<HTMLDivElement | null>(null);
   const uiInstance = useRef<Form | Viewer | null>(null);
 
   const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>();
 
 
-  // Only Once when page starts -> Loads in data from database
+  // When page starts -> Puts backend data into saltData
   useEffect(() => {
     if (bootcamps) {
       if (bootcamps[selectedBootcampIndex].diplomas.length === 0) {
@@ -66,7 +66,7 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
     }
   }, [bootcamps]);
 
-  // Everytime Page Changes -> Loads in to PDF preview
+  // When Page Changes -> Loads in to PDF preview
   useEffect(() => {
     const template: Template = getTemplate();
     const inputs = [makeTemplateInput(saltData[selectedBootcampIndex].names[currentTemplateIndex], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].datebootcamp)];
@@ -94,7 +94,8 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
     };
   }, [uiRef, currentDisplayMode, currentTemplateIndex, saltData, selectedBootcampIndex]);
 
-  const updateSaltInfoHandler = (data: SaltData) => {
+  //When pressing "Apply button" -> Updates SaltData
+  const updateSaltDataHandler = (data: SaltData) => {
     setSaltData(prevSaltInfoProper =>
       prevSaltInfoProper.map((item, index) =>
         index === selectedBootcampIndex ? data : item
@@ -182,11 +183,11 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
       </section>
       <section className="flex-1 flex flex-col">
         <AddDiplomaForm 
-          SetFormInfo={updateSaltInfoHandler} 
+          updateSaltData={updateSaltDataHandler} 
           deleteBootcamp={deleteBootcamp} 
           bootcamps={bootcamps} 
           setSelectedBootcampIndex={(index) => {setSelectedBootcampIndex(index); setCurrentTemplateIndex(0);}}
-          SaltInfo={saltData[selectedBootcampIndex]}
+          saltData={saltData[selectedBootcampIndex]}
         />
       </section>
     </div>
