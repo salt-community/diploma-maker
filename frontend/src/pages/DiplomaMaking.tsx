@@ -26,7 +26,7 @@ type Props = {
 export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
   const [saltData, setSaltData] = useState<SaltData[]>([saltDefaultData]);
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
-  const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
+  const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);
 
   const uiRef = useRef<HTMLDivElement | null>(null);
@@ -69,7 +69,7 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
   // When Page Changes -> Loads in to PDF preview
   useEffect(() => {
     const template: Template = getTemplate();
-    const inputs = [makeTemplateInput(saltData[selectedBootcampIndex].names[currentTemplateIndex], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].datebootcamp)];
+    const inputs = [makeTemplateInput(saltData[selectedBootcampIndex].names[currentPageIndex], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].datebootcamp)];
 
     getFontsData().then((font) => {
       if (uiRef.current) {
@@ -92,16 +92,15 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
         uiInstance.current = null;
       }
     };
-  }, [uiRef, currentDisplayMode, currentTemplateIndex, saltData, selectedBootcampIndex]);
+  }, [uiRef, currentDisplayMode, currentPageIndex, saltData, selectedBootcampIndex]);
 
-  //When pressing "Apply button" -> Updates SaltData
   const updateSaltDataHandler = (data: SaltData) => {
     setSaltData(prevSaltInfoProper =>
       prevSaltInfoProper.map((item, index) =>
         index === selectedBootcampIndex ? data : item
       )
     );
-    setCurrentTemplateIndex(0);
+    setCurrentPageIndex(0);
   };
 
   const changeDisplayModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,21 +109,15 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
   };
 
   const prevTemplateInstanceHandler = () => {
-    setCurrentTemplateIndex((prevIndex) =>
+    setCurrentPageIndex((prevIndex) =>
       prevIndex === 0 ? saltData[selectedBootcampIndex].names.length - 1 : prevIndex - 1
     );
   };
 
   const nextTemplateInstanceHandler = () => {
-    setCurrentTemplateIndex((prevIndex) =>
+    setCurrentPageIndex((prevIndex) =>
       prevIndex === saltData[selectedBootcampIndex].names.length - 1 ? 0 : prevIndex + 1
     );
-  };
-
-  const saveInputsHandler = () => {
-    if (uiInstance.current) {
-
-    }
   };
 
   const generatePDFHandler = async () => {
@@ -167,7 +160,6 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
           </div>
           <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generatePDFHandler}>Generate PDF</button>
           <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generateCombinedPDFHandler}>Generate PDFs</button>
-          <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={saveInputsHandler}>Save Changes</button>
         </header>
         <div
           ref={uiRef}
@@ -176,7 +168,7 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
         <div className="flex justify-center mt-4">
           <button onClick={prevTemplateInstanceHandler}>Previous</button>
           <span className="mx-4">
-            Template {currentTemplateIndex + 1} of {saltData[selectedBootcampIndex].names.length}
+            Template {currentPageIndex + 1} of {saltData[selectedBootcampIndex].names.length}
           </span>
           <button onClick={nextTemplateInstanceHandler}>Next</button>
         </div>
@@ -186,7 +178,7 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
           updateSaltData={updateSaltDataHandler} 
           deleteBootcamp={deleteBootcamp} 
           bootcamps={bootcamps} 
-          setSelectedBootcampIndex={(index) => {setSelectedBootcampIndex(index); setCurrentTemplateIndex(0);}}
+          setSelectedBootcampIndex={(index) => {setSelectedBootcampIndex(index); setCurrentPageIndex(0);}}
           saltData={saltData[selectedBootcampIndex]}
         />
       </section>

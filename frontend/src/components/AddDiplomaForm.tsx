@@ -5,11 +5,11 @@ import { BootcampResponse, SaltData } from "../util/types";
 import BootcampManagement from "./BootcampManagement";
 
 type Props = {
-  updateSaltData: (data: SaltData) => void;
   bootcamps: BootcampResponse[] | null;
+  saltData: SaltData;
+  updateSaltData: (data: SaltData) => void;
   deleteBootcamp: (i: number) => Promise<void>;
   setSelectedBootcampIndex: (index: number) => void;
-  saltData: SaltData;
 };
 
 export default function AddDiplomaForm({ updateSaltData, bootcamps, deleteBootcamp, setSelectedBootcampIndex, saltData }: Props) {

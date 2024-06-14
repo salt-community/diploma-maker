@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import './TagsInput.css';
 
 type Props = {
-  selectedTags: (tags: string[]) => void;
   tags: string[];
+  selectedTags: (tags: string[]) => void;
 }
 
 const TagsInput = ({ selectedTags, tags }: Props) => {
