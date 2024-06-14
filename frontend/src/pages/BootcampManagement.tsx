@@ -1,9 +1,9 @@
-import { FieldValues, UseFormRegister, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { BootcampRequest, BootcampResponse } from "../util/types"
-import { EditText, EditTextarea } from 'react-edit-text';
-import { Dispatch, SetStateAction, useState } from "react";
+import { EditText } from 'react-edit-text';
+import { useState } from "react";
 import AddNewBootcampForm from "../components/AddNewBootcampForm";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -24,7 +24,6 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
 
   async function handleDeleteBootcamp(i: number){
     await deleteBootcamp(i);
-    alert("Successfully deleted!")
     setShowConfirmAlert(-1);
   }
 
@@ -39,7 +38,6 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
       };
       await updateBootcamp(newBootcamp);
     }
-    alert("Successfully updated! ")
   }
 
 

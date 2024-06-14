@@ -1,44 +1,31 @@
-import { useForm, FieldValues, UseFormRegister } from "react-hook-form";
+import { useForm, FieldValues } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
-import { BootcampRequest, BootcampResponse } from "../util/types";
+import { BootcampRequest, BootcampResponse, SaltData } from "../util/types";
 import BootcampManagement from "../pages/BootcampManagement";
 import { Link } from "react-router-dom";
 
-
-
-type FormData = {
-  classname: string;
-  datebootcamp: string;
-  names: string;
-};
-
 type Props = {
-  SetFormInfo: (data: any) => void;
   bootcamps: BootcampResponse[] | null;
-  deleteBootcamp: (i: number) => Promise<void>;
-  addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
+  saltData: SaltData;
+  updateSaltData: (data: SaltData) => void;
+  // deleteBootcamp: (i: number) => Promise<void>;
+  setSelectedBootcampIndex: (index: number) => void;
+  // addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 };
 
-export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp, addNewBootcamp }: Props) {
+export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData }: Props) {
   const {register, handleSubmit} = useForm();
   const [names, setNames] = useState<string[]>([]);
 
-
-    const submitAndMakePDF = (data: FieldValues) => {
-        const formData: FormData = {
+    const updateSaltDataHandler = (data: FieldValues) => {
+        const newSaltData: SaltData = {
             classname: data.classname,
             datestart: data.datestart,
             dategraduate: data.dategraduate,
             names: names,
         }
-        console.log(formData.names);
-        SetFormInfo(formData);
-        
-        const newBootcamp: BootcampRequest = {name: data.newname, startDate: data.newstartdate, graduationDate: data.newgraduatedate};
-        addNewBootcamp(newBootcamp);
-        
-        
+        updateSaltData(newSaltData);
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
@@ -51,7 +38,7 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmit(submitAndMakePDF)();
+          handleSubmit(updateSaltDataHandler)();
         }}
         onKeyDown={handleKeyDown}
         className="space-y-4 p-6 bg-white rounded shadow-md"
@@ -64,12 +51,14 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
             id="classname"
             {...register("classname")}
             className="mt-1 w-3/4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            onChange={(e) => {setSelectedBootcampIndex(e.target.selectedIndex)}}
+            value={saltData.classname}
           >
             
           {
             bootcamps &&(
-              bootcamps!.map((bootcamp => 
-                <option value={bootcamp.name}>{bootcamp.name}</option>
+              bootcamps!.map(((bootcamp, index) => 
+                <option key={index} value={bootcamp.name}>{bootcamp.name}</option>
               ))
             )
           }
@@ -81,19 +70,14 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
             </button>
           </Link>
         </div>
-  
+
         <div>
           <label htmlFor="names" className="block text-sm font-medium text-gray-700">
             Student Names
           </label>
-          {/* <textarea
-            id="names"
-            {...register("names")}
-            className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          /> */}
-          
           <TagsInput 
             selectedTags={(names: string[]) => setNames(names)} 
+            tags={saltData.names}
           />
         </div>
   
@@ -105,9 +89,6 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
             Apply
           </button>
         </div>
-        {/* {bootcamps &&
-          <p>{new Date(bootcamps[0].startDate).toLocaleDateString()}</p>
-        } */}
       </form>
     );
   }

@@ -38,5 +38,12 @@ export type BootcampResponse = {
     name: string;
     startDate: Date;
     graduationDate: Date;
-    diplomas: DiplomaInBootcamp;
+    diplomas: DiplomaInBootcamp[];
 }
+
+export type SaltData = {
+    classname: string;
+    datestart?: string;
+    dategraduate: string;
+    names: string[];
+};

@@ -9,6 +9,7 @@ import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
 import { BootcampResponse, DiplomaInBootcamp } from '../util/types';
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -20,6 +21,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (bootcamps) {
@@ -57,8 +59,13 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
         setCurrentPage(1);
     };
 
-    const modifyHandler = () => {
-        
+    const modifyHandler = (guidId: string) => {
+       if (bootcamps) {
+            const bootcampIndex = bootcamps.findIndex(bootcamp =>
+                bootcamp.diplomas.some(diploma => diploma.guidId === guidId)
+            );
+            navigate(`/${bootcampIndex}`);
+        } 
     };
 
     const deleteHandler = (id: string) => {
@@ -83,7 +90,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
                                 <p className='overview-page__item--title'>{item.studentName}</p>
                                 <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
                                 <section className='overview-page__item--menu'>
-                                    <ModifyButton text='Modify' onClick={modifyHandler} />
+                                    <ModifyButton text='Modify' onClick={() => modifyHandler(item.guidId)} />
                                     <RemoveButton text='Remove' onClick={() => deleteHandler(item.guidId)} />
                                 </section>
                             </button>

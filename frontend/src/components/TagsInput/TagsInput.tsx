@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './TagsInput.css';
 
 type Props = {
+  tags: string[];
   selectedTags: (tags: string[]) => void;
 }
 
-const TagsInput = ({selectedTags}: Props) => {
+const TagsInput = ({ selectedTags, tags }: Props) => {
   const [currentTags, setCurrentTags] = useState<string[]>([]);
+
+  useEffect(() => {
+    setCurrentTags(tags);
+    selectedTags(tags);
+  }, [tags]);
 
   const removeTags = (indexToRemove: number): void => {
     const newTags = currentTags.filter((_, index) => index !== indexToRemove);
