@@ -1,8 +1,9 @@
 import { useForm, FieldValues } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
-import { BootcampResponse, SaltData } from "../util/types";
-import BootcampManagement from "./BootcampManagement";
+import { BootcampRequest, BootcampResponse, SaltData } from "../util/types";
+import BootcampManagement from "../pages/BootcampManagement";
+import { Link } from "react-router-dom";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -20,10 +21,16 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, deleteBootca
     const updateSaltDataHandler = (data: FieldValues) => {
         const newSaltData: SaltData = {
             classname: data.classname,
-            datebootcamp: data.datebootcamp,
-            names: names
+            datestart: data.datestart,
+            dategraduate: data.dategraduate,
+            names: names,
         }
         updateSaltData(newSaltData);
+        
+        const newBootcamp: BootcampRequest = {name: data.newname, startDate: data.newstartdate, graduationDate: data.newgraduatedate};
+        addNewBootcamp(newBootcamp);
+        
+        
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
@@ -31,10 +38,6 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, deleteBootca
         e.preventDefault();
       }
     };
-
-    function showBootcamps(){
-      setIsManageBootcamp(!isManageBootcamp);
-    }
 
     return (
       <form
@@ -65,18 +68,12 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, deleteBootca
             )
           }
           </select>
-          <button type="button" onClick={showBootcamps} className="w-1/4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Manage
-          </button>
-          {(isManageBootcamp && bootcamps) &&(
-            <BootcampManagement 
-              bootcamps={bootcamps} 
-              deleteBootcamp={deleteBootcamp} 
-              register={register} 
-              isManageBootcamp={isManageBootcamp} 
-              setIsManageBootcamp={setIsManageBootcamp}
-            />
-          )}
+          
+          <Link to="/bootcamp-management">
+            <button type="button" className="w-1/4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              Manage
+            </button>
+          </Link>
         </div>
 
         <div>

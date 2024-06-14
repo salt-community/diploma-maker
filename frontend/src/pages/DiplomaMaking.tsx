@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, SaltData, displayMode } from "../util/types";
+import { BootcampRequest, BootcampResponse, SaltData, displayMode } from "../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -21,9 +21,10 @@ const saltDefaultData: SaltData = {
 type Props = {
   bootcamps: BootcampResponse[] | null;
   deleteBootcamp: (i: number) => Promise<void>;
+  addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 };
 
-export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
+export default function DiplomaMaking({ bootcamps, deleteBootcamp , addNewBootcamp}: Props) {
   const [saltData, setSaltData] = useState<SaltData[]>([saltDefaultData])
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);

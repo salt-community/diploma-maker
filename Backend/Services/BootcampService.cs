@@ -59,25 +59,32 @@ public class BootcampService
         return bootcamp;
     }
 
-    public async Task PutBootcamp(string guidId, BootcampRequestDto requestDto)
+   public async Task<bool> PutBootcampAsync(BootcampRequestDto requestDto) 
+   {
+    try
     {
         var bootcamp = await _context.Bootcamp
             .FirstOrDefaultAsync(b => b.GuidId == requestDto.GuidId);
-        if(bootcamp == null)
-            throw new ArgumentException("Bootcamp not found");
+    
+        if (bootcamp == null)
+        {
+            return false;
+        }
 
         bootcamp.Name = requestDto.Name;
         bootcamp.StartDate = requestDto.StartDate;
         bootcamp.GraduationDate = requestDto.GraduationDate;
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateException)
-        {
-            throw new DbUpdateException("Failed to save changes");
-        }
+
+        await _context.SaveChangesAsync();
     }
+    catch (DbUpdateException ex)
+    {
+        throw new DbUpdateException("Failed to save changes", ex);
+    }
+
+    return true;
+}
+
 
     private bool BootcampExists(int id)
     {
