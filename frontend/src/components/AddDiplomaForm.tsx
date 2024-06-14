@@ -54,16 +54,16 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
           handleSubmit(submitAndMakePDF)();
         }}
         onKeyDown={handleKeyDown}
-        className="space-y-4 p-6 bg-white rounded shadow-md"
+        className="space-y-4 p-6 bg-white rounded shadow-md dark: bg-darkbg2 ml-10 mr-10 rounded-2xl"
       >
         <div className="select-bootcamp">
-          <label htmlFor="classname" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="classname" className="block text-sm font-medium text-gray-700 dark: text-white">
             Class Name
           </label>
           <select
             id="classname"
             {...register("classname")}
-            className="mt-1 w-3/4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 w-3/4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
           >
             
           {
@@ -83,7 +83,7 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
         </div>
   
         <div>
-          <label htmlFor="names" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="names" className="block text-sm font-medium text-gray-700 dark: text-white">
             Student Names
           </label>
           {/* <textarea
