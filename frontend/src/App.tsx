@@ -53,7 +53,8 @@ function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path="/" element={<DiplomaMaking bootcamps={bootcamps!} deleteBootcamp={deleteBootcamp} addNewBootcamp= {addNewBootcamp}/>} />
+        <Route path="/" element={<DiplomaMaking bootcamps={bootcamps!}/>} />
+        <Route path="/:selectedBootcamp" element={<DiplomaMaking bootcamps={bootcamps!}/>} />
         <Route path={`/:guidId`} element = {<VertificationPage />} />
         <Route path="/bootcamp-management" element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteDiploma={deleteDiploma}/>} />

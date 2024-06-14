@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Template, checkTemplate } from "@pdfme/common";
+import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampRequest, BootcampResponse, displayMode } from "../util/types";
+import { BootcampResponse, SaltData, displayMode } from "../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -10,38 +10,63 @@ import {
   generateCombinedPDF,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
-import { deleteBootcampById } from "../services/bootcampService";
-import { generate } from "@pdfme/generator";
+import { useParams } from "react-router-dom";
 
-
-type SaltData = {
-  classname: string;
-  datebootcamp: string;
-  names: string[];
-};
-
-const saltInitData: SaltData = {
+const saltDefaultData: SaltData = {
   classname: ".Net Fullstack",
-  datebootcamp: "2024-06-08",
-  names: ["Xinnan Luo"]
+  dategraduate: '12/04/2024',
+  names: ["John Smith"]
 };
+
 type Props = {
   bootcamps: BootcampResponse[] | null;
-  deleteBootcamp: (i: number) => Promise<void>;
-  addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
-}
+};
 
-export default function DiplomaMaking({bootcamps, deleteBootcamp, addNewBootcamp}: Props) {
-  const [SaltInfo, setSaltInfo] = useState<SaltData>(saltInitData);
+export default function DiplomaMaking({ bootcamps }: Props) {
+  const [saltData, setSaltData] = useState<SaltData[]>([saltDefaultData])
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
-  const [currentTemplateIndex, setCurrentTemplateIndex] = useState<number>(0);
-  
+  const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
+  const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);
+
   const uiRef = useRef<HTMLDivElement | null>(null);
   const uiInstance = useRef<Form | Viewer | null>(null);
 
-  useEffect(() => {    
-    const template: Template = getTemplate();  
-    const inputs = [makeTemplateInput(SaltInfo.names[currentTemplateIndex], SaltInfo.classname, SaltInfo.datebootcamp)];
+  const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>();
+
+  // When page starts -> Puts backend data into saltData
+  useEffect(() => {
+    if (bootcamps) {
+      if(selectedBootcamp){
+        setSelectedBootcampIndex(Number(selectedBootcamp));
+      }
+      if (bootcamps[selectedBootcampIndex].diplomas.length === 0) {
+        setSaltData([saltDefaultData]);
+      } 
+      else {
+        const initialSaltData: SaltData[] = bootcamps.map((bootcamp) => {
+          if (bootcamp.diplomas.length === 0) {
+            return {
+              classname: bootcamp.name,
+              dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
+              names: saltDefaultData.names,
+            };
+          } else {
+            return {
+              classname: bootcamp.name,
+              dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
+              names: bootcamp.diplomas.map((diploma) => diploma.studentName),
+            };
+          }
+        });
+        setSaltData(initialSaltData)
+      }
+    }
+  }, [bootcamps]);
+
+  // When Page Changes -> Loads in to PDF preview
+  useEffect(() => {
+    const template: Template = getTemplate();
+    const inputs = [makeTemplateInput(saltData[selectedBootcampIndex].names[currentPageIndex], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].dategraduate)];
 
     getFontsData().then((font) => {
       if (uiRef.current) {
@@ -64,11 +89,18 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp, addNewBootcamp
         uiInstance.current = null;
       }
     };
-  }, [uiRef, currentDisplayMode, currentTemplateIndex, SaltInfo]);
+  }, [uiRef, currentDisplayMode, currentPageIndex, selectedBootcampIndex, saltData]);
 
-  const UpdateSaltInfo = (data: SaltData) => {
-    setSaltInfo(data);
-    setCurrentTemplateIndex(0); 
+  const updateSaltDataHandler = (data: SaltData) => {
+    setSaltData(prevSaltInfoProper =>
+      prevSaltInfoProper.map((item, index) =>
+        index === selectedBootcampIndex
+          ? { ...item, names: data.names }
+          : item
+      )
+    );
+
+    setCurrentPageIndex(0);
   };
 
   const changeDisplayModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,22 +109,15 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp, addNewBootcamp
   };
 
   const prevTemplateInstanceHandler = () => {
-    setCurrentTemplateIndex((prevIndex) =>
-      prevIndex === 0 ? SaltInfo.names.length - 1 : prevIndex - 1
+    setCurrentPageIndex((prevIndex) =>
+      prevIndex === 0 ? saltData[selectedBootcampIndex].names.length - 1 : prevIndex - 1
     );
   };
 
   const nextTemplateInstanceHandler = () => {
-    setCurrentTemplateIndex((prevIndex) =>
-      prevIndex === SaltInfo.names.length - 1 ? 0 : prevIndex + 1
+    setCurrentPageIndex((prevIndex) =>
+      prevIndex === saltData[selectedBootcampIndex].names.length - 1 ? 0 : prevIndex + 1
     );
-  };
-
-  const saveInputsHandler = () => {
-    if (uiInstance.current) {
-      const inputs = uiInstance.current.getInputs();
-      localStorage.setItem(`inputs_${currentTemplateIndex}`, JSON.stringify(inputs));
-    }
   };
 
   const generatePDFHandler = async () => {
@@ -104,12 +129,11 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp, addNewBootcamp
   };
 
   const generateCombinedPDFHandler = async () => {
-    const inputsArray = SaltInfo.names.map((_, index) => {
-      const inputsString = localStorage.getItem(`inputs_${index}`);
-      return inputsString ? JSON.parse(inputsString) : [makeTemplateInput(SaltInfo.names[index], SaltInfo.classname, SaltInfo.datebootcamp)];
+    const inputsArray = saltData[selectedBootcampIndex].names.map((_, index) => {
+      return [makeTemplateInput(saltData[selectedBootcampIndex].names[index], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].dategraduate)];
     });
 
-    await generateCombinedPDF(SaltInfo.names.map(() => getTemplate()), inputsArray);
+    await generateCombinedPDF(saltData[selectedBootcampIndex].names.map(() => getTemplate()), inputsArray);
   };
 
   return (
@@ -136,7 +160,6 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp, addNewBootcamp
           </div>
           <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generatePDFHandler}>Generate PDF</button>
           <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generateCombinedPDFHandler}>Generate PDFs</button>
-          <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={saveInputsHandler}>Save Changes</button>
         </header>
         <div
           ref={uiRef}
@@ -145,15 +168,19 @@ export default function DiplomaMaking({bootcamps, deleteBootcamp, addNewBootcamp
         <div className="flex justify-center mt-4">
           <button onClick={prevTemplateInstanceHandler}>Previous</button>
           <span className="mx-4">
-            Template {currentTemplateIndex + 1} of {SaltInfo.names.length}
+            Template {currentPageIndex + 1} of {saltData[selectedBootcampIndex].names.length}
           </span>
           <button onClick={nextTemplateInstanceHandler}>Next</button>
         </div>
       </section>
       <section className="flex-1 flex flex-col">
-        <AddDiplomaForm SetFormInfo={UpdateSaltInfo} deleteBootcamp={deleteBootcamp} bootcamps={bootcamps} addNewBootcamp= {addNewBootcamp}/>
+        <AddDiplomaForm 
+          updateSaltData={updateSaltDataHandler} 
+          bootcamps={bootcamps} 
+          setSelectedBootcampIndex={(index) => {setSelectedBootcampIndex(index); setCurrentPageIndex(0);}}
+          saltData={saltData[selectedBootcampIndex]}
+        />
       </section>
     </div>
   );
 }
-
