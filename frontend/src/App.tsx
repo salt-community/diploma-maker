@@ -41,6 +41,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<DiplomaMaking bootcamps={bootcamps!} deleteBootcamp={deleteBootcamp}/>} />
+        <Route path="/:selectedBootcamp" element={<DiplomaMaking bootcamps={bootcamps!} deleteBootcamp={deleteBootcamp}/>} />
         <Route path={`/:guidId`} element = {<VertificationPage />} />
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteDiploma={deleteDiploma}/>} />
       </Routes>
