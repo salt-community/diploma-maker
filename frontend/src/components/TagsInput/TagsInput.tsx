@@ -11,6 +11,7 @@ const TagsInput = ({ selectedTags, tags }: Props) => {
 
   useEffect(() => {
     setCurrentTags(tags);
+    selectedTags(tags);
   }, [tags]);
 
   const removeTags = (indexToRemove: number): void => {

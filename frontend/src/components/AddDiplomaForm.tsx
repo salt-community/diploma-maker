@@ -9,7 +9,7 @@ import BootcampManagement from "./BootcampManagement";
 type FormData = {
   classname: string;
   datebootcamp: string;
-  names: string;
+  names: string[];
 };
 
 type Props = {
@@ -25,7 +25,7 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
   const {register, handleSubmit} = useForm();
   const [names, setNames] = useState<string[]>([]);
   const [isManageBootcamp, setIsManageBootcamp] = useState<boolean>(false);
-  const[selectedBootcamp, setSelectedBootcamp] = useState<BootcampResponse>()
+  const [selectedBootcamp, setSelectedBootcamp] = useState<BootcampResponse>()
 
     const submitAndMakePDF = (data: FieldValues) => {
         const formData: FormData = {
@@ -33,7 +33,6 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
             datebootcamp: data.datebootcamp,
             names: names
         }
-        console.log(formData.names);
         SetFormInfo(formData);
     }
 
@@ -65,6 +64,7 @@ export default function AddDiplomaForm({ SetFormInfo, bootcamps, deleteBootcamp,
             {...register("classname")}
             className="mt-1 w-3/4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             onChange={(e) => {setSelectedBootcampIndex(e.target.selectedIndex)}}
+            value={SaltInfo.classname}
           >
             
           {
