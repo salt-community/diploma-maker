@@ -24,7 +24,7 @@ type Props = {
 };
 
 export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
-  const [saltData, setSaltData] = useState<SaltData[]>([saltDefaultData]);
+  const [saltData, setSaltData] = useState<SaltData[]>([saltDefaultData])
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);
@@ -34,15 +34,17 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
 
   const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>();
 
-
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
     if (bootcamps) {
+      if(selectedBootcamp){
+        setSelectedBootcampIndex(Number(selectedBootcamp));
+      }
       if (bootcamps[selectedBootcampIndex].diplomas.length === 0) {
         setSaltData([saltDefaultData]);
       } 
       else {
-        const updatedSaltInfoProper: SaltData[] = bootcamps.map((bootcamp) => {
+        const initialSaltData: SaltData[] = bootcamps.map((bootcamp) => {
           if (bootcamp.diplomas.length === 0) {
             return {
               classname: bootcamp.name,
@@ -57,11 +59,7 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
             };
           }
         });
-
-        setSaltData(updatedSaltInfoProper)
-        if(selectedBootcamp){
-          setSelectedBootcampIndex(Number(selectedBootcamp));
-        }
+        setSaltData(initialSaltData)
       }
     }
   }, [bootcamps]);
@@ -92,7 +90,7 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
         uiInstance.current = null;
       }
     };
-  }, [uiRef, currentDisplayMode, currentPageIndex, saltData, selectedBootcampIndex]);
+  }, [uiRef, currentDisplayMode, currentPageIndex, selectedBootcampIndex, saltData]);
 
   const updateSaltDataHandler = (data: SaltData) => {
     setSaltData(prevSaltInfoProper =>
@@ -100,6 +98,7 @@ export default function DiplomaMaking({ bootcamps, deleteBootcamp }: Props) {
         index === selectedBootcampIndex ? data : item
       )
     );
+
     setCurrentPageIndex(0);
   };
 
