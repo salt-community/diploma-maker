@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { BootcampRequest, BootcampResponse } from "../util/types";
 import { useState } from "react";
+import { AlertPopup, PopupType } from "./MenuItems/Popups/AlertPopup";
 
 type Props = {
     addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
@@ -13,25 +14,39 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps }: Props)
     const [startDate, setStartDate] = useState<Date>();
     const [gradDate, setGradDate] = useState<Date>();
 
+    const [showPopup, setShowPopup] = useState<boolean>(false);
+    const [popupContent, setPopupContent] = useState<string[]>(["",""]);
+    const [popupType, setPopupType] = useState<PopupType>(PopupType.success);
+
     async function submitToAddBootcamp(){
         if(name == ""){
-            alert("Name cannot be empty");
+            setPopupType(PopupType.fail);
+            setPopupContent(["Input Validation Error", "Name cannot be empty"]);
+            setShowPopup(true);
+            // alert("Name cannot be empty");
             return;
         }
         bootcamps!.forEach(bootcamp => {
             if(bootcamp.name == name){
-                alert("The name already exists");
+                setPopupType(PopupType.fail);
+                setPopupContent(["Input Validation Error", "The name already exists"]);
+                setShowPopup(true);
+                // alert("The name already exists");
                 return;
             }
         });
-       const newBootcamp: BootcampRequest = {name: name, startDate: startDate, graduationDate: gradDate}
-       await addNewBootcamp(newBootcamp);
-       alert("Successfully added new bootcamp")
-    }
+        const newBootcamp: BootcampRequest = {name: name, startDate: startDate, graduationDate: gradDate}
+        await addNewBootcamp(newBootcamp);
 
+        setPopupType(PopupType.success);
+        setPopupContent(["Successfully added!", "Successfully added new bootcamp to database"]);
+        setShowPopup(true);
+        // alert("Successfully added new bootcamp")
+    }
 
     return (
         <div className="relative flex-auto">
+            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
             <br />
             <table className="table-auto">
                 <tbody>
