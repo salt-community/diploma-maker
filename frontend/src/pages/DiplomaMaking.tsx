@@ -148,7 +148,7 @@ export default function DiplomaMaking({ bootcamps }: Props) {
               value="form"
               checked={currentDisplayMode === "form"}
             />
-            <label htmlFor="form">Form</label>
+            <label htmlFor="form" className="dark: text-white">Form</label>
             <input
               type="radio"
               onChange={changeDisplayModeHandler}
@@ -156,7 +156,7 @@ export default function DiplomaMaking({ bootcamps }: Props) {
               value="viewer"
               checked={currentDisplayMode === "viewer"}
             />
-            <label htmlFor="viewer">Viewer</label>
+            <label htmlFor="viewer" className="dark: text-white">Viewer</label>
           </div>
           <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generatePDFHandler}>Generate PDF</button>
           <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generateCombinedPDFHandler}>Generate PDFs</button>
@@ -165,12 +165,12 @@ export default function DiplomaMaking({ bootcamps }: Props) {
           ref={uiRef}
           style={{ width: "100%", height: "calc(95vh - 68px)" }}
         />
-        <div className="flex justify-center mt-4">
-          <button onClick={prevTemplateInstanceHandler}>Previous</button>
-          <span className="mx-4">
+        <div className="flex justify-center mt-4 mb-4">
+          <button onClick={prevTemplateInstanceHandler} className="dark: text-white">Previous</button>
+          <span className="mx-4 dark: text-white">
             Template {currentPageIndex + 1} of {saltData[selectedBootcampIndex].names.length}
           </span>
-          <button onClick={nextTemplateInstanceHandler}>Next</button>
+          <button onClick={nextTemplateInstanceHandler} className="dark: text-white">Next</button>
         </div>
       </section>
       <section className="flex-1 flex flex-col">
