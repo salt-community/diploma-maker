@@ -15,6 +15,7 @@ import { PaginationMenu } from "../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../components/MenuItems/Buttons/PublishButton";
 import './DiplomaMaking.css'
 import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
+import { SaveButton } from "../components/MenuItems/Buttons/SaveButton";
 
 const saltDefaultData: SaltData = {
   classname: ".Net Fullstack",
@@ -157,7 +158,7 @@ export default function DiplomaMaking({ bootcamps }: Props) {
 
   return (
     <div className="flex w-full h-screen justify-between pt-10 dark:bg-darkbg">
-      <section className="flex-1 flex flex-col justify-start gap-1 ml-5">
+      <section className="flex-1 flex flex-col justify-start gap-1 ml-5" style={{position: 'relative'}}>
         <header className="flex items-center justify-start gap-3 mb-5 viewersidebar-container">
           <div>
             <SwitchComponent
