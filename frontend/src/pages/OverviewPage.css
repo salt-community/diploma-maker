@@ -21,6 +21,14 @@
         grid-template-rows: 1fr 1fr;
         gap: 1rem;
     }
+    @media screen and (max-width: 1000px) {
+        .overview-page__listmodule-cardcontainer{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: 1fr 1fr;
+            gap: 1rem;
+        }
+    }
     .overview-page__listmodule-cardcontainer .spinner{
         position: absolute;
         top: 40%;
@@ -32,6 +40,7 @@
             overflow: hidden;
             border-radius: .5rem;
             opacity: .9;
+            aspect-ratio: 310 / 445;
             transition: all .25s ease-in-out;
         }
             .listmodule__item:hover{
@@ -42,12 +51,17 @@
             .overview-page__item--title{
                 position: absolute;
                 left: 50%;
-                top: 60%;
+                top: 40%;
                 transform: translateY(-50%) translateX(-50%);
 
-                font-size: .7rem;
+                font-size: 1rem;
                 color: #fff;
                 z-index: 1;
+            }
+            @media screen and (max-width: 1920px) {
+                .overview-page__item--title{
+                    font-size: .5rem;
+                }
             }
             .overview-page__item--bg{
                 position: absolute;
@@ -55,6 +69,7 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
+                object-fit: fill;
             }
             .overview-page__item--menu{
                 position: absolute;
