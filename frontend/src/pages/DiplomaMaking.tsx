@@ -11,6 +11,10 @@ import {
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
+import { PaginationMenu } from "../components/MenuItems/PaginationMenu";
+import { PublishButton } from "../components/MenuItems/Buttons/PublishButton";
+import './DiplomaMaking.css'
+import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
 
 const saltDefaultData: SaltData = {
   classname: ".Net Fullstack",
@@ -103,9 +107,13 @@ export default function DiplomaMaking({ bootcamps }: Props) {
     setCurrentPageIndex(0);
   };
 
-  const changeDisplayModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value as displayMode;
-    setDisplayMode(value);
+  // const changeDisplayModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = e.target.value as displayMode;
+  //   setDisplayMode(value);
+  // };
+
+  const handleToggle = (checked: boolean) => {
+    setDisplayMode(checked ? "form" : "viewer");
   };
 
   const prevTemplateInstanceHandler = () => {
@@ -139,39 +147,37 @@ export default function DiplomaMaking({ bootcamps }: Props) {
   return (
     <div className="flex w-full h-screen justify-between pt-10 dark:bg-darkbg">
       <section className="flex-1 flex flex-col justify-start gap-1 ml-5">
-        <header className="flex items-center justify-start gap-3 mb-5">
+        <header className="flex items-center justify-start gap-3 mb-5 viewersidebar-container">
           <div>
-            <input
-              type="radio"
-              onChange={changeDisplayModeHandler}
-              id="form"
-              value="form"
+            <SwitchComponent
               checked={currentDisplayMode === "form"}
+              onToggle={handleToggle}
             />
-            <label htmlFor="form">Form</label>
-            <input
-              type="radio"
-              onChange={changeDisplayModeHandler}
-              id="viewer"
-              value="viewer"
-              checked={currentDisplayMode === "viewer"}
-            />
-            <label htmlFor="viewer">Viewer</label>
           </div>
-          <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generatePDFHandler}>Generate PDF</button>
-          <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generateCombinedPDFHandler}>Generate PDFs</button>
+          {/* <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generatePDFHandler}>Generate PDF</button>
+          <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generateCombinedPDFHandler}>Generate PDFs</button> */}
+          <PublishButton text="Generate PDF" onClick={generatePDFHandler}/>
+          <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler}/>
         </header>
         <div
+          className="pdfpreview-container"
           ref={uiRef}
-          style={{ width: "100%", height: "calc(95vh - 68px)" }}
+          style={{ width: "100%", height: "calc(82vh - 68px)" }}
         />
-        <div className="flex justify-center mt-4">
+        {/* <div className="flex justify-center mt-4">
           <button onClick={prevTemplateInstanceHandler}>Previous</button>
           <span className="mx-4">
             Template {currentPageIndex + 1} of {saltData[selectedBootcampIndex].names.length}
           </span>
           <button onClick={nextTemplateInstanceHandler}>Next</button>
-        </div>
+        </div> */}
+        <PaginationMenu 
+          containerClassOverride="flex justify-center mt-4 pagination-menu" 
+          currentPage={currentPageIndex + 1} 
+          totalPages={saltData[selectedBootcampIndex].names.length} 
+          handleNextPage={nextTemplateInstanceHandler} 
+          handlePrevPage={prevTemplateInstanceHandler}
+        />
       </section>
       <section className="flex-1 flex flex-col">
         <AddDiplomaForm 

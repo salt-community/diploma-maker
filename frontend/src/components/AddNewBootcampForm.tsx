@@ -37,13 +37,25 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps }: Props)
                 <tbody>
                     <tr>
                         <td className="pr-6 ">
-                            <input type="text" onChange={event => setName(event.target.value)} className="w-full mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                            <input 
+                                type="text" 
+                                onChange={event => setName(event.target.value)} 
+                                className="w-full mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                            />
                         </td>
                         <td className="pr-3"> 
-                            <input type="date" onChange={event => setStartDate(new Date(event.target.value))}  className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                            <input 
+                                type="date" 
+                                onChange={event => setStartDate(new Date(event.target.value))}  
+                                className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                            />
                         </td>
                         <td className="pr-3">
-                            <input type="date" onChange={event => setGradDate(new Date(event.target.value))} className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                            <input 
+                                type="date" 
+                                onChange={event => setGradDate(new Date(event.target.value))} 
+                                className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                            />
                         </td>
                         <td>
                             <button onClick={submitToAddBootcamp} className="left-full ml-2 text-green-500 ">Add</button>

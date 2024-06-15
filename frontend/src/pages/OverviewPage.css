@@ -83,29 +83,7 @@
         transform: translateX(-50%);
         width: 22%;
         max-width: 200px;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        
-
-        color: #dddde6;
     }
-        .overview-page__pagination-info{
-            background-color: #171722;
-            height: 2.5rem;
-            width: 6rem;
-            cursor: default;
-
-            font-size: .85rem;
-            font-family: inherit;
-            font-weight: 400;
-            border-radius: .5rem;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
 
 
 .overview-page__sidebar{
