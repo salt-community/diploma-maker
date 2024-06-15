@@ -10,6 +10,8 @@ import { BootcampResponse, DiplomaInBootcamp } from '../util/types';
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
+import { generateCombinedPDF } from '../util/helper';
+import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -74,8 +76,13 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
         setLoading(false);
     };
 
-    const generatePDFsHandler = () => {
-        
+    const generatePDFsHandler = async () => {
+        const inputsArray = selectedItems.map(item => {
+            const bootcamp = bootcamps?.find(b => b.diplomas.some(diploma => diploma.guidId === item.guidId));
+            return bootcamp ? [makeTemplateInput(item.studentName, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10))] : [];
+        });
+    
+        await generateCombinedPDF(selectedItems.map(() => getTemplate()), inputsArray);
     };
 
     return (
