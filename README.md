@@ -2,6 +2,12 @@
 
 Diploma Maker is an intuitive tool designed to simplify the diploma generation process for <Salt/> (School of Applied Technology). This comprehensive full-stack application enables efficient batch generation of PDF diplomas, management of bootcamp details, and provides a temporary solution for diploma verification through QR code scanning.
 
+## Video Demo
+
+https://github.com/salt-community/diploma-maker/assets/109028168/12a9b564-f024-448a-8014-998f15241796
+
+
+
 ## Features
 
 - **Batch Diploma Generation**: Easily generate PDF diplomas in bulk by entering names manually or importing them from a file.
