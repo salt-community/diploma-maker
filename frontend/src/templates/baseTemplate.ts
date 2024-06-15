@@ -3,7 +3,7 @@ import { Template } from "@pdfme/common";
 export const makeTemplateInput = (name : string , classname :  string, datebootcamp: string ) => {
   return {
     "name": name,
-    "course-date": `has successfully completed\nthe ${classname} Bootcamp of ${datebootcamp} at School of Applied Technology.`,
+    "course-date": `has successfully completed\nthe ${classname} Bootcamp of \n ${datebootcamp} at School of Applied Technology.`,
     "intro": "This certifies that\n"
   };
 };
