@@ -21,7 +21,6 @@ export async function getBootcampById(guidId: string): Promise<BootcampResponse>
 export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<void> {
     const formattedRequest = {
         ...bootcampRequest,
-        startDate: bootcampRequest.startDate? bootcampRequest.startDate.toISOString(): undefined,
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
     const response = await fetch (`http://localhost:5258/api/bootcamp`,{
@@ -39,7 +38,6 @@ export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<vo
 export async function updateBootcamp(bootcampRequest: BootcampRequest): Promise<void>{
     const formattedRequest = {
         ...bootcampRequest,
-        startDate: bootcampRequest.startDate? bootcampRequest.startDate.toISOString(): undefined,
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
     console.log(formattedRequest);

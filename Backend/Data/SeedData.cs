@@ -16,18 +16,18 @@ public static class SeedData
             var dotnetBootcamp1 = new Bootcamp
             {
                 Name = ".Net Fullstack Winter 2024",
-                CourseDate = new DateTime(2024,2,5),
+                graduationDate = new DateTime(2024,2,5),
                 
             };
             var dotnetBootcamp2 = new Bootcamp
             {
                 Name = ".Net Fullstack Autumn 2023",
-                CourseDate = new DateTime(2024,11,5),
+                graduationDate = new DateTime(2024,11,5),
             };
             var JavaBootcamp = new Bootcamp
             {
                 Name = "Java Fullstack Winter 2024",
-                CourseDate = new DateTime(2024,1,5),
+                graduationDate = new DateTime(2024,1,5),
             };
 
             var bootcamps = new List<Bootcamp>{dotnetBootcamp1, dotnetBootcamp2, JavaBootcamp};

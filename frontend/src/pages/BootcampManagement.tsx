@@ -43,7 +43,6 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
       const newBootcamp: BootcampRequest = {
         guidId: bootcamps![i].guidId,
         name: data[`name${i}`],
-        startDate:  new Date(data[`datestart${i}`]),
         graduationDate:  new Date (data[`dategraduate${i}`])
       };
       try{
@@ -102,16 +101,6 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                           className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                       </td>
-                        <td className="pr-3">
-                          <input
-                            id={bootcamp.guidId}
-                            {...register(`datestart${index}`)}
-                            type="date"
-                            className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            defaultValue={formatDate(bootcamp.startDate)}
-                            key={bootcamp.guidId}
-                          />
-                        </td>
                         <td className="pr-3">
                           <input
                             id={bootcamp.guidId + "1"}

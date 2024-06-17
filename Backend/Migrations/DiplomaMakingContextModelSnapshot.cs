@@ -29,15 +29,15 @@ namespace Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CourseDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid>("GuidId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("graduationDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

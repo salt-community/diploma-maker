@@ -6,6 +6,6 @@ public class Bootcamp
     public int Id { get; set; }
     public Guid GuidId { get; set; } = Guid.NewGuid();
     public required string Name { get; set; }
-    public DateTime CourseDate {get; set; } = DateTime.Now;
+    public DateTime graduationDate {get; set; } = DateTime.Now;
     public List<Diploma> Diplomas { get; set; } = [];
 }
