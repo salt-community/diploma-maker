@@ -3,11 +3,11 @@ import DiplomaMaking from './pages/DiplomaMaking';
 import { VertificationPage } from "./pages/VerificationPage";
 import { useState } from "react";
 import { BootcampRequest, BootcampResponse, DiplomaRequest, DiplomaResponse, DiplomasRequestDto } from "./util/types";
-import { deleteBootcampById, getBootcamps, postBootcamp, postMultipleDiplomas, updateBootcamp as updateBootcampService } from "./services/bootcampService";
+import { deleteBootcampById, getBootcamps, postBootcamp, updateBootcamp as updateBootcampService } from "./services/bootcampService";
 import { OverviewPage } from "./pages/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar";
 import BootcampManagement from "./pages/BootcampManagement";
-import { deleteDiplomaById } from "./services/diplomaService";
+import { deleteDiplomaById, postMultipleDiplomas } from "./services/diplomaService";
 
 function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
