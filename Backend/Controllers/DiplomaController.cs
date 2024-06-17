@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Backend.Models;
 using AutoMapper;
 using Backend.Services;
+using Backend.Dtos;
 
 namespace Backend.Controllers;
 
@@ -18,7 +19,7 @@ public class DiplomaController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpPost]
+    [HttpPost("single")]
     public async Task<ActionResult<DiplomaResponseDto>> PostDiploma(DiplomaRequestDto requestDto)
     {
         try
@@ -34,6 +35,33 @@ public class DiplomaController : ControllerBase
         catch(DiplomaExistsException)
         {
             return Conflict(new { message = "This student has already earned a diploma in this bootcamp" });
+        }
+    }
+
+    [HttpPost("many")]
+    public async Task<ActionResult<List<DiplomaResponseDto>>> PostDiplomas(DiplomasRequestDto requestDto)
+    {
+        try
+        {
+            var diplomas = await _service.PostDiplomas(requestDto);
+            var responseDtos = diplomas.Select(d => _mapper.Map<DiplomaResponseDto>(d)).ToList();
+        
+            if (responseDtos.Any())
+            {
+                return CreatedAtAction(nameof(GetDiplomaByGuidId), new { id = responseDtos.First().GuidId }, responseDtos);
+            }
+            else
+            {
+                return BadRequest("No diplomas were created.");
+            }
+        }
+        catch (BootcampNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (DiplomaExistsException ex)
+        {
+            return Conflict(new { message = ex.Message });
         }
     }
 

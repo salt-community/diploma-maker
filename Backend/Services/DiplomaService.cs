@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Models;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+using Backend.Dtos;
 
 namespace Backend.Services;
 
@@ -37,6 +36,43 @@ public class DiplomaService
         await _context.SaveChangesAsync();
 
         return diploma;
+    }
+
+    public async Task<List<Diploma>> PostDiplomas(DiplomasRequestDto requestDto)
+    {
+        var diplomas = new List<Diploma>();
+
+        foreach (var diplomaDto in requestDto.Diplomas)
+        {
+            var bootcamp = await _context.Bootcamp
+                .FirstOrDefaultAsync(b => b.GuidId.ToString() == diplomaDto.BootcampGuidId)
+                ?? throw new BootcampNotFoundException($"Bootcamp with ID {diplomaDto.BootcampGuidId} does not exist");
+
+            var existingDiploma = await _context.Diploma
+                .FirstOrDefaultAsync(d => d.StudentName == diplomaDto.StudentName
+                && d.Bootcamp.GuidId == bootcamp.GuidId);
+
+            if (existingDiploma != null)
+            {
+                existingDiploma.StudentName = diplomaDto.StudentName;
+                _context.Diploma.Update(existingDiploma);
+                diplomas.Add(existingDiploma);
+            }
+            else
+            {
+                var newDiploma = new Diploma
+                {
+                    StudentName = diplomaDto.StudentName,
+                    Bootcamp = bootcamp
+                };
+                _context.Diploma.Add(newDiploma);
+                diplomas.Add(newDiploma);
+            }
+        }
+
+        await _context.SaveChangesAsync();
+
+        return diplomas;
     }
 
     public async Task<List<Diploma>> GetDiplomas(){
