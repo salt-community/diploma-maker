@@ -47,3 +47,7 @@ export type SaltData = {
     dategraduate: string;
     names: string[];
 };
+
+export type DiplomasRequestDto = {
+    diplomas: DiplomaRequest[];
+}

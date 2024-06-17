@@ -1,4 +1,4 @@
-import { BootcampInDiploma, BootcampRequest, BootcampResponse, DiplomaRequest, DiplomaResponse } from "../util/types";
+import { BootcampInDiploma, BootcampRequest, BootcampResponse, DiplomaRequest, DiplomaResponse, DiplomasRequestDto } from "../util/types";
 
 export async function getBootcamps(): Promise<BootcampResponse[]>{
     const response = await fetch(`http://localhost:5258/api/bootcamp`);
@@ -80,5 +80,24 @@ export async function postSingleDiploma(diplomaRequest: DiplomaRequest): Promise
     }
 
     const result = await response.json() as DiplomaResponse;
+    return result;
+}
+
+
+export async function postMultipleDiplomas(diplomasRequest: DiplomasRequestDto): Promise<DiplomaResponse[]> {
+    const response = await fetch(`http://localhost:5258/api/diploma/multiple`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(diplomasRequest)
+    });
+
+    if (!response.ok) {
+        if (response.status === 409) {
+            throw new Error("Some diplomas already exist!");
+        }
+        throw new Error("Failed to post diplomas!");
+    }
+
+    const result = await response.json() as DiplomaResponse[];
     return result;
 }
