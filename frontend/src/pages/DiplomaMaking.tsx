@@ -67,7 +67,7 @@ export default function DiplomaMaking({ bootcamps }: Props) {
     }
   }, [bootcamps]);
 
-  // When Page Changes -> Loads in to PDF preview
+  // When Page Changes -> Loads into PDF preview
   useEffect(() => {
     if(saltData){
       const template: Template = getTemplate();
@@ -111,11 +111,6 @@ export default function DiplomaMaking({ bootcamps }: Props) {
     setCurrentPageIndex(0);
     
   };
-
-  // const changeDisplayModeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value as displayMode;
-  //   setDisplayMode(value);
-  // };
 
   const handleToggle = (checked: boolean) => {
     setDisplayMode(checked ? "form" : "viewer");
@@ -165,8 +160,6 @@ export default function DiplomaMaking({ bootcamps }: Props) {
               onToggle={handleToggle}
             />
           </div>
-          {/* <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generatePDFHandler}>Generate PDF</button>
-          <button className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={generateCombinedPDFHandler}>Generate PDFs</button> */}
           <PublishButton text="Generate PDF" onClick={generatePDFHandler}/>
           <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler}/>
         </header>
@@ -177,13 +170,6 @@ export default function DiplomaMaking({ bootcamps }: Props) {
             style={{ width: "100%", height: "calc(82vh - 68px)" }}
           />
         }
-        {/* <div className="flex justify-center mt-4">
-          <button onClick={prevTemplateInstanceHandler}>Previous</button>
-          <span className="mx-4">
-            Template {currentPageIndex + 1} of {saltData[selectedBootcampIndex].names.length}
-          </span>
-          <button onClick={nextTemplateInstanceHandler}>Next</button>
-        </div> */}
         {saltData &&
           <PaginationMenu 
             containerClassOverride="flex justify-center mt-4 pagination-menu" 
