@@ -12,6 +12,7 @@ import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
 import { generateCombinedPDF } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
+import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -24,6 +25,10 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
+    const [showPopup, setShowPopup] = useState<boolean>(false);
+    const [popupContent, setPopupContent] = useState<string[]>(["",""]);
+    const [popupType, setPopupType] = useState<PopupType>(PopupType.fail);
 
     useEffect(() => {
         if (bootcamps) {
@@ -74,6 +79,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
         setLoading(true);
         deleteDiploma(id);
         setLoading(false);
+        
+        setPopupContent(["Successfully deleted", "Diploma has been successfully deleted from the database."]);
+        setShowPopup(true);
     };
 
     const generatePDFsHandler = async () => {
@@ -81,12 +89,19 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
             const bootcamp = bootcamps?.find(b => b.diplomas.some(diploma => diploma.guidId === item.guidId));
             return bootcamp ? [makeTemplateInput(item.studentName, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10))] : [];
         });
+
+        if(inputsArray.length === 0){
+            setPopupContent(["Invalid Action", "There are no diplomas to generate pdf from."]);
+            setShowPopup(true);
+            return;
+        }
     
         await generateCombinedPDF(selectedItems.map(() => getTemplate()), inputsArray);
     };
 
     return (
         <main className="overview-page">
+            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
             <section className='overview-page__listmodule'>
             <div className='overview-page__listmodule-cardcontainer'>
                     {loading ? (
