@@ -1,9 +1,9 @@
 import { FieldValues, useForm } from "react-hook-form";
 import { BootcampRequest, BootcampResponse } from "../util/types"
-import { EditText } from 'react-edit-text';
 import { useState } from "react";
 import AddNewBootcampForm from "../components/AddNewBootcampForm";
 import { useNavigate } from "react-router-dom";
+import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -17,6 +17,10 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   const [showConfirmAlert, setShowConfirmAlert] = useState<number>(-1); 
   const navigate = useNavigate();
 
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [popupContent, setPopupContent] = useState<string[]>(["",""]);
+  const [popupType, setPopupType] = useState<PopupType>(PopupType.success);
+
   function formatDate(date: Date){
     const dateConverted = new Date(date);
     dateConverted.setDate(dateConverted.getDate() + 1);
@@ -27,6 +31,10 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   async function handleDeleteBootcamp(i: number){
     await deleteBootcamp(i);
     setShowConfirmAlert(-1);
+    
+    setPopupType(PopupType.fail);
+    setPopupContent(["Delete Successful", "Successfully removed bootcamp from database."]);
+    setShowPopup(true);
   }
 
   async function handleUpdateBootcamp(data: FieldValues){
@@ -45,6 +53,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
 
   return (
     <form onSubmit={handleSubmit(handleUpdateBootcamp)}>
+      <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
       <div
         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none font-medium text-gray-700 "
       >

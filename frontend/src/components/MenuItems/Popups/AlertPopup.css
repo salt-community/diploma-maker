@@ -1,0 +1,49 @@
+.popup {
+    position: fixed;
+    bottom: 4%;
+    right: 2%;
+    cursor: default;
+    padding: 1rem 3rem;
+
+    border-radius: 1rem;
+    z-index: 150;
+    opacity: 0;
+    transition: all .75s ease;
+}
+    .popup:hover{
+        filter: saturate(150%);
+    }
+    .popup.success {
+        background-image: linear-gradient(to left bottom, #365655, #2a4449, #21323a, #1a2129, #101118);
+    }
+    .popup.fail {
+        background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
+        z-index: 175;
+    }
+
+.popup-content {
+    display: flex;
+    gap: 2rem;
+}
+    .popup-content svg {
+        width: 30px;
+    }
+    .popup-content h1 {
+        font-size: 1.1rem;
+        color: #fff;
+    }
+    .popup-content p {
+        max-width: 300px;
+        font-size: .75rem;
+        color: #858698;
+    }
+
+.fade-in {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}

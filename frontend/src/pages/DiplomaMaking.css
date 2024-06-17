@@ -1,0 +1,21 @@
+.viewersidebar-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+
+    color: #fff;
+    background-color: #171722;
+    border-radius: 1rem;
+    padding: .5rem;
+}
+.pagination-menu{
+    align-self: center;
+    width: 200px;
+}
+.pdfpreview-container div div div div:nth-of-type(1){
+    background-color: transparent;
+}
+.pdfpreview-container div{
+    background-color: #2e2e38;
+}

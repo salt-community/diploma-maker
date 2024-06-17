@@ -1,0 +1,21 @@
+.save-btn{
+    color: #fff;
+    margin: .5rem .5rem;
+    transition: all .15s ease-in-out;
+}
+    .save-btn svg{
+        width: 25px;
+        transition: all .15s ease-in-out;
+    }
+    .save-btn svg path{
+        fill: #ababba;
+        transition: all .15s ease-in-out;
+    }
+    .save-btn:hover svg path{
+        fill: #fff;
+        transition: all .15s ease-in-out;
+    }
+    .save-btn:hover svg{
+        transform: scale(1.02);
+        transition: all .15s ease-in-out;
+    }

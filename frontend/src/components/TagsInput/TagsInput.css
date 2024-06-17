@@ -9,7 +9,7 @@
 	margin: 0.5rem 0.2rem;
 	box-sizing: border-box;
 	background-color: transparent;
-	border: 1px solid #c6c6c682;
+	border: 1px solid #ababba5b;
 	border-radius: 0.5rem;
 	transition: all 0.2s ease-in-out;
   }
@@ -34,12 +34,14 @@
 	/* background-color: #171721; */
 	color: white;
 	transition: all 0.2s ease-in-out;
+	background-color: #20202a;
   }
   
   .taginputbox:focus {
 	/* border-color: #fa633e;
 	background-color: #f6522b; */
-	color: #000;
+	background-color: #2c2c36;
+	color: #fff;
 	outline: none;
   }
   
@@ -62,7 +64,7 @@
 	border: 1px solid transparent;
 	border-radius: 0.5rem;
 	/* background-color: #1a1a1a; */
-	background-color: #424242;
+	background-color: #2e2e38;
 	color: white;
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
