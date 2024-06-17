@@ -1,17 +1,14 @@
 import { useForm, FieldValues } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
-import { BootcampRequest, BootcampResponse, SaltData } from "../util/types";
-import BootcampManagement from "../pages/BootcampManagement";
+import { BootcampResponse, SaltData } from "../util/types";
 import { Link } from "react-router-dom";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
   saltData: SaltData;
   updateSaltData: (data: SaltData) => void;
-  // deleteBootcamp: (i: number) => Promise<void>;
   setSelectedBootcampIndex: (index: number) => void;
-  // addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 };
 
 export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData }: Props) {

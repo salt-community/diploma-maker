@@ -1,4 +1,3 @@
-import { useForm } from "react-hook-form";
 import { BootcampRequest, BootcampResponse } from "../util/types";
 import { useState } from "react";
 import { AlertPopup, PopupType } from "./MenuItems/Popups/AlertPopup";

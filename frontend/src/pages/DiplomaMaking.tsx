@@ -15,7 +15,6 @@ import { PaginationMenu } from "../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../components/MenuItems/Buttons/PublishButton";
 import './DiplomaMaking.css'
 import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
-import { SaveButton } from "../components/MenuItems/Buttons/SaveButton";
 
 const saltDefaultData: SaltData = {
   classname: ".Net Fullstack",

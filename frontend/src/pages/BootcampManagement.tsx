@@ -1,6 +1,5 @@
 import { FieldValues, useForm } from "react-hook-form";
 import { BootcampRequest, BootcampResponse } from "../util/types"
-import { EditText } from 'react-edit-text';
 import { useState } from "react";
 import AddNewBootcampForm from "../components/AddNewBootcampForm";
 import { useNavigate } from "react-router-dom";
