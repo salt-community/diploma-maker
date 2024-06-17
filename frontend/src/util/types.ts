@@ -24,13 +24,11 @@ export type DiplomaInBootcamp = {
 export type BootcampInDiploma = {
     guidId: string;
     name: string;
-    startDate: Date;
     graduationDate: Date;
 }
 export type BootcampRequest = {
     guidId?: string;
     name: string;
-    startDate?: Date;
     graduationDate?: Date;
 }
 export type BootcampResponse = {
