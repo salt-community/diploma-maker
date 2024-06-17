@@ -143,33 +143,34 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
   };
 
   const generateCombinedPDFHandler = async () => {
+      if (saltData) {
+          const inputsArray = saltData[selectedBootcampIndex].names.map((_, index) => {
+              return [makeTemplateInput(saltData[selectedBootcampIndex].names[index], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].dategraduate)];
+          });
+
+          await generateCombinedPDF(saltData[selectedBootcampIndex].names.map(() => getTemplate()), inputsArray);
+          await postSelectedBootcampData();
+      }
+  };
+
+  const postSelectedBootcampData = async () => {
     if (saltData && bootcamps) {
-        const inputsArray = saltData[selectedBootcampIndex].names.map((_, index) => {
-            return [makeTemplateInput(saltData[selectedBootcampIndex].names[index], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].dategraduate)];
-        });
-
-        await generateCombinedPDF(saltData[selectedBootcampIndex].names.map(() => getTemplate()), inputsArray);
-
-        // Prepare diplomas data for the backend
-        const selectedBootcamp = bootcamps[selectedBootcampIndex];
-        const diplomasRequest: DiplomasRequestDto = {
-            diplomas: saltData[selectedBootcampIndex].names.map((name, index) => ({
-                guidId: selectedBootcamp.diplomas[index]?.guidId || crypto.randomUUID(), // Use existing guidId or generate a new one
-                studentName: name,
-                bootcampGuidId: selectedBootcamp.guidId // Ensure correct bootcampGuidId
-            }))
-        };
-
-        console.log(diplomasRequest);
-
-        try {
-            await addMultipleDiplomas(diplomasRequest);
-            alert("Diplomas added successfully.");
-        } catch (error) {
-            alert("Failed to add diplomas: " + error);
-        }
+      const currentBootcamp = bootcamps[selectedBootcampIndex];
+      const diplomasRequest: DiplomasRequestDto = {
+          diplomas: saltData[selectedBootcampIndex].names.map((name, index) => ({
+              guidId: currentBootcamp.diplomas[index]?.guidId || crypto.randomUUID(),
+              studentName: name,
+              bootcampGuidId: currentBootcamp.guidId
+          }))
+      };
+      try {
+          await addMultipleDiplomas(diplomasRequest);
+          alert("Diplomas added successfully.");
+      } catch (error) {
+          alert("Failed to add diplomas: " + error);
+      }
     }
-};
+  }
 
 
   const saveInputFieldsHandler = () => {
