@@ -15,6 +15,7 @@ import { PaginationMenu } from "../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../components/MenuItems/Buttons/PublishButton";
 import './DiplomaMaking.css'
 import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
+import { SaveButton } from "../components/MenuItems/Buttons/SaveButton";
 
 const saltDefaultData: SaltData = {
   classname: ".Net Fullstack",
@@ -150,6 +151,30 @@ export default function DiplomaMaking({ bootcamps }: Props) {
     }
   };
 
+  const saveInputFieldsHandler = () => {
+    if (uiInstance.current && saltData) {
+      const inputs = uiInstance.current.getInputs();
+      const newName = inputs[0].name;
+      const currentName = saltData[selectedBootcampIndex].names[currentPageIndex];
+
+      if (currentName === newName) {
+        return;
+      }
+
+      const updatedSaltData = saltData.map((item, index) => {
+        if (index === selectedBootcampIndex) {
+          const updatedNames = [...item.names];
+          updatedNames[currentPageIndex] = newName;
+          return { ...item, names: updatedNames };
+        }
+        return item;
+      });
+  
+      setSaltData(updatedSaltData);
+      console.log('Name updated to:', newName);
+    }
+  };
+
   return (
     <div className="flex w-full h-screen justify-between pt-10 dark:bg-darkbg">
       <section className="flex-1 flex flex-col justify-start gap-1 ml-5" style={{position: 'relative'}}>
@@ -162,12 +187,14 @@ export default function DiplomaMaking({ bootcamps }: Props) {
           </div>
           <PublishButton text="Generate PDF" onClick={generatePDFHandler}/>
           <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler}/>
+          <SaveButton onClick={saveInputFieldsHandler}/>
         </header>
         {saltData && 
           <div
             className="pdfpreview-container"
             ref={uiRef}
             style={{ width: "100%", height: "calc(82vh - 68px)" }}
+            // onBlur={saveInputFieldsHandler}
           />
         }
         {saltData &&
