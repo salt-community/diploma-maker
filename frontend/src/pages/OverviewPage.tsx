@@ -120,15 +120,17 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
                         <Popup404 text='No Diplomas Generated Yet For This Bootcamp'/>
                     )}
                 </div>
-                <PaginationMenu
-                    containerClassOverride='overview-page__footer'
-                    buttonClassOverride='overview-page__pagination-button'
-                    textContainerClassOverride='overview-page__pagination-info'
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    handleNextPage={handleNextPage}
-                    handlePrevPage={handlePrevPage}
-                />
+                {selectedItems.length > 0 &&
+                    <PaginationMenu
+                        containerClassOverride='overview-page__footer'
+                        buttonClassOverride='overview-page__pagination-button'
+                        textContainerClassOverride='overview-page__pagination-info'
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        handleNextPage={handleNextPage}
+                        handlePrevPage={handlePrevPage}
+                    />
+                }
             </section>
             <section className='overview-page__sidebar'>
                 <div className='overview-page__sidebar-menu'>
