@@ -144,6 +144,7 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
       const inputs = uiInstance.current.getInputs();
       const template = getTemplate();
       await generatePDF(template, inputs);
+      await postSelectedBootcampData();
     }
   };
 
