@@ -53,9 +53,8 @@
                 .FirstOrDefaultAsync(b => b.GuidId == GuidID) ?? throw new ArgumentException("The specifc ID for Bootcamp does not exist");
 
             bootcamp.Name = requestDto.Name;
-            bootcamp.StartDate = requestDto.StartDate;
-            bootcamp.GraduationDate = requestDto.GraduationDate;
-
+            bootcamp.CourseDate = requestDto.CourseDate;
+    
            await _context.SaveChangesAsync();
            return bootcamp;
         }
