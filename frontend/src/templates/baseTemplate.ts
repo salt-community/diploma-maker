@@ -3,7 +3,7 @@ import { Template } from "@pdfme/common";
 export const makeTemplateInput = (name : string , classname :  string, datebootcamp: string ) => {
   return {
     "name": name,
-    "course-date": `has successfully completed\nthe ${classname} Bootcamp of \n ${datebootcamp} at School of Applied Technology.`,
+    "courseDate": `has successfully completed\nthe ${classname} Bootcamp of \n ${datebootcamp} at School of Applied Technology.`,
     "intro": "This certifies that\n"
   };
 };
@@ -11,7 +11,7 @@ export const makeTemplateInput = (name : string , classname :  string, datebootc
 export const getTemplate = (): Template => ({
   schemas: [
     {
-      "course-date": {
+      "courseDate": {
         type: "text",
         position: { x: 35.08, y: 135.72 },
         width: 145.76,
