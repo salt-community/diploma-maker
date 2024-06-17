@@ -45,10 +45,10 @@ public class DiplomaController : ControllerBase
         {
             var diplomas = await _service.PostDiplomas(requestDto);
             var responseDtos = diplomas.Select(d => _mapper.Map<DiplomaResponseDto>(d)).ToList();
-        
+
             if (responseDtos.Any())
             {
-                return CreatedAtAction(nameof(GetDiplomaByGuidId), new { id = responseDtos.First().GuidId }, responseDtos);
+                return CreatedAtAction(nameof(GetDiplomaByGuidId), new { guidId = responseDtos.First().GuidId }, responseDtos);
             }
             else
             {
@@ -64,6 +64,7 @@ public class DiplomaController : ControllerBase
             return Conflict(new { message = ex.Message });
         }
     }
+
 
     // GET: api/Diploma
     [HttpGet]

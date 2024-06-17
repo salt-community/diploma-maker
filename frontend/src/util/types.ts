@@ -3,7 +3,7 @@ export type displayMode = "form" | "viewer";
 // diplomas
 
 export type DiplomaRequest = {
-    // guidId: string;
+    guidId?: string;
     studentName: string;
     bootcampGuidId: string;
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, SaltData, displayMode } from "../util/types";
+import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode } from "../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -25,9 +25,10 @@ const saltDefaultData: SaltData = {
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
+  addMultipleDiplomas: (diplomasRequest: DiplomasRequestDto) => Promise<DiplomaResponse[]>;
 };
 
-export default function DiplomaMaking({ bootcamps }: Props) {
+export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props) {
   const [saltData, setSaltData] = useState<SaltData[] | null>()
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
@@ -142,14 +143,34 @@ export default function DiplomaMaking({ bootcamps }: Props) {
   };
 
   const generateCombinedPDFHandler = async () => {
-    if(saltData){
-      const inputsArray = saltData[selectedBootcampIndex].names.map((_, index) => {
-        return [makeTemplateInput(saltData[selectedBootcampIndex].names[index], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].dategraduate)];
-      });
+    if (saltData && bootcamps) {
+        const inputsArray = saltData[selectedBootcampIndex].names.map((_, index) => {
+            return [makeTemplateInput(saltData[selectedBootcampIndex].names[index], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].dategraduate)];
+        });
 
-      await generateCombinedPDF(saltData[selectedBootcampIndex].names.map(() => getTemplate()), inputsArray);
+        await generateCombinedPDF(saltData[selectedBootcampIndex].names.map(() => getTemplate()), inputsArray);
+
+        // Prepare diplomas data for the backend
+        const selectedBootcamp = bootcamps[selectedBootcampIndex];
+        const diplomasRequest: DiplomasRequestDto = {
+            diplomas: saltData[selectedBootcampIndex].names.map((name, index) => ({
+                guidId: selectedBootcamp.diplomas[index]?.guidId || crypto.randomUUID(), // Use existing guidId or generate a new one
+                studentName: name,
+                bootcampGuidId: selectedBootcamp.guidId // Ensure correct bootcampGuidId
+            }))
+        };
+
+        console.log(diplomasRequest);
+
+        try {
+            await addMultipleDiplomas(diplomasRequest);
+            alert("Diplomas added successfully.");
+        } catch (error) {
+            alert("Failed to add diplomas: " + error);
+        }
     }
-  };
+};
+
 
   const saveInputFieldsHandler = () => {
     if (uiInstance.current && saltData) {

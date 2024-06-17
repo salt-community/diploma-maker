@@ -49,12 +49,12 @@ public class DiplomaService
                 ?? throw new BootcampNotFoundException($"Bootcamp with ID {diplomaDto.BootcampGuidId} does not exist");
 
             var existingDiploma = await _context.Diploma
-                .FirstOrDefaultAsync(d => d.StudentName == diplomaDto.StudentName
-                && d.Bootcamp.GuidId == bootcamp.GuidId);
+                .FirstOrDefaultAsync(d => d.GuidId == diplomaDto.GuidId);
 
             if (existingDiploma != null)
             {
                 existingDiploma.StudentName = diplomaDto.StudentName;
+                existingDiploma.Bootcamp = bootcamp;
                 _context.Diploma.Update(existingDiploma);
                 diplomas.Add(existingDiploma);
             }
@@ -62,6 +62,7 @@ public class DiplomaService
             {
                 var newDiploma = new Diploma
                 {
+                    GuidId = diplomaDto.GuidId,
                     StudentName = diplomaDto.StudentName,
                     Bootcamp = bootcamp
                 };
@@ -74,7 +75,6 @@ public class DiplomaService
 
         return diplomas;
     }
-
     public async Task<List<Diploma>> GetDiplomas(){
         return await _context.Diploma
             .Include(d => d.Bootcamp)

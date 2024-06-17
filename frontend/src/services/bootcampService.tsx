@@ -85,7 +85,7 @@ export async function postSingleDiploma(diplomaRequest: DiplomaRequest): Promise
 
 
 export async function postMultipleDiplomas(diplomasRequest: DiplomasRequestDto): Promise<DiplomaResponse[]> {
-    const response = await fetch(`http://localhost:5258/api/diploma/multiple`, {
+    const response = await fetch(`http://localhost:5258/api/diploma/many`, { // Ensure the URL matches
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(diplomasRequest)
