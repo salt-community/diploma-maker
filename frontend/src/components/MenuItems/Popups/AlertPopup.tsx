@@ -12,19 +12,21 @@ type Props = {
   show: boolean;
   onClose: () => void;
   popupType: PopupType;
+  durationOverride?: number;
 }
 
-export const AlertPopup = ({ show, onClose, popupType, title, text }: Props) => {
+export const AlertPopup = ({ show, onClose, popupType, title, text, durationOverride }: Props) => {
   const [visible, setVisible] = useState(show);
 
   useEffect(() => {
     let timer: any;
+    let visibleTime = durationOverride ? durationOverride : 2000;
 
     if (show) {
       setVisible(true);
       timer = setTimeout(() => {
         setVisible(false);
-      }, 2000);
+      }, visibleTime);
     }
 
     return () => clearTimeout(timer);

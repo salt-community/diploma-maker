@@ -1,4 +1,4 @@
-import { DiplomaRequest, DiplomaResponse } from "../util/types";
+import { DiplomaRequest, DiplomaResponse, DiplomasRequestDto } from "../util/types";
 
 export async function getDiplomasByKeyword(keyword: string): Promise<DiplomaResponse[]> {
     const response = await fetch(`http://localhost:5258/api/diploma/%20/?keyword=${keyword}`);
@@ -55,4 +55,42 @@ export async function deleteDiplomaById(guidId: string): Promise<void> {
         throw new Error('Diploma not found');
     if (!response.ok)
         throw new Error('Failed to delete diploma!');
+}
+
+
+export async function postSingleDiploma(diplomaRequest: DiplomaRequest): Promise<DiplomaResponse> {
+    const response = await fetch(`http://localhost:5258/api/diploma/single`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(diplomaRequest)
+    });
+
+    if (!response.ok) {
+        if (response.status === 409) {
+            throw new Error("This student has already earned a diploma in this bootcamp!");
+        }
+        throw new Error("Failed to post new diploma!");
+    }
+
+    const result = await response.json() as DiplomaResponse;
+    return result;
+}
+
+
+export async function postMultipleDiplomas(diplomasRequest: DiplomasRequestDto): Promise<DiplomaResponse[]> {
+    const response = await fetch(`http://localhost:5258/api/diploma/many`, { // Ensure the URL matches
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(diplomasRequest)
+    });
+
+    if (!response.ok) {
+        if (response.status === 409) {
+            throw new Error("Some diplomas already exist!");
+        }
+        throw new Error("Failed to post diplomas!");
+    }
+
+    const result = await response.json() as DiplomaResponse[];
+    return result;
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, SaltData, displayMode } from "../util/types";
+import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode } from "../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -15,6 +15,8 @@ import { PaginationMenu } from "../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../components/MenuItems/Buttons/PublishButton";
 import './DiplomaMaking.css'
 import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
+import { SaveButton } from "../components/MenuItems/Buttons/SaveButton";
+import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 
 const saltDefaultData: SaltData = {
   classname: ".Net Fullstack",
@@ -24,9 +26,10 @@ const saltDefaultData: SaltData = {
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
+  addMultipleDiplomas: (diplomasRequest: DiplomasRequestDto) => Promise<DiplomaResponse[]>;
 };
 
-export default function DiplomaMaking({ bootcamps }: Props) {
+export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props) {
   const [saltData, setSaltData] = useState<SaltData[] | null>()
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
@@ -36,6 +39,10 @@ export default function DiplomaMaking({ bootcamps }: Props) {
   const uiInstance = useRef<Form | Viewer | null>(null);
 
   const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>();
+
+  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [popupContent, setPopupContent] = useState<string[]>(["",""]);
+  const [popupType, setPopupType] = useState<PopupType>(PopupType.success);
 
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
@@ -141,17 +148,68 @@ export default function DiplomaMaking({ bootcamps }: Props) {
   };
 
   const generateCombinedPDFHandler = async () => {
-    if(saltData){
-      const inputsArray = saltData[selectedBootcampIndex].names.map((_, index) => {
-        return [makeTemplateInput(saltData[selectedBootcampIndex].names[index], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].dategraduate)];
-      });
+      if (saltData) {
+          const inputsArray = saltData[selectedBootcampIndex].names.map((_, index) => {
+              return [makeTemplateInput(saltData[selectedBootcampIndex].names[index], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].dategraduate)];
+          });
 
-      await generateCombinedPDF(saltData[selectedBootcampIndex].names.map(() => getTemplate()), inputsArray);
+          await generateCombinedPDF(saltData[selectedBootcampIndex].names.map(() => getTemplate()), inputsArray);
+          await postSelectedBootcampData();
+      }
+  };
+
+  const postSelectedBootcampData = async () => {
+    if (saltData && bootcamps) {
+      const currentBootcamp = bootcamps[selectedBootcampIndex];
+      const diplomasRequest: DiplomasRequestDto = {
+          diplomas: saltData[selectedBootcampIndex].names.map((name, index) => ({
+              guidId: currentBootcamp.diplomas[index]?.guidId || crypto.randomUUID(),
+              studentName: name,
+              bootcampGuidId: currentBootcamp.guidId
+          }))
+      };
+      try {
+          await addMultipleDiplomas(diplomasRequest);
+
+          setPopupType(PopupType.success);
+          setPopupContent(["Diplomas added successfully.", "Successfully added diplomas to the database."]);
+          setShowPopup(true);
+
+      } catch (error) {
+          setPopupType(PopupType.fail);
+          setPopupContent(["Failed to add diplomas:", `${error}`]);
+          setShowPopup(true);
+      }
+    }
+  }
+
+
+  const saveInputFieldsHandler = () => {
+    if (uiInstance.current && saltData) {
+      const inputs = uiInstance.current.getInputs();
+      const newName = inputs[0].name;
+      const currentName = saltData[selectedBootcampIndex].names[currentPageIndex];
+
+      if (currentName === newName) {
+        return;
+      }
+
+      const updatedSaltData = saltData.map((item, index) => {
+        if (index === selectedBootcampIndex) {
+          const updatedNames = [...item.names];
+          updatedNames[currentPageIndex] = newName;
+          return { ...item, names: updatedNames };
+        }
+        return item;
+      });
+  
+      setSaltData(updatedSaltData);
     }
   };
 
   return (
     <div className="flex w-full h-screen justify-between pt-10 dark:bg-darkbg">
+      <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)} durationOverride={3500}/>
       <section className="flex-1 flex flex-col justify-start gap-1 ml-5" style={{position: 'relative'}}>
         <header className="flex items-center justify-start gap-3 mb-5 viewersidebar-container">
           <div>
@@ -162,12 +220,14 @@ export default function DiplomaMaking({ bootcamps }: Props) {
           </div>
           <PublishButton text="Generate PDF" onClick={generatePDFHandler}/>
           <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler}/>
+          <SaveButton onClick={saveInputFieldsHandler}/>
         </header>
         {saltData && 
           <div
             className="pdfpreview-container"
             ref={uiRef}
             style={{ width: "100%", height: "calc(82vh - 68px)" }}
+            // onBlur={saveInputFieldsHandler}
           />
         }
         {saltData &&

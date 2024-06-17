@@ -3,7 +3,7 @@ export type displayMode = "form" | "viewer";
 // diplomas
 
 export type DiplomaRequest = {
-    // guidId: string;
+    guidId?: string;
     studentName: string;
     bootcampGuidId: string;
 }
@@ -47,3 +47,7 @@ export type SaltData = {
     dategraduate: string;
     names: string[];
 };
+
+export type DiplomasRequestDto = {
+    diplomas: DiplomaRequest[];
+}

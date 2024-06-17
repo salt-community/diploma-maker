@@ -1,4 +1,4 @@
-import { BootcampInDiploma, BootcampRequest, BootcampResponse } from "../util/types";
+import { BootcampRequest, BootcampResponse } from "../util/types";
 
 export async function getBootcamps(): Promise<BootcampResponse[]>{
     const response = await fetch(`http://localhost:5258/api/bootcamp`);

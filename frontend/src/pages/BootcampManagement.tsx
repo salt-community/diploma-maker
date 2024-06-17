@@ -46,7 +46,19 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
         startDate:  new Date(data[`datestart${i}`]),
         graduationDate:  new Date (data[`dategraduate${i}`])
       };
-      await updateBootcamp(newBootcamp);
+      try{
+        await updateBootcamp(newBootcamp);
+
+        setPopupType(PopupType.success);
+        setPopupContent(["Updated Bootcamps Successfully.", "Successfully removed bootcamp from database."]);
+        setShowPopup(true);
+      } catch (error) {
+        
+        setPopupType(PopupType.fail);
+        setPopupContent(["Error Updating Bootcamp", "Successfully removed bootcamp from database."]);
+        setShowPopup(true);
+      }
+      
     }
   }
 
