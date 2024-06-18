@@ -7,5 +7,6 @@ public class BootcampResponseDto
     public required string Name { get; set; }
     public DateTime graduationDate{ get; set; } = DateTime.Now.Date;
 
+    public Template template{ get; set; } 
     public List<DiplomaInBootcampDto> Diplomas { get; set; } = [];
 }

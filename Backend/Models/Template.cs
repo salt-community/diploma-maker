@@ -4,7 +4,7 @@ namespace Backend.Models
 }
 public class Template
 {
-    public string Id { get; set;}
+    public int Id { get; set;}
 
     public required string templateName {get; set;} 
 

@@ -24,11 +24,13 @@
         public async Task<List<Bootcamp>> GetBootcamps() =>
                 await _context.Bootcamp
                 .Include(b => b.Diplomas)
+                .Include(b =>b.template)
                 .ToListAsync();
 
         public async Task<Bootcamp?> GetBootcampByGuidId(Guid guidId) => 
                 await _context.Bootcamp
                 .Include(b => b.Diplomas)
+                .Include(b =>b.template)
                 .FirstOrDefaultAsync(b => b.GuidId == guidId);
 
     public async Task<Bootcamp> DeleteBootcampByGuidId(Guid guidId)
