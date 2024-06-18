@@ -10,11 +10,12 @@ type Props = {
 }
 
 export const TemplateCreatorPage = ({ bootcamps }: Props) => {
-    const [templates, setTemplates] = useState<Template>();
+    const [templates, setTemplates] = useState<Template[]>();
 
     useEffect(() => {
 
-    })
+    }, [])
+
     const handleBootcampChange = () => {
 
     }
@@ -49,7 +50,6 @@ export const TemplateCreatorPage = ({ bootcamps }: Props) => {
                     </section>
                     <section className="templatecreator-page__leftsidebar-menu-section">
                         <h3>Generate</h3>
-                        <PublishButton text='Generate PDFs' onClick={generatePDFsHandler} />
                     </section>
                 </div>
             </section>
