@@ -47,7 +47,18 @@ export type SaltData = {
     template: Template;
 };
 
+// Templates
+
 export type Template = {
+    id: number;
+    templateName: string;
+    footer: string;
+    intro: string;
+    studentName: string;
+    basePdf: string;
+}
+
+export type TemplateResponse = {
     id: number;
     templateName: string;
     footer: string;
