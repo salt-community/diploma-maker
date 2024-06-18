@@ -8,9 +8,9 @@ public class Template
 
     public required string templateName {get; set;} 
 
-    public string footer {get; set;} = "This certifies that\n";
+    public string footer {get; set;} = "has successfully completed\nthe ${classname} Bootcamp of \n ${datebootcamp} at School of Applied Technology.";
 
-    public string intro {get; set;} = "has successfully completed\nthe ${classname} Bootcamp of \n ${datebootcamp} at School of Applied Technology.";
+    public string intro {get; set;} = "This certifies that\n";
 
     public string studentName {get; set;} =  "{studentname}";
 
