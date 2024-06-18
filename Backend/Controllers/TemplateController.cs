@@ -10,15 +10,18 @@ namespace Backend.Controllers;
 public class TemplateController : ControllerBase
 {
     private readonly IMapper _mapper;
+    private readonly TemplateService _templateService;
 
-    public TemplateController( IMapper mapper)
+    public TemplateController(IMapper mapper, TemplateService templateService)
     {
         _mapper = mapper;
+        _templateService = templateService;
     }
 
     [HttpGet]
     public async Task<ActionResult> GetTemplates()
     {
+        var templates = await _templateService.GetDiplomas();
         throw new NotImplementedException();
     }
 
