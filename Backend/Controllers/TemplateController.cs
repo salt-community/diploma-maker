@@ -19,7 +19,7 @@ public class TemplateController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult> GetTemplates()
+    public async Task<ActionResult<List<TemplatesResponseDto>>> GetTemplates()
     {
         var templates = await _templateService.GetDiplomas();
         var templateResponseDtos = _mapper.Map<List<TemplateResponseDto>>(templates);
