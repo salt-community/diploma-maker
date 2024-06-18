@@ -169,3 +169,6 @@ export const populateFooterField = (input: string, classname: string, datebootca
     .replace('${classname}', classname)
     .replace('${datebootcamp}', datebootcamp);
 }
+  
+    
+    

@@ -9,6 +9,8 @@ import {
   generatePDF,
   generateCombinedPDF,
   populateIntroField,
+  populateNameField,
+  populateFooterField,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
@@ -83,10 +85,19 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
       const template: Template = getTemplate();
       const inputs = 
         [makeTemplateInput(
-          saltData[selectedBootcampIndex].names[currentPageIndex], 
-          saltData[selectedBootcampIndex].classname, 
-          saltData[selectedBootcampIndex].dategraduate
-          )];
+          populateIntroField(
+            saltData[selectedBootcampIndex].template.footer
+          ),
+          populateNameField(
+            saltData[selectedBootcampIndex].template.studentName,
+            saltData[selectedBootcampIndex].names[currentPageIndex]
+          ),
+          populateFooterField(
+            saltData[selectedBootcampIndex].template.intro,
+            saltData[selectedBootcampIndex].classname,
+            saltData[selectedBootcampIndex].dategraduate
+          )
+        )];
 
       getFontsData().then((font) => {
         if (uiRef.current) {
