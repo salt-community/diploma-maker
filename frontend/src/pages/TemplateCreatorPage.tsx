@@ -1,24 +1,30 @@
-import { useEffect } from "react";
 import { SelectOptions } from "../components/MenuItems/Inputs/SelectOptions";
 import './TemplateCreatorPage.css'
 import { PdfFileUpload } from "../components/MenuItems/Inputs/PdfFileUpload";
-import { TemplateResponse } from "../util/types";
+import { Template, TemplateResponse } from "../util/types";
+import { useEffect, useState } from "react";
 
 type Props = {
     templates: TemplateResponse[] | null;
 }
 
 export const TemplateCreatorPage = ({ templates }: Props) => {
+    const [currentTemplate, setCurrentTemplate] = useState<Template>();
+
     useEffect(() => {
+        if(templates){
+            setCurrentTemplate(templates[0])
+        }
+    }, [templates])
 
-    }, [])
-
-    const handleBootcampChange = () => {
-
+    const handleTemplateChange = () => {
+        
     }
+
     const pdfFileUploadHandler = (file: File) => {
         console.log(file);
     }
+    
     return(
         <main className="templatecreator-page">
             <section className='templatecreator-page__leftsidebar'>
@@ -55,13 +61,12 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
                             containerClassOverride='overview-page__select-container'
                             selectClassOverride='overview-page__select-box'
                             options={[
-                                { value: "", label: "All Bootcamps" },
-                                ...(bootcamps?.map(bootcamp => ({
-                                    value: bootcamp.guidId,
-                                    label: bootcamp.name
+                                ...(templates?.map(template => ({
+                                    value: template.templateName,
+                                    label: template.templateName
                                 })) || [])
                             ]}
-                            onChange={handleBootcampChange}
+                            onChange={handleTemplateChange}
                         />
                     </section>
                     <section className="templatecreator-page__rightsidebar-menu-section">
