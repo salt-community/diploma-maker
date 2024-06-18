@@ -12,22 +12,32 @@ public static class SeedData
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
             
+            // template 
+            
+            var baseTemplate = new Template {
+                templateName = "defaultTemplate"
+            };
+
             // Bootcamps
             var dotnetBootcamp1 = new Bootcamp
             {
                 Name = ".Net Fullstack Winter 2024",
                 graduationDate = new DateTime(2024,2,5),
+                template = baseTemplate,
                 
             };
             var dotnetBootcamp2 = new Bootcamp
             {
                 Name = ".Net Fullstack Autumn 2023",
                 graduationDate = new DateTime(2024,11,5),
+                template = baseTemplate,
+                
             };
             var JavaBootcamp = new Bootcamp
             {
                 Name = "Java Fullstack Winter 2024",
                 graduationDate = new DateTime(2024,1,5),
+                template = baseTemplate,
             };
 
             var bootcamps = new List<Bootcamp>{dotnetBootcamp1, dotnetBootcamp2, JavaBootcamp};

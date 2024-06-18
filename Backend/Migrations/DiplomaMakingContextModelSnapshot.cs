@@ -39,10 +39,15 @@ namespace Backend.Migrations
                     b.Property<DateTime>("graduationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("templateId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
+
+                    b.HasIndex("templateId");
 
                     b.ToTable("Bootcamp");
                 });
@@ -70,6 +75,50 @@ namespace Backend.Migrations
                     b.HasIndex("BootcampId");
 
                     b.ToTable("Diploma");
+                });
+
+            modelBuilder.Entity("Template", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("basePdf")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("footer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("intro")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("studentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("templateName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Template");
+                });
+
+            modelBuilder.Entity("Backend.Models.Bootcamp", b =>
+                {
+                    b.HasOne("Template", "template")
+                        .WithMany()
+                        .HasForeignKey("templateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("template");
                 });
 
             modelBuilder.Entity("Backend.Models.Diploma", b =>

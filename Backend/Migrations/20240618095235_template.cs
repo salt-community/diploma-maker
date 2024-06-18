@@ -6,11 +6,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class graddate : Migration
+    public partial class template : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Template",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    templateName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    footer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    intro = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    studentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    basePdf = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Template", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Bootcamp",
                 columns: table => new
@@ -19,11 +36,18 @@ namespace Backend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GuidId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    graduationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    graduationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    templateId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bootcamp", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bootcamp_Template_templateId",
+                        column: x => x.templateId,
+                        principalTable: "Template",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,6 +78,11 @@ namespace Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bootcamp_templateId",
+                table: "Bootcamp",
+                column: "templateId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Diploma_BootcampId",
                 table: "Diploma",
                 column: "BootcampId");
@@ -67,6 +96,9 @@ namespace Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Bootcamp");
+
+            migrationBuilder.DropTable(
+                name: "Template");
         }
     }
 }
