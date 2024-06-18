@@ -9,28 +9,38 @@ type Props = {
 }
 
 export const TemplateCreatorPage = ({ templates }: Props) => {
-    const [currentTemplate, setCurrentTemplate] = useState<Template>();
+    const [templateData, setTemplateData] = useState<Template[]>([]);
+    const [currentTemplate, setCurrentTemplate] = useState<Template | null>(null);
 
     useEffect(() => {
-        if(templates){
-            setCurrentTemplate(templates[0])
+        if (templates && templates.length > 0) {
+            const templateData = templates.map(template => ({
+                id: template.id,
+                templateName: template.templateName,
+                footer: template.footer,
+                intro: template.intro,
+                studentName: template.studentName,
+                basePdf: template.basePdf
+            }));
+            setTemplateData(templateData);
+            setCurrentTemplate(templateData[0] || null);
         }
-    }, [templates])
+    }, [templates]);
 
-    const handleTemplateChange = () => {
-        
-    }
+    const templateChangeHandler = (index: number) => {
+        setCurrentTemplate(templateData[index] || null);
+    };
 
     const pdfFileUploadHandler = (file: File) => {
         console.log(file);
-    }
-    
-    return(
+    };
+
+    return (
         <main className="templatecreator-page">
             <section className='templatecreator-page__leftsidebar'>
                 <div className='templatecreator-page__leftsidebar-menu'>
                     <header className="templatecreator-page__leftsidebar-menu-header">
-                        
+
                     </header>
                     <section className="templatecreator-page__leftsidebar-menu-section">
 
@@ -39,9 +49,9 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
             </section>
             <section className='templatecreator-page__preview-container'>
                 <div className='templatecreator-page__preview'>
-                    <h2>Slide 1</h2>
+                    <h2>{currentTemplate?.templateName}</h2>
                     <div className="pdfpreview">
-                        
+
                     </div>
                 </div>
             </section>
@@ -61,17 +71,17 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
                             containerClassOverride='overview-page__select-container'
                             selectClassOverride='overview-page__select-box'
                             options={[
-                                ...(templates?.map(template => ({
+                                ...(templateData.map(template => ({
                                     value: template.templateName,
                                     label: template.templateName
-                                })) || [])
+                                })))
                             ]}
-                            onChange={handleTemplateChange}
+                            onChange={(event) => templateChangeHandler(Number(event.target.value))}
                         />
                     </section>
                     <section className="templatecreator-page__rightsidebar-menu-section">
                         <h3>Add PDF Background</h3>
-                        <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)}/>
+                        <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)} />
                     </section>
                 </div>
             </section>
