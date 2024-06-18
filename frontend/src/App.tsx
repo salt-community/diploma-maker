@@ -8,6 +8,7 @@ import { OverviewPage } from "./pages/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar";
 import BootcampManagement from "./pages/BootcampManagement";
 import { deleteDiplomaById, postMultipleDiplomas } from "./services/diplomaService";
+import { TemplateCreatorPage } from "./pages/TemplateCreatorPage";
 
 function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
@@ -50,7 +51,6 @@ function App() {
   }
 
   async function addMultipleDiplomas(diplomasRequest: DiplomasRequestDto): Promise<DiplomaResponse[]> {
-    console.log(diplomasRequest);
     const response = await postMultipleDiplomas(diplomasRequest);
     await refresh();
     return response;
@@ -60,11 +60,12 @@ function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path="/" element={<DiplomaMaking bootcamps={bootcamps!} addMultipleDiplomas={addMultipleDiplomas}/>} />
-        <Route path="/:selectedBootcamp" element={<DiplomaMaking bootcamps={bootcamps!} addMultipleDiplomas={addMultipleDiplomas}/>} />
+        <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} addMultipleDiplomas={addMultipleDiplomas}/>} />
+        <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} addMultipleDiplomas={addMultipleDiplomas}/>} />
         <Route path={`/:guidId`} element = {<VertificationPage />} />
-        <Route path="/bootcamp-management" element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
+        <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteDiploma={deleteDiploma}/>} />
+        <Route path={"/template-creator"} element={<TemplateCreatorPage />} />
       </Routes>
     </>
   );
