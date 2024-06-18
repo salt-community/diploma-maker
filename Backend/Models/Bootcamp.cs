@@ -8,4 +8,6 @@ public class Bootcamp
     public required string Name { get; set; }
     public DateTime graduationDate {get; set; } = DateTime.Now;
     public List<Diploma> Diplomas { get; set; } = [];
-}
+    public required Template template { get; set;} 
+    
+    }

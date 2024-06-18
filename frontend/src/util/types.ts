@@ -34,7 +34,6 @@ export type BootcampRequest = {
 export type BootcampResponse = {
     guidId: string;
     name: string;
-    startDate: Date;
     graduationDate: Date;
     diplomas: DiplomaInBootcamp[];
 }
