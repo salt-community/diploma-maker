@@ -44,6 +44,7 @@ export type SaltData = {
     datestart?: string;
     dategraduate: string;
     names: string[];
+    template: Template;
 };
 
 export type Template = {

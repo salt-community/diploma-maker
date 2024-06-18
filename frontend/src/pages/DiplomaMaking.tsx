@@ -61,12 +61,14 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
               classname: bootcamp.name,
               dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
               names: saltDefaultData.names,
+              template: bootcamp.template
             };
           } else {
             return {
               classname: bootcamp.name,
               dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
               names: bootcamp.diplomas.map((diploma) => diploma.studentName),
+              template: bootcamp.template
             };
           }
         });
