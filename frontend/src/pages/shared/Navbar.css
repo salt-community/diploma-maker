@@ -57,3 +57,22 @@
         fill: #fffffff1;
     }
         
+
+
+/* Template Creator icon */
+.cls-1 {
+    fill: none;
+    stroke: #ababba;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.5px;
+    transition: all 150ms ease-in;
+}
+    .navbar__item:hover .cls-1{
+        stroke: #fff;
+        transition: all 150ms ease-in;
+    }
+    .active svg .cls-1{
+        stroke: #fffffff1;
+        transition: all 150ms ease-in;
+    }
