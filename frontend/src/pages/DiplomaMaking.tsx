@@ -8,6 +8,9 @@ import {
   getPlugins,
   generatePDF,
   generateCombinedPDF,
+  populateIntroField,
+  populateNameField,
+  populateFooterField,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
@@ -17,12 +20,7 @@ import './DiplomaMaking.css'
 import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
 import { SaveButton } from "../components/MenuItems/Buttons/SaveButton";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
-
-const saltDefaultData: SaltData = {
-  classname: ".Net Fullstack",
-  dategraduate: '12/04/2024',
-  names: ["John Smith"]
-};
+import { saltDefaultData } from "../data/data";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -60,12 +58,14 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
               classname: bootcamp.name,
               dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
               names: saltDefaultData.names,
+              template: bootcamp.template
             };
           } else {
             return {
               classname: bootcamp.name,
               dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
               names: bootcamp.diplomas.map((diploma) => diploma.studentName),
+              template: bootcamp.template
             };
           }
         });
@@ -77,8 +77,23 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
   // When Page Changes -> Loads into PDF preview
   useEffect(() => {
     if(saltData){
-      const template: Template = getTemplate();
-      const inputs = [makeTemplateInput(saltData[selectedBootcampIndex].names[currentPageIndex], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].dategraduate)];
+      const inputs = 
+        [makeTemplateInput(
+          populateIntroField(
+            saltData[selectedBootcampIndex].template.footer
+          ),
+          populateNameField(
+            saltData[selectedBootcampIndex].template.studentName,
+            saltData[selectedBootcampIndex].names[currentPageIndex]
+          ),
+          populateFooterField(
+            saltData[selectedBootcampIndex].template.intro,
+            saltData[selectedBootcampIndex].classname,
+            saltData[selectedBootcampIndex].dategraduate
+          ),
+          saltData[selectedBootcampIndex].template.basePdf
+        )];
+      const template: Template = getTemplate(inputs[0]);
 
       getFontsData().then((font) => {
         if (uiRef.current) {

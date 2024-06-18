@@ -35,6 +35,7 @@ export type BootcampResponse = {
     guidId: string;
     name: string;
     graduationDate: Date;
+    template: Template;
     diplomas: DiplomaInBootcamp[];
 }
 
@@ -43,7 +44,17 @@ export type SaltData = {
     datestart?: string;
     dategraduate: string;
     names: string[];
+    template: Template;
 };
+
+export type Template = {
+    id: number;
+    templateName: string;
+    footer: string;
+    intro: string;
+    studentName: string;
+    basePdf: string;
+}
 
 export type DiplomasRequestDto = {
     diplomas: DiplomaRequest[];
