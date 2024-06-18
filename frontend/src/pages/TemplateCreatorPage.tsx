@@ -1,18 +1,14 @@
-import { useEffect, useState } from "react";
-import { PublishButton } from "../components/MenuItems/Buttons/PublishButton";
+import { useEffect } from "react";
 import { SelectOptions } from "../components/MenuItems/Inputs/SelectOptions";
-import { BootcampResponse } from "../util/types";
 import './TemplateCreatorPage.css'
-import { Template } from "@pdfme/common";
 import { PdfFileUpload } from "../components/MenuItems/Inputs/PdfFileUpload";
+import { TemplateResponse } from "../util/types";
 
 type Props = {
-    bootcamps: BootcampResponse[] | null;
+    templates: TemplateResponse[] | null;
 }
 
-export const TemplateCreatorPage = ({ bootcamps }: Props) => {
-    const [templates, setTemplates] = useState<Template[]>();
-
+export const TemplateCreatorPage = ({ templates }: Props) => {
     useEffect(() => {
 
     }, [])
