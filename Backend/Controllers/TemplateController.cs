@@ -22,7 +22,8 @@ public class TemplateController : ControllerBase
     public async Task<ActionResult> GetTemplates()
     {
         var templates = await _templateService.GetDiplomas();
-        throw new NotImplementedException();
+        var templateResponseDtos = _mapper.Map<List<TemplateResponseDto>>(templates);
+        return Ok(templateResponseDtos);
     }
 
     [HttpGet("{guidId}")]
