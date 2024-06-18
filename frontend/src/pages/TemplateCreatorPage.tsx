@@ -11,6 +11,8 @@ type Props = {
 export const TemplateCreatorPage = ({ templates }: Props) => {
     const [templateData, setTemplateData] = useState<Template[]>([]);
     const [currentTemplate, setCurrentTemplate] = useState<Template | null>(null);
+    const [rightSideBarPage, setRightSideBarPage] = useState<number>(0);
+    const [leftSideBarPage, setLeftSideBarPage] = useState<number>(0);
 
     useEffect(() => {
         if (templates && templates.length > 0) {
@@ -40,11 +42,28 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
             <section className='templatecreator-page__leftsidebar'>
                 <div className='templatecreator-page__leftsidebar-menu'>
                     <header className="templatecreator-page__leftsidebar-menu-header">
-
+                        <button onClick={() => setLeftSideBarPage(0)} className={leftSideBarPage === 0 ? 'active' : ''}>
+                            -
+                        </button>
+                        <button onClick={() => setLeftSideBarPage(1)} className={leftSideBarPage === 1 ? 'active' : ''}>
+                            -
+                        </button>
                     </header>
-                    <section className="templatecreator-page__leftsidebar-menu-section">
-
-                    </section>
+                    {leftSideBarPage === 0 && 
+                        <>
+                            <section className="templatecreator-page__leftsidebar-menu-section">
+                                <h3>page 1</h3>
+                            </section>
+                        </>
+                    }
+                    {leftSideBarPage === 1 && 
+                        <>
+                            <section className="templatecreator-page__leftsidebar-menu-section">
+                                <h3>page 2</h3>
+                            </section>
+                        </>
+                    }
+                    
                 </div>
             </section>
             <section className='templatecreator-page__preview-container'>
@@ -58,31 +77,45 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
             <section className='templatecreator-page__rightsidebar'>
                 <div className='templatecreator-page__rightsidebar-menu'>
                     <header className="templatecreator-page__rightsidebar-menu-header">
-                        <button>
+                        <button onClick={() => setRightSideBarPage(0)} className={rightSideBarPage === 0 ? 'active' : ''}>
                             Browse
                         </button>
-                        <button>
+                        <button onClick={() => setRightSideBarPage(1)} className={rightSideBarPage === 1 ? 'active' : ''}>
                             Edit
                         </button>
                     </header>
-                    <section className="templatecreator-page__rightsidebar-menu-section">
-                        <h3>Templates</h3>
-                        <SelectOptions
-                            containerClassOverride='overview-page__select-container'
-                            selectClassOverride='overview-page__select-box'
-                            options={[
-                                ...(templateData.map(template => ({
-                                    value: template.templateName,
-                                    label: template.templateName
-                                })))
-                            ]}
-                            onChange={(event) => templateChangeHandler(Number(event.target.value))}
-                        />
-                    </section>
-                    <section className="templatecreator-page__rightsidebar-menu-section">
-                        <h3>Add PDF Background</h3>
-                        <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)} />
-                    </section>
+                    {rightSideBarPage === 0 && 
+                        <>
+                            <section className="templatecreator-page__rightsidebar-menu-section">
+                                <h3>Templates</h3>
+                                <SelectOptions
+                                    containerClassOverride='overview-page__select-container'
+                                    selectClassOverride='overview-page__select-box'
+                                    options={[
+                                        ...(templateData.map(template => ({
+                                            value: template.templateName,
+                                            label: template.templateName
+                                        })))
+                                    ]}
+                                    onChange={(event) => templateChangeHandler(Number(event.target.value))}
+                                />
+                            </section>
+                            <section className="templatecreator-page__rightsidebar-menu-section">
+                                <h3>Add PDF Background</h3>
+                                <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)} />
+                            </section>
+                        </>
+                    }
+                    {rightSideBarPage === 1 && 
+                        <>
+                            <section className="templatecreator-page__rightsidebar-menu-section">
+                                <h3>Editing Stuff</h3>
+                            </section>
+                            <section className="templatecreator-page__rightsidebar-menu-section">
+                                <h3>Edit Fields</h3>
+                            </section>
+                        </>
+                    }
                 </div>
             </section>
         </main>

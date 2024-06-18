@@ -3,7 +3,7 @@
     background-color: #2e2e38;
 
     display: grid;
-    grid-template-columns: .1fr .7fr .2fr;
+    grid-template-columns: .15fr .65fr .2fr;
     
 }
     .templatecreator-page__preview-container{
@@ -57,11 +57,22 @@
 
             border-bottom: 1px solid #ababba5b;
         }
-            .templatecreator-page__leftsidebar-menu-header button{
-                color: #fffff1;
-                font-size: 1.6rem;
-                font-weight: 400;
-            }
+        .templatecreator-page__leftsidebar-menu-header button{
+            color: #ababba;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: all .1s ease-in-out;
+        }
+        .templatecreator-page__leftsidebar-menu-header button.active{
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: all .1s ease-in-out;
+        }
+        .templatecreator-page__leftsidebar-menu-header button:hover{
+            color: #fffff1;
+            transition: all .1s ease-in-out;
+        }
         .templatecreator-page__leftsidebar-menu-section{
             padding: 3% 7%;
             min-height: fit-content;
@@ -99,10 +110,22 @@
             border-bottom: 1px solid #ababba5b;
         }
             .templatecreator-page__rightsidebar-menu-header button{
-                color: #fffff1;
-                font-size: 1.6rem;
-                font-weight: 400;
+                color: #ababba;
+                font-size: 1.5rem;
+                font-weight: 600;
+                transition: all .1s ease-in-out;
             }
+            .templatecreator-page__rightsidebar-menu-header button.active{
+                color: #ffffff;
+                font-size: 1.5rem;
+                font-weight: 600;
+                transition: all .1s ease-in-out;
+            }
+            .templatecreator-page__rightsidebar-menu-header button:hover{
+                color: #fffff1;
+                transition: all .1s ease-in-out;
+            }
+            
         .templatecreator-page__rightsidebar-menu-section{
             padding: 3% 7%;
             min-height: fit-content;
