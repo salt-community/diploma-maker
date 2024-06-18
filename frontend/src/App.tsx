@@ -2,16 +2,18 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/DiplomaMaking';
 import { VertificationPage } from "./pages/VerificationPage";
 import { useState } from "react";
-import { BootcampRequest, BootcampResponse, DiplomaResponse, DiplomasRequestDto } from "./util/types";
+import { BootcampRequest, BootcampResponse, DiplomaResponse, DiplomasRequestDto, TemplateResponse } from "./util/types";
 import { deleteBootcampById, getBootcamps, postBootcamp, updateBootcamp as updateBootcampService } from "./services/bootcampService";
 import { OverviewPage } from "./pages/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar";
 import BootcampManagement from "./pages/BootcampManagement";
 import { deleteDiplomaById, postMultipleDiplomas } from "./services/diplomaService";
 import { TemplateCreatorPage } from "./pages/TemplateCreatorPage";
+import { getAllTemplates } from "./services/templateService";
 
 function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
+  const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
 
   async function getBootcampsFromBackend() {
     const newBootcamps: BootcampResponse[] = await getBootcamps(); 
@@ -20,6 +22,10 @@ function App() {
 
   if(!bootcamps){
     getBootcampsFromBackend();
+  }
+
+  if(!templates){
+    getTemplates();
   }
 
   async function deleteBootcamp(i: number){
@@ -54,6 +60,11 @@ function App() {
     const response = await postMultipleDiplomas(diplomasRequest);
     await refresh();
     return response;
+  }
+
+  async function getTemplates() {
+    const templates: TemplateResponse[] = await getAllTemplates(); 
+    setTemplates(templates);
   }
 
   return (
