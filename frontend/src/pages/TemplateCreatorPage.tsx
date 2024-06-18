@@ -4,6 +4,7 @@ import { SelectOptions } from "../components/MenuItems/Inputs/SelectOptions";
 import { BootcampResponse } from "../util/types";
 import './TemplateCreatorPage.css'
 import { Template } from "@pdfme/common";
+import { PdfFileUpload } from "../components/MenuItems/Inputs/PdfFileUpload";
 
 type Props = {
     bootcamps: BootcampResponse[] | null;
@@ -19,37 +20,18 @@ export const TemplateCreatorPage = ({ bootcamps }: Props) => {
     const handleBootcampChange = () => {
 
     }
-    const generatePDFsHandler = () => {
-
+    const pdfFileUploadHandler = (file: File) => {
+        console.log(file);
     }
     return(
         <main className="templatecreator-page">
             <section className='templatecreator-page__leftsidebar'>
                 <div className='templatecreator-page__leftsidebar-menu'>
                     <header className="templatecreator-page__leftsidebar-menu-header">
-                        <button>
-                            Browse
-                        </button>
+                        
                     </header>
                     <section className="templatecreator-page__leftsidebar-menu-section">
-                        <h3>Filtering</h3>               </section>
-                    <section className="templatecreator-page__leftsidebar-menu-section">
-                        <h3>Bootcamps</h3>
-                        <SelectOptions
-                            containerClassOverride='overview-page__select-container'
-                            selectClassOverride='overview-page__select-box'
-                            options={[
-                                { value: "", label: "All Bootcamps" },
-                                ...(bootcamps?.map(bootcamp => ({
-                                    value: bootcamp.guidId,
-                                    label: bootcamp.name
-                                })) || [])
-                            ]}
-                            onChange={handleBootcampChange}
-                        />
-                    </section>
-                    <section className="templatecreator-page__leftsidebar-menu-section">
-                        <h3>Generate</h3>
+
                     </section>
                 </div>
             </section>
@@ -67,11 +49,12 @@ export const TemplateCreatorPage = ({ bootcamps }: Props) => {
                         <button>
                             Browse
                         </button>
+                        <button>
+                            Edit
+                        </button>
                     </header>
                     <section className="templatecreator-page__rightsidebar-menu-section">
-                        <h3>Filtering</h3>               </section>
-                    <section className="templatecreator-page__rightsidebar-menu-section">
-                        <h3>Bootcamps</h3>
+                        <h3>Templates</h3>
                         <SelectOptions
                             containerClassOverride='overview-page__select-container'
                             selectClassOverride='overview-page__select-box'
@@ -86,8 +69,8 @@ export const TemplateCreatorPage = ({ bootcamps }: Props) => {
                         />
                     </section>
                     <section className="templatecreator-page__rightsidebar-menu-section">
-                        <h3>Generate</h3>
-                        <PublishButton text='Generate PDFs' onClick={generatePDFsHandler} />
+                        <h3>Add PDF Background</h3>
+                        <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)}/>
                     </section>
                 </div>
             </section>
