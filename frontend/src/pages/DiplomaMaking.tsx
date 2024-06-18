@@ -24,7 +24,7 @@ import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup
 const saltDefaultData: SaltData = {
   classname: ".Net Fullstack",
   dategraduate: '12/04/2024',
-  names: ["John Smith"]
+  names: ["John Smith"],
 };
 
 type Props = {
@@ -82,7 +82,6 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
   // When Page Changes -> Loads into PDF preview
   useEffect(() => {
     if(saltData){
-      const template: Template = getTemplate();
       const inputs = 
         [makeTemplateInput(
           populateIntroField(
@@ -96,8 +95,10 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
             saltData[selectedBootcampIndex].template.intro,
             saltData[selectedBootcampIndex].classname,
             saltData[selectedBootcampIndex].dategraduate
-          )
+          ),
+          saltData[selectedBootcampIndex].template.basePdf
         )];
+      const template: Template = getTemplate(inputs[0]);
 
       getFontsData().then((font) => {
         if (uiRef.current) {
