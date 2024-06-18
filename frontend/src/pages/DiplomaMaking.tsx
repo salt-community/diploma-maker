@@ -20,12 +20,7 @@ import './DiplomaMaking.css'
 import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
 import { SaveButton } from "../components/MenuItems/Buttons/SaveButton";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
-
-const saltDefaultData: SaltData = {
-  classname: ".Net Fullstack",
-  dategraduate: '12/04/2024',
-  names: ["John Smith"],
-};
+import { saltDefaultData } from "../data/data";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
