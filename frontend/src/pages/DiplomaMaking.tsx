@@ -80,14 +80,14 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
       const inputs = 
         [makeTemplateInput(
           populateIntroField(
-            saltData[selectedBootcampIndex].template.footer
+            saltData[selectedBootcampIndex].template.intro
           ),
           populateNameField(
             saltData[selectedBootcampIndex].template.studentName,
             saltData[selectedBootcampIndex].names[currentPageIndex]
           ),
           populateFooterField(
-            saltData[selectedBootcampIndex].template.intro,
+            saltData[selectedBootcampIndex].template.footer,
             saltData[selectedBootcampIndex].classname,
             saltData[selectedBootcampIndex].dategraduate
           ),

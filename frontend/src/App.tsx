@@ -2,7 +2,7 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/DiplomaMaking';
 import { VertificationPage } from "./pages/VerificationPage";
 import { useState } from "react";
-import { BootcampRequest, BootcampResponse, DiplomaRequest, DiplomaResponse, DiplomasRequestDto } from "./util/types";
+import { BootcampRequest, BootcampResponse, DiplomaResponse, DiplomasRequestDto } from "./util/types";
 import { deleteBootcampById, getBootcamps, postBootcamp, updateBootcamp as updateBootcampService } from "./services/bootcampService";
 import { OverviewPage } from "./pages/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar";
