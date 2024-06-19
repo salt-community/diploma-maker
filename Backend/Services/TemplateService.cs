@@ -73,6 +73,22 @@ public class TemplateService
 
     public async Task<Template> DeleteTemplate(int id)
     {
-        throw new NotImplementedException();
+        var template = await _context.Template.FirstOrDefaultAsync(t => t.Id == id);
+        if (template == null)
+        {
+            throw new KeyNotFoundException("Template not found.");
+        }
+
+        try
+        {
+            _context.Template.Remove(template);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.ToString());
+        }
+
+        return template;
     }
 }
