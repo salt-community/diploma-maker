@@ -126,7 +126,9 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             try {
                 await updateTemplate(currentTemplate?.id, currentTemplate);
             } catch (error) {
-                alert(error);
+                setPopupType(PopupType.fail);
+                setPopupContent(["Template Update failure!", `${error} when trying to update template.`]);
+                setShowPopup(true);
             }
 
             setPopupType(PopupType.success);
@@ -136,8 +138,25 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
 
     const addTemplate = async (inputContent?: string) => {
-        alert(inputContent);
         setShowConfirmationPopup(false);
+        if(inputContent && inputContent.trim() != ""){
+            try {
+                const blankTemplate: TemplateRequest = {
+                    templateName: inputContent,
+                    intro: "",
+                    studentName: "",
+                    footer: "",
+                    basePdf: "",
+                  }
+                await addNewTemplate(blankTemplate);
+            } catch (error) {
+                alert(error);
+            }
+        } else {
+            setPopupType(PopupType.fail);
+            setPopupContent(["Template Creation failure!", `Name field is blank`]);
+            setShowPopup(true);
+        }
     }
 
     const confirmChangeTemplateHandler = async () => {
