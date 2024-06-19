@@ -5,6 +5,7 @@ export type TabularData = {
   [key: string]: string ;
 }
 
+
 export const parseCSV = (fileData: string): Promise<TabularData[]> => {
   return new Promise((resolve, reject) => {
     Papa.parse(fileData, {
@@ -31,3 +32,41 @@ export const parseJSON = (fileData: string): TabularData[] => {
 };
 
 
+export const ParseFileData = async (file : File, UpdateNamesFromFile: React.Dispatch<React.SetStateAction<string[]>> ) => {
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = async (e) => {
+   
+    const fileData = e.target!.result as string;
+    try {
+      let parsedData: TabularData[] = [];
+      if (file.type === 'text/csv') {
+        parsedData = await parseCSV(fileData);
+      } else if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        parsedData = parseExcel(fileData);
+      } else if (file.type === 'application/json') {
+        parsedData = parseJSON(fileData);
+      } else {
+        alert('Unsupported file format');
+        return;
+      }
+      const result = parsedData
+      .filter(item => item.hasOwnProperty('Name')) 
+      .map(item => item['Name']);
+      
+      UpdateNamesFromFile(result);
+    
+
+    } catch (error) {
+      console.log("Failed to parse file")
+    }
+  };
+
+  if (file.type === 'application/json' || file.type === 'text/csv') {
+    reader.readAsText(file);
+  } else if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    reader.readAsArrayBuffer(file);
+  }
+};
