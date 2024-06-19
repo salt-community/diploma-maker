@@ -46,9 +46,31 @@ public class TemplateService
 
     public async Task<Template> PutTemplate(int id, TemplateRequestDto templateRequest)
     {
-        throw new NotImplementedException();
+        var template = await _context.Template.FirstOrDefaultAsync(t => t.Id == id);
+        if (template == null)
+        {
+            throw new KeyNotFoundException("Template not found.");
+        }
+
+        template.templateName = templateRequest.templateName;
+        template.footer = templateRequest.footer;
+        template.intro = templateRequest.intro;
+        template.studentName = templateRequest.studentName;
+        template.basePdf = templateRequest.basePdf;
+
+        try
+        {
+            _context.Template.Update(template);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.ToString());
+        }
+
+        return template;
     }
-    
+
     public async Task<Template> DeleteTemplate(int id)
     {
         throw new NotImplementedException();
