@@ -65,9 +65,9 @@
 .cls-1 {
     fill: none;
     stroke: #ababba;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 1.5px;
+    strokeLinecap: round;
+    strokeLinejoin: round;
+    strokeWidth: 1.5px;
     transition: all 150ms ease-in;
 }
     .navbar__item:hover .cls-1{
