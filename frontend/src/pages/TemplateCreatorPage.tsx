@@ -1,16 +1,27 @@
 import { SelectOptions } from "../components/MenuItems/Inputs/SelectOptions";
 import './TemplateCreatorPage.css'
 import { PdfFileUpload } from "../components/MenuItems/Inputs/PdfFileUpload";
-import { Template, TemplateResponse } from "../util/types";
-import { useEffect, useState } from "react";
+import { CustomTemplate, TemplateResponse } from "../util/types";
+import { useEffect, useRef, useState } from "react";
+import { Designer } from "@pdfme/ui";
+import { cloneDeep, getFontsData, getPlugins, readFile } from "../util/helper";
+import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
+import { getTemplateSample } from "../templates/sampledata";
+import { getTemplateBackup } from "../templates/baseTemplateBACKUP";
+import { Template, checkTemplate } from "@pdfme/common";
+import { PDFDocument } from 'pdf-lib';
 
 type Props = {
     templates: TemplateResponse[] | null;
 }
 
 export const TemplateCreatorPage = ({ templates }: Props) => {
-    const [templateData, setTemplateData] = useState<Template[]>([]);
-    const [currentTemplate, setCurrentTemplate] = useState<Template | null>(null);
+    const [templateData, setTemplateData] = useState<CustomTemplate[]>([]);
+    const [currentTemplate, setCurrentTemplate] = useState<CustomTemplate | null>(null);
+
+    const designerRef = useRef<HTMLDivElement | null>(null);
+    const designer = useRef<Designer | null>(null);
+
     const [rightSideBarPage, setRightSideBarPage] = useState<number>(0);
     const [leftSideBarPage, setLeftSideBarPage] = useState<number>(0);
 
@@ -28,13 +39,56 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
             setCurrentTemplate(templateData[0] || null);
         }
     }, [templates]);
+    
+    useEffect(() => {
+        if (currentTemplate) {
+            const template: Template = getTemplateSample();
+
+            getFontsData().then((font) => {
+                if (designerRef.current) {
+                    if (designer.current) {
+                        designer.current.destroy();
+                    }
+                    designer.current = new Designer({
+                        domContainer: designerRef.current,
+                        template,
+                        options: { font },
+                        plugins: getPlugins(),
+                    });
+                }
+            });
+
+            return () => {
+                if (designer.current) {
+                    designer.current.destroy();
+                    designer.current = null;
+                }
+            };
+        }
+    }, [currentTemplate]);
 
     const templateChangeHandler = (index: number) => {
         setCurrentTemplate(templateData[index] || null);
     };
 
-    const pdfFileUploadHandler = (file: File) => {
-        console.log(file);
+    const pdfFileUploadHandler = async (file: File) => {
+        if (file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdfDoc = await PDFDocument.load(arrayBuffer);
+            const finalFile = await PDFDocument.create();
+            const [firstPage] = await finalFile.copyPages(pdfDoc, [0]);
+            
+            finalFile.addPage(firstPage);
+            const basePdf = await finalFile.saveAsBase64({ dataUri: true });
+
+            if (designer.current) {
+                designer.current.updateTemplate(
+                    Object.assign(cloneDeep(designer.current.getTemplate()), {
+                        basePdf,
+                    })
+                );
+            }
+        }
     };
 
     return (
@@ -67,11 +121,9 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
                 </div>
             </section>
             <section className='templatecreator-page__preview-container'>
-                <div className='templatecreator-page__preview'>
+                <div className='templatecreator-page__preview' style={{width: '100%', overflow: 'hidden', height: `calc(100vh - 68px)` }}>
                     <h2>{currentTemplate?.templateName}</h2>
-                    <div className="pdfpreview">
-
-                    </div>
+                    <div className="pdfpreview" ref={designerRef} style={{height: `calc(100vh - 68px)` }} />
                 </div>
             </section>
             <section className='templatecreator-page__rightsidebar'>
