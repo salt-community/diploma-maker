@@ -49,6 +49,9 @@ public class TemplateController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTemplate(int id)
     {
+        if(id == 1){
+            return BadRequest("You are not allowed to delete the base template");
+        }
         var template = await _templateService.DeleteTemplate(id);
         if (template == null)
         {
