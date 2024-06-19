@@ -9,7 +9,7 @@ import { NavBar } from "./pages/shared/Navbar";
 import BootcampManagement from "./pages/BootcampManagement";
 import { deleteDiplomaById, postMultipleDiplomas } from "./services/diplomaService";
 import { TemplateCreatorPage } from "./pages/TemplateCreatorPage";
-import { deleteTemplateById, getAllTemplates, postTemplate } from "./services/templateService";
+import { deleteTemplateById, getAllTemplates, postTemplate, putTemplate } from "./services/templateService";
 
 function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
@@ -67,9 +67,10 @@ function App() {
     refreshTemplates();
   }
 
-  async function updateTemplate(template: TemplateRequest){
-    await updateTemplate(template);
+  async function updateTemplate(id: number, templateRequest: TemplateRequest){
+    var templateResponse = await putTemplate(id, templateRequest);
     refreshTemplates();
+    return templateResponse
   }
 
   async function deleteTemplate(id: number){
@@ -97,7 +98,7 @@ function App() {
         <Route path={`/:guidId`} element = {<VertificationPage />} />
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteDiploma={deleteDiploma}/>} />
-        <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates}/>} />
+        <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate}/>} />
       </Routes>
     </>
   );

@@ -52,3 +52,26 @@ export async function deleteTemplateById(id: number): Promise<void> {
     if (!response.ok)
         throw new Error('Failed to delete template!');
 }
+
+
+export async function putTemplate(id: number, templateRequest: TemplateRequest): Promise<TemplateResponse> {
+    const formattedRequest = {
+        ...templateRequest,
+    };
+
+    const response = await fetch(`http://localhost:5258/api/template/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formattedRequest)
+    });
+
+    if (response.status === 404) {
+        throw new Error("Template not found");
+    }
+    if (!response.ok) {
+        throw new Error("Failed to update template");
+    }
+
+    const result = await response.json() as TemplateResponse;
+    return result;
+}

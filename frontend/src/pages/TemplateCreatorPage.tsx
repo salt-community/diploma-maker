@@ -1,7 +1,7 @@
 import { SelectOptions } from "../components/MenuItems/Inputs/SelectOptions";
 import './TemplateCreatorPage.css'
 import { PdfFileUpload } from "../components/MenuItems/Inputs/PdfFileUpload";
-import { CustomTemplate, TemplateResponse } from "../util/types";
+import { CustomTemplate, TemplateRequest, TemplateResponse } from "../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
 import { cloneDeep, getFontsData, getPlugins } from "../util/helper";
@@ -14,9 +14,12 @@ import { AddButton } from "../components/MenuItems/Buttons/AddButton";
 
 type Props = {
     templates: TemplateResponse[] | null;
+    addNewTemplate: (templateRequest: TemplateRequest) => Promise<void>;
+    updateTemplate: (id: number, templateRequest: TemplateRequest) => Promise<TemplateResponse>;
+    deleteTemplate: (templateRequest: number) => Promise<void>;
 }
 
-export const TemplateCreatorPage = ({ templates }: Props) => {
+export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate }: Props) => {
     const [templateData, setTemplateData] = useState<CustomTemplate[]>([]);
     const [currentTemplate, setCurrentTemplate] = useState<CustomTemplate | null>(null);
 
