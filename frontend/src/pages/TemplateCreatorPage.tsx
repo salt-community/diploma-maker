@@ -127,9 +127,9 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
                 </div>
             </section>
             <section className='templatecreator-page__preview-container'>
-                <div className='templatecreator-page__preview' style={{width: '100%', overflow: 'hidden', height: `calc(100vh - 68px)` }}>
+                <div className='templatecreator-page__preview' style={{width: '100%', overflow: 'hidden', height: `calc(50vh - 68px)` }}>
                     <h2>{currentTemplate?.templateName}</h2>
-                    <div className="pdfpreview" ref={designerRef} style={{height: `calc(100vh - 68px)` }} />
+                    <div className="pdfpreview" ref={designerRef} style={{height: `80%` }}/>
                 </div>
             </section>
             <section className='templatecreator-page__rightsidebar'>

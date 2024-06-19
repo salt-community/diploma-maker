@@ -25,7 +25,6 @@
         overflow: hidden;
     }
         .templatecreator-page__preview-container h2{
-            margin-right: auto;
             color: #9898a7;
             font-size: .9rem;
         }
@@ -145,9 +144,9 @@
             }
 
 
-.pdfpreview-container div div div div:nth-of-type(1){
+.pdfpreview div div div div:nth-of-type(1){
     background-color: transparent;
 }
-.pdfpreview-container div{
+.pdfpreview div{
     background-color: #2e2e38;
 }
