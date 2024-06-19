@@ -111,3 +111,20 @@
 }
 
 
+
+.popup_confirmation-content-input{
+    padding: .2rem 1rem;
+    border-radius: .5rem;
+    background-color: #e9e9f9e9;
+    font-weight: 600;
+    /* min-width: 400px; */
+    transition: all .1s ease-in-out;
+}
+.popup_confirmation-content-input:focus {
+    outline: 2px solid #0084ff3b;
+    background-color: #e9e9f9;
+    transition: all .1s ease-in-out;
+}
+.popup_confirmation-content-btn-container.confirmation{
+    gap: 1rem;
+}

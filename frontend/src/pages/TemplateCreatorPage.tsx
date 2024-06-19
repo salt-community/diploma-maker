@@ -31,6 +31,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const [leftSideBarPage, setLeftSideBarPage] = useState<number>(0);
 
     const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false);
+    const [confirmationPopupContent, setConfirmationPopupContent] = useState<string[]>(["",""]);
+    const [confirmationPopupType, setConfirmationPopupType] = useState<ConfirmationPopupType>(ConfirmationPopupType.question);
+    const [confirmationPopupHandler, setConfirmationPopupHandler] = useState<() => void>(() => {});
+    
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [popupContent, setPopupContent] = useState<string[]>(["",""]);
     const [popupType, setPopupType] = useState<PopupType>(PopupType.success);
@@ -58,8 +62,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 currentTemplate.footer,
                 currentTemplate.basePdf
             )];
-        const template: Template = getTemplate(inputs[0]);
-        // const template: Template = getTemplateSample();
+            const template: Template = getTemplate(inputs[0]);
 
             getFontsData().then((font) => {
                 if (designerRef.current) {
@@ -117,11 +120,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         }
     };
 
-    const saveTempateHandler = () => {
-        setShowConfirmationPopup(true);
-    }
-
-    const confirmHandler = async () => {
+    const saveTemplate = async () => {
         if(currentTemplate){
             setShowConfirmationPopup(false);
             try {
@@ -136,6 +135,27 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         }
     }
 
+    const addTemplate = async (inputContent?: string) => {
+        alert(inputContent);
+        setShowConfirmationPopup(false);
+    }
+
+    const confirmChangeTemplateHandler = async () => {
+        setConfirmationPopupType(ConfirmationPopupType.question);
+        setConfirmationPopupContent(["Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template"]);
+        setConfirmationPopupHandler(() => saveTemplate);
+        setShowConfirmationPopup(true);
+    }
+
+    const confirmAddNewTemplateHandler = async () => {
+        setConfirmationPopupType(ConfirmationPopupType.form);
+        setConfirmationPopupContent(["What should we name your template?", "Names are echoes of identity, whispers of our soul's melody."]);
+        setConfirmationPopupHandler(() => (inputContent?: string) => addTemplate(inputContent));
+        setShowConfirmationPopup(true);
+    }
+    
+    
+
     const abortHandler = () => {
         setShowConfirmationPopup(false);
     }
@@ -143,12 +163,12 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     return (
         <main className="templatecreator-page">
             <ConfirmationPopup 
-                title="Are you sure you want to save changes to this template?"
-                text="This will change template for all bootcamps that use this template"
+                title={confirmationPopupContent[0]}
+                text={confirmationPopupContent[1]}
                 show={showConfirmationPopup}
-                confirmationPopupType={ConfirmationPopupType.question}
+                confirmationPopupType={confirmationPopupType}
                 abortClick={() => abortHandler()}
-                confirmClick={() => confirmHandler()}
+                confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
             />
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
             <section className='templatecreator-page__leftsidebar'>
@@ -212,14 +232,14 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Add Template</h3>
-                                <AddButton onClick={() => {}}/>
+                                <AddButton onClick={confirmAddNewTemplateHandler}/>
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Add PDF Background</h3>
                                 <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)} />
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
-                                <SaveButton saveButtonType={SaveButtonType.normal} onClick={saveTempateHandler}/>
+                                <SaveButton saveButtonType={SaveButtonType.normal} onClick={confirmChangeTemplateHandler}/>
                             </section>
                         </>
                     }
