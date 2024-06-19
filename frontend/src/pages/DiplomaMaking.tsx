@@ -21,7 +21,6 @@ import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent"
 import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { saltDefaultData } from "../data/data";
-import { getTemplateBackup, makeTemplateInputBackup } from "../templates/baseTemplateBACKUP";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -46,6 +45,7 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
     if (bootcamps) {
+      console.log("RUNNING!")
       if(selectedBootcamp){
         setSelectedBootcampIndex(Number(selectedBootcamp));
       }

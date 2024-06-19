@@ -130,7 +130,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
 
     const abortHandler = () => {
-        alert("aborted");
         setShowConfirmationPopup(false);
     }
 
