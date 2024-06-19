@@ -42,7 +42,13 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
     
     useEffect(() => {
         if (currentTemplate) {
-            const template: Template = getTemplateSample();
+            const inputs = [makeTemplateInput(
+                currentTemplate.intro,
+                currentTemplate.studentName,
+                currentTemplate.footer,
+                currentTemplate.basePdf
+            )];
+        const template: Template = getTemplate(inputs[0]);
 
             getFontsData().then((font) => {
                 if (designerRef.current) {
