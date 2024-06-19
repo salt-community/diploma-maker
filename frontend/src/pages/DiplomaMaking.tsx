@@ -21,6 +21,7 @@ import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent"
 import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { saltDefaultData } from "../data/data";
+import { getTemplateBackup, makeTemplateInputBackup } from "../templates/baseTemplateBACKUP";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -157,21 +158,35 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
   const generatePDFHandler = async () => {
     if (uiInstance.current) {
       const inputs = uiInstance.current.getInputs();
-      const template = getTemplate();
+      const pdfInput = [makeTemplateInput(
+          inputs[0].header,
+          inputs[0].name,
+          inputs[0].footer,
+          inputs[0].pdfbase
+      )];
+      const template = getTemplate(pdfInput[0]);
       await generatePDF(template, inputs);
       await postSelectedBootcampData();
     }
   };
 
   const generateCombinedPDFHandler = async () => {
-      if (saltData) {
-          const inputsArray = saltData[selectedBootcampIndex].names.map((_, index) => {
-              return [makeTemplateInput(saltData[selectedBootcampIndex].names[index], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].dategraduate)];
-          });
-
-          await generateCombinedPDF(saltData[selectedBootcampIndex].names.map(() => getTemplate()), inputsArray);
-          await postSelectedBootcampData();
-      }
+    if (saltData) {
+      const selectedBootcampData = saltData[selectedBootcampIndex];
+      const inputsArray = selectedBootcampData.names.map((name) => {
+        return makeTemplateInput(
+          populateIntroField(selectedBootcampData.template.intro),
+          populateNameField(selectedBootcampData.template.studentName, name),
+          populateFooterField(selectedBootcampData.template.footer, selectedBootcampData.classname, selectedBootcampData.dategraduate),
+          selectedBootcampData.template.basePdf
+        );
+      });
+  
+      const templates = inputsArray.map((input) => getTemplate(input));
+  
+      await generateCombinedPDF(templates, inputsArray);
+      await postSelectedBootcampData();
+    }
   };
 
   const postSelectedBootcampData = async () => {

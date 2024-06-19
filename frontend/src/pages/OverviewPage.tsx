@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { generateCombinedPDF } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
+import { getTemplateBackup, makeTemplateInputBackup } from '../templates/baseTemplateBACKUP';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -87,16 +88,20 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     const generatePDFsHandler = async () => {
         const inputsArray = selectedItems.map(item => {
             const bootcamp = bootcamps?.find(b => b.diplomas.some(diploma => diploma.guidId === item.guidId));
-            return bootcamp ? [makeTemplateInput(item.studentName, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10))] : [];
-        });
+            return bootcamp ? makeTemplateInput(
+                bootcamp.template.intro,
+                item.studentName,
+                bootcamp.template.footer,
+                bootcamp.template.basePdf
+            ) : null;
+        }).filter(input => input !== null) as ReturnType<typeof makeTemplateInput>[];
 
-        if(inputsArray.length === 0){
-            setPopupContent(["Invalid Action", "There are no diplomas to generate pdf from."]);
-            setShowPopup(true);
-            return;
-        }
-    
-        await generateCombinedPDF(selectedItems.map(() => getTemplate()), inputsArray);
+        const templates = inputsArray.map(input => getTemplate(input));
+
+        await generateCombinedPDF(templates, inputsArray);
+        setPopupContent(["PDFs Generated", "The combined PDF has been successfully generated."]);
+        setPopupType(PopupType.success);
+        setShowPopup(true);
     };
 
     return (
