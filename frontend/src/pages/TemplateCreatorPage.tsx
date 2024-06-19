@@ -9,8 +9,8 @@ import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Template } from "@pdfme/common";
 import { PDFDocument } from 'pdf-lib';
 import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
-import { getTemplateSample } from "../templates/sampledata";
 import { AddButton } from "../components/MenuItems/Buttons/AddButton";
+import { ConfirmationPopup, PopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -28,6 +28,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     const [rightSideBarPage, setRightSideBarPage] = useState<number>(0);
     const [leftSideBarPage, setLeftSideBarPage] = useState<number>(0);
+
+    const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false);
 
     useEffect(() => {
         if (templates && templates.length > 0) {
@@ -102,8 +104,26 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         }
     };
 
+    const confirmHandler = () => {
+        alert("confirmed");
+        setShowConfirmationPopup(false);
+    }
+
+    const abortHandler = () => {
+        alert("aborted");
+        setShowConfirmationPopup(false);
+    }
+
     return (
         <main className="templatecreator-page">
+            <ConfirmationPopup 
+                title="Are you sure you want to save changes to this template?"
+                text="This will change template for all bootcamps that use this template"
+                show={showConfirmationPopup}
+                popupType={PopupType.question}
+                abortClick={() => abortHandler()}
+                confirmClick={() => confirmHandler()}
+            />
             <section className='templatecreator-page__leftsidebar'>
                 <div className='templatecreator-page__leftsidebar-menu'>
                     <header className="templatecreator-page__leftsidebar-menu-header">
