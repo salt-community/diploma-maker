@@ -58,10 +58,16 @@ public class TemplateController : ControllerBase
         return Ok(templateResponseDto);
     }
 
-    [HttpPut("{guidId}")]
-    public async Task<ActionResult> PutTemplate()
+    [HttpPut("{id}")]
+    public async Task<ActionResult<TemplateResponseDto>> PutTemplate(int id, TemplateRequestDto templateRequestDto)
     {
-        throw new NotImplementedException();
+        var template = await _templateService.PutTemplate(id, templateRequestDto);
+        if (template == null)
+        {
+            return NotFound();
+        }
+        var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);
+        return Ok(templateResponseDto);
     }
 }
 
