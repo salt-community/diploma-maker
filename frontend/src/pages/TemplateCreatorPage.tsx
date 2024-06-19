@@ -125,24 +125,17 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             setShowConfirmationPopup(false);
             try {
                 await updateTemplate(currentTemplate?.id, currentTemplate);
+                customAlert(PopupType.success, "Template Successfully Updated!", `Successfully updated ${currentTemplate.templateName} to database`);
             } catch (error) {
-                setPopupType(PopupType.fail);
-                setPopupContent(["Template Update failure!", `${error} when trying to update template.`]);
-                setShowPopup(true);
+                customAlert(PopupType.fail, "Template Update failure!", `${error} when trying to update template.`);
             }
-
-            setPopupType(PopupType.success);
-            setPopupContent(["Template Successfully Updated!", `Successfully updated ${currentTemplate.templateName} to database`]);
-            setShowPopup(true);
         }
     }
 
     const addTemplate = async (inputContent?: string) => {
         setShowConfirmationPopup(false);
         if(templateData.some(template => template.templateName === inputContent)){
-            setPopupType(PopupType.fail);
-            setPopupContent(["Template Creation failure!", `Name already exists`]);
-            setShowPopup(true);
+            customAlert(PopupType.fail, "Template Creation failure!", `Name already exists`);
             return;
         }
         if(inputContent && inputContent.trim() != ""){
@@ -155,37 +148,38 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                     basePdf: "",
                   }
                 await addNewTemplate(blankTemplate);
-                setPopupType(PopupType.success);
-                setPopupContent(["Succesfully added new template!", `Successfully added new template to database.`]);
-                setShowPopup(true);
+                customAlert(PopupType.success, "Succesfully added new template!", `Successfully added new template to database.`);
             } catch (error) {
-                setPopupType(PopupType.fail);
-                setPopupContent(["Template add failure!", `${error} when trying to add new template to database.`]);
-                setShowPopup(true);
+                customAlert(PopupType.fail, "Template add failure!", `${error} when trying to add new template to database.`);
             }
         } else {
-            setPopupType(PopupType.fail);
-            setPopupContent(["Template Creation failure!", `Name field is blank`]);
-            setShowPopup(true);
+            customAlert(PopupType.fail, "Template Creation failure!", `Name field is blank`);
         }
     }
 
     const confirmChangeTemplateHandler = async () => {
-        setConfirmationPopupType(ConfirmationPopupType.question);
-        setConfirmationPopupContent(["Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template"]);
-        setConfirmationPopupHandler(() => saveTemplate);
-        setShowConfirmationPopup(true);
+        customPopup(ConfirmationPopupType.question, "Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template", () => saveTemplate)
     }
 
     const confirmAddNewTemplateHandler = async () => {
-        setConfirmationPopupType(ConfirmationPopupType.form);
-        setConfirmationPopupContent(["What should we name your template?", "Names are echoes of identity, whispers of our soul's melody."]);
-        setConfirmationPopupHandler(() => (inputContent?: string) => addTemplate(inputContent));
-        setShowConfirmationPopup(true);
+        customPopup(ConfirmationPopupType.form, "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent))
     }
 
     const abortHandler = () => {
         setShowConfirmationPopup(false);
+    }
+
+    const customAlert = (alertType: PopupType, title: string, content: string) => {
+        setPopupType(alertType);
+        setPopupContent([title, content]);
+        setShowPopup(true);
+    }
+
+    const customPopup = (type: ConfirmationPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => {
+        setConfirmationPopupType(type);
+        setConfirmationPopupContent([title, content]);
+        setConfirmationPopupHandler(handler);
+        setShowConfirmationPopup(true);
     }
 
     return (
