@@ -31,29 +31,27 @@ function App() {
   async function deleteBootcamp(i: number){
     const guid = bootcamps![i].guidId;
     await deleteBootcampById(guid);
-    await refreshBootcamps();
+    await refresh();
   }
 
   async function deleteDiploma(id: string){
     await deleteDiplomaById(id);
-    await refreshBootcamps();
+    await refresh();
   }
 
   async function addNewBootcamp(bootcamp: BootcampRequest){
     await postBootcamp(bootcamp);
-    const newBootcamps = await getBootcamps();
-    setBootcamps(newBootcamps);
+    await refresh();
   }
 
   async function updateBootcamp(bootcamp: BootcampRequest){
     await updateBootcampService(bootcamp);
-    const newBootcamps = await getBootcamps();
-    setBootcamps(newBootcamps);
+    await refresh();
   }
 
   async function addMultipleDiplomas(diplomasRequest: DiplomasRequestDto): Promise<DiplomaResponse[]> {
     const response = await postMultipleDiplomas(diplomasRequest);
-    await refreshBootcamps();
+    await refresh();
     return response;
   }
 
@@ -64,28 +62,24 @@ function App() {
 
   async function addNewTemplate(template: TemplateRequest){
     await postTemplate(template);
-    refreshTemplates();
+    await refresh();
   }
 
   async function updateTemplate(id: number, templateRequest: TemplateRequest){
     var templateResponse = await putTemplate(id, templateRequest);
-    refreshTemplates();
-    refreshBootcamps();
+    await refresh();
     return templateResponse
   }
 
   async function deleteTemplate(id: number){
     await deleteTemplateById(id);
-    await refreshTemplates();
+    await refresh();
   }
 
-  async function refreshBootcamps(){
+  async function refresh(){
     const newBootcamps = await getBootcamps();
-    setBootcamps(newBootcamps);
-  }
-
-  async function refreshTemplates(){
     const newTemplates = await getAllTemplates();
+    setBootcamps(newBootcamps);
     setTemplates(newTemplates);
   }
 

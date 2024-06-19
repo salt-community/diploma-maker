@@ -165,7 +165,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         customPopup(ConfirmationPopupType.form, "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent))
     }
 
-    const abortHandler = () => {
+    const globalAbortHandler = () => {
         setShowConfirmationPopup(false);
     }
 
@@ -189,7 +189,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 text={confirmationPopupContent[1]}
                 show={showConfirmationPopup}
                 confirmationPopupType={confirmationPopupType}
-                abortClick={() => abortHandler()}
+                abortClick={() => globalAbortHandler()}
                 confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
             />
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>

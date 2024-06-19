@@ -5,7 +5,6 @@ export async function getBootcamps(): Promise<BootcampResponse[]>{
     if (!response.ok)
         throw new Error("Failed to get bootcamps!")
     const result = await response.json() as BootcampResponse[]
-    // console.table(result);
     return result;
 }
 
@@ -14,7 +13,6 @@ export async function getBootcampById(guidId: string): Promise<BootcampResponse>
     if (!response.ok)
         throw new Error("Failed to get bootcamp!")
     const result = await response.json() as  BootcampResponse;
-    // console.log(result);
     return result;
 }
 
@@ -40,7 +38,6 @@ export async function updateBootcamp(bootcampRequest: BootcampRequest): Promise<
         ...bootcampRequest,
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
-    console.log(formattedRequest);
     const response = await fetch(`http://localhost:5258/api/bootcamp/${bootcampRequest.guidId!}`,{
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
