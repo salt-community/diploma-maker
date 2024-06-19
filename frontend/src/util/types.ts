@@ -1,7 +1,6 @@
 export type displayMode = "form" | "viewer";
 
 // diplomas
-
 export type DiplomaRequest = {
     guidId?: string;
     studentName: string;
@@ -20,7 +19,6 @@ export type DiplomaInBootcamp = {
 }
 
 // bootcamps
-
 export type BootcampInDiploma = {
     guidId: string;
     name: string;
@@ -39,6 +37,11 @@ export type BootcampResponse = {
     diplomas: DiplomaInBootcamp[];
 }
 
+export type DiplomasRequestDto = {
+    diplomas: DiplomaRequest[];
+}
+
+// Internal Data
 export type SaltData = {
     classname: string;
     datestart?: string;
@@ -48,7 +51,6 @@ export type SaltData = {
 };
 
 // Templates
-
 export type CustomTemplate = {
     id: number;
     templateName: string;
@@ -67,6 +69,10 @@ export type TemplateResponse = {
     basePdf: string;
 }
 
-export type DiplomasRequestDto = {
-    diplomas: DiplomaRequest[];
+export type TemplateRequest = {
+    templateName: string;
+    footer: string;
+    intro: string;
+    studentName: string;
+    basePdf: string;
 }
