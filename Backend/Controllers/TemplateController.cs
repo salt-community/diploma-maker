@@ -46,10 +46,16 @@ public class TemplateController : ControllerBase
         return CreatedAtAction(nameof(GetTemplateById), new { id = template.Id }, templateResponseDto);
     }
 
-    [HttpDelete("{guidId}")]
-    public async Task<IActionResult> DeleteTemplate(Guid guidId)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTemplate(int id)
     {
-        throw new NotImplementedException();
+        var template = await _templateService.DeleteTemplate(id);
+        if (template == null)
+        {
+            return NotFound();
+        }
+        var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);
+        return Ok(templateResponseDto);
     }
 
     [HttpPut("{guidId}")]
