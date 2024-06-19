@@ -10,7 +10,8 @@ import { Template } from "@pdfme/common";
 import { PDFDocument } from 'pdf-lib';
 import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
 import { AddButton } from "../components/MenuItems/Buttons/AddButton";
-import { ConfirmationPopup, PopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
+import { ConfirmationPopup, ConfirmationPopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
+import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -30,6 +31,9 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const [leftSideBarPage, setLeftSideBarPage] = useState<number>(0);
 
     const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false);
+    const [showPopup, setShowPopup] = useState<boolean>(false);
+    const [popupContent, setPopupContent] = useState<string[]>(["",""]);
+    const [popupType, setPopupType] = useState<PopupType>(PopupType.success);
 
     useEffect(() => {
         if (templates && templates.length > 0) {
@@ -125,7 +129,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             } catch (error) {
                 alert(error);
             }
-            alert("Operation succesfull");
+
+            setPopupType(PopupType.success);
+            setPopupContent(["Template Successfully Updated!", `Successfully updated ${currentTemplate.templateName} to database`]);
+            setShowPopup(true);
         }
     }
 
@@ -139,10 +146,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 title="Are you sure you want to save changes to this template?"
                 text="This will change template for all bootcamps that use this template"
                 show={showConfirmationPopup}
-                popupType={PopupType.question}
+                confirmationPopupType={ConfirmationPopupType.question}
                 abortClick={() => abortHandler()}
                 confirmClick={() => confirmHandler()}
             />
+            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
             <section className='templatecreator-page__leftsidebar'>
                 <div className='templatecreator-page__leftsidebar-menu'>
                     <header className="templatecreator-page__leftsidebar-menu-header">
