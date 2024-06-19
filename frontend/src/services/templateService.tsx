@@ -41,7 +41,7 @@ export async function postTemplate(templateRequest: TemplateRequest): Promise<vo
     }
 }
 
-export async function deleteTemplate(id: number): Promise<void> {
+export async function deleteTemplateById(id: number): Promise<void> {
     const response = await fetch(`http://localhost:5258/api/template/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }

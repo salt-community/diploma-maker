@@ -2,14 +2,14 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/DiplomaMaking';
 import { VertificationPage } from "./pages/VerificationPage";
 import { useState } from "react";
-import { BootcampRequest, BootcampResponse, DiplomaResponse, DiplomasRequestDto, TemplateResponse } from "./util/types";
+import { BootcampRequest, BootcampResponse, DiplomaResponse, DiplomasRequestDto, TemplateRequest, TemplateResponse } from "./util/types";
 import { deleteBootcampById, getBootcamps, postBootcamp, updateBootcamp as updateBootcampService } from "./services/bootcampService";
 import { OverviewPage } from "./pages/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar";
 import BootcampManagement from "./pages/BootcampManagement";
 import { deleteDiplomaById, postMultipleDiplomas } from "./services/diplomaService";
 import { TemplateCreatorPage } from "./pages/TemplateCreatorPage";
-import { getAllTemplates } from "./services/templateService";
+import { deleteTemplateById, getAllTemplates, postTemplate } from "./services/templateService";
 
 function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
@@ -31,17 +31,12 @@ function App() {
   async function deleteBootcamp(i: number){
     const guid = bootcamps![i].guidId;
     await deleteBootcampById(guid);
-    await refresh();
+    await refreshBootcamps();
   }
 
   async function deleteDiploma(id: string){
     await deleteDiplomaById(id);
-    await refresh();
-  }
-
-  async function refresh(){
-    const newBootcamps = await getBootcamps();
-    setBootcamps(newBootcamps);
+    await refreshBootcamps();
   }
 
   async function addNewBootcamp(bootcamp: BootcampRequest){
@@ -58,7 +53,7 @@ function App() {
 
   async function addMultipleDiplomas(diplomasRequest: DiplomasRequestDto): Promise<DiplomaResponse[]> {
     const response = await postMultipleDiplomas(diplomasRequest);
-    await refresh();
+    await refreshBootcamps();
     return response;
   }
 
@@ -66,6 +61,32 @@ function App() {
     const templates: TemplateResponse[] = await getAllTemplates(); 
     setTemplates(templates);
   }
+
+  async function addNewTemplate(template: TemplateRequest){
+    await postTemplate(template);
+    refreshTemplates();
+  }
+
+  async function updateTemplate(template: TemplateRequest){
+    await updateTemplate(template);
+    refreshTemplates();
+  }
+
+  async function deleteTemplate(id: number){
+    await deleteTemplateById(id);
+    await refreshTemplates();
+  }
+
+  async function refreshBootcamps(){
+    const newBootcamps = await getBootcamps();
+    setBootcamps(newBootcamps);
+  }
+
+  async function refreshTemplates(){
+    const newTemplates = await getAllTemplates();
+    setTemplates(newTemplates);
+  }
+
 
   return (
     <>
