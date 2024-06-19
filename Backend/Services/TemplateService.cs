@@ -20,12 +20,28 @@ public class TemplateService
 
     public async Task<Template> GetTemplate(int id)
     {
-       throw new NotImplementedException();
+        return await _context.Template.FirstOrDefaultAsync(t => t.Id == id);
     }
 
     public async Task<Template> PostTemplate(TemplateRequestDto templateRequest)
     {
-        throw new NotImplementedException();
+        var newTemplate = new Template()
+        {
+            templateName = templateRequest.templateName,
+            footer = templateRequest.footer,
+            intro = templateRequest.intro,
+            studentName = templateRequest.studentName,
+            basePdf = templateRequest.basePdf,
+        };
+        try{
+            await _context.Template.AddAsync(newTemplate);
+            await _context.SaveChangesAsync();
+        }
+        catch(Exception ex){
+            throw new Exception(ex.ToString());
+        }
+        
+        return newTemplate;
     }
 
     public async Task<Template> PutTemplate(int id, TemplateRequestDto templateRequest)
