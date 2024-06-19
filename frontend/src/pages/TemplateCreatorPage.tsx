@@ -139,6 +139,12 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     const addTemplate = async (inputContent?: string) => {
         setShowConfirmationPopup(false);
+        if(templateData.some(template => template.templateName === inputContent)){
+            setPopupType(PopupType.fail);
+            setPopupContent(["Template Creation failure!", `Name already exists`]);
+            setShowPopup(true);
+            return;
+        }
         if(inputContent && inputContent.trim() != ""){
             try {
                 const blankTemplate: TemplateRequest = {
@@ -149,8 +155,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                     basePdf: "",
                   }
                 await addNewTemplate(blankTemplate);
+                setPopupType(PopupType.success);
+                setPopupContent(["Succesfully added new template!", `Successfully added new template to database.`]);
+                setShowPopup(true);
             } catch (error) {
-                alert(error);
+                setPopupType(PopupType.fail);
+                setPopupContent(["Template add failure!", `${error} when trying to add new template to database.`]);
+                setShowPopup(true);
             }
         } else {
             setPopupType(PopupType.fail);
@@ -172,8 +183,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         setConfirmationPopupHandler(() => (inputContent?: string) => addTemplate(inputContent));
         setShowConfirmationPopup(true);
     }
-    
-    
 
     const abortHandler = () => {
         setShowConfirmationPopup(false);
@@ -240,12 +249,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                                 <SelectOptions
                                     containerClassOverride='overview-page__select-container'
                                     selectClassOverride='overview-page__select-box'
-                                    options={[
-                                        ...(templateData.map(template => ({
-                                            value: template.templateName,
-                                            label: template.templateName
-                                        })))
-                                    ]}
+                                    options={templateData.map((template, index) => ({
+                                        value: index.toString(),
+                                        label: template.templateName
+                                    }))}
                                     onChange={(event) => templateChangeHandler(Number(event.target.value))}
                                 />
                             </section>

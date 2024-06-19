@@ -68,7 +68,6 @@ function App() {
   }
 
   async function updateTemplate(id: number, templateRequest: TemplateRequest){
-    console.log("updating!");
     var templateResponse = await putTemplate(id, templateRequest);
     refreshTemplates();
     refreshBootcamps();
