@@ -4,13 +4,13 @@ import { PdfFileUpload } from "../components/MenuItems/Inputs/PdfFileUpload";
 import { CustomTemplate, TemplateResponse } from "../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { cloneDeep, getFontsData, getPlugins, readFile } from "../util/helper";
+import { cloneDeep, getFontsData, getPlugins } from "../util/helper";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
-import { getTemplateSample } from "../templates/sampledata";
-import { getTemplateBackup } from "../templates/baseTemplateBACKUP";
-import { Template, checkTemplate } from "@pdfme/common";
+import { Template } from "@pdfme/common";
 import { PDFDocument } from 'pdf-lib';
 import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
+import { getTemplateSample } from "../templates/sampledata";
+import { AddButton } from "../components/MenuItems/Buttons/AddButton";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -50,6 +50,7 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
                 currentTemplate.basePdf
             )];
         const template: Template = getTemplate(inputs[0]);
+        // const template: Template = getTemplateSample();
 
             getFontsData().then((font) => {
                 if (designerRef.current) {
@@ -158,6 +159,10 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
                                     ]}
                                     onChange={(event) => templateChangeHandler(Number(event.target.value))}
                                 />
+                            </section>
+                            <section className="templatecreator-page__rightsidebar-menu-section">
+                                <h3>Add Template</h3>
+                                <AddButton onClick={() => {}}/>
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Add PDF Background</h3>
