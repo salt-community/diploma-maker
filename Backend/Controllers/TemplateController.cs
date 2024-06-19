@@ -39,9 +39,11 @@ public class TemplateController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> PostTemplate()
+    public async Task<ActionResult<TemplateResponseDto>> PostTemplate(TemplateRequestDto templateRequestDto)
     {
-        throw new NotImplementedException();
+        var template = await _templateService.PostTemplate(templateRequestDto);
+        var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);
+        return CreatedAtAction(nameof(GetTemplateById), new { id = template.Id }, templateResponseDto);
     }
 
     [HttpDelete("{guidId}")]
