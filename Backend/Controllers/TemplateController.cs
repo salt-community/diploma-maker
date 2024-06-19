@@ -26,10 +26,16 @@ public class TemplateController : ControllerBase
         return Ok(templateResponseDtos);
     }
 
-    [HttpGet("{guidId}")]
-    public async Task<ActionResult> GetTemplateById(Guid guidId)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<TemplateResponseDto>> GetTemplateById(int id)
     {
-        throw new NotImplementedException();
+        var template = await _templateService.GetTemplate(id);
+        if (template == null)
+        {
+            return NotFound();
+        }
+        var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);
+        return Ok(templateResponseDto);
     }
 
     [HttpPost]
@@ -49,8 +55,5 @@ public class TemplateController : ControllerBase
     {
         throw new NotImplementedException();
     }
-
-
-
 }
 
