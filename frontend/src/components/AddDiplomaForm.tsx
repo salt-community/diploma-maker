@@ -20,7 +20,6 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
     const updateSaltDataHandler = (data: FieldValues) => {
         const newSaltData: SaltData = {
             classname: data.classname,
-            datestart: data.datestart,
             dategraduate: data.dategraduate,
             names: names,
         }
@@ -35,6 +34,13 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
 
     const HandleFileUpload = (file: File) => {
       ParseFileData(file, setNames);
+      const newSaltData: SaltData = {
+        classname: saltData.classname,
+        dategraduate: saltData.dategraduate,
+        names: names,
+    }
+      console.log(newSaltData)
+      updateSaltData(newSaltData);
     }
 
     return (
@@ -80,7 +86,7 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
           </label>
           <TagsInput 
             selectedTags={(names: string[]) => setNames(names)} 
-            tags={names}
+            tags={saltData.names}
           />
           <FileUpload FileHandler={HandleFileUpload}/>
         </div>

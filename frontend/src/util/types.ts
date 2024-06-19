@@ -41,10 +41,9 @@ export type BootcampResponse = {
 
 export type SaltData = {
     classname: string;
-    datestart?: string;
     dategraduate: string;
     names: string[];
-    template: Template;
+    template?: Template;
 };
 
 export type Template = {
