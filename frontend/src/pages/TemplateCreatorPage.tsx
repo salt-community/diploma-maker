@@ -10,6 +10,7 @@ import { getTemplateSample } from "../templates/sampledata";
 import { getTemplateBackup } from "../templates/baseTemplateBACKUP";
 import { Template, checkTemplate } from "@pdfme/common";
 import { PDFDocument } from 'pdf-lib';
+import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -161,6 +162,9 @@ export const TemplateCreatorPage = ({ templates }: Props) => {
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Add PDF Background</h3>
                                 <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)} />
+                            </section>
+                            <section className="templatecreator-page__rightsidebar-menu-section">
+                                <SaveButton saveButtonType={SaveButtonType.normal} onClick={() => {}}/>
                             </section>
                         </>
                     }

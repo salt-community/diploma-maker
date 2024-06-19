@@ -18,7 +18,7 @@ import { PaginationMenu } from "../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../components/MenuItems/Buttons/PublishButton";
 import './DiplomaMaking.css'
 import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
-import { SaveButton } from "../components/MenuItems/Buttons/SaveButton";
+import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { saltDefaultData } from "../data/data";
 
@@ -236,7 +236,7 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
           </div>
           <PublishButton text="Generate PDF" onClick={generatePDFHandler}/>
           <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler}/>
-          <SaveButton onClick={saveInputFieldsHandler}/>
+          <SaveButton saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler}/>
         </header>
         {saltData && 
           <div
