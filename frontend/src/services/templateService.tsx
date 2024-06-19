@@ -55,6 +55,7 @@ export async function deleteTemplateById(id: number): Promise<void> {
 
 
 export async function putTemplate(id: number, templateRequest: TemplateRequest): Promise<TemplateResponse> {
+    console.log("putting!");
     const formattedRequest = {
         ...templateRequest,
     };
@@ -73,5 +74,6 @@ export async function putTemplate(id: number, templateRequest: TemplateRequest):
     }
 
     const result = await response.json() as TemplateResponse;
+    console.log(result);
     return result;
 }

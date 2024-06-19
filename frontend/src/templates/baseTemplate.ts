@@ -1,6 +1,6 @@
 import { Template } from "@pdfme/common";
 
-export const makeTemplateInput = (header: string, name: string, footer: string, pdfbase: string) => {
+export const makeTemplateInput = (header: string, name: string, footer: string, pdfbase?: string) => {
   return {
     name,
     header,

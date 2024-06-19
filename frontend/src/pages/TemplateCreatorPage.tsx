@@ -101,12 +101,32 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                     })
                 );
             }
+            if (currentTemplate) {
+                const updatedTemplate = { ...currentTemplate, basePdf };
+                setCurrentTemplate(updatedTemplate);
+    
+                const updatedTemplateData = templateData.map(template =>
+                    template.id === currentTemplate.id ? updatedTemplate : template
+                );
+                setTemplateData(updatedTemplateData);
+            }
         }
     };
 
-    const confirmHandler = () => {
-        alert("confirmed");
-        setShowConfirmationPopup(false);
+    const saveTempateHandler = () => {
+        setShowConfirmationPopup(true);
+    }
+
+    const confirmHandler = async () => {
+        if(currentTemplate){
+            setShowConfirmationPopup(false);
+            try {
+                await updateTemplate(currentTemplate?.id, currentTemplate);
+            } catch (error) {
+                alert(error);
+            }
+            alert("Operation succesfull");
+        }
     }
 
     const abortHandler = () => {
@@ -192,7 +212,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                                 <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)} />
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
-                                <SaveButton saveButtonType={SaveButtonType.normal} onClick={() => {}}/>
+                                <SaveButton saveButtonType={SaveButtonType.normal} onClick={saveTempateHandler}/>
                             </section>
                         </>
                     }
