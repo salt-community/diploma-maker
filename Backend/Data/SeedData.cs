@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Models;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 
 public static class SeedData 
 {

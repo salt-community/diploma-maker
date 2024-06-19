@@ -18,7 +18,6 @@ public class BootcampController : ControllerBase
         _mapper = mapper;
     }
 
-    // POST: api/Bootcamp
     [HttpPost]
     public async Task<ActionResult<BootcampResponseDto>> PostBootcamp(BootcampRequestDto requestDto)
     {
@@ -36,7 +35,6 @@ public class BootcampController : ControllerBase
 
     }
 
-    // GET: api/Bootcamp
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Bootcamp>>> GetBootcamps()
     {
@@ -45,7 +43,6 @@ public class BootcampController : ControllerBase
         return Ok(bootcampResponseDtos);
     }
 
-    // GET: api/Bootcamp/5
     [HttpGet("{guidId}")]
     public async Task<ActionResult<BootcampResponseDto>> GetBootcampByGuidId(Guid guidId)
     {
@@ -55,9 +52,6 @@ public class BootcampController : ControllerBase
             _mapper.Map<BootcampResponseDto>(bootcamp);
     }
 
-
-
-    // DELETE: api/Bootcamp/5
     [HttpDelete("{guidId}")]
     public async Task<IActionResult> DeleteBootcamp(Guid guidId)
     {
@@ -73,8 +67,6 @@ public class BootcampController : ControllerBase
 
     }
 
-
-    // PUT: api/Bootcamp/5
     [HttpPut("{guidId}")]
     public async Task<ActionResult<Bootcamp>> PutBootcamp(Guid guidId, [FromBody] BootcampRequestDto requestDto)
     {
