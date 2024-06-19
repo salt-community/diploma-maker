@@ -3,6 +3,8 @@ import TagsInput from "./TagsInput/TagsInput";
 import { useState } from "react";
 import { BootcampResponse, SaltData } from "../util/types";
 import { Link } from "react-router-dom";
+import { FileUpload } from "./MenuItems/Inputs/FileUploader";
+import {TabularData, parseCSV, parseExcel, parseJSON } from '../services/InputFileService';
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -30,6 +32,49 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
         e.preventDefault();
       }
     };
+
+
+  const handleFileUpload = async (file : File) => {
+
+   
+    if (!file) return;
+  
+    const reader = new FileReader();
+
+    reader.onload = async (e) => {
+     
+      const fileData = e.target!.result as string;
+      try {
+        let parsedData: TabularData[] = [];
+        if (file.type === 'text/csv') {
+          parsedData = await parseCSV(fileData);
+        } else if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+          parsedData = parseExcel(fileData);
+        } else if (file.type === 'application/json') {
+          parsedData = parseJSON(fileData);
+        } else {
+          alert('Unsupported file format');
+          return;
+        }
+        console.log(parsedData);
+      
+        const result = parsedData
+        .filter(item => item.hasOwnProperty('Name')) 
+        .map(item => item['Name']);
+        console.log(result)
+        setNames(result);
+
+      } catch (error) {
+        console.log("Failed to parse file")
+      }
+    };
+
+    if (file.type === 'application/json' || file.type === 'text/csv') {
+      reader.readAsText(file);
+    } else if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      reader.readAsArrayBuffer(file);
+    }
+  };
 
     return (
       <form
@@ -77,6 +122,7 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
             selectedTags={(names: string[]) => setNames(names)} 
             tags={saltData.names}
           />
+          <FileUpload FileHandler={handleFileUpload}/>
         </div>
   
         <div>
