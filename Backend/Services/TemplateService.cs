@@ -28,10 +28,10 @@ public class TemplateService
         var newTemplate = new Template()
         {
             templateName = templateRequest.templateName,
-            footer = templateRequest.footer,
-            intro = templateRequest.intro,
-            studentName = templateRequest.studentName,
-            basePdf = templateRequest.basePdf,
+            // footer = templateRequest.footer,
+            // intro = templateRequest.intro,
+            // studentName = templateRequest.studentName,
+            // basePdf = templateRequest.basePdf,
         };
         try{
             await _context.Template.AddAsync(newTemplate);
