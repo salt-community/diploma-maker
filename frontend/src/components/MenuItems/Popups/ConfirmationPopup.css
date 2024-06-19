@@ -1,4 +1,4 @@
-.popup {
+.popup_confirmation {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -17,40 +17,40 @@
     opacity: 0;
     transition: all .75s ease;
 }
-    .popup:hover{
+    .popup_confirmation:hover{
         filter: saturate(145%);
         cursor: default;
     }
-    .popup.success {
+    .popup_confirmation.success {
         background-image: linear-gradient(to left bottom, #365655, #2a4449, #21323a, #1a2129, #101118);
     }
-    .popup.fail {
+    .popup_confirmation.fail {
         background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
     }
-    .popup.question {
+    .popup_confirmation.question {
         background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
     }
 
-.popup-content {
+.popup_confirmation-content {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 2rem;
 }
-    .popup-content svg {
+    .popup_confirmation-content svg {
         width: 75px;
     }
-    .popup-content h1 {
+    .popup_confirmation-content h1 {
         font-size: 1.3rem;
         color: #fff;
     }
-    .popup-content p {
+    .popup_confirmation-content p {
         max-width: 100%;
         margin-top: .2rem;
         font-size: 1rem;
         color: #858698;
     }
-    .popup-content-btn-container{
+    .popup_confirmation-content-btn-container{
         margin-top: 1rem;
 
         display: flex;
@@ -58,7 +58,7 @@
         align-items: center;
         gap: 5rem;
     }
-        .popup-content-btn{
+        .popup_confirmation-content-btn{
             display: flex;
             align-items: center;
             justify-content: center;
@@ -71,41 +71,41 @@
             border-radius: .5rem;
             transition: all .15s ease-in-out;
         }
-        .popup-content-btn svg path{
+        .popup_confirmation-content-btn svg path{
             transition: all .15s ease-in-out;
         }
-        .popup-content-btn svg{
+        .popup_confirmation-content-btn svg{
             width: 25px;
             transition: all .15s ease-in-out;
         }
-        .popup-content-btn:hover{
+        .popup_confirmation-content-btn:hover{
             cursor: pointer;
             color: #fff;
             transition: all .15s ease-in-out;
         }
-        .popup-content-btn:hover svg path{
+        .popup_confirmation-content-btn:hover svg path{
             fill: #000;
             transition: all .15s ease-in-out;
         }
-        .popup-content-btn:hover{
+        .popup_confirmation-content-btn:hover{
             color: #000;
             transition: all .15s ease-in-out;
         }
-        .popup-content-btn:nth-of-type(1):hover{
+        .popup_confirmation-content-btn:nth-of-type(1):hover{
             background-color: #07ff0a;
             transition: all .15s ease-in-out;
         }
-        .popup-content-btn:nth-of-type(2):hover{
+        .popup_confirmation-content-btn:nth-of-type(2):hover{
             background-color: #ff5563;
             transition: all .15s ease-in-out;
         }
 
-.fade-in {
+.popup_confirmation.fade-in {
     opacity: 1;
     pointer-events: auto;
 }
 
-.fade-out {
+.popup_confirmation.fade-out {
     opacity: 0;
     pointer-events: none;
 }
