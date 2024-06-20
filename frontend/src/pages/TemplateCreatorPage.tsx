@@ -12,7 +12,6 @@ import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/Save
 import { AddButton } from "../components/MenuItems/Buttons/AddButton";
 import { ConfirmationPopup, ConfirmationPopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
-import { RemoveButton } from "../components/MenuItems/Buttons/RemoveButton";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -233,6 +232,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 show={showConfirmationPopup}
                 confirmationPopupType={confirmationPopupType}
                 abortClick={() => globalAbortHandler()}
+                // @ts-ignore
                 confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
             />
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
@@ -240,23 +240,23 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 <div className='templatecreator-page__leftsidebar-menu'>
                     <header className="templatecreator-page__leftsidebar-menu-header">
                         <button onClick={() => setLeftSideBarPage(0)} className={leftSideBarPage === 0 ? 'active' : ''}>
-                            -
+                            Bootcamp Assignment
                         </button>
-                        <button onClick={() => setLeftSideBarPage(1)} className={leftSideBarPage === 1 ? 'active' : ''}>
+                        {/* <button onClick={() => setLeftSideBarPage(1)} className={leftSideBarPage === 1 ? 'active' : ''}>
                             -
-                        </button>
+                        </button> */}
                     </header>
                     {leftSideBarPage === 0 && 
                         <>
                             <section className="templatecreator-page__leftsidebar-menu-section">
-                                <h3>page 1</h3>
+                                <h3></h3>
                             </section>
                         </>
                     }
                     {leftSideBarPage === 1 && 
                         <>
                             <section className="templatecreator-page__leftsidebar-menu-section">
-                                <h3>page 2</h3>
+                                <h3></h3>
                             </section>
                         </>
                     }
