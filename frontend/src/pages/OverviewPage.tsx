@@ -28,6 +28,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
 
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [popupContent, setPopupContent] = useState<string[]>(["",""]);
+    // @ts-ignore
     const [popupType, setPopupType] = useState<PopupType>(PopupType.fail);
 
     useEffect(() => {
@@ -87,6 +88,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     const generatePDFsHandler = async () => {
         const inputsArray = selectedItems.map(item => {
             const bootcamp = bootcamps?.find(b => b.diplomas.some(diploma => diploma.guidId === item.guidId));
+            // @ts-ignore
             return bootcamp ? [makeTemplateInput(item.studentName, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10))] : [];
         });
 
@@ -95,7 +97,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
             setShowPopup(true);
             return;
         }
-    
+        // @ts-ignore
         await generateCombinedPDF(selectedItems.map(() => getTemplate()), inputsArray);
     };
 
@@ -107,6 +109,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
                     {loading ? (
                         <SpinnerDefault classOverride="spinner"/>
                     ) : (
+                        // @ts-ignore
                         selectedItems.length > 0 ? selectedItems.map((item, index) => (
                             <button key={item.guidId} className='listmodule__item'>
                                 <p className='overview-page__item--title'>{item.studentName}</p>

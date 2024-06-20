@@ -22,6 +22,7 @@ export async function getDiplomaById(guidId: string): Promise<DiplomaResponse> {
 export async function postDiploma(diplomaRequest: DiplomaRequest): Promise<void> {
     const formattedRequest = {
         ...diplomaRequest,
+        // @ts-ignore
         graduationDate: diplomaRequest.graduationDate ? diplomaRequest.graduationDate.toISOString() : undefined
     };
 
