@@ -4,17 +4,20 @@ import './PdfFileUpload.css';
 
 type Props = {
   fileResult: (file: File) => void
+  setFileAdded?: (added: boolean) => void
+  fileAdded?: boolean
 }
 
-export const PdfFileUpload = ({ fileResult }: Props) => {
+export const PdfFileUpload = ({ fileResult, setFileAdded, fileAdded }: Props) => {
   const [isFileValid, setIsFileValid] = useState<boolean | null>(null);
-  const [fileAdded, setFileAdded] = useState<boolean>(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     fileResult(acceptedFiles[0]);
     setIsFileValid(null); 
-    setFileAdded(true);
-  }, [fileResult]);
+    if (setFileAdded) {
+      setFileAdded(true);
+    }
+  }, [fileResult, setFileAdded]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

@@ -40,6 +40,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const [popupType, setPopupType] = useState<PopupType>(PopupType.success);
     
     const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
+    const [fileAdded, setFileAdded] = useState<boolean>(false);
 
     useEffect(() => {
         if (templates && templates.length > 0) {
@@ -94,7 +95,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             shouldWeSaveHandler(index);
         }
         else{
-            setCurrentTemplate(templateData[index] || null);
+            setFileAdded(false);
+            setCurrentTemplate(templateData[index] || null);   
         }
     };
 
@@ -125,6 +127,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 setTemplateData(updatedTemplateData);
             }
             setTemplateHasChanged(true);
+            setFileAdded(true);
         }
     };
 
@@ -137,6 +140,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 setTemplateHasChanged(false);
                 if (goToIndex !== undefined) {
                     setCurrentTemplate(templateData[goToIndex] || null);
+                    setFileAdded(false);
                 }
             } catch (error) {
                 customAlert(PopupType.fail, "Template Update failure!", `${error} when trying to update template.`);
@@ -272,7 +276,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Add PDF Background</h3>
-                                <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)} />
+                                <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)} fileAdded={fileAdded} setFileAdded={setFileAdded} />
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <SaveButton saveButtonType={SaveButtonType.normal} onClick={confirmChangeTemplateHandler}/>
