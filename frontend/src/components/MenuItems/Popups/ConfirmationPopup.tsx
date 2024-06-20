@@ -22,6 +22,18 @@ export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, co
     setInputContent(event.target.value);
   };
 
+  const confirmClickHandler = (inputContent?: string) => {
+    if(inputContent){
+      confirmClick(inputContent);
+      setTimeout(() => {
+        setInputContent('');
+      }, 1500);
+    }
+    else{
+      confirmClick();
+    }
+  }
+
   return (
     <>
     <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
@@ -42,7 +54,7 @@ export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, co
             <div className={'popup_confirmation-content-btn-container ' + (confirmationPopupType === ConfirmationPopupType.form && 'confirmation')}>
               {confirmationPopupType === ConfirmationPopupType.question ?
               <>
-                <button onClick={() => confirmClick()} className='popup_confirmation-content-btn'>
+                <button onClick={() => confirmClickHandler()} className='popup_confirmation-content-btn'>
                   <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="" stroke="" strokeWidth="0.01024">
                     <g id="SVGRepo_bgCarrier" strokeWidth="0"/>
                     <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"/>
@@ -67,7 +79,7 @@ export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, co
               :
               <>
                 <input className='popup_confirmation-content-input' value={inputContent} onChange={handleInputChange} required type="text" />
-                <button onClick={() => confirmClick(inputContent)} className='popup_confirmation-content-btn'>
+                <button onClick={() => confirmClickHandler(inputContent)} className='popup_confirmation-content-btn'>
                   <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="" stroke="" strokeWidth="0.01024">
                     <g id="SVGRepo_bgCarrier" strokeWidth="0"/>
                     <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"/>
