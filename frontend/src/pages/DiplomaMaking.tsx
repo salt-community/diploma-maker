@@ -91,7 +91,7 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
           ),
           populateFooterField(
             // @ts-ignore
-            saltData[selectedBootcampIndex].template.intro,
+            saltData[selectedBootcampIndex].template.footer,
             saltData[selectedBootcampIndex].classname,
             saltData[selectedBootcampIndex].dategraduate
           ),
