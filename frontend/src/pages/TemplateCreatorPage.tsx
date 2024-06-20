@@ -12,6 +12,7 @@ import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/Save
 import { AddButton } from "../components/MenuItems/Buttons/AddButton";
 import { ConfirmationPopup, ConfirmationPopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
+import { RemoveButton } from "../components/MenuItems/Buttons/RemoveButton";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -185,6 +186,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         customPopup(ConfirmationPopupType.form, "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent))
     }
 
+    const confirmRemoveTemplateHandler = async () => {
+        customPopup(ConfirmationPopupType.warning, `Are you completely sure you want to remove ${currentTemplate?.templateName} from the database?`, "This will unlink the template for all bootcamps that use it.", () => (inputContent?: string) => addTemplate(inputContent))
+    }
+
     const globalAbortHandler = () => {
         setShowConfirmationPopup(false);
     }
@@ -290,6 +295,9 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Edit Fields</h3>
+                            </section>
+                            <section className="templatecreator-page__rightsidebar-menu-section">
+                                <SaveButton saveButtonType={SaveButtonType.remove} onClick={confirmRemoveTemplateHandler}/>
                             </section>
                         </>
                     }

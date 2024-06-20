@@ -63,3 +63,48 @@
     .save-btn_title{
         cursor: pointer;
     }
+
+
+
+
+
+    .save-btn.remove{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+    
+        background-color: #20202a;
+        color: #fff;
+        color: #dbdbe5;
+        font-weight: 600;
+        font-size: .8rem;
+        margin: .5rem 0;
+        padding: .6rem 1.2rem;
+        border-radius: .5rem;
+        transition: all .25s ease-in-out;
+    }
+        .save-btn.remove:hover{
+            filter: saturate(125%);
+            background-color: #f62b2b;
+            color: #000;
+            cursor: pointer;
+    
+            transition: all .15s ease-in-out;
+        }
+        .save-btn.remove svg{
+            width: 25px;
+            transition: all .15s ease-in-out;
+        }
+        .save-btn.remove svg path{
+            stroke: #ababba;
+            transition: all .15s ease-in-out;
+        }
+        .save-btn.remove:hover svg path{
+            stroke: #000000;
+            transition: all .15s ease-in-out;
+        }
+        .save-btn.remove:hover svg{
+            transform: scale(1.02);
+            transition: all .15s ease-in-out;
+        }

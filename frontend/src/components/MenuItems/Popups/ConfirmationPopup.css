@@ -30,6 +30,9 @@
     .popup_confirmation.question {
         background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
     }
+    .popup_confirmation.warning {
+        background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
+    }
 
 .popup_confirmation-content {
     display: flex;
@@ -97,6 +100,14 @@
         }
         .popup_confirmation-content-btn:nth-of-type(2):hover{
             background-color: #ff5563;
+            transition: all .15s ease-in-out;
+        }
+        .popup_confirmation.warning .popup_confirmation-content-btn:nth-of-type(1):hover{
+            background-color: #ff5563;
+            transition: all .15s ease-in-out;
+        }
+        .popup_confirmation.warning .popup_confirmation-content-btn:nth-of-type(2):hover{
+            background-color: #07ff0a;
             transition: all .15s ease-in-out;
         }
 
