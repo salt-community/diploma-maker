@@ -38,6 +38,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [popupContent, setPopupContent] = useState<string[]>(["",""]);
     const [popupType, setPopupType] = useState<PopupType>(PopupType.success);
+    
+    const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
 
     useEffect(() => {
         if (templates && templates.length > 0) {
@@ -87,8 +89,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         }
     }, [currentTemplate]);
 
-    const templateChangeHandler = (index: number) => {
-        setCurrentTemplate(templateData[index] || null);
+    const templateChangeHandler = async (index: number) => {
+        if (templateHasChanged) {
+            shouldWeSaveHandler(index);
+        }
+        else{
+            setCurrentTemplate(templateData[index] || null);
+        }
     };
 
     const pdfFileUploadHandler = async (file: File) => {
@@ -117,15 +124,20 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 );
                 setTemplateData(updatedTemplateData);
             }
+            setTemplateHasChanged(true);
         }
     };
 
-    const saveTemplate = async () => {
+    const saveTemplate = async (goToIndex?: number) => {
         if(currentTemplate){
             setShowConfirmationPopup(false);
             try {
                 await updateTemplate(currentTemplate?.id, currentTemplate);
                 customAlert(PopupType.success, "Template Successfully Updated!", `Successfully updated ${currentTemplate.templateName} to database`);
+                setTemplateHasChanged(false);
+                if (goToIndex !== undefined) {
+                    setCurrentTemplate(templateData[goToIndex] || null);
+                }
             } catch (error) {
                 customAlert(PopupType.fail, "Template Update failure!", `${error} when trying to update template.`);
             }
@@ -155,6 +167,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         } else {
             customAlert(PopupType.fail, "Template Creation failure!", `Name field is blank`);
         }
+    }
+
+    const shouldWeSaveHandler = async (index: number) => {
+        customPopup(ConfirmationPopupType.question, "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index));
     }
 
     const confirmChangeTemplateHandler = async () => {
