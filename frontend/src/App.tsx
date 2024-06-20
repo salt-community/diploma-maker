@@ -22,9 +22,6 @@ function App() {
 
   if(!bootcamps){
     getBootcampsFromBackend();
-  }
-
-  if(!templates){
     getTemplates();
   }
 
@@ -82,7 +79,6 @@ function App() {
     setBootcamps(newBootcamps);
     setTemplates(newTemplates);
   }
-
 
   return (
     <>
