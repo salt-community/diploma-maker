@@ -86,8 +86,8 @@ export default function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} addMultipleDiplomas={addMultipleDiplomas}/>} />
-        <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} addMultipleDiplomas={addMultipleDiplomas}/>} />
+        <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} addMultipleDiplomas={addMultipleDiplomas}/>} />
+        <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} addMultipleDiplomas={addMultipleDiplomas}/>} />
         <Route path={`/:guidId`} element = {<VertificationPage />} />
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteDiploma={deleteDiploma}/>} />

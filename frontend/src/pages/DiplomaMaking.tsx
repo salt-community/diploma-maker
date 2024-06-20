@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode } from "../util/types";
+import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode, TemplateResponse } from "../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -24,10 +24,11 @@ import { saltDefaultData } from "../data/data";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
+  templates: TemplateResponse[] | null
   addMultipleDiplomas: (diplomasRequest: DiplomasRequestDto) => Promise<DiplomaResponse[]>;
 };
 
-export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props) {
+export default function DiplomaMaking({ bootcamps, templates, addMultipleDiplomas }: Props) {
   const [saltData, setSaltData] = useState<SaltData[] | null>()
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
@@ -126,18 +127,19 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
   }, [uiRef, currentDisplayMode, currentPageIndex, selectedBootcampIndex, saltData]);
 
   const updateSaltDataHandler = (data: SaltData) => {
-    if(saltData){
+    if (saltData) {
       setSaltData(prevSaltInfoProper =>
         (prevSaltInfoProper ?? []).map((item, index) =>
           index === selectedBootcampIndex
-            ? { ...item, names: data.names }
+            ? { ...item, names: data.names, template: data.template }
             : item
         )
       );
     }
+  
     setCurrentPageIndex(0);
-    
   };
+  
 
   const handleToggle = (checked: boolean) => {
     setDisplayMode(checked ? "form" : "viewer");
@@ -282,6 +284,7 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
             bootcamps={bootcamps} 
             setSelectedBootcampIndex={(index) => {setSelectedBootcampIndex(index); setCurrentPageIndex(0);}}
             saltData={saltData[selectedBootcampIndex]}
+            templates={templates}
           />
         }
       </section>
