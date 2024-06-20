@@ -8,10 +8,12 @@ type Props = {
 
 export const PdfFileUpload = ({ fileResult }: Props) => {
   const [isFileValid, setIsFileValid] = useState<boolean | null>(null);
+  const [fileAdded, setFileAdded] = useState<boolean>(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     fileResult(acceptedFiles[0]);
-    setIsFileValid(null); // Reset the state after file is dropped
+    setIsFileValid(null); 
+    setFileAdded(true);
   }, [fileResult]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -45,15 +47,21 @@ export const PdfFileUpload = ({ fileResult }: Props) => {
       <input {...getInputProps()} />
         <>
           <div className={'fileupload__icon-wrapper ' + (isDragActive ? (isFileValid ? 'valid' : 'invalid') : 'normal')}>
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> 
-              <path d="M4 12H20M12 4V20" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g>
-            </svg>
+            {fileAdded ? 
+              <svg fill="#FFFFFFDF" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+                <path d="M23,12A11,11,0,1,1,12,1a10.9,10.9,0,0,1,5.882,1.7l1.411-1.411A1,1,0,0,1,21,2V6a1,1,0,0,1-1,1H16a1,1,0,0,1-.707-1.707L16.42,4.166A8.9,8.9,0,0,0,12,3a9,9,0,1,0,9,9,1,1,0,0,1,2,0Z"></path></g>
+              </svg>
+            : 
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> 
+                <path d="M4 12H20M12 4V20" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g>
+              </svg>
+            }
           </div>
           <h4 className='fileupload_title'>
-            {isDragActive ? (isFileValid ? 'Valid File' : 'Invalid File Format') : 'Add new PDF'}
+            {isDragActive ? (isFileValid ? 'Valid File' : 'Invalid File Format') : (fileAdded ? 'Change PDF' : 'Add new PDF')}
           </h4>
           <p className='fileupload_section'>
-            {isDragActive ? (isFileValid ? 'Drag & drop' : 'File should be .pdf') : 'Drag & drop'}
+          {isDragActive ? (isFileValid ? ('Drag & drop') : ('File should be .pdf')) : (fileAdded ? 'Drag & drop' : 'Drag & drop')}
           </p>
         </>
     </div>
