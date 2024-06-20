@@ -32,14 +32,19 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
       }
     };
 
-    const HandleFileUpload = (file: File) => {
-      ParseFileData(file, setNames);
+    const HandleFileUpload = async (file: File) => {
+      
+      const names = await ParseFileData(file);
+      console.log(names)
+      setNames(names);
+
+
       const newSaltData: SaltData = {
         classname: saltData.classname,
         dategraduate: saltData.dategraduate,
         names: names,
     }
-      console.log(newSaltData)
+      
       updateSaltData(newSaltData);
     }
 
