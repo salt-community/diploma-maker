@@ -174,6 +174,24 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         }
     }
 
+    const removeTemplate = async () => {
+        if(currentTemplate?.id){
+            setShowConfirmationPopup(false);
+            const templateId = currentTemplate?.id;
+            if(templateId === 1){
+                customAlert(PopupType.fail, `Cannot Delete the Default Template`, `You are not allowed to delete the baseTemplate.`);
+                return;
+            }
+            try {
+                await deleteTemplate(templateId);
+                customAlert(PopupType.success, "Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
+                setTemplateHasChanged(false);
+            } catch (error) {
+                customAlert(PopupType.fail, "Template Update failure!", `${error} when trying to update template.`);
+            }
+        }
+    }
+
     const shouldWeSaveHandler = async (index: number) => {
         customPopup(ConfirmationPopupType.question, "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index));
     }
@@ -187,7 +205,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
 
     const confirmRemoveTemplateHandler = async () => {
-        customPopup(ConfirmationPopupType.warning, `Are you completely sure you want to remove ${currentTemplate?.templateName} from the database?`, "This will unlink the template for all bootcamps that use it.", () => (inputContent?: string) => addTemplate(inputContent))
+        customPopup(ConfirmationPopupType.warning, `Are you sure you want to remove ${currentTemplate?.templateName}?`, "This will unlink the template for all bootcamps that use it.", () => () => removeTemplate())
     }
 
     const globalAbortHandler = () => {
