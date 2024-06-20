@@ -81,17 +81,21 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
       const inputs = 
         [makeTemplateInput(
           populateIntroField(
+            // @ts-ignore
             saltData[selectedBootcampIndex].template.intro
           ),
           populateNameField(
+            // @ts-ignore
             saltData[selectedBootcampIndex].template.studentName,
             saltData[selectedBootcampIndex].names[currentPageIndex]
           ),
           populateFooterField(
-            saltData[selectedBootcampIndex].template.footer,
+            // @ts-ignore
+            saltData[selectedBootcampIndex].template.intro,
             saltData[selectedBootcampIndex].classname,
             saltData[selectedBootcampIndex].dategraduate
           ),
+          // @ts-ignore
           saltData[selectedBootcampIndex].template.basePdf
         )];
       const template: Template = getTemplate(inputs[0]);

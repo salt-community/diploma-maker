@@ -1,7 +1,9 @@
 import { BootcampRequest, BootcampResponse } from "../util/types";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export async function getBootcamps(): Promise<BootcampResponse[]>{
-    const response = await fetch(`http://localhost:5258/api/bootcamp`);
+    const response = await fetch(`${apiUrl}/api/bootcamp`);
     if (!response.ok)
         throw new Error("Failed to get bootcamps!")
     const result = await response.json() as BootcampResponse[]
@@ -9,7 +11,7 @@ export async function getBootcamps(): Promise<BootcampResponse[]>{
 }
 
 export async function getBootcampById(guidId: string): Promise<BootcampResponse>{
-    const response = await fetch(`http://localhost:5258/api/bootcamp/${guidId}`);
+    const response = await fetch(`${apiUrl}/api/bootcamp/${guidId}`);
     if (!response.ok)
         throw new Error("Failed to get bootcamp!")
     const result = await response.json() as  BootcampResponse;
@@ -21,7 +23,7 @@ export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<vo
         ...bootcampRequest,
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
-    const response = await fetch (`http://localhost:5258/api/bootcamp`,{
+    const response = await fetch (`${apiUrl}/api/bootcamp`,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedRequest)
@@ -38,7 +40,8 @@ export async function updateBootcamp(bootcampRequest: BootcampRequest): Promise<
         ...bootcampRequest,
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
-    const response = await fetch(`http://localhost:5258/api/bootcamp/${bootcampRequest.guidId!}`,{
+    console.log(formattedRequest);
+    const response = await fetch(`${apiUrl}/api/bootcamp/${bootcampRequest.guidId!}`,{
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedRequest)
@@ -48,7 +51,7 @@ export async function updateBootcamp(bootcampRequest: BootcampRequest): Promise<
 }
 
 export async function deleteBootcampById(guidId: string): Promise<void> {
-    const response = await fetch(`http://localhost:5258/api/bootcamp/${guidId}`, {
+    const response = await fetch(`${apiUrl}/api/bootcamp/${guidId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
     });

@@ -135,6 +135,7 @@ export const generateCombinedPDF = async (templates: Template[], inputsArray: an
 
   const pdf = await generate({
     template: combinedTemplate,
+    // @ts-ignore
     inputs: combinedTemplate.sampledata,
     options: { font },
     plugins: getPlugins(),

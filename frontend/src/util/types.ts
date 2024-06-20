@@ -44,7 +44,6 @@ export type DiplomasRequestDto = {
 // Internal Data
 export type SaltData = {
     classname: string;
-    datestart?: string;
     dategraduate: string;
     names: string[];
     template: CustomTemplate;

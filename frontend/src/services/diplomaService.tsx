@@ -1,7 +1,9 @@
 import { DiplomaRequest, DiplomaResponse, DiplomasRequestDto } from "../util/types";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export async function getDiplomasByKeyword(keyword: string): Promise<DiplomaResponse[]> {
-    const response = await fetch(`http://localhost:5258/api/diploma/%20/?keyword=${keyword}`);
+    const response = await fetch(`${apiUrl}/api/diploma/%20/?keyword=${keyword}`);
     if (!response.ok) {
         throw new Error('Failed to get diplomas!');
     }
@@ -10,7 +12,7 @@ export async function getDiplomasByKeyword(keyword: string): Promise<DiplomaResp
 }
 
 export async function getDiplomaById(guidId: string): Promise<DiplomaResponse> {
-    const response = await fetch(`http://localhost:5258/api/diploma/${guidId}`);
+    const response = await fetch(`${apiUrl}/api/diploma/${guidId}`);
     if (!response.ok) {
         throw new Error('Failed to get diploma!');
     }
@@ -21,10 +23,11 @@ export async function getDiplomaById(guidId: string): Promise<DiplomaResponse> {
 export async function postDiploma(diplomaRequest: DiplomaRequest): Promise<void> {
     const formattedRequest = {
         ...diplomaRequest,
+        // @ts-ignore
         graduationDate: diplomaRequest.graduationDate ? diplomaRequest.graduationDate.toISOString() : undefined
     };
 
-    const response = await fetch('http://localhost:5258/api/diploma', {
+    const response = await fetch(`${apiUrl}/api/diploma`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedRequest)
@@ -45,7 +48,7 @@ export async function postDiploma(diplomaRequest: DiplomaRequest): Promise<void>
 
 
 export async function deleteDiplomaById(guidId: string): Promise<void> {
-    const response = await fetch(`http://localhost:5258/api/diploma/${guidId}`, {
+    const response = await fetch(`${apiUrl}/api/diploma/${guidId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
     });
@@ -58,7 +61,7 @@ export async function deleteDiplomaById(guidId: string): Promise<void> {
 
 
 export async function postSingleDiploma(diplomaRequest: DiplomaRequest): Promise<DiplomaResponse> {
-    const response = await fetch(`http://localhost:5258/api/diploma/single`, {
+    const response = await fetch(`${apiUrl}/api/diploma/single`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(diplomaRequest)
@@ -77,7 +80,7 @@ export async function postSingleDiploma(diplomaRequest: DiplomaRequest): Promise
 
 
 export async function postMultipleDiplomas(diplomasRequest: DiplomasRequestDto): Promise<DiplomaResponse[]> {
-    const response = await fetch(`http://localhost:5258/api/diploma/many`, { // Ensure the URL matches
+    const response = await fetch(`${apiUrl}/api/diploma/many`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(diplomasRequest)
