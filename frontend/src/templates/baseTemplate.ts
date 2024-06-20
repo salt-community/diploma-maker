@@ -1,6 +1,6 @@
 import { Template } from "@pdfme/common";
 
-export const makeTemplateInput = (header: string, name: string, footer: string, pdfbase: string) => {
+export const makeTemplateInput= (header: string, name: string, footer: string, pdfbase: string) => {
   return {
     name,
     header,
@@ -46,6 +46,13 @@ export const getTemplate = (input: { header: string; name: string; footer: strin
       },
     },
   ],
-  columns: ["footer", "header", "name"],
   basePdf: input.pdfbase,
+  sampledata: [
+    {
+      footer: input.footer,
+      header: input.header,
+      name: input.name,
+    }
+  ],
+  columns: ["footer", "header", "name"],
 });

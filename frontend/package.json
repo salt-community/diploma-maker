@@ -10,13 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@pdfme/common": "^4.0.2",
-    "@pdfme/generator": "^4.0.2",
-    "@pdfme/ui": "^4.0.2",
+    "@pdfme/common": "^3.4.3-dev.2",
+    "@pdfme/generator": "^3.4.3-dev.2",
+    "@pdfme/schemas": "^3.4.3-dev.2",
+    "@pdfme/ui": "^3.4.3-dev.2",
     "@react-pdf/renderer": "^3.4.4",
     "@types/react-dropzone": "^5.1.0",
-    "pdf-lib": "^1.17.1",
     "papaparse": "^5.4.1",
+    "pdf-lib": "^1.17.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",

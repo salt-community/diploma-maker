@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Template } from "@pdfme/common";
-import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Form, Viewer } from "@pdfme/ui";
 import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode } from "../util/types";
 import {
@@ -21,6 +20,7 @@ import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent"
 import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { saltDefaultData } from "../data/data";
+import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;

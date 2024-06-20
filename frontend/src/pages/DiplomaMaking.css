@@ -13,8 +13,14 @@
     align-self: center;
     width: 200px;
 }
+
+
 .pdfpreview-container div div div div:nth-of-type(1){
-    background-color: transparent;
+    background-color: transparent !important;
+    cursor: default;
+}
+.pdfpreview-container div div div div div div:hover{
+    cursor: text;
 }
 .pdfpreview-container div{
     background-color: #2e2e38;

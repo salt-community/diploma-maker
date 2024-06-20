@@ -144,9 +144,12 @@
             }
 
 
-.pdfpreview div div div div:nth-of-type(1){
-    background-color: transparent;
+.pdfpreview div div div div div:nth-of-type(1){
+    background-color: transparent !important;
 }
 .pdfpreview div{
     background-color: #2e2e38;
+}
+.pdfpreview div div div div div div:hover{
+    cursor: pointer;
 }
