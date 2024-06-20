@@ -11,6 +11,7 @@ public class DiplomaMakingContext : DbContext
 
     public DbSet<Bootcamp> Bootcamp { get; set; } = default!;
     public DbSet<Diploma> Diploma { get; set; } = default!;
+    public DbSet<Template> Template { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -7,7 +7,6 @@ export async function getBootcamps(): Promise<BootcampResponse[]>{
     if (!response.ok)
         throw new Error("Failed to get bootcamps!")
     const result = await response.json() as BootcampResponse[]
-    // console.table(result);
     return result;
 }
 
@@ -16,7 +15,6 @@ export async function getBootcampById(guidId: string): Promise<BootcampResponse>
     if (!response.ok)
         throw new Error("Failed to get bootcamp!")
     const result = await response.json() as  BootcampResponse;
-    // console.log(result);
     return result;
 }
 

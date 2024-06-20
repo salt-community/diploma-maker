@@ -8,7 +8,6 @@ export async function getDiplomasByKeyword(keyword: string): Promise<DiplomaResp
         throw new Error('Failed to get diplomas!');
     }
     const result = await response.json() as DiplomaResponse[];
-    console.log(result);
     return result;
 }
 

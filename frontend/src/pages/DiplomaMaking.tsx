@@ -18,7 +18,7 @@ import { PaginationMenu } from "../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../components/MenuItems/Buttons/PublishButton";
 import './DiplomaMaking.css'
 import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
-import { SaveButton } from "../components/MenuItems/Buttons/SaveButton";
+import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { saltDefaultData } from "../data/data";
 
@@ -45,6 +45,7 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
     if (bootcamps) {
+      console.log("RUNNING!")
       if(selectedBootcamp){
         setSelectedBootcampIndex(Number(selectedBootcamp));
       }
@@ -81,7 +82,7 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
         [makeTemplateInput(
           populateIntroField(
             // @ts-ignore
-            saltData[selectedBootcampIndex].template.footer
+            saltData[selectedBootcampIndex].template.intro
           ),
           populateNameField(
             // @ts-ignore
@@ -161,24 +162,35 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
   const generatePDFHandler = async () => {
     if (uiInstance.current) {
       const inputs = uiInstance.current.getInputs();
-      // @ts-ignore
-      const template = getTemplate();
+      const pdfInput = [makeTemplateInput(
+          inputs[0].header,
+          inputs[0].name,
+          inputs[0].footer,
+          inputs[0].pdfbase
+      )];
+      const template = getTemplate(pdfInput[0]);
       await generatePDF(template, inputs);
       await postSelectedBootcampData();
     }
   };
 
   const generateCombinedPDFHandler = async () => {
-      if (saltData) {
-          const inputsArray = saltData[selectedBootcampIndex].names.map((_, index) => {
-            // @ts-ignore
-              return [makeTemplateInput(saltData[selectedBootcampIndex].names[index], saltData[selectedBootcampIndex].classname, saltData[selectedBootcampIndex].dategraduate)];
-          });
-
-          // @ts-ignore
-          await generateCombinedPDF(saltData[selectedBootcampIndex].names.map(() => getTemplate()), inputsArray);
-          await postSelectedBootcampData();
-      }
+    if (saltData) {
+      const selectedBootcampData = saltData[selectedBootcampIndex];
+      const inputsArray = selectedBootcampData.names.map((name) => {
+        return makeTemplateInput(
+          populateIntroField(selectedBootcampData.template.intro),
+          populateNameField(selectedBootcampData.template.studentName, name),
+          populateFooterField(selectedBootcampData.template.footer, selectedBootcampData.classname, selectedBootcampData.dategraduate),
+          selectedBootcampData.template.basePdf
+        );
+      });
+  
+      const templates = inputsArray.map((input) => getTemplate(input));
+  
+      await generateCombinedPDF(templates, inputsArray);
+      await postSelectedBootcampData();
+    }
   };
 
   const postSelectedBootcampData = async () => {
@@ -243,7 +255,7 @@ export default function DiplomaMaking({ bootcamps, addMultipleDiplomas }: Props)
           </div>
           <PublishButton text="Generate PDF" onClick={generatePDFHandler}/>
           <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler}/>
-          <SaveButton onClick={saveInputFieldsHandler}/>
+          <SaveButton saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler}/>
         </header>
         {saltData && 
           <div

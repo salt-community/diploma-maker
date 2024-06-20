@@ -1,37 +1,35 @@
-    using Microsoft.EntityFrameworkCore;
-    using Backend.Models;
-    using AutoMapper;
-    using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Backend.Models;
 
-    namespace Backend.Services;
+namespace Backend.Services;
 
-    public class BootcampService
+public class BootcampService
+{
+    private readonly DiplomaMakingContext _context;
+
+    public BootcampService(DiplomaMakingContext context)
     {
-        private readonly DiplomaMakingContext _context;
+        _context = context;
+    }
 
-        public BootcampService(DiplomaMakingContext context)
-        {
-            _context = context;
-        }
+    public async Task<Bootcamp> PostBootcamp(Bootcamp bootcamp)
+    {
+        _context.Bootcamp.Add(bootcamp);
+        await _context.SaveChangesAsync();
+        return bootcamp;
+    }
 
-        public async Task<Bootcamp> PostBootcamp(Bootcamp bootcamp)
-        {
-            _context.Bootcamp.Add(bootcamp);
-            await _context.SaveChangesAsync();
-            return bootcamp;
-        }
+    public async Task<List<Bootcamp>> GetBootcamps() =>
+            await _context.Bootcamp
+            .Include(b => b.Diplomas)
+            .Include(b =>b.template)
+            .ToListAsync();
 
-        public async Task<List<Bootcamp>> GetBootcamps() =>
-                await _context.Bootcamp
-                .Include(b => b.Diplomas)
-                .Include(b =>b.template)
-                .ToListAsync();
-
-        public async Task<Bootcamp?> GetBootcampByGuidId(Guid guidId) => 
-                await _context.Bootcamp
-                .Include(b => b.Diplomas)
-                .Include(b =>b.template)
-                .FirstOrDefaultAsync(b => b.GuidId == guidId);
+    public async Task<Bootcamp?> GetBootcampByGuidId(Guid guidId) => 
+            await _context.Bootcamp
+            .Include(b => b.Diplomas)
+            .Include(b =>b.template)
+            .FirstOrDefaultAsync(b => b.GuidId == guidId);
 
     public async Task<Bootcamp> DeleteBootcampByGuidId(Guid guidId)
     {
@@ -56,16 +54,16 @@
 
             bootcamp.Name = requestDto.Name;
             bootcamp.graduationDate = requestDto.graduationDate;
-    
-           await _context.SaveChangesAsync();
-           return bootcamp;
+
+            await _context.SaveChangesAsync();
+            return bootcamp;
         }
         catch (DbUpdateException ex)
         {
             throw new DbUpdateException("Failed to save changes Bootcamp name needs to be unique");
         }
-   
+
     }
 
 
-    }
+}

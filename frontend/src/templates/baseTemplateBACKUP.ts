@@ -1,6 +1,6 @@
 import { Template } from "@pdfme/common";
 
-export const makeTemplateInput = (header: string, name: string , footer: string ) => {
+export const makeTemplateInputBackup = (header: string, name: string , footer: string ) => {
   return {
     "name": name,
     "header": header,
@@ -8,7 +8,7 @@ export const makeTemplateInput = (header: string, name: string , footer: string 
   };
 };
 
-export const getTemplate = (): Template => ({
+export const getTemplateBackup = (): Template => ({
   schemas: [
     {
       "footer": {

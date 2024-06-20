@@ -1,0 +1,75 @@
+.fileupload-wrapper {
+    border: 2px dashed #cccccc31;
+    border-radius: .5rem;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all .2s ease-in-out;
+  }
+  .fileupload-wrapper:hover{
+    border: 2px dashed #cccccc4b;
+    filter: saturate(125%);
+    transition: all .2s ease-in-out;
+  }
+    .fileupload_title {
+        margin-top: .5rem;
+        color: #fff;
+        font-weight: 600;
+    }
+    .fileupload_section{
+        color: #ababba;
+        font-size: .8rem;
+    }
+    .fileupload__icon-wrapper.normal {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* background-color: #1576fb;
+        border-radius: 100%;
+        box-shadow: 0 0 10px #1575fb6e, 0 0 45px #1575fb88; */
+        background-color: #f6522b;
+        border-radius: 100%;
+        box-shadow: 0 0 10px #f6522b6e, 0 0 45px #f6522b88;
+
+        transition: all .2s ease-in-out;
+    }
+    .fileupload__icon-wrapper.valid{
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #15fb34;
+        border-radius: 100%;
+        box-shadow: 0 0 10px #24fb156e, 0 0 45px #2cfb1588;
+
+        transition: all .2s ease-in-out;
+    }
+    .fileupload__icon-wrapper.valid svg{
+        transform: scale(1.15);
+        transition: all .2s ease-in-out;
+    }
+    .fileupload__icon-wrapper svg{
+        width: 50%;
+        height: 50%;
+        transition: all .2s ease-in-out;
+    }
+
+    .fileupload__icon-wrapper.invalid{
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fb1515;
+        border-radius: 100%;
+        box-shadow: 0 0 10px #fb15156e, 0 0 45px #fb151588;
+
+        transition: all .2s ease-in-out;
+    }

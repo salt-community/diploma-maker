@@ -1,0 +1,42 @@
+.add-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+
+    background-color: #20202a;
+    color: #dbdbe5;
+    font-weight: 600;
+    font-size: .8rem;
+    margin: .7rem 0;
+    padding: .5rem 1.2rem;
+    border-radius: .5rem;
+    transition: all .2s ease-in-out;
+}
+    .add-btn:hover{
+        filter: saturate(125%);
+        background-color: #2b7cf6;
+        color: #ffffff;
+        cursor: pointer;
+
+        transition: all .2s ease-in-out;
+    }
+    .add-btn svg{
+        width: 25px;
+        transition: all .2s ease-in-out;
+    }
+    .add-btn svg path{
+        stroke: #ababba;
+        transition: all .2s ease-in-out;
+    }
+    .add-btn:hover svg path{
+        stroke: #ffffff;
+        transition: all .2s ease-in-out;
+    }
+    .add-btn:hover svg{
+        transform: scale(1.02);
+        transition: all .2s ease-in-out;
+    }
+    .add-btn_title{
+        cursor: pointer;
+    }
