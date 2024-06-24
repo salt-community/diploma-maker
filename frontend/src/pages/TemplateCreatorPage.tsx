@@ -12,6 +12,7 @@ import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/Save
 import { AddButton } from "../components/MenuItems/Buttons/AddButton";
 import { ConfirmationPopup, ConfirmationPopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
+import { TextInputIcon } from "../components/MenuItems/Icons/TextInputIcon";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -320,7 +321,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                                 <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)} fileAdded={fileAdded} setFileAdded={setFileAdded} />
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
-                                <SaveButton saveButtonType={SaveButtonType.normal} onClick={confirmChangeTemplateHandler}/>
+                                <SaveButton textfield="Save Template" saveButtonType={SaveButtonType.normal} onClick={confirmChangeTemplateHandler}/>
                             </section>
                         </>
                     }
@@ -331,10 +332,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Edit Fields</h3>
-                                <SaveButton saveButtonType={SaveButtonType.normal} onClick={saveFieldsHandler}/>
+                                <SaveButton textfield="Save Inputs" saveButtonType={SaveButtonType.normal} onClick={saveFieldsHandler} customIcon={<TextInputIcon />}/>
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
-                                <SaveButton saveButtonType={SaveButtonType.remove} onClick={confirmRemoveTemplateHandler}/>
+                                <SaveButton textfield="Remove Template" saveButtonType={SaveButtonType.remove} onClick={confirmRemoveTemplateHandler}/>
                             </section>
                         </>
                     }
