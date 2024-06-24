@@ -19,20 +19,20 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
   const [names, setNames] = useState<string[]>(saltData.names);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
 
-
-  const updateSaltDataHandler = (data: FieldValues) => {
-  
-    console.log(selectedTemplate.templateName)
-    
+  const getStateAndUpdate = () : void => {
+    console.log(names);
     const newSaltData: SaltData = {
-      classname: data.classname,
-      dategraduate: data.dategraduate,
+      classname: saltData.classname,
+      dategraduate: saltData.dategraduate,
       names: names,
       template: selectedTemplate
     }
+  
     updateSaltData(newSaltData);
   }
 
+  const updateSaltDataHandler = (data: FieldValues) => getStateAndUpdate();
+    
   const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -42,16 +42,10 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
   const HandleFileUpload = async (file: File) => {
     const names = await ParseFileData(file);
     setNames(names);
-
-    const newSaltData: SaltData = {
-      classname: saltData.classname,
-      dategraduate: saltData.dategraduate,
-      names: names,
-      template: saltData.template
-    }
-
-    updateSaltData(newSaltData);
+    console.log(names);
+    getStateAndUpdate();
   }
+
 
   return (
     <form
