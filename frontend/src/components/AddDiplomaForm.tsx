@@ -26,10 +26,16 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
     setBootcampsCache(bootcamps);
     updateSaltData({
       ...saltData,
-      names,
       template: selectedTemplate
     });
-  }, [selectedTemplate, names]);
+  }, [selectedTemplate]);
+
+  useEffect(() => {
+    updateSaltData({
+      ...saltData,
+      names,
+    });
+  }, [names]);
 
   const handleFileUpload = async (file: File) => {
     const newNames = await ParseFileData(file);
