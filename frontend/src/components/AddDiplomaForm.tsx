@@ -1,6 +1,6 @@
 import { useForm, FieldValues } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BootcampResponse, TemplateResponse, SaltData } from "../util/types";
 import { Link } from "react-router-dom";
 import { FileUpload } from "./MenuItems/Inputs/FileUploader";
@@ -14,25 +14,29 @@ type Props = {
   setSelectedBootcampIndex: (index: number) => void;
 };
 
-export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates}: Props) {
+export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates }: Props) {
   const { register, handleSubmit } = useForm();
   const [names, setNames] = useState<string[]>(saltData.names);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
 
-  const getStateAndUpdate = () : void => {
-    console.log(names);
+
+  useEffect(() => {
+    getStateAndUpdate();
+  }, [selectedTemplate, names])
+
+  const getStateAndUpdate = (): void => {
+
     const newSaltData: SaltData = {
       classname: saltData.classname,
       dategraduate: saltData.dategraduate,
       names: names,
       template: selectedTemplate
     }
-  
     updateSaltData(newSaltData);
   }
 
   const updateSaltDataHandler = (data: FieldValues) => getStateAndUpdate();
-    
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -40,10 +44,8 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
   };
 
   const HandleFileUpload = async (file: File) => {
-    const names = await ParseFileData(file);
-    setNames(names);
-    console.log(names);
-    getStateAndUpdate();
+    const names2 = await ParseFileData(file);
+    setNames(names2);
   }
 
 
@@ -128,19 +130,24 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
           selectedTags={(names: string[]) => setNames(names)}
           tags={saltData.names}
         />
-        <FileUpload FileHandler={HandleFileUpload} />
+      </div>
+      <div>
+        <label htmlFor="names" className="block text-lg font-medium text-gray-700 dark: text-white mb-2">
+            Upload Student Information 
+        </label>
+          <FileUpload FileHandler={HandleFileUpload} />
       </div>
 
       {/* Submit Changes */}
 
-      <div>
+{/*       <div>
         <button
           type="submit"
           className="w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           Apply
         </button>
-      </div>
+      </div> */}
     </form>
   );
 }
