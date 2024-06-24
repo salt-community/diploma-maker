@@ -191,6 +191,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         }
     }
 
+    const saveFieldsHandler = async () => {
+        
+    }
+
     const shouldWeSaveHandler = async (index: number) => {
         customPopup(ConfirmationPopupType.question, "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index));
     }
@@ -313,6 +317,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Edit Fields</h3>
+                                <SaveButton saveButtonType={SaveButtonType.normal} onClick={saveFieldsHandler}/>
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <SaveButton saveButtonType={SaveButtonType.remove} onClick={confirmRemoveTemplateHandler}/>
