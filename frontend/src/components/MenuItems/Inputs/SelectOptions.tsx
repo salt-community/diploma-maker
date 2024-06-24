@@ -10,7 +10,7 @@ type Props = {
     selectClassOverride?: string;
     options: Option[];
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    value: string;
+    value?: string;
 };
 
 export const SelectOptions = ({ options, containerClassOverride, selectClassOverride, onChange, value }: Props) => {

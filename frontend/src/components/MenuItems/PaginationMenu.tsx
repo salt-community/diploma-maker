@@ -1,3 +1,4 @@
+import { NextIcon } from './Icons/NextIcon';
 import './PaginationMenu.css'
 
 type Props = {
@@ -14,17 +15,13 @@ export const PaginationMenu = ({ currentPage, totalPages, handlePrevPage, handle
     return (
         <footer className={"pagination-container " + containerClassOverride}>
             <button className={"iconbtn " + buttonClassOverride} onClick={handlePrevPage}>
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15 7L10 12L15 17" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <NextIcon />
             </button>
             <span className={"pagination-info " + textContainerClassOverride}>
                 Page {currentPage} of {totalPages}
             </span>
             <button className={"iconbtn " + buttonClassOverride} onClick={handleNextPage}>
-                <svg viewBox="0 0 24 24" style={{ transform: 'rotate(180deg)' }} fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15 7L10 12L15 17" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <NextIcon rotation={180}/>
             </button>
         </footer>
     );
