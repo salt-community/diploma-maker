@@ -110,6 +110,33 @@
             background-color: #07ff0a;
             transition: all .15s ease-in-out;
         }
+        .popup_confirmation-close-btn{
+            position: absolute;
+            right: 0;
+            top: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 40px;
+            height: 35px;
+        }
+        .popup_confirmation-close-btn:hover{
+            cursor: pointer;
+        }
+        .popup_confirmation-close-btn svg{
+            width: 25px;
+            aspect-ratio: 1 / 1;
+        }
+            .popup_confirmation-close-btn svg path{
+                fill: #ababba;
+                transition: all .1s ease-in-out;
+            }
+            .popup_confirmation-close-btn:hover svg path{
+                fill: #fff;
+                transition: all .1s ease-in-out;
+            }
 
 .popup_confirmation.fade-in {
     opacity: 1;

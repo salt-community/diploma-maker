@@ -12,6 +12,7 @@ import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/Save
 import { AddButton } from "../components/MenuItems/Buttons/AddButton";
 import { ConfirmationPopup, ConfirmationPopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
+import { TextInputIcon } from "../components/MenuItems/Icons/TextInputIcon";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -41,6 +42,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     
     const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
     const [fileAdded, setFileAdded] = useState<boolean>(false);
+    const [templateAdded, setTemplateAdded] = useState<boolean>(false);
 
     useEffect(() => {
         if (templates && templates.length > 0) {
@@ -53,7 +55,15 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 basePdf: template.basePdf
             }));
             setTemplateData(templateData);
-            setCurrentTemplate(templateData[0] || null);
+            if(templateAdded){
+                setCurrentTemplate(templateData[templateData.length - 1]);
+                setTemplateAdded(false);
+            }
+            else{
+                setCurrentTemplate(templateData[0] || null);
+            }
+            
+            
         }
     }, [templates]);
     
@@ -66,7 +76,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 currentTemplate.basePdf
             )];
             const template: Template = getTemplate(inputs[0]);
-
+    
             getFontsData().then((font) => {
                 if (designerRef.current) {
                     if (designer.current) {
@@ -80,7 +90,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                     });
                 }
             });
-
+    
             return () => {
                 if (designer.current) {
                     designer.current.destroy();
@@ -93,10 +103,9 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const templateChangeHandler = async (index: number) => {
         if (templateHasChanged) {
             shouldWeSaveHandler(index);
-        }
-        else{
+        } else {
             setFileAdded(false);
-            setCurrentTemplate(templateData[index] || null);   
+            setCurrentTemplate(templateData[index] || null);
         }
     };
 
@@ -165,6 +174,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                   }
                 await addNewTemplate(blankTemplate);
                 customAlert(PopupType.success, "Succesfully added new template!", `Successfully added new template to database.`);
+                setTemplateAdded(true);
             } catch (error) {
                 customAlert(PopupType.fail, "Template add failure!", `${error} when trying to add new template to database.`);
             }
@@ -189,6 +199,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 customAlert(PopupType.fail, "Template Update failure!", `${error} when trying to update template.`);
             }
         }
+    }
+
+    const saveFieldsHandler = async () => {
+        
     }
 
     const shouldWeSaveHandler = async (index: number) => {
@@ -223,6 +237,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         setConfirmationPopupHandler(handler);
         setShowConfirmationPopup(true);
     }
+
+    const getTemplateIndex = (template: CustomTemplate | null) => {
+        return template ? templateData.findIndex(t => t.id === template.id) : 0;
+    };
 
     return (
         <main className="templatecreator-page">
@@ -290,6 +308,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                                         value: index.toString(),
                                         label: template.templateName
                                     }))}
+                                    value={getTemplateIndex(currentTemplate).toString()}
                                     onChange={(event) => templateChangeHandler(Number(event.target.value))}
                                 />
                             </section>
@@ -302,7 +321,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                                 <PdfFileUpload fileResult={(file: File) => pdfFileUploadHandler(file)} fileAdded={fileAdded} setFileAdded={setFileAdded} />
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
-                                <SaveButton saveButtonType={SaveButtonType.normal} onClick={confirmChangeTemplateHandler}/>
+                                <SaveButton textfield="Save Template" saveButtonType={SaveButtonType.normal} onClick={confirmChangeTemplateHandler}/>
                             </section>
                         </>
                     }
@@ -313,9 +332,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Edit Fields</h3>
+                                <SaveButton textfield="Save Inputs" saveButtonType={SaveButtonType.normal} onClick={saveFieldsHandler} customIcon={<TextInputIcon />}/>
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
-                                <SaveButton saveButtonType={SaveButtonType.remove} onClick={confirmRemoveTemplateHandler}/>
+                                <SaveButton textfield="Remove Template" saveButtonType={SaveButtonType.remove} onClick={confirmRemoveTemplateHandler}/>
                             </section>
                         </>
                     }

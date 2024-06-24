@@ -10,12 +10,13 @@ type Props = {
     selectClassOverride?: string;
     options: Option[];
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    value?: string;
 };
 
-export const SelectOptions = ({ options, containerClassOverride, selectClassOverride, onChange }: Props) => {
+export const SelectOptions = ({ options, containerClassOverride, selectClassOverride, onChange, value }: Props) => {
     return (
         <div className={"select-wrapper " + (containerClassOverride || '')}>
-            <select onChange={onChange} className={selectClassOverride}>
+            <select value={value} onChange={onChange} className={selectClassOverride}>
                 {options.map(option => (
                     <option key={option.value} value={option.value}>
                         {option.label}
