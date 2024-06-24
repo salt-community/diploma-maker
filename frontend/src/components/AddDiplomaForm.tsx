@@ -12,16 +12,18 @@ type Props = {
   saltData: SaltData;
   updateSaltData: (data: SaltData) => void;
   setSelectedBootcampIndex: (index: number) => void;
+  selectedBootcampIndex: number;
 };
 
-export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedBootcampIndex,saltData, templates}: Props) 
+export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex}: Props) 
 {
   const { register } = useForm();
   const [names, setNames] = useState<string[]>(saltData.names);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
+  const [bootcampsCache, setBootcampsCache] = useState<BootcampResponse[] | null>();
 
   useEffect(() => {
-    console.log("triggered")
+    setBootcampsCache(bootcamps);
     updateSaltData({
       ...saltData,
       names,
@@ -48,7 +50,12 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
           id="classname"
           {...register("classname")}
           className="mt-2 w-8/12 py-2 px-3 order border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm  dark:bg-darkbg dark:text-white"
-          onChange={(e) => { setSelectedBootcampIndex(e.target.selectedIndex) }}
+          onChange={(e) => { 
+            setSelectedBootcampIndex(e.target.selectedIndex) 
+            const selectedTemplateName = bootcampsCache[selectedBootcampIndex].template.templateName;
+            const selectedTemplateObject = templates!.find(template => template.templateName === selectedTemplateName);
+            setSelectedTemplate(selectedTemplateObject!);
+          }}
           value={saltData.classname}
         >
 
