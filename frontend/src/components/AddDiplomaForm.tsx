@@ -1,4 +1,4 @@
-import { useForm, FieldValues } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import TagsInput from "./TagsInput/TagsInput";
 import { useEffect, useState } from "react";
 import { BootcampResponse, TemplateResponse, SaltData } from "../util/types";
@@ -14,48 +14,28 @@ type Props = {
   setSelectedBootcampIndex: (index: number) => void;
 };
 
-export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates }: Props) {
-  const { register, handleSubmit } = useForm();
+export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedBootcampIndex,saltData, templates}: Props) 
+{
+  const { register } = useForm();
   const [names, setNames] = useState<string[]>(saltData.names);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
 
-
   useEffect(() => {
-    getStateAndUpdate();
-  }, [selectedTemplate, names])
-
-  const getStateAndUpdate = (): void => {
-
-    const newSaltData: SaltData = {
-      classname: saltData.classname,
-      dategraduate: saltData.dategraduate,
-      names: names,
+    console.log("triggered")
+    updateSaltData({
+      ...saltData,
+      names,
       template: selectedTemplate
-    }
-    updateSaltData(newSaltData);
-  }
+    });
+  }, [selectedTemplate, names]);
 
-  const updateSaltDataHandler = (data: FieldValues) => getStateAndUpdate();
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-    }
+  const handleFileUpload = async (file: File) => {
+    const newNames = await ParseFileData(file);
+    setNames(newNames);
   };
-
-  const HandleFileUpload = async (file: File) => {
-    const names2 = await ParseFileData(file);
-    setNames(names2);
-  }
-
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleSubmit(updateSaltDataHandler)();
-      }}
-      onKeyDown={handleKeyDown}
       className="space-y-4 p-6 rounded shadow-md ml-10 mr-10 rounded-2xl  dark: bg-darkbg2"
     >
       {/* Select bootcamp Class */}
@@ -133,21 +113,11 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
       </div>
       <div>
         <label htmlFor="names" className="block text-lg font-medium text-gray-700 dark: text-white mb-2">
-            Upload Student Information 
+          Upload Student Information
         </label>
-          <FileUpload FileHandler={HandleFileUpload} />
+        <FileUpload FileHandler={handleFileUpload} />
       </div>
 
-      {/* Submit Changes */}
-
-{/*       <div>
-        <button
-          type="submit"
-          className="w-full inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Apply
-        </button>
-      </div> */}
     </form>
   );
 }
