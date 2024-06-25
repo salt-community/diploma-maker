@@ -113,22 +113,33 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
         setShowPopup(true);
     };
 
+    const modifyEmailHandler = (inputContent?: DiplomaInBootcamp) => {
+        if(!inputContent?.emailAddress || inputContent?.emailAddress === "No Email"){
+            alert("string is empty!")
+        }
+        if(!inputContent?.emailAddress.includes('@')){
+            alert("Please put in a valid email address")
+        }
+    }
+
     const showStudentInfohandler = (student: DiplomaInBootcamp) => {
         var emailAddress = student.emailAddress;
         if(!student.emailAddress){
             emailAddress = "No Email"
         }
-        setConfirmationPopupContent([student.studentName, emailAddress]);
-        // setConfirmationPopupHandler(handler);
-        setShowConfirmationPopup(true);
+        customPopup(InfoPopupType.form, student.studentName, emailAddress, () => (inputContent?: DiplomaInBootcamp) => modifyEmailHandler({
+            guidId: student.guidId,
+            studentName: student.studentName,
+            emailAddress: inputContent
+        }))
     }
 
-    // const customPopup = (type: ConfirmationPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => {
-    //     setConfirmationPopupType(type);
-    //     setConfirmationPopupContent([title, content]);
-    //     setConfirmationPopupHandler(handler);
-    //     setShowConfirmationPopup(true);
-    // }
+    const customPopup = (type: InfoPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => {
+        setConfirmationPopupType(type);
+        setConfirmationPopupContent([title, content]);
+        setConfirmationPopupHandler(handler);
+        setShowConfirmationPopup(true);
+    }
 
     return (
         <main className="overview-page">
@@ -138,7 +149,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
                 text={confirmationPopupContent[1]}
                 show={showConfirmationPopup}
                 infoPopupType={confirmationPopupType}
-                abortClick={() => {setShowConfirmationPopup(false)}}
+                abortClick={() => {setShowConfirmationPopup(false);}}
                 // @ts-ignore
                 confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
             />

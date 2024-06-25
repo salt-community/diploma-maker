@@ -4,9 +4,7 @@ import { SuccessIcon } from '../Icons/SuccessIcon';
 import { CloseWindowIcon } from '../Icons/CloseWindowIcon';
 
 export enum InfoPopupType {
-  question,
   form,
-  warning
 }
 
 type Props = {
@@ -27,7 +25,11 @@ export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick,
 
   useEffect(() => {
     setInputContent(text);
-  }, [])
+  }, [title, text])
+
+  const abortClickHandler = () => {
+    abortClick();
+  }
 
   const confirmClickHandler = (inputContent?: string) => {
     if(inputContent){
@@ -59,12 +61,12 @@ export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick,
             <div className={'popup_confirmation-content-btn-container ' + (infoPopupType === InfoPopupType.form && 'confirmation')}>
               {infoPopupType === InfoPopupType.form &&
                 <>
-                  <input className="popup_confirmation-input" type="text" value={inputContent} placeholder={text} onChange={handleInputChange}></input>
+                  <input className="popup_confirmation-input" type="text" value={inputContent} onChange={handleInputChange}></input>
                   <button onClick={() => confirmClickHandler(inputContent)} className='popup_confirmation-content-btn'>
                     <SuccessIcon />
-                    Save Changes
+                    Save
                   </button>
-                  <button onClick={abortClick} className='popup_confirmation-close-btn'>
+                  <button onClick={abortClickHandler} className='popup_confirmation-close-btn'>
                     <CloseWindowIcon />
                   </button>
                 </>
