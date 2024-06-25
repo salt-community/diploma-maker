@@ -118,14 +118,17 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
     const modifyStudentEmailHandler = async (studentInput?: DiplomaInBootcamp, originalEmail?: string) => {
         if(!studentInput?.emailAddress || studentInput?.emailAddress === "No Email"){
             customAlert(PopupType.fail, "Validation Error", "Email field is empty!")
+            setShowConfirmationPopup(false);
             return;
         }
         if(!studentInput?.emailAddress.includes('@')){
             customAlert(PopupType.fail, "Validation Error", "Please put in a valid email address")
+            setShowConfirmationPopup(false);
             return;
         }
         if(studentInput?.emailAddress == originalEmail){
-            customAlert(PopupType.success, "No changes", "Email was unchanged so no changes were made")
+            customAlert(PopupType.message, "No changes", "Email was unchanged so no changes were made")
+            setShowConfirmationPopup(false);
             return;
         }
         

@@ -20,6 +20,9 @@
         background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
         z-index: 175;
     }
+    .popup.message{
+        background-image: linear-gradient(to left bottom, #365655, #2a4449, #21323a, #1a2129, #101118);
+    }
 
 .popup-content {
     display: flex;
