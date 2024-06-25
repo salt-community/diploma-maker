@@ -18,9 +18,11 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendEmail(string body)
+        public async Task<IActionResult> SendEmail(string[] emails, IFormFile file)
         {
-           await _emailService.SendEmailWithAttachmentAsync("Zzer0ph@gmail.com", "Salt Diploma", body);
+           
+           await _emailService.SendEmailWithAttachmentAsync("Zzer0ph@gmail.com", "Salt Diploma", file);
+           
            return Ok("An email has been successfully sent to your email");
         }
     }

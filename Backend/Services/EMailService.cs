@@ -2,6 +2,7 @@ using MimeKit;
 using MimeKit.Text;
 using MailKit.Net.Smtp;
 
+
 namespace Backend.Services
 {
     public class EmailService
@@ -17,13 +18,33 @@ namespace Backend.Services
             _logger = logger;
         }
 
-        public async Task SendEmailWithAttachmentAsync(string receiverEmail, string subject, string HtmlBody)
+        public async Task SendEmailWithAttachmentAsync(string receiverEmail, string subject, IFormFile file)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("DiplomaMakers", _email));
             message.To.Add(new MailboxAddress("Student", receiverEmail));
             message.Subject = subject;
-            message.Body = new TextPart(TextFormat.Html) { Text = HtmlBody };
+
+             
+            var multipart = new Multipart("mixed");
+
+      
+            var body = new TextPart("plain")
+            {
+                Text = "Well done completing the bootcamp here is your diploma"
+            };
+            multipart.Add(body);
+
+            var attachment = new MimePart(file.ContentType)
+            {
+                Content = new MimeContent(file.OpenReadStream(), ContentEncoding.Default),
+                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                ContentTransferEncoding = ContentEncoding.Base64,
+                FileName = file.FileName
+            };
+            multipart.Add(attachment);
+
+            message.Body = multipart;
 
             using (var client = new SmtpClient())
             {
