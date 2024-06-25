@@ -6,7 +6,7 @@ import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, DiplomaInBootcamp } from '../util/types';
+import { BootcampResponse, DiplomaInBootcamp, DiplomaRequest, DiplomaUpdateRequestDto } from '../util/types';
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
@@ -90,6 +90,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
         deleteDiploma(id);
         setLoading(false);
         
+        setPopupType(PopupType.fail);
         setPopupContent(["Successfully deleted", "Diploma has been successfully deleted from the database."]);
         setShowPopup(true);
     };
@@ -113,25 +114,50 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
         setShowPopup(true);
     };
 
-    const modifyEmailHandler = (inputContent?: DiplomaInBootcamp) => {
-        if(!inputContent?.emailAddress || inputContent?.emailAddress === "No Email"){
+    const modifyStudentEmailHandler = (studentInput?: DiplomaInBootcamp, originalEmail?: string) => {
+        if(!studentInput?.emailAddress || studentInput?.emailAddress === "No Email"){
             alert("string is empty!")
+            return;
         }
-        if(!inputContent?.emailAddress.includes('@')){
+        if(!studentInput?.emailAddress.includes('@')){
             alert("Please put in a valid email address")
+            return;
         }
+        if(studentInput?.emailAddress == originalEmail){
+            alert("email unchanged")
+            return;
+        }
+        
+        try {
+            const emailUpdateRequest: DiplomaUpdateRequestDto = {
+                guidId: studentInput.guidId,
+                studentName: studentInput.studentName,
+                emailAddress: studentInput.emailAddress
+            }
+            setPopupContent(["Email Successfully Updated", `Email Successfully Updated for ${studentInput.studentName}`]);
+            setPopupType(PopupType.success);
+            setShowPopup(true);
+        } catch (error) {
+            setPopupType(PopupType.fail);
+            setPopupContent(["Something Went Wroing", `${error}`]);
+            setShowPopup(true);
+        }
+       
+        setShowConfirmationPopup(false);
     }
 
     const showStudentInfohandler = (student: DiplomaInBootcamp) => {
-        var emailAddress = student.emailAddress;
-        if(!student.emailAddress){
-            emailAddress = "No Email"
+        if(student){
+            var emailAddress = student.emailAddress;
+            if(!student.emailAddress){
+                emailAddress = "No Email"
+            }
+            customPopup(InfoPopupType.form, student.studentName, emailAddress, () => (inputContent?: DiplomaInBootcamp) => modifyStudentEmailHandler({
+                guidId: student.guidId,
+                studentName: student.studentName,
+                emailAddress: inputContent
+            }, emailAddress))
         }
-        customPopup(InfoPopupType.form, student.studentName, emailAddress, () => (inputContent?: DiplomaInBootcamp) => modifyEmailHandler({
-            guidId: student.guidId,
-            studentName: student.studentName,
-            emailAddress: inputContent
-        }))
     }
 
     const customPopup = (type: InfoPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => {

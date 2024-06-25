@@ -7,6 +7,12 @@ export type DiplomaRequest = {
     bootcampGuidId: string;
 }
 
+export type DiplomaUpdateRequestDto = {
+    guidId: string;
+    studentName: string;
+    emailAddress: string;
+}
+
 export type DiplomaResponse = {
     guidId: string;
     studentName: string;
