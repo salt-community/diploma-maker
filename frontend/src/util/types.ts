@@ -16,6 +16,7 @@ export type DiplomaResponse = {
 export type DiplomaInBootcamp = {
     guidId: string;
     studentName: string;
+    emailAddress: string;
 }
 
 // bootcamps

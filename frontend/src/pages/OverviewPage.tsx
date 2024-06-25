@@ -108,7 +108,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     };
 
     const showStudentInfohandler = (student: DiplomaInBootcamp) => {
-        
+        alert(student.emailAddress)
     }
 
     return (
