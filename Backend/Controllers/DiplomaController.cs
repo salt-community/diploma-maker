@@ -26,7 +26,7 @@ public class DiplomaController : ControllerBase
         {
             var diploma = await _service.PostDiploma(requestDto);
             var responseDto = _mapper.Map<DiplomaResponseDto>(diploma);
-            return CreatedAtAction(nameof(GetDiplomaByKeyword), new { id = diploma.Id }, diploma);
+            return CreatedAtAction(nameof(GetDiplomaByKeyword), new { id = diploma.GuidId }, diploma);
         }
         catch(BootcampNotFoundException)
         {
@@ -43,7 +43,8 @@ public class DiplomaController : ControllerBase
     {
         try
         {
-            var updatedDiploma = await _service.UpdateDiploma(updateDto);
+            var diplomaRequest = _mapper.Map<Diploma>(updateDto);
+            var updatedDiploma = await _service.UpdateDiploma(diplomaRequest);
             if (updatedDiploma == null)
             {
                 return NotFound("Diploma not found");
