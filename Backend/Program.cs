@@ -19,6 +19,8 @@ builder.Services.AddAutoMapper(typeof(AutomapperConfig));
 builder.Services.AddScoped<BootcampService>();
 builder.Services.AddScoped<DiplomaService>();
 builder.Services.AddScoped<TemplateService>();
+builder.Services.AddSingleton<EmailService>();
+builder.Services.AddLogging();
 
 var app = builder.Build();
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
