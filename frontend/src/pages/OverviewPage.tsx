@@ -16,6 +16,7 @@ import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup
 import { getTemplateBackup, makeTemplateInputBackup } from '../templates/baseTemplateBACKUP';
 import { SaveButton } from '../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../components/MenuItems/Buttons/SelectButton';
+import { InfoPopupShort, InfoPopupType } from '../components/MenuItems/Popups/InfoPopupShort';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -33,6 +34,11 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     const [popupContent, setPopupContent] = useState<string[]>(["",""]);
     // @ts-ignore
     const [popupType, setPopupType] = useState<PopupType>(PopupType.fail);
+
+    const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false);
+    const [confirmationPopupContent, setConfirmationPopupContent] = useState<string[]>(["",""]);
+    const [confirmationPopupType, setConfirmationPopupType] = useState<InfoPopupType>(InfoPopupType.form);
+    const [confirmationPopupHandler, setConfirmationPopupHandler] = useState<() => void>(() => {});
 
     useEffect(() => {
         if (bootcamps) {
@@ -108,12 +114,34 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     };
 
     const showStudentInfohandler = (student: DiplomaInBootcamp) => {
-        alert(student.emailAddress)
+        var emailAddress = student.emailAddress;
+        if(!student.emailAddress){
+            emailAddress = "No Email"
+        }
+        setConfirmationPopupContent([student.studentName, emailAddress]);
+        // setConfirmationPopupHandler(handler);
+        setShowConfirmationPopup(true);
     }
+
+    // const customPopup = (type: ConfirmationPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => {
+    //     setConfirmationPopupType(type);
+    //     setConfirmationPopupContent([title, content]);
+    //     setConfirmationPopupHandler(handler);
+    //     setShowConfirmationPopup(true);
+    // }
 
     return (
         <main className="overview-page">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
+            <InfoPopupShort 
+                title={confirmationPopupContent[0]}
+                text={confirmationPopupContent[1]}
+                show={showConfirmationPopup}
+                infoPopupType={confirmationPopupType}
+                abortClick={() => {setShowConfirmationPopup(false)}}
+                // @ts-ignore
+                confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
+            />
             <section className='overview-page__listmodule'>
             <div className='overview-page__listmodule-cardcontainer'>
                     {loading ? (
