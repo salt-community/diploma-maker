@@ -18,6 +18,7 @@ import { SaveButton } from '../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../components/MenuItems/Buttons/SelectButton';
 import { InfoPopupShort, InfoPopupType } from '../components/MenuItems/Popups/InfoPopupShort';
 import { updateSingleDiploma } from '../services/diplomaService';
+import { EmailClient } from '../components/EmailClient';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -187,6 +188,12 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                 // @ts-ignore
                 confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
             />
+            {selectedItems.length > 0 && 
+                <EmailClient 
+                    title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'} 
+                    clients={selectedItems}
+                    closeEmailClient={() => {}}
+                />}
             <section className='overview-page__listmodule'>
             <div className='overview-page__listmodule-cardcontainer'>
                     {loading ? (
