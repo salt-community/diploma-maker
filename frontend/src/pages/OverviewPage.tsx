@@ -144,8 +144,8 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                 studentName: studentInput.studentName,
                 emailAddress: studentInput.emailAddress
             }
-            const emailUpdateResponse = await updateDiploma(emailUpdateRequest);
             setShowConfirmationPopup(false);
+            const emailUpdateResponse = await updateDiploma(emailUpdateRequest);
             customAlert(PopupType.success, "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateResponse.studentName}`)
 
         } catch (error) {

@@ -17,10 +17,6 @@ type Props = {
 export const EmailClient = ({ clients, title, show, closeEmailClient }: Props) => {
     const [inputContent, setInputContent] = useState<string>('');
 
-    // useEffect(() => {
-    //     setInputContent(text);
-    //   }, [title, text])
-
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputContent(event.target.value);
     };
@@ -33,24 +29,23 @@ export const EmailClient = ({ clients, title, show, closeEmailClient }: Props) =
                     <h2>Students</h2>
                 </header>
                 <ul className="emailclient__list">
-                {clients.map((student: DiplomaInBootcamp, index) => (
-                    <li className="emailclient__list--item">
-                        <h3>{student.studentName}</h3>
-                        {/* <p>{student.emailAddress}</p> */}
-                        <div className="emailclient__list--input-wrapper">
-                            <input className="emailclient__list--input" type="text" value={student.emailAddress ? student.emailAddress : 'No Email'} onChange={handleInputChange} />
-                            <CogWheelIcon />
-                        </div>
-                        <div className="checkbox-wrapper-31">
-                            <input type="checkbox"/>
-                            <svg viewBox="0 0 35.6 35.6">
-                                <circle className="background" cx="17.8" cy="17.8" r="17.8"></circle>
-                                <circle className="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
-                                <polyline className="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
-                            </svg>
-                        </div>
-                    </li>            ))
-                }
+                    {clients.map((student: DiplomaInBootcamp, index) => (
+                        <li className="emailclient__list--item">
+                            <h3>{student.studentName}</h3>
+                            <div className="emailclient__list--input-wrapper">
+                                <input className="emailclient__list--input" type="text" value={student.emailAddress ? student.emailAddress : 'No Email'} onChange={handleInputChange} />
+                                <CogWheelIcon />
+                            </div>
+                            <div className="checkbox-wrapper-31">
+                                <input type="checkbox"/>
+                                <svg viewBox="0 0 35.6 35.6">
+                                    <circle className="background" cx="17.8" cy="17.8" r="17.8"></circle>
+                                    <circle className="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+                                    <polyline className="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+                                </svg>
+                            </div>
+                        </li>
+                    ))}
                 </ul>
                 <button onClick={closeEmailClient} className='emailclient-close-btn'>
                     <CloseWindowIcon />
