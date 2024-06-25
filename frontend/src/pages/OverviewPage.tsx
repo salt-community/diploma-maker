@@ -14,11 +14,13 @@ import { generateCombinedPDF } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
 import { getTemplateBackup, makeTemplateInputBackup } from '../templates/baseTemplateBACKUP';
-import { SaveButton } from '../components/MenuItems/Buttons/SaveButton';
+import { SaveButton, SaveButtonType } from '../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../components/MenuItems/Buttons/SelectButton';
 import { InfoPopupShort, InfoPopupType } from '../components/MenuItems/Popups/InfoPopupShort';
 import { updateSingleDiploma } from '../services/diplomaService';
 import { EmailClient } from '../components/EmailClient';
+import { TextInputIcon } from '../components/MenuItems/Icons/TextInputIcon';
+import { EmailIcon } from '../components/MenuItems/Icons/EmailIcon';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -42,6 +44,8 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
     const [confirmationPopupContent, setConfirmationPopupContent] = useState<string[]>(["",""]);
     const [confirmationPopupType, setConfirmationPopupType] = useState<InfoPopupType>(InfoPopupType.form);
     const [confirmationPopupHandler, setConfirmationPopupHandler] = useState<() => void>(() => {});
+
+    const [showEmailClient, setShowEmailClient] = useState<boolean>(true);
 
     useEffect(() => {
         if (bootcamps) {
@@ -192,7 +196,8 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                 <EmailClient 
                     title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'} 
                     clients={selectedItems}
-                    closeEmailClient={() => {}}
+                    closeEmailClient={() => {setShowEmailClient(false)}}
+                    show={showEmailClient}
                 />}
             <section className='overview-page__listmodule'>
             <div className='overview-page__listmodule-cardcontainer'>
@@ -260,6 +265,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                     <section className="overview-page__sidebar-menu-section">
                         <h3>Generate</h3>
                         <PublishButton text='Generate PDFs' onClick={generatePDFsHandler} />
+                    </section>
+                    <section className="overview-page__sidebar-menu-section">
+                        <SaveButton textfield="Email Management" saveButtonType={SaveButtonType.normal} onClick={() => setShowEmailClient(true)} customIcon={<EmailIcon />}/>
                     </section>
                 </div>
             </section>

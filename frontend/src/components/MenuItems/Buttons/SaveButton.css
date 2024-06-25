@@ -56,6 +56,14 @@
         stroke: #000000;
         transition: all .15s ease-in-out;
     }
+    .save-btn.normal svg .fill{
+        fill: #ababba;
+        transition: all .15s ease-in-out;
+    }
+    .save-btn.normal:hover svg .fill{
+        fill: #000000;
+        transition: all .15s ease-in-out;
+    }
     .save-btn.normal:hover svg{
         transform: scale(1.02);
         transition: all .15s ease-in-out;

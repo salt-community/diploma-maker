@@ -4,7 +4,7 @@ import { GtaSaveIcon } from '../Icons/GtaSaveIcon';
 import './SaveButton.css';
 
 type Props = {
-  classNameOverride: string;
+  classNameOverride?: string;
   onClick: () => void;
   saveButtonType: SaveButtonType;
   textfield: string;
