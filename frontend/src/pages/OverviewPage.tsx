@@ -95,9 +95,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
         deleteDiploma(id);
         setLoading(false);
         
-        setPopupType(PopupType.fail);
-        setPopupContent(["Successfully deleted", "Diploma has been successfully deleted from the database."]);
-        setShowPopup(true);
+        customAlert(PopupType.fail, "Successfully deleted", "Diploma has been successfully deleted from the database.")
     };
 
     const generatePDFsHandler = async () => {
@@ -114,22 +112,20 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
         const templates = inputsArray.map(input => getTemplate(input));
 
         await generateCombinedPDF(templates, inputsArray);
-        setPopupContent(["PDFs Generated", "The combined PDF has been successfully generated."]);
-        setPopupType(PopupType.success);
-        setShowPopup(true);
+        customAlert(PopupType.success, "PDFs Generated", "The combined PDF has been successfully generated.")
     };
 
     const modifyStudentEmailHandler = async (studentInput?: DiplomaInBootcamp, originalEmail?: string) => {
         if(!studentInput?.emailAddress || studentInput?.emailAddress === "No Email"){
-            alert("string is empty!")
+            customAlert(PopupType.fail, "Validation Error", "Email field is empty!")
             return;
         }
         if(!studentInput?.emailAddress.includes('@')){
-            alert("Please put in a valid email address")
+            customAlert(PopupType.fail, "Validation Error", "Please put in a valid email address")
             return;
         }
         if(studentInput?.emailAddress == originalEmail){
-            alert("email unchanged")
+            customAlert(PopupType.success, "No changes", "Email was unchanged so no changes were made")
             return;
         }
         
@@ -140,20 +136,12 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                 emailAddress: studentInput.emailAddress
             }
             setShowConfirmationPopup(false);
-
             const emailUpdateResponse = await updateDiploma(emailUpdateRequest);
-            
-            setPopupContent(["Email Successfully Updated", `Email Successfully Updated for ${emailUpdateResponse.studentName}`]);
-            setPopupType(PopupType.success);
-            setShowPopup(true);
+            customAlert(PopupType.success, "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateResponse.studentName}`)
 
         } catch (error) {
-            setPopupType(PopupType.fail);
-            setPopupContent(["Something Went Wroing", `${error}`]);
-            setShowPopup(true);
+            customAlert(PopupType.fail, "Something Went Wroing", `${error}`)
         }
-       
-        
     }
 
     const showStudentInfohandler = (student: DiplomaInBootcamp) => {
@@ -175,6 +163,12 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
         setConfirmationPopupContent([title, content]);
         setConfirmationPopupHandler(handler);
         setShowConfirmationPopup(true);
+    }
+
+    const customAlert = (alertType: PopupType, title: string, content: string) => {
+        setPopupType(alertType);
+        setPopupContent([title, content]);
+        setShowPopup(true);
     }
 
     return (
