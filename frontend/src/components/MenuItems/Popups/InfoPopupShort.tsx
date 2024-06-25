@@ -27,16 +27,12 @@ export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick,
     setInputContent(text);
   }, [title, text])
 
-  const abortClickHandler = () => {
-    abortClick();
-  }
-
   const confirmClickHandler = (inputContent?: string) => {
     if(inputContent){
       confirmClick(inputContent);
-      setTimeout(() => {
-        setInputContent('');
-      }, 1500);
+      // setTimeout(() => {
+      //   setInputContent('');
+      // }, 1500);
     }
     else{
       confirmClick();
@@ -66,7 +62,7 @@ export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick,
                     <SuccessIcon />
                     Save
                   </button>
-                  <button onClick={abortClickHandler} className='popup_confirmation-close-btn'>
+                  <button onClick={abortClick} className='popup_confirmation-close-btn'>
                     <CloseWindowIcon />
                   </button>
                 </>

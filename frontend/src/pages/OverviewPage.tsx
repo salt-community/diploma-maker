@@ -133,13 +133,14 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
         }
         
         try {
+            
             const emailUpdateRequest: DiplomaUpdateRequestDto = {
                 guidId: studentInput.guidId,
                 studentName: studentInput.studentName,
                 emailAddress: studentInput.emailAddress
             }
-            setShowConfirmationPopup(false);
             const emailUpdateResponse = await updateDiploma(emailUpdateRequest);
+            setShowConfirmationPopup(false);
             customAlert(PopupType.success, "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateResponse.studentName}`)
 
         } catch (error) {
