@@ -63,6 +63,10 @@ namespace Backend.Migrations
                     b.Property<int>("BootcampId")
                         .HasColumnType("int");
 
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("GuidId")
                         .HasColumnType("uniqueidentifier");
 

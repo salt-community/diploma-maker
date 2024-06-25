@@ -46,16 +46,19 @@ public static class SeedData
             var diploma1 = new Diploma 
             { 
                 StudentName = "Xinnan Luo", 
+                EmailAddress = "william.f.lindberg@hotmail.com",
                 Bootcamp = dotnetBootcamp1 
             };
             var diploma2 = new Diploma 
             { 
                 StudentName = "Zerophymyr Falk", 
+                EmailAddress = "Zzer0ph@gmail.com",
                 Bootcamp = dotnetBootcamp1 
             };
             var diploma3 = new Diploma 
             { 
                 StudentName = "William F Lindberg", 
+                EmailAddress = "lindberg.f.william@gmail.com",
                 Bootcamp = dotnetBootcamp1 
             };
             var diploma4 = new Diploma 
