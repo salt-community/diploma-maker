@@ -6,7 +6,7 @@ import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, DiplomaInBootcamp, DiplomaRequest, DiplomaUpdateRequestDto } from '../util/types';
+import { BootcampResponse, DiplomaInBootcamp, DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto } from '../util/types';
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
@@ -17,13 +17,15 @@ import { getTemplateBackup, makeTemplateInputBackup } from '../templates/baseTem
 import { SaveButton } from '../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../components/MenuItems/Buttons/SelectButton';
 import { InfoPopupShort, InfoPopupType } from '../components/MenuItems/Popups/InfoPopupShort';
+import { updateSingleDiploma } from '../services/diplomaService';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
     deleteDiploma: (id: string) => Promise<void>;
+    updateDiploma: (diplomaRequest: DiplomaUpdateRequestDto) => Promise<DiplomaResponse>;
 }
 
-export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
+export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -43,6 +45,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     useEffect(() => {
         if (bootcamps) {
             setLoading(false);
+        }
+        else{
+            setLoading(true);
         }
     }, [bootcamps]);
 
@@ -114,7 +119,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
         setShowPopup(true);
     };
 
-    const modifyStudentEmailHandler = (studentInput?: DiplomaInBootcamp, originalEmail?: string) => {
+    const modifyStudentEmailHandler = async (studentInput?: DiplomaInBootcamp, originalEmail?: string) => {
         if(!studentInput?.emailAddress || studentInput?.emailAddress === "No Email"){
             alert("string is empty!")
             return;
@@ -134,16 +139,21 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
                 studentName: studentInput.studentName,
                 emailAddress: studentInput.emailAddress
             }
-            setPopupContent(["Email Successfully Updated", `Email Successfully Updated for ${studentInput.studentName}`]);
+            setShowConfirmationPopup(false);
+
+            const emailUpdateResponse = await updateDiploma(emailUpdateRequest);
+            
+            setPopupContent(["Email Successfully Updated", `Email Successfully Updated for ${emailUpdateResponse.studentName}`]);
             setPopupType(PopupType.success);
             setShowPopup(true);
+
         } catch (error) {
             setPopupType(PopupType.fail);
             setPopupContent(["Something Went Wroing", `${error}`]);
             setShowPopup(true);
         }
        
-        setShowConfirmationPopup(false);
+        
     }
 
     const showStudentInfohandler = (student: DiplomaInBootcamp) => {
