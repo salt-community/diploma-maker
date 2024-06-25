@@ -38,6 +38,25 @@ public class DiplomaController : ControllerBase
         }
     }
 
+    [HttpPut("single")]
+    public async Task<ActionResult<DiplomaResponseDto>> PutDiploma(DiplomaPutRequestDto updateDto)
+    {
+        try
+        {
+            var updatedDiploma = await _service.UpdateDiploma(updateDto);
+            if (updatedDiploma == null)
+            {
+                return NotFound("Diploma not found");
+            }
+            var responseDto = _mapper.Map<DiplomaResponseDto>(updatedDiploma);
+            return Ok(responseDto);
+        }
+        catch (BootcampNotFoundException)
+        {
+            return NotFound("Bootcamp not found");
+        }
+    }
+
     [HttpPost("many")]
     public async Task<ActionResult<List<DiplomaResponseDto>>> PostDiplomas(DiplomasRequestDto requestDto)
     {
