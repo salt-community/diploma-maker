@@ -107,6 +107,10 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
         setShowPopup(true);
     };
 
+    const showStudentInfohandler = (student: DiplomaInBootcamp) => {
+        
+    }
+
     return (
         <main className="overview-page">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
@@ -116,14 +120,14 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
                         <SpinnerDefault classOverride="spinner"/>
                     ) : (
                         // @ts-ignore
-                        selectedItems.length > 0 ? selectedItems.map((item, index) => (
-                            <button key={item.guidId} className='listmodule__item'>
-                                <p className='overview-page__item--title'>{item.studentName}</p>
+                        selectedItems.length > 0 ? selectedItems.map((student: DiplomaInBootcamp, index) => (
+                            <button key={student.guidId} className='listmodule__item'>
+                                <p className='overview-page__item--title'>{student.studentName}</p>
                                 <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
                                 <section className='overview-page__item--menu'>
-                                    <ModifyButton text='Modify' onClick={() => modifyHandler(item.guidId)} />
-                                    <RemoveButton text='Remove' onClick={() => deleteHandler(item.guidId)} />
-                                    <SelectButton classOverride="email-btn" selectButtonType={SelectButtonType.email}/>
+                                    <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
+                                    <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
+                                    <SelectButton classOverride="email-btn" selectButtonType={SelectButtonType.email} onClick={() => showStudentInfohandler(student)}/>
                                 </section>
                             </button>
                         )) : 
