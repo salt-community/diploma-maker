@@ -10,7 +10,7 @@
     font-weight: 600;
     font-size: .8rem;
     margin: .5rem 0;
-    padding: .4rem .5rem;
+    padding: .4rem .7rem;
     border-radius: .5rem;
     transition: all .25s ease-in-out;
 }
@@ -23,7 +23,7 @@
         transition: all .15s ease-in-out;
     }
     .select-btn.email svg{
-        width: 20px;
+        width: 15px;
         transition: all .15s ease-in-out;
     }
     .select-btn.email svg path{
