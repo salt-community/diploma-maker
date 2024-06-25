@@ -1,0 +1,43 @@
+.select-btn.email{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+
+    background-color: #20202a;
+    color: #fff;
+    color: #dbdbe5;
+    font-weight: 600;
+    font-size: .8rem;
+    margin: .5rem 0;
+    padding: .4rem .5rem;
+    border-radius: .5rem;
+    transition: all .25s ease-in-out;
+}
+    .select-btn.email:hover{
+        filter: saturate(125%);
+        background-color: #2b80f6;
+        color: #000;
+        cursor: pointer;
+
+        transition: all .15s ease-in-out;
+    }
+    .select-btn.email svg{
+        width: 20px;
+        transition: all .15s ease-in-out;
+    }
+    .select-btn.email svg path{
+        fill: #ababba;
+        transition: all .15s ease-in-out;
+    }
+    .select-btn.email:hover svg path{
+        fill: #fff;
+        transition: all .15s ease-in-out;
+    }
+    .select-btn.email:hover svg{
+        transform: scale(1.02);
+        transition: all .15s ease-in-out;
+    }
+    .select-btn_title{
+        cursor: pointer;
+    }

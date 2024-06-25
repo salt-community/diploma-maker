@@ -14,6 +14,8 @@ import { generateCombinedPDF } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
 import { getTemplateBackup, makeTemplateInputBackup } from '../templates/baseTemplateBACKUP';
+import { SaveButton } from '../components/MenuItems/Buttons/SaveButton';
+import { SelectButton, SelectButtonType } from '../components/MenuItems/Buttons/SelectButton';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -121,6 +123,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
                                 <section className='overview-page__item--menu'>
                                     <ModifyButton text='Modify' onClick={() => modifyHandler(item.guidId)} />
                                     <RemoveButton text='Remove' onClick={() => deleteHandler(item.guidId)} />
+                                    <SelectButton classOverride="email-btn" selectButtonType={SelectButtonType.email}/>
                                 </section>
                             </button>
                         )) : 
