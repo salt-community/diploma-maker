@@ -10,11 +10,13 @@ type Props = {
     title: string | undefined,
     show: boolean,
     closeEmailClient: () => void,
-    modifyStudentEmailHandler: (studentInput?: DiplomaInBootcamp, originalEmail?: string) => void;
+    modifyStudentEmailHandler: (studentInput?: DiplomaInBootcamp, originalEmail?: string) => void,
+    sendEmails: (userIds: string[]) => void,
 };
 
-export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStudentEmailHandler }: Props) => {
+export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStudentEmailHandler, sendEmails }: Props) => {
     const [emailChanges, setEmailChanges] = useState<{[key: string]: string}>({});
+    const [checkedUsers, setCheckedUsers] = useState<{[key: string]: boolean}>({});
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, student: DiplomaInBootcamp) => {
         setEmailChanges({
@@ -32,6 +34,18 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
             }, student.emailAddress);
         }
     };
+
+    const checkboxChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, studentId: string) => {
+        setCheckedUsers({
+            ...checkedUsers,
+            [studentId]: event.target.checked,
+        });
+    };
+
+    const sendEmailsHandler = () => {
+        const selectedIds = Object.keys(checkedUsers).filter(id => checkedUsers[id]);
+        sendEmails(selectedIds);
+    }
 
     return (
         <>
@@ -55,7 +69,11 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                 <CogWheelIcon />
                             </div>
                             <div className="checkbox-wrapper-31">
-                                <input type="checkbox"/>
+                                <input 
+                                    type="checkbox" 
+                                    checked={!!checkedUsers[student.guidId]} 
+                                    onChange={(event) => checkboxChangeHandler(event, student.guidId)} 
+                                />
                                 <svg viewBox="0 0 35.6 35.6">
                                     <circle className="background" cx="17.8" cy="17.8" r="17.8"></circle>
                                     <circle className="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
@@ -68,9 +86,9 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 <button onClick={closeEmailClient} className='emailclient-close-btn'>
                     <CloseWindowIcon />
                 </button>
-                <SaveButton classNameOverride="send-emails-btn" saveButtonType={SaveButtonType.normal} textfield="Send Emails to Selected Clients" onClick={() => {}}/>
+                <SaveButton classNameOverride="send-emails-btn" saveButtonType={SaveButtonType.normal} textfield="Send Emails to Selected Clients" onClick={sendEmailsHandler}/>
             </section>
             <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
         </>
-    )
-}
+    );
+};

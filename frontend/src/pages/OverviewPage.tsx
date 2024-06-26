@@ -199,6 +199,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                     closeEmailClient={() => {setShowEmailClient(false)}}
                     show={showEmailClient}
                     modifyStudentEmailHandler={modifyStudentEmailHandler} 
+                    sendEmails={(userIds: string[]) => {console.log(userIds)}}
                 />
             }
             <section className='overview-page__listmodule'>
