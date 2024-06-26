@@ -21,7 +21,7 @@ type Props = {
 
 export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick, abortClick, currentProgress }: Props) => {
   const [inputContent, setInputContent] = useState<string>('');
-  const [finished, setFinished] = useState<boolean>(true);
+  const [finished, setFinished] = useState<boolean>(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputContent(event.target.value);

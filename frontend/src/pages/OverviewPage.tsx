@@ -6,7 +6,7 @@ import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, DiplomaInBootcamp, DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto } from '../util/types';
+import { BootcampResponse, DiplomaInBootcamp, DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto, EmailSendRequest } from '../util/types';
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
@@ -26,9 +26,10 @@ type Props = {
     bootcamps: BootcampResponse[] | null,
     deleteDiploma: (id: string) => Promise<void>;
     updateDiploma: (diplomaRequest: DiplomaUpdateRequestDto) => Promise<DiplomaResponse>;
+    sendEmail: (guidId: string, emailRequest: EmailSendRequest) => Promise<void>;
 }
 
-export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props) => {
+export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmail }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -175,8 +176,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
         const blendProgressDelay = 500;
 
         for (let i = 0; i < userIds.length; i++) {
-            await generatePDFFile(userIds[i]);
-
+            var file = await generatePDFFile(userIds[i]);
+            sendEmail(userIds[i], file)
+           
             const progressBarValue = ((i + 1) / userIds.length) * 100;
             await blendProgress((i / userIds.length) * 100, progressBarValue, blendProgressDelay);
         }
