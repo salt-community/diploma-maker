@@ -45,6 +45,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
     const [confirmationPopupType, setConfirmationPopupType] = useState<InfoPopupType>(InfoPopupType.form);
     const [confirmationPopupHandler, setConfirmationPopupHandler] = useState<() => void>(() => {});
 
+    const [sendEmailProgress, setSendEmailProgress] = useState(0);
+
+
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
 
     useEffect(() => {
@@ -168,12 +171,13 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
     }
 
     const sendEmailsHandler = async (userIds: string[]) => {
-        
+        const blendProgressDelay = 500;
 
-        for (const userId of userIds) {
-            var pdfFile = await generatePDFFile(userId);
-            console.log(pdfFile);
-            await delay(2000);
+        for (let i = 0; i < userIds.length; i++) {
+            await generatePDFFile(userIds[i]);
+
+            const progressBarValue = ((i + 1) / userIds.length) * 100;
+            await blendProgress((i / userIds.length) * 100, progressBarValue, blendProgressDelay);
         }
     }
 
@@ -219,6 +223,15 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
         setShowPopup(true);
     }
 
+    const blendProgress = async (start: number, end: number, blendDelay: number) => {
+        const steps = Math.abs(end - start);
+        const stepDelay = blendDelay / steps;
+        for (let i = 1; i <= steps; i++) {
+            await delay(stepDelay);
+            setSendEmailProgress(Math.round(start + i * Math.sign(end - start)));
+        }
+    }
+
     return (
         <main className="overview-page">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
@@ -232,6 +245,8 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                 confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
             />
             {selectedItems.length > 0 && 
+                 <>
+                <h1 style={{color: '#fff'}}>{sendEmailProgress}</h1>
                 <EmailClient 
                     title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'} 
                     clients={selectedItems}
@@ -240,6 +255,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                     modifyStudentEmailHandler={modifyStudentEmailHandler} 
                     sendEmails={(userIds: string[]) => {sendEmailsHandler(userIds)}}
                 />
+                </>
             }
             <section className='overview-page__listmodule'>
             <div className='overview-page__listmodule-cardcontainer'>
