@@ -1,6 +1,7 @@
 using MimeKit;
 using MimeKit.Text;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace Backend.Services
@@ -10,28 +11,32 @@ namespace Backend.Services
         private readonly string _email;
         private readonly string _appPassword;
         private readonly ILogger<EmailService> _logger;
+        private readonly DiplomaMakingContext _context;
 
-        public EmailService(IConfiguration configuration, ILogger<EmailService> logger)
+        public EmailService(IConfiguration configuration, ILogger<EmailService> logger, DiplomaMakingContext context)
         {
             _email = configuration["EmailSettings:Email"];
             _appPassword = configuration["EmailSettings:AppPassword"]; 
             _logger = logger;
+            _context = context;
+            
         }
-
-        public async Task SendEmailWithAttachmentAsync(string receiverEmail, string subject, IFormFile file)
+        public async Task SendEmailWithAttachmentAsync([FromForm] string receiverEmail, IFormFile file)
         {
+            //check if valid email
+
+            // check if valid file
+
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("DiplomaMakers", _email));
-            message.To.Add(new MailboxAddress("Student", receiverEmail));
-            message.Subject = subject;
+            message.To.Add(new MailboxAddress("Salt Graduate", receiverEmail));
+            message.Subject = "Salt Diploma";
 
-             
             var multipart = new Multipart("mixed");
-
       
-            var body = new TextPart("plain")
+            var body = new TextPart("html")
             {
-                Text = "Well done completing the bootcamp here is your diploma"
+                Text = $"<html><body><h1>Congratulations!🎉</h1><p>Well done on completing the bootcamp.</p></body></html>"
             };
             multipart.Add(body);
 
@@ -61,5 +66,6 @@ namespace Backend.Services
                 }
             }
         }
+        
     }
 }
