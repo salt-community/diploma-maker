@@ -1,39 +1,57 @@
-import { useEffect, useState } from "react"
-import { DiplomaInBootcamp } from "../util/types"
-import './EmailClient.css'
-import { CloseWindowIcon } from "./MenuItems/Icons/CloseWindowIcon"
-import { CogWheelIcon } from "./MenuItems/Icons/CogWheelIcon"
-import { AddButton } from "./MenuItems/Buttons/AddButton"
-import { PublishButton } from "./MenuItems/Buttons/PublishButton"
-import { SaveButton, SaveButtonType } from "./MenuItems/Buttons/SaveButton"
+import React, { useState } from "react";
+import { DiplomaInBootcamp } from "../util/types";
+import './EmailClient.css';
+import { CloseWindowIcon } from "./MenuItems/Icons/CloseWindowIcon";
+import { CogWheelIcon } from "./MenuItems/Icons/CogWheelIcon";
+import { SaveButton, SaveButtonType } from "./MenuItems/Buttons/SaveButton";
 
 type Props = {
-    clients:  DiplomaInBootcamp[],
+    clients: DiplomaInBootcamp[],
     title: string | undefined,
     show: boolean,
     closeEmailClient: () => void,
-}
+    modifyStudentEmailHandler: (studentInput?: DiplomaInBootcamp, originalEmail?: string) => void;
+};
 
-export const EmailClient = ({ clients, title, show, closeEmailClient }: Props) => {
-    const [inputContent, setInputContent] = useState<string>('');
+export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStudentEmailHandler }: Props) => {
+    const [emailChanges, setEmailChanges] = useState<{[key: string]: string}>({});
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputContent(event.target.value);
+    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, student: DiplomaInBootcamp) => {
+        setEmailChanges({
+            ...emailChanges,
+            [student.guidId]: event.target.value,
+        });
     };
 
-    return(
+    const inputBlurHandler = (student: DiplomaInBootcamp) => {
+        const newEmail = emailChanges[student.guidId];
+        if (newEmail && newEmail !== student.emailAddress) {
+            modifyStudentEmailHandler({
+                ...student,
+                emailAddress: newEmail,
+            }, student.emailAddress);
+        }
+    };
+
+    return (
         <>
-            <section className={"emailclient " +  (show ? 'fade-in' : 'fade-out')}>
+            <section className={"emailclient " + (show ? 'fade-in' : 'fade-out')}>
                 <header className="emailclient__header">
                     <h1>{title}</h1>
                     <h2>Students</h2>
                 </header>
                 <ul className="emailclient__list">
-                    {clients.map((student: DiplomaInBootcamp, index) => (
-                        <li className="emailclient__list--item">
+                    {clients.map((student: DiplomaInBootcamp) => (
+                        <li key={student.guidId} className="emailclient__list--item">
                             <h3>{student.studentName}</h3>
                             <div className="emailclient__list--input-wrapper">
-                                <input className="emailclient__list--input" type="text" value={student.emailAddress ? student.emailAddress : 'No Email'} onChange={handleInputChange} />
+                                <input 
+                                    className="emailclient__list--input" 
+                                    type="text" 
+                                    value={emailChanges[student.guidId] || student.emailAddress || 'No Email'} 
+                                    onChange={(event) => inputChangeHandler(event, student)} 
+                                    onBlur={() => inputBlurHandler(student)} 
+                                />
                                 <CogWheelIcon />
                             </div>
                             <div className="checkbox-wrapper-31">
@@ -54,6 +72,5 @@ export const EmailClient = ({ clients, title, show, closeEmailClient }: Props) =
             </section>
             <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
         </>
-        
     )
 }

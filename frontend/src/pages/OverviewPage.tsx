@@ -198,7 +198,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                     clients={selectedItems}
                     closeEmailClient={() => {setShowEmailClient(false)}}
                     show={showEmailClient}
-                />}
+                    modifyStudentEmailHandler={modifyStudentEmailHandler} 
+                />
+            }
             <section className='overview-page__listmodule'>
             <div className='overview-page__listmodule-cardcontainer'>
                     {loading ? (
