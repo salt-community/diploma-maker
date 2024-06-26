@@ -6,7 +6,7 @@
     padding: 1rem 3rem;
 
     border-radius: 1rem;
-    z-index: 150;
+    z-index: 5000;
     opacity: 0;
     transition: all .75s ease;
 }
