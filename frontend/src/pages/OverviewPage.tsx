@@ -26,7 +26,7 @@ type Props = {
     bootcamps: BootcampResponse[] | null,
     deleteDiploma: (id: string) => Promise<void>;
     updateDiploma: (diplomaRequest: DiplomaUpdateRequestDto) => Promise<DiplomaResponse>;
-    sendEmail: (guidId: string, emailRequest: EmailSendRequest) => Promise<void>;
+    sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
 }
 
 export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmail }: Props) => {
@@ -172,12 +172,23 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
     }
 
     const sendEmailsHandler = async (userIds: string[]) => {
+        if(userIds.length === 0) return
+        
         customPopup(InfoPopupType.progress, "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
-        const blendProgressDelay = 500;
+        const blendProgressDelay = 750;
 
         for (let i = 0; i < userIds.length; i++) {
-            var file = await generatePDFFile(userIds[i]);
-            sendEmail(userIds[i], file)
+            try {
+                var file = await generatePDFFile(userIds[i]);
+                var emailSendRequest: EmailSendRequest = {
+                    guidId: userIds[i],
+                    file: file
+                }
+                await sendEmail(emailSendRequest)
+            } catch (error) {
+                customAlert(PopupType.fail, `Failed to send ${i}th email`, `Something went wrong. ${error}`)
+                return;
+            }
            
             const progressBarValue = ((i + 1) / userIds.length) * 100;
             await blendProgress((i / userIds.length) * 100, progressBarValue, blendProgressDelay);
@@ -256,6 +267,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
                     show={showEmailClient}
                     modifyStudentEmailHandler={modifyStudentEmailHandler} 
                     sendEmails={(userIds: string[]) => {sendEmailsHandler(userIds)}}
+                    callCustomAlert={customAlert}
                 />
             }
             <section className='overview-page__listmodule'>

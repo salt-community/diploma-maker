@@ -4,6 +4,7 @@ import './EmailClient.css';
 import { CloseWindowIcon } from "./MenuItems/Icons/CloseWindowIcon";
 import { CogWheelIcon } from "./MenuItems/Icons/CogWheelIcon";
 import { SaveButton, SaveButtonType } from "./MenuItems/Buttons/SaveButton";
+import { PopupType } from "./MenuItems/Popups/AlertPopup";
 
 type Props = {
     clients: DiplomaInBootcamp[],
@@ -12,9 +13,10 @@ type Props = {
     closeEmailClient: () => void,
     modifyStudentEmailHandler: (studentInput?: DiplomaInBootcamp, originalEmail?: string) => void,
     sendEmails: (userIds: string[]) => void,
+    callCustomAlert: (alertType: PopupType, title: string, content: string) => void,
 };
 
-export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStudentEmailHandler, sendEmails }: Props) => {
+export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStudentEmailHandler, sendEmails, callCustomAlert }: Props) => {
     const [emailChanges, setEmailChanges] = useState<{[key: string]: string}>({});
     const [checkedUsers, setCheckedUsers] = useState<{[key: string]: boolean}>({});
 
@@ -44,6 +46,13 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
 
     const sendEmailsHandler = () => {
         const selectedIds = Object.keys(checkedUsers).filter(id => checkedUsers[id]);
+        const selectedStudents = clients.filter(student => selectedIds.includes(student.guidId));
+        const studentNullEmail = selectedStudents.find(student => !student.emailAddress);
+
+        if (studentNullEmail) {
+            callCustomAlert(PopupType.fail, `Failure in sending emails`, `Cannot send email to ${studentNullEmail.studentName} as their email address is missing.`);
+            return;
+        }
         sendEmails(selectedIds);
     }
 
