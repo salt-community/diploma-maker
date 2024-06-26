@@ -26,7 +26,7 @@ type Props = {
     bootcamps: BootcampResponse[] | null,
     deleteDiploma: (id: string) => Promise<void>;
     updateDiploma: (diplomaRequest: DiplomaUpdateRequestDto) => Promise<DiplomaResponse>;
-    sendEmail: (guidId: string, emailRequest: EmailSendRequest) => Promise<void>;
+    sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
 }
 
 export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmail }: Props) => {
@@ -177,7 +177,11 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
 
         for (let i = 0; i < userIds.length; i++) {
             var file = await generatePDFFile(userIds[i]);
-            sendEmail(userIds[i], file)
+            var emailSendRequest: EmailSendRequest = {
+                guidId: userIds[i],
+                file: file
+            }
+            await sendEmail(emailSendRequest)
            
             const progressBarValue = ((i + 1) / userIds.length) * 100;
             await blendProgress((i / userIds.length) * 100, progressBarValue, blendProgressDelay);

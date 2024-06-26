@@ -82,8 +82,8 @@ export default function App() {
     await refresh();
   }
 
-  async function sendEmail(guidId: string, emailRequest: EmailSendRequest){
-    await postEmail(guidId, emailRequest)
+  async function sendEmail(emailRequest: EmailSendRequest){
+    await postEmail(emailRequest)
   }
 
   async function refresh(){
