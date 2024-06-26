@@ -1,7 +1,5 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using JokesAPI.Configuration;
-using Backend.Models;
 using Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +17,8 @@ builder.Services.AddAutoMapper(typeof(AutomapperConfig));
 builder.Services.AddScoped<BootcampService>();
 builder.Services.AddScoped<DiplomaService>();
 builder.Services.AddScoped<TemplateService>();
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddLogging();
 
 var app = builder.Build();
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

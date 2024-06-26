@@ -1,4 +1,4 @@
-import { DiplomaRequest, DiplomaResponse, DiplomasRequestDto } from "../util/types";
+import { DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto, DiplomasRequestDto } from "../util/types";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -94,5 +94,23 @@ export async function postMultipleDiplomas(diplomasRequest: DiplomasRequestDto):
     }
 
     const result = await response.json() as DiplomaResponse[];
+    return result;
+}
+
+export async function updateSingleDiploma(diplomaRequest: DiplomaUpdateRequestDto): Promise<DiplomaResponse> {
+    const response = await fetch(`${apiUrl}/api/diploma/single`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(diplomaRequest)
+    });
+
+    if (!response.ok) {
+        if (response.status === 404) {
+            throw new Error("Diploma not found!");
+        }
+        throw new Error("Failed to update diploma!");
+    }
+
+    const result = await response.json() as DiplomaResponse;
     return result;
 }

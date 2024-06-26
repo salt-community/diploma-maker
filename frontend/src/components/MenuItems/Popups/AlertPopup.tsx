@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import './AlertPopup.css';
 import { PopupAlertIcon } from '../Icons/PopupAlertIcon';
 import { PopupSuccessIcon } from '../Icons/PopupSuccessIcon';
+import { AttentionIcon } from '../Icons/AttentionIcon';
 
 export enum PopupType {
   success,
   fail,
+  message
 }
 
 type Props = {
@@ -42,12 +44,14 @@ export const AlertPopup = ({ show, onClose, popupType, title, text, durationOver
   }, [visible, show, onClose]);
 
   return (
-    <div onClick={() => {alert("clicked")}} className={`popup ${popupType === PopupType.fail ? 'fail' : 'success'} ${visible ? 'fade-in' : 'fade-out'}`}>
+    <div onClick={() => {alert("clicked")}} className={`popup ${popupType === PopupType.fail ? 'fail' : popupType === PopupType.success ? 'success' : 'message'} ${visible ? 'fade-in' : 'fade-out'}`}>
       <div className="popup-content">
         {popupType === PopupType.fail ? 
             <PopupAlertIcon />
-          :
+        : popupType === PopupType.success ?  
             <PopupSuccessIcon />
+        :
+            <AttentionIcon />
         }
         <div className='popup-content-text'>
           <h1>{title}</h1>

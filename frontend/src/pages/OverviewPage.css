@@ -75,9 +75,10 @@
                 position: absolute;
                 bottom: 1%;
                 width: 100%;
+                height: 100%;
 
                 display: flex;
-                align-items: center;
+                align-items: flex-end;
                 justify-content: center;
             }
                 .overview-page__item--menu {
@@ -85,12 +86,17 @@
                     visibility: hidden;
                     transition: opacity 0.3s ease-in-out;
                 }
-                
                 .listmodule__item:hover .overview-page__item--menu {
                     opacity: 1;
                     visibility: visible;
                     transition: opacity 0.3s ease;
                 }
+                    .email-btn{
+                        position: absolute;
+                        top: 0;
+                        right: 3%;
+                    }
+
     .overview-page__footer{
         position: absolute;
         bottom: 1%;

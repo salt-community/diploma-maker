@@ -26,7 +26,7 @@ public class DiplomaController : ControllerBase
         {
             var diploma = await _service.PostDiploma(requestDto);
             var responseDto = _mapper.Map<DiplomaResponseDto>(diploma);
-            return CreatedAtAction(nameof(GetDiplomaByKeyword), new { id = diploma.Id }, diploma);
+            return CreatedAtAction(nameof(GetDiplomaByKeyword), new { id = diploma.GuidId }, diploma);
         }
         catch(BootcampNotFoundException)
         {
@@ -35,6 +35,26 @@ public class DiplomaController : ControllerBase
         catch(DiplomaExistsException)
         {
             return Conflict(new { message = "This student has already earned a diploma in this bootcamp" });
+        }
+    }
+
+    [HttpPut("single")]
+    public async Task<ActionResult<DiplomaResponseDto>> PutDiploma(DiplomaPutRequestDto updateDto)
+    {
+        try
+        {
+            var diplomaRequest = _mapper.Map<Diploma>(updateDto);
+            var updatedDiploma = await _service.UpdateDiploma(diplomaRequest);
+            if (updatedDiploma == null)
+            {
+                return NotFound("Diploma not found");
+            }
+            var responseDto = _mapper.Map<DiplomaResponseDto>(updatedDiploma);
+            return Ok(responseDto);
+        }
+        catch (BootcampNotFoundException)
+        {
+            return NotFound("Bootcamp not found");
         }
     }
 

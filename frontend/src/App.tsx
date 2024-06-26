@@ -2,12 +2,12 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/DiplomaMaking';
 import { VertificationPage } from "./pages/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, DiplomaResponse, DiplomasRequestDto, TemplateRequest, TemplateResponse } from "./util/types";
+import { BootcampRequest, BootcampResponse, DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto, DiplomasRequestDto, TemplateRequest, TemplateResponse } from "./util/types";
 import { deleteBootcampById, getBootcamps, postBootcamp, updateBootcamp as updateBootcampService } from "./services/bootcampService";
 import { OverviewPage } from "./pages/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar";
 import BootcampManagement from "./pages/BootcampManagement";
-import { deleteDiplomaById, postMultipleDiplomas } from "./services/diplomaService";
+import { deleteDiplomaById, postMultipleDiplomas, updateSingleDiploma } from "./services/diplomaService";
 import { TemplateCreatorPage } from "./pages/TemplateCreatorPage";
 import { deleteTemplateById, getAllTemplates, postTemplate, putTemplate } from "./services/templateService";
 
@@ -70,12 +70,19 @@ export default function App() {
     return templateResponse
   }
 
+  async function updateDiploma(diplomaRequest: DiplomaUpdateRequestDto){
+    var diplomaResponse = await updateSingleDiploma(diplomaRequest);
+    await refresh();
+    return diplomaResponse
+  }
+
   async function deleteTemplate(id: number){
     await deleteTemplateById(id);
     await refresh();
   }
 
   async function refresh(){
+    console.log("Refetching!");
     const newBootcamps = await getBootcamps();
     const newTemplates = await getAllTemplates();
     setBootcamps(newBootcamps);
@@ -90,7 +97,7 @@ export default function App() {
         <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} addMultipleDiplomas={addMultipleDiplomas}/>} />
         <Route path={`/:guidId`} element = {<VertificationPage />} />
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
-        <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteDiploma={deleteDiploma}/>} />
+        <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteDiploma={deleteDiploma} updateDiploma={updateDiploma}/>} />
         <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate}/>} />
       </Routes>
     </>

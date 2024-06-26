@@ -6,7 +6,7 @@ import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, DiplomaInBootcamp } from '../util/types';
+import { BootcampResponse, DiplomaInBootcamp, DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto } from '../util/types';
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
@@ -14,13 +14,21 @@ import { generateCombinedPDF } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
 import { getTemplateBackup, makeTemplateInputBackup } from '../templates/baseTemplateBACKUP';
+import { SaveButton, SaveButtonType } from '../components/MenuItems/Buttons/SaveButton';
+import { SelectButton, SelectButtonType } from '../components/MenuItems/Buttons/SelectButton';
+import { InfoPopupShort, InfoPopupType } from '../components/MenuItems/Popups/InfoPopupShort';
+import { updateSingleDiploma } from '../services/diplomaService';
+import { EmailClient } from '../components/EmailClient';
+import { TextInputIcon } from '../components/MenuItems/Icons/TextInputIcon';
+import { EmailIcon } from '../components/MenuItems/Icons/EmailIcon';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
     deleteDiploma: (id: string) => Promise<void>;
+    updateDiploma: (diplomaRequest: DiplomaUpdateRequestDto) => Promise<DiplomaResponse>;
 }
 
-export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
+export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -32,9 +40,19 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
     // @ts-ignore
     const [popupType, setPopupType] = useState<PopupType>(PopupType.fail);
 
+    const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false);
+    const [confirmationPopupContent, setConfirmationPopupContent] = useState<string[]>(["",""]);
+    const [confirmationPopupType, setConfirmationPopupType] = useState<InfoPopupType>(InfoPopupType.form);
+    const [confirmationPopupHandler, setConfirmationPopupHandler] = useState<() => void>(() => {});
+
+    const [showEmailClient, setShowEmailClient] = useState<boolean>(true);
+
     useEffect(() => {
         if (bootcamps) {
             setLoading(false);
+        }
+        else{
+            setLoading(true);
         }
     }, [bootcamps]);
 
@@ -82,8 +100,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
         deleteDiploma(id);
         setLoading(false);
         
-        setPopupContent(["Successfully deleted", "Diploma has been successfully deleted from the database."]);
-        setShowPopup(true);
+        customAlert(PopupType.fail, "Successfully deleted", "Diploma has been successfully deleted from the database.")
     };
 
     const generatePDFsHandler = async () => {
@@ -100,27 +117,105 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
         const templates = inputsArray.map(input => getTemplate(input));
 
         await generateCombinedPDF(templates, inputsArray);
-        setPopupContent(["PDFs Generated", "The combined PDF has been successfully generated."]);
-        setPopupType(PopupType.success);
-        setShowPopup(true);
+        customAlert(PopupType.success, "PDFs Generated", "The combined PDF has been successfully generated.")
     };
+
+    const modifyStudentEmailHandler = async (studentInput?: DiplomaInBootcamp, originalEmail?: string) => {
+        if(!studentInput?.emailAddress || studentInput?.emailAddress === "No Email"){
+            customAlert(PopupType.fail, "Validation Error", "Email field is empty!")
+            setShowConfirmationPopup(false);
+            return;
+        }
+        if(!studentInput?.emailAddress.includes('@')){
+            customAlert(PopupType.fail, "Validation Error", "Please put in a valid email address")
+            setShowConfirmationPopup(false);
+            return;
+        }
+        if(studentInput?.emailAddress == originalEmail){
+            customAlert(PopupType.message, "No changes", "Email was unchanged so no changes were made")
+            setShowConfirmationPopup(false);
+            return;
+        }
+        
+        try {
+            
+            const emailUpdateRequest: DiplomaUpdateRequestDto = {
+                guidId: studentInput.guidId,
+                studentName: studentInput.studentName,
+                emailAddress: studentInput.emailAddress
+            }
+            setShowConfirmationPopup(false);
+            const emailUpdateResponse = await updateDiploma(emailUpdateRequest);
+            customAlert(PopupType.success, "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateResponse.studentName}`)
+
+        } catch (error) {
+            customAlert(PopupType.fail, "Something Went Wroing", `${error}`)
+        }
+    }
+
+    const showStudentInfohandler = (student: DiplomaInBootcamp) => {
+        if(student){
+            var emailAddress = student.emailAddress;
+            if(!student.emailAddress){
+                emailAddress = "No Email"
+            }
+            customPopup(InfoPopupType.form, student.studentName, emailAddress, () => (inputContent?: DiplomaInBootcamp) => modifyStudentEmailHandler({
+                guidId: student.guidId,
+                studentName: student.studentName,
+                emailAddress: inputContent
+            }, emailAddress))
+        }
+    }
+
+    const customPopup = (type: InfoPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => {
+        setConfirmationPopupType(type);
+        setConfirmationPopupContent([title, content]);
+        setConfirmationPopupHandler(handler);
+        setShowConfirmationPopup(true);
+    }
+
+    const customAlert = (alertType: PopupType, title: string, content: string) => {
+        setPopupType(alertType);
+        setPopupContent([title, content]);
+        setShowPopup(true);
+    }
 
     return (
         <main className="overview-page">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
+            <InfoPopupShort 
+                title={confirmationPopupContent[0]}
+                text={confirmationPopupContent[1]}
+                show={showConfirmationPopup}
+                infoPopupType={confirmationPopupType}
+                abortClick={() => {setShowConfirmationPopup(false);}}
+                // @ts-ignore
+                confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
+            />
+            {selectedItems.length > 0 && 
+                <EmailClient 
+                    title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'} 
+                    clients={selectedItems}
+                    closeEmailClient={() => {setShowEmailClient(false)}}
+                    show={showEmailClient}
+                    modifyStudentEmailHandler={modifyStudentEmailHandler} 
+                    sendEmails={(userIds: string[]) => {console.log(userIds)}}
+                />
+            }
             <section className='overview-page__listmodule'>
             <div className='overview-page__listmodule-cardcontainer'>
                     {loading ? (
                         <SpinnerDefault classOverride="spinner"/>
                     ) : (
                         // @ts-ignore
-                        selectedItems.length > 0 ? selectedItems.map((item, index) => (
-                            <button key={item.guidId} className='listmodule__item'>
-                                <p className='overview-page__item--title'>{item.studentName}</p>
+                        selectedItems.length > 0 ? selectedItems.map((student: DiplomaInBootcamp, index) => (
+                            <button key={student.guidId} className='listmodule__item'>
+                                <p className='overview-page__item--title'>{student.studentName}</p>
                                 <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
                                 <section className='overview-page__item--menu'>
-                                    <ModifyButton text='Modify' onClick={() => modifyHandler(item.guidId)} />
-                                    <RemoveButton text='Remove' onClick={() => deleteHandler(item.guidId)} />
+                                    <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
+                                    <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
+                                    <SelectButton classOverride="email-btn" selectButtonType={SelectButtonType.email} onClick={() => showStudentInfohandler(student)}/>
                                 </section>
                             </button>
                         )) : 
@@ -173,6 +268,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma }: Props) => {
                     <section className="overview-page__sidebar-menu-section">
                         <h3>Generate</h3>
                         <PublishButton text='Generate PDFs' onClick={generatePDFsHandler} />
+                    </section>
+                    <section className="overview-page__sidebar-menu-section">
+                        <SaveButton textfield="Email Management" saveButtonType={SaveButtonType.normal} onClick={() => setShowEmailClient(true)} customIcon={<EmailIcon />}/>
                     </section>
                 </div>
             </section>
