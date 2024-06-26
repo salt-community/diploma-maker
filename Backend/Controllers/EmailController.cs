@@ -12,26 +12,22 @@ namespace Backend.Controllers
     public class EmailController : ControllerBase
     {   
         private readonly EmailService _emailService;
-        private readonly DiplomaMakingContext _context;
-
-        public EmailController(EmailService emailService, DiplomaMakingContext context)
+        
+        public EmailController(EmailService emailService)
         {
             _emailService = emailService;
-            _context = context;
         }
 
-        [HttpPost("send-email")]
-        public async Task<IActionResult> SendEmail(IFormFile file, [FromForm] string email)
+        [HttpPost("{guidID}")]
+        public async Task<IActionResult> SendEmail(IFormFile file, Guid guidID)
         {
-
-            // check if email exists
            try
            {
-                await _emailService.SendEmailWithAttachmentAsync(email, file);
+                await _emailService.SendEmailWithAttachmentAsync(guidID, file);
            }
            catch(Exception ex)
            {
-                return BadRequest("Something wrong with the provided file");
+                return BadRequest(ex.Message);
            }
            
            return Ok("The Diploma has been successfully sent to your email");
