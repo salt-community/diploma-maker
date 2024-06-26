@@ -171,6 +171,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
     }
 
     const sendEmailsHandler = async (userIds: string[]) => {
+        customPopup(InfoPopupType.progress, "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
         const blendProgressDelay = 500;
 
         for (let i = 0; i < userIds.length; i++) {
@@ -243,10 +244,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                 abortClick={() => {setShowConfirmationPopup(false);}}
                 // @ts-ignore
                 confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
+                currentProgress={sendEmailProgress}
             />
             {selectedItems.length > 0 && 
-                 <>
-                <h1 style={{color: '#fff'}}>{sendEmailProgress}</h1>
                 <EmailClient 
                     title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'} 
                     clients={selectedItems}
@@ -255,7 +255,6 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                     modifyStudentEmailHandler={modifyStudentEmailHandler} 
                     sendEmails={(userIds: string[]) => {sendEmailsHandler(userIds)}}
                 />
-                </>
             }
             <section className='overview-page__listmodule'>
             <div className='overview-page__listmodule-cardcontainer'>
