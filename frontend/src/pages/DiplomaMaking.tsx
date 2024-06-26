@@ -259,7 +259,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
           </div>
           <PublishButton text="Generate PDF" onClick={generatePDFHandler}/>
           <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler}/>
-          <SaveButton saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler}/>
+          <SaveButton textfield="" saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler}/>
         </header>
         {saltData && 
           <div

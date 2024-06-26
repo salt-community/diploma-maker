@@ -26,7 +26,7 @@ public class BootcampController : ControllerBase
             var bootcamp = _mapper.Map<Bootcamp>(requestDto);
             Bootcamp createdBootcamp = await _service.PostBootcamp(bootcamp);
             var responseDto = _mapper.Map<BootcampResponseDto>(createdBootcamp);
-            return CreatedAtAction(nameof(GetBootcamps), new { id = createdBootcamp.Id }, responseDto);
+            return CreatedAtAction(nameof(GetBootcamps), new { id = createdBootcamp.GuidId }, responseDto);
         }
         catch (DbUpdateException)
         {

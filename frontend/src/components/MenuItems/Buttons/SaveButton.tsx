@@ -4,6 +4,7 @@ import { GtaSaveIcon } from '../Icons/GtaSaveIcon';
 import './SaveButton.css';
 
 type Props = {
+  classNameOverride?: string;
   onClick: () => void;
   saveButtonType: SaveButtonType;
   textfield: string;
@@ -16,8 +17,8 @@ export enum SaveButtonType {
   remove
 }
 
-export const SaveButton = ({ onClick, saveButtonType, textfield, customIcon }: Props) => (
-  <button className={"save-btn " + (saveButtonType === SaveButtonType.grandTheftAuto ? 'gta' : saveButtonType === SaveButtonType.remove ? 'remove' : 'normal')} onClick={onClick}>
+export const SaveButton = ({ classNameOverride, onClick, saveButtonType, textfield, customIcon }: Props) => (
+  <button className={"save-btn " + classNameOverride + (saveButtonType === SaveButtonType.grandTheftAuto ? ' gta' : saveButtonType === SaveButtonType.remove ? ' remove' : ' normal')} onClick={onClick}>
     {customIcon ? (
       <>
         {customIcon}

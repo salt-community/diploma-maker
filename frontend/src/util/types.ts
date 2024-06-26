@@ -7,6 +7,12 @@ export type DiplomaRequest = {
     bootcampGuidId: string;
 }
 
+export type DiplomaUpdateRequestDto = {
+    guidId: string;
+    studentName: string;
+    emailAddress: string;
+}
+
 export type DiplomaResponse = {
     guidId: string;
     studentName: string;
@@ -16,6 +22,7 @@ export type DiplomaResponse = {
 export type DiplomaInBootcamp = {
     guidId: string;
     studentName: string;
+    emailAddress: string;
 }
 
 // bootcamps

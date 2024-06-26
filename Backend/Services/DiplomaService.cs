@@ -100,8 +100,6 @@ public class DiplomaService
         return diploma;
     }
 
-
-
     public async Task<Diploma> DeleteDiplomaByGuidId(string guidId)
     {
         var diploma = await _context.Diploma.
@@ -112,6 +110,21 @@ public class DiplomaService
         await _context.SaveChangesAsync();
         return diploma;
     }
+    public async Task<Diploma> UpdateDiploma(Diploma updateRequest)
+    {
+        var diploma = await _context.Diploma.FirstOrDefaultAsync(b => b.GuidId == updateRequest.GuidId);
+
+        if (diploma != null)
+        {
+            diploma.StudentName = updateRequest.StudentName;
+            diploma.EmailAddress = updateRequest.EmailAddress;
+
+            await _context.SaveChangesAsync();
+            return diploma;
+        }
+        throw new BootcampNotFoundException("This diploma does not exist");
+    }
+
 }
 
 public class BootcampNotFoundException : Exception
