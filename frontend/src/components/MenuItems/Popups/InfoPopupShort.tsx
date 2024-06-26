@@ -51,15 +51,15 @@ export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick,
 
   const closeProgressWindowHandler = async () => {
     abortClick(); 
-    await delay(1500)
+    await delay(750)
     setFinished(false);
   }
 
   return (
     <>
-    <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
+    <div className={`preventClickBGinfo ${show ? 'fade-in' : 'fade-out'}`}></div>
       <div className={`popup_confirmation 
-          ${infoPopupType === InfoPopupType.form ? 'form' : finished ? 'progress finished' : 'progress'} 
+          ${infoPopupType === InfoPopupType.form ? 'form' : finished ? 'finished' : 'progress'} 
           ${show ? 'fade-in ' : 'fade-out '}`}>
         <div className="popup_confirmation-content">
           {infoPopupType === InfoPopupType.form ?
@@ -80,7 +80,7 @@ export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick,
             :
               <div className='popup_confirmation-content-text__title_wrapper'>
                 <h1>{finished ? 'Finshed!' : title}</h1>
-                <p>{finished ? 'All Emails Sent out Successfully' : text}</p>
+                <p><span>{finished ? 'All Emails Sent out Successfully!' : text}</span></p>
               </div>
             }
             <div className={'popup_confirmation-content-btn-container ' + (infoPopupType === InfoPopupType.form ? 'confirmation' : 'progress')}>
@@ -102,7 +102,7 @@ export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick,
                     <progress id="progress-bar" value={currentProgress} max="100"></progress>
                   </div>
                   <button onClick={() => {closeProgressWindowHandler()}} 
-                    className={'popup_confirmation-content-btn ' + (finished && 'finished')}
+                    className={'popup_confirmation-content-btn ' + (finished ? 'finished' : 'progress')}
                   >
                     {finished ? 'Done' : 'Cancel'}
                   </button>
