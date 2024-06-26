@@ -66,7 +66,7 @@ public class EmailService
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while processing the file for GUID: {GuidId}", guidid);
-            throw;
+            throw new ArgumentException("FileContent is of the wrong format");
         }
 
         message.Body = multipart;
