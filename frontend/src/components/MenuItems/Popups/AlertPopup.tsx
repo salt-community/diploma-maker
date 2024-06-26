@@ -24,7 +24,7 @@ export const AlertPopup = ({ show, onClose, popupType, title, text, durationOver
 
   useEffect(() => {
     let timer: any;
-    let visibleTime = durationOverride ? durationOverride : 2000;
+    let visibleTime = durationOverride ? durationOverride : 2500;
 
     if (show) {
       setVisible(true);
@@ -44,7 +44,7 @@ export const AlertPopup = ({ show, onClose, popupType, title, text, durationOver
   }, [visible, show, onClose]);
 
   return (
-    <div onClick={() => {alert("clicked")}} className={`popup ${popupType === PopupType.fail ? 'fail' : popupType === PopupType.success ? 'success' : 'message'} ${visible ? 'fade-in' : 'fade-out'}`}>
+    <div onClick={() => {}} className={`popup ${popupType === PopupType.fail ? 'fail' : popupType === PopupType.success ? 'success' : 'message'} ${visible ? 'fade-in' : 'fade-out'}`}>
       <div className="popup-content">
         {popupType === PopupType.fail ? 
             <PopupAlertIcon />
