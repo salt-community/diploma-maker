@@ -10,7 +10,7 @@ import { BootcampResponse, DiplomaInBootcamp, DiplomaRequest, DiplomaResponse, D
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { generateCombinedPDF } from '../util/helper';
+import { delay, generateCombinedPDF, generatePDF, populateFooterField, populateIntroField } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
 import { getTemplateBackup, makeTemplateInputBackup } from '../templates/baseTemplateBACKUP';
@@ -45,7 +45,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
     const [confirmationPopupType, setConfirmationPopupType] = useState<InfoPopupType>(InfoPopupType.form);
     const [confirmationPopupHandler, setConfirmationPopupHandler] = useState<() => void>(() => {});
 
-    const [showEmailClient, setShowEmailClient] = useState<boolean>(true);
+    const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
 
     useEffect(() => {
         if (bootcamps) {
@@ -167,6 +167,45 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
         }
     }
 
+    const sendEmailsHandler = async (userIds: string[]) => {
+        
+
+        for (const userId of userIds) {
+            var pdfFile = await generatePDFFile(userId);
+            console.log(pdfFile);
+            await delay(2000);
+        }
+    }
+
+    const generatePDFFile = async (guidId: string): Promise<Blob | void> => {
+        const diploma = items.find(item => item.guidId === guidId);
+        if (!diploma) {
+            customAlert(PopupType.fail, "Selection Error:", "No Emails Selected");
+            return;
+        }
+        const bootcamp = bootcamps?.find(b => b.diplomas.some(d => d.guidId === guidId));
+        if (!bootcamp) {
+            customAlert(PopupType.fail, "Bootcamp Error:", "Bootcamp not found");
+            return;
+        }
+    
+        const pdfInput = makeTemplateInput(
+            populateIntroField(
+                bootcamp.template.intro
+            ),
+            diploma.studentName,
+            populateFooterField(
+                bootcamp.template.footer,
+                bootcamp.name,
+                bootcamp.graduationDate.toString().slice(0, 10)
+              ),
+            bootcamp.template.basePdf
+        );
+        const template = getTemplate(pdfInput);
+        const pdfFile = await generatePDF(template, [pdfInput], true);
+        return pdfFile;
+    };
+
     const customPopup = (type: InfoPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => {
         setConfirmationPopupType(type);
         setConfirmationPopupContent([title, content]);
@@ -199,7 +238,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                     closeEmailClient={() => {setShowEmailClient(false)}}
                     show={showEmailClient}
                     modifyStudentEmailHandler={modifyStudentEmailHandler} 
-                    sendEmails={(userIds: string[]) => {console.log(userIds)}}
+                    sendEmails={(userIds: string[]) => {sendEmailsHandler(userIds)}}
                 />
             }
             <section className='overview-page__listmodule'>
