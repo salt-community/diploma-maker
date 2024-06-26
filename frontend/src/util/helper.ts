@@ -109,7 +109,7 @@ export const getPlugins = () => {
   }
 }
 
-export const generatePDF = async (template: Template, inputs: any) => {
+export const generatePDF = async (template: Template, inputs: any, returnFile?: boolean): Promise<Blob | void> => {
   if(!template) return;
   const font = await getFontsData();
 
@@ -121,7 +121,12 @@ export const generatePDF = async (template: Template, inputs: any) => {
   });
 
   const blob = new Blob([pdf.buffer], { type: "application/pdf" });
-  window.open(URL.createObjectURL(blob));
+  if(returnFile){
+    return blob;
+  }
+  else{
+    window.open(URL.createObjectURL(blob));
+  }
 };
 
 export const generateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
@@ -170,3 +175,5 @@ export const populateFooterField = (input: string, classname: string, datebootca
     .replace('${classname}', classname)
     .replace('${datebootcamp}', datebootcamp);
 }
+
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

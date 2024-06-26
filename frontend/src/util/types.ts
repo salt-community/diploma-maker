@@ -74,3 +74,8 @@ export type TemplateRequest = {
     studentName: string;
     basePdf: string;
 }
+
+export type EmailSendRequest = {
+    guidId: string,
+    file: Blob
+}

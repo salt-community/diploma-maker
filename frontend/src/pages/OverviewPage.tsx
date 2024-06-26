@@ -6,11 +6,11 @@ import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, DiplomaInBootcamp, DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto } from '../util/types';
+import { BootcampResponse, DiplomaInBootcamp, DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto, EmailSendRequest } from '../util/types';
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { generateCombinedPDF } from '../util/helper';
+import { delay, generateCombinedPDF, generatePDF, populateFooterField, populateIntroField } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
 import { getTemplateBackup, makeTemplateInputBackup } from '../templates/baseTemplateBACKUP';
@@ -26,9 +26,10 @@ type Props = {
     bootcamps: BootcampResponse[] | null,
     deleteDiploma: (id: string) => Promise<void>;
     updateDiploma: (diplomaRequest: DiplomaUpdateRequestDto) => Promise<DiplomaResponse>;
+    sendEmail: (guidId: string, emailRequest: EmailSendRequest) => Promise<void>;
 }
 
-export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props) => {
+export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmail }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -45,7 +46,10 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
     const [confirmationPopupType, setConfirmationPopupType] = useState<InfoPopupType>(InfoPopupType.form);
     const [confirmationPopupHandler, setConfirmationPopupHandler] = useState<() => void>(() => {});
 
-    const [showEmailClient, setShowEmailClient] = useState<boolean>(true);
+    const [sendEmailProgress, setSendEmailProgress] = useState(0);
+
+
+    const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
 
     useEffect(() => {
         if (bootcamps) {
@@ -167,6 +171,48 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
         }
     }
 
+    const sendEmailsHandler = async (userIds: string[]) => {
+        customPopup(InfoPopupType.progress, "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
+        const blendProgressDelay = 500;
+
+        for (let i = 0; i < userIds.length; i++) {
+            var file = await generatePDFFile(userIds[i]);
+            sendEmail(userIds[i], file)
+           
+            const progressBarValue = ((i + 1) / userIds.length) * 100;
+            await blendProgress((i / userIds.length) * 100, progressBarValue, blendProgressDelay);
+        }
+    }
+
+    const generatePDFFile = async (guidId: string): Promise<Blob | void> => {
+        const diploma = items.find(item => item.guidId === guidId);
+        if (!diploma) {
+            customAlert(PopupType.fail, "Selection Error:", "No Emails Selected");
+            return;
+        }
+        const bootcamp = bootcamps?.find(b => b.diplomas.some(d => d.guidId === guidId));
+        if (!bootcamp) {
+            customAlert(PopupType.fail, "Bootcamp Error:", "Bootcamp not found");
+            return;
+        }
+    
+        const pdfInput = makeTemplateInput(
+            populateIntroField(
+                bootcamp.template.intro
+            ),
+            diploma.studentName,
+            populateFooterField(
+                bootcamp.template.footer,
+                bootcamp.name,
+                bootcamp.graduationDate.toString().slice(0, 10)
+              ),
+            bootcamp.template.basePdf
+        );
+        const template = getTemplate(pdfInput);
+        const pdfFile = await generatePDF(template, [pdfInput], true);
+        return pdfFile;
+    };
+
     const customPopup = (type: InfoPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => {
         setConfirmationPopupType(type);
         setConfirmationPopupContent([title, content]);
@@ -180,6 +226,15 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
         setShowPopup(true);
     }
 
+    const blendProgress = async (start: number, end: number, blendDelay: number) => {
+        const steps = Math.abs(end - start);
+        const stepDelay = blendDelay / steps;
+        for (let i = 1; i <= steps; i++) {
+            await delay(stepDelay);
+            setSendEmailProgress(Math.round(start + i * Math.sign(end - start)));
+        }
+    }
+
     return (
         <main className="overview-page">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
@@ -191,6 +246,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                 abortClick={() => {setShowConfirmationPopup(false);}}
                 // @ts-ignore
                 confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
+                currentProgress={sendEmailProgress}
             />
             {selectedItems.length > 0 && 
                 <EmailClient 
@@ -199,7 +255,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma }: Props)
                     closeEmailClient={() => {setShowEmailClient(false)}}
                     show={showEmailClient}
                     modifyStudentEmailHandler={modifyStudentEmailHandler} 
-                    sendEmails={(userIds: string[]) => {console.log(userIds)}}
+                    sendEmails={(userIds: string[]) => {sendEmailsHandler(userIds)}}
                 />
             }
             <section className='overview-page__listmodule'>

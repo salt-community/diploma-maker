@@ -33,6 +33,12 @@
     .popup_confirmation.warning {
         background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
     }
+    .popup_confirmation.progress {
+        background-image: linear-gradient(to left bottom, #212b60, #1d2244, #1a1a30, #181625, #1a1c2b);
+    }
+    .popup_confirmation.finished {
+        background-image: linear-gradient(to left bottom, #216044, #1d443d, #1a2c30, #181625, #1a1c2b);
+    }
 
 .popup_confirmation-content {
     display: flex;
@@ -46,7 +52,7 @@
     .popup_confirmation-content h1 {
         font-size: 1.3rem;
         color: #fff;
-        padding: .5rem .4rem;
+        padding: .5rem 0rem;
     }
     .popup_confirmation-content p {
         max-width: 100%;
@@ -83,6 +89,21 @@
         justify-content: center;
         align-items: center;
         gap: 5rem;
+    }
+    .popup_confirmation-content-btn-container.progress{
+        gap: 1rem;
+        min-width: 400px;
+    }
+    .popup_confirmation-content-btn-container.progress .popup_confirmation-content-btn{
+        width: 10%;
+    }
+    .popup_confirmation-content-btn-container.progress .popup_confirmation-content-btn:nth-of-type(1):hover{
+        background-color: #07daff;
+        transition: all .15s ease-in-out;
+    }
+    .popup_confirmation-content-btn-container.progress .popup_confirmation-content-btn:nth-of-type(1).finished:hover{
+        background-color: #07ff1c;
+        transition: all .15s ease-in-out;
     }
         .popup_confirmation-content-btn{
             display: flex;
@@ -201,4 +222,76 @@
     height: 100%;
     z-index: 100;
     transition: all .15s ease-in-out;
+}
+
+
+.progress-wrapper {
+    width: 90%;
+    position: relative;
+}
+
+
+
+.popup_confirmation.progress label {
+    position: absolute;
+    top: -60%;
+    right: 0;
+
+    display: block;
+    margin-bottom: 5px;
+    color: #9497b0;
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+progress {
+    width: 100%;
+    height: 10px;
+}
+
+progress {
+    width: 100%;
+    height: 25px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Style the progress bar */
+progress {
+    width: 100%;
+    height: 10px;
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+}
+
+/* Style the progress bar background */
+progress::-webkit-progress-bar {
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: none;
+}
+
+/* Style the progress bar value */
+progress::-webkit-progress-value {
+    background: linear-gradient(to right, #5e39a2, #6f359b, #493bb2, #3758c9, #4099ff);
+}
+
+/* Firefox */
+progress::-moz-progress-bar {
+    background: linear-gradient(to right, #5e39a2, #6f359b, #493bb2, #3758c9, #4099ff);
+    border-radius: 8px;
+    border: none; 
+}
+
+/* For Internet Explorer */
+progress::-ms-fill {
+    background: linear-gradient(to right, #5e39a2, #6f359b, #493bb2, #3758c9, #4099ff);
+    border-radius: 8px;
+    border: none;
+}
+
+.popup_confirmation.finished progress::-webkit-progress-value{
+    background: linear-gradient(to right, #3ca239, #359b44, #3bb261, #37c943, #56ff40);
 }
