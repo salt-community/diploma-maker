@@ -59,7 +59,7 @@ public class EmailService
                 Content = new MimeContent(file.OpenReadStream(), ContentEncoding.Default),
                 ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
                 ContentTransferEncoding = ContentEncoding.Base64,
-                FileName = file.FileName
+                FileName = $"Diploma-{diplomaByGuid.StudentName}.pdf"
             };
             multipart.Add(attachment);
         }
