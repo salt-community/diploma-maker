@@ -8,5 +8,5 @@ public class Diploma
     public required string StudentName { get; set; }
     public string? EmailAddress { get; set; }
     [JsonIgnore]
-    public Bootcamp Bootcamp {get; set;}
+    public required Bootcamp Bootcamp {get; set;}
 }

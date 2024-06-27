@@ -17,7 +17,7 @@ type Props = {
 
 export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex}: Props) 
 {
-  const { register } = useForm();
+  const {register } = useForm();
   const [names, setNames] = useState<string[]>(saltData.names);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
   const [bootcampsCache, setBootcampsCache] = useState<BootcampResponse[] | null>();
@@ -45,7 +45,7 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
 
   return (
     <form
-      className="space-y-4 p-6 rounded shadow-md ml-10 mr-10 rounded-2xl  dark: bg-darkbg2"
+      className="space-y-4 p-6 rounded shadow-md ml-10 mr-10 rounded-2xl dark: bg-darkbg2"
     >
       {/* Select bootcamp Class */}
 
@@ -74,15 +74,6 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
             )
           }
         </select>
-
-
-        {/* Manage bootcamp Class */}
-
-        <Link to="/bootcamp-management">
-          <button type="button" className="w-3/12 ml-4 h-8 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Manage
-          </button>
-        </Link>
       </div>
 
 

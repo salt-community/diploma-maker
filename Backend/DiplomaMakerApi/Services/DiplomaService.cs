@@ -40,7 +40,6 @@ public class DiplomaService
 
         return diploma;
     }
-    // <-- THIS
     public async Task<List<Diploma>> PostDiplomas(DiplomasRequestDto requestDto)
     {
         var diplomas = new List<Diploma>();
@@ -49,7 +48,7 @@ public class DiplomaService
             var bootcamp = await _context.Bootcamp
                 .FirstOrDefaultAsync(b => b.GuidId.ToString() == diplomaDto.BootcampGuidId)
                 ?? throw new BootcampNotFoundException($"Bootcamp with ID {diplomaDto.BootcampGuidId} does not exist");
-            _logger.LogInformation("thus far good");
+            
             var existingDiploma = await _context.Diploma
                 .FirstOrDefaultAsync(d => d.GuidId == diplomaDto.GuidId);
 
