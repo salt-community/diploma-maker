@@ -17,6 +17,7 @@ public class DiplomaController : ControllerBase
     {
         _service = service;
         _mapper = mapper;
+
     }
 
     [HttpPost("single")]

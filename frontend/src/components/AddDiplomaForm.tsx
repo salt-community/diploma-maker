@@ -38,8 +38,9 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
   }, [names]);
 
   const handleFileUpload = async (file: File) => {
-    const newNames = await ParseFileData(file);
-    setNames(newNames);
+    const dataFromFile = await ParseFileData(file);
+    const names = dataFromFile.map(item => item.Name);
+    setNames(names);
   };
 
   return (
