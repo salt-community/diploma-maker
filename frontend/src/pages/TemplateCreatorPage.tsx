@@ -259,7 +259,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             };
             await setCurrentTemplate(updatedTemplate);
             setRightSideBarPage(0)
-            customAlert(PopupType.message, "Inputs Saved", ``);
+            customAlert(PopupType.message, "Inputs Saved", `Remember to also save your template for changes to reflect in pdfcreator!`);
         }
     };    
 
