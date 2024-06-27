@@ -82,18 +82,18 @@ export type TemplateRequest = {
 }
 
 export type EmailSendRequest = {
-    guidId: string,
-    file: Blob
+    guidId: string;
+    file: Blob;
 }
 
 export type XYPosition = {
-    x: number,
-    y: number
+    x: number | undefined;
+    y: number | undefined;
 }
 
 export type Size = {
-    width: number,
-    height: number
+    width: number | undefined;
+    height: number | undefined;
 }
 
 export type Style = {

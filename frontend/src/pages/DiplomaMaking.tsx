@@ -109,46 +109,43 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
           saltData[selectedBootcampIndex].template.basePdf
         )];
         const template: Template = getTemplate(
-          inputs[0], 
-          saltData[selectedBootcampIndex].template.introStyling?.xPos !== null && saltData[selectedBootcampIndex].template.introStyling?.yPos !== null
-          ? { x: saltData[selectedBootcampIndex].template.introStyling.xPos, y: saltData[selectedBootcampIndex].template.introStyling.yPos }
-          : undefined, // headerPos
-          // { width: 50, height: 20 },
-          // 14,
-          // "#000000",
-          // "Arial",
-          // "left",
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          saltData[selectedBootcampIndex].template.mainStyling?.xPos !== null && saltData[selectedBootcampIndex].template.mainStyling?.yPos !== null
-          ? { x: saltData[selectedBootcampIndex].template.mainStyling.xPos, y: saltData[selectedBootcampIndex].template.mainStyling.yPos }
-          : undefined, // mainPos
-          // { width: 100, height: 40 }, // mainSize
-          // 20, // mainFontSize
-          // "#111111", // mainFontColor
-          // "Times New Roman", // mainFont
-          // "right", // mainAlignment
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          saltData[selectedBootcampIndex].template.footerStyling?.xPos !== null && saltData[selectedBootcampIndex].template.footerStyling?.yPos !== null
-          ? { x: saltData[selectedBootcampIndex].template.footerStyling.xPos, y: saltData[selectedBootcampIndex].template.footerStyling.yPos }
-          : undefined, // footerPos
-          // { width: 150, height: 60 }, // footerSize
-          // 12, // footerFontSize
-          // "#222222", // footerFontColor
-          // "Courier New", // footerFont
-          // "center" // footerAlignment
-          undefined,
-          undefined,
-          undefined,
-          undefined,
-          undefined,
+          inputs[0],
+          { 
+            x: saltData[selectedBootcampIndex].template.introStyling?.xPos, 
+            y: saltData[selectedBootcampIndex].template.introStyling?.yPos 
+          }, // headerPos
+          { 
+            width: saltData[selectedBootcampIndex].template.introStyling?.width, 
+            height: saltData[selectedBootcampIndex].template.introStyling?.height 
+          }, // headerSize
+          saltData[selectedBootcampIndex].template.introStyling?.fontSize, // footerFontSize
+          saltData[selectedBootcampIndex].template.introStyling?.fontColor, // footerFontColor
+          saltData[selectedBootcampIndex].template.introStyling?.fontName, // footerFont
+          saltData[selectedBootcampIndex].template.introStyling?.alignment, // footerAlignment
+          { 
+            x: saltData[selectedBootcampIndex].template.mainStyling?.xPos, 
+            y: saltData[selectedBootcampIndex].template.mainStyling?.yPos 
+          }, // mainPos
+          { 
+            width: saltData[selectedBootcampIndex].template.mainStyling?.width, 
+            height: saltData[selectedBootcampIndex].template.mainStyling?.height 
+          }, // mainSize
+          saltData[selectedBootcampIndex].template.mainStyling?.fontSize, // footerFontSize
+          saltData[selectedBootcampIndex].template.mainStyling?.fontColor, // footerFontColor
+          saltData[selectedBootcampIndex].template.mainStyling?.fontName, // footerFont
+          saltData[selectedBootcampIndex].template.mainStyling?.alignment, // footerAlignment
+          { 
+            x: saltData[selectedBootcampIndex].template.footerStyling?.xPos, 
+            y: saltData[selectedBootcampIndex].template.footerStyling?.yPos 
+          }, // footerPos
+          { 
+            width: saltData[selectedBootcampIndex].template.footerStyling?.width, 
+            height: saltData[selectedBootcampIndex].template.footerStyling?.height 
+          }, // footerSize
+          saltData[selectedBootcampIndex].template.footerStyling?.fontSize, // footerFontSize
+          saltData[selectedBootcampIndex].template.footerStyling?.fontColor, // footerFontColor
+          saltData[selectedBootcampIndex].template.footerStyling?.fontName, // footerFont
+          saltData[selectedBootcampIndex].template.footerStyling?.alignment // footerAlignment
         );
 
       getFontsData().then((font) => {
