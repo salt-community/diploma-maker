@@ -145,7 +145,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             setShowConfirmationPopup(false);
             try {
                 await updateTemplate(currentTemplate?.id, currentTemplate);
-                console.log(currentTemplate);
                 customAlert(PopupType.success, "Template Successfully Updated!", `Successfully updated ${currentTemplate.templateName} to database`);
                 setTemplateHasChanged(false);
                 if (goToIndex !== undefined) {
