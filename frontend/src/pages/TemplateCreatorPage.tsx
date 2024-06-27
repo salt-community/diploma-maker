@@ -13,6 +13,7 @@ import { AddButton } from "../components/MenuItems/Buttons/AddButton";
 import { ConfirmationPopup, ConfirmationPopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { TextInputIcon } from "../components/MenuItems/Icons/TextInputIcon";
+import { mapTemplatesToTemplateDataDesigner } from "../util/dataHelpers";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -46,44 +47,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     useEffect(() => {
         if (templates && templates.length > 0) {
-            const templateData = templates.map(template => ({
-                id: template.id,
-                templateName: template.templateName,
-                footer: template.footer,
-                footerStyling: {
-                    XPos: template.footerStyling?.xPos,
-                    YPos: template.footerStyling?.yPos,
-                    Width: template.footerStyling?.width,
-                    Height: template.footerStyling?.height,
-                    FontSize: template.footerStyling?.fontSize,
-                    FontColor: template.footerStyling?.fontColor,
-                    FontName: template.footerStyling?.fontName,
-                    Alignment: template.footerStyling?.alignment
-                },
-                intro: template.intro,
-                introStyling: {
-                    XPos: template.introStyling?.xPos,
-                    YPos: template.introStyling?.yPos,
-                    Width: template.introStyling?.width,
-                    Height: template.introStyling?.height,
-                    FontSize: template.introStyling?.fontSize,
-                    FontColor: template.introStyling?.fontColor,
-                    FontName: template.introStyling?.fontName,
-                    Alignment: template.introStyling?.alignment
-                },
-                main: template.main,
-                mainStyling: {
-                    XPos: template.mainStyling?.xPos,
-                    YPos: template.mainStyling?.yPos,
-                    Width: template.mainStyling?.width,
-                    Height: template.mainStyling?.height,
-                    FontSize: template.mainStyling?.fontSize,
-                    FontColor: template.mainStyling?.fontColor,
-                    FontName: template.mainStyling?.fontName,
-                    Alignment: template.mainStyling?.alignment
-                },
-                basePdf: template.basePdf
-            }));
+            const templateData = mapTemplatesToTemplateDataDesigner(templates);
 
             setTemplateData(templateData);
             if(templateAdded){
