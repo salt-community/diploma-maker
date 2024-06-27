@@ -49,6 +49,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
     if (bootcamps) {
+      console.log(bootcamps);
       if(selectedBootcamp){
         setSelectedBootcampIndex(Number(selectedBootcamp));
       }
@@ -107,7 +108,27 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
           // @ts-ignore
           saltData[selectedBootcampIndex].template.basePdf
         )];
-      const template: Template = getTemplate(inputs[0]);
+        const template: Template = getTemplate(
+          inputs[0],
+          // { x: saltData[selectedBootcampIndex].template.introStyling?.xPos, y: saltData[selectedBootcampIndex].template.introStyling?.yPos }, // headerPos
+          // { width: 50, height: 20 }, // headerSize
+          // 14, // headerFontSize
+          // "#000000", // headerFontColor
+          // "Arial", // headerFont
+          // "left", // headerAlignment
+          // { x: 20, y: 30 }, // mainPos
+          // { width: 100, height: 40 }, // mainSize
+          // 20, // mainFontSize
+          // "#111111", // mainFontColor
+          // "Times New Roman", // mainFont
+          // "right", // mainAlignment
+          // { x: 30, y: 40 }, // footerPos
+          // { width: 150, height: 60 }, // footerSize
+          // 12, // footerFontSize
+          // "#222222", // footerFontColor
+          // "Courier New", // footerFont
+          // "center" // footerAlignment
+        );
 
       getFontsData().then((font) => {
         if (uiRef.current) {
