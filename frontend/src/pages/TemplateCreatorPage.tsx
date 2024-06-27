@@ -51,7 +51,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 templateName: template.templateName,
                 footer: template.footer,
                 intro: template.intro,
-                studentName: template.studentName,
+                main: template.main,
                 basePdf: template.basePdf
             }));
             setTemplateData(templateData);
@@ -71,7 +71,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         if (currentTemplate) {
             const inputs = [makeTemplateInput(
                 currentTemplate.intro,
-                currentTemplate.studentName,
+                currentTemplate.main,
                 currentTemplate.footer,
                 currentTemplate.basePdf
             )];
@@ -168,7 +168,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 const blankTemplate: TemplateRequest = {
                     templateName: inputContent,
                     intro: "",
-                    studentName: "",
+                    main: "",
                     footer: "",
                     basePdf: "",
                   }
@@ -207,7 +207,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             const updatedTemplate = {
                 ...currentTemplate,
                 intro: currentTemplateFields.sampledata[0].header,
-                studentName: currentTemplateFields.sampledata[0].name,
+                main: currentTemplateFields.sampledata[0].name,
                 footer: currentTemplateFields.sampledata[0].footer,
             };
             setCurrentTemplate(updatedTemplate);

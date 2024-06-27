@@ -55,7 +55,7 @@ public class TemplateService
         template.templateName = templateRequest.templateName;
         template.footer = templateRequest.footer;
         template.intro = templateRequest.intro;
-        template.studentName = templateRequest.studentName;
+        template.main = templateRequest.main;
         template.basePdf = templateRequest.basePdf;
 
         try

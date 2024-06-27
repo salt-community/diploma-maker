@@ -92,7 +92,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
           ),
           populateField(
             // @ts-ignore
-            saltData[selectedBootcampIndex].template.studentName,
+            saltData[selectedBootcampIndex].template.main,
             saltData[selectedBootcampIndex].classname,
             saltData[selectedBootcampIndex].dategraduate,
             saltData[selectedBootcampIndex].names[currentPageIndex]
@@ -190,7 +190,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
       const inputsArray = selectedBootcampData.names.map((name) => {
         return makeTemplateInput(
           populateIntroField(selectedBootcampData.template.intro),
-          populateNameField(selectedBootcampData.template.studentName, name),
+          populateNameField(selectedBootcampData.template.main, name),
           populateFooterField(selectedBootcampData.template.footer, selectedBootcampData.classname, selectedBootcampData.dategraduate),
           selectedBootcampData.template.basePdf
         );

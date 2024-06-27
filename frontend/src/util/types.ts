@@ -63,7 +63,7 @@ export type TemplateResponse = {
     templateName: string;
     footer: string;
     intro: string;
-    studentName: string;
+    main: string;
     basePdf: string;
 }
 
@@ -71,7 +71,7 @@ export type TemplateRequest = {
     templateName: string;
     footer: string;
     intro: string;
-    studentName: string;
+    main: string;
     basePdf: string;
 }
 
