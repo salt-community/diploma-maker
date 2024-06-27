@@ -1,4 +1,4 @@
-import { Template } from "@pdfme/common";
+import { Size, Template } from "@pdfme/common";
 import { XYPosition } from "../util/types";
 
 export const makeTemplateInput= (header: string, name: string, footer: string, pdfbase: string) => {
@@ -10,14 +10,21 @@ export const makeTemplateInput= (header: string, name: string, footer: string, p
   };
 };
 
-export const getTemplate = (input: { header: string; name: string; footer: string; pdfbase: string }, XYHeader?: XYPosition, XYName?: XYPosition, XYfooter?: XYPosition): Template => ({
+export const getTemplate = (
+    input: { 
+      header: string; name: string; footer: string; pdfbase: string }, 
+      headerPos?: XYPosition, headerSize?: Size, 
+      namePos?: XYPosition, nameSize?: Size, 
+      footerPos?: XYPosition, footerSize?: Size
+    ): Template => ({
+  
   schemas: [
     {
       footer: {
         type: "text",
-        position: XYfooter|| { x: 35.08, y: 135.72 },
-        width: 145.76,
-        height: 21.08,
+        position: footerPos || { x: 35.08, y: 135.72 },
+        width: footerSize?.width || 145.76,
+        height: footerSize?.height || 21.08,
         rotate: 0,
         fontSize: 16,
         fontColor: "#ffffff",
@@ -26,9 +33,9 @@ export const getTemplate = (input: { header: string; name: string; footer: strin
       },
       header: {
         type: "text",
-        position: XYHeader || { x: 83.89, y: 98.63 },
-        width: 48.13,
-        height: 10.23,
+        position: headerPos || { x: 83.89, y: 98.63 },
+        width: headerSize?.width || 48.13,
+        height: headerSize?.height || 10.23,
         rotate: 0,
         fontSize: 16,
         fontColor: "#ffffff",
@@ -36,9 +43,9 @@ export const getTemplate = (input: { header: string; name: string; footer: strin
       },
       name: {
         type: "text",
-        position: XYName || { x: 35.08, y: 113.4 },
-        width: 145.76,
-        height: 16.83,
+        position: namePos || { x: 35.08, y: 113.4 },
+        width: nameSize?.width || 145.76,
+        height: nameSize?.height || 16.83,
         rotate: 0,
         fontSize: 33,
         fontColor: "#ffffff",
