@@ -201,9 +201,32 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         }
     }
 
+    useEffect(() => {
+        console.log(templateData);
+    }, [templateData])
+
     const saveFieldsHandler = async () => {
-        
-    }
+        if (designer.current && currentTemplate) {
+            const currentTemplateFields = designer.current.getTemplate();
+            const updatedTemplate = {
+                ...currentTemplate,
+                header: currentTemplateFields.sampledata[0].header,
+                name: currentTemplateFields.sampledata[0].name,
+                footer: currentTemplateFields.sampledata[0].footer,
+                sampledata: [
+                    {
+                        header: currentTemplateFields.sampledata[0].header,
+                        name: currentTemplateFields.sampledata[0].name,
+                        footer: currentTemplateFields.sampledata[0].footer,
+                    },
+                ],
+            };
+    
+            setTemplateData(prevTemplateData => prevTemplateData.map(template =>
+                template.id === currentTemplate.id ? updatedTemplate : template
+            ));
+        }
+    };    
 
     const shouldWeSaveHandler = async (index: number) => {
         customPopup(ConfirmationPopupType.question, "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index));
@@ -258,7 +281,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 <div className='templatecreator-page__leftsidebar-menu'>
                     <header className="templatecreator-page__leftsidebar-menu-header">
                         <button onClick={() => setLeftSideBarPage(0)} className={leftSideBarPage === 0 ? 'active' : ''}>
-                            Bootcamp Assignment
+                            _
                         </button>
                         {/* <button onClick={() => setLeftSideBarPage(1)} className={leftSideBarPage === 1 ? 'active' : ''}>
                             -
