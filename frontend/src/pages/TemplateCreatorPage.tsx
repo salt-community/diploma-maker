@@ -145,6 +145,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             setShowConfirmationPopup(false);
             try {
                 await updateTemplate(currentTemplate?.id, currentTemplate);
+                console.log(currentTemplate);
                 customAlert(PopupType.success, "Template Successfully Updated!", `Successfully updated ${currentTemplate.templateName} to database`);
                 setTemplateHasChanged(false);
                 if (goToIndex !== undefined) {
@@ -201,30 +202,16 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         }
     }
 
-    useEffect(() => {
-        console.log(templateData);
-    }, [templateData])
-
     const saveFieldsHandler = async () => {
         if (designer.current && currentTemplate) {
             const currentTemplateFields = designer.current.getTemplate();
             const updatedTemplate = {
                 ...currentTemplate,
-                header: currentTemplateFields.sampledata[0].header,
-                name: currentTemplateFields.sampledata[0].name,
+                intro: currentTemplateFields.sampledata[0].header,
+                studentName: currentTemplateFields.sampledata[0].name,
                 footer: currentTemplateFields.sampledata[0].footer,
-                sampledata: [
-                    {
-                        header: currentTemplateFields.sampledata[0].header,
-                        name: currentTemplateFields.sampledata[0].name,
-                        footer: currentTemplateFields.sampledata[0].footer,
-                    },
-                ],
             };
-    
-            setTemplateData(prevTemplateData => prevTemplateData.map(template =>
-                template.id === currentTemplate.id ? updatedTemplate : template
-            ));
+            setCurrentTemplate(updatedTemplate);
         }
     };    
 
