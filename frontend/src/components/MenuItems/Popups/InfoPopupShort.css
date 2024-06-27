@@ -35,9 +35,13 @@
     }
     .popup_confirmation.progress {
         background-image: linear-gradient(to left bottom, #212b60, #1d2244, #1a1a30, #181625, #1a1c2b);
+        height: 250px;
+        width: 750px;
+        transition: all .5s ease-in-out;
     }
     .popup_confirmation.finished {
         background-image: linear-gradient(to left bottom, #216044, #1d443d, #1a2c30, #181625, #1a1c2b);
+        height: 250px;
     }
 
 .popup_confirmation-content {
@@ -56,6 +60,7 @@
     }
     .popup_confirmation-content p {
         max-width: 100%;
+        min-width: 555px;
         margin-top: .2rem;
         font-size: 1rem;
         color: #858698;
@@ -97,11 +102,11 @@
     .popup_confirmation-content-btn-container.progress .popup_confirmation-content-btn{
         width: 10%;
     }
-    .popup_confirmation-content-btn-container.progress .popup_confirmation-content-btn:nth-of-type(1):hover{
+    .popup_confirmation-content-btn-container.progress .popup_confirmation-content-btn.progress:nth-of-type(1):hover{
         background-color: #07daff;
         transition: all .15s ease-in-out;
     }
-    .popup_confirmation-content-btn-container.progress .popup_confirmation-content-btn:nth-of-type(1).finished:hover{
+    .popup_confirmation-content-btn-container.finished .popup_confirmation-content-btn:nth-of-type(1):hover{
         background-color: #07ff1c;
         transition: all .15s ease-in-out;
     }
@@ -194,8 +199,6 @@
     pointer-events: none;
 }
 
-
-
 .popup_confirmation-content-input{
     padding: .2rem 1rem;
     border-radius: .5rem;
@@ -214,13 +217,13 @@
 }
 
 
-.preventClickBG{
+.preventClickBGinfo{
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 100;
+    z-index: 160;
     transition: all .15s ease-in-out;
 }
 
@@ -232,7 +235,7 @@
 
 
 
-.popup_confirmation.progress label {
+.popup_confirmation label {
     position: absolute;
     top: -60%;
     right: 0;
@@ -276,6 +279,7 @@ progress::-webkit-progress-bar {
 /* Style the progress bar value */
 progress::-webkit-progress-value {
     background: linear-gradient(to right, #5e39a2, #6f359b, #493bb2, #3758c9, #4099ff);
+    border: none;
 }
 
 /* Firefox */
