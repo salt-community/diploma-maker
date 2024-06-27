@@ -176,4 +176,11 @@ export const populateFooterField = (input: string, classname: string, datebootca
     .replace('${datebootcamp}', datebootcamp);
 }
 
+export const populateField = (input: string, classname: string, datebootcamp: string, studentname: string): string => {
+  return input
+    .replace('{classname}', classname)
+    .replace('{datebootcamp}', datebootcamp)
+    .replace('{studentname}', studentname)
+}
+
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
