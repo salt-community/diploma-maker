@@ -243,7 +243,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 },
             };
             await setCurrentTemplate(updatedTemplate);
-            // setRightSideBarPage(0)
+            setRightSideBarPage(0)
             customAlert(PopupType.message, "Inputs Saved", ``);
         }
     };    
