@@ -10,6 +10,10 @@ export const makeTemplateInput= (header: string, main: string, footer: string, p
   };
 };
 
+const checkPosition = (pos?: XYPosition): XYPosition | undefined => {
+  return (pos?.x !== null && pos?.y !== null) ? pos : undefined;
+};
+
 export const getTemplate = (
   input: { 
     header: string; main: string; footer: string; pdfbase: string }, 
@@ -22,36 +26,36 @@ schemas: [
   {
     footer: {
       type: "text",
-      position: footerPos ?? { x: 35.08, y: 135.72 },
-      width: footerSize?.width ?? 145.76,
-      height: footerSize?.height ?? 21.08,
+      position: checkPosition(footerPos) ?? { x: 35.08, y: 135.72 },
+      width: footerSize?.width !== null ? footerSize.width : 145.76,
+      height: footerSize?.height !== null ? footerSize.height : 21.08,
       rotate: 0,
-      fontSize: footerFontSize ?? 16,
-      fontColor: footerFontColor ?? "#ffffff",
-      fontmain: footerFont ?? "NotoSerifJP-Regular",
-      alignment: footerAlignment ?? "center",
+      fontSize: footerFontSize !== null ? footerFontSize : 16,
+      fontColor: footerFontColor !== null ? footerFontColor : "#ffffff",
+      fontmain: footerFont !== null ? footerFont : "NotoSerifJP-Regular",
+      alignment: footerAlignment !== null ? footerAlignment : "center",
     },
     header: {
       type: "text",
-      position: headerPos ?? { x: 83.89, y: 98.63 },
-      width: headerSize?.width ?? 48.13,
-      height: headerSize?.height ?? 10.23,
+      position: checkPosition(headerPos) ?? { x: 83.89, y: 98.63 },
+      width: headerSize?.width !== null ? headerSize.width : 48.13,
+      height: headerSize?.height !== null ? headerSize.height : 10.23,
       rotate: 0,
-      fontSize: headerFontSize ?? 16,
-      fontColor: headerFontColor ?? "#ffffff",
-      fontmain: headerFont ?? "NotoSerifJP-Regular",
-      alignment: headerAlignment ?? "center",
+      fontSize: headerFontSize !== null ? headerFontSize : 16,
+      fontColor: headerFontColor !== null ? headerFontColor : "#ffffff",
+      fontmain: headerFont !== null ? headerFont : "NotoSerifJP-Regular",
+      alignment: headerAlignment !== null ? headerAlignment : "center",
     },
     main: {
       type: "text",
-      position: mainPos ?? { x: 35.08, y: 113.4 },
-      width: mainSize?.width ?? 145.76,
-      height: mainSize?.height ?? 16.83,
+      position: checkPosition(mainPos) ?? { x: 35.08, y: 113.4 },
+      width: mainSize?.width !== null ? mainSize.width : 145.76,
+      height: mainSize?.height !== null ? mainSize.height : 16.83,
       rotate: 0,
-      fontSize: mainFontSize ?? 33,
-      fontColor: mainFontColor ?? "#ffffff",
-      fontmain: mainFont ?? "NotoSerifJP-Regular",
-      alignment: mainAlignment ?? "center",
+      fontSize: mainFontSize !== null ? mainFontSize : 33,
+      fontColor: mainFontColor !== null ? mainFontColor : "#ffffff",
+      fontmain: mainFont !== null ? mainFont : "NotoSerifJP-Regular",
+      alignment: mainAlignment !== null ? mainAlignment : "center",
     },
   },
 ],
