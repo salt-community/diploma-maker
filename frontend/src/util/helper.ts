@@ -184,3 +184,22 @@ export const populateField = (input: string, classname: string, datebootcamp: st
 }
 
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+
+export const getPosition = (styling: any) => (
+  styling && styling.XPos !== undefined && styling.YPos !== undefined
+      ? { x: styling.XPos, y: styling.YPos }
+      : undefined
+  );
+
+export const getSize = (styling: any) => (
+  styling && styling.Width !== undefined && styling.Height !== undefined
+      ? { width: styling.Width, height: styling.Height }
+      : undefined
+  );
+
+export const checkAndGetXYPosition = (styling: any) => (
+  styling?.xPos !== undefined && styling?.yPos !== undefined
+      ? { x: styling.xPos, y: styling.yPos }
+      : undefined
+  );

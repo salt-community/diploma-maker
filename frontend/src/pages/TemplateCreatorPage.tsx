@@ -4,7 +4,7 @@ import { PdfFileUpload } from "../components/MenuItems/Inputs/PdfFileUpload";
 import { CustomTemplate, TemplateRequest, TemplateResponse } from "../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { cloneDeep, getFontsData, getPlugins } from "../util/helper";
+import { cloneDeep, getFontsData, getPlugins, getPosition, getSize } from "../util/helper";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Template } from "@pdfme/common";
 import { PDFDocument } from 'pdf-lib';
@@ -46,42 +46,41 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     useEffect(() => {
         if (templates && templates.length > 0) {
-            console.log(templates);
             const templateData = templates.map(template => ({
                 id: template.id,
                 templateName: template.templateName,
                 footer: template.footer,
                 footerStyling: {
-                    XPos: template.footerStyling?.xPos ?? undefined,
-                    YPos: template.footerStyling?.yPos ?? undefined,
-                    Width: template.footerStyling?.width ?? undefined,
-                    Height: template.footerStyling?.height ?? undefined,
-                    FontSize: template.footerStyling?.fontSize ?? undefined,
-                    FontColor: template.footerStyling?.fontColor ?? undefined,
-                    FontName: template.footerStyling?.fontName ?? undefined,
-                    Alignment: template.footerStyling?.alignment ?? undefined
+                    XPos: template.footerStyling?.xPos,
+                    YPos: template.footerStyling?.yPos,
+                    Width: template.footerStyling?.width,
+                    Height: template.footerStyling?.height,
+                    FontSize: template.footerStyling?.fontSize,
+                    FontColor: template.footerStyling?.fontColor,
+                    FontName: template.footerStyling?.fontName,
+                    Alignment: template.footerStyling?.alignment
                 },
                 intro: template.intro,
                 introStyling: {
-                    XPos: template.introStyling?.xPos ?? undefined,
-                    YPos: template.introStyling?.yPos ?? undefined,
-                    Width: template.introStyling?.width ?? undefined,
-                    Height: template.introStyling?.height ?? undefined,
-                    FontSize: template.introStyling?.fontSize ?? undefined,
-                    FontColor: template.introStyling?.fontColor ?? undefined,
-                    FontName: template.introStyling?.fontName ?? undefined,
-                    Alignment: template.introStyling?.alignment ?? undefined
+                    XPos: template.introStyling?.xPos,
+                    YPos: template.introStyling?.yPos,
+                    Width: template.introStyling?.width,
+                    Height: template.introStyling?.height,
+                    FontSize: template.introStyling?.fontSize,
+                    FontColor: template.introStyling?.fontColor,
+                    FontName: template.introStyling?.fontName,
+                    Alignment: template.introStyling?.alignment
                 },
                 main: template.main,
                 mainStyling: {
-                    XPos: template.mainStyling?.xPos ?? undefined,
-                    YPos: template.mainStyling?.yPos ?? undefined,
-                    Width: template.mainStyling?.width ?? undefined,
-                    Height: template.mainStyling?.height ?? undefined,
-                    FontSize: template.mainStyling?.fontSize ?? undefined,
-                    FontColor: template.mainStyling?.fontColor ?? undefined,
-                    FontName: template.mainStyling?.fontName ?? undefined,
-                    Alignment: template.mainStyling?.alignment ?? undefined
+                    XPos: template.mainStyling?.xPos,
+                    YPos: template.mainStyling?.yPos,
+                    Width: template.mainStyling?.width,
+                    Height: template.mainStyling?.height,
+                    FontSize: template.mainStyling?.fontSize,
+                    FontColor: template.mainStyling?.fontColor,
+                    FontName: template.mainStyling?.fontName,
+                    Alignment: template.mainStyling?.alignment
                 },
                 basePdf: template.basePdf
             }));
@@ -109,25 +108,39 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             )];
             const template: Template = getTemplate(
                 inputs[0],
-                currentTemplate.introStyling && { x: currentTemplate.introStyling.XPos, y: currentTemplate.introStyling.YPos },
-                currentTemplate.introStyling && { width: currentTemplate.introStyling.Width, height: currentTemplate.introStyling.Height },
-                currentTemplate.introStyling?.FontSize,
-                currentTemplate.introStyling?.FontColor,
-                currentTemplate.introStyling?.FontName,
-                currentTemplate.introStyling?.Alignment,
-                currentTemplate.mainStyling && { x: currentTemplate.mainStyling.XPos, y: currentTemplate.mainStyling.YPos },
-                currentTemplate.mainStyling && { width: currentTemplate.mainStyling.Width, height: currentTemplate.mainStyling.Height },
-                currentTemplate.mainStyling?.FontSize,
-                currentTemplate.mainStyling?.FontColor,
-                currentTemplate.mainStyling?.FontName,
-                currentTemplate.mainStyling?.Alignment,
-                currentTemplate.footerStyling && { x: currentTemplate.footerStyling.XPos, y: currentTemplate.footerStyling.YPos },
-                currentTemplate.footerStyling && { width: currentTemplate.footerStyling.Width, height: currentTemplate.footerStyling.Height },
-                currentTemplate.footerStyling?.FontSize,
-                currentTemplate.footerStyling?.FontColor,
-                currentTemplate.footerStyling?.FontName,
-                currentTemplate.footerStyling?.Alignment
+                getPosition(currentTemplate.introStyling),
+                getSize(currentTemplate.introStyling),
+                // currentTemplate.introStyling?.FontSize,
+                // currentTemplate.introStyling?.FontColor,
+                // currentTemplate.introStyling?.FontName,
+                // currentTemplate.introStyling?.Alignment,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                getPosition(currentTemplate.mainStyling),
+                getSize(currentTemplate.mainStyling),
+                // currentTemplate.mainStyling?.FontSize,
+                // currentTemplate.mainStyling?.FontColor,
+                // currentTemplate.mainStyling?.FontName,
+                // currentTemplate.mainStyling?.Alignment,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                getPosition(currentTemplate.footerStyling),
+                getSize(currentTemplate.footerStyling),
+                // currentTemplate.footerStyling?.FontSize,
+                // currentTemplate.footerStyling?.FontColor,
+                // currentTemplate.footerStyling?.FontName,
+                // currentTemplate.footerStyling?.Alignment
+                undefined,
+                undefined,
+                undefined,
+                undefined,
             );
+
+            console.log(currentTemplate.introStyling)
     
             getFontsData().then((font) => {
                 if (designerRef.current) {
