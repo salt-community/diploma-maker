@@ -174,7 +174,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
       const inputs = uiInstance.current.getInputs();
       const pdfInput = [makeTemplateInput(
           inputs[0].header,
-          inputs[0].name,
+          inputs[0].main,
           inputs[0].footer,
           inputs[0].pdfbase
       )];
@@ -232,7 +232,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   const saveInputFieldsHandler = () => {
     if (uiInstance.current && saltData) {
       const inputs = uiInstance.current.getInputs();
-      const newName = inputs[0].name;
+      const newName = inputs[0].main;
       const currentName = saltData[selectedBootcampIndex].names[currentPageIndex];
 
       if (currentName === newName) {

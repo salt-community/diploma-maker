@@ -207,10 +207,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             const updatedTemplate = {
                 ...currentTemplate,
                 intro: currentTemplateFields.sampledata[0].header,
-                main: currentTemplateFields.sampledata[0].name,
+                main: currentTemplateFields.sampledata[0].main,
                 footer: currentTemplateFields.sampledata[0].footer,
             };
-            setCurrentTemplate(updatedTemplate);
+            await setCurrentTemplate(updatedTemplate);
+            setRightSideBarPage(0)
         }
     };    
 

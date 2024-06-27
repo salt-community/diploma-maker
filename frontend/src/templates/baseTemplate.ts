@@ -1,9 +1,9 @@
 import { Size, Template } from "@pdfme/common";
 import { XYPosition } from "../util/types";
 
-export const makeTemplateInput= (header: string, name: string, footer: string, pdfbase: string) => {
+export const makeTemplateInput= (header: string, main: string, footer: string, pdfbase: string) => {
   return {
-    name,
+    main,
     header,
     footer,
     pdfbase,
@@ -12,9 +12,9 @@ export const makeTemplateInput= (header: string, name: string, footer: string, p
 
 export const getTemplate = (
     input: { 
-      header: string; name: string; footer: string; pdfbase: string }, 
+      header: string; main: string; footer: string; pdfbase: string }, 
       headerPos?: XYPosition, headerSize?: Size, headerFontSize?: number, headerFontColor?: string, headerFont?: string, headerAlignment?: string,
-      namePos?: XYPosition, nameSize?: Size, nameFontSize?: number, nameFontColor?: string, nameFont?: string, nameAlignment?: string,
+      mainPos?: XYPosition, mainSize?: Size, mainFontSize?: number, mainFontColor?: string, mainFont?: string, mainAlignment?: string,
       footerPos?: XYPosition, footerSize?: Size, footerFontSize?: number, footerFontColor?: string, footerFont?: string, footerAlignment?: string
     ): Template => ({
   
@@ -28,7 +28,7 @@ export const getTemplate = (
         rotate: 0,
         fontSize: footerFontSize || 16,
         fontColor: footerFontColor || "#ffffff",
-        fontName: footerFont || "NotoSerifJP-Regular",
+        fontmain: footerFont || "NotoSerifJP-Regular",
         alignment: footerAlignment || "center",
       },
       header: {
@@ -39,19 +39,19 @@ export const getTemplate = (
         rotate: 0,
         fontSize: headerFontSize || 16,
         fontColor: headerFontColor || "#ffffff",
-        fontName: headerFont || "NotoSerifJP-Regular",
+        fontmain: headerFont || "NotoSerifJP-Regular",
         alignment: headerAlignment || "center",
       },
-      name: {
+      main: {
         type: "text",
-        position: namePos || { x: 35.08, y: 113.4 },
-        width: nameSize?.width || 145.76,
-        height: nameSize?.height || 16.83,
+        position: mainPos || { x: 35.08, y: 113.4 },
+        width: mainSize?.width || 145.76,
+        height: mainSize?.height || 16.83,
         rotate: 0,
-        fontSize: nameFontSize || 33,
-        fontColor: nameFontColor || "#ffffff",
-        fontName: nameFont || "NotoSerifJP-Regular",
-        alignment: nameAlignment || "center",
+        fontSize: mainFontSize || 33,
+        fontColor: mainFontColor || "#ffffff",
+        fontmain: mainFont || "NotoSerifJP-Regular",
+        alignment: mainAlignment || "center",
       },
     },
   ],
@@ -60,8 +60,8 @@ export const getTemplate = (
     {
       footer: input.footer,
       header: input.header,
-      name: input.name,
+      main: input.main,
     }
   ],
-  columns: ["footer", "header", "name"],
+  columns: ["footer", "header", "main"],
 });
