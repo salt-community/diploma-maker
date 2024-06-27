@@ -46,6 +46,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     useEffect(() => {
         if (templates && templates.length > 0) {
+            console.log(templates);
             const templateData = templates.map(template => ({
                 id: template.id,
                 templateName: template.templateName,

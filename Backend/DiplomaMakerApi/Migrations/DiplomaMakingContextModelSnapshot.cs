@@ -114,7 +114,7 @@ namespace DiplomaMakerApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Style");
+                    b.ToTable("styles");
                 });
 
             modelBuilder.Entity("Template", b =>

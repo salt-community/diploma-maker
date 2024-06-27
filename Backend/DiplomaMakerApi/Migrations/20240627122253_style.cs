@@ -12,7 +12,7 @@ namespace DiplomaMakerApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Style",
+                name: "styles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -28,7 +28,7 @@ namespace DiplomaMakerApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Style", x => x.Id);
+                    table.PrimaryKey("PK_styles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,19 +50,19 @@ namespace DiplomaMakerApi.Migrations
                 {
                     table.PrimaryKey("PK_Template", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Template_Style_footerStylingId",
+                        name: "FK_Template_styles_footerStylingId",
                         column: x => x.footerStylingId,
-                        principalTable: "Style",
+                        principalTable: "styles",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Template_Style_introStylingId",
+                        name: "FK_Template_styles_introStylingId",
                         column: x => x.introStylingId,
-                        principalTable: "Style",
+                        principalTable: "styles",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Template_Style_mainStylingId",
+                        name: "FK_Template_styles_mainStylingId",
                         column: x => x.mainStylingId,
-                        principalTable: "Style",
+                        principalTable: "styles",
                         principalColumn: "Id");
                 });
 
@@ -155,7 +155,7 @@ namespace DiplomaMakerApi.Migrations
                 name: "Template");
 
             migrationBuilder.DropTable(
-                name: "Style");
+                name: "styles");
         }
     }
 }

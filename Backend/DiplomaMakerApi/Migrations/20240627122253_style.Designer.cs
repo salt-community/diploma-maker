@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DiplomaMakerApi.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240627114956_style")]
+    [Migration("20240627122253_style")]
     partial class style
     {
         /// <inheritdoc />
@@ -117,7 +117,7 @@ namespace DiplomaMakerApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Style");
+                    b.ToTable("styles");
                 });
 
             modelBuilder.Entity("Template", b =>
