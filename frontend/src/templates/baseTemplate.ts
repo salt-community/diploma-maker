@@ -13,9 +13,9 @@ export const makeTemplateInput= (header: string, name: string, footer: string, p
 export const getTemplate = (
     input: { 
       header: string; name: string; footer: string; pdfbase: string }, 
-      headerPos?: XYPosition, headerSize?: Size, 
-      namePos?: XYPosition, nameSize?: Size, 
-      footerPos?: XYPosition, footerSize?: Size
+      headerPos?: XYPosition, headerSize?: Size, headerFontSize?: number, headerFontColor?: string, headerFont?: string, headerAlignment?: string,
+      namePos?: XYPosition, nameSize?: Size, nameFontSize?: number, nameFontColor?: string, nameFont?: string, nameAlignment?: string,
+      footerPos?: XYPosition, footerSize?: Size, footerFontSize?: number, footerFontColor?: string, footerFont?: string, footerAlignment?: string
     ): Template => ({
   
   schemas: [
@@ -26,10 +26,10 @@ export const getTemplate = (
         width: footerSize?.width || 145.76,
         height: footerSize?.height || 21.08,
         rotate: 0,
-        fontSize: 16,
-        fontColor: "#ffffff",
-        fontName: "NotoSerifJP-Regular",
-        alignment: "center",
+        fontSize: footerFontSize || 16,
+        fontColor: footerFontColor || "#ffffff",
+        fontName: footerFont || "NotoSerifJP-Regular",
+        alignment: footerAlignment || "center",
       },
       header: {
         type: "text",
@@ -37,9 +37,10 @@ export const getTemplate = (
         width: headerSize?.width || 48.13,
         height: headerSize?.height || 10.23,
         rotate: 0,
-        fontSize: 16,
-        fontColor: "#ffffff",
-        fontName: "NotoSerifJP-Regular",
+        fontSize: headerFontSize || 16,
+        fontColor: headerFontColor || "#ffffff",
+        fontName: headerFont || "NotoSerifJP-Regular",
+        alignment: headerAlignment || "center",
       },
       name: {
         type: "text",
@@ -47,10 +48,10 @@ export const getTemplate = (
         width: nameSize?.width || 145.76,
         height: nameSize?.height || 16.83,
         rotate: 0,
-        fontSize: 33,
-        fontColor: "#ffffff",
-        fontName: "NotoSerifJP-Regular",
-        alignment: "center",
+        fontSize: nameFontSize || 33,
+        fontColor: nameFontColor || "#ffffff",
+        fontName: nameFont || "NotoSerifJP-Regular",
+        alignment: nameAlignment || "center",
       },
     },
   ],
