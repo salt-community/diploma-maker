@@ -79,3 +79,8 @@ export type EmailSendRequest = {
     guidId: string,
     file: Blob
 }
+
+export type XYPosition = {
+    x: number,
+    y: number
+}
