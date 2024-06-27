@@ -150,6 +150,23 @@
 .pdfpreview div{
     background-color: #2e2e38;
 }
+.pdfpreview-boundingbox{
+    position: absolute;
+    top: 0;
+    left: 40%;
+    transform: translateX(-50%);
+
+    width: 60%;
+    height: 100%;
+    z-index: 10;
+}
+.bg-boundingbox{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
 .pdfpreview div div div div div div:hover{
     cursor: pointer;
 }

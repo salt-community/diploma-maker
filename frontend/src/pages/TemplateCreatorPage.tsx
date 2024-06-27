@@ -253,6 +253,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     return (
         <main className="templatecreator-page">
+            <div className="bg-boundingbox" onClick={() => setRightSideBarPage(0)}></div>
             <ConfirmationPopup 
                 title={confirmationPopupContent[0]}
                 text={confirmationPopupContent[1]}
@@ -293,7 +294,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             <section className='templatecreator-page__preview-container'>
                 <div className='templatecreator-page__preview' style={{width: '100%', overflow: 'hidden', height: `calc(50vh - 68px)` }}>
                     <h2>{currentTemplate?.templateName}</h2>
-                    <div className="pdfpreview" ref={designerRef} style={{height: `80%` }}/>
+                    <div className="pdfpreview" ref={designerRef} style={{height: `80%` }} onClick={() => setRightSideBarPage(0)}/>
+                    <div onClick={() => setRightSideBarPage(1)} className="pdfpreview-boundingbox"></div>
                 </div>
             </section>
             <section className='templatecreator-page__rightsidebar'>
