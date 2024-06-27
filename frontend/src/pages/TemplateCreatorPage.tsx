@@ -51,10 +51,41 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 id: template.id,
                 templateName: template.templateName,
                 footer: template.footer,
+                footerStyling: {
+                    XPos: template.footerStyling?.xPos ?? undefined,
+                    YPos: template.footerStyling?.yPos ?? undefined,
+                    Width: template.footerStyling?.width ?? undefined,
+                    Height: template.footerStyling?.height ?? undefined,
+                    FontSize: template.footerStyling?.fontSize ?? undefined,
+                    FontColor: template.footerStyling?.fontColor ?? undefined,
+                    FontName: template.footerStyling?.fontName ?? undefined,
+                    Alignment: template.footerStyling?.alignment ?? undefined
+                },
                 intro: template.intro,
+                introStyling: {
+                    XPos: template.introStyling?.xPos ?? undefined,
+                    YPos: template.introStyling?.yPos ?? undefined,
+                    Width: template.introStyling?.width ?? undefined,
+                    Height: template.introStyling?.height ?? undefined,
+                    FontSize: template.introStyling?.fontSize ?? undefined,
+                    FontColor: template.introStyling?.fontColor ?? undefined,
+                    FontName: template.introStyling?.fontName ?? undefined,
+                    Alignment: template.introStyling?.alignment ?? undefined
+                },
                 main: template.main,
+                mainStyling: {
+                    XPos: template.mainStyling?.xPos ?? undefined,
+                    YPos: template.mainStyling?.yPos ?? undefined,
+                    Width: template.mainStyling?.width ?? undefined,
+                    Height: template.mainStyling?.height ?? undefined,
+                    FontSize: template.mainStyling?.fontSize ?? undefined,
+                    FontColor: template.mainStyling?.fontColor ?? undefined,
+                    FontName: template.mainStyling?.fontName ?? undefined,
+                    Alignment: template.mainStyling?.alignment ?? undefined
+                },
                 basePdf: template.basePdf
             }));
+
             setTemplateData(templateData);
             if(templateAdded){
                 setCurrentTemplate(templateData[templateData.length - 1]);
