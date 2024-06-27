@@ -75,7 +75,27 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 currentTemplate.footer,
                 currentTemplate.basePdf
             )];
-            const template: Template = getTemplate(inputs[0]);
+            const template: Template = getTemplate(
+                inputs[0],
+                currentTemplate.introStyling && { x: currentTemplate.introStyling.XPos, y: currentTemplate.introStyling.YPos },
+                currentTemplate.introStyling && { width: currentTemplate.introStyling.Width, height: currentTemplate.introStyling.Height },
+                currentTemplate.introStyling?.FontSize,
+                currentTemplate.introStyling?.FontColor,
+                currentTemplate.introStyling?.FontName,
+                currentTemplate.introStyling?.Alignment,
+                currentTemplate.mainStyling && { x: currentTemplate.mainStyling.XPos, y: currentTemplate.mainStyling.YPos },
+                currentTemplate.mainStyling && { width: currentTemplate.mainStyling.Width, height: currentTemplate.mainStyling.Height },
+                currentTemplate.mainStyling?.FontSize,
+                currentTemplate.mainStyling?.FontColor,
+                currentTemplate.mainStyling?.FontName,
+                currentTemplate.mainStyling?.Alignment,
+                currentTemplate.footerStyling && { x: currentTemplate.footerStyling.XPos, y: currentTemplate.footerStyling.YPos },
+                currentTemplate.footerStyling && { width: currentTemplate.footerStyling.Width, height: currentTemplate.footerStyling.Height },
+                currentTemplate.footerStyling?.FontSize,
+                currentTemplate.footerStyling?.FontColor,
+                currentTemplate.footerStyling?.FontName,
+                currentTemplate.footerStyling?.Alignment
+            );
     
             getFontsData().then((font) => {
                 if (designerRef.current) {
@@ -207,11 +227,23 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             const updatedTemplate = {
                 ...currentTemplate,
                 intro: currentTemplateFields.sampledata[0].header,
+                introStyling: {
+                    XPos: currentTemplateFields.schemas[0].header.position.x,
+                    YPos: currentTemplateFields.schemas[0].header.position.y,
+                },
                 main: currentTemplateFields.sampledata[0].main,
+                mainStyling: {
+                    XPos: currentTemplateFields.schemas[0].main.position.x,
+                    YPos: currentTemplateFields.schemas[0].main.position.y
+                },
                 footer: currentTemplateFields.sampledata[0].footer,
+                footerStyling: {
+                    XPos: currentTemplateFields.schemas[0].footer.position.x,
+                    YPos: currentTemplateFields.schemas[0].footer.position.y,
+                },
             };
             await setCurrentTemplate(updatedTemplate);
-            setRightSideBarPage(0)
+            // setRightSideBarPage(0)
             customAlert(PopupType.message, "Inputs Saved", ``);
         }
     };    
