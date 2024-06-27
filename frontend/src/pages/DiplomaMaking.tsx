@@ -285,7 +285,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
           />
         }
       </section>
-      <section className="flex-1 flex flex-col">
+      <section className="flex-1 flex flex-col ">
         {saltData &&
           <AddDiplomaForm 
             updateSaltData={updateSaltDataHandler} 
