@@ -2,6 +2,7 @@ namespace DiplomaMakerApi.Models
 {
     public class Style
     {
+        public int Id { get; set; }
         public double? XPos { get; set; }
         public double? YPos { get; set; }
         public double? Width { get; set; }

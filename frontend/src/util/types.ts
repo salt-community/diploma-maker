@@ -62,16 +62,22 @@ export type TemplateResponse = {
     id: number;
     templateName: string;
     footer: string;
+    footerStyling?: Style;
     intro: string;
+    introStyling?: Style;
     main: string;
+    mainStyling?: Style;
     basePdf: string;
 }
 
 export type TemplateRequest = {
     templateName: string;
     footer: string;
+    footerStyling?: Style;
     intro: string;
+    introStyling?: Style;
     main: string;
+    mainStyling?: Style;
     basePdf: string;
 }
 
@@ -88,4 +94,16 @@ export type XYPosition = {
 export type Size = {
     width: number,
     height: number
+}
+
+export type Style = {
+    id: number;
+    xPos?: number;
+    yPos?: number;
+    width?: number;
+    height?: number;
+    fontSize?: number;
+    fontColor?: string;
+    fontName?: string;
+    alignment?: string;
 }

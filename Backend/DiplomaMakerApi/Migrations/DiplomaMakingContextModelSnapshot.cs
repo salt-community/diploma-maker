@@ -80,6 +80,43 @@ namespace DiplomaMakerApi.Migrations
                     b.ToTable("Diploma");
                 });
 
+            modelBuilder.Entity("DiplomaMakerApi.Models.Style", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Alignment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FontColor")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FontName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("FontSize")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Height")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("Width")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("XPos")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("YPos")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Style");
+                });
+
             modelBuilder.Entity("Template", b =>
                 {
                     b.Property<int>("Id")
@@ -96,19 +133,34 @@ namespace DiplomaMakerApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("footerStylingId")
+                        .HasColumnType("int");
+
                     b.Property<string>("intro")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("studentName")
+                    b.Property<int?>("introStylingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("main")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("mainStylingId")
+                        .HasColumnType("int");
 
                     b.Property<string>("templateName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("footerStylingId");
+
+                    b.HasIndex("introStylingId");
+
+                    b.HasIndex("mainStylingId");
 
                     b.ToTable("Template");
                 });
@@ -133,6 +185,27 @@ namespace DiplomaMakerApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Bootcamp");
+                });
+
+            modelBuilder.Entity("Template", b =>
+                {
+                    b.HasOne("DiplomaMakerApi.Models.Style", "footerStyling")
+                        .WithMany()
+                        .HasForeignKey("footerStylingId");
+
+                    b.HasOne("DiplomaMakerApi.Models.Style", "introStyling")
+                        .WithMany()
+                        .HasForeignKey("introStylingId");
+
+                    b.HasOne("DiplomaMakerApi.Models.Style", "mainStyling")
+                        .WithMany()
+                        .HasForeignKey("mainStylingId");
+
+                    b.Navigation("footerStyling");
+
+                    b.Navigation("introStyling");
+
+                    b.Navigation("mainStyling");
                 });
 
             modelBuilder.Entity("DiplomaMakerApi.Models.Bootcamp", b =>
