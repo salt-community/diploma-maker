@@ -202,8 +202,17 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
 
     const saveFieldsHandler = async () => {
-        
-    }
+        if (designer.current && currentTemplate) {
+            const currentTemplateFields = designer.current.getTemplate();
+            const updatedTemplate = {
+                ...currentTemplate,
+                intro: currentTemplateFields.sampledata[0].header,
+                studentName: currentTemplateFields.sampledata[0].name,
+                footer: currentTemplateFields.sampledata[0].footer,
+            };
+            setCurrentTemplate(updatedTemplate);
+        }
+    };    
 
     const shouldWeSaveHandler = async (index: number) => {
         customPopup(ConfirmationPopupType.question, "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index));
@@ -258,7 +267,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 <div className='templatecreator-page__leftsidebar-menu'>
                     <header className="templatecreator-page__leftsidebar-menu-header">
                         <button onClick={() => setLeftSideBarPage(0)} className={leftSideBarPage === 0 ? 'active' : ''}>
-                            Bootcamp Assignment
+                            _
                         </button>
                         {/* <button onClick={() => setLeftSideBarPage(1)} className={leftSideBarPage === 1 ? 'active' : ''}>
                             -

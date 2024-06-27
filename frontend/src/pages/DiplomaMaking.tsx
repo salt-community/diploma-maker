@@ -10,6 +10,7 @@ import {
   populateIntroField,
   populateNameField,
   populateFooterField,
+  populateField,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
@@ -48,7 +49,6 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
     if (bootcamps) {
-      console.log("RUNNING!")
       if(selectedBootcamp){
         setSelectedBootcampIndex(Number(selectedBootcamp));
       }
@@ -83,20 +83,26 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
     if(saltData){
       const inputs = 
         [makeTemplateInput(
-          populateIntroField(
+          populateField(
             // @ts-ignore
-            saltData[selectedBootcampIndex].template.intro
-          ),
-          populateNameField(
-            // @ts-ignore
-            saltData[selectedBootcampIndex].template.studentName,
+            saltData[selectedBootcampIndex].template.intro,
+            saltData[selectedBootcampIndex].classname,
+            saltData[selectedBootcampIndex].dategraduate,
             saltData[selectedBootcampIndex].names[currentPageIndex]
           ),
-          populateFooterField(
+          populateField(
+            // @ts-ignore
+            saltData[selectedBootcampIndex].template.studentName,
+            saltData[selectedBootcampIndex].classname,
+            saltData[selectedBootcampIndex].dategraduate,
+            saltData[selectedBootcampIndex].names[currentPageIndex]
+          ),
+          populateField(
             // @ts-ignore
             saltData[selectedBootcampIndex].template.footer,
             saltData[selectedBootcampIndex].classname,
-            saltData[selectedBootcampIndex].dategraduate
+            saltData[selectedBootcampIndex].dategraduate,
+            saltData[selectedBootcampIndex].names[currentPageIndex]
           ),
           // @ts-ignore
           saltData[selectedBootcampIndex].template.basePdf
