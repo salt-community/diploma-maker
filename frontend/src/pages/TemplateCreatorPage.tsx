@@ -5,14 +5,14 @@ import { CustomTemplate, TemplateRequest, TemplateResponse } from "../util/types
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
 import { cloneDeep, getFontsData, getPlugins } from "../util/helper";
-import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
-import { Template } from "@pdfme/common";
+import { makeTemplateInput } from "../templates/baseTemplate";
 import { PDFDocument } from 'pdf-lib';
 import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
 import { AddButton } from "../components/MenuItems/Buttons/AddButton";
 import { ConfirmationPopup, ConfirmationPopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { TextInputIcon } from "../components/MenuItems/Icons/TextInputIcon";
+import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData } from "../util/dataHelpers";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -46,14 +46,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     useEffect(() => {
         if (templates && templates.length > 0) {
-            const templateData = templates.map(template => ({
-                id: template.id,
-                templateName: template.templateName,
-                footer: template.footer,
-                intro: template.intro,
-                studentName: template.studentName,
-                basePdf: template.basePdf
-            }));
+            const templateData = mapTemplatesToTemplateData(templates);
+
             setTemplateData(templateData);
             if(templateAdded){
                 setCurrentTemplate(templateData[templateData.length - 1]);
@@ -62,8 +56,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             else{
                 setCurrentTemplate(templateData[0] || null);
             }
-            
-            
         }
     }, [templates]);
     
@@ -71,11 +63,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         if (currentTemplate) {
             const inputs = [makeTemplateInput(
                 currentTemplate.intro,
-                currentTemplate.studentName,
+                currentTemplate.main,
                 currentTemplate.footer,
                 currentTemplate.basePdf
             )];
-            const template: Template = getTemplate(inputs[0]);
+            const template = mapTemplateInputsToTemplateDesigner(currentTemplate, inputs);
     
             getFontsData().then((font) => {
                 if (designerRef.current) {
@@ -165,14 +157,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         }
         if(inputContent && inputContent.trim() != ""){
             try {
-                const blankTemplate: TemplateRequest = {
-                    templateName: inputContent,
-                    intro: "",
-                    studentName: "",
-                    footer: "",
-                    basePdf: "",
-                  }
-                await addNewTemplate(blankTemplate);
+                await addNewTemplate(createBlankTemplate(inputContent));
                 customAlert(PopupType.success, "Succesfully added new template!", `Successfully added new template to database.`);
                 setTemplateAdded(true);
             } catch (error) {
@@ -203,15 +188,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     const saveFieldsHandler = async () => {
         if (designer.current && currentTemplate) {
-            const currentTemplateFields = designer.current.getTemplate();
-            const updatedTemplate = {
-                ...currentTemplate,
-                intro: currentTemplateFields.sampledata[0].header,
-                studentName: currentTemplateFields.sampledata[0].name,
-                footer: currentTemplateFields.sampledata[0].footer,
-            };
-            setCurrentTemplate(updatedTemplate);
-        }
+            const updatedTemplate = createUpdatedTemplate(currentTemplate, designer)
+            await setCurrentTemplate(updatedTemplate);
+            setRightSideBarPage(0)
+            customAlert(PopupType.message, "Inputs Saved", `Remember to also save your template for changes to reflect in pdfcreator!`);
+        };
     };    
 
     const shouldWeSaveHandler = async (index: number) => {
@@ -253,6 +234,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     return (
         <main className="templatecreator-page">
+            <div className="bg-boundingbox" onClick={() => setRightSideBarPage(0)}></div>
             <ConfirmationPopup 
                 title={confirmationPopupContent[0]}
                 text={confirmationPopupContent[1]}
@@ -293,7 +275,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             <section className='templatecreator-page__preview-container'>
                 <div className='templatecreator-page__preview' style={{width: '100%', overflow: 'hidden', height: `calc(50vh - 68px)` }}>
                     <h2>{currentTemplate?.templateName}</h2>
-                    <div className="pdfpreview" ref={designerRef} style={{height: `80%` }}/>
+                    <div className="pdfpreview" ref={designerRef} style={{height: `80%` }} onClick={() => setRightSideBarPage(1)}/>
                 </div>
             </section>
             <section className='templatecreator-page__rightsidebar'>

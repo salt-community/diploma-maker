@@ -62,20 +62,48 @@ export type TemplateResponse = {
     id: number;
     templateName: string;
     footer: string;
+    footerStyling?: Style;
     intro: string;
-    studentName: string;
+    introStyling?: Style;
+    main: string;
+    mainStyling?: Style;
     basePdf: string;
 }
 
 export type TemplateRequest = {
     templateName: string;
     footer: string;
+    footerStyling?: Style;
     intro: string;
-    studentName: string;
+    introStyling?: Style;
+    main: string;
+    mainStyling?: Style;
     basePdf: string;
 }
 
 export type EmailSendRequest = {
-    guidId: string,
-    file: Blob
+    guidId: string;
+    file: Blob;
+}
+
+export type XYPosition = {
+    x: number | null;
+    y: number | null;
+}
+
+export type Size = {
+    width: number | null;
+    height: number | null;
+}
+
+export type Style = {
+    id: number;
+    xPos?: number;
+    yPos?: number;
+    width?: number;
+    height?: number;
+    fontSize?: number;
+    fontColor?: string;
+    fontName?: string;
+    alignment?: string;
 }

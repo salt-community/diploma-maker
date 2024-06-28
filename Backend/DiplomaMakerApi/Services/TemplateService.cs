@@ -15,6 +15,9 @@ public class TemplateService
 
     public async Task<List<Template>> GetTemplates(){
         return await _context.Template
+            .Include(t => t.introStyling)
+            .Include(t => t.mainStyling)
+            .Include(t => t.footerStyling)
             .ToListAsync();
     }
 
@@ -54,8 +57,11 @@ public class TemplateService
 
         template.templateName = templateRequest.templateName;
         template.footer = templateRequest.footer;
+        template.footerStyling = templateRequest.footerStyling;
         template.intro = templateRequest.intro;
-        template.studentName = templateRequest.studentName;
+        template.introStyling = templateRequest.introStyling;
+        template.main = templateRequest.main;
+        template.mainStyling = templateRequest.mainStyling;
         template.basePdf = templateRequest.basePdf;
 
         try

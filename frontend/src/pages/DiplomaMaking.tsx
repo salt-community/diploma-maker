@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Template } from "@pdfme/common";
 import { Form, Viewer } from "@pdfme/ui";
 import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode, TemplateResponse } from "../util/types";
 import {
@@ -10,7 +9,6 @@ import {
   populateIntroField,
   populateNameField,
   populateFooterField,
-  populateField,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
@@ -22,6 +20,7 @@ import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/Save
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { saltDefaultData } from "../data/data";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
+import { mapTemplateInputsToTemplateViewer, templateInputsFromSaltData } from "../util/dataHelpers";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -49,6 +48,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
     if (bootcamps) {
+      console.log(bootcamps);
       if(selectedBootcamp){
         setSelectedBootcampIndex(Number(selectedBootcamp));
       }
@@ -81,33 +81,8 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   // When Page Changes -> Loads into PDF preview
   useEffect(() => {
     if(saltData){
-      const inputs = 
-        [makeTemplateInput(
-          populateField(
-            // @ts-ignore
-            saltData[selectedBootcampIndex].template.intro,
-            saltData[selectedBootcampIndex].classname,
-            saltData[selectedBootcampIndex].dategraduate,
-            saltData[selectedBootcampIndex].names[currentPageIndex]
-          ),
-          populateField(
-            // @ts-ignore
-            saltData[selectedBootcampIndex].template.studentName,
-            saltData[selectedBootcampIndex].classname,
-            saltData[selectedBootcampIndex].dategraduate,
-            saltData[selectedBootcampIndex].names[currentPageIndex]
-          ),
-          populateField(
-            // @ts-ignore
-            saltData[selectedBootcampIndex].template.footer,
-            saltData[selectedBootcampIndex].classname,
-            saltData[selectedBootcampIndex].dategraduate,
-            saltData[selectedBootcampIndex].names[currentPageIndex]
-          ),
-          // @ts-ignore
-          saltData[selectedBootcampIndex].template.basePdf
-        )];
-      const template: Template = getTemplate(inputs[0]);
+      const inputs = templateInputsFromSaltData(saltData, selectedBootcampIndex, currentPageIndex);
+      const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputs)
 
       getFontsData().then((font) => {
         if (uiRef.current) {
@@ -174,7 +149,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
       const inputs = uiInstance.current.getInputs();
       const pdfInput = [makeTemplateInput(
           inputs[0].header,
-          inputs[0].name,
+          inputs[0].main,
           inputs[0].footer,
           inputs[0].pdfbase
       )];
@@ -190,7 +165,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
       const inputsArray = selectedBootcampData.names.map((name) => {
         return makeTemplateInput(
           populateIntroField(selectedBootcampData.template.intro),
-          populateNameField(selectedBootcampData.template.studentName, name),
+          populateNameField(selectedBootcampData.template.main, name),
           populateFooterField(selectedBootcampData.template.footer, selectedBootcampData.classname, selectedBootcampData.dategraduate),
           selectedBootcampData.template.basePdf
         );
@@ -232,7 +207,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   const saveInputFieldsHandler = () => {
     if (uiInstance.current && saltData) {
       const inputs = uiInstance.current.getInputs();
-      const newName = inputs[0].name;
+      const newName = inputs[0].main;
       const currentName = saltData[selectedBootcampIndex].names[currentPageIndex];
 
       if (currentName === newName) {
