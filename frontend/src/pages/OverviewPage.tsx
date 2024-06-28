@@ -249,6 +249,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
                 // @ts-ignore
                 confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
                 currentProgress={sendEmailProgress}
+                setCurrentProgress={setSendEmailProgress}
             />
             {selectedItems.length > 0 && 
                 <EmailClient 

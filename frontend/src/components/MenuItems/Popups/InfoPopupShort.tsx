@@ -17,9 +17,10 @@ type Props = {
   confirmClick: (inputContent?: string) => void;
   abortClick: () => void;
   currentProgress?: number;
+  setCurrentProgress: (value: number) => void;
 }
 
-export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick, abortClick, currentProgress }: Props) => {
+export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick, abortClick, currentProgress, setCurrentProgress }: Props) => {
   const [inputContent, setInputContent] = useState<string>('');
   const [finished, setFinished] = useState<boolean>(false);
 
@@ -53,6 +54,7 @@ export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick,
     abortClick(); 
     await delay(750)
     setFinished(false);
+    setCurrentProgress(0);
   }
 
   return (
