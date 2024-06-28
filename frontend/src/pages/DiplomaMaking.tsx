@@ -111,42 +111,44 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
         const template: Template = getTemplate(
           inputs[0],
           { 
-            x: saltData[selectedBootcampIndex].template.introStyling?.xPos, 
-            y: saltData[selectedBootcampIndex].template.introStyling?.yPos 
+            x: saltData[selectedBootcampIndex].template.introStyling?.xPos ?? null, 
+            y: saltData[selectedBootcampIndex].template.introStyling?.yPos ?? null
           }, // headerPos
           { 
-            width: saltData[selectedBootcampIndex].template.introStyling?.width, 
-            height: saltData[selectedBootcampIndex].template.introStyling?.height 
+            width: saltData[selectedBootcampIndex].template.introStyling?.width ?? null, 
+            height: saltData[selectedBootcampIndex].template.introStyling?.height ?? null
           }, // headerSize
-          saltData[selectedBootcampIndex].template.introStyling?.fontSize, // footerFontSize
-          saltData[selectedBootcampIndex].template.introStyling?.fontColor, // footerFontColor
-          saltData[selectedBootcampIndex].template.introStyling?.fontName, // footerFont
-          saltData[selectedBootcampIndex].template.introStyling?.alignment, // footerAlignment
+          saltData[selectedBootcampIndex].template.introStyling?.fontSize ?? null, // footerFontSize
+          saltData[selectedBootcampIndex].template.introStyling?.fontColor ?? null, // footerFontColor
+          saltData[selectedBootcampIndex].template.introStyling?.fontName ?? null, // footerFont
+          saltData[selectedBootcampIndex].template.introStyling?.alignment ?? null, // footerAlignment
           { 
-            x: saltData[selectedBootcampIndex].template.mainStyling?.xPos, 
-            y: saltData[selectedBootcampIndex].template.mainStyling?.yPos 
+            x: saltData[selectedBootcampIndex].template.mainStyling?.xPos ?? null, 
+            y: saltData[selectedBootcampIndex].template.mainStyling?.yPos ?? null
           }, // mainPos
           { 
-            width: saltData[selectedBootcampIndex].template.mainStyling?.width, 
-            height: saltData[selectedBootcampIndex].template.mainStyling?.height 
+            width: saltData[selectedBootcampIndex].template.mainStyling?.width ?? null, 
+            height: saltData[selectedBootcampIndex].template.mainStyling?.height ?? null
           }, // mainSize
-          saltData[selectedBootcampIndex].template.mainStyling?.fontSize, // footerFontSize
-          saltData[selectedBootcampIndex].template.mainStyling?.fontColor, // footerFontColor
-          saltData[selectedBootcampIndex].template.mainStyling?.fontName, // footerFont
-          saltData[selectedBootcampIndex].template.mainStyling?.alignment, // footerAlignment
+          saltData[selectedBootcampIndex].template.mainStyling?.fontSize ?? null, // footerFontSize
+          saltData[selectedBootcampIndex].template.mainStyling?.fontColor ?? null, // footerFontColor
+          saltData[selectedBootcampIndex].template.mainStyling?.fontName ?? null, // footerFont
+          saltData[selectedBootcampIndex].template.mainStyling?.alignment ?? null, // footerAlignment
           { 
-            x: saltData[selectedBootcampIndex].template.footerStyling?.xPos, 
-            y: saltData[selectedBootcampIndex].template.footerStyling?.yPos 
+            x: saltData[selectedBootcampIndex].template.footerStyling?.xPos ?? null, 
+            y: saltData[selectedBootcampIndex].template.footerStyling?.yPos ?? null 
           }, // footerPos
           { 
-            width: saltData[selectedBootcampIndex].template.footerStyling?.width, 
-            height: saltData[selectedBootcampIndex].template.footerStyling?.height 
+            width: saltData[selectedBootcampIndex].template.footerStyling?.width ?? null, 
+            height: saltData[selectedBootcampIndex].template.footerStyling?.height ?? null
           }, // footerSize
-          saltData[selectedBootcampIndex].template.footerStyling?.fontSize, // footerFontSize
-          saltData[selectedBootcampIndex].template.footerStyling?.fontColor, // footerFontColor
-          saltData[selectedBootcampIndex].template.footerStyling?.fontName, // footerFont
-          saltData[selectedBootcampIndex].template.footerStyling?.alignment // footerAlignment
+          saltData[selectedBootcampIndex].template.footerStyling?.fontSize ?? null, // footerFontSize
+          saltData[selectedBootcampIndex].template.footerStyling?.fontColor ?? null, // footerFontColor
+          saltData[selectedBootcampIndex].template.footerStyling?.fontName ?? null, // footerFont
+          saltData[selectedBootcampIndex].template.footerStyling?.alignment ?? null // footerAlignment
         );
+
+        console.log(saltData[selectedBootcampIndex]);
 
       getFontsData().then((font) => {
         if (uiRef.current) {
