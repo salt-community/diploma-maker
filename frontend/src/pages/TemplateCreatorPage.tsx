@@ -73,41 +73,41 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             const template: Template = getTemplate(
                 inputs[0],
                 {
-                    x: currentTemplate.introStyling.XPos,
-                    y: currentTemplate.introStyling.YPos,
+                    x: currentTemplate.introStyling.XPos ?? null,
+                    y: currentTemplate.introStyling.YPos ?? null,
                 },
                 {
-                    width: currentTemplate.introStyling.Width,
-                    height: currentTemplate.introStyling.Height,
+                    width: currentTemplate.introStyling.Width ?? null,
+                    height: currentTemplate.introStyling.Height ?? null,
                 },
-                currentTemplate.introStyling?.FontSize,
-                currentTemplate.introStyling?.FontColor,
-                currentTemplate.introStyling?.FontName,
-                currentTemplate.introStyling?.Alignment,
+                currentTemplate.introStyling?.FontSize ?? null,
+                currentTemplate.introStyling?.FontColor ?? null,
+                currentTemplate.introStyling?.FontName ?? null,
+                currentTemplate.introStyling?.Alignment ?? null,
                 {
-                    x: currentTemplate.mainStyling.XPos,
-                    y: currentTemplate.mainStyling.YPos,
-                },
-                {
-                    width: currentTemplate.mainStyling.Width,
-                    height: currentTemplate.mainStyling.Height,
-                },
-                currentTemplate.mainStyling?.FontSize,
-                currentTemplate.mainStyling?.FontColor,
-                currentTemplate.mainStyling?.FontName,
-                currentTemplate.mainStyling?.Alignment,
-                {
-                    x: currentTemplate.footerStyling.XPos,
-                    y: currentTemplate.footerStyling.YPos,
+                    x: currentTemplate.mainStyling.XPos ?? null,
+                    y: currentTemplate.mainStyling.YPos ?? null,
                 },
                 {
-                    width: currentTemplate.footerStyling.Width,
-                    height: currentTemplate.footerStyling.Height,
+                    width: currentTemplate.mainStyling.Width ?? null,
+                    height: currentTemplate.mainStyling.Height ?? null,
                 },
-                currentTemplate.footerStyling?.FontSize,
-                currentTemplate.footerStyling?.FontColor,
-                currentTemplate.footerStyling?.FontName,
-                currentTemplate.footerStyling?.Alignment
+                currentTemplate.mainStyling?.FontSize ?? null,
+                currentTemplate.mainStyling?.FontColor ?? null,
+                currentTemplate.mainStyling?.FontName ?? null,
+                currentTemplate.mainStyling?.Alignment ?? null,
+                {
+                    x: currentTemplate.footerStyling.XPos ?? null,
+                    y: currentTemplate.footerStyling.YPos ?? null,
+                },
+                {
+                    width: currentTemplate.footerStyling.Width ?? null,
+                    height: currentTemplate.footerStyling.Height ?? null,
+                },
+                currentTemplate.footerStyling?.FontSize ?? null,
+                currentTemplate.footerStyling?.FontColor ?? null,
+                currentTemplate.footerStyling?.FontName ?? null,
+                currentTemplate.footerStyling?.Alignment ?? null
             );
 
             console.log(currentTemplate.introStyling)
