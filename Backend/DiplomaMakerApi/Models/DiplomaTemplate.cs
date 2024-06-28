@@ -4,7 +4,7 @@ public class DiplomaTemplate
 {
     public int Id { get; set;}
 
-    public required string TemplateName {get; set;} 
+    public required string Name {get; set;} 
 
     public string Footer {get; set;} = "has successfully completed\nthe {classname} Bootcamp of \n {datebootcamp} at School of Applied Technology.";
     public TemplateStyle? FooterStyling {get; set;}
