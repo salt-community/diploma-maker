@@ -50,14 +50,14 @@ export type DiplomasRequestDto = {
 
 export type PersonalStudentData = {
     name: string;
-    email: string;
+    email?: string;
 }
 
 // Internal Data
 export type SaltData = {
     classname: string;
     dategraduate: string;
-    names: string[];
+    students: PersonalStudentData[];
     template: TemplateResponse;
 };
 

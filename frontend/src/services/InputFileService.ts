@@ -1,13 +1,9 @@
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
+import { PersonalStudentData } from '../util/types';
 
-export type TabularData = {
+type TabularData = {
   [key: string]: string ;
-}
-
-export type filteredData = {
-  Name: string;
-  Email?: string;
 }
 
 export const parseCSV = (fileData: string): Promise<TabularData[]> => {
@@ -35,10 +31,10 @@ export const parseJSON = (fileData: string): TabularData[] => {
   return JSON.parse(fileData) as TabularData[];
 };
 
-export const ParseFileData = async (file: File): Promise<filteredData[]> => {
+export const ParseFileData = async (file: File): Promise<PersonalStudentData[]> => {
   if (!file) return [];
 
-  return new Promise<filteredData[]>((resolve) => {
+  return new Promise<PersonalStudentData[]>((resolve) => {
 
     const reader = new FileReader();
 
@@ -59,18 +55,19 @@ export const ParseFileData = async (file: File): Promise<filteredData[]> => {
         }
         
         const emailRegex = new RegExp("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,4}$");
-        const filteredData = parsedData
+        const data: PersonalStudentData[] = parsedData
           .filter(item => item.Name)
           .map(item => {
             if (item.Email && emailRegex.test(item.Email)) {
-              return { Name: item.Name, Email: item.Email };
+              return { name: item.Name, email: item.Email };
             } else {
-              return { Name: item.Name };
+              return { name: item.Name, email: undefined }; 
             }
           });
-
-        console.log(filteredData);
-        resolve(filteredData ?? []);
+        
+        console.log(data);
+        resolve(data ?? []);
+        
 
       } catch (error) {
         console.log("Failed to parse file", error);
