@@ -9,10 +9,10 @@ public class AutomapperConfig : Profile
         CreateMap<BootcampRequestDto, Bootcamp>().ReverseMap();
         CreateMap<BootcampResponseDto, Bootcamp>().ReverseMap();
         CreateMap<BootcampInDiplomaDto, Bootcamp>().ReverseMap();
-        CreateMap<DiplomaRequestDto, Diploma>().ReverseMap();
-        CreateMap<DiplomaResponseDto, Diploma>().ReverseMap();
-        CreateMap<DiplomaInBootcampDto, Diploma>().ReverseMap();
+        CreateMap<DiplomaRequestDto, Student>().ReverseMap();
+        CreateMap<DiplomaResponseDto, Student>().ReverseMap();
+        CreateMap<DiplomaInBootcampDto, Student>().ReverseMap();
         CreateMap<TemplateResponseDto, Template>().ReverseMap();
-        CreateMap<DiplomaPutRequestDto, Diploma>().ReverseMap();
+        CreateMap<DiplomaPutRequestDto, Student>().ReverseMap();
     }
 }

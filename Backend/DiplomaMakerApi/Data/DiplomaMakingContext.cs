@@ -4,15 +4,15 @@ using DiplomaMakerApi.Models;
 
 public class DiplomaMakingContext : DbContext
 {
-    public DiplomaMakingContext(DbContextOptions<DiplomaMakingContext> options): base(options)
+    public DiplomaMakingContext(DbContextOptions<DiplomaMakingContext> options) : base(options)
     {
+
     }
 
-
-    public DbSet<Bootcamp> Bootcamp { get; set; } = default!;
-    public DbSet<Diploma> Diploma { get; set; } = default!;
-    public DbSet<Template> Template { get; set; } = default!;
-    public DbSet<Style> styles { get; set; } = default!;
+    public DbSet<Bootcamp> Bootcamps { get; set; } = default!;
+    public DbSet<Student> Students { get; set; } = default!;
+    public DbSet<DiplomaTemplate> DiplomaTemplates { get; set; } = default!;
+    public DbSet<Style> Styles { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
