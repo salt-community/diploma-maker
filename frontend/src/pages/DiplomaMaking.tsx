@@ -9,6 +9,8 @@ import {
   populateIntroField,
   populateNameField,
   populateFooterField,
+  newGenerateCombinedPDF,
+  populateField,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
@@ -20,7 +22,8 @@ import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/Save
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { saltDefaultData } from "../data/data";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
-import { mapTemplateInputsToTemplateViewer, templateInputsFromSaltData } from "../util/dataHelpers";
+import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../util/dataHelpers";
+import { Template } from "@pdfme/common";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -84,7 +87,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
     
     if(saltData){
       const inputs = templateInputsFromSaltData(saltData, selectedBootcampIndex, currentPageIndex);
-      const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputs)
+      const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputs[0])
 
       getFontsData().then((font) => {
         if (uiRef.current) {
@@ -153,7 +156,11 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
           inputs[0].footer,
           inputs[0].pdfbase
       )];
+      console.log("PDF INPUTS")
+      console.log(pdfInput);
       const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, pdfInput)
+      console.log("TEMPLATE")
+      console.log(template);
       await generatePDF(template, inputs);
       await postSelectedBootcampData();
     }
@@ -163,17 +170,17 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
     if (saltData) {
       const selectedBootcampData = saltData[selectedBootcampIndex];
       const inputsArray = selectedBootcampData.students.map((student) => {
-        return makeTemplateInput(
-          populateIntroField(selectedBootcampData.template.intro),
-          populateNameField(selectedBootcampData.template.main, name),
-          populateFooterField(selectedBootcampData.template.footer, selectedBootcampData.classname, selectedBootcampData.dategraduate),
-          selectedBootcampData.template.basePdf
-        );
+        return templateInputsFromBootcampData(selectedBootcampData, student.name);
       });
 
-      const templates = inputsArray.map((input) => getTemplate(input));
+      var templatesArr: Template[] = [];
+      for (let i = 0; i < inputsArray.length; i++) {
+        templatesArr.push(
+          mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputsArray[i])
+        )
+      }
 
-      await generateCombinedPDF(templates, inputsArray);
+      await newGenerateCombinedPDF(templatesArr, inputsArray);
       await postSelectedBootcampData();
     }
   };
