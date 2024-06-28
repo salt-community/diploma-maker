@@ -208,7 +208,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
         diplomas: saltData[selectedBootcampIndex].students.map((student, index) => ({
           guidId: currentBootcamp.diplomas[index]?.guidId || crypto.randomUUID(),
           studentName: student.name,
-          studentEmail: student.email,  // Assuming you have this field in the DiplomaResponse type
+          EmailAddress: student.email,  
           bootcampGuidId: currentBootcamp.guidId
         }))
       };

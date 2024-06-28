@@ -4,6 +4,7 @@ export type displayMode = "form" | "viewer";
 export type DiplomaRequest = {
     guidId?: string;
     studentName: string;
+    EmailAddress?: string;
     bootcampGuidId: string;
 }
 
