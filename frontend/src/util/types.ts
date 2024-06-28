@@ -48,6 +48,11 @@ export type DiplomasRequestDto = {
     diplomas: DiplomaRequest[];
 }
 
+export type PersonalStudentData = {
+    name: string;
+    email: string;
+}
+
 // Internal Data
 export type SaltData = {
     classname: string;
