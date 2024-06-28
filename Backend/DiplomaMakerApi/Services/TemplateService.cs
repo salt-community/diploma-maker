@@ -21,7 +21,7 @@ public class TemplateService
             .ToListAsync();
     }
 
-    public async Task<Template> GetTemplate(int id)
+    public async Task<Template?> GetTemplate(int id)
     {
         return await _context.Template.FirstOrDefaultAsync(t => t.Id == id);
     }

@@ -7,21 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
 
 
-public class EmailService
+public class EmailService(IConfiguration configuration, ILogger<EmailService> logger, DiplomaMakingContext context)
 {
-    private readonly string _email;
-    private readonly string _appPassword;
-    private readonly ILogger<EmailService> _logger;
-    private readonly DiplomaMakingContext _context;
+    private readonly string _email = configuration["EmailSettings:Email"] ?? throw new ArgumentNullException(nameof(_email));
+    private readonly string _appPassword = configuration["EmailSettings:AppPassword"] ?? throw new ArgumentNullException(nameof(_appPassword));
+    private readonly ILogger<EmailService> _logger = logger;
+    private readonly DiplomaMakingContext _context = context;
 
-    public EmailService(IConfiguration configuration, ILogger<EmailService> logger, DiplomaMakingContext context)
-    {
-        _email = configuration["EmailSettings:Email"];
-        _appPassword = configuration["EmailSettings:AppPassword"];
-        _logger = logger;
-        _context = context;
-
-    }
     public async Task SendEmailWithAttachmentAsync(Guid guidid, IFormFile file)
     {
         var diplomaByGuid = await _context.Diploma.FirstOrDefaultAsync(d => d.GuidId == guidid);
@@ -59,7 +51,7 @@ public class EmailService
                 Content = new MimeContent(file.OpenReadStream(), ContentEncoding.Default),
                 ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
                 ContentTransferEncoding = ContentEncoding.Base64,
-                FileName = file.FileName
+                FileName = $"Diploma-{diplomaByGuid.StudentName}.pdf"
             };
             multipart.Add(attachment);
         }

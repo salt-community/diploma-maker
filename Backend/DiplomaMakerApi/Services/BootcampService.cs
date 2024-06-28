@@ -63,7 +63,7 @@ public class BootcampService
             await _context.SaveChangesAsync();
             return bootcamp;
         }
-        catch (DbUpdateException ex)
+        catch (DbUpdateException)
         {
             throw new DbUpdateException("Failed to save changes Bootcamp name needs to be unique");
         }
