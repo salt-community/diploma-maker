@@ -10,7 +10,7 @@ import { BootcampResponse, DiplomaInBootcamp, DiplomaResponse, DiplomaUpdateRequ
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { delay, generatePDF, oldGenerateCombinedPDF, populateFooterField, populateIntroField } from '../util/helper';
+import { delay, generatePDF, oldGenerateCombinedPDF, populateField, populateFooterField, populateIntroField } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../components/MenuItems/Buttons/SaveButton';
@@ -106,9 +106,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
         const inputsArray = selectedItems.map(item => {
             const bootcamp = bootcamps?.find(b => b.diplomas.some(diploma => diploma.guidId === item.guidId));
             return bootcamp ? makeTemplateInput(
-                bootcamp.template.intro,
-                item.studentName,
-                bootcamp.template.footer,
+                populateField(bootcamp.template.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.studentName),
+                populateField(item.studentName, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.studentName),
+                populateField(bootcamp.template.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.studentName),
                 bootcamp.template.basePdf
             ) : null;
         }).filter(input => input !== null) as ReturnType<typeof makeTemplateInput>[];
@@ -204,15 +204,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
         }
     
         const pdfInput = makeTemplateInput(
-            populateIntroField(
-                bootcamp.template.intro
-            ),
-            diploma.studentName,
-            populateFooterField(
-                bootcamp.template.footer,
-                bootcamp.name,
-                bootcamp.graduationDate.toString().slice(0, 10)
-              ),
+            populateField(bootcamp.template.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.studentName),
+            populateField(diploma.studentName, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.studentName),
+            populateField(bootcamp.template.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.studentName),
             bootcamp.template.basePdf
         );
 
