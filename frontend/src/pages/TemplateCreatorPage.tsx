@@ -109,8 +109,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 currentTemplate.footerStyling?.FontName ?? null,
                 currentTemplate.footerStyling?.Alignment ?? null
             );
-
-            console.log(currentTemplate.introStyling)
     
             getFontsData().then((font) => {
                 if (designerRef.current) {
