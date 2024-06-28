@@ -145,7 +145,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   };
 
   const generatePDFHandler = async () => {
-    if (uiInstance.current) {
+    if (uiInstance.current && saltData) {
       const inputs = uiInstance.current.getInputs();
       const pdfInput = [makeTemplateInput(
           inputs[0].header,
@@ -153,7 +153,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
           inputs[0].footer,
           inputs[0].pdfbase
       )];
-      const template = getTemplate(pdfInput[0]);
+      const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, pdfInput)
       await generatePDF(template, inputs);
       await postSelectedBootcampData();
     }
