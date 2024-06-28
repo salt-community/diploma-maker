@@ -50,7 +50,6 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
     if (bootcamps) {
-      console.log(bootcamps);
       if(selectedBootcamp){
         setSelectedBootcampIndex(Number(selectedBootcamp));
       }

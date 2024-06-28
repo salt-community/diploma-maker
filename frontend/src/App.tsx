@@ -87,7 +87,6 @@ export default function App() {
   }
 
   async function refresh(){
-    console.log("Refetching!");
     const newBootcamps = await getBootcamps();
     const newTemplates = await getAllTemplates();
     setBootcamps(newBootcamps);
