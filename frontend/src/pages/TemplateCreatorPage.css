@@ -38,6 +38,7 @@
                 left: -80%;
                 width: 300%;
                 height: 100%;
+                min-width: 1000px !important;
             }
 
 .templatecreator-page__leftsidebar{
@@ -144,6 +145,9 @@
             }
 
 
+
+/* PDFME Designer janky css overrides */
+
 .pdfpreview div div div div div:nth-of-type(1){
     background-color: transparent !important;
 }
@@ -160,16 +164,16 @@
 .pdfpreview div div div div div div:hover{
     cursor: pointer;
 }
-
-.pdfpreview div div div div div div:nth-of-type(1){
-    /* background-color: #5bea53 !important; */
-    /* outline: #c9ff0722 solid 1.5px;
-    border: none; */
-}
 .pdfpreview div div div div div div div{
     background-color: #6eff07 !important;
 }
 
+.pdfpreview div div div div div div div div:nth-of-type(2){
+    visibility: hidden;
+}
+.pdfpreview div div div div div div div div:nth-of-type(3){
+    visibility: hidden;
+}
 .pdfpreview div div div div div button{
     visibility: hidden;
     background-color: #197eff !important;
