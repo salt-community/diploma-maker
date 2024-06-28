@@ -131,6 +131,8 @@ export const generatePDF = async (template: Template, inputs: any, returnFile?: 
 
 export const generateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
   const font = await getFontsData();
+  console.log("we are inside the generate combined pdf")
+  console.log(templates);
 
   const combinedTemplate: Template = {
     ...templates[0],

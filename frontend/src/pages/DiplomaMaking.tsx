@@ -21,6 +21,7 @@ import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup
 import { saltDefaultData } from "../data/data";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { mapTemplateInputsToTemplateViewer, templateInputsFromSaltData } from "../util/dataHelpers";
+import { Template } from "@pdfme/common";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -153,7 +154,11 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
           inputs[0].footer,
           inputs[0].pdfbase
       )];
+      console.log("PDF INPUTS")
+      console.log(pdfInput);
       const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, pdfInput)
+      console.log("TEMPLATE")
+      console.log(template);
       await generatePDF(template, inputs);
       await postSelectedBootcampData();
     }
@@ -165,15 +170,59 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
       const inputsArray = selectedBootcampData.students.map((student) => {
         return makeTemplateInput(
           populateIntroField(selectedBootcampData.template.intro),
-          populateNameField(selectedBootcampData.template.main, name),
+          populateNameField(selectedBootcampData.template.main, student.name),
           populateFooterField(selectedBootcampData.template.footer, selectedBootcampData.classname, selectedBootcampData.dategraduate),
           selectedBootcampData.template.basePdf
         );
       });
 
-      const templates = inputsArray.map((input) => getTemplate(input));
+      var templatesArr: Template[] = [];
 
-      await generateCombinedPDF(templates, inputsArray);
+      for (let i = 0; i < inputsArray.length; i++) {
+        templatesArr.push(
+          getTemplate(
+            inputsArray[i],
+            { 
+              x: saltData[selectedBootcampIndex].template.introStyling?.xPos ?? null, 
+              y: saltData[selectedBootcampIndex].template.introStyling?.yPos ?? null
+            }, // headerPos
+            { 
+              width: saltData[selectedBootcampIndex].template.introStyling?.width ?? null, 
+              height: saltData[selectedBootcampIndex].template.introStyling?.height ?? null
+            }, // headerSize
+            saltData[selectedBootcampIndex].template.introStyling?.fontSize ?? null, // footerFontSize
+            saltData[selectedBootcampIndex].template.introStyling?.fontColor ?? null, // footerFontColor
+            saltData[selectedBootcampIndex].template.introStyling?.fontName ?? null, // footerFont
+            saltData[selectedBootcampIndex].template.introStyling?.alignment ?? null, // footerAlignment
+            { 
+              x: saltData[selectedBootcampIndex].template.mainStyling?.xPos ?? null, 
+              y: saltData[selectedBootcampIndex].template.mainStyling?.yPos ?? null
+            }, // mainPos
+            { 
+              width: saltData[selectedBootcampIndex].template.mainStyling?.width ?? null, 
+              height: saltData[selectedBootcampIndex].template.mainStyling?.height ?? null
+            }, // mainSize
+            saltData[selectedBootcampIndex].template.mainStyling?.fontSize ?? null, // footerFontSize
+            saltData[selectedBootcampIndex].template.mainStyling?.fontColor ?? null, // footerFontColor
+            saltData[selectedBootcampIndex].template.mainStyling?.fontName ?? null, // footerFont
+            saltData[selectedBootcampIndex].template.mainStyling?.alignment ?? null, // footerAlignment
+            { 
+              x: saltData[selectedBootcampIndex].template.footerStyling?.xPos ?? null, 
+              y: saltData[selectedBootcampIndex].template.footerStyling?.yPos ?? null 
+            }, // footerPos
+            { 
+              width: saltData[selectedBootcampIndex].template.footerStyling?.width ?? null, 
+              height: saltData[selectedBootcampIndex].template.footerStyling?.height ?? null
+            }, // footerSize
+            saltData[selectedBootcampIndex].template.footerStyling?.fontSize ?? null, // footerFontSize
+            saltData[selectedBootcampIndex].template.footerStyling?.fontColor ?? null, // footerFontColor
+            saltData[selectedBootcampIndex].template.footerStyling?.fontName ?? null, // footerFont
+            saltData[selectedBootcampIndex].template.footerStyling?.alignment ?? null // footerAlignment
+          )
+        )
+      }
+
+      await generateCombinedPDF(templatesArr, inputsArray);
       await postSelectedBootcampData();
     }
   };
