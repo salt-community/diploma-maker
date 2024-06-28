@@ -23,6 +23,11 @@ public class BootcampService
             await _context.Bootcamp
             .Include(b => b.Diplomas)
             .Include(b =>b.template)
+                .ThenInclude(t => t.introStyling)
+            .Include(b =>b.template)
+                .ThenInclude(t => t.mainStyling)
+            .Include(b =>b.template)
+                .ThenInclude(t => t.footerStyling)
             .ToListAsync();
 
     public async Task<Bootcamp?> GetBootcampByGuidId(Guid guidId) => 

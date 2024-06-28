@@ -6,11 +6,31 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DiplomaMakerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class style : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "styles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    XPos = table.Column<double>(type: "float", nullable: true),
+                    YPos = table.Column<double>(type: "float", nullable: true),
+                    Width = table.Column<double>(type: "float", nullable: true),
+                    Height = table.Column<double>(type: "float", nullable: true),
+                    FontSize = table.Column<double>(type: "float", nullable: true),
+                    FontColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FontName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Alignment = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_styles", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Template",
                 columns: table => new
@@ -19,13 +39,31 @@ namespace DiplomaMakerApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     templateName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     footer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    footerStylingId = table.Column<int>(type: "int", nullable: true),
                     intro = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    studentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    introStylingId = table.Column<int>(type: "int", nullable: true),
+                    main = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    mainStylingId = table.Column<int>(type: "int", nullable: true),
                     basePdf = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Template", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Template_styles_footerStylingId",
+                        column: x => x.footerStylingId,
+                        principalTable: "styles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Template_styles_introStylingId",
+                        column: x => x.introStylingId,
+                        principalTable: "styles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Template_styles_mainStylingId",
+                        column: x => x.mainStylingId,
+                        principalTable: "styles",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -87,6 +125,21 @@ namespace DiplomaMakerApi.Migrations
                 name: "IX_Diploma_BootcampId",
                 table: "Diploma",
                 column: "BootcampId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Template_footerStylingId",
+                table: "Template",
+                column: "footerStylingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Template_introStylingId",
+                table: "Template",
+                column: "introStylingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Template_mainStylingId",
+                table: "Template",
+                column: "mainStylingId");
         }
 
         /// <inheritdoc />
@@ -100,6 +153,9 @@ namespace DiplomaMakerApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Template");
+
+            migrationBuilder.DropTable(
+                name: "styles");
         }
     }
 }
