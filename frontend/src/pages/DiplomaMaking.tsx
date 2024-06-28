@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Template } from "@pdfme/common";
 import { Form, Viewer } from "@pdfme/ui";
 import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode, TemplateResponse } from "../util/types";
 import {
@@ -10,7 +9,6 @@ import {
   populateIntroField,
   populateNameField,
   populateFooterField,
-  populateField,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
@@ -22,7 +20,7 @@ import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/Save
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { saltDefaultData } from "../data/data";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
-import { createTempateInputsFromSaltData, mapInputsToTemplateViewer, mapTemplateInputsToTemplateViewer, tempateInputsFromSaltData, templateInputsFromSaltData } from "../util/dataHelpers";
+import { mapTemplateInputsToTemplateViewer, templateInputsFromSaltData } from "../util/dataHelpers";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;

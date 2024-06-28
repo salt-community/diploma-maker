@@ -2,6 +2,7 @@ import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { populateField } from "./helper";
 import { SaltData, TemplateResponse } from "./types";
+import { Designer } from "@pdfme/ui";
 
 export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcampIndex: number, currentPageIndex: number) => {
     const inputs = 
@@ -76,7 +77,51 @@ export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selected
     return template;
 }
 
-export const mapTemplatesToTemplateDataDesigner = (templateInput: TemplateResponse[]) => {
+export const mapTemplateInputsToTemplateDesigner = (currentTemplate: any, inputs: any) => {
+    const template: Template = getTemplate(
+        inputs[0],
+        {
+            x: currentTemplate.introStyling.XPos ?? null,
+            y: currentTemplate.introStyling.YPos ?? null,
+        },
+        {
+            width: currentTemplate.introStyling.Width ?? null,
+            height: currentTemplate.introStyling.Height ?? null,
+        },
+        currentTemplate.introStyling?.FontSize ?? null,
+        currentTemplate.introStyling?.FontColor ?? null,
+        currentTemplate.introStyling?.FontName ?? null,
+        currentTemplate.introStyling?.Alignment ?? null,
+        {
+            x: currentTemplate.mainStyling.XPos ?? null,
+            y: currentTemplate.mainStyling.YPos ?? null,
+        },
+        {
+            width: currentTemplate.mainStyling.Width ?? null,
+            height: currentTemplate.mainStyling.Height ?? null,
+        },
+        currentTemplate.mainStyling?.FontSize ?? null,
+        currentTemplate.mainStyling?.FontColor ?? null,
+        currentTemplate.mainStyling?.FontName ?? null,
+        currentTemplate.mainStyling?.Alignment ?? null,
+        {
+            x: currentTemplate.footerStyling.XPos ?? null,
+            y: currentTemplate.footerStyling.YPos ?? null,
+        },
+        {
+            width: currentTemplate.footerStyling.Width ?? null,
+            height: currentTemplate.footerStyling.Height ?? null,
+        },
+        currentTemplate.footerStyling?.FontSize ?? null,
+        currentTemplate.footerStyling?.FontColor ?? null,
+        currentTemplate.footerStyling?.FontName ?? null,
+        currentTemplate.footerStyling?.Alignment ?? null
+    );
+
+    return template;
+}
+
+export const mapTemplatesToTemplateData = (templateInput: TemplateResponse[]) => {
     const templateData = templateInput.map(template => ({
         id: template.id,
         templateName: template.templateName,
@@ -117,4 +162,27 @@ export const mapTemplatesToTemplateDataDesigner = (templateInput: TemplateRespon
     }));
 
     return templateData
+}
+
+export const createUpdatedTemplate = (currentTemplate: any, designer: any) => {
+    const currentTemplateFields = designer.current.getTemplate();
+    const updatedTemplate = {
+        ...currentTemplate,
+        intro: currentTemplateFields.sampledata[0].header,
+        introStyling: {
+            XPos: currentTemplateFields.schemas[0].header.position.x,
+            YPos: currentTemplateFields.schemas[0].header.position.y,
+        },
+        main: currentTemplateFields.sampledata[0].main,
+        mainStyling: {
+            XPos: currentTemplateFields.schemas[0].main.position.x,
+            YPos: currentTemplateFields.schemas[0].main.position.y
+        },
+        footer: currentTemplateFields.sampledata[0].footer,
+        footerStyling: {
+            XPos: currentTemplateFields.schemas[0].footer.position.x,
+            YPos: currentTemplateFields.schemas[0].footer.position.y,
+        },
+    }
+    return updatedTemplate;
 }

@@ -87,13 +87,13 @@ export type EmailSendRequest = {
 }
 
 export type XYPosition = {
-    x: number | undefined;
-    y: number | undefined;
+    x: number | null;
+    y: number | null;
 }
 
 export type Size = {
-    width: number | undefined;
-    height: number | undefined;
+    width: number | null;
+    height: number | null;
 }
 
 export type Style = {

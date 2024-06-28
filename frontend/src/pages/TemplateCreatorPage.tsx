@@ -4,7 +4,7 @@ import { PdfFileUpload } from "../components/MenuItems/Inputs/PdfFileUpload";
 import { CustomTemplate, TemplateRequest, TemplateResponse } from "../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { cloneDeep, getFontsData, getPlugins, getPosition, getSize } from "../util/helper";
+import { cloneDeep, getFontsData, getPlugins } from "../util/helper";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { Template } from "@pdfme/common";
 import { PDFDocument } from 'pdf-lib';
@@ -13,7 +13,7 @@ import { AddButton } from "../components/MenuItems/Buttons/AddButton";
 import { ConfirmationPopup, ConfirmationPopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { TextInputIcon } from "../components/MenuItems/Icons/TextInputIcon";
-import { mapTemplatesToTemplateDataDesigner } from "../util/dataHelpers";
+import { createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData } from "../util/dataHelpers";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -47,7 +47,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     useEffect(() => {
         if (templates && templates.length > 0) {
-            const templateData = mapTemplatesToTemplateDataDesigner(templates);
+            const templateData = mapTemplatesToTemplateData(templates);
 
             setTemplateData(templateData);
             if(templateAdded){
@@ -70,45 +70,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 currentTemplate.footer,
                 currentTemplate.basePdf
             )];
-            const template: Template = getTemplate(
-                inputs[0],
-                {
-                    x: currentTemplate.introStyling.XPos ?? null,
-                    y: currentTemplate.introStyling.YPos ?? null,
-                },
-                {
-                    width: currentTemplate.introStyling.Width ?? null,
-                    height: currentTemplate.introStyling.Height ?? null,
-                },
-                currentTemplate.introStyling?.FontSize ?? null,
-                currentTemplate.introStyling?.FontColor ?? null,
-                currentTemplate.introStyling?.FontName ?? null,
-                currentTemplate.introStyling?.Alignment ?? null,
-                {
-                    x: currentTemplate.mainStyling.XPos ?? null,
-                    y: currentTemplate.mainStyling.YPos ?? null,
-                },
-                {
-                    width: currentTemplate.mainStyling.Width ?? null,
-                    height: currentTemplate.mainStyling.Height ?? null,
-                },
-                currentTemplate.mainStyling?.FontSize ?? null,
-                currentTemplate.mainStyling?.FontColor ?? null,
-                currentTemplate.mainStyling?.FontName ?? null,
-                currentTemplate.mainStyling?.Alignment ?? null,
-                {
-                    x: currentTemplate.footerStyling.XPos ?? null,
-                    y: currentTemplate.footerStyling.YPos ?? null,
-                },
-                {
-                    width: currentTemplate.footerStyling.Width ?? null,
-                    height: currentTemplate.footerStyling.Height ?? null,
-                },
-                currentTemplate.footerStyling?.FontSize ?? null,
-                currentTemplate.footerStyling?.FontColor ?? null,
-                currentTemplate.footerStyling?.FontName ?? null,
-                currentTemplate.footerStyling?.Alignment ?? null
-            );
+            const template = mapTemplateInputsToTemplateDesigner(currentTemplate, inputs);
     
             getFontsData().then((font) => {
                 if (designerRef.current) {
@@ -236,29 +198,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     const saveFieldsHandler = async () => {
         if (designer.current && currentTemplate) {
-            const currentTemplateFields = designer.current.getTemplate();
-            const updatedTemplate = {
-                ...currentTemplate,
-                intro: currentTemplateFields.sampledata[0].header,
-                introStyling: {
-                    XPos: currentTemplateFields.schemas[0].header.position.x,
-                    YPos: currentTemplateFields.schemas[0].header.position.y,
-                },
-                main: currentTemplateFields.sampledata[0].main,
-                mainStyling: {
-                    XPos: currentTemplateFields.schemas[0].main.position.x,
-                    YPos: currentTemplateFields.schemas[0].main.position.y
-                },
-                footer: currentTemplateFields.sampledata[0].footer,
-                footerStyling: {
-                    XPos: currentTemplateFields.schemas[0].footer.position.x,
-                    YPos: currentTemplateFields.schemas[0].footer.position.y,
-                },
-            };
+            const updatedTemplate = createUpdatedTemplate(currentTemplate, designer)
             await setCurrentTemplate(updatedTemplate);
             setRightSideBarPage(0)
             customAlert(PopupType.message, "Inputs Saved", `Remember to also save your template for changes to reflect in pdfcreator!`);
-        }
+        };
     };    
 
     const shouldWeSaveHandler = async (index: number) => {
