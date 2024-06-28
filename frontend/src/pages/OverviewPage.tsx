@@ -6,20 +6,17 @@ import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, DiplomaInBootcamp, DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto, EmailSendRequest } from '../util/types';
+import { BootcampResponse, DiplomaInBootcamp, DiplomaResponse, DiplomaUpdateRequestDto, EmailSendRequest } from '../util/types';
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
 import { delay, generateCombinedPDF, generatePDF, populateFooterField, populateIntroField } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
-import { getTemplateBackup, makeTemplateInputBackup } from '../templates/baseTemplateBACKUP';
 import { SaveButton, SaveButtonType } from '../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../components/MenuItems/Buttons/SelectButton';
 import { InfoPopupShort, InfoPopupType } from '../components/MenuItems/Popups/InfoPopupShort';
-import { updateSingleDiploma } from '../services/diplomaService';
 import { EmailClient } from '../components/EmailClient';
-import { TextInputIcon } from '../components/MenuItems/Icons/TextInputIcon';
 import { EmailIcon } from '../components/MenuItems/Icons/EmailIcon';
 
 type Props = {
@@ -38,7 +35,6 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
 
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [popupContent, setPopupContent] = useState<string[]>(["",""]);
-    // @ts-ignore
     const [popupType, setPopupType] = useState<PopupType>(PopupType.fail);
 
     const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false);
@@ -47,8 +43,6 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
     const [confirmationPopupHandler, setConfirmationPopupHandler] = useState<() => void>(() => {});
 
     const [sendEmailProgress, setSendEmailProgress] = useState(0);
-
-
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
 
     useEffect(() => {

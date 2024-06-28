@@ -5,15 +5,14 @@ import { CustomTemplate, TemplateRequest, TemplateResponse } from "../util/types
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
 import { cloneDeep, getFontsData, getPlugins } from "../util/helper";
-import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
-import { Template } from "@pdfme/common";
+import { makeTemplateInput } from "../templates/baseTemplate";
 import { PDFDocument } from 'pdf-lib';
 import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
 import { AddButton } from "../components/MenuItems/Buttons/AddButton";
 import { ConfirmationPopup, ConfirmationPopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { TextInputIcon } from "../components/MenuItems/Icons/TextInputIcon";
-import { createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData } from "../util/dataHelpers";
+import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData } from "../util/dataHelpers";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -57,8 +56,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             else{
                 setCurrentTemplate(templateData[0] || null);
             }
-            
-            
         }
     }, [templates]);
     
@@ -160,14 +157,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         }
         if(inputContent && inputContent.trim() != ""){
             try {
-                const blankTemplate: TemplateRequest = {
-                    templateName: inputContent,
-                    intro: "",
-                    main: "",
-                    footer: "",
-                    basePdf: "",
-                  }
-                await addNewTemplate(blankTemplate);
+                await addNewTemplate(createBlankTemplate(inputContent));
                 customAlert(PopupType.success, "Succesfully added new template!", `Successfully added new template to database.`);
                 setTemplateAdded(true);
             } catch (error) {

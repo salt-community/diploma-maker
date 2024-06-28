@@ -1,7 +1,7 @@
 import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { populateField } from "./helper";
-import { SaltData, TemplateResponse } from "./types";
+import { SaltData, TemplateRequest, TemplateResponse } from "./types";
 import { Designer } from "@pdfme/ui";
 
 export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcampIndex: number, currentPageIndex: number) => {
@@ -185,4 +185,15 @@ export const createUpdatedTemplate = (currentTemplate: any, designer: any) => {
         },
     }
     return updatedTemplate;
+}
+
+export const createBlankTemplate = (templateName: string) => {
+    const blankTemplate: TemplateRequest = {
+        templateName: templateName,
+        intro: "",
+        main: "",
+        footer: "",
+        basePdf: "",
+      }
+    return blankTemplate;
 }
