@@ -67,7 +67,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 currentTemplate.footer,
                 currentTemplate.basePdf
             )];
-            const template = mapTemplateInputsToTemplateDesigner(currentTemplate, inputs);
+            const template = mapTemplateInputsToTemplateDesigner(currentTemplate, inputs[0]);
     
             getFontsData().then((font) => {
                 if (designerRef.current) {

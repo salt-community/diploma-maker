@@ -18,6 +18,7 @@ import { SelectButton, SelectButtonType } from '../components/MenuItems/Buttons/
 import { InfoPopupShort, InfoPopupType } from '../components/MenuItems/Popups/InfoPopupShort';
 import { EmailClient } from '../components/EmailClient';
 import { EmailIcon } from '../components/MenuItems/Icons/EmailIcon';
+import { mapTemplateInputsBootcampsToTemplateViewer } from '../util/dataHelpers';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -214,7 +215,8 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
               ),
             bootcamp.template.basePdf
         );
-        const template = getTemplate(pdfInput);
+
+        const template = mapTemplateInputsBootcampsToTemplateViewer(bootcamp, pdfInput);
         const pdfFile = await generatePDF(template, [pdfInput], true);
         return pdfFile;
     };
