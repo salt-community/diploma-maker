@@ -56,6 +56,7 @@ public class DiplomaService
             {
                 existingDiploma.StudentName = diplomaDto.StudentName;
                 existingDiploma.Bootcamp = bootcamp;
+                existingDiploma.EmailAddress = diplomaDto.EmailAddress;
                 _context.Diploma.Update(existingDiploma);
                 diplomas.Add(existingDiploma);
             }

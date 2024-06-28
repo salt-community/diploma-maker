@@ -4,6 +4,7 @@ export type displayMode = "form" | "viewer";
 export type DiplomaRequest = {
     guidId?: string;
     studentName: string;
+    EmailAddress?: string;
     bootcampGuidId: string;
 }
 
@@ -48,11 +49,16 @@ export type DiplomasRequestDto = {
     diplomas: DiplomaRequest[];
 }
 
+export type PersonalStudentData = {
+    name: string;
+    email?: string;
+}
+
 // Internal Data
 export type SaltData = {
     classname: string;
     dategraduate: string;
-    names: string[];
+    students: PersonalStudentData[];
     template: TemplateResponse;
 };
 
