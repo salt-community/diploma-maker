@@ -85,7 +85,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
     
     if(saltData){
       const inputs = templateInputsFromSaltData(saltData, selectedBootcampIndex, currentPageIndex);
-      const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputs)
+      const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputs[0])
 
       getFontsData().then((font) => {
         if (uiRef.current) {
@@ -180,45 +180,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
 
       for (let i = 0; i < inputsArray.length; i++) {
         templatesArr.push(
-          getTemplate(
-            inputsArray[i],
-            { 
-              x: saltData[selectedBootcampIndex].template.introStyling?.xPos ?? null, 
-              y: saltData[selectedBootcampIndex].template.introStyling?.yPos ?? null
-            }, // headerPos
-            { 
-              width: saltData[selectedBootcampIndex].template.introStyling?.width ?? null, 
-              height: saltData[selectedBootcampIndex].template.introStyling?.height ?? null
-            }, // headerSize
-            saltData[selectedBootcampIndex].template.introStyling?.fontSize ?? null, // footerFontSize
-            saltData[selectedBootcampIndex].template.introStyling?.fontColor ?? null, // footerFontColor
-            saltData[selectedBootcampIndex].template.introStyling?.fontName ?? null, // footerFont
-            saltData[selectedBootcampIndex].template.introStyling?.alignment ?? null, // footerAlignment
-            { 
-              x: saltData[selectedBootcampIndex].template.mainStyling?.xPos ?? null, 
-              y: saltData[selectedBootcampIndex].template.mainStyling?.yPos ?? null
-            }, // mainPos
-            { 
-              width: saltData[selectedBootcampIndex].template.mainStyling?.width ?? null, 
-              height: saltData[selectedBootcampIndex].template.mainStyling?.height ?? null
-            }, // mainSize
-            saltData[selectedBootcampIndex].template.mainStyling?.fontSize ?? null, // footerFontSize
-            saltData[selectedBootcampIndex].template.mainStyling?.fontColor ?? null, // footerFontColor
-            saltData[selectedBootcampIndex].template.mainStyling?.fontName ?? null, // footerFont
-            saltData[selectedBootcampIndex].template.mainStyling?.alignment ?? null, // footerAlignment
-            { 
-              x: saltData[selectedBootcampIndex].template.footerStyling?.xPos ?? null, 
-              y: saltData[selectedBootcampIndex].template.footerStyling?.yPos ?? null 
-            }, // footerPos
-            { 
-              width: saltData[selectedBootcampIndex].template.footerStyling?.width ?? null, 
-              height: saltData[selectedBootcampIndex].template.footerStyling?.height ?? null
-            }, // footerSize
-            saltData[selectedBootcampIndex].template.footerStyling?.fontSize ?? null, // footerFontSize
-            saltData[selectedBootcampIndex].template.footerStyling?.fontColor ?? null, // footerFontColor
-            saltData[selectedBootcampIndex].template.footerStyling?.fontName ?? null, // footerFont
-            saltData[selectedBootcampIndex].template.footerStyling?.alignment ?? null // footerAlignment
-          )
+          mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputsArray[i])
         )
       }
 

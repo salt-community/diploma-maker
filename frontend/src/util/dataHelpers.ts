@@ -36,7 +36,7 @@ export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcam
 
 export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selectedBootcampIndex: number, inputs: any) => {
     const template: Template = getTemplate(
-        inputs[0],
+        inputs,
         { 
           x: saltData[selectedBootcampIndex].template.introStyling?.xPos ?? null, 
           y: saltData[selectedBootcampIndex].template.introStyling?.yPos ?? null
