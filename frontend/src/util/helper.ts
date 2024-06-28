@@ -3,6 +3,7 @@ import { Form, Viewer, Designer } from "@pdfme/ui";
 import { generate } from "@pdfme/generator";
 import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
+import { PDFDocument } from "pdf-lib";
 
 const fontObjList = [
   {
@@ -131,8 +132,6 @@ export const generatePDF = async (template: Template, inputs: any, returnFile?: 
 
 export const generateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
   const font = await getFontsData();
-  console.log("we are inside the generate combined pdf")
-  console.log(templates);
 
   const combinedTemplate: Template = {
     ...templates[0],
@@ -149,6 +148,28 @@ export const generateCombinedPDF = async (templates: Template[], inputsArray: an
   });
 
   const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+  window.open(URL.createObjectURL(blob));
+}
+
+
+export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
+  const font = await getFontsData();
+  const mergedPdf = await PDFDocument.create();
+
+  for (let i = 0; i < templates.length; i++) {
+    const pdf = await generate({
+      template: templates[i],
+      inputs: [inputsArray[i]],
+      options: { font },
+      plugins: getPlugins(),
+    });
+    const loadedPdf = await PDFDocument.load(pdf);
+    const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
+    copiedPages.forEach(page => mergedPdf.addPage(page));
+  }
+
+  const mergedPdfBytes = await mergedPdf.save();
+  const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
   window.open(URL.createObjectURL(blob));
 }
 

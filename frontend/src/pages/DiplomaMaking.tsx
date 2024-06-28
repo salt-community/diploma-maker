@@ -9,6 +9,7 @@ import {
   populateIntroField,
   populateNameField,
   populateFooterField,
+  newGenerateCombinedPDF,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
@@ -177,14 +178,13 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
       });
 
       var templatesArr: Template[] = [];
-
       for (let i = 0; i < inputsArray.length; i++) {
         templatesArr.push(
           mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputsArray[i])
         )
       }
 
-      await generateCombinedPDF(templatesArr, inputsArray);
+      await newGenerateCombinedPDF(templatesArr, inputsArray);
       await postSelectedBootcampData();
     }
   };
