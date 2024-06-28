@@ -10,7 +10,7 @@ import { BootcampResponse, DiplomaInBootcamp, DiplomaResponse, DiplomaUpdateRequ
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { delay, generateCombinedPDF, generatePDF, populateFooterField, populateIntroField } from '../util/helper';
+import { delay, generatePDF, oldGenerateCombinedPDF, populateFooterField, populateIntroField } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../components/MenuItems/Buttons/SaveButton';
@@ -114,7 +114,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
 
         const templates = inputsArray.map(input => getTemplate(input));
 
-        await generateCombinedPDF(templates, inputsArray);
+        await oldGenerateCombinedPDF(templates, inputsArray);
         customAlert(PopupType.success, "PDFs Generated", "The combined PDF has been successfully generated.")
     };
 
