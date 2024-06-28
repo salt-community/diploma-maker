@@ -130,7 +130,7 @@ export const generatePDF = async (template: Template, inputs: any, returnFile?: 
   }
 };
 
-export const generateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
+export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
   const font = await getFontsData();
 
   const combinedTemplate: Template = {

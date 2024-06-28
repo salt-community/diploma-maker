@@ -34,6 +34,27 @@ export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcam
     return inputs;
 }
 
+export const templateInputsFromBootcampData = (selectedBootcampData: any, name: string) => {
+  return makeTemplateInput(
+    populateField(
+      selectedBootcampData.template.intro, 
+      selectedBootcampData.classname, 
+      selectedBootcampData.dategraduate, 
+      name),
+    populateField(
+      selectedBootcampData.template.main, 
+      selectedBootcampData.classname, 
+      selectedBootcampData.dategraduate, 
+      name),
+    populateField(
+      selectedBootcampData.template.footer, 
+      selectedBootcampData.classname, 
+      selectedBootcampData.dategraduate, 
+      name),
+    selectedBootcampData.template.basePdf
+  );
+}
+
 export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selectedBootcampIndex: number, inputs: any) => {
     const template: Template = getTemplate(
         inputs,

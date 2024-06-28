@@ -10,6 +10,7 @@ import {
   populateNameField,
   populateFooterField,
   newGenerateCombinedPDF,
+  populateField,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
@@ -21,7 +22,7 @@ import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/Save
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { saltDefaultData } from "../data/data";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
-import { mapTemplateInputsToTemplateViewer, templateInputsFromSaltData } from "../util/dataHelpers";
+import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../util/dataHelpers";
 import { Template } from "@pdfme/common";
 
 type Props = {
@@ -169,12 +170,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
     if (saltData) {
       const selectedBootcampData = saltData[selectedBootcampIndex];
       const inputsArray = selectedBootcampData.students.map((student) => {
-        return makeTemplateInput(
-          populateIntroField(selectedBootcampData.template.intro),
-          populateNameField(selectedBootcampData.template.main, student.name),
-          populateFooterField(selectedBootcampData.template.footer, selectedBootcampData.classname, selectedBootcampData.dategraduate),
-          selectedBootcampData.template.basePdf
-        );
+        return templateInputsFromBootcampData(selectedBootcampData, student.name);
       });
 
       var templatesArr: Template[] = [];
