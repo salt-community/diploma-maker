@@ -34,7 +34,6 @@ public class BootcampController : ControllerBase
         }
 
     }
-
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Bootcamp>>> GetBootcamps()
     {

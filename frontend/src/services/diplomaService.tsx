@@ -2,32 +2,15 @@ import { DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto, DiplomasReque
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export async function getDiplomasByKeyword(keyword: string): Promise<DiplomaResponse[]> {
-    const response = await fetch(`${apiUrl}/api/diploma/%20/?keyword=${keyword}`);
-    if (!response.ok) {
-        throw new Error('Failed to get diplomas!');
-    }
-    const result = await response.json() as DiplomaResponse[];
-    return result;
-}
 
-export async function getDiplomaById(guidId: string): Promise<DiplomaResponse> {
-    const response = await fetch(`${apiUrl}/api/diploma/${guidId}`);
-    if (!response.ok) {
-        throw new Error('Failed to get diploma!');
-    }
-    const result = await response.json() as DiplomaResponse;
-    return result;
-}
-
-export async function postDiploma(diplomaRequest: DiplomaRequest): Promise<void> {
+export async function postStudent(diplomaRequest: DiplomaRequest): Promise<void> {
     const formattedRequest = {
         ...diplomaRequest,
         // @ts-ignore
         graduationDate: diplomaRequest.graduationDate ? diplomaRequest.graduationDate.toISOString() : undefined
     };
 
-    const response = await fetch(`${apiUrl}/api/diploma`, {
+    const response = await fetch(`${apiUrl}/api/student`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedRequest)
@@ -44,6 +27,23 @@ export async function postDiploma(diplomaRequest: DiplomaRequest): Promise<void>
     if (!response.ok) {
         throw new Error('Failed to create new diploma!');
     }
+}
+export async function getDiplomasByKeyword(keyword: string): Promise<DiplomaResponse[]> {
+    const response = await fetch(`${apiUrl}/api/diploma/%20/?keyword=${keyword}`);
+    if (!response.ok) {
+        throw new Error('Failed to get diplomas!');
+    }
+    const result = await response.json() as DiplomaResponse[];
+    return result;
+}
+
+export async function getDiplomaById(guidId: string): Promise<DiplomaResponse> {
+    const response = await fetch(`${apiUrl}/api/diploma/${guidId}`);
+    if (!response.ok) {
+        throw new Error('Failed to get diploma!');
+    }
+    const result = await response.json() as DiplomaResponse;
+    return result;
 }
 
 

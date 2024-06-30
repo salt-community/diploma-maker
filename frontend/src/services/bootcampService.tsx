@@ -2,22 +2,6 @@ import { BootcampRequest, BootcampResponse } from "../util/types";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export async function getBootcamps(): Promise<BootcampResponse[]>{
-    const response = await fetch(`${apiUrl}/api/bootcamp`);
-    if (!response.ok)
-        throw new Error("Failed to get bootcamps!")
-    const result = await response.json() as BootcampResponse[]
-    return result;
-}
-
-export async function getBootcampById(guidId: string): Promise<BootcampResponse>{
-    const response = await fetch(`${apiUrl}/api/bootcamp/${guidId}`);
-    if (!response.ok)
-        throw new Error("Failed to get bootcamp!")
-    const result = await response.json() as  BootcampResponse;
-    return result;
-}
-
 export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<void> {
     const formattedRequest = {
         ...bootcampRequest,
@@ -34,6 +18,22 @@ export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<vo
     if (!response.ok)
         throw new Error("Failed to post new bootcamp!")
 }
+export async function getBootcamps(): Promise<BootcampResponse[]>{
+    const response = await fetch(`${apiUrl}/api/Bootcamp`);
+    if (!response.ok)
+        throw new Error("Failed to get bootcamps!")
+    const result = await response.json() as BootcampResponse[]
+    return result;
+}
+
+export async function getBootcampById(guidId: string): Promise<BootcampResponse>{
+    const response = await fetch(`${apiUrl}/api/Bootcamp/${guidId}`);
+    if (!response.ok)
+        throw new Error("Failed to get bootcamp!")
+    const result = await response.json() as  BootcampResponse;
+    return result;
+}
+
 
 export async function updateBootcamp(bootcampRequest: BootcampRequest): Promise<void>{
     const formattedRequest = {
