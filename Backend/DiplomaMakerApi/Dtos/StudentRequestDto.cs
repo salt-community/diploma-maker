@@ -1,6 +1,6 @@
 namespace DiplomaMakerApi.Models;
 
-public class DiplomaRequestDto
+public class StudentRequestDto
 {
     public Guid GuidId { get; set; } = Guid.NewGuid();
     public required string StudentName { get; set; }
