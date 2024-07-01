@@ -86,25 +86,7 @@ public class BootcampsController : ControllerBase
         }
     }
 
-    [HttpPut("{guidID}/students")]
-    public async Task<ActionResult<StudentResponseDto>> UpdateStudents(Guid guidID, StudentUpdateRequestDto updateDto)
-    {
-        try
-        {
-            var StudentRequest = _mapper.Map<Student>(updateDto);
-            var updatedStudent = await _service.UpdateStudents(guidID, StudentRequest);
-            if (updatedStudent == null)
-            {
-                return NotFound("Student not found");
-            }
-            var responseDto = _mapper.Map<StudentResponseDto>(updatedStudent);
-            return Ok(responseDto);
-        }
-        catch (BootcampNotFoundException)
-        {
-            return NotFound("Bootcamp not found");
-        }
-    }
+
 
 }
 

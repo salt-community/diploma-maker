@@ -13,11 +13,11 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     private readonly IMapper _mapper = mapper;
 
     [HttpPost]
-    public async Task<ActionResult<List<StudentResponseDto>>> PostStudents(List<StudentRequestDto> requestDto)
+    public async Task<ActionResult<List<StudentResponseDto>>> PostStudents(StudentsRequestDto requestDto)
     {
         try
         {
-            var Students = await _service.PostStudents(requestDto);
+            var Students = await _service.ReplaceStudents(requestDto);
             var responseDtos = Students.Select(d => _mapper.Map<StudentResponseDto>(d)).ToList();
 
             if (responseDtos.Any())
@@ -29,7 +29,7 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
                 return BadRequest("No Students were created.");
             }
         }
-        catch (BootcampNotFoundException ex)
+        catch (StudentNotFoundException ex)
         {
             return NotFound(ex.Message);
         }
@@ -39,6 +39,24 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
         }
     }
 
+    [HttpPut("{GuidID}")]
+    public async Task<ActionResult<StudentResponseDto>> UpdateStudents(Guid GuidID, StudentUpdateRequestDto updateDto)
+    {
+        try
+        {
+            var updatedStudent = await _service.UpdateStudent(GuidID, updateDto);
+            if (updatedStudent == null)
+            {
+                return NotFound("Student not found");
+            }
+            var responseDto = _mapper.Map<StudentResponseDto>(updatedStudent);
+            return Ok(responseDto);
+        }
+        catch (StudentNotFoundException)
+        {
+            return NotFound("Bootcamp not found");
+        }
+    }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<StudentResponseDto>>> GetStudents([FromQuery] string keyword = "")
@@ -77,7 +95,7 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
         {
             await _service.DeleteStudentByGuidId(guidId);
         }
-        catch(BootcampNotFoundException)
+        catch(StudentNotFoundException)
         {
             return NotFound("Bootcamp not found");
         }
