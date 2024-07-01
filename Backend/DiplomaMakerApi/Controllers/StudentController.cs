@@ -19,15 +19,8 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
         {
             var Students = await _service.ReplaceStudents(requestDto);
             var responseDtos = Students.Select(d => _mapper.Map<StudentResponseDto>(d)).ToList();
-
-            if (responseDtos.Any())
-            {
-                return CreatedAtAction(nameof(GetStudentByGuidId), new { guidId = responseDtos.First().GuidId }, responseDtos);
-            }
-            else
-            {
-                return BadRequest("No Students were created.");
-            }
+            return CreatedAtAction(nameof(GetStudents), responseDtos);
+      
         }
         catch (StudentNotFoundException ex)
         {

@@ -17,18 +17,21 @@ public class StudentService
     }
     public async Task<List<Student>> ReplaceStudents(StudentsRequestDto requestDto)
     {
-
         var bootcamp = await _context.Bootcamps
                 .FirstOrDefaultAsync(b => b.GuidId == requestDto.BootcampGuidId)
-                ?? throw new StudentNotFoundException($"Bootcamp with ID {requestDto.BootcampGuidId} does not exist");
+                ?? throw new Exception($"Bootcamp with ID {requestDto.BootcampGuidId} does not exist");
         
+        if (requestDto.Students.Count == 0)
+        {
+            throw new StudentNotFoundException("You need to add students to perform this update"); 
+        }
+
         _context.Students.RemoveRange(bootcamp.Students);
         await _context.SaveChangesAsync();
 
         var Students = new List<Student>();
         foreach (var Student in requestDto.Students)
         {
-          
                 var newStudent = new Student
                 {
                     Name = Student.Name,
