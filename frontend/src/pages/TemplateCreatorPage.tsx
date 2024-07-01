@@ -33,8 +33,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const [rightSideBarPage, setRightSideBarPage] = useState<number>(0);
     const [leftSideBarPage, setLeftSideBarPage] = useState<number>(0);
 
-    const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
     const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+    const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
     
     const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
     const [fileAdded, setFileAdded] = useState<boolean>(false);
