@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './InfoPopupShort.css';
+import './InfoPopup.css';
 import { SuccessIcon } from '../Icons/SuccessIcon';
 import { CloseWindowIcon } from '../Icons/CloseWindowIcon';
 import { delay } from '../../../util/helper';
@@ -22,7 +22,7 @@ type Props = {
   setCurrentProgress: (value: number) => void;
 }
 
-export const InfoPopupShort = ({ show, infoPopupType, title, text, confirmClick, abortClick, currentProgress, setCurrentProgress }: Props) => {
+export const InfoPopup = ({ show, infoPopupType, title, text, confirmClick, abortClick, currentProgress, setCurrentProgress }: Props) => {
   const [inputContent, setInputContent] = useState<string>('');
   const [finished, setFinished] = useState<boolean>(false);
 
