@@ -1,5 +1,5 @@
 import {Routes, Route, } from "react-router-dom";
-import DiplomaMaking from './pages/DiplomaMaking';
+import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/VerificationPage";
 import { useEffect, useState } from "react";
 import { BootcampRequest, BootcampResponse, DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto, DiplomasRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse } from "./util/types";

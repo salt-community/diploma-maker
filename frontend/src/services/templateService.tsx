@@ -5,6 +5,7 @@ export async function getAllTemplates(): Promise<TemplateResponse[]> {
     if (!response.ok)
         throw new Error("Failed to get templates!");
     const result = await response.json() as TemplateResponse[];
+   
     return result;
 }
 

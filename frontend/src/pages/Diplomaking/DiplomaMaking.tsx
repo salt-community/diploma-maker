@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode, TemplateResponse, PersonalStudentData } from "../util/types";
+import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode, TemplateResponse, PersonalStudentData } from "../../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -9,18 +9,18 @@ import {
   populateIntroField,
   populateNameField,
   populateFooterField,
-} from "../util/helper";
-import AddDiplomaForm from "../components/AddDiplomaForm";
+} from "../../util/helper";
+import AddDiplomaForm from "../../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
-import { PaginationMenu } from "../components/MenuItems/PaginationMenu";
-import { PublishButton } from "../components/MenuItems/Buttons/PublishButton";
+import { PaginationMenu } from "../../components/MenuItems/PaginationMenu";
+import { PublishButton } from "../../components/MenuItems/Buttons/PublishButton";
 import './DiplomaMaking.css';
-import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
-import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
-import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
-import { saltDefaultData } from "../data/data";
-import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
-import { mapTemplateInputsToTemplateViewer, templateInputsFromSaltData } from "../util/dataHelpers";
+import { SwitchComponent } from "../../components/MenuItems/Inputs/SwitchComponent";
+import { SaveButton, SaveButtonType } from "../../components/MenuItems/Buttons/SaveButton";
+import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
+import { saltDefaultData } from "../../data/data";
+import { getTemplate, makeTemplateInput } from "../../templates/baseTemplate";
+import { mapTemplateInputsToTemplateViewer, templateInputsFromSaltData } from "../../util/dataHelpers";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -33,8 +33,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
-  const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);
-
+  const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);  
   const uiRef = useRef<HTMLDivElement | null>(null);
   const uiInstance = useRef<Form | Viewer | null>(null);
 
@@ -51,26 +50,24 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
       if(selectedBootcamp){
         setSelectedBootcampIndex(Number(selectedBootcamp));
       }
-      if (bootcamps[selectedBootcampIndex].diplomas.length === 0) {
+      if (bootcamps[selectedBootcampIndex].students.length === 0) {
         setSaltData([saltDefaultData]);
       } else {
+
         const initialSaltData: SaltData[] = bootcamps.map((bootcamp) => {
-          if (bootcamp.diplomas.length === 0) {
+          if (bootcamp.students.length === 0) {
             return {
               classname: bootcamp.name,
               dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
               students: saltDefaultData.students,
-              template: bootcamp.template
+              template: bootcamp.diplomaTemplate
             };
           } else {
             return {
               classname: bootcamp.name,
               dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
-              students: bootcamp.diplomas.map((diploma) => ({
-                name: diploma.studentName,
-                email: diploma.emailAddress
-              })),
-              template: bootcamp.template
+              students: bootcamp.students,
+              template: bootcamp.diplomaTemplate
             };
           }
         });
@@ -183,7 +180,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
       const currentBootcamp = bootcamps[selectedBootcampIndex];
       const diplomasRequest: DiplomasRequestDto = {
         diplomas: saltData[selectedBootcampIndex].students.map((student, index) => ({
-          guidId: currentBootcamp.diplomas[index]?.guidId || crypto.randomUUID(),
+          guidId: currentBootcamp.students[index]?.guidId || crypto.randomUUID(),
           studentName: student.name,
           EmailAddress: student.email,  
           bootcampGuidId: currentBootcamp.guidId
