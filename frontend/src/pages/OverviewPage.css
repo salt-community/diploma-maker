@@ -18,7 +18,7 @@
 
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: 1fr .9fr;
         gap: 1rem;
     }
     @media screen and (max-width: 1000px) {

@@ -13,6 +13,8 @@ import { ConfirmationPopup, ConfirmationPopupType } from "../components/MenuItem
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { TextInputIcon } from "../components/MenuItems/Icons/TextInputIcon";
 import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData } from "../util/dataHelpers";
+import { useCustomAlert } from "../components/Hooks/useCustomAlert";
+import { useCustomConfirmationPopup } from "../components/Hooks/useCustomConfirmationPopup";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -31,14 +33,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const [rightSideBarPage, setRightSideBarPage] = useState<number>(0);
     const [leftSideBarPage, setLeftSideBarPage] = useState<number>(0);
 
-    const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false);
-    const [confirmationPopupContent, setConfirmationPopupContent] = useState<string[]>(["",""]);
-    const [confirmationPopupType, setConfirmationPopupType] = useState<ConfirmationPopupType>(ConfirmationPopupType.question);
-    const [confirmationPopupHandler, setConfirmationPopupHandler] = useState<() => void>(() => {});
-    
-    const [showPopup, setShowPopup] = useState<boolean>(false);
-    const [popupContent, setPopupContent] = useState<string[]>(["",""]);
-    const [popupType, setPopupType] = useState<PopupType>(PopupType.success);
+    const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+    const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
     
     const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
     const [fileAdded, setFileAdded] = useState<boolean>(false);
@@ -134,7 +130,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     const saveTemplate = async (goToIndex?: number) => {
         if(currentTemplate){
-            setShowConfirmationPopup(false);
+            closeConfirmationPopup();
             try {
                 await updateTemplate(currentTemplate?.id, currentTemplate);
                 customAlert(PopupType.success, "Template Successfully Updated!", `Successfully updated ${currentTemplate.templateName} to database`);
@@ -150,7 +146,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
 
     const addTemplate = async (inputContent?: string) => {
-        setShowConfirmationPopup(false);
+        closeConfirmationPopup();
         if(templateData.some(template => template.templateName === inputContent)){
             customAlert(PopupType.fail, "Template Creation failure!", `Name already exists`);
             return;
@@ -170,7 +166,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     const removeTemplate = async () => {
         if(currentTemplate?.id){
-            setShowConfirmationPopup(false);
+            closeConfirmationPopup();
             const templateId = currentTemplate?.id;
             if(templateId === 1){
                 customAlert(PopupType.fail, `Cannot Delete the Default Template`, `You are not allowed to delete the baseTemplate.`);
@@ -178,7 +174,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             }
             try {
                 await deleteTemplate(templateId);
-                customAlert(PopupType.success, "Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
+                customAlert(PopupType.fail, "Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
                 setTemplateHasChanged(false);
             } catch (error) {
                 customAlert(PopupType.fail, "Template Update failure!", `${error} when trying to update template.`);
@@ -212,20 +208,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
 
     const globalAbortHandler = () => {
-        setShowConfirmationPopup(false);
-    }
-
-    const customAlert = (alertType: PopupType, title: string, content: string) => {
-        setPopupType(alertType);
-        setPopupContent([title, content]);
-        setShowPopup(true);
-    }
-
-    const customPopup = (type: ConfirmationPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => {
-        setConfirmationPopupType(type);
-        setConfirmationPopupContent([title, content]);
-        setConfirmationPopupHandler(handler);
-        setShowConfirmationPopup(true);
+        closeConfirmationPopup();
     }
 
     const getTemplateIndex = (template: CustomTemplate | null) => {
@@ -244,7 +227,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 // @ts-ignore
                 confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
             />
-            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
+            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
             <section className='templatecreator-page__leftsidebar'>
                 <div className='templatecreator-page__leftsidebar-menu'>
                     <header className="templatecreator-page__leftsidebar-menu-header">
