@@ -1,16 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode, TemplateResponse, PersonalStudentData } from "../util/types";
+import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode, TemplateResponse } from "../util/types";
 import {
   getFontsData,
   getPlugins,
   generatePDF,
-  generateCombinedPDF,
-  populateIntroField,
-  populateNameField,
-  populateFooterField,
   newGenerateCombinedPDF,
-  populateField,
 } from "../util/helper";
 import AddDiplomaForm from "../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
@@ -21,7 +16,7 @@ import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent"
 import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
 import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
 import { saltDefaultData } from "../data/data";
-import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
+import { makeTemplateInput } from "../templates/baseTemplate";
 import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../util/dataHelpers";
 import { Template } from "@pdfme/common";
 import { useCustomAlert } from "../components/Hooks/useCustomAlert";

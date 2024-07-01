@@ -10,12 +10,12 @@ import { BootcampResponse, DiplomaInBootcamp, DiplomaResponse, DiplomaUpdateRequ
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { delay, generatePDF, oldGenerateCombinedPDF, populateField, populateFooterField, populateIntroField } from '../util/helper';
+import { delay, generatePDF, oldGenerateCombinedPDF, populateField } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../components/MenuItems/Buttons/SelectButton';
-import { InfoPopup, InfoPopupShort, InfoPopupType } from '../components/MenuItems/Popups/InfoPopup';
+import { InfoPopup, InfoPopupType } from '../components/MenuItems/Popups/InfoPopup';
 import { EmailClient } from '../components/EmailClient';
 import { EmailIcon } from '../components/MenuItems/Icons/EmailIcon';
 import { mapTemplateInputsBootcampsToTemplateViewer } from '../util/dataHelpers';
