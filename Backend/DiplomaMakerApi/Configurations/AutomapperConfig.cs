@@ -12,7 +12,7 @@ public class AutomapperConfig : Profile
         CreateMap<BootcampResponseDto, Bootcamp>().ReverseMap();
         CreateMap<StudentRequestDto, Student>().ReverseMap();
         CreateMap<StudentResponseDto, Student>().ReverseMap();
-        CreateMap<TemplateResponseDto, TemplateStyle>().ReverseMap();
+        CreateMap<TemplateResponseDto, DiplomaTemplate>().ReverseMap();
         CreateMap<StudentUpdateRequestDto, Student>().ReverseMap();
     }
 }

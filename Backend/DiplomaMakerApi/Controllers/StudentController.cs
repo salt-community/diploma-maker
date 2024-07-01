@@ -52,13 +52,13 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<StudentResponseDto>>> GetStudents([FromQuery] string keyword = "")
+    public async Task<ActionResult<List<StudentResponseDto>>> GetStudents([FromQuery] string keyword = "")
     {
-        IEnumerable<Student> students;
+        List<Student> students;
 
         if (string.IsNullOrWhiteSpace(keyword))
         {
-            students = await _service.GetStudents();
+            students = await _service.GetAllStudents();
         }
         else
         {

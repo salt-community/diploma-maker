@@ -43,7 +43,7 @@ public class StudentService
         await _context.SaveChangesAsync();
         return Students;
     }
-    public async Task<List<Student>> GetStudents(){
+    public async Task<List<Student>> GetAllStudents(){
         return await _context.Students
             .Include(s => s.Bootcamp)
             .ToListAsync();

@@ -7,7 +7,7 @@ export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<vo
         ...bootcampRequest,
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
-    const response = await fetch (`${apiUrl}/api/bootcamp`,{
+    const response = await fetch (`${apiUrl}/api/bootcamps`,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedRequest)
@@ -19,10 +19,11 @@ export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<vo
         throw new Error("Failed to post new bootcamp!")
 }
 export async function getBootcamps(): Promise<BootcampResponse[]>{
-    const response = await fetch(`${apiUrl}/api/Bootcamp`);
+    const response = await fetch(`${apiUrl}/api/Bootcamps`);
     if (!response.ok)
         throw new Error("Failed to get bootcamps!")
     const result = await response.json() as BootcampResponse[]
+    console.log(result)
     return result;
 }
 
