@@ -14,6 +14,7 @@ import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup
 import { TextInputIcon } from "../components/MenuItems/Icons/TextInputIcon";
 import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData } from "../util/dataHelpers";
 import { useCustomAlert } from "../components/Hooks/useCustomAlert";
+import { useCustomConfirmationPopup } from "../components/Hooks/useCustomConfirmationPopup";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -32,11 +33,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const [rightSideBarPage, setRightSideBarPage] = useState<number>(0);
     const [leftSideBarPage, setLeftSideBarPage] = useState<number>(0);
 
-    const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false);
-    const [confirmationPopupContent, setConfirmationPopupContent] = useState<string[]>(["",""]);
-    const [confirmationPopupType, setConfirmationPopupType] = useState<ConfirmationPopupType>(ConfirmationPopupType.question);
-    const [confirmationPopupHandler, setConfirmationPopupHandler] = useState<() => void>(() => {});
-
+    const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
     const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     
     const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
@@ -133,7 +130,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     const saveTemplate = async (goToIndex?: number) => {
         if(currentTemplate){
-            setShowConfirmationPopup(false);
+            closeConfirmationPopup();
             try {
                 await updateTemplate(currentTemplate?.id, currentTemplate);
                 customAlert(PopupType.success, "Template Successfully Updated!", `Successfully updated ${currentTemplate.templateName} to database`);
@@ -149,7 +146,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
 
     const addTemplate = async (inputContent?: string) => {
-        setShowConfirmationPopup(false);
+        closeConfirmationPopup();
         if(templateData.some(template => template.templateName === inputContent)){
             customAlert(PopupType.fail, "Template Creation failure!", `Name already exists`);
             return;
@@ -169,7 +166,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
     const removeTemplate = async () => {
         if(currentTemplate?.id){
-            setShowConfirmationPopup(false);
+            closeConfirmationPopup();
             const templateId = currentTemplate?.id;
             if(templateId === 1){
                 customAlert(PopupType.fail, `Cannot Delete the Default Template`, `You are not allowed to delete the baseTemplate.`);
@@ -211,14 +208,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
 
     const globalAbortHandler = () => {
-        setShowConfirmationPopup(false);
-    }
-
-    const customPopup = (type: ConfirmationPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => {
-        setConfirmationPopupType(type);
-        setConfirmationPopupContent([title, content]);
-        setConfirmationPopupHandler(handler);
-        setShowConfirmationPopup(true);
+        closeConfirmationPopup();
     }
 
     const getTemplateIndex = (template: CustomTemplate | null) => {
