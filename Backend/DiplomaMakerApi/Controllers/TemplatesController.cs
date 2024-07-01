@@ -6,12 +6,12 @@ namespace DiplomaMakerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TemplateController : ControllerBase
+public class TemplatesController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly TemplateService _templateService;
 
-    public TemplateController(IMapper mapper, TemplateService templateService)
+    public TemplatesController(IMapper mapper, TemplateService templateService)
     {
         _mapper = mapper;
         _templateService = templateService;

@@ -1,10 +1,7 @@
 namespace DiplomaMakerApi.Services;
 using MimeKit;
-using MimeKit.Text;
 using MailKit.Net.Smtp;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DiplomaMakerApi.Models;
 
 
 public class EmailService(IConfiguration configuration, ILogger<EmailService> logger, DiplomaMakingContext context)

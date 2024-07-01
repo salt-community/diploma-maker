@@ -3,7 +3,7 @@ import { DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto, DiplomasReque
 const apiUrl = import.meta.env.VITE_API_URL;
 
 
-export async function postStudent(diplomaRequest: DiplomaRequest): Promise<void> {
+export async function postDiploma(diplomaRequest: DiplomaRequest): Promise<void> {
     const formattedRequest = {
         ...diplomaRequest,
         // @ts-ignore

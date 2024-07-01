@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 
 namespace DiplomaMakerApi.Services;
 
@@ -58,7 +59,7 @@ public class BootcampService
                 .FirstOrDefaultAsync(b => b.GuidId == GuidID) ?? throw new ArgumentException("The specifc ID for Bootcamp does not exist");
 
             bootcamp.Name = requestDto.Name;
-            bootcamp.GraduationDate = requestDto.graduationDate;
+            bootcamp.GraduationDate = requestDto.GraduationDate;
 
             await _context.SaveChangesAsync();
             return bootcamp;

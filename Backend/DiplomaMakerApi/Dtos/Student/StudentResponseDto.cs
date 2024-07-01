@@ -1,9 +1,8 @@
 namespace DiplomaMakerApi.Models;
 
-public class BootcampInDiplomaDto
+public class StudentResponseDto
 {
     public Guid GuidId { get; set; } = Guid.NewGuid();
     public required string Name { get; set; }
-    public DateTime graduationDate{ get; set; } = DateTime.Now.Date;
-
+    public required string Email { get; set; }
 }

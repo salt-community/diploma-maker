@@ -2,65 +2,18 @@ using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Models;
 using AutoMapper;
 using DiplomaMakerApi.Services;
-using DiplomaMakerApi.Dtos;
 
 namespace StudentMakerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class StudentController : ControllerBase
+public class StudentsController(StudentService service, IMapper mapper) : ControllerBase
 {
-    private readonly StudentService _service;
-    private readonly IMapper _mapper;   
-
-    public StudentController(StudentService service, IMapper mapper)
-    {
-        _service = service;
-        _mapper = mapper;
-
-    }
+    private readonly StudentService _service = service;
+    private readonly IMapper _mapper = mapper;
 
     [HttpPost]
-    public async Task<ActionResult<StudentResponseDto>> AddStudent(StudentRequestDto requestDto)
-    {
-        try
-        {
-            var Student = await _service.PostStudent(requestDto);
-            var responseDto = _mapper.Map<StudentResponseDto>(Student);
-            return CreatedAtAction(nameof(GetStudentByKeyword), new { id = Student.GuidId }, Student);
-        }
-        catch(BootcampNotFoundException)
-        {
-            return NotFound("Bootcamp you are trying to add this student to, does not exist");
-        }
-        catch(StudentExistsException)
-        {
-            return Conflict(new { message = "This student has already been added to this bootcamp" });
-        }
-    }
-
-    [HttpPut]
-    public async Task<ActionResult<StudentResponseDto>> UpdateStudent(StudentPutRequestDto updateDto)
-    {
-        try
-        {
-            var StudentRequest = _mapper.Map<Student>(updateDto);
-            var updatedStudent = await _service.UpdateStudent(StudentRequest);
-            if (updatedStudent == null)
-            {
-                return NotFound("Student not found");
-            }
-            var responseDto = _mapper.Map<StudentResponseDto>(updatedStudent);
-            return Ok(responseDto);
-        }
-        catch (BootcampNotFoundException)
-        {
-            return NotFound("Bootcamp not found");
-        }
-    }
-
-    [HttpPost("many")]
-    public async Task<ActionResult<List<StudentResponseDto>>> PostStudents(StudentsRequestDto requestDto)
+    public async Task<ActionResult<List<StudentResponseDto>>> PostStudents(List<StudentRequestDto> requestDto)
     {
         try
         {
@@ -86,27 +39,44 @@ public class StudentController : ControllerBase
         }
     }
 
+    [HttpPut("{guidID}")]
+    public async Task<ActionResult<StudentResponseDto>> UpdateStudents(Guid guidID, StudentUpdateRequestDto updateDto)
+    {
+        try
+        {
+            var StudentRequest = _mapper.Map<Student>(updateDto);
+            var updatedStudent = await _service.UpdateStudent(guidID, StudentRequest);
+            if (updatedStudent == null)
+            {
+                return NotFound("Student not found");
+            }
+            var responseDto = _mapper.Map<StudentResponseDto>(updatedStudent);
+            return Ok(responseDto);
+        }
+        catch (BootcampNotFoundException)
+        {
+            return NotFound("Bootcamp not found");
+        }
+    }
 
-    // GET: api/Student
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<StudentResponseDto>>> GetStudents()
+    public async Task<ActionResult<IEnumerable<StudentResponseDto>>> GetStudents([FromQuery] string keyword = "")
     {
+        IEnumerable<Student> students;
 
-        var Students = await _service.GetStudents();
-        var StudentResponseDtos = _mapper.Map<List<StudentResponseDto>>(Students);
-        return Ok(StudentResponseDtos);
+        if (string.IsNullOrWhiteSpace(keyword))
+        {
+            students = await _service.GetStudents();
+        }
+        else
+        {
+            students = await _service.GetStudentsByKeyword(keyword);
+        }
+
+        var studentResponseDtos = _mapper.Map<List<StudentResponseDto>>(students);
+        return Ok(studentResponseDtos);
     }
 
-    // GET: api/Student/David
-    [HttpGet(" ")]
-    public async Task<ActionResult<IEnumerable<StudentResponseDto>>> GetStudentByKeyword(string keyword)
-    {
-        var Students = await _service.GetStudentsByKeyword(keyword);
-        var StudentResponseDtos = _mapper.Map<List<StudentResponseDto>>(Students);
-        return Ok(StudentResponseDtos);
-    }
-
-    // GET: api/Student/5
     [HttpGet("{guidId}")]
     public async Task<ActionResult<StudentResponseDto>> GetStudentByGuidId(string guidId)
     {

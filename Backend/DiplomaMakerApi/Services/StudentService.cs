@@ -39,10 +39,10 @@ public class StudentService
 
         return Student;
     }
-    public async Task<List<Student>> PostStudents(StudentsRequestDto requestDto)
+    public async Task<List<Student>> PostStudents(List<StudentRequestDto> requestDto)
     {
         var Students = new List<Student>();
-        foreach (var StudentDto in requestDto.Students)
+        foreach (var StudentDto in requestDto)
         {
             var bootcamp = await _context.Bootcamps
                 .FirstOrDefaultAsync(b => b.GuidId.ToString() == StudentDto.BootcampGuidId)
@@ -55,7 +55,7 @@ public class StudentService
             {
                 existingStudent.Name = StudentDto.Name;
                 existingStudent.Bootcamp = bootcamp;
-                existingStudent.EmailAddress = StudentDto.EmailAddress;
+                existingStudent.Email = StudentDto.Email;
                 _context.Students.Update(existingStudent);
                 Students.Add(existingStudent);
             }
@@ -111,9 +111,9 @@ public class StudentService
         await _context.SaveChangesAsync();
         return Student;
     }
-    public async Task<Student> UpdateStudent(Student updateRequest)
+    public async Task<Student> UpdateStudent(Guid GuidID, Student updateRequest)
     {
-        var Student = await _context.Students.FirstOrDefaultAsync(b => b.GuidId == updateRequest.GuidId);
+        var Student = await _context.Students.FirstOrDefaultAsync(b => b.GuidId == GuidID);
 
         if (Student != null)
         {
