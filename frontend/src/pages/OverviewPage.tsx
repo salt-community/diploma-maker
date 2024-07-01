@@ -178,10 +178,13 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
                     guidId: userIds[i],
                     file: file
                 }
-                await sendEmail(emailSendRequest)
+                // await sendEmail(emailSendRequest)
+                console.log("sending email;");
+                throw Error
 
             } catch (error) {
-                customAlert(PopupType.fail, `Failed to send ${i}th email`, `Something went wrong. ${error}`)
+                customAlert(PopupType.fail, `Failed to send ${i}th email`, `Something went wrong: ${error}`)
+                customPopup(InfoPopupType.fail, `Opps, Something went wrong`, `${error}`, () => {});
                 return;
             }
            

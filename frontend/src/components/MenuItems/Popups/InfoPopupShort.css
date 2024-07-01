@@ -198,7 +198,6 @@
     opacity: 0;
     pointer-events: none;
 }
-
 .popup_confirmation-content-input{
     padding: .2rem 1rem;
     border-radius: .5rem;
@@ -274,6 +273,10 @@ progress::-webkit-progress-bar {
     border-radius: 8px;
     overflow: hidden;
     border: none;
+}
+
+.popup_confirmation.fail progress::-webkit-progress-bar{
+    background-color: #ff4459;
 }
 
 /* Style the progress bar value */
