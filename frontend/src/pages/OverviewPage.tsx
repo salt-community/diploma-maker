@@ -19,6 +19,7 @@ import { InfoPopupShort, InfoPopupType } from '../components/MenuItems/Popups/In
 import { EmailClient } from '../components/EmailClient';
 import { EmailIcon } from '../components/MenuItems/Icons/EmailIcon';
 import { mapTemplateInputsBootcampsToTemplateViewer } from '../util/dataHelpers';
+import { useCustomAlert } from '../components/Hooks/useCustomAlert';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -34,9 +35,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    const [showPopup, setShowPopup] = useState<boolean>(false);
-    const [popupContent, setPopupContent] = useState<string[]>(["",""]);
-    const [popupType, setPopupType] = useState<PopupType>(PopupType.fail);
+    const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
     const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false);
     const [confirmationPopupContent, setConfirmationPopupContent] = useState<string[]>(["",""]);
@@ -94,10 +93,10 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
         } 
     };
 
-    const deleteHandler = (id: string) => {
-        setLoading(true);
-        deleteDiploma(id);
-        setLoading(false);
+    const deleteHandler = async (id: string) => {
+        // setLoading(true);
+        await deleteDiploma(id);
+        // setLoading(false);
         
         customAlert(PopupType.fail, "Successfully deleted", "Diploma has been successfully deleted from the database.")
     };
@@ -222,12 +221,6 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
         setShowConfirmationPopup(true);
     }
 
-    const customAlert = (alertType: PopupType, title: string, content: string) => {
-        setPopupType(alertType);
-        setPopupContent([title, content]);
-        setShowPopup(true);
-    }
-
     const blendProgress = async (start: number, end: number, blendDelay: number) => {
         const steps = Math.abs(end - start);
         const stepDelay = blendDelay / steps;
@@ -239,7 +232,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
 
     return (
         <main className="overview-page">
-            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
+            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
             <InfoPopupShort 
                 title={confirmationPopupContent[0]}
                 text={confirmationPopupContent[1]}
