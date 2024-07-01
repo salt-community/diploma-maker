@@ -6,6 +6,7 @@ import { CogWheelIcon } from "./MenuItems/Icons/CogWheelIcon";
 import { SaveButton, SaveButtonType } from "./MenuItems/Buttons/SaveButton";
 import { PopupType } from "./MenuItems/Popups/AlertPopup";
 import { CircleIcon } from "./MenuItems/Icons/CircleIcon";
+import CustomCheckBoxRound from "./MenuItems/Inputs/CustomCheckBoxRound";
 
 type Props = {
     clients: DiplomaInBootcamp[],
@@ -78,14 +79,10 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                 />
                                 <CogWheelIcon />
                             </div>
-                            <div className="checkbox-wrapper-31">
-                                <input 
-                                    type="checkbox" 
-                                    checked={!!checkedUsers[student.guidId]} 
-                                    onChange={(event) => checkboxChangeHandler(event, student.guidId)} 
-                                />
-                                <CircleIcon />
-                            </div>
+                            <CustomCheckBoxRound 
+                                checked={!!checkedUsers[student.guidId]} 
+                                onChange={(event) => checkboxChangeHandler(event, student.guidId)} 
+                            />
                         </li>
                     ))}
                 </ul>
