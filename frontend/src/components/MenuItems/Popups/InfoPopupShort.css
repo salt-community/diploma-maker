@@ -299,6 +299,18 @@ progress::-ms-fill {
     border: none;
 }
 
+.popup_confirmation.fail progress::-webkit-progress-value{
+    filter: hue-rotate(80deg);
+}
+
+.popup_confirmation.fail progress::-moz-progress-bar{
+    filter: hue-rotate(80deg);
+}
+
+.popup_confirmation.fail progress::-ms-fill{
+    filter: hue-rotate(80deg);
+}
+
 .popup_confirmation.finished progress::-webkit-progress-value{
     background: linear-gradient(to right, #3ca239, #359b44, #3bb261, #37c943, #56ff40);
 }

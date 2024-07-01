@@ -180,10 +180,11 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
                 }
                 // await sendEmail(emailSendRequest)
                 console.log("sending email;");
-                throw Error
+                if(i === 2){
+                    throw Error
+                }
 
             } catch (error) {
-                customAlert(PopupType.fail, `Failed to send ${i}th email`, `Something went wrong: ${error}`)
                 customPopup(InfoPopupType.fail, `Opps, Something went wrong`, `${error}`, () => {});
                 return;
             }
