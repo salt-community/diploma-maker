@@ -111,20 +111,7 @@ public class StudentService
         await _context.SaveChangesAsync();
         return Student;
     }
-    public async Task<Student> UpdateStudent(Guid GuidID, Student updateRequest)
-    {
-        var Student = await _context.Students.FirstOrDefaultAsync(b => b.GuidId == GuidID);
 
-        if (Student != null)
-        {
-            Student.Name = updateRequest.Name;
-            Student.Email = updateRequest.Email;
-
-            await _context.SaveChangesAsync();
-            return Student;
-        }
-        throw new BootcampNotFoundException("This Student does not exist");
-    }
 
 }
 

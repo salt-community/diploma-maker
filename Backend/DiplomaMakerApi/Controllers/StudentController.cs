@@ -39,25 +39,6 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
         }
     }
 
-    [HttpPut("{guidID}")]
-    public async Task<ActionResult<StudentResponseDto>> UpdateStudents(Guid guidID, StudentUpdateRequestDto updateDto)
-    {
-        try
-        {
-            var StudentRequest = _mapper.Map<Student>(updateDto);
-            var updatedStudent = await _service.UpdateStudent(guidID, StudentRequest);
-            if (updatedStudent == null)
-            {
-                return NotFound("Student not found");
-            }
-            var responseDto = _mapper.Map<StudentResponseDto>(updatedStudent);
-            return Ok(responseDto);
-        }
-        catch (BootcampNotFoundException)
-        {
-            return NotFound("Bootcamp not found");
-        }
-    }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<StudentResponseDto>>> GetStudents([FromQuery] string keyword = "")
