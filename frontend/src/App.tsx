@@ -1,14 +1,14 @@
 import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
-import { VertificationPage } from "./pages/VerificationPage";
+import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
 import { BootcampRequest, BootcampResponse, DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto, DiplomasRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse } from "./util/types";
 import { deleteBootcampById, getBootcamps, postBootcamp, updateBootcamp as updateBootcampService } from "./services/bootcampService";
-import { OverviewPage } from "./pages/OverviewPage";
-import { NavBar } from "./pages/shared/Navbar";
-import BootcampManagement from "./pages/BootcampManagement";
+import { OverviewPage } from "./pages/Overview/OverviewPage";
+import { NavBar } from "./pages/shared/Navbar/Navbar";
+import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
 import { deleteDiplomaById, postMultipleDiplomas, updateSingleDiploma } from "./services/diplomaService";
-import { TemplateCreatorPage } from "./pages/TemplateCreatorPage";
+import { TemplateCreatorPage } from "./pages/TemplateCreator/TemplateCreatorPage";
 import { deleteTemplateById, getAllTemplates, postTemplate, putTemplate } from "./services/templateService";
 import { postEmail } from "./services/emailService";
 

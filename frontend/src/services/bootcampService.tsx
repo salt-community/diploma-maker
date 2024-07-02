@@ -23,7 +23,6 @@ export async function getBootcamps(): Promise<BootcampResponse[]>{
     if (!response.ok)
         throw new Error("Failed to get bootcamps!")
     const result = await response.json() as BootcampResponse[]
-    console.log(result)
     return result;
 }
 

@@ -1,7 +1,7 @@
-import { BootcampRequest, BootcampResponse } from "../util/types";
+import { BootcampRequest, BootcampResponse } from "../../util/types";
 import { useState } from "react";
-import { AlertPopup, PopupType } from "./MenuItems/Popups/AlertPopup";
-import { useCustomAlert } from "./Hooks/useCustomAlert";
+import { AlertPopup, PopupType } from "../MenuItems/Popups/AlertPopup";
+import { useCustomAlert } from "../Hooks/useCustomAlert";
 
 type Props = {
     addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;

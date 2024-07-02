@@ -1,9 +1,9 @@
 import { FieldValues, useForm } from "react-hook-form";
-import { BootcampRequest, BootcampResponse } from "../util/types"
+import { BootcampRequest, BootcampResponse } from "../../util/types"
 import { useState } from "react";
-import AddNewBootcampForm from "../components/AddNewBootcampForm";
+import AddNewBootcampForm from "../../components/Forms/AddNewBootcampForm";
 import { useNavigate } from "react-router-dom";
-import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
+import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;

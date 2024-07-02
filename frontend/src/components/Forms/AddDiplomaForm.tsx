@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
-import TagsInput from "./TagsInput/TagsInput";
+import TagsInput from "../TagsInput/TagsInput";
 import { useEffect, useState } from "react";
-import { BootcampResponse, TemplateResponse, SaltData, PersonalStudentData } from "../util/types";
-import { FileUpload } from "./MenuItems/Inputs/FileUploader";
-import { ParseFileData } from '../services/InputFileService';
+import { BootcampResponse, TemplateResponse, SaltData, PersonalStudentData } from "../../util/types";
+import { FileUpload } from "../MenuItems/Inputs/FileUploader";
+import { ParseFileData } from '../../services/InputFileService';
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -36,11 +36,10 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
     });
   }, [students]);
 
-  console.log(saltData)
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
-    console.log(dataFromFile)
+   
     setStudents(dataFromFile);
   };
 
@@ -57,7 +56,7 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
           className="mt-2 w-8/12 py-2 px-3 order border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
           onChange={(e) => { 
             setSelectedBootcampIndex(e.target.selectedIndex) 
-            const selectedname = bootcampsCache![selectedBootcampIndex].template.name;
+            const selectedname = bootcampsCache![selectedBootcampIndex].diplomaTemplate.name;
             const selectedTemplateObject = templates!.find(template => template.name === selectedname);
             setSelectedTemplate(selectedTemplateObject!);
           }}

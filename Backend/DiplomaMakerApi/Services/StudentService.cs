@@ -17,7 +17,7 @@ public class StudentService
     }
     public async Task<List<Student>> ReplaceStudents(StudentsRequestDto requestDto)
     {
-        var bootcamp = await _context.Bootcamps
+        var bootcamp = await _context.Bootcamps.Include(b => b.Students)
                 .FirstOrDefaultAsync(b => b.GuidId == requestDto.BootcampGuidId)
                 ?? throw new Exception($"Bootcamp with ID {requestDto.BootcampGuidId} does not exist");
         
@@ -35,6 +35,7 @@ public class StudentService
                 var newStudent = new Student
                 {
                     Name = Student.Name,
+                    Email = Student.Email,
                     Bootcamp = bootcamp
                 };
                 _context.Students.Add(newStudent);

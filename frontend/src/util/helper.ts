@@ -113,7 +113,7 @@ export const getPlugins = () => {
 export const generatePDF = async (template: Template, inputs: any, returnFile?: boolean): Promise<Blob | void> => {
   if(!template) return;
   const font = await getFontsData();
-
+ 
   const pdf = await generate({
     template,
     inputs,

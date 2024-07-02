@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Student } from "../util/types";
+import { Student } from "../../util/types";
 import './EmailClient.css';
-import { CloseWindowIcon } from "./MenuItems/Icons/CloseWindowIcon";
-import { CogWheelIcon } from "./MenuItems/Icons/CogWheelIcon";
-import { SaveButton, SaveButtonType } from "./MenuItems/Buttons/SaveButton";
-import { PopupType } from "./MenuItems/Popups/AlertPopup";
-import { CircleIcon } from "./MenuItems/Icons/CircleIcon";
-import CustomCheckBoxRound from "./MenuItems/Inputs/CustomCheckBoxRound";
+import { CloseWindowIcon } from "../MenuItems/Icons/CloseWindowIcon";
+import { CogWheelIcon } from "../MenuItems/Icons/CogWheelIcon";
+import { SaveButton, SaveButtonType } from "../MenuItems/Buttons/SaveButton";
+import { PopupType } from "../MenuItems/Popups/AlertPopup";
+import { CircleIcon } from "../MenuItems/Icons/CircleIcon";
+import CustomCheckBoxRound from "../MenuItems/Inputs/CustomCheckBoxRound";
 
 type Props = {
     clients: Student[],
