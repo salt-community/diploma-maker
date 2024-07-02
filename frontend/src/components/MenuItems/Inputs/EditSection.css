@@ -1,0 +1,13 @@
+.editlayout__menusection label{
+  font-size: .8rem;
+  min-width: 40px;
+  margin-right: .75rem;
+}
+.editlayout__menusection{
+  display: flex;
+
+  color: #ababba;
+  align-items: center;
+  justify-content: flex-start;
+  gap: .5rem;
+}

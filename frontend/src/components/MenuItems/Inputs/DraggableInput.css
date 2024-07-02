@@ -1,0 +1,24 @@
+.draggable-input-container {
+    display: flex;
+    border-radius: 1rem;
+    position: relative;
+}
+.draggable-input {
+    padding: 8px;
+    border: none;
+    outline: none;
+
+    color: #fff;
+    background-color: #20202a;
+    border-radius: .5rem;
+    width: 100%;
+
+    cursor: ew-resize;
+    user-select: none;
+}
+
+.draggable-input-container label{
+    position: absolute;
+    top: 0;
+    right: 0;
+}

@@ -15,6 +15,8 @@ import { TextInputIcon } from "../../components/MenuItems/Icons/TextInputIcon";
 import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData } from "../../util/dataHelpers";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
+import DraggableInput from "../../components/MenuItems/Inputs/DraggableInput";
+import { EditSection } from "../../components/MenuItems/Inputs/EditSection";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -302,7 +304,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                     {rightSideBarPage === 1 && 
                         <>
                             <section className="templatecreator-page__rightsidebar-menu-section">
-                                <h3>Editing Stuff</h3>
+                                <h3>Field Layout</h3>
+                                <EditSection />
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Edit Fields</h3>
