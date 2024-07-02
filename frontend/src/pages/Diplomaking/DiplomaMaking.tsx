@@ -52,6 +52,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
       }
       if (bootcamps[selectedBootcampIndex].students.length === 0) {
         setSaltData([saltDefaultData]);
+        
       } else {
 
         const initialSaltData: SaltData[] = bootcamps.map((bootcamp) => {
