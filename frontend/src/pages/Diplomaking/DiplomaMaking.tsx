@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode, TemplateResponse, PersonalStudentData } from "../../util/types";
+import { BootcampResponse, StudentResponse, StudentsRequestDto, SaltData, displayMode, TemplateResponse, PersonalStudentData } from "../../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -24,10 +24,10 @@ import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 type Props = {
   bootcamps: BootcampResponse[] | null;
   templates: TemplateResponse[] | null;
-  addMultipleDiplomas: (diplomasRequest: DiplomasRequestDto) => Promise<DiplomaResponse[]>;
+  addMultipleStudents: (studentsRequest: StudentsRequestDto) => Promise<StudentResponse[]>;
 };
 
-export default function DiplomaMaking({ bootcamps, templates, addMultipleDiplomas }: Props) {
+export default function DiplomaMaking({ bootcamps, templates, addMultipleStudents }: Props) {
 
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
@@ -175,7 +175,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   const postSelectedBootcampData = async () => {
     if (saltData && bootcamps) {
       const currentBootcamp = bootcamps[selectedBootcampIndex];
-      const diplomasRequest: DiplomasRequestDto = {
+      const studentsRequest: StudentsRequestDto = {
         students: saltData[selectedBootcampIndex].students.map((student, index) => ({
           guidId: currentBootcamp.students[index]?.guidId || crypto.randomUUID(),
           name: student.name,
@@ -184,7 +184,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
         bootcampGuidId: currentBootcamp.guidId
       };
       try {
-        await addMultipleDiplomas(diplomasRequest);
+        await addMultipleStudents(studentsRequest);
         customAlert(PopupType.success, "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
       } catch (error) {

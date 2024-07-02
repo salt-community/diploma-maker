@@ -1,13 +1,13 @@
-import { DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto, DiplomasRequestDto } from "../util/types";
+import { StudentRequest, StudentResponse, StudentUpdateRequestDto, StudentsRequestDto } from "../util/types";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 
-export async function postDiploma(diplomaRequest: DiplomaRequest): Promise<void> {
+export async function postDiploma(StudentRequest: StudentRequest): Promise<void> {
     const formattedRequest = {
-        ...diplomaRequest,
+        ...StudentRequest,
         // @ts-ignore
-        graduationDate: diplomaRequest.graduationDate ? diplomaRequest.graduationDate.toISOString() : undefined
+        graduationDate: StudentRequest.graduationDate ? StudentRequest.graduationDate.toISOString() : undefined
     };
 
     const response = await fetch(`${apiUrl}/api/student`, {
@@ -28,27 +28,25 @@ export async function postDiploma(diplomaRequest: DiplomaRequest): Promise<void>
         throw new Error('Failed to create new diploma!');
     }
 }
-export async function getDiplomasByKeyword(keyword: string): Promise<DiplomaResponse[]> {
-    const response = await fetch(`${apiUrl}/api/diploma/%20/?keyword=${keyword}`);
+export async function getStudentsByKeyword(keyword: string): Promise<StudentResponse[]> {
+    const response = await fetch(`${apiUrl}/api/students/%20/?keyword=${keyword}`);
     if (!response.ok) {
         throw new Error('Failed to get diplomas!');
     }
-    const result = await response.json() as DiplomaResponse[];
+    const result = await response.json() as StudentResponse[];
     return result;
 }
-
-export async function getDiplomaById(guidId: string): Promise<DiplomaResponse> {
-    const response = await fetch(`${apiUrl}/api/diploma/${guidId}`);
+export async function getStudentById(guidId: string): Promise<StudentResponse> {
+    const response = await fetch(`${apiUrl}/api/students/${guidId}`);
     if (!response.ok) {
         throw new Error('Failed to get diploma!');
     }
-    const result = await response.json() as DiplomaResponse;
+    const result = await response.json() as StudentResponse;
     return result;
 }
 
-
-export async function deleteDiplomaById(guidId: string): Promise<void> {
-    const response = await fetch(`${apiUrl}/api/diploma/${guidId}`, {
+export async function deleteStudentById(guidId: string): Promise<void> {
+    const response = await fetch(`${apiUrl}/api/students/${guidId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
     });
@@ -60,26 +58,8 @@ export async function deleteDiplomaById(guidId: string): Promise<void> {
 }
 
 
-export async function postSingleDiploma(diplomaRequest: DiplomaRequest): Promise<DiplomaResponse> {
-    const response = await fetch(`${apiUrl}/api/diploma/single`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(diplomaRequest)
-    });
 
-    if (!response.ok) {
-        if (response.status === 409) {
-            throw new Error("This student has already earned a diploma in this bootcamp!");
-        }
-        throw new Error("Failed to post new diploma!");
-    }
-
-    const result = await response.json() as DiplomaResponse;
-    return result;
-}
-
-
-export async function postMultipleDiplomas(diplomasRequest: DiplomasRequestDto): Promise<DiplomaResponse[]> {
+export async function postMultipleStudents(diplomasRequest: StudentsRequestDto): Promise<StudentResponse[]> {
     const response = await fetch(`${apiUrl}/api/Students`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -93,15 +73,15 @@ export async function postMultipleDiplomas(diplomasRequest: DiplomasRequestDto):
         throw new Error("Failed to post diplomas!");
     }
 
-    const result = await response.json() as DiplomaResponse[];
+    const result = await response.json() as StudentResponse[];
     return result;
 }
 
-export async function updateSingleDiploma(diplomaRequest: DiplomaUpdateRequestDto): Promise<DiplomaResponse> {
-    const response = await fetch(`${apiUrl}/api/diploma/single`, {
+export async function updateSingleStudent(StudentRequest: StudentUpdateRequestDto): Promise<StudentResponse> {
+    const response = await fetch(`${apiUrl}/api/Students`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(diplomaRequest)
+        body: JSON.stringify(StudentRequest)
     });
 
     if (!response.ok) {
@@ -111,6 +91,6 @@ export async function updateSingleDiploma(diplomaRequest: DiplomaUpdateRequestDt
         throw new Error("Failed to update diploma!");
     }
 
-    const result = await response.json() as DiplomaResponse;
+    const result = await response.json() as StudentResponse;
     return result;
 }

@@ -2,12 +2,12 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, DiplomaRequest, DiplomaResponse, DiplomaUpdateRequestDto, DiplomasRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentResponse, StudentUpdateRequestDto, StudentsRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse } from "./util/types";
 import { deleteBootcampById, getBootcamps, postBootcamp, updateBootcamp as updateBootcampService } from "./services/bootcampService";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
-import { deleteDiplomaById, postMultipleDiplomas, updateSingleDiploma } from "./services/diplomaService";
+import { deleteStudentById, postMultipleStudents, updateSingleStudent } from "./services/studentService";
 import { TemplateCreatorPage } from "./pages/TemplateCreator/TemplateCreatorPage";
 import { deleteTemplateById, getAllTemplates, postTemplate, putTemplate } from "./services/templateService";
 import { postEmail } from "./services/emailService";
@@ -28,33 +28,41 @@ export default function App() {
     }
   }, [bootcamps]);
 
+  // bootcamps
   async function deleteBootcamp(i: number){
     const guid = bootcamps![i].guidId;
     await deleteBootcampById(guid);
     await refresh();
   }
-
-  async function deleteDiploma(id: string){
-    await deleteDiplomaById(id);
-    await refresh();
-  }
-
+  
   async function addNewBootcamp(bootcamp: BootcampRequest){
     await postBootcamp(bootcamp);
     await refresh();
   }
-
+  
   async function updateBootcamp(bootcamp: BootcampRequest){
     await updateBootcampService(bootcamp);
     await refresh();
   }
 
-  async function addMultipleDiplomas(diplomasRequest: DiplomasRequestDto): Promise<DiplomaResponse[]> {
-    const response = await postMultipleDiplomas(diplomasRequest);
+  //students
+  async function deleteStudent(id: string){
+    await deleteStudentById(id);
+    await refresh();
+  }
+  async function addMultipleStudents(diplomasRequest: StudentsRequestDto): Promise<StudentResponse[]> {
+    const response = await postMultipleStudents(diplomasRequest);
     await refresh();
     return response;
   }
-
+  
+  async function updateStudentInformation(StudentRequest: StudentUpdateRequestDto){
+      var StudentResponse = await updateSingleStudent(StudentRequest);
+      await refresh();
+      return StudentResponse
+   }
+   
+  // templates
   async function getTemplates() {
     const templates: TemplateResponse[] = await getAllTemplates(); 
     setTemplates(templates);
@@ -71,17 +79,11 @@ export default function App() {
     return templateResponse
   }
 
-  async function updateDiploma(diplomaRequest: DiplomaUpdateRequestDto){
-    var diplomaResponse = await updateSingleDiploma(diplomaRequest);
-    await refresh();
-    return diplomaResponse
-  }
-
   async function deleteTemplate(id: number){
     await deleteTemplateById(id);
     await refresh();
   }
-
+  //email
   async function sendEmail(emailRequest: EmailSendRequest){
     await postEmail(emailRequest)
   }
@@ -97,11 +99,11 @@ export default function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} addMultipleDiplomas={addMultipleDiplomas}/>} />
-        <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} addMultipleDiplomas={addMultipleDiplomas}/>} />
+        <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} addMultipleStudents={addMultipleStudents}/>} />
+        <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} addMultipleStudents={addMultipleStudents}/>} />
         <Route path={`/:guidId`} element = {<VertificationPage />} />
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
-        <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteDiploma={deleteDiploma} updateDiploma={updateDiploma} sendEmail={sendEmail}/>} />
+        <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail}/>} />
         <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate}/>} />
       </Routes>
     </>
