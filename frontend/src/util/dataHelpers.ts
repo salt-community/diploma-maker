@@ -34,9 +34,30 @@ export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcam
     return inputs;
 }
 
+export const templateInputsFromBootcampData = (selectedBootcampData: any, name: string) => {
+  return makeTemplateInput(
+    populateField(
+      selectedBootcampData.template.intro, 
+      selectedBootcampData.classname, 
+      selectedBootcampData.dategraduate, 
+      name),
+    populateField(
+      selectedBootcampData.template.main, 
+      selectedBootcampData.classname, 
+      selectedBootcampData.dategraduate, 
+      name),
+    populateField(
+      selectedBootcampData.template.footer, 
+      selectedBootcampData.classname, 
+      selectedBootcampData.dategraduate, 
+      name),
+    selectedBootcampData.template.basePdf
+  );
+}
+
 export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selectedBootcampIndex: number, inputs: any) => {
     const template: Template = getTemplate(
-        inputs[0],
+        inputs,
         { 
           x: saltData[selectedBootcampIndex].template.introStyling?.xPos ?? null, 
           y: saltData[selectedBootcampIndex].template.introStyling?.yPos ?? null
@@ -77,9 +98,52 @@ export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selected
     return template;
 }
 
+export const mapTemplateInputsBootcampsToTemplateViewer = (bootcamp: any, pdfInput: any) => {
+  const template: Template = getTemplate(
+    pdfInput,
+    {
+        x: bootcamp.template.introStyling?.xPos ?? null,
+        y: bootcamp.template.introStyling?.yPos ?? null,
+    },
+    {
+        width: bootcamp.template.introStyling?.width ?? null,
+        height: bootcamp.template.introStyling?.height ?? null,
+    },
+    bootcamp.template.introStyling?.fontSize ?? null,
+    bootcamp.template.introStyling?.fontColor ?? null,
+    bootcamp.template.introStyling?.fontName ?? null,
+    bootcamp.template.introStyling?.alignment ?? null,
+    {
+        x: bootcamp.template.mainStyling?.xPos ?? null,
+        y: bootcamp.template.mainStyling?.yPos ?? null,
+    },
+    {
+        width: bootcamp.template.mainStyling?.width ?? null,
+        height: bootcamp.template.mainStyling?.height ?? null,
+    },
+    bootcamp.template.mainStyling?.fontSize ?? null,
+    bootcamp.template.mainStyling?.fontColor ?? null,
+    bootcamp.template.mainStyling?.fontName ?? null,
+    bootcamp.template.mainStyling?.alignment ?? null,
+    {
+        x: bootcamp.template.footerStyling?.xPos ?? null,
+        y: bootcamp.template.footerStyling?.yPos ?? null,
+    },
+    {
+        width: bootcamp.template.footerStyling?.width ?? null,
+        height: bootcamp.template.footerStyling?.height ?? null,
+    },
+    bootcamp.template.footerStyling?.fontSize ?? null,
+    bootcamp.template.footerStyling?.fontColor ?? null,
+    bootcamp.template.footerStyling?.fontName ?? null,
+    bootcamp.template.footerStyling?.alignment ?? null
+);
+  return template;
+}
+
 export const mapTemplateInputsToTemplateDesigner = (currentTemplate: any, inputs: any) => {
     const template: Template = getTemplate(
-        inputs[0],
+        inputs,
         {
             x: currentTemplate.introStyling.XPos ?? null,
             y: currentTemplate.introStyling.YPos ?? null,

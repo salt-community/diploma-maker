@@ -10,14 +10,17 @@ import { BootcampResponse, Student, DiplomaResponse, DiplomaUpdateRequestDto, Em
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { delay, generateCombinedPDF, generatePDF, populateFooterField, populateIntroField } from '../util/helper';
+import { delay, generatePDF, oldGenerateCombinedPDF, populateField } from '../util/helper';
 import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../components/MenuItems/Buttons/SelectButton';
-import { InfoPopupShort, InfoPopupType } from '../components/MenuItems/Popups/InfoPopupShort';
+import { InfoPopup, InfoPopupType } from '../components/MenuItems/Popups/InfoPopup';
 import { EmailClient } from '../components/EmailClient';
 import { EmailIcon } from '../components/MenuItems/Icons/EmailIcon';
+import { mapTemplateInputsBootcampsToTemplateViewer } from '../util/dataHelpers';
+import { useCustomAlert } from '../components/Hooks/useCustomAlert';
+import { useCustomInfoPopup } from '../components/Hooks/useCustomInfoPopup';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -32,18 +35,10 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-
-    const [showPopup, setShowPopup] = useState<boolean>(false);
-    const [popupContent, setPopupContent] = useState<string[]>(["",""]);
-    const [popupType, setPopupType] = useState<PopupType>(PopupType.fail);
-
-    const [showConfirmationPopup, setShowConfirmationPopup] = useState<boolean>(false);
-    const [confirmationPopupContent, setConfirmationPopupContent] = useState<string[]>(["",""]);
-    const [confirmationPopupType, setConfirmationPopupType] = useState<InfoPopupType>(InfoPopupType.form);
-    const [confirmationPopupHandler, setConfirmationPopupHandler] = useState<() => void>(() => {});
-
-    const [sendEmailProgress, setSendEmailProgress] = useState(0);
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
+
+    const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+    const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
 
     useEffect(() => {
         if (bootcamps) {
@@ -94,11 +89,8 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
         } 
     };
 
-    const deleteHandler = (id: string) => {
-        setLoading(true);
-        deleteDiploma(id);
-        setLoading(false);
-        
+    const deleteHandler = async (id: string) => {
+        await deleteDiploma(id);
         customAlert(PopupType.fail, "Successfully deleted", "Diploma has been successfully deleted from the database.")
     };
 
@@ -106,33 +98,33 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
         const inputsArray = selectedItems.map(item => {
             const bootcamp = bootcamps?.find(b => b.students.some(student => student.guidId === item.guidId));
             return bootcamp ? makeTemplateInput(
-                bootcamp.diplomaTemplate.intro,
-                item.name,
-                bootcamp.diplomaTemplate.footer,
+                populateField(bootcamp.diplomaTemplate.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.name),
+                populateField(item.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.name),
+                populateField(bootcamp.diplomaTemplate.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.name),
                 bootcamp.diplomaTemplate.basePdf
             ) : null;
         }).filter(input => input !== null) as ReturnType<typeof makeTemplateInput>[];
 
         const templates = inputsArray.map(input => getTemplate(input));
 
-        await generateCombinedPDF(templates, inputsArray);
+        await oldGenerateCombinedPDF(templates, inputsArray);
         customAlert(PopupType.success, "PDFs Generated", "The combined PDF has been successfully generated.")
     };
 
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
         if(!studentInput?.email || studentInput?.email === "No Email"){
             customAlert(PopupType.fail, "Validation Error", "Email field is empty!")
-            setShowConfirmationPopup(false);
+            closeInfoPopup();
             return;
         }
         if(!studentInput?.email.includes('@')){
             customAlert(PopupType.fail, "Validation Error", "Please put in a valid email address")
-            setShowConfirmationPopup(false);
+            closeInfoPopup();
             return;
         }
         if(studentInput?.email == originalEmail){
             customAlert(PopupType.message, "No changes", "Email was unchanged so no changes were made")
-            setShowConfirmationPopup(false);
+            closeInfoPopup();
             return;
         }
         
@@ -143,7 +135,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
                 studentName: studentInput.name,
                 emailAddress: studentInput.email
             }
-            setShowConfirmationPopup(false);
+            closeInfoPopup();
             const emailUpdateResponse = await updateDiploma(emailUpdateRequest);
             customAlert(PopupType.success, "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateResponse.studentName}`)
 
@@ -158,7 +150,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
             if(!student.email){
                 emailAddress = "No Email"
             }
-            customPopup(InfoPopupType.form, student.name, emailAddress, () => (inputContent?: Student) => modifyStudentEmailHandler({
+            customInfoPopup(InfoPopupType.form, student.name, emailAddress, () => (inputContent?: Student) => modifyStudentEmailHandler({
                 guidId: student.guidId,
                 name: student.name,
                 email: inputContent
@@ -169,7 +161,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
     const sendEmailsHandler = async (userIds: string[]) => {
         if(userIds.length === 0) return
         
-        customPopup(InfoPopupType.progress, "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
+        customInfoPopup(InfoPopupType.progress, "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
         const blendProgressDelay = 750;
 
         for (let i = 0; i < userIds.length; i++) {
@@ -180,9 +172,8 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
                     file: file
                 }
                 await sendEmail(emailSendRequest)
-
             } catch (error) {
-                customAlert(PopupType.fail, `Failed to send ${i}th email`, `Something went wrong. ${error}`)
+                customInfoPopup(InfoPopupType.fail, `Opps, Something went wrong`, `${error}`, () => {});
                 return;
             }
            
@@ -204,56 +195,39 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
         }
     
         const pdfInput = makeTemplateInput(
-            populateIntroField(
-                bootcamp.diplomaTemplate.intro
-            ),
-            diploma.name,
-            populateFooterField(
-                bootcamp.diplomaTemplate.footer,
-                bootcamp.name,
-                bootcamp.graduationDate.toString().slice(0, 10)
-              ),
+            populateField(bootcamp.diplomaTemplate.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
+            populateField(diploma.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
+            populateField(bootcamp.diplomaTemplate.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
             bootcamp.diplomaTemplate.basePdf
         );
-        const template = getTemplate(pdfInput);
+
+        const template = mapTemplateInputsBootcampsToTemplateViewer(bootcamp, pdfInput);
         const pdfFile = await generatePDF(template, [pdfInput], true);
         return pdfFile;
     };
-
-    const customPopup = (type: InfoPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => {
-        setConfirmationPopupType(type);
-        setConfirmationPopupContent([title, content]);
-        setConfirmationPopupHandler(handler);
-        setShowConfirmationPopup(true);
-    }
-
-    const customAlert = (alertType: PopupType, title: string, content: string) => {
-        setPopupType(alertType);
-        setPopupContent([title, content]);
-        setShowPopup(true);
-    }
 
     const blendProgress = async (start: number, end: number, blendDelay: number) => {
         const steps = Math.abs(end - start);
         const stepDelay = blendDelay / steps;
         for (let i = 1; i <= steps; i++) {
             await delay(stepDelay);
-            setSendEmailProgress(Math.round(start + i * Math.sign(end - start)));
+            setProgress(Math.round(start + i * Math.sign(end - start)));
         }
     }
 
     return (
         <main className="overview-page">
-            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
-            <InfoPopupShort 
-                title={confirmationPopupContent[0]}
-                text={confirmationPopupContent[1]}
-                show={showConfirmationPopup}
-                infoPopupType={confirmationPopupType}
-                abortClick={() => {setShowConfirmationPopup(false);}}
+            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
+            <InfoPopup 
+                title={infoPopupContent[0]}
+                text={infoPopupContent[1]}
+                show={showInfoPopup}
+                infoPopupType={infoPopupType}
+                abortClick={closeInfoPopup}
                 // @ts-ignore
-                confirmClick={(inputContent?: string) => confirmationPopupHandler(inputContent)}
-                currentProgress={sendEmailProgress}
+                confirmClick={(inputContent?: string) => infoPopupHandler(inputContent)}
+                currentProgress={progress}
+                setCurrentProgress={setProgress}
             />
             {selectedItems.length > 0 && 
                 <EmailClient 

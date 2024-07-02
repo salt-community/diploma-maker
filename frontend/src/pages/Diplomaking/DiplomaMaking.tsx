@@ -1,26 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
 import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode, TemplateResponse, PersonalStudentData } from "../../util/types";
+import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode, TemplateResponse } from "../util/types";
 import {
   getFontsData,
   getPlugins,
   generatePDF,
-  generateCombinedPDF,
-  populateIntroField,
-  populateNameField,
-  populateFooterField,
-} from "../../util/helper";
-import AddDiplomaForm from "../../components/AddDiplomaForm";
+  newGenerateCombinedPDF,
+} from "../util/helper";
+import AddDiplomaForm from "../components/AddDiplomaForm";
 import { useParams } from "react-router-dom";
 import { PaginationMenu } from "../../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../../components/MenuItems/Buttons/PublishButton";
 import './DiplomaMaking.css';
-import { SwitchComponent } from "../../components/MenuItems/Inputs/SwitchComponent";
-import { SaveButton, SaveButtonType } from "../../components/MenuItems/Buttons/SaveButton";
-import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
-import { saltDefaultData } from "../../data/data";
-import { getTemplate, makeTemplateInput } from "../../templates/baseTemplate";
-import { mapTemplateInputsToTemplateViewer, templateInputsFromSaltData } from "../../util/dataHelpers";
+import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
+import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
+import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
+import { saltDefaultData } from "../data/data";
+import { makeTemplateInput } from "../templates/baseTemplate";
+import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../util/dataHelpers";
+import { Template } from "@pdfme/common";
+import { useCustomAlert } from "../components/Hooks/useCustomAlert";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -38,15 +38,11 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   const uiInstance = useRef<Form | Viewer | null>(null);
 
   const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>();
-
-  const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [popupContent, setPopupContent] = useState<string[]>(["",""]);
-  const [popupType, setPopupType] = useState<PopupType>(PopupType.success);
+  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
     if (bootcamps) {
-      console.log(bootcamps);
       if(selectedBootcamp){
         setSelectedBootcampIndex(Number(selectedBootcamp));
       }
@@ -82,7 +78,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
     
     if(saltData){
       const inputs = templateInputsFromSaltData(saltData, selectedBootcampIndex, currentPageIndex);
-      const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputs)
+      const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputs[0])
 
       getFontsData().then((font) => {
         if (uiRef.current) {
@@ -143,7 +139,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   };
 
   const generatePDFHandler = async () => {
-    if (uiInstance.current) {
+    if (uiInstance.current && saltData) {
       const inputs = uiInstance.current.getInputs();
       const pdfInput = [makeTemplateInput(
           inputs[0].header,
@@ -151,7 +147,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
           inputs[0].footer,
           inputs[0].pdfbase
       )];
-      const template = getTemplate(pdfInput[0]);
+      const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, pdfInput)
       await generatePDF(template, inputs);
       await postSelectedBootcampData();
     }
@@ -161,17 +157,17 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
     if (saltData) {
       const selectedBootcampData = saltData[selectedBootcampIndex];
       const inputsArray = selectedBootcampData.students.map((student) => {
-        return makeTemplateInput(
-          populateIntroField(selectedBootcampData.template.intro),
-          populateNameField(selectedBootcampData.template.main, name),
-          populateFooterField(selectedBootcampData.template.footer, selectedBootcampData.classname, selectedBootcampData.dategraduate),
-          selectedBootcampData.template.basePdf
-        );
+        return templateInputsFromBootcampData(selectedBootcampData, student.name);
       });
 
-      const templates = inputsArray.map((input) => getTemplate(input));
+      var templatesArr: Template[] = [];
+      for (let i = 0; i < inputsArray.length; i++) {
+        templatesArr.push(
+          mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputsArray[i])
+        )
+      }
 
-      await generateCombinedPDF(templates, inputsArray);
+      await newGenerateCombinedPDF(templatesArr, inputsArray);
       await postSelectedBootcampData();
     }
   };
@@ -189,15 +185,10 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
       };
       try {
         await addMultipleDiplomas(diplomasRequest);
-
-        setPopupType(PopupType.success);
-        setPopupContent(["Diplomas added successfully.", "Successfully added diplomas to the database."]);
-        setShowPopup(true);
+        customAlert(PopupType.success, "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
       } catch (error) {
-        setPopupType(PopupType.fail);
-        setPopupContent(["Failed to add diplomas:", `${error}`]);
-        setShowPopup(true);
+        customAlert(PopupType.fail, "Failed to add diplomas:", `${error}`);
       }
     }
   };
@@ -227,7 +218,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
 
   return (
     <div className="flex w-full h-screen justify-between pt-10 dark:bg-darkbg">
-      <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)} durationOverride={3500} />
+      <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
       <section className="flex-1 flex flex-col justify-start gap-1 ml-5" style={{ position: 'relative' }}>
         <header className="flex items-center justify-start gap-3 mb-5 viewersidebar-container">
           <div>
