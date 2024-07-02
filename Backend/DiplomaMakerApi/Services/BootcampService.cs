@@ -15,6 +15,7 @@ public class BootcampService
 
     public async Task<Bootcamp> PostBootcamp(Bootcamp bootcamp)
     {
+        bootcamp.DiplomaTemplate = await _context.DiplomaTemplates.FirstOrDefaultAsync(d => d.Name == "Default") ?? throw new Exception("Default template does not exist");
         _context.Bootcamps.Add(bootcamp);
         await _context.SaveChangesAsync();
         return bootcamp;

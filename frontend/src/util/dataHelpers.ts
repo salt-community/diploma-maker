@@ -124,7 +124,7 @@ export const mapTemplateInputsToTemplateDesigner = (currentTemplate: any, inputs
 export const mapTemplatesToTemplateData = (templateInput: TemplateResponse[]) => {
     const templateData = templateInput.map(template => ({
         id: template.id,
-        templateName: template.templateName,
+        templateName: template.name,
         footer: template.footer,
         footerStyling: {
             XPos: template.footerStyling?.xPos,

@@ -12,7 +12,6 @@ public static class SeedData
             
             DiplomaTemplate diploma = new DiplomaTemplate { Name = "Default" };
 
-
             // Bootcamps
             var dotnetBootcamp1 = new Bootcamp
             {
