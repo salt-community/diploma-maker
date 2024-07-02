@@ -1,9 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import './Navbar.css'
-import { PdfCreatorIcon } from "../../components/MenuItems/Icons/PdfCreatorIcon";
-import { DashBoardIcon } from "../../components/MenuItems/Icons/DashBoardIcon";
-import { TemplateCreatorIcon } from "../../components/MenuItems/Icons/TemplateCreatorIcon";
-import { CogWheelIcon } from "../../components/MenuItems/Icons/CogWheelIcon";
+import { PdfCreatorIcon } from "../../../components/MenuItems/Icons/PdfCreatorIcon";
+import { DashBoardIcon } from "../../../components/MenuItems/Icons/DashBoardIcon";
+import { TemplateCreatorIcon } from "../../../components/MenuItems/Icons/TemplateCreatorIcon";
+import { CogWheelIcon } from "../../../components/MenuItems/Icons/CogWheelIcon";
 
 export const NavBar = () => {
     const location = useLocation();

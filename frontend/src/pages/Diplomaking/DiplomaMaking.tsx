@@ -7,7 +7,7 @@ import {
   generatePDF,
   newGenerateCombinedPDF,
 } from "../../util/helper";
-import AddDiplomaForm from "../../components/AddDiplomaForm";
+import AddDiplomaForm from "../../components/Forms/AddDiplomaForm";
 import { useParams } from "react-router-dom";
 import { PaginationMenu } from "../../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../../components/MenuItems/Buttons/PublishButton";
@@ -175,12 +175,12 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
     if (saltData && bootcamps) {
       const currentBootcamp = bootcamps[selectedBootcampIndex];
       const diplomasRequest: DiplomasRequestDto = {
-        diplomas: saltData[selectedBootcampIndex].students.map((student, index) => ({
+        students: saltData[selectedBootcampIndex].students.map((student, index) => ({
           guidId: currentBootcamp.students[index]?.guidId || crypto.randomUUID(),
-          studentName: student.name,
-          EmailAddress: student.email,  
-          bootcampGuidId: currentBootcamp.guidId
-        }))
+          name: student.name,
+          email: student.email,    
+        })),
+        bootcampGuidId: currentBootcamp.guidId
       };
       try {
         await addMultipleDiplomas(diplomasRequest);

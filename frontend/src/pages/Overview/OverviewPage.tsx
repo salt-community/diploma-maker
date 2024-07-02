@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import './OverviewPage.css';
-import { ModifyButton } from '../components/MenuItems/Buttons/ModifyButton';
-import { RemoveButton } from '../components/MenuItems/Buttons/RemoveButton';
-import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
-import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
-import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
-import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, Student, DiplomaResponse, DiplomaUpdateRequestDto, EmailSendRequest } from '../util/types';
-import { Popup404 } from '../components/MenuItems/Popups/Popup404';
-import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
+import { ModifyButton } from '../../components/MenuItems/Buttons/ModifyButton';
+import { RemoveButton } from '../../components/MenuItems/Buttons/RemoveButton';
+import { SelectOptions } from '../../components/MenuItems/Inputs/SelectOptions';
+import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
+import { PaginationMenu } from '../../components/MenuItems/PaginationMenu';
+import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
+import { BootcampResponse, Student, DiplomaResponse, DiplomaUpdateRequestDto, EmailSendRequest } from '../../util/types';
+import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
+import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { delay, generatePDF, oldGenerateCombinedPDF, populateField } from '../util/helper';
-import { getTemplate, makeTemplateInput } from '../templates/baseTemplate';
-import { AlertPopup, PopupType } from '../components/MenuItems/Popups/AlertPopup';
-import { SaveButton, SaveButtonType } from '../components/MenuItems/Buttons/SaveButton';
-import { SelectButton, SelectButtonType } from '../components/MenuItems/Buttons/SelectButton';
-import { InfoPopup, InfoPopupType } from '../components/MenuItems/Popups/InfoPopup';
-import { EmailClient } from '../components/EmailClient';
-import { EmailIcon } from '../components/MenuItems/Icons/EmailIcon';
-import { mapTemplateInputsBootcampsToTemplateViewer } from '../util/dataHelpers';
-import { useCustomAlert } from '../components/Hooks/useCustomAlert';
-import { useCustomInfoPopup } from '../components/Hooks/useCustomInfoPopup';
+import { delay, generatePDF, oldGenerateCombinedPDF, populateField } from '../../util/helper';
+import { getTemplate, makeTemplateInput } from '../../templates/baseTemplate';
+import { AlertPopup, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
+import { SaveButton, SaveButtonType } from '../../components/MenuItems/Buttons/SaveButton';
+import { SelectButton, SelectButtonType } from '../../components/MenuItems/Buttons/SelectButton';
+import { InfoPopup, InfoPopupType } from '../../components/MenuItems/Popups/InfoPopup';
+import { EmailClient } from '../../components/EmailClient/EmailClient';
+import { EmailIcon } from '../../components/MenuItems/Icons/EmailIcon';
+import { mapTemplateInputsBootcampsToTemplateViewer } from '../../util/dataHelpers';
+import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
+import { useCustomInfoPopup } from '../../components/Hooks/useCustomInfoPopup';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,

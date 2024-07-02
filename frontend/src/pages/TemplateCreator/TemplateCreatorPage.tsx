@@ -1,20 +1,20 @@
-import { SelectOptions } from "../components/MenuItems/Inputs/SelectOptions";
+import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import './TemplateCreatorPage.css'
-import { PdfFileUpload } from "../components/MenuItems/Inputs/PdfFileUpload";
-import { CustomTemplate, TemplateRequest, TemplateResponse } from "../util/types";
+import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
+import { CustomTemplate, TemplateRequest, TemplateResponse } from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { cloneDeep, getFontsData, getPlugins } from "../util/helper";
-import { makeTemplateInput } from "../templates/baseTemplate";
+import { cloneDeep, getFontsData, getPlugins } from "../../util/helper";
+import { makeTemplateInput } from "../../templates/baseTemplate";
 import { PDFDocument } from 'pdf-lib';
-import { SaveButton, SaveButtonType } from "../components/MenuItems/Buttons/SaveButton";
-import { AddButton } from "../components/MenuItems/Buttons/AddButton";
-import { ConfirmationPopup, ConfirmationPopupType } from "../components/MenuItems/Popups/ConfirmationPopup";
-import { AlertPopup, PopupType } from "../components/MenuItems/Popups/AlertPopup";
-import { TextInputIcon } from "../components/MenuItems/Icons/TextInputIcon";
-import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData } from "../util/dataHelpers";
-import { useCustomAlert } from "../components/Hooks/useCustomAlert";
-import { useCustomConfirmationPopup } from "../components/Hooks/useCustomConfirmationPopup";
+import { SaveButton, SaveButtonType } from "../../components/MenuItems/Buttons/SaveButton";
+import { AddButton } from "../../components/MenuItems/Buttons/AddButton";
+import { ConfirmationPopup, ConfirmationPopupType } from "../../components/MenuItems/Popups/ConfirmationPopup";
+import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
+import { TextInputIcon } from "../../components/MenuItems/Icons/TextInputIcon";
+import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData } from "../../util/dataHelpers";
+import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
+import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
 
 type Props = {
     templates: TemplateResponse[] | null;

@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom"
-import { getDiplomaById } from "../services/diplomaService";
+import { getDiplomaById } from "../../services/diplomaService";
 import QRCode from "react-qr-code";
 /*
 https://www.npmjs.com/package/react-qr-code
