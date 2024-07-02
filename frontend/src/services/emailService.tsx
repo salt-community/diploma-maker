@@ -6,7 +6,7 @@ export async function postEmail(emailRequest: EmailSendRequest): Promise<void> {
     const formData = new FormData();
     formData.append('file', emailRequest.file);
 
-    const response = await fetch(`${apiUrl}/api/Email/${emailRequest.guidId}`, {
+    const response = await fetch(`${apiUrl}/api/Email/email-student/${emailRequest.guidId}`, {
         method: 'POST',
         body: formData
     });
