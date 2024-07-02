@@ -53,7 +53,6 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
     
     const itemsPerPage = 8;
     const startIndex = (currentPage - 1) * itemsPerPage;
-    console.log(items);
     const visibleItems = items.filter((item: any) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
         (!selectedBootcamp || bootcamps?.some(bootcamp => bootcamp.guidId === selectedBootcamp && bootcamp.students.includes(item)))
@@ -200,6 +199,8 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
             populateField(bootcamp.diplomaTemplate.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
             bootcamp.diplomaTemplate.basePdf
         );
+
+        
 
         const template = mapTemplateInputsBootcampsToTemplateViewer(bootcamp, pdfInput);
         const pdfFile = await generatePDF(template, [pdfInput], true);
