@@ -147,6 +147,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
           inputs[0].pdfbase
       )];
       const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, pdfInput)
+     
       await generatePDF(template, inputs);
       await postSelectedBootcampData();
     }

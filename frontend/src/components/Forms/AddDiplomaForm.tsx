@@ -36,11 +36,10 @@ export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedB
     });
   }, [students]);
 
-  console.log(saltData)
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
-    console.log(dataFromFile)
+   
     setStudents(dataFromFile);
   };
 
