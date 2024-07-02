@@ -15,7 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 builder.Services.AddAutoMapper(typeof(AutomapperConfig));
 builder.Services.AddScoped<BootcampService>();
-builder.Services.AddScoped<DiplomaService>();
+builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<TemplateService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddLogging();

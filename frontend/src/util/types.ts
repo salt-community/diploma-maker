@@ -20,10 +20,10 @@ export type DiplomaResponse = {
     bootcamp: BootcampInDiploma;
 }
 
-export type DiplomaInBootcamp = {
+export type Student = {
     guidId: string;
-    studentName: string;
-    emailAddress: string;
+    name: string;
+    email: string;
 }
 
 // bootcamps
@@ -41,8 +41,8 @@ export type BootcampResponse = {
     guidId: string;
     name: string;
     graduationDate: Date;
-    template: TemplateResponse;
-    diplomas: DiplomaInBootcamp[];
+    diplomaTemplate: TemplateResponse;
+    students: Student[];
 }
 
 export type DiplomasRequestDto = {
@@ -66,7 +66,7 @@ export type SaltData = {
 
 export type TemplateResponse = {
     id: number;
-    templateName: string;
+    name: string;
     footer: string;
     footerStyling?: Style;
     intro: string;

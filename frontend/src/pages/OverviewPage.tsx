@@ -6,7 +6,7 @@ import { SelectOptions } from '../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, DiplomaInBootcamp, DiplomaResponse, DiplomaUpdateRequestDto, EmailSendRequest } from '../util/types';
+import { BootcampResponse, Student, DiplomaResponse, DiplomaUpdateRequestDto, EmailSendRequest } from '../util/types';
 import { Popup404 } from '../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
@@ -48,14 +48,15 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
             setLoading(true);
         }
     }, [bootcamps]);
-
-    const items = bootcamps?.flatMap(bootcamp => bootcamp.diplomas) || []; // Flatmap instead of map to flatten [][] into []
+    
+    const items = bootcamps?.flatMap(bootcamp => bootcamp.students) || []; // Flatmap instead of map to flatten [][] into []
+    
     const itemsPerPage = 8;
     const startIndex = (currentPage - 1) * itemsPerPage;
-
-    const visibleItems = items.filter((item: DiplomaInBootcamp) =>
-        item.studentName.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (!selectedBootcamp || bootcamps?.some(bootcamp => bootcamp.guidId === selectedBootcamp && bootcamp.diplomas.includes(item)))
+    console.log(items);
+    const visibleItems = items.filter((item: any) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (!selectedBootcamp || bootcamps?.some(bootcamp => bootcamp.guidId === selectedBootcamp && bootcamp.students.includes(item)))
     );
 
     const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
@@ -82,7 +83,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
     const modifyHandler = (guidId: string) => {
        if (bootcamps) {
             const bootcampIndex = bootcamps.findIndex(bootcamp =>
-                bootcamp.diplomas.some(diploma => diploma.guidId === guidId)
+                bootcamp.students.some(student => student.guidId === guidId)
             );
             navigate(`/${bootcampIndex}`);
         } 
@@ -95,12 +96,12 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
 
     const generatePDFsHandler = async () => {
         const inputsArray = selectedItems.map(item => {
-            const bootcamp = bootcamps?.find(b => b.diplomas.some(diploma => diploma.guidId === item.guidId));
+            const bootcamp = bootcamps?.find(b => b.students.some(student => student.guidId === item.guidId));
             return bootcamp ? makeTemplateInput(
-                populateField(bootcamp.template.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.studentName),
-                populateField(item.studentName, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.studentName),
-                populateField(bootcamp.template.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.studentName),
-                bootcamp.template.basePdf
+                populateField(bootcamp.diplomaTemplate.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.name),
+                populateField(item.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.name),
+                populateField(bootcamp.diplomaTemplate.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.name),
+                bootcamp.diplomaTemplate.basePdf
             ) : null;
         }).filter(input => input !== null) as ReturnType<typeof makeTemplateInput>[];
 
@@ -110,18 +111,18 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
         customAlert(PopupType.success, "PDFs Generated", "The combined PDF has been successfully generated.")
     };
 
-    const modifyStudentEmailHandler = async (studentInput?: DiplomaInBootcamp, originalEmail?: string) => {
-        if(!studentInput?.emailAddress || studentInput?.emailAddress === "No Email"){
+    const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
+        if(!studentInput?.email || studentInput?.email === "No Email"){
             customAlert(PopupType.fail, "Validation Error", "Email field is empty!")
             closeInfoPopup();
             return;
         }
-        if(!studentInput?.emailAddress.includes('@')){
+        if(!studentInput?.email.includes('@')){
             customAlert(PopupType.fail, "Validation Error", "Please put in a valid email address")
             closeInfoPopup();
             return;
         }
-        if(studentInput?.emailAddress == originalEmail){
+        if(studentInput?.email == originalEmail){
             customAlert(PopupType.message, "No changes", "Email was unchanged so no changes were made")
             closeInfoPopup();
             return;
@@ -131,8 +132,8 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
             
             const emailUpdateRequest: DiplomaUpdateRequestDto = {
                 guidId: studentInput.guidId,
-                studentName: studentInput.studentName,
-                emailAddress: studentInput.emailAddress
+                studentName: studentInput.name,
+                emailAddress: studentInput.email
             }
             closeInfoPopup();
             const emailUpdateResponse = await updateDiploma(emailUpdateRequest);
@@ -143,16 +144,16 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
         }
     }
 
-    const showStudentInfohandler = (student: DiplomaInBootcamp) => {
+    const showStudentInfohandler = (student: Student) => {
         if(student){
-            var emailAddress = student.emailAddress;
-            if(!student.emailAddress){
+            var emailAddress = student.email;
+            if(!student.email){
                 emailAddress = "No Email"
             }
-            customInfoPopup(InfoPopupType.form, student.studentName, emailAddress, () => (inputContent?: DiplomaInBootcamp) => modifyStudentEmailHandler({
+            customInfoPopup(InfoPopupType.form, student.name, emailAddress, () => (inputContent?: Student) => modifyStudentEmailHandler({
                 guidId: student.guidId,
-                studentName: student.studentName,
-                emailAddress: inputContent
+                name: student.name,
+                email: inputContent
             }, emailAddress))
         }
     }
@@ -187,17 +188,17 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
             customAlert(PopupType.fail, "Selection Error:", "No Emails Selected");
             return;
         }
-        const bootcamp = bootcamps?.find(b => b.diplomas.some(d => d.guidId === guidId));
+        const bootcamp = bootcamps?.find(b => b.students.some(d => d.guidId === guidId));
         if (!bootcamp) {
             customAlert(PopupType.fail, "Bootcamp Error:", "Bootcamp not found");
             return;
         }
     
         const pdfInput = makeTemplateInput(
-            populateField(bootcamp.template.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.studentName),
-            populateField(diploma.studentName, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.studentName),
-            populateField(bootcamp.template.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.studentName),
-            bootcamp.template.basePdf
+            populateField(bootcamp.diplomaTemplate.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
+            populateField(diploma.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
+            populateField(bootcamp.diplomaTemplate.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
+            bootcamp.diplomaTemplate.basePdf
         );
 
         const template = mapTemplateInputsBootcampsToTemplateViewer(bootcamp, pdfInput);
@@ -245,9 +246,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
                         <SpinnerDefault classOverride="spinner"/>
                     ) : (
                         // @ts-ignore
-                        selectedItems.length > 0 ? selectedItems.map((student: DiplomaInBootcamp, index) => (
+                        selectedItems.length > 0 ? selectedItems.map((student: Student, index) => (
                             <button key={student.guidId} className='listmodule__item'>
-                                <p className='overview-page__item--title'>{student.studentName}</p>
+                                <p className='overview-page__item--title'>{student.name}</p>
                                 <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
                                 <section className='overview-page__item--menu'>
                                     <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />

@@ -1,6 +1,6 @@
 namespace DiplomaMakerApi.Models
 {
-    public class Style
+    public class TemplateStyle
     {
         public int Id { get; set; }
         public double? XPos { get; set; }

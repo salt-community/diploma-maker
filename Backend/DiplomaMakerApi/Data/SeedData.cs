@@ -10,32 +10,29 @@ public static class SeedData
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
             
-            // template 
-            
-            var baseTemplate = new Template {
-                templateName = "defaultTemplate"
-            };
+            DiplomaTemplate diploma = new DiplomaTemplate { Name = "Default" };
 
             // Bootcamps
             var dotnetBootcamp1 = new Bootcamp
             {
                 Name = ".Net Fullstack Winter 2024",
-                graduationDate = new DateTime(2024,2,5),
-                template = baseTemplate,
-                
+                GraduationDate = new DateTime(2024,2,5),
+                DiplomaTemplate = diploma 
             };
             var dotnetBootcamp2 = new Bootcamp
             {
                 Name = ".Net Fullstack Autumn 2023",
-                graduationDate = new DateTime(2024,11,5),
-                template = baseTemplate,
+                GraduationDate = new DateTime(2024,11,5),
+                DiplomaTemplate = diploma 
+             
                 
             };
             var JavaBootcamp = new Bootcamp
             {
                 Name = "Java Fullstack Winter 2024",
-                graduationDate = new DateTime(2024,1,5),
-                template = baseTemplate,
+                GraduationDate = new DateTime(2024,1,5),
+                DiplomaTemplate = diploma 
+              
             };
 
             var bootcamps = new List<Bootcamp>{dotnetBootcamp1, dotnetBootcamp2, JavaBootcamp};
@@ -43,31 +40,31 @@ public static class SeedData
             _context.SaveChanges();
 
             // Diplomas
-            var diploma1 = new Diploma 
+            var student1 = new Student 
             { 
-                StudentName = "Xinnan Luo", 
-                EmailAddress = "william.f.lindberg@hotmail.com",
+                Name = "Xinnan Luo", 
+                Email = "william.f.lindberg@hotmail.com",
                 Bootcamp = dotnetBootcamp1 
             };
-            var diploma2 = new Diploma 
+            var student2 = new Student 
             { 
-                StudentName = "Zerophymyr Falk", 
-                EmailAddress = "Zzer0ph@gmail.com",
+                Name = "Zerophymyr Falk", 
+                Email = "Zzer0ph@gmail.com",
                 Bootcamp = dotnetBootcamp1 
             };
-            var diploma3 = new Diploma 
+            var student3 = new Student 
             { 
-                StudentName = "William F Lindberg", 
-                EmailAddress = "lindberg.f.william@gmail.com",
+                Name = "William F Lindberg", 
+                Email = "lindberg.f.william@gmail.com",
                 Bootcamp = dotnetBootcamp1 
             };
-            var diploma4 = new Diploma 
+            var student4 = new Student 
             { 
-                StudentName = "Silvia Dominguez", 
+                Name = "Silvia Dominguez", 
                 Bootcamp = dotnetBootcamp2 
             };
-            var diplomas = new List<Diploma>{diploma1, diploma2, diploma3, diploma4};
-            _context.AddRange(diplomas);
+            var students = new List<Student>{student1, student2, student3, student4};
+            _context.AddRange(students);
             _context.SaveChanges();
 
 

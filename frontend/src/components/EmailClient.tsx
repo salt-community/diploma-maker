@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DiplomaInBootcamp } from "../util/types";
+import { Student } from "../util/types";
 import './EmailClient.css';
 import { CloseWindowIcon } from "./MenuItems/Icons/CloseWindowIcon";
 import { CogWheelIcon } from "./MenuItems/Icons/CogWheelIcon";
@@ -9,11 +9,11 @@ import { CircleIcon } from "./MenuItems/Icons/CircleIcon";
 import CustomCheckBoxRound from "./MenuItems/Inputs/CustomCheckBoxRound";
 
 type Props = {
-    clients: DiplomaInBootcamp[],
+    clients: Student[],
     title: string | undefined,
     show: boolean,
     closeEmailClient: () => void,
-    modifyStudentEmailHandler: (studentInput?: DiplomaInBootcamp, originalEmail?: string) => void,
+    modifyStudentEmailHandler: (studentInput?: Student, originalEmail?: string) => void,
     sendEmails: (userIds: string[]) => void,
     callCustomAlert: (alertType: PopupType, title: string, content: string) => void,
 };
@@ -22,20 +22,20 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
     const [emailChanges, setEmailChanges] = useState<{[key: string]: string}>({});
     const [checkedUsers, setCheckedUsers] = useState<{[key: string]: boolean}>({});
 
-    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, student: DiplomaInBootcamp) => {
+    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, student: Student) => {
         setEmailChanges({
             ...emailChanges,
             [student.guidId]: event.target.value,
         });
     };
 
-    const inputBlurHandler = (student: DiplomaInBootcamp) => {
+    const inputBlurHandler = (student: Student) => {
         const newEmail = emailChanges[student.guidId];
-        if (newEmail && newEmail !== student.emailAddress) {
+        if (newEmail && newEmail !== student.email) {
             modifyStudentEmailHandler({
                 ...student,
-                emailAddress: newEmail,
-            }, student.emailAddress);
+                email: newEmail,
+            }, student.email);
         }
     };
 
@@ -49,10 +49,10 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
     const sendEmailsHandler = () => {
         const selectedIds = Object.keys(checkedUsers).filter(id => checkedUsers[id]);
         const selectedStudents = clients.filter(student => selectedIds.includes(student.guidId));
-        const studentNullEmail = selectedStudents.find(student => !student.emailAddress);
+        const studentNullEmail = selectedStudents.find(student => !student.email);
 
         if (studentNullEmail) {
-            callCustomAlert(PopupType.fail, `Failure in sending emails`, `Cannot send email to ${studentNullEmail.studentName} as their email address is missing.`);
+            callCustomAlert(PopupType.fail, `Failure in sending emails`, `Cannot send email to ${studentNullEmail.name} as their email address is missing.`);
             return;
         }
         sendEmails(selectedIds);
@@ -66,14 +66,14 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                     <h2>Students</h2>
                 </header>
                 <ul className="emailclient__list">
-                    {clients.map((student: DiplomaInBootcamp) => (
+                    {clients.map((student: Student) => (
                         <li key={student.guidId} className="emailclient__list--item">
-                            <h3>{student.studentName}</h3>
+                            <h3>{student.name}</h3>
                             <div className="emailclient__list--input-wrapper">
                                 <input 
                                     className="emailclient__list--input" 
                                     type="text" 
-                                    value={emailChanges[student.guidId] || student.emailAddress || 'No Email'} 
+                                    value={emailChanges[student.guidId] || student.email || 'No Email'} 
                                     onChange={(event) => inputChangeHandler(event, student)} 
                                     onBlur={() => inputBlurHandler(student)} 
                                 />

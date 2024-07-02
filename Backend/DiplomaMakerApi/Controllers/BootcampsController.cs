@@ -1,18 +1,20 @@
+namespace DiplomaMakerApi.Controllers;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using AutoMapper;
-namespace DiplomaMakerApi.Controllers;
+using DiplomaMakerApi.Dtos;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BootcampController : ControllerBase
+public class BootcampsController : ControllerBase
 {
     private readonly BootcampService _service;
     private readonly IMapper _mapper;
 
-    public BootcampController(BootcampService service, IMapper mapper)
+    public BootcampsController(BootcampService service, IMapper mapper)
     {
         _service = service;
         _mapper = mapper;
@@ -34,7 +36,6 @@ public class BootcampController : ControllerBase
         }
 
     }
-
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Bootcamp>>> GetBootcamps()
     {

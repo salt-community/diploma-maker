@@ -133,7 +133,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             closeConfirmationPopup();
             try {
                 await updateTemplate(currentTemplate?.id, currentTemplate);
-                customAlert(PopupType.success, "Template Successfully Updated!", `Successfully updated ${currentTemplate.templateName} to database`);
+                customAlert(PopupType.success, "Template Successfully Updated!", `Successfully updated ${currentTemplate.diplomaTemplateName} to database`);
                 setTemplateHasChanged(false);
                 if (goToIndex !== undefined) {
                     setCurrentTemplate(templateData[goToIndex] || null);

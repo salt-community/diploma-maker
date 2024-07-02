@@ -14,8 +14,8 @@ public class EmailController : ControllerBase
         _emailService = emailService;
     }
 
-    [HttpPost("{guidID}")]
-    public async Task<IActionResult> SendEmail(IFormFile file, Guid guidID)
+    [HttpPost("email-student/{guidID}")]
+    public async Task<IActionResult> SendEmailToStudent(IFormFile file, Guid guidID)
     {
         try
         {

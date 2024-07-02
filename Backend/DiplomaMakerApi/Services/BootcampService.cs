@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 
 namespace DiplomaMakerApi.Services;
 
@@ -14,31 +15,32 @@ public class BootcampService
 
     public async Task<Bootcamp> PostBootcamp(Bootcamp bootcamp)
     {
-        _context.Bootcamp.Add(bootcamp);
+        bootcamp.DiplomaTemplate = await _context.DiplomaTemplates.FirstOrDefaultAsync(d => d.Name == "Default") ?? throw new Exception("Default template does not exist");
+        _context.Bootcamps.Add(bootcamp);
         await _context.SaveChangesAsync();
         return bootcamp;
     }
 
     public async Task<List<Bootcamp>> GetBootcamps() =>
-            await _context.Bootcamp
-            .Include(b => b.Diplomas)
-            .Include(b =>b.template)
-                .ThenInclude(t => t.introStyling)
-            .Include(b =>b.template)
-                .ThenInclude(t => t.mainStyling)
-            .Include(b =>b.template)
-                .ThenInclude(t => t.footerStyling)
+            await _context.Bootcamps
+            .Include(b => b.Students)
+            .Include(b =>b.DiplomaTemplate)
+                .ThenInclude(t => t.IntroStyling)
+            .Include(b =>b.DiplomaTemplate)
+                .ThenInclude(t => t.MainStyling)
+            .Include(b =>b.DiplomaTemplate)
+                .ThenInclude(t => t.FooterStyling)
             .ToListAsync();
 
     public async Task<Bootcamp?> GetBootcampByGuidId(Guid guidId) => 
-            await _context.Bootcamp
-            .Include(b => b.Diplomas)
-            .Include(b =>b.template)
+            await _context.Bootcamps
+            .Include(b => b.Students)
+            .Include(b =>b.DiplomaTemplate)
             .FirstOrDefaultAsync(b => b.GuidId == guidId);
 
     public async Task<Bootcamp> DeleteBootcampByGuidId(Guid guidId)
     {
-        var bootcamp = await _context.Bootcamp.FirstOrDefaultAsync(b => b.GuidId == guidId);
+        var bootcamp = await _context.Bootcamps.FirstOrDefaultAsync(b => b.GuidId == guidId);
         if (bootcamp == null)
         {
             throw new ArgumentException("The specifc ID for Bootcamp does not exist");
@@ -54,11 +56,11 @@ public class BootcampService
     {
         try
         {
-            var bootcamp = await _context.Bootcamp
+            var bootcamp = await _context.Bootcamps
                 .FirstOrDefaultAsync(b => b.GuidId == GuidID) ?? throw new ArgumentException("The specifc ID for Bootcamp does not exist");
 
             bootcamp.Name = requestDto.Name;
-            bootcamp.graduationDate = requestDto.graduationDate;
+            bootcamp.GraduationDate = requestDto.GraduationDate;
 
             await _context.SaveChangesAsync();
             return bootcamp;
@@ -69,6 +71,8 @@ public class BootcampService
         }
 
     }
+
+    
 
 
 }
