@@ -72,15 +72,7 @@ export const TextEditSection = () => {
             <label htmlFor="">Color</label>
           </div>
           <div className="edittext__menusection--inputwrapper">
-          <SelectOptions
-                  containerClassOverride='overview-page__select-container'
-                  selectClassOverride='overview-page__select-box'
-                  options={[{
-                    value: "",
-                    label: ""
-                  }]}
-                  onChange={() => {}}
-            />
+            
           </div>
         </div>
       </div>
