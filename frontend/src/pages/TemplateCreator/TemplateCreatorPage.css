@@ -179,7 +179,14 @@
     background-color: #197eff !important;
 }
 
+.pdfpreview div div div div div[title="header"]{
+    background-color: blue !important;
+}
 
+.pdfpreview div div div div div div div:nth-of-type(1)[title="main"]{
+    background-color: red !important;
+}
 
-
-
+.pdfpreview div div div div div div div:nth-of-type(1)[title="footer"]{
+    background-color: green !important;
+}
