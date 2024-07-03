@@ -97,6 +97,14 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         }
     }, [currentTemplate]);
 
+    const textAlignHandler = async (value: string) => {
+        setAlign(value);
+        if (designer.current) {
+            designer.current.template.schemas[0].main.alignment = value;
+            designer.current.updateTemplate(designer.current.template);
+        }  
+    };
+
     const templateChangeHandler = async (index: number) => {
         if (templateHasChanged) {
             shouldWeSaveHandler(index);
@@ -227,17 +235,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const setPositionXHandler = (value: number) => {
         setPositionX(value);
     };
-
-    const textAlignHandler = (value: string) => {
-        setAlign(value);
-        setCurrentTemplate({
-            ...currentTemplate,
-            mainStyling: {
-                ...currentTemplate.mainStyling,
-                Alignment: value,
-            },
-        });
-    };
     
 
     return (
@@ -343,7 +340,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                                 <h3>Text</h3>
                                 <TextEditSection 
                                     align={align}
-                                    setAlign={textAlignHandler}
+                                    setAlign={(value: string) => {textAlignHandler(value);}}
                                 />
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
