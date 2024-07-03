@@ -151,8 +151,8 @@ export const TemplateCreatorPage = ({
       selectors.forEach((selector) => {
         const elements = document.querySelectorAll(selector);
         elements.forEach((element) => {
-          element.removeEventListener("click", handleClick);
-          element.addEventListener("click", handleClick);
+          element.removeEventListener("click", handleFieldClick);
+          element.addEventListener("click", handleFieldClick);
         });
       });
     };
@@ -175,16 +175,29 @@ export const TemplateCreatorPage = ({
       selectors.forEach((selector) => {
         const elements = document.querySelectorAll(selector);
         elements.forEach((element) => {
-          element.removeEventListener("click", handleClick);
+          element.removeEventListener("click", handleFieldClick);
         });
       });
     };
   }, []);
 
-  const handleClick = (event) => {
-    const elementClicked = event.currentTarget.getAttribute("title");
-    console.log(elementClicked);
-    setSelectedField(elementClicked);
+  const handleFieldClick = (event) => {
+    const clickedField = event.currentTarget.getAttribute("title");
+    setSelectedField(clickedField);
+    if(designer.current){
+        console.log(designer.current.template.schemas[0][clickedField].alignment);
+        const posX: number = designer.current.template.schemas[0][clickedField].position.x;
+        const posY: number = designer.current.template.schemas[0][clickedField].position.y;
+        const width: number = designer.current.template.schemas[0][clickedField].width;
+        const height: number = designer.current.template.schemas[0][clickedField].height;
+        const alignment: string = designer.current.template.schemas[0][clickedField].alignment;
+    
+        setPositionX(posX);
+        setPositionY(posY);
+        setSizeWidth(width);
+        setSizeHeight(height);
+        setAlign(alignment);
+    }
   };
 
   const textAlignHandler = async (value: string) => {
