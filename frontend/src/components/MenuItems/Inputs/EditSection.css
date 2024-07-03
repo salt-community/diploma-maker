@@ -1,7 +1,9 @@
-.editlayout__menusection label{
+.editlayout__menusection--title{
   font-size: .8rem;
-  min-width: 40px;
-  margin-right: .75rem;
+  min-width: 50px;
+  margin-right: .1rem;
+  display: flex;
+  justify-content: space-between;
 }
 .editlayout__menusection{
   display: flex;
@@ -11,6 +13,28 @@
   justify-content: flex-start;
   gap: .5rem;
 }
+  .editlayout__menusection svg{
+    width: 18px;
+    transform: rotate(90deg);
+    cursor: pointer;
+    transition: all .15s ease-in-out;
+  }
+  .editlayout__menusection svg path{
+    stroke: #ababba;
+    transition: all .15s ease-in-out;
+  }
+    .editlayout__menusection svg:hover path{
+      stroke: #ddddeb;
+      transition: all .15s ease-in-out;
+    }
+    .editlayout__menusection svg.locked{
+      transform: scale(1.01) rotate(90deg);
+      transition: all .15s ease-in-out;
+    }
+    .editlayout__menusection svg.locked path{
+      stroke: #ff632b;
+      transition: all .15s ease-in-out;
+    }
 
 .editlayout__menusection--inputwrapper{
   display: flex;
