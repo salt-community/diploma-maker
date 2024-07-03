@@ -51,7 +51,7 @@ const DraggableInput = ({ value, setValue, label }: DraggableInputProps) => {
             className="draggable-input"
             onMouseDown={onStart}
         />
-        <label htmlFor="">{label}</label>
+        <p>{label}</p>
     </div>
   );
 };

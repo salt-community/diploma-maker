@@ -1,24 +1,38 @@
 .draggable-input-container {
-    display: flex;
-    border-radius: 1rem;
     position: relative;
+    display: flex;
+    width: 100%;
+
+    border-radius: .5rem;
+    color: #fff;
+    
+    background-color: #20202a;
 }
 .draggable-input {
     padding: 8px;
     border: none;
     outline: none;
 
-    color: #fff;
-    background-color: #20202a;
+    background: transparent;
     border-radius: .5rem;
     width: 100%;
 
     cursor: ew-resize;
     user-select: none;
+    caret-color: #ababba;
+    caret-shape: 1px;
 }
+    .draggable-input::selection {
+        background: none;
+    }
 
-.draggable-input-container label{
+.draggable-input-container p{
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15%;
+
+    color: #ababba;
+    font-size: .9rem;
+    font-weight: 200;
 }
