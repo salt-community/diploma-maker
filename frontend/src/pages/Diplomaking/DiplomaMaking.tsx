@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, StudentResponse, StudentsRequestDto, SaltData, displayMode, TemplateResponse, PersonalStudentData } from "../../util/types";
+import { BootcampResponse, StudentResponse, StudentsRequestDto, SaltData, displayMode, TemplateResponse } from "../../util/types";
 import {
   getFontsData,
   getPlugins,
   generatePDF,
   newGenerateCombinedPDF,
 } from "../../util/helper";
-import AddDiplomaForm from "../../components/Forms/AddDiplomaForm";
+import DiplomaDataForm from "../../components/Forms/DiplomaGeneratorForm";
 import { useParams } from "react-router-dom";
 import { PaginationMenu } from "../../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../../components/MenuItems/Buttons/PublishButton";
@@ -251,7 +251,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
       </section>
       <section className="flex-1 flex flex-col ">
         {saltData &&
-          <AddDiplomaForm
+          <DiplomaDataForm
             updateSaltData={updateSaltDataHandler}
             bootcamps={bootcamps}
             setSelectedBootcampIndex={(index) => { setSelectedBootcampIndex(index); setCurrentPageIndex(0); }}

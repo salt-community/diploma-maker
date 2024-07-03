@@ -50,8 +50,8 @@ export default function App() {
     await deleteStudentById(id);
     await refresh();
   }
-  async function addMultipleStudents(diplomasRequest: StudentsRequestDto): Promise<StudentResponse[]> {
-    const response = await postMultipleStudents(diplomasRequest);
+  async function addMultipleStudents(studentsRequest: StudentsRequestDto): Promise<StudentResponse[]> {
+    const response = await postMultipleStudents(studentsRequest);
     await refresh();
     return response;
   }
