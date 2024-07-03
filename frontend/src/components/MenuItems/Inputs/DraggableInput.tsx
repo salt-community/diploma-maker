@@ -13,7 +13,10 @@ const DraggableInput = ({ value, setValue, label, minValue }: DraggableInputProp
   const [startVal, setStartVal] = useState<number>(0);
 
   const onInputChange = useCallback(
-    (ev: React.ChangeEvent<HTMLInputElement>) => setValue(parseInt(ev.target.value, 10)),
+    (ev: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = parseFloat(ev.target.value);
+      setValue(isNaN(newValue) ? 0 : parseFloat(newValue.toFixed(1)));
+    },
     []
   );
 
@@ -26,23 +29,24 @@ const DraggableInput = ({ value, setValue, label, minValue }: DraggableInputProp
   );
 
   useEffect(() => {
-    const onUpdate = (event: MouseEvent) => {
-      if (startVal) {
-        setValue(Math.max(minValue, snapshot + Math.floor((event.clientX - startVal) / 5)));
-      }
-    };
+  const onUpdate = (event: MouseEvent) => {
+    if (startVal) {
+      const newValue = snapshot + (event.clientX - startVal) / 5;
+      setValue(Math.max(minValue, parseFloat(newValue.toFixed(1))));
+    }
+  };
 
-    const onEnd = () => {
-      setStartVal(0);
-    };
+  const onEnd = () => {
+    setStartVal(0);
+  };
 
-    document.addEventListener("mousemove", onUpdate);
-    document.addEventListener("mouseup", onEnd);
-    return () => {
-      document.removeEventListener("mousemove", onUpdate);
-      document.removeEventListener("mouseup", onEnd);
-    };
-  }, [startVal, setValue, snapshot, minValue]);
+  document.addEventListener("mousemove", onUpdate);
+  document.addEventListener("mouseup", onEnd);
+  return () => {
+    document.removeEventListener("mousemove", onUpdate);
+    document.removeEventListener("mouseup", onEnd);
+  };
+}, [startVal, setValue, snapshot, minValue]);
 
   return (
     <div className="draggable-input-container">

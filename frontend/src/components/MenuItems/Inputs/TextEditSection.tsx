@@ -6,11 +6,12 @@ import { SelectOptions } from "./SelectOptions";
 
 type Props = {
   align: string,
-  setAlign: (value: string) => void
+  setAlign: (value: string) => void,
+  fontSize: number,
+  setFontSize: (value: number) => void,
 }
 
-export const TextEditSection = ({align, setAlign}: Props) => {
-  const [fontSize, setFontSize] = useState<number>(16);
+export const TextEditSection = ({align, setAlign, fontSize, setFontSize}: Props) => {
 
   return (
     <>

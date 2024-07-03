@@ -1,62 +1,33 @@
 import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import "./TemplateCreatorPage.css";
 import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
-import {
-  CustomTemplate,
-  TemplateRequest,
-  TemplateResponse,
-} from "../../util/types";
+import { CustomTemplate, TemplateRequest, TemplateResponse,} from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
 import { cloneDeep, getFontsData, getPlugins } from "../../util/helper";
 import { makeTemplateInput } from "../../templates/baseTemplate";
 import { PDFDocument } from "pdf-lib";
-import {
-  SaveButton,
-  SaveButtonType,
-} from "../../components/MenuItems/Buttons/SaveButton";
+import { SaveButton, SaveButtonType,} from "../../components/MenuItems/Buttons/SaveButton";
 import { AddButton } from "../../components/MenuItems/Buttons/AddButton";
-import {
-  ConfirmationPopup,
-  ConfirmationPopupType,
-} from "../../components/MenuItems/Popups/ConfirmationPopup";
-import {
-  AlertPopup,
-  PopupType,
-} from "../../components/MenuItems/Popups/AlertPopup";
+import { ConfirmationPopup, ConfirmationPopupType } from "../../components/MenuItems/Popups/ConfirmationPopup";
+import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
 import { TextInputIcon } from "../../components/MenuItems/Icons/TextInputIcon";
-import {
-  createBlankTemplate,
-  createUpdatedTemplate,
-  mapTemplateInputsToTemplateDesigner,
-  mapTemplatesToTemplateData,
-} from "../../util/dataHelpers";
+import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData} from "../../util/dataHelpers";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
-import DraggableInput from "../../components/MenuItems/Inputs/DraggableInput";
 import { EditSection } from "../../components/MenuItems/Inputs/EditSection";
 import { TextEditSection } from "../../components/MenuItems/Inputs/TextEditSection";
 
 type Props = {
   templates: TemplateResponse[] | null;
   addNewTemplate: (templateRequest: TemplateRequest) => Promise<void>;
-  updateTemplate: (
-    id: number,
-    templateRequest: TemplateRequest
-  ) => Promise<TemplateResponse>;
+  updateTemplate: (id: number,templateRequest: TemplateRequest) => Promise<TemplateResponse>;
   deleteTemplate: (templateRequest: number) => Promise<void>;
 };
 
-export const TemplateCreatorPage = ({
-  templates,
-  addNewTemplate,
-  updateTemplate,
-  deleteTemplate,
-}: Props) => {
+export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate }: Props) => {
   const [templateData, setTemplateData] = useState<CustomTemplate[]>([]);
-  const [currentTemplate, setCurrentTemplate] = useState<CustomTemplate | null>(
-    null
-  );
+  const [currentTemplate, setCurrentTemplate] = useState<CustomTemplate | null>(null);
 
   const designerRef = useRef<HTMLDivElement | null>(null);
   const designer = useRef<Designer | null>(null);
@@ -64,16 +35,8 @@ export const TemplateCreatorPage = ({
   const [rightSideBarPage, setRightSideBarPage] = useState<number>(0);
   const [leftSideBarPage, setLeftSideBarPage] = useState<number>(0);
 
-  const { showPopup, popupContent, popupType, customAlert, closeAlert } =
-    useCustomAlert();
-  const {
-    showConfirmationPopup,
-    confirmationPopupContent,
-    confirmationPopupType,
-    confirmationPopupHandler,
-    customPopup,
-    closeConfirmationPopup,
-  } = useCustomConfirmationPopup();
+  const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+  const {showConfirmationPopup,confirmationPopupContent,confirmationPopupType,confirmationPopupHandler,customPopup,closeConfirmationPopup} = useCustomConfirmationPopup();
 
   const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
   const [fileAdded, setFileAdded] = useState<boolean>(false);
@@ -84,6 +47,7 @@ export const TemplateCreatorPage = ({
   const [sizeWidth, setSizeWidth] = useState<number>(48.13);
   const [sizeHeight, setSizeHeight] = useState<number>(10.23);
   const [align, setAlign] = useState<string>("center");
+  const [fontSize, setFontSize] = useState<number>(12);
 
   const [selectedField, setSelectedField] = useState<string | null>(null);
 
@@ -185,18 +149,52 @@ export const TemplateCreatorPage = ({
     const clickedField = event.currentTarget.getAttribute("title");
     setSelectedField(clickedField);
     if(designer.current){
-        console.log(designer.current.template.schemas[0][clickedField].alignment);
+        console.log(designer.current.template.schemas[0][clickedField]);
         const posX: number = designer.current.template.schemas[0][clickedField].position.x;
         const posY: number = designer.current.template.schemas[0][clickedField].position.y;
         const width: number = designer.current.template.schemas[0][clickedField].width;
         const height: number = designer.current.template.schemas[0][clickedField].height;
         const alignment: string = designer.current.template.schemas[0][clickedField].alignment;
+        const fontScale: number = designer.current.template.schemas[0][clickedField].fontSize;
     
         setPositionX(posX);
         setPositionY(posY);
         setSizeWidth(width);
         setSizeHeight(height);
         setAlign(alignment);
+        setFontSize(fontScale);
+    }
+  };
+
+  const setPositionXHandler = async (value: number) => {
+    setPositionX(value);
+    if (designer.current && selectedField) {
+      designer.current.template.schemas[0][selectedField].position.x = value;
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+  
+  const setPositionYHandler = async (value: number) => {
+    setPositionY(value);
+    if (designer.current && selectedField) {
+      designer.current.template.schemas[0][selectedField].position.y = value;
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+  
+  const setSizeWidthHandler = async (value: number) => {
+    setSizeWidth(value);
+    if (designer.current && selectedField) {
+      designer.current.template.schemas[0][selectedField].width = value;
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+  
+  const setSizeHeightHandler = async (value: number) => {
+    setSizeHeight(value);
+    if (designer.current && selectedField) {
+      designer.current.template.schemas[0][selectedField].height = value;
+      designer.current.updateTemplate(designer.current.template);
     }
   };
 
@@ -207,6 +205,17 @@ export const TemplateCreatorPage = ({
       designer.current.updateTemplate(designer.current.template);
     }
   };
+
+  const fontSizeHandler = async (value: number) => {
+    setFontSize(value);
+    if (designer.current && selectedField) {
+      designer.current.template.schemas[0][selectedField].fontSize = value;
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+
+  
+
 
   const templateChangeHandler = async (index: number) => {
     if (templateHasChanged) {
@@ -253,22 +262,14 @@ export const TemplateCreatorPage = ({
       closeConfirmationPopup();
       try {
         await updateTemplate(currentTemplate?.id, currentTemplate);
-        customAlert(
-          PopupType.success,
-          "Template Successfully Updated!",
-          `Successfully updated ${currentTemplate.diplomaTemplateName} to database`
-        );
+        customAlert(PopupType.success,"Template Successfully Updated!",`Successfully updated ${currentTemplate.diplomaTemplateName} to database`);
         setTemplateHasChanged(false);
         if (goToIndex !== undefined) {
           setCurrentTemplate(templateData[goToIndex] || null);
           setFileAdded(false);
         }
       } catch (error) {
-        customAlert(
-          PopupType.fail,
-          "Template Update failure!",
-          `${error} when trying to update template.`
-        );
+        customAlert(PopupType.fail,"Template Update failure!",`${error} when trying to update template.`);
       }
     }
   };
@@ -278,35 +279,19 @@ export const TemplateCreatorPage = ({
     if (
       templateData.some((template) => template.templateName === inputContent)
     ) {
-      customAlert(
-        PopupType.fail,
-        "Template Creation failure!",
-        `Name already exists`
-      );
+      customAlert(PopupType.fail,"Template Creation failure!",`Name already exists`);
       return;
     }
     if (inputContent && inputContent.trim() != "") {
       try {
         await addNewTemplate(createBlankTemplate(inputContent));
-        customAlert(
-          PopupType.success,
-          "Succesfully added new template!",
-          `Successfully added new template to database.`
-        );
+        customAlert(PopupType.success,"Succesfully added new template!",`Successfully added new template to database.`);
         setTemplateAdded(true);
       } catch (error) {
-        customAlert(
-          PopupType.fail,
-          "Template add failure!",
-          `${error} when trying to add new template to database.`
-        );
+        customAlert(PopupType.fail,"Template add failure!",`${error} when trying to add new template to database.`);
       }
     } else {
-      customAlert(
-        PopupType.fail,
-        "Template Creation failure!",
-        `Name field is blank`
-      );
+      customAlert(PopupType.fail,"Template Creation failure!",`Name field is blank`);
     }
   };
 
@@ -315,27 +300,15 @@ export const TemplateCreatorPage = ({
       closeConfirmationPopup();
       const templateId = currentTemplate?.id;
       if (templateId === 1) {
-        customAlert(
-          PopupType.fail,
-          `Cannot Delete the Default Template`,
-          `You are not allowed to delete the baseTemplate.`
-        );
+        customAlert(PopupType.fail,`Cannot Delete the Default Template`,`You are not allowed to delete the baseTemplate.`);
         return;
       }
       try {
         await deleteTemplate(templateId);
-        customAlert(
-          PopupType.fail,
-          "Template Successfully Deleted!",
-          `Successfully deleted ${currentTemplate.templateName} from database`
-        );
+        customAlert(PopupType.fail,"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
         setTemplateHasChanged(false);
       } catch (error) {
-        customAlert(
-          PopupType.fail,
-          "Template Update failure!",
-          `${error} when trying to update template.`
-        );
+        customAlert(PopupType.fail,"Template Update failure!",`${error} when trying to update template.`);
       }
     }
   };
@@ -345,47 +318,31 @@ export const TemplateCreatorPage = ({
       const updatedTemplate = createUpdatedTemplate(currentTemplate, designer);
       await setCurrentTemplate(updatedTemplate);
       setRightSideBarPage(0);
-      customAlert(
-        PopupType.message,
-        "Inputs Saved",
-        `Remember to also save your template for changes to reflect in pdfcreator!`
-      );
+      customAlert(PopupType.message, "Inputs Saved", `Remember to also save your template for changes to reflect in pdfcreator!`);
     }
   };
 
   const shouldWeSaveHandler = async (index: number) => {
     customPopup(
-      ConfirmationPopupType.question,
-      "Do you want to save your changes?",
-      "This will change template for all bootcamps that use this template",
-      () => () => saveTemplate(index)
+      ConfirmationPopupType.question, "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index)
     );
   };
 
   const confirmChangeTemplateHandler = async () => {
     customPopup(
-      ConfirmationPopupType.question,
-      "Are you sure you want to save changes to this template?",
-      "This will change template for all bootcamps that use this template",
-      () => saveTemplate
+      ConfirmationPopupType.question, "Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template", () => saveTemplate
     );
   };
 
   const confirmAddNewTemplateHandler = async () => {
     customPopup(
-      ConfirmationPopupType.form,
-      "What should we name your template?",
-      "Names are echoes of identity, whispers of our soul's melody.",
-      () => (inputContent?: string) => addTemplate(inputContent)
+      ConfirmationPopupType.form, "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent)
     );
   };
 
   const confirmRemoveTemplateHandler = async () => {
     customPopup(
-      ConfirmationPopupType.warning,
-      `Are you sure you want to remove ${currentTemplate?.templateName}?`,
-      "This will unlink the template for all bootcamps that use it.",
-      () => () => removeTemplate()
+      ConfirmationPopupType.warning, `Are you sure you want to remove ${currentTemplate?.templateName}?`, "This will unlink the template for all bootcamps that use it.", () => () => removeTemplate()
     );
   };
 
@@ -397,16 +354,9 @@ export const TemplateCreatorPage = ({
     return template ? templateData.findIndex((t) => t.id === template.id) : 0;
   };
 
-  const setPositionXHandler = (value: number) => {
-    setPositionX(value);
-  };
-
   return (
     <main className="templatecreator-page">
-      <div
-        className="bg-boundingbox"
-        onClick={() => setRightSideBarPage(0)}
-      ></div>
+      <div className="bg-boundingbox" onClick={() => setRightSideBarPage(0)}></div>
       <ConfirmationPopup
         title={confirmationPopupContent[0]}
         text={confirmationPopupContent[1]}
@@ -414,9 +364,7 @@ export const TemplateCreatorPage = ({
         confirmationPopupType={confirmationPopupType}
         abortClick={() => globalAbortHandler()}
         // @ts-ignore
-        confirmClick={(inputContent?: string) =>
-          confirmationPopupHandler(inputContent)
-        }
+        confirmClick={(inputContent?: string) =>confirmationPopupHandler()}
       />
       <AlertPopup
         title={popupContent[0]}
@@ -455,36 +403,18 @@ export const TemplateCreatorPage = ({
         </div>
       </section>
       <section className="templatecreator-page__preview-container">
-        <div
-          className="templatecreator-page__preview"
-          style={{
-            width: "100%",
-            overflow: "hidden",
-            height: `calc(50vh - 68px)`,
-          }}
-        >
+        <div className="templatecreator-page__preview" style={{width: "100%",overflow: "hidden",height: `calc(50vh - 68px)`,}}>
           <h2>{currentTemplate?.templateName}</h2>
-          <div
-            className="pdfpreview"
-            ref={designerRef}
-            style={{ height: `80%` }}
-            onClick={() => setRightSideBarPage(1)}
-          />
+          <div className="pdfpreview" ref={designerRef} style={{ height: `80%` }} onClick={() => setRightSideBarPage(1)}/>
         </div>
       </section>
       <section className="templatecreator-page__rightsidebar">
         <div className="templatecreator-page__rightsidebar-menu">
           <header className="templatecreator-page__rightsidebar-menu-header">
-            <button
-              onClick={() => setRightSideBarPage(0)}
-              className={rightSideBarPage === 0 ? "active" : ""}
-            >
+            <button onClick={() => setRightSideBarPage(0)} className={rightSideBarPage === 0 ? "active" : ""}>
               Browse
             </button>
-            <button
-              onClick={() => setRightSideBarPage(1)}
-              className={rightSideBarPage === 1 ? "active" : ""}
-            >
+            <button onClick={() => setRightSideBarPage(1)} className={rightSideBarPage === 1 ? "active" : ""}>
               Edit
             </button>
           </header>
@@ -531,27 +461,26 @@ export const TemplateCreatorPage = ({
               <section className="templatecreator-page__rightsidebar-menu-section">
                 <h3>Layout</h3>
                 <EditSection
-                  positionX={positionX}
-                  positionY={positionY}
-                  sizeWidth={sizeWidth}
-                  sizeHeight={sizeHeight}
-                  setPositionX={setPositionXHandler}
-                  setPositionY={setPositionY}
-                  setSizeWidth={setSizeWidth}
-                  setSizeHeight={setSizeHeight}
+                    positionX={positionX}
+                    positionY={positionY}
+                    sizeWidth={sizeWidth}
+                    sizeHeight={sizeHeight}
+                    setPositionX={setPositionXHandler}
+                    setPositionY={setPositionYHandler}
+                    setSizeWidth={setSizeWidthHandler}
+                    setSizeHeight={setSizeHeightHandler}
                 />
               </section>
               <section className="templatecreator-page__rightsidebar-menu-section">
                 <h3>Text</h3>
                 <TextEditSection
                   align={align}
-                  setAlign={(value: string) => {
-                    textAlignHandler(value);
-                  }}
+                  setAlign={(value: string) => textAlignHandler(value)}
+                  fontSize={fontSize}setFontSize={(value: number) => fontSizeHandler(value)}
                 />
               </section>
               <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Edit Fields</h3>
+                <h3>Edit Field {selectedField && selectedField}</h3>
                 <SaveButton
                   textfield="Save Inputs"
                   saveButtonType={SaveButtonType.normal}
