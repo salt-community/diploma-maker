@@ -47,6 +47,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const [positionY, setPositionY] = useState<number>(98.63);
     const [sizeWidth, setSizeWidth] = useState<number>(48.13);
     const [sizeHeight, setSizeHeight] = useState<number>(10.23);
+    const [align, setAlign] = useState<string>("center");
 
     useEffect(() => {
         if (templates && templates.length > 0) {
@@ -226,6 +227,17 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const setPositionXHandler = (value: number) => {
         setPositionX(value);
     };
+
+    const textAlignHandler = (value: string) => {
+        setAlign(value);
+        setCurrentTemplate({
+            ...currentTemplate,
+            mainStyling: {
+                ...currentTemplate.mainStyling,
+                Alignment: value,
+            },
+        });
+    };
     
 
     return (
@@ -330,7 +342,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Text</h3>
                                 <TextEditSection 
-
+                                    align={align}
+                                    setAlign={textAlignHandler}
                                 />
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
