@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom"
-import { getDiplomaById } from "../../services/diplomaService";
+import { getStudentById } from "../../services/studentService";
 import QRCode from "react-qr-code";
 /*
 https://www.npmjs.com/package/react-qr-code
@@ -11,7 +11,7 @@ export function VertificationPage() {
 
     const { isLoading, data: diploma } = useQuery({
         queryKey: ['getDiplomaById'],
-        queryFn: () => getDiplomaById(guidId || ''),
+        queryFn: () => getStudentById(guidId || ''),
         onSuccess: (data) => {
             console.log("Success", data);
         }
@@ -20,8 +20,6 @@ export function VertificationPage() {
     if (isLoading) {
         return (<h1>Loading...</h1>)
     }
-
-
 
     return (
         <>

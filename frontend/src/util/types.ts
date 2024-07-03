@@ -1,22 +1,27 @@
 export type displayMode = "form" | "viewer";
 
-// diplomas
-export type DiplomaRequest = {
+// Students
+export type StudentRequest = {
     guidId?: string;
     name: string;
     email?: string;
 }
 
-export type DiplomaUpdateRequestDto = {
+export type StudentsRequestDto = {
+    students: StudentRequest[];
+    bootcampGuidId: string;
+}
+
+export type StudentUpdateRequestDto = {
     guidId: string;
     studentName: string;
     emailAddress: string;
 }
 
-export type DiplomaResponse = {
+export type StudentResponse = {
     guidId: string;
     studentName: string;
-    bootcamp: BootcampInDiploma;
+    email: string;
 }
 
 export type Student = {
@@ -24,6 +29,8 @@ export type Student = {
     name: string;
     email: string;
 }
+
+
 
 // bootcamps
 export type BootcampInDiploma = {
@@ -44,10 +51,6 @@ export type BootcampResponse = {
     students: Student[];
 }
 
-export type DiplomasRequestDto = {
-    students: DiplomaRequest[];
-    bootcampGuidId: string;
-}
 
 export type PersonalStudentData = {
     name: string;

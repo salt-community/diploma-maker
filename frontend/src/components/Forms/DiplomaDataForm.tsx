@@ -14,7 +14,7 @@ type Props = {
   selectedBootcampIndex: number;
 };
 
-export default function AddDiplomaForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex}: Props) {
+export default function   ({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex}: Props) {
   const { register } = useForm();
   const [students, setStudents] = useState<PersonalStudentData[]>(saltData.students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);

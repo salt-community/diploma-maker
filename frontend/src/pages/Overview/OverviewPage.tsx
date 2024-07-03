@@ -6,7 +6,7 @@ import { SelectOptions } from '../../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, Student, DiplomaResponse, DiplomaUpdateRequestDto, EmailSendRequest } from '../../util/types';
+import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest } from '../../util/types';
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
@@ -24,12 +24,12 @@ import { useCustomInfoPopup } from '../../components/Hooks/useCustomInfoPopup';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
-    deleteDiploma: (id: string) => Promise<void>;
-    updateDiploma: (diplomaRequest: DiplomaUpdateRequestDto) => Promise<DiplomaResponse>;
+    deleteStudent: (id: string) => Promise<void>;
+    updateStudentInformation: (studentRequest: StudentUpdateRequestDto) => Promise<StudentResponse>;
     sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
 }
 
-export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmail }: Props) => {
+export const OverviewPage = ({ bootcamps, deleteStudent, updateStudentInformation, sendEmail }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -90,7 +90,7 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
     };
 
     const deleteHandler = async (id: string) => {
-        await deleteDiploma(id);
+        await deleteStudent(id);
         customAlert(PopupType.fail, "Successfully deleted", "Diploma has been successfully deleted from the database.")
     };
 
@@ -130,13 +130,13 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
         
         try {
             
-            const emailUpdateRequest: DiplomaUpdateRequestDto = {
+            const emailUpdateRequest: StudentUpdateRequestDto = {
                 guidId: studentInput.guidId,
                 studentName: studentInput.name,
                 emailAddress: studentInput.email
             }
             closeInfoPopup();
-            const emailUpdateResponse = await updateDiploma(emailUpdateRequest);
+            const emailUpdateResponse = await updateStudentInformation(emailUpdateRequest);
             customAlert(PopupType.success, "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateResponse.studentName}`)
 
         } catch (error) {
@@ -183,8 +183,8 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
     }
 
     const generatePDFFile = async (guidId: string): Promise<Blob | void> => {
-        const diploma = items.find(item => item.guidId === guidId);
-        if (!diploma) {
+        const student = items.find(item => item.guidId === guidId);
+        if (!student) {
             customAlert(PopupType.fail, "Selection Error:", "No Emails Selected");
             return;
         }
@@ -195,9 +195,9 @@ export const OverviewPage = ({ bootcamps, deleteDiploma, updateDiploma, sendEmai
         }
     
         const pdfInput = makeTemplateInput(
-            populateField(bootcamp.diplomaTemplate.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
-            populateField(diploma.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
-            populateField(bootcamp.diplomaTemplate.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
+            populateField(bootcamp.diplomaTemplate.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            populateField(student.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            populateField(bootcamp.diplomaTemplate.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
             bootcamp.diplomaTemplate.basePdf
         );
 

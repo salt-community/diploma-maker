@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, DiplomaResponse, DiplomasRequestDto, SaltData, displayMode, TemplateResponse, PersonalStudentData } from "../../util/types";
+import { BootcampResponse, StudentResponse, StudentsRequestDto, SaltData, displayMode, TemplateResponse } from "../../util/types";
 import {
   getFontsData,
   getPlugins,
   generatePDF,
   newGenerateCombinedPDF,
 } from "../../util/helper";
-import AddDiplomaForm from "../../components/Forms/AddDiplomaForm";
+import DiplomaDataForm from "../../components/Forms/DiplomaDataForm";
 import { useParams } from "react-router-dom";
 import { PaginationMenu } from "../../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../../components/MenuItems/Buttons/PublishButton";
@@ -24,10 +24,10 @@ import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 type Props = {
   bootcamps: BootcampResponse[] | null;
   templates: TemplateResponse[] | null;
-  addMultipleDiplomas: (diplomasRequest: DiplomasRequestDto) => Promise<DiplomaResponse[]>;
+  addMultipleStudents: (studentsRequest: StudentsRequestDto) => Promise<StudentResponse[]>;
 };
 
-export default function DiplomaMaking({ bootcamps, templates, addMultipleDiplomas }: Props) {
+export default function DiplomaMaking({ bootcamps, templates, addMultipleStudents }: Props) {
 
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
@@ -175,7 +175,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
   const postSelectedBootcampData = async () => {
     if (saltData && bootcamps) {
       const currentBootcamp = bootcamps[selectedBootcampIndex];
-      const diplomasRequest: DiplomasRequestDto = {
+      const studentsRequest: StudentsRequestDto = {
         students: saltData[selectedBootcampIndex].students.map((student, index) => ({
           guidId: currentBootcamp.students[index]?.guidId || crypto.randomUUID(),
           name: student.name,
@@ -184,7 +184,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
         bootcampGuidId: currentBootcamp.guidId
       };
       try {
-        await addMultipleDiplomas(diplomasRequest);
+        await addMultipleStudents(studentsRequest);
         customAlert(PopupType.success, "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
       } catch (error) {
@@ -251,7 +251,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleDiploma
       </section>
       <section className="flex-1 flex flex-col ">
         {saltData &&
-          <AddDiplomaForm
+          <DiplomaDataForm
             updateSaltData={updateSaltDataHandler}
             bootcamps={bootcamps}
             setSelectedBootcampIndex={(index) => { setSelectedBootcampIndex(index); setCurrentPageIndex(0); }}
