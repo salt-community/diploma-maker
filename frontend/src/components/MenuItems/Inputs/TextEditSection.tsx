@@ -2,6 +2,7 @@ import { useState } from "react";
 import DraggableInput from "./DraggableInput";
 import './TextEditSection.css'
 import { SelectOptions } from "./SelectOptions";
+import { ChromePicker, PhotoshopPicker, SketchPicker } from "react-color";
 
 
 type Props = {
@@ -9,9 +10,32 @@ type Props = {
   setAlign: (value: string) => void,
   fontSize: number,
   setFontSize: (value: number) => void,
+  font: string,
+  setFont: (value: string) => void,
+  fontColor: string,
+  setFontColor: (value: string) => void,
 }
 
-export const TextEditSection = ({align, setAlign, fontSize, setFontSize}: Props) => {
+export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, setFont, fontColor, setFontColor}: Props) => {
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
+  const [colorPickerColor, setColorPickerColor] = useState<string>("#fff");
+
+  const handleColorClick = () => {
+    setDisplayColorPicker(!displayColorPicker);
+  };
+
+  const colorpickerCancelHandler = () => {
+    setDisplayColorPicker(false);
+  };
+
+  const colorPickerColorChangeHandler = (color: any) => {
+    setColorPickerColor(color.hex);
+  };
+
+  const colorPickerApplyHandler = () => {
+    setFontColor(colorPickerColor);
+    setDisplayColorPicker(false);
+  }
 
   return (
     <>
@@ -52,8 +76,8 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize}: Props)
                   containerClassOverride='overview-page__select-container'
                   selectClassOverride='overview-page__select-box'
                   options={[{
-                    value: "NotoSerifJP-Regular",
-                    label: "NotoSerifJP-Regular"
+                    value: font,
+                    label: font
                   }]}
                   onChange={() => {}}
             />
@@ -72,7 +96,17 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize}: Props)
             <label htmlFor="">Color</label>
           </div>
           <div className="edittext__menusection--inputwrapper">
-            
+            <div 
+              className="color-picker__swatch" 
+              style={{ backgroundColor: fontColor }} 
+              onClick={handleColorClick}
+            />
+            {displayColorPicker ? 
+              <div className="color-picker__popover">
+                <PhotoshopPicker color={colorPickerColor} onChange={colorPickerColorChangeHandler} onAccept={colorPickerApplyHandler} onCancel={colorpickerCancelHandler}/>
+              </div> 
+              : null
+            }
           </div>
         </div>
       </div>

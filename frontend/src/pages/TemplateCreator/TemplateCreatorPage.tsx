@@ -48,6 +48,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [sizeHeight, setSizeHeight] = useState<number>(10.23);
   const [align, setAlign] = useState<string>("center");
   const [fontSize, setFontSize] = useState<number>(12);
+  const [font, setFont] = useState<string>("NotoSerifJP-Regular");
+  const [fontColor, setFontColor] = useState<string>("#ffffff");
 
   const [selectedField, setSelectedField] = useState<string | null>(null);
 
@@ -149,13 +151,15 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const clickedField = event.currentTarget.getAttribute("title");
     setSelectedField(clickedField);
     if(designer.current){
-        console.log(designer.current.template.schemas[0][clickedField]);
+        console.log(designer.current.template.schemas[0][clickedField].fontmain);
         const posX: number = designer.current.template.schemas[0][clickedField].position.x;
         const posY: number = designer.current.template.schemas[0][clickedField].position.y;
         const width: number = designer.current.template.schemas[0][clickedField].width;
         const height: number = designer.current.template.schemas[0][clickedField].height;
         const alignment: string = designer.current.template.schemas[0][clickedField].alignment;
         const fontScale: number = designer.current.template.schemas[0][clickedField].fontSize;
+        const font: string = designer.current.template.schemas[0][clickedField].fontmain;
+        const fontcolor: string = designer.current.template.schemas[0][clickedField].fontColor;
     
         setPositionX(posX);
         setPositionY(posY);
@@ -163,6 +167,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         setSizeHeight(height);
         setAlign(alignment);
         setFontSize(fontScale);
+        setFont(font);
+        setFontColor(fontcolor);
     }
   };
 
@@ -214,8 +220,21 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   };
 
-  
+  const setFontHandler = async (value: string) => {
+    setFont(value);
+    if (designer.current && selectedField) {
+      designer.current.template.schemas[0][selectedField].fontmain = value;
+      designer.current.updateTemplate(designer.current.template);
+    }
+  }
 
+  const setFontColorHandler = async (value: string) => {
+    setFontColor(value);
+    if (designer.current && selectedField) {
+      designer.current.template.schemas[0][selectedField].fontColor = value;
+      designer.current.updateTemplate(designer.current.template);
+    }
+  }
 
   const templateChangeHandler = async (index: number) => {
     if (templateHasChanged) {
@@ -477,6 +496,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                   align={align}
                   setAlign={(value: string) => textAlignHandler(value)}
                   fontSize={fontSize}setFontSize={(value: number) => fontSizeHandler(value)}
+                  font={font}
+                  setFont={(value: string) => setFontHandler(value)}
+                  fontColor={fontColor}
+                  setFontColor={(value: string) => setFontColorHandler(value)}
                 />
               </section>
               <section className="templatecreator-page__rightsidebar-menu-section">

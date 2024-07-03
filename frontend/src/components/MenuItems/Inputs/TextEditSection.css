@@ -55,3 +55,25 @@
   
   padding: 5px 0px
 }
+
+
+.color-picker__swatch {
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  margin-left: auto;
+  border-radius: .5rem;
+  margin-right: .1rem;
+}
+  .color-picker__swatch:hover{
+    filter: saturate(125%);
+  }
+
+.color-picker__popover {
+  position: absolute;
+  top: 60%;
+  right: 5%;
+  transform: translateY(-50%);
+  z-index: 500;
+  background-color: red;
+}
