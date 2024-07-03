@@ -183,8 +183,8 @@ export const OverviewPage = ({ bootcamps, deleteStudent, updateStudentInformatio
     }
 
     const generatePDFFile = async (guidId: string): Promise<Blob | void> => {
-        const diploma = items.find(item => item.guidId === guidId);
-        if (!diploma) {
+        const student = items.find(item => item.guidId === guidId);
+        if (!student) {
             customAlert(PopupType.fail, "Selection Error:", "No Emails Selected");
             return;
         }
@@ -195,9 +195,9 @@ export const OverviewPage = ({ bootcamps, deleteStudent, updateStudentInformatio
         }
     
         const pdfInput = makeTemplateInput(
-            populateField(bootcamp.diplomaTemplate.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
-            populateField(diploma.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
-            populateField(bootcamp.diplomaTemplate.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), diploma.name),
+            populateField(bootcamp.diplomaTemplate.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            populateField(student.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            populateField(bootcamp.diplomaTemplate.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
             bootcamp.diplomaTemplate.basePdf
         );
 

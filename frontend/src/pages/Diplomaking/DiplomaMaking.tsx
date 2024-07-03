@@ -7,7 +7,7 @@ import {
   generatePDF,
   newGenerateCombinedPDF,
 } from "../../util/helper";
-import DiplomaDataForm from "../../components/Forms/DiplomaGeneratorForm";
+import DiplomaDataForm from "../../components/Forms/DiplomaDataForm";
 import { useParams } from "react-router-dom";
 import { PaginationMenu } from "../../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../../components/MenuItems/Buttons/PublishButton";
