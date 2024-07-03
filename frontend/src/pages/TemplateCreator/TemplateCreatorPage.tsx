@@ -17,6 +17,7 @@ import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
 import DraggableInput from "../../components/MenuItems/Inputs/DraggableInput";
 import { EditSection } from "../../components/MenuItems/Inputs/EditSection";
+import { TextEditSection } from "../../components/MenuItems/Inputs/TextEditSection";
 
 type Props = {
     templates: TemplateResponse[] | null;
@@ -41,6 +42,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
     const [fileAdded, setFileAdded] = useState<boolean>(false);
     const [templateAdded, setTemplateAdded] = useState<boolean>(false);
+
+    const [positionX, setPositionX] = useState<number>(83.89);
+    const [positionY, setPositionY] = useState<number>(98.63);
+    const [sizeWidth, setSizeWidth] = useState<number>(48.13);
+    const [sizeHeight, setSizeHeight] = useState<number>(10.23);
 
     useEffect(() => {
         if (templates && templates.length > 0) {
@@ -217,6 +223,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         return template ? templateData.findIndex(t => t.id === template.id) : 0;
     };
 
+    const setPositionXHandler = (value: number) => {
+        setPositionX(value);
+    };
+    
+
     return (
         <main className="templatecreator-page">
             <div className="bg-boundingbox" onClick={() => setRightSideBarPage(0)}></div>
@@ -304,8 +315,23 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                     {rightSideBarPage === 1 && 
                         <>
                             <section className="templatecreator-page__rightsidebar-menu-section">
-                                <h3>Field Layout</h3>
-                                <EditSection />
+                                <h3>Layout</h3>
+                                <EditSection 
+                                    positionX={positionX}
+                                    positionY={positionY}
+                                    sizeWidth={sizeWidth}
+                                    sizeHeight={sizeHeight}
+                                    setPositionX={setPositionXHandler}
+                                    setPositionY={setPositionY}
+                                    setSizeWidth={setSizeWidth}
+                                    setSizeHeight={setSizeHeight}
+                                />
+                            </section>
+                            <section className="templatecreator-page__rightsidebar-menu-section">
+                                <h3>Text</h3>
+                                <TextEditSection 
+
+                                />
                             </section>
                             <section className="templatecreator-page__rightsidebar-menu-section">
                                 <h3>Edit Fields</h3>

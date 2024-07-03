@@ -2,7 +2,6 @@ import { useState } from "react";
 import DraggableInput from "./DraggableInput";
 import './EditSection.css'
 
-
 type Props = {
   positionX: number,
   setPositionX: (value: number) => void,

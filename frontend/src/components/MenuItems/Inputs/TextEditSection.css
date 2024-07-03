@@ -1,0 +1,57 @@
+.edittext__menusection{
+  display: flex;
+
+  color: #ababba;
+  align-items: center;
+  justify-content: flex-start;
+  gap: .5rem;
+  height: 60px;
+}
+  .edittext__menusection--title{
+    font-size: .8rem;
+    min-width: 50px;
+    margin-right: .1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  .edittext__menusection--btn{
+    padding: 2%;
+    transition: all .15s ease-in-out;
+  }
+  .edittext__menusection--btn svg{
+    width: 18px;
+    cursor: pointer;
+    transition: all .15s ease-in-out;
+  }
+  .edittext__menusection--btn svg path{
+    stroke: #ababba;
+    transition: all .15s ease-in-out;
+  }
+    .edittext__menusection--btn svg:hover path{
+      stroke: #ddddeb;
+      transition: all .15s ease-in-out;
+    }
+    .edittext__menusection--btn.selected svg{
+      transition: all .15s ease-in-out;
+    }
+    .edittext__menusection--btn.selected svg path{
+      stroke: #ff632b;
+      transition: all .15s ease-in-out;
+    }
+    .edittext__menusection--btn.selected{
+      background-color: #ff642b3a;
+      border-radius: .3rem;
+      transition: all .15s ease-in-out;
+    }
+
+.edittext__menusection--inputwrapper{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+
+  width: 100%;
+  height: 60px;
+  
+  padding: 5px 0px
+}
