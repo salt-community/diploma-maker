@@ -5,9 +5,10 @@ interface DraggableInputProps {
   value: number;
   setValue: (value: number) => void;
   label: string;
+  minValue: number;
 }
 
-const DraggableInput = ({ value, setValue, label }: DraggableInputProps) => {
+const DraggableInput = ({ value, setValue, label, minValue }: DraggableInputProps) => {
   const [snapshot, setSnapshot] = useState<number>(value);
   const [startVal, setStartVal] = useState<number>(0);
 
@@ -27,7 +28,7 @@ const DraggableInput = ({ value, setValue, label }: DraggableInputProps) => {
   useEffect(() => {
     const onUpdate = (event: MouseEvent) => {
       if (startVal) {
-        setValue(snapshot + Math.floor((event.clientX - startVal) / 5));
+        setValue(Math.max(minValue, snapshot + Math.floor((event.clientX - startVal) / 5)));
       }
     };
 
@@ -41,7 +42,7 @@ const DraggableInput = ({ value, setValue, label }: DraggableInputProps) => {
       document.removeEventListener("mousemove", onUpdate);
       document.removeEventListener("mouseup", onEnd);
     };
-  }, [startVal, setValue, snapshot]);
+  }, [startVal, setValue, snapshot, minValue]);
 
   return (
     <div className="draggable-input-container">

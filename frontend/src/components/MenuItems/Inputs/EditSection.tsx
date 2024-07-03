@@ -25,8 +25,8 @@ export const EditSection = ({ positionX, setPositionX, positionY, setPositionY, 
             <label htmlFor="">Position</label>
           </div>
           <div className="editlayout__menusection--inputwrapper">
-            <DraggableInput value={positionX} setValue={setPositionX} label="X"/>
-            <DraggableInput value={positionY} setValue={setPositionY} label="Y"/>
+            <DraggableInput value={positionX} setValue={setPositionX} label="X" minValue={0}/>
+            <DraggableInput value={positionY} setValue={setPositionY} label="Y" minValue={0}/>
           </div>
         </div>
         <div className="editlayout__menusection">
@@ -37,8 +37,8 @@ export const EditSection = ({ positionX, setPositionX, positionY, setPositionY, 
             </svg>
           </div>
           <div className="editlayout__menusection--inputwrapper">
-            <DraggableInput value={sizeWidth} setValue={setSizeWidth} label="W"/>
-            <DraggableInput value={sizeHeight} setValue={setSizeHeight} label="H"/>
+            <DraggableInput value={sizeWidth} setValue={setSizeWidth} label="W" minValue={0}/>
+            <DraggableInput value={sizeHeight} setValue={setSizeHeight} label="H" minValue={0}/>
           </div>
         </div>
       </form>

@@ -63,7 +63,7 @@ export const TextEditSection = ({align, setAlign}: Props) => {
             <label htmlFor="">Size</label>
           </div>
           <div className="edittext__menusection--inputwrapper">
-            <DraggableInput value={fontSize} setValue={setFontSize} label="px"/>
+            <DraggableInput value={fontSize} setValue={setFontSize} label="px" minValue={1}/>
           </div>
         </div>
         <div className="edittext__menusection">
