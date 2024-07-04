@@ -21,6 +21,7 @@ import { makeTemplateInput } from "../../templates/baseTemplate";
 import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../../util/dataHelpers";
 import { Template } from "@pdfme/common";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
+import { Popup404 } from "../../components/MenuItems/Popups/Popup404";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -48,13 +49,10 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
         setSelectedBootcampIndex(Number(selectedBootcamp));
       }
       if (bootcamps[selectedBootcampIndex].students.length === 0) {
-        setSaltData([saltDefaultData]);
-        
-      } else {
-
-        const initialSaltData = bootcamps.map(b => mapBootcampToSaltData(b))
-
-        setSaltData(initialSaltData);
+        setSaltData([saltDefaultData]); 
+      } 
+      else {
+        setSaltData(bootcamps.map(b => mapBootcampToSaltData(b)));
       }
     }
   }, [bootcamps]);
@@ -179,7 +177,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
     }
   };
 
-  const saveInputFieldsHandler = () => {
+/*   const saveInputFieldsHandler = () => {
     if (uiInstance.current && saltData) {
       const inputs = uiInstance.current.getInputs();
       const newName = inputs[0].name;
@@ -200,7 +198,8 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
 
       setSaltData(updatedSaltData);
     }
-  };
+  }; */
+
 
   return (
     <div className="flex w-full h-screen justify-between pt-10 dark:bg-darkbg">
@@ -215,17 +214,16 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
           </div>
           <PublishButton text="Generate PDF" onClick={generatePDFHandler} />
           <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler} />
-          <SaveButton textfield="" saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler} />
+          <SaveButton textfield="" saveButtonType={SaveButtonType.grandTheftAuto} onClick={postSelectedBootcampData} />
         </header>
-        {saltData &&
-          <div
+        { (saltData && saltData[currentPageIndex].students.length > 0) ?
+        <>
+           <div
             className="pdfpreview-container"
             ref={uiRef}
             style={{ width: "100%", height: "calc(82vh - 68px)" }}
           // onBlur={saveInputFieldsHandler}
           />
-        }
-        {saltData &&
           <PaginationMenu
             containerClassOverride="flex justify-center mt-4 pagination-menu"
             currentPage={currentPageIndex + 1}
@@ -233,7 +231,12 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
             handleNextPage={nextTemplateInstanceHandler}
             handlePrevPage={prevTemplateInstanceHandler}
           />
+        </> : 
+         <Popup404 text='No student names found.'/>
         }
+      
+        
+        
       </section>
       <section className="flex-1 flex flex-col ">
         {saltData &&

@@ -12,21 +12,21 @@ export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcam
             saltData[selectedBootcampIndex].diplomaTemplate.intro,
             saltData[selectedBootcampIndex].classname,
             saltData[selectedBootcampIndex].dategraduate,
-            saltData[selectedBootcampIndex].students[currentPageIndex].name
+            saltData[selectedBootcampIndex].students.length > 0 ? saltData[selectedBootcampIndex].students[currentPageIndex].name : "noname"
           ),
           populateField(
             // @ts-ignore
             saltData[selectedBootcampIndex].diplomaTemplate.main,
             saltData[selectedBootcampIndex].classname,
             saltData[selectedBootcampIndex].dategraduate,
-            saltData[selectedBootcampIndex].students[currentPageIndex].name
+            saltData[selectedBootcampIndex].students.length > 0 ? saltData[selectedBootcampIndex].students[currentPageIndex].name : "noname"
           ),
           populateField(
             // @ts-ignore
             saltData[selectedBootcampIndex].diplomaTemplate.footer,
             saltData[selectedBootcampIndex].classname,
             saltData[selectedBootcampIndex].dategraduate,
-            saltData[selectedBootcampIndex].students[currentPageIndex].name
+            saltData[selectedBootcampIndex].students.length > 0 ? saltData[selectedBootcampIndex].students[currentPageIndex].name : "noname"
           ),
           // @ts-ignore
           saltData[selectedBootcampIndex].diplomaTemplate.basePdf

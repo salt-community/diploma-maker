@@ -30,13 +30,8 @@ export type Student = {
     email: string;
 }
 
-
 // bootcamps
-export type BootcampInDiploma = {
-    guidId: string;
-    name: string;
-    graduationDate: Date;
-}
+
 export type BootcampRequest = {
     guidId?: string;
     name: string;

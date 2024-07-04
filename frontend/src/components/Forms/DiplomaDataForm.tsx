@@ -96,7 +96,7 @@ export default function   ({ updateSaltData, bootcamps, setSelectedBootcampIndex
       {/* Display student data */}
       <div>
         <label htmlFor="students" className="block text-lg font-medium text-gray-700 dark: text-white">
-          Student Information
+          Name of Students
         </label>
         <TagsInput
           selectedTags={(names: string[]) => setStudents(names.map(name => ({ name, email: ''})))} // Adjust this based on how TagsInput is implemented
