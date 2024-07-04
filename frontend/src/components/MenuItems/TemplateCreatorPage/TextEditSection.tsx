@@ -41,7 +41,6 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
 
   useEffect(() => {
     getFontsData().then((font) => {
-      console.log(font);
       setFonts(font);
     })
   }, [])
@@ -90,8 +89,8 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
                         label: font.label
                     }))
                 ]}
-                  onChange={() => {}}
-                  disabled={align && fontSize && font && fontColor ? false : true}
+                onChange={() => {}}
+                disabled={align && fontSize && font && fontColor ? false : true}
             />
           </div>
         </div>

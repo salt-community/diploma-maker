@@ -113,3 +113,14 @@ export type Style = {
     fontName?: string;
     alignment?: string;
 }
+
+type Font = {
+    fallback: boolean;
+    label: string;
+    url: string;
+    data: object;
+};
+  
+type Fonts = {
+    [key: string]: Font;
+};
