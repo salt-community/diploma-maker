@@ -4,6 +4,7 @@ import './TextEditSection.css'
 import { SelectOptions } from "../Inputs/SelectOptions";
 import { ChromePicker, PhotoshopPicker, SketchPicker } from "react-color";
 import { getFontsData } from "../../../util/helper";
+import { Fonts } from "../../../util/types";
 
 
 type Props = {
@@ -20,7 +21,7 @@ type Props = {
 export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, setFont, fontColor, setFontColor}: Props) => {
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [colorPickerColor, setColorPickerColor] = useState<string>("#fff");
-  const [fonts, setFonts] = useState<any>();
+  const [fonts, setFonts] = useState<Fonts | null>();
 
   const handleColorClick = () => {
     setDisplayColorPicker(!displayColorPicker);

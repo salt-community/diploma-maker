@@ -114,13 +114,13 @@ export type Style = {
     alignment?: string;
 }
 
-type Font = {
+export type Font = {
     fallback: boolean;
     label: string;
     url: string;
     data: object;
 };
   
-type Fonts = {
+export type Fonts = {
     [key: string]: Font;
 };
