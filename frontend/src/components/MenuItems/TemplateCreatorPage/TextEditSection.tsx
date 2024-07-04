@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DraggableInput from "../Inputs/DraggableInput";
 import './TextEditSection.css'
 import { SelectOptions } from "../Inputs/SelectOptions";
 import { ChromePicker, PhotoshopPicker, SketchPicker } from "react-color";
+import { getFontsData } from "../../../util/helper";
 
 
 type Props = {
@@ -19,6 +20,7 @@ type Props = {
 export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, setFont, fontColor, setFontColor}: Props) => {
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [colorPickerColor, setColorPickerColor] = useState<string>("#fff");
+  const [fonts, setFonts] = useState<any>();
 
   const handleColorClick = () => {
     setDisplayColorPicker(!displayColorPicker);
@@ -36,6 +38,13 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
     setFontColor(colorPickerColor);
     setDisplayColorPicker(false);
   }
+
+  useEffect(() => {
+    getFontsData().then((font) => {
+      console.log(font);
+      setFonts(font);
+    })
+  }, [])
 
   return (
     <>
@@ -75,10 +84,12 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
           <SelectOptions
                   containerClassOverride='overview-page__select-container'
                   selectClassOverride='overview-page__select-box'
-                  options={[{
-                    value: font ?? "-",
-                    label: font ?? "-"
-                  }]}
+                  options={[
+                    ...Object.values(fonts || {}).map(font => ({
+                        value: font.label,
+                        label: font.label
+                    }))
+                ]}
                   onChange={() => {}}
                   disabled={align && fontSize && font && fontColor ? false : true}
             />
