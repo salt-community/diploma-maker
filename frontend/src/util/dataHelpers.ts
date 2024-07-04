@@ -9,92 +9,91 @@ export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcam
         [makeTemplateInput(
           populateField(
             // @ts-ignore
-            saltData[selectedBootcampIndex].template.intro,
+            saltData[selectedBootcampIndex].diplomaTemplate.intro,
             saltData[selectedBootcampIndex].classname,
             saltData[selectedBootcampIndex].dategraduate,
             saltData[selectedBootcampIndex].students[currentPageIndex].name
           ),
           populateField(
             // @ts-ignore
-            saltData[selectedBootcampIndex].template.main,
+            saltData[selectedBootcampIndex].diplomaTemplate.main,
             saltData[selectedBootcampIndex].classname,
             saltData[selectedBootcampIndex].dategraduate,
             saltData[selectedBootcampIndex].students[currentPageIndex].name
           ),
           populateField(
             // @ts-ignore
-            saltData[selectedBootcampIndex].template.footer,
+            saltData[selectedBootcampIndex].diplomaTemplate.footer,
             saltData[selectedBootcampIndex].classname,
             saltData[selectedBootcampIndex].dategraduate,
             saltData[selectedBootcampIndex].students[currentPageIndex].name
           ),
           // @ts-ignore
-          saltData[selectedBootcampIndex].template.basePdf
+          saltData[selectedBootcampIndex].diplomaTemplate.basePdf
         )];
     return inputs;
 }
 
-export const templateInputsFromBootcampData = (selectedBootcampData: any, name: string) => {
+export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, name: string) => {
   return makeTemplateInput(
     populateField(
-      selectedBootcampData.template.intro, 
+      selectedBootcampData.diplomaTemplate.intro, 
       selectedBootcampData.classname, 
       selectedBootcampData.dategraduate, 
       name),
     populateField(
-      selectedBootcampData.template.main, 
+      selectedBootcampData.diplomaTemplate.main, 
       selectedBootcampData.classname, 
       selectedBootcampData.dategraduate, 
       name),
     populateField(
-      selectedBootcampData.template.footer, 
+      selectedBootcampData.diplomaTemplate.footer, 
       selectedBootcampData.classname, 
       selectedBootcampData.dategraduate, 
       name),
-    selectedBootcampData.template.basePdf
+    selectedBootcampData.diplomaTemplate.basePdf
   );
 }
 
 export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selectedBootcampIndex: number, inputs: any) => {
-    console.log(saltData[selectedBootcampIndex])
     const template: Template = getTemplate(
         inputs,
         { 
-          x: saltData[selectedBootcampIndex].template.introStyling?.xPos ?? null, 
-          y: saltData[selectedBootcampIndex].template.introStyling?.yPos ?? null
+          x: saltData[selectedBootcampIndex].diplomaTemplate.introStyling?.xPos ?? null, 
+          y: saltData[selectedBootcampIndex].diplomaTemplate.introStyling?.yPos ?? null
         }, // headerPos
         { 
-          width: saltData[selectedBootcampIndex].template.introStyling?.width ?? null, 
-          height: saltData[selectedBootcampIndex].template.introStyling?.height ?? null
+          width: saltData[selectedBootcampIndex].diplomaTemplate.introStyling?.width ?? null, 
+          height: saltData[selectedBootcampIndex].diplomaTemplate.introStyling?.height ?? null
         }, // headerSize
-        saltData[selectedBootcampIndex].template.introStyling?.fontSize ?? null, // footerFontSize
-        saltData[selectedBootcampIndex].template.introStyling?.fontColor ?? null, // footerFontColor
-        saltData[selectedBootcampIndex].template.introStyling?.fontName ?? null, // footerFont
-        saltData[selectedBootcampIndex].template.introStyling?.alignment ?? null, // footerAlignment
+        saltData[selectedBootcampIndex].diplomaTemplate.introStyling?.fontSize ?? null, // footerFontSize
+        saltData[selectedBootcampIndex].diplomaTemplate.introStyling?.fontColor ?? null, // footerFontColor
+        saltData[selectedBootcampIndex].diplomaTemplate.introStyling?.fontName ?? null, // footerFont
+        saltData[selectedBootcampIndex].diplomaTemplate.introStyling?.alignment ?? null, // footerAlignment
         { 
-          x: saltData[selectedBootcampIndex].template.mainStyling?.xPos ?? null, 
-          y: saltData[selectedBootcampIndex].template.mainStyling?.yPos ?? null
+          x: saltData[selectedBootcampIndex].diplomaTemplate.mainStyling?.xPos ?? null, 
+          y: saltData[selectedBootcampIndex].diplomaTemplate.mainStyling?.yPos ?? null
         }, // mainPos
         { 
-          width: saltData[selectedBootcampIndex].template.mainStyling?.width ?? null, 
-          height: saltData[selectedBootcampIndex].template.mainStyling?.height ?? null
+          width: saltData[selectedBootcampIndex].diplomaTemplate.mainStyling?.width ?? null, 
+          height: saltData[selectedBootcampIndex].diplomaTemplate.mainStyling?.height ?? null
         }, // mainSize
-        saltData[selectedBootcampIndex].template.mainStyling?.fontSize ?? null, // footerFontSize
-        saltData[selectedBootcampIndex].template.mainStyling?.fontColor ?? null, // footerFontColor
-        saltData[selectedBootcampIndex].template.mainStyling?.fontName ?? null, // footerFont
-        saltData[selectedBootcampIndex].template.mainStyling?.alignment ?? null, // footerAlignment
+        saltData[selectedBootcampIndex].diplomaTemplate.mainStyling?.fontSize ?? null, // footerFontSize
+        saltData[selectedBootcampIndex].diplomaTemplate.mainStyling?.fontColor ?? null, // footerFontColor
+        saltData[selectedBootcampIndex].diplomaTemplate.mainStyling?.fontName ?? null, // footerFont
+        saltData[selectedBootcampIndex].diplomaTemplate.mainStyling?.alignment ?? null, // footerAlignment
         { 
-          x: saltData[selectedBootcampIndex].template.footerStyling?.xPos ?? null, 
-          y: saltData[selectedBootcampIndex].template.footerStyling?.yPos ?? null 
+          x: saltData[selectedBootcampIndex].diplomaTemplate.footerStyling?.xPos ?? null, 
+          y: saltData[selectedBootcampIndex].diplomaTemplate.footerStyling?.yPos ?? null 
         }, // footerPos
         { 
-          width: saltData[selectedBootcampIndex].template.footerStyling?.width ?? null, 
-          height: saltData[selectedBootcampIndex].template.footerStyling?.height ?? null
+          width: saltData[selectedBootcampIndex].diplomaTemplate.footerStyling?.width ?? null, 
+          height: saltData[selectedBootcampIndex].diplomaTemplate.footerStyling?.height ?? null
         }, // footerSize
-        saltData[selectedBootcampIndex].template.footerStyling?.fontSize ?? null, // footerFontSize
-        saltData[selectedBootcampIndex].template.footerStyling?.fontColor ?? null, // footerFontColor
-        saltData[selectedBootcampIndex].template.footerStyling?.fontName ?? null, // footerFont
-        saltData[selectedBootcampIndex].template.footerStyling?.alignment ?? null // footerAlignment
+        saltData[selectedBootcampIndex].diplomaTemplate.footerStyling?.fontSize ?? null, // footerFontSize
+        saltData[selectedBootcampIndex].diplomaTemplate.footerStyling?.fontColor ?? null, // footerFontColor
+        saltData[selectedBootcampIndex].diplomaTemplate.footerStyling?.fontName ?? null, // footerFont
+        saltData[selectedBootcampIndex].diplomaTemplate.footerStyling?.alignment ?? null // footerAlignment
       );
     return template;
 }

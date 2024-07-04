@@ -4,5 +4,6 @@ export const saltDefaultData: SaltData = {
     dategraduate: '12/04/2024',
     students: [{
       name: "John Smith",
+      email: ""
     } ]
   };

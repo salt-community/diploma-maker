@@ -6,6 +6,7 @@ import {
   getPlugins,
   generatePDF,
   newGenerateCombinedPDF,
+  mapBootcampToSaltData,
 } from "../../util/helper";
 import DiplomaDataForm from "../../components/Forms/DiplomaDataForm";
 import { useParams } from "react-router-dom";
@@ -29,7 +30,7 @@ type Props = {
 
 export default function DiplomaMaking({ bootcamps, templates, addMultipleStudents }: Props) {
 
-  const [saltData, setSaltData] = useState<SaltData[] | null>();
+  const [saltData, setSaltData] = useState<SaltData[] | null>(null);
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);  
@@ -41,6 +42,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
 
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
+    
     if (bootcamps) {
       if(selectedBootcamp){
         setSelectedBootcampIndex(Number(selectedBootcamp));
@@ -50,23 +52,8 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
         
       } else {
 
-        const initialSaltData: SaltData[] = bootcamps.map((bootcamp) => {
-          if (bootcamp.students.length === 0) {
-            return {
-              classname: bootcamp.name,
-              dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
-              students: saltDefaultData.students,
-              template: bootcamp.diplomaTemplate
-            };
-          } else {
-            return {
-              classname: bootcamp.name,
-              dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
-              students: bootcamp.students,
-              template: bootcamp.diplomaTemplate
-            };
-          }
-        });
+        const initialSaltData = bootcamps.map(b => mapBootcampToSaltData(b))
+
         setSaltData(initialSaltData);
       }
     }
@@ -74,7 +61,6 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
 
   // When Page Changes -> Loads into PDF preview
   useEffect(() => {
-    
     if(saltData){
       const inputs = templateInputsFromSaltData(saltData, selectedBootcampIndex, currentPageIndex);
       const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputs[0])
@@ -108,7 +94,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
       setSaltData(prevSaltInfoProper =>
         (prevSaltInfoProper ?? []).map((item, index) =>
           index === selectedBootcampIndex
-            ? { ...item, students: data.students, template: data.template }
+            ? { ...item, students: data.students, template: data.diplomaTemplate }
             : item
         )
       );

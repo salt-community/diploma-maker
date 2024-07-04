@@ -4,6 +4,7 @@ import { generate } from "@pdfme/generator";
 import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
+import { BootcampResponse, SaltData } from "./types";
 
 const fontObjList = [
   {
@@ -207,3 +208,13 @@ export const populateField = (input: string, classname: string, datebootcamp: st
 }
 
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+export function mapBootcampToSaltData(bootcamp: BootcampResponse): SaltData {
+  return {
+      guidId: bootcamp.guidId,
+      classname: bootcamp.name,
+      dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
+      students: bootcamp.students,
+      diplomaTemplate: bootcamp.diplomaTemplate
+  };
+}

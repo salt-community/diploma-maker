@@ -16,19 +16,20 @@ export default function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
   const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
 
-  async function getBootcampsFromBackend() {
-    const newBootcamps: BootcampResponse[] = await getBootcamps(); 
-    setBootcamps(newBootcamps);
-  }
-
+  
   useEffect(() => {
     if(!bootcamps){
       getBootcampsFromBackend();
       getTemplates();
     }
   }, [bootcamps]);
-
+  
   // bootcamps
+  async function getBootcampsFromBackend() {
+    const newBootcamps: BootcampResponse[] = await getBootcamps(); 
+    setBootcamps(newBootcamps);
+  }
+  
   async function deleteBootcamp(i: number){
     const guid = bootcamps![i].guidId;
     await deleteBootcampById(guid);

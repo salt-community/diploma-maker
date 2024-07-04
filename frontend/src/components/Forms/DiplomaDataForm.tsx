@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import TagsInput from "../TagsInput/TagsInput";
 import { useEffect, useState } from "react";
-import { BootcampResponse, TemplateResponse, SaltData, PersonalStudentData } from "../../util/types";
+import { BootcampResponse, TemplateResponse, SaltData, Student } from "../../util/types";
 import { FileUpload } from "../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../services/InputFileService';
 
@@ -16,8 +16,8 @@ type Props = {
 
 export default function   ({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex}: Props) {
   const { register } = useForm();
-  const [students, setStudents] = useState<PersonalStudentData[]>(saltData.students);
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
+  const [students, setStudents] = useState<Student[]>(saltData.students);
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.diplomaTemplate);
   const [bootcampsCache, setBootcampsCache] = useState<BootcampResponse[] | null>();
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function   ({ updateSaltData, bootcamps, setSelectedBootcampIndex
     
     updateSaltData({
       ...saltData,
-      template: selectedTemplate
+      diplomaTemplate: selectedTemplate
     });
   }, [selectedTemplate]);
 
@@ -99,7 +99,7 @@ export default function   ({ updateSaltData, bootcamps, setSelectedBootcampIndex
           Student Information
         </label>
         <TagsInput
-          selectedTags={(names: string[]) => setStudents(names.map(name => ({ name, email: '' })))} // Adjust this based on how TagsInput is implemented
+          selectedTags={(names: string[]) => setStudents(names.map(name => ({ name, email: ''})))} // Adjust this based on how TagsInput is implemented
           tags={saltData.students.map(student => student.name)}
         />
       </div>

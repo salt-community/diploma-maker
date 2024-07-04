@@ -13,7 +13,7 @@ export type StudentsRequestDto = {
 }
 
 export type StudentUpdateRequestDto = {
-    guidId: string;
+    guidId : string;
     studentName: string;
     emailAddress: string;
 }
@@ -25,11 +25,10 @@ export type StudentResponse = {
 }
 
 export type Student = {
-    guidId: string;
+    guidId?: string;
     name: string;
     email: string;
 }
-
 
 
 // bootcamps
@@ -50,23 +49,16 @@ export type BootcampResponse = {
     diplomaTemplate: TemplateResponse;
     students: Student[];
 }
-
-
-export type PersonalStudentData = {
-    name: string;
-    email?: string;
-}
-
 // Internal Data
 export type SaltData = {
+    guidId: string;
     classname: string;
     dategraduate: string;
-    students: PersonalStudentData[];
-    template: TemplateResponse;
+    diplomaTemplate: TemplateResponse;
+    students: Student[];
 };
 
 // Template
-
 export type TemplateResponse = {
     id: number;
     name: string;
@@ -96,8 +88,8 @@ export type EmailSendRequest = {
 }
 
 export type XYPosition = {
-    x: number | null;
-    y: number | null;
+    x: number;
+    y: number;
 }
 
 export type Size = {

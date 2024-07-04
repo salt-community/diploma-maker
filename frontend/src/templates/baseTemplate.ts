@@ -27,8 +27,8 @@ schemas: [
     footer: {
       type: "text",
       position: checkPosition(footerPos) ?? { x: 35.08, y: 135.72 },
-      width: footerSize?.width !== null ? footerSize.width : 145.76,
-      height: footerSize?.height !== null ? footerSize.height : 21.08,
+      width: footerSize?.width !== null ? footerSize!.width : 145.76,
+      height: footerSize?.height !== null ? footerSize!.height : 21.08,
       rotate: 0,
       fontSize: footerFontSize !== null ? footerFontSize : 16,
       fontColor: footerFontColor !== null ? footerFontColor : "#ffffff",
@@ -38,8 +38,8 @@ schemas: [
     header: {
       type: "text",
       position: checkPosition(headerPos) ?? { x: 83.89, y: 98.63 },
-      width: headerSize?.width !== null ? headerSize.width : 48.13,
-      height: headerSize?.height !== null ? headerSize.height : 10.23,
+      width: headerSize?.width !== null ? headerSize!.width : 48.13,
+      height: headerSize?.height !== null ? headerSize!.height : 10.23,
       rotate: 0,
       fontSize: headerFontSize !== null ? headerFontSize : 16,
       fontColor: headerFontColor !== null ? headerFontColor : "#ffffff",
@@ -49,8 +49,8 @@ schemas: [
     main: {
       type: "text",
       position: checkPosition(mainPos) ?? { x: 35.08, y: 113.4 },
-      width: mainSize?.width !== null ? mainSize.width : 145.76,
-      height: mainSize?.height !== null ? mainSize.height : 16.83,
+      width: mainSize?.width !== null ? mainSize!.width : 145.76,
+      height: mainSize?.height !== null ? mainSize!.height : 16.83,
       rotate: 0,
       fontSize: mainFontSize !== null ? mainFontSize : 33,
       fontColor: mainFontColor !== null ? mainFontColor : "#ffffff",

@@ -19,7 +19,7 @@ public class BootcampsController : ControllerBase
         _service = service;
         _mapper = mapper;
     }
-
+    
     [HttpPost]
     public async Task<ActionResult<BootcampResponseDto>> PostBootcamp(BootcampRequestDto requestDto)
     {
