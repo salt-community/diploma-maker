@@ -6,9 +6,10 @@ interface DraggableInputProps {
   setValue: (value: number) => void;
   label: string;
   minValue: number;
+  disabled?: boolean;
 }
 
-const DraggableInput = ({ value, setValue, label, minValue }: DraggableInputProps) => {
+const DraggableInput = ({ value, setValue, label, minValue, disabled = false }: DraggableInputProps) => {
   const [snapshot, setSnapshot] = useState<number>(value);
   const [startVal, setStartVal] = useState<number>(0);
 
@@ -49,11 +50,11 @@ const DraggableInput = ({ value, setValue, label, minValue }: DraggableInputProp
 }, [startVal, setValue, snapshot, minValue]);
 
   return (
-    <div className="draggable-input-container">
+    <div className={"draggable-input-container " + (disabled && 'disabled')}>
         <input
-            value={value}
+            value={disabled ? "-" : value}
             onChange={onInputChange}
-            className="draggable-input"
+            className={"draggable-input "  + (disabled && 'disabled')}
             onMouseDown={onStart}
         />
         <p>{label}</p>

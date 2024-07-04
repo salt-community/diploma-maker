@@ -3,13 +3,13 @@ import DraggableInput from "./DraggableInput";
 import './EditSection.css'
 
 type Props = {
-  positionX: number,
+  positionX: number | null,
   setPositionX: (value: number) => void,
-  positionY: number,
+  positionY: number | null,
   setPositionY: (value: number) => void,
-  sizeWidth: number,
+  sizeWidth: number | null,
   setSizeWidth: (value: number) => void,
-  sizeHeight: number,
+  sizeHeight: number | null,
   setSizeHeight: (value: number) => void,
 }
 
@@ -25,8 +25,8 @@ export const EditSection = ({ positionX, setPositionX, positionY, setPositionY, 
             <label htmlFor="">Position</label>
           </div>
           <div className="editlayout__menusection--inputwrapper">
-            <DraggableInput value={positionX} setValue={setPositionX} label="X" minValue={0}/>
-            <DraggableInput value={positionY} setValue={setPositionY} label="Y" minValue={0}/>
+            <DraggableInput value={positionX ?? 0} setValue={setPositionX} label="X" minValue={0} disabled={positionX && positionY && sizeWidth && sizeHeight ? false : true}/>
+            <DraggableInput value={positionY ?? 0} setValue={setPositionY} label="Y" minValue={0} disabled={positionX && positionY && sizeWidth && sizeHeight ? false : true}/>
           </div>
         </div>
         <div className="editlayout__menusection">
@@ -37,8 +37,8 @@ export const EditSection = ({ positionX, setPositionX, positionY, setPositionY, 
             </svg>
           </div>
           <div className="editlayout__menusection--inputwrapper">
-            <DraggableInput value={sizeWidth} setValue={setSizeWidth} label="W" minValue={0}/>
-            <DraggableInput value={sizeHeight} setValue={setSizeHeight} label="H" minValue={0}/>
+            <DraggableInput value={sizeWidth ?? 0} setValue={setSizeWidth} label="W" minValue={0} disabled={positionX && positionY && sizeWidth && sizeHeight ? false : true}/>
+            <DraggableInput value={sizeHeight ?? 0} setValue={setSizeHeight} label="H" minValue={0} disabled={positionX && positionY && sizeWidth && sizeHeight ? false : true}/>
           </div>
         </div>
       </form>

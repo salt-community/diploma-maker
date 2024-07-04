@@ -7,6 +7,13 @@
     color: #fff;
     
     background-color: #20202a;
+    transition: all .15s ease-in;
+}
+.draggable-input-container.disabled{
+    filter: blur(1px);
+    opacity: .75;
+    transition: all .5s cubic-bezier(0.19,0.22,0.43,0.99);
+    pointer-events: none;
 }
 .draggable-input {
     padding: 8px;
@@ -21,6 +28,7 @@
     user-select: none;
     caret-color: #ababba;
     caret-shape: 1px;
+    transition: all .15s ease-in;
 }
     .draggable-input::selection {
         background: none;

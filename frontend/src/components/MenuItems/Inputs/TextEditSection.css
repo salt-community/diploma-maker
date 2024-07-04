@@ -55,6 +55,12 @@
   
   padding: 5px 0px
 }
+.edittext__menusection--inputwrapper.disabled{
+  filter: blur(1px);
+  opacity: .75;
+  transition: all .5s cubic-bezier(0.19,0.22,0.43,0.99);
+  pointer-events: none;
+}
 
 
 .color-picker__swatch {
@@ -69,11 +75,17 @@
     filter: saturate(125%);
   }
 
+.color-picker__swatch.disabled{
+  filter: blur(1px);
+  opacity: .25;
+  transition: filter .5s cubic-bezier(0.19,0.22,0.43,0.99);
+  pointer-events: none;
+}
+
 .color-picker__popover {
   position: absolute;
   top: 60%;
   right: 5%;
   transform: translateY(-50%);
   z-index: 500;
-  background-color: red;
 }

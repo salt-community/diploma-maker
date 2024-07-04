@@ -42,14 +42,14 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [fileAdded, setFileAdded] = useState<boolean>(false);
   const [templateAdded, setTemplateAdded] = useState<boolean>(false);
 
-  const [positionX, setPositionX] = useState<number>(83.89);
-  const [positionY, setPositionY] = useState<number>(98.63);
-  const [sizeWidth, setSizeWidth] = useState<number>(48.13);
-  const [sizeHeight, setSizeHeight] = useState<number>(10.23);
-  const [align, setAlign] = useState<string>("center");
-  const [fontSize, setFontSize] = useState<number>(12);
-  const [font, setFont] = useState<string>("NotoSerifJP-Regular");
-  const [fontColor, setFontColor] = useState<string>("#ffffff");
+  const [positionX, setPositionX] = useState<number | null>(null);
+  const [positionY, setPositionY] = useState<number | null>(null);
+  const [sizeWidth, setSizeWidth] = useState<number | null>(null);
+  const [sizeHeight, setSizeHeight] = useState<number | null>(null);
+  const [align, setAlign] = useState<string | null>(null);
+  const [fontSize, setFontSize] = useState<number | null>(null);
+  const [font, setFont] = useState<string | null>(null);
+  const [fontColor, setFontColor] = useState<string | null>(null);
 
   const [selectedField, setSelectedField] = useState<string | null>(null);
 
@@ -107,45 +107,77 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   // Right Now I Literally cannot get the name of which field the user has clicked on in any other way... Temporary Solution!
   useEffect(() => {
-    const attachListeners = () => {
-      const selectors = [
-        '.pdfpreview div div div div div[title="header"]',
-        '.pdfpreview div div div div div[title="main"]',
-        '.pdfpreview div div div div div[title="footer"]',
-      ];
+    const handleClickOutside = (event: MouseEvent) => {
+        const selectors = [
+            '.pdfpreview div div div div div[title="header"]',
+            '.pdfpreview div div div div div[title="main"]',
+            '.pdfpreview div div div div div[title="footer"]',
+        ];
 
-      selectors.forEach((selector) => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach((element) => {
-          element.removeEventListener("click", handleFieldClick);
-          element.addEventListener("click", handleFieldClick);
+        const isClickInside = selectors.some(selector => {
+            const elements = document.querySelectorAll(selector);
+            return Array.from(elements).some(element => element.contains(event.target as Node));
         });
-      });
+
+        if (!isClickInside) {
+            handleFieldClickOutside();
+        }
+    };
+
+    const attachListeners = () => {
+        const selectors = [
+            '.pdfpreview div div div div div[title="header"]',
+            '.pdfpreview div div div div div[title="main"]',
+            '.pdfpreview div div div div div[title="footer"]',
+        ];
+
+        selectors.forEach((selector) => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach((element) => {
+                element.removeEventListener("click", handleFieldClick);
+                element.addEventListener("click", handleFieldClick);
+            });
+        });
     };
 
     const observer = new MutationObserver(() => {
-      attachListeners();
+        attachListeners();
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
     attachListeners();
 
-    return () => {
-      observer.disconnect();
-      const selectors = [
-        '.pdfpreview div div div div div[title="header"]',
-        '.pdfpreview div div div div div[title="main"]',
-        '.pdfpreview div div div div div[title="footer"]',
-      ];
+    document.addEventListener('click', handleClickOutside);
 
-      selectors.forEach((selector) => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach((element) => {
-          element.removeEventListener("click", handleFieldClick);
+    return () => {
+        observer.disconnect();
+        document.removeEventListener('click', handleClickOutside);
+        const selectors = [
+            '.pdfpreview div div div div div[title="header"]',
+            '.pdfpreview div div div div div[title="main"]',
+            '.pdfpreview div div div div div[title="footer"]',
+        ];
+
+        selectors.forEach((selector) => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach((element) => {
+                element.removeEventListener("click", handleFieldClick);
+            });
         });
-      });
     };
   }, []);
+
+  const handleFieldClickOutside = () => {
+    setPositionX(null);
+    setPositionY(null);
+    setSizeWidth(null);
+    setSizeHeight(null);
+    setAlign(null);
+    setFontSize(null);
+    setFont(null);
+    setFontColor(null);
+  }
+
 
   const handleFieldClick = (event: any) => {
     const clickedField = event.currentTarget.getAttribute("title");
