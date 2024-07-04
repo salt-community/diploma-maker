@@ -342,84 +342,114 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     return template ? templateData.findIndex((t) => t.id === template.id) : 0;
   };
 
+  // SideMenu Field Editing Functions
   const setPositionXHandler = async (value: number) => {
     setPositionX(value);
-    if (designer.current && selectedField) {                                    // @ts-ignore
-      designer.current.template.schemas[0][selectedField].position.x = value;   // @ts-ignore
+    if (designer.current && selectedField) {                                    
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].position.x = value;   
+      // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
   };
   
   const setPositionYHandler = async (value: number) => {
     setPositionY(value);
-    if (designer.current && selectedField) {                                    // @ts-ignore
-      designer.current.template.schemas[0][selectedField].position.y = value;   // @ts-ignore
+    if (designer.current && selectedField) {                                    
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].position.y = value;   
+      // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
   };
   
   const setSizeWidthHandler = async (value: number) => {
     setSizeWidth(value);
-    if (designer.current && selectedField) {                                    // @ts-ignore
-      designer.current.template.schemas[0][selectedField].width = value;        // @ts-ignore
+    if (designer.current && selectedField) {                                   
+      // @ts-ignore 
+      designer.current.template.schemas[0][selectedField].width = value;     
+      // @ts-ignore   
       designer.current.updateTemplate(designer.current.template);
     }
   };
   
   const setSizeHeightHandler = async (value: number) => {
     setSizeHeight(value);
-    if (designer.current && selectedField) {                                    // @ts-ignore
-      designer.current.template.schemas[0][selectedField].height = value;       // @ts-ignore
+    if (designer.current && selectedField) {                   
+      // @ts-ignore                 
+      designer.current.template.schemas[0][selectedField].height = value;       
+      // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
   };
 
   const textAlignHandler = async (value: string) => {
     setAlign(value);
-    if (designer.current && selectedField) {                                    // @ts-ignore
-      designer.current.template.schemas[0][selectedField].alignment = value;    // @ts-ignore
+    if (designer.current && selectedField) {                          
+      // @ts-ignore          
+      designer.current.template.schemas[0][selectedField].alignment = value;    
+      // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
   };
 
   const fontSizeHandler = async (value: number) => {
     setFontSize(value);
-    if (designer.current && selectedField) {                                    // @ts-ignore
-      designer.current.template.schemas[0][selectedField].fontSize = value;     // @ts-ignore
+    if (designer.current && selectedField) {                                   
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].fontSize = value;     
+      // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
   };
 
   const setFontHandler = async (value: string) => {
     setFont(value);
-    if (designer.current && selectedField) {                                    // @ts-ignore
-      designer.current.template.schemas[0][selectedField].fontmain = value;     // @ts-ignore
+    if (designer.current && selectedField) {                                    
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].fontmain = value;     
+      // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
   }
 
   const setFontColorHandler = async (value: string) => {
     setFontColor(value);
-    if (designer.current && selectedField) {                                    // @ts-ignore
-      designer.current.template.schemas[0][selectedField].fontColor = value;    // @ts-ignore
+    if (designer.current && selectedField) {
+      // @ts-ignore                                    
+      designer.current.template.schemas[0][selectedField].fontColor = value;    
+      // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
   }
 
-  //Hardcoded width value of 215 since i cannot get the width right now of canvas in any other way through pdfme designer
+  // Hardcoded width value of 215 since i cannot get the width right now of canvas in any other way through pdfme designer
   const setAlignHorizontalCenter = () => {
-    if (designer.current && selectedField) { // @ts-ignore
+    if (designer.current && selectedField) {                        
+        // @ts-ignore                            
         const selectedFieldWidth = designer.current.template.schemas[0][selectedField].width;
-        const centerPosition = (215 - selectedFieldWidth) / 2; // @ts-ignore
-        designer.current.template.schemas[0][selectedField].position.x = centerPosition; // @ts-ignore
+        const centerPosition = (215 - selectedFieldWidth) / 2;                                  
+        // @ts-ignore
+        designer.current.template.schemas[0][selectedField].position.x = centerPosition;   
+        // @ts-ignore     
         designer.current.updateTemplate(designer.current.template);
 
         setPositionX(centerPosition);
     }
   };
-
+  //Same here: Hardcoded height value of 305
   const setAlignVerticalCenter = () => {
-    alert("setting align vertical!")
+    if (designer.current && selectedField) {      
+      // @ts-ignore                                              
+      const selectedFieldWidth = designer.current.template.schemas[0][selectedField].height;
+      const centerPosition = (305 - selectedFieldWidth) / 2;                                    
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].position.y = centerPosition;
+      // @ts-ignore   
+      designer.current.updateTemplate(designer.current.template);
+
+      setPositionY(centerPosition);
+  }
   }
 
   return (
@@ -450,9 +480,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             >
               _
             </button>
-            {/* <button onClick={() => setLeftSideBarPage(1)} className={leftSideBarPage === 1 ? 'active' : ''}>
-                            -
-                        </button> */}
           </header>
           {leftSideBarPage === 0 && (
             <>
@@ -539,6 +566,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                     setSizeHeight={setSizeHeightHandler}
                     setAlignHorizontalCenter={setAlignHorizontalCenter}
                     setAlignVerticalCenter={setAlignVerticalCenter}
+                    fieldWidth={designer.current.template.schemas[0][selectedField].width}
+                    fieldHeight={designer.current.template.schemas[0][selectedField].height}
                 />
               </section>
               <section className="templatecreator-page__rightsidebar-menu-section">
