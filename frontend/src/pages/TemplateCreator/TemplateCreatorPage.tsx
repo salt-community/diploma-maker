@@ -52,6 +52,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [fontColor, setFontColor] = useState<string | null>(null);
 
   const [selectedField, setSelectedField] = useState<string | null>(null);
+  const [fieldWidth, setFieldWidth] = useState<number | null>(null);
+  const [fieldHeight, setFieldHeight] = useState<number | null>(null);
 
   useEffect(() => {
     if (templates && templates.length > 0) {
@@ -166,6 +168,19 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         });
     };
   }, []);
+
+
+  useEffect(() => {
+    if (designer.current && selectedField) {
+      // @ts-ignore
+      const width: number = designer.current.template.schemas[0][selectedField]?.width ?? null;
+      // @ts-ignore
+      const height: number = designer.current.template.schemas[0][selectedField]?.height ?? null;
+  
+      setFieldWidth(width);
+      setFieldHeight(height);
+    }
+  }, [designer.current, selectedField]);
 
   const handleFieldClickOutside = (event: any) => {
     if (!event.target.closest('.templatecreator-page__rightsidebar-menu')) {
@@ -566,9 +581,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                       setSizeHeight={setSizeHeightHandler}
                       setAlignHorizontalCenter={setAlignHorizontalCenter}
                       setAlignVerticalCenter={setAlignVerticalCenter}
-                      // designer.current.template.schemas[0][selectedField].width
-                      fieldWidth={0}
-                      fieldHeight={0}
+                      fieldWidth={fieldWidth}
+                      fieldHeight={fieldHeight}
                   />
               </section>
               <section className="templatecreator-page__rightsidebar-menu-section">

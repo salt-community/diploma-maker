@@ -13,16 +13,16 @@ type Props = {
   setSizeHeight: (value: number) => void,
   setAlignHorizontalCenter: () => void,
   setAlignVerticalCenter: () => void,
-  fieldWidth: number,
-  fieldHeight: number
+  fieldWidth: number | null,
+  fieldHeight: number | null
 }
 
 export const EditSection = ({ positionX, setPositionX, positionY, setPositionY, sizeWidth, setSizeWidth, sizeHeight, setSizeHeight, setAlignHorizontalCenter, setAlignVerticalCenter, fieldWidth, fieldHeight}: Props) => {
   const [lockAspectRatio, setLockAspectRatio] = useState<boolean>(false);
   const [selectedButtons, setSelectedButtons] = useState<{ horizontal: boolean, vertical: boolean }>({ horizontal: false, vertical: false });
 
-  const centerPositionX = (215 - fieldWidth) / 2;
-  const centerPositionY = (305 - fieldHeight) / 2;
+  const centerPositionX = (215 - (fieldWidth ?? 0)) / 2;
+  const centerPositionY = (305 - (fieldHeight ?? 0)) / 2;
 
   useEffect(() => {
     setSelectedButtons(prev => ({
