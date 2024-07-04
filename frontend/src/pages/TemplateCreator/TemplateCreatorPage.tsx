@@ -555,20 +555,21 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             <>
               <section className="templatecreator-page__rightsidebar-menu-section">
                 <h3>Layout</h3>
-                <EditSection
-                    positionX={positionX}
-                    positionY={positionY}
-                    sizeWidth={sizeWidth}
-                    sizeHeight={sizeHeight}
-                    setPositionX={setPositionXHandler}
-                    setPositionY={setPositionYHandler}
-                    setSizeWidth={setSizeWidthHandler}
-                    setSizeHeight={setSizeHeightHandler}
-                    setAlignHorizontalCenter={setAlignHorizontalCenter}
-                    setAlignVerticalCenter={setAlignVerticalCenter}
-                    fieldWidth={designer.current.template.schemas[0][selectedField].width}
-                    fieldHeight={designer.current.template.schemas[0][selectedField].height}
-                />
+                  <EditSection
+                      positionX={positionX}
+                      positionY={positionY}
+                      sizeWidth={sizeWidth}
+                      sizeHeight={sizeHeight}
+                      setPositionX={setPositionXHandler}
+                      setPositionY={setPositionYHandler}
+                      setSizeWidth={setSizeWidthHandler}
+                      setSizeHeight={setSizeHeightHandler}
+                      setAlignHorizontalCenter={setAlignHorizontalCenter}
+                      setAlignVerticalCenter={setAlignVerticalCenter}
+                      // designer.current.template.schemas[0][selectedField].width
+                      fieldWidth={0}
+                      fieldHeight={0}
+                  />
               </section>
               <section className="templatecreator-page__rightsidebar-menu-section">
                 <h3>Text</h3>
