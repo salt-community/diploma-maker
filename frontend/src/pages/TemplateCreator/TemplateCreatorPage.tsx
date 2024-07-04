@@ -15,8 +15,8 @@ import { TextInputIcon } from "../../components/MenuItems/Icons/TextInputIcon";
 import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData} from "../../util/dataHelpers";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
-import { EditSection } from "../../components/MenuItems/Inputs/EditSection";
-import { TextEditSection } from "../../components/MenuItems/Inputs/TextEditSection";
+import { EditSection } from "../../components/MenuItems/TemplateCreatorPage/EditSection";
+import { TextEditSection } from "../../components/MenuItems/TemplateCreatorPage/TextEditSection";
 
 type Props = {
   templates: TemplateResponse[] | null;

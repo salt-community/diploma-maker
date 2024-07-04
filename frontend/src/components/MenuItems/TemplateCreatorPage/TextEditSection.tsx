@@ -1,7 +1,7 @@
 import { useState } from "react";
-import DraggableInput from "./DraggableInput";
+import DraggableInput from "../Inputs/DraggableInput";
 import './TextEditSection.css'
-import { SelectOptions } from "./SelectOptions";
+import { SelectOptions } from "../Inputs/SelectOptions";
 import { ChromePicker, PhotoshopPicker, SketchPicker } from "react-color";
 
 

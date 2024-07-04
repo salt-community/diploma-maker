@@ -1,5 +1,5 @@
 import { useState } from "react";
-import DraggableInput from "./DraggableInput";
+import DraggableInput from "../Inputs/DraggableInput";
 import './EditSection.css'
 
 type Props = {
