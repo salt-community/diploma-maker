@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import DraggableInput from "../Inputs/DraggableInput";
 import './TextEditSection.css'
 import { SelectOptions } from "../Inputs/SelectOptions";
@@ -22,6 +22,7 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [colorPickerColor, setColorPickerColor] = useState<string>("#fff");
   const [fonts, setFonts] = useState<Fonts | null>();
+  const [currentFont, setCurrentFont] = useState<string | null>(null);
 
   const handleColorClick = () => {
     setDisplayColorPicker(!displayColorPicker);
@@ -41,10 +42,16 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
   }
 
   useEffect(() => {
+    setCurrentFont(font);
     getFontsData().then((font) => {
       setFonts(font);
     })
   }, [])
+
+  const handleFontChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setFont(e.target.value);
+    setCurrentFont(e.target.value);
+  };
 
   return (
     <>
@@ -82,17 +89,17 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
           </div>
           <div className="edittext__menusection--inputwrapper">
           <SelectOptions
-                  containerClassOverride='overview-page__select-container'
-                  selectClassOverride='overview-page__select-box'
-                  options={[
-                    ...Object.values(fonts || {}).map(font => ({
-                        value: font.label,
-                        label: font.label
-                    }))
-                ]}
-                onChange={() => {}}
-                disabled={align && fontSize && font && fontColor ? false : true}
-            />
+            containerClassOverride='overview-page__select-container'
+            selectClassOverride='overview-page__select-box'
+            options={[
+              ...Object.values(fonts || {}).map(font => ({
+                value: font.label,
+                label: font.label
+              }))
+            ]}
+            onChange={handleFontChange}
+            disabled={align && fontSize && font && fontColor ? false : true}
+          />
           </div>
         </div>
         <div className="edittext__menusection">
