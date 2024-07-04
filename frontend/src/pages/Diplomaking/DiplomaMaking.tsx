@@ -177,16 +177,13 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
     }
   };
 
-/*   const saveInputFieldsHandler = () => {
+  const saveInputFieldsHandler = () => {
     if (uiInstance.current && saltData) {
       const inputs = uiInstance.current.getInputs();
-      const newName = inputs[0].name;
-      const currentName = saltData[selectedBootcampIndex].students[currentPageIndex].name;
+      console.log(inputs)
 
-      if (currentName === newName) {
-        return;
-      }
-
+      const newName = inputs[0].main;
+      
       const updatedSaltData = saltData.map((item, index) => {
         if (index === selectedBootcampIndex) {
           const updatedStudents = [...item.students];
@@ -198,7 +195,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
 
       setSaltData(updatedSaltData);
     }
-  }; */
+  }; 
 
 
   return (
@@ -214,7 +211,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
           </div>
           <PublishButton text="Generate PDF" onClick={generatePDFHandler} />
           <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler} />
-          <SaveButton textfield="" saveButtonType={SaveButtonType.grandTheftAuto} onClick={postSelectedBootcampData} />
+          <SaveButton textfield="" saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler} />
         </header>
         { (saltData && saltData[currentPageIndex].students.length > 0) ?
         <>
