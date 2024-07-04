@@ -147,19 +147,18 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     };
   }, []);
 
-  const handleFieldClick = (event) => {
+  const handleFieldClick = (event: any) => {
     const clickedField = event.currentTarget.getAttribute("title");
     setSelectedField(clickedField);
-    if(designer.current){
-        console.log(designer.current.template.schemas[0][clickedField].fontmain);
-        const posX: number = designer.current.template.schemas[0][clickedField].position.x;
-        const posY: number = designer.current.template.schemas[0][clickedField].position.y;
-        const width: number = designer.current.template.schemas[0][clickedField].width;
-        const height: number = designer.current.template.schemas[0][clickedField].height;
-        const alignment: string = designer.current.template.schemas[0][clickedField].alignment;
-        const fontScale: number = designer.current.template.schemas[0][clickedField].fontSize;
-        const font: string = designer.current.template.schemas[0][clickedField].fontmain;
-        const fontcolor: string = designer.current.template.schemas[0][clickedField].fontColor;
+    if(designer.current){                                                                       // @ts-ignore
+        const posX: number = designer.current.template.schemas[0][clickedField].position.x;     // @ts-ignore
+        const posY: number = designer.current.template.schemas[0][clickedField].position.y;     // @ts-ignore
+        const width: number = designer.current.template.schemas[0][clickedField].width;         // @ts-ignore
+        const height: number = designer.current.template.schemas[0][clickedField].height;       // @ts-ignore
+        const alignment: string = designer.current.template.schemas[0][clickedField].alignment; // @ts-ignore
+        const fontScale: number = designer.current.template.schemas[0][clickedField].fontSize;  // @ts-ignore
+        const font: string = designer.current.template.schemas[0][clickedField].fontmain;       // @ts-ignore
+        const fontcolor: string = designer.current.template.schemas[0][clickedField].fontColor; // @ts-ignore
     
         setPositionX(posX);
         setPositionY(posY);
@@ -171,70 +170,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         setFontColor(fontcolor);
     }
   };
-
-  const setPositionXHandler = async (value: number) => {
-    setPositionX(value);
-    if (designer.current && selectedField) {
-      designer.current.template.schemas[0][selectedField].position.x = value;
-      designer.current.updateTemplate(designer.current.template);
-    }
-  };
-  
-  const setPositionYHandler = async (value: number) => {
-    setPositionY(value);
-    if (designer.current && selectedField) {
-      designer.current.template.schemas[0][selectedField].position.y = value;
-      designer.current.updateTemplate(designer.current.template);
-    }
-  };
-  
-  const setSizeWidthHandler = async (value: number) => {
-    setSizeWidth(value);
-    if (designer.current && selectedField) {
-      designer.current.template.schemas[0][selectedField].width = value;
-      designer.current.updateTemplate(designer.current.template);
-    }
-  };
-  
-  const setSizeHeightHandler = async (value: number) => {
-    setSizeHeight(value);
-    if (designer.current && selectedField) {
-      designer.current.template.schemas[0][selectedField].height = value;
-      designer.current.updateTemplate(designer.current.template);
-    }
-  };
-
-  const textAlignHandler = async (value: string) => {
-    setAlign(value);
-    if (designer.current && selectedField) {
-      designer.current.template.schemas[0][selectedField].alignment = value;
-      designer.current.updateTemplate(designer.current.template);
-    }
-  };
-
-  const fontSizeHandler = async (value: number) => {
-    setFontSize(value);
-    if (designer.current && selectedField) {
-      designer.current.template.schemas[0][selectedField].fontSize = value;
-      designer.current.updateTemplate(designer.current.template);
-    }
-  };
-
-  const setFontHandler = async (value: string) => {
-    setFont(value);
-    if (designer.current && selectedField) {
-      designer.current.template.schemas[0][selectedField].fontmain = value;
-      designer.current.updateTemplate(designer.current.template);
-    }
-  }
-
-  const setFontColorHandler = async (value: string) => {
-    setFontColor(value);
-    if (designer.current && selectedField) {
-      designer.current.template.schemas[0][selectedField].fontColor = value;
-      designer.current.updateTemplate(designer.current.template);
-    }
-  }
 
   const templateChangeHandler = async (index: number) => {
     if (templateHasChanged) {
@@ -372,6 +307,70 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const getTemplateIndex = (template: CustomTemplate | null) => {
     return template ? templateData.findIndex((t) => t.id === template.id) : 0;
   };
+
+  const setPositionXHandler = async (value: number) => {
+    setPositionX(value);
+    if (designer.current && selectedField) {                                    // @ts-ignore
+      designer.current.template.schemas[0][selectedField].position.x = value;   // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+  
+  const setPositionYHandler = async (value: number) => {
+    setPositionY(value);
+    if (designer.current && selectedField) {                                    // @ts-ignore
+      designer.current.template.schemas[0][selectedField].position.y = value;   // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+  
+  const setSizeWidthHandler = async (value: number) => {
+    setSizeWidth(value);
+    if (designer.current && selectedField) {                                    // @ts-ignore
+      designer.current.template.schemas[0][selectedField].width = value;        // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+  
+  const setSizeHeightHandler = async (value: number) => {
+    setSizeHeight(value);
+    if (designer.current && selectedField) {                                    // @ts-ignore
+      designer.current.template.schemas[0][selectedField].height = value;       // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+
+  const textAlignHandler = async (value: string) => {
+    setAlign(value);
+    if (designer.current && selectedField) {                                    // @ts-ignore
+      designer.current.template.schemas[0][selectedField].alignment = value;    // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+
+  const fontSizeHandler = async (value: number) => {
+    setFontSize(value);
+    if (designer.current && selectedField) {                                    // @ts-ignore
+      designer.current.template.schemas[0][selectedField].fontSize = value;     // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+
+  const setFontHandler = async (value: string) => {
+    setFont(value);
+    if (designer.current && selectedField) {                                    // @ts-ignore
+      designer.current.template.schemas[0][selectedField].fontmain = value;     // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  }
+
+  const setFontColorHandler = async (value: string) => {
+    setFontColor(value);
+    if (designer.current && selectedField) {                                    // @ts-ignore
+      designer.current.template.schemas[0][selectedField].fontColor = value;    // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  }
 
   return (
     <main className="templatecreator-page">
