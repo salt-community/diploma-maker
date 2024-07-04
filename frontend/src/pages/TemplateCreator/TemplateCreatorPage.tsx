@@ -406,6 +406,14 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   }
 
+  const setAlignHorizontalCenter = () => {
+    alert("setting align horizontal!")
+  }
+
+  const setAlignVerticalCenter = () => {
+    alert("setting align vertical!")
+  }
+
   return (
     <main className="templatecreator-page">
       <div className="bg-boundingbox" onClick={() => setRightSideBarPage(0)}></div>
@@ -521,6 +529,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                     setPositionY={setPositionYHandler}
                     setSizeWidth={setSizeWidthHandler}
                     setSizeHeight={setSizeHeightHandler}
+                    setAlignHorizontalCenter={setAlignHorizontalCenter}
+                    setAlignVerticalCenter={setAlignVerticalCenter}
                 />
               </section>
               <section className="templatecreator-page__rightsidebar-menu-section">
