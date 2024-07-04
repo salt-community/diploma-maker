@@ -406,9 +406,17 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   }
 
+  //Hardcoded width value of 215 since i cannot get the width right now of canvas in any other way through pdfme designer
   const setAlignHorizontalCenter = () => {
-    alert("setting align horizontal!")
-  }
+    if (designer.current && selectedField) { // @ts-ignore
+        const selectedFieldWidth = designer.current.template.schemas[0][selectedField].width;
+        const centerPosition = (215 - selectedFieldWidth) / 2; // @ts-ignore
+        designer.current.template.schemas[0][selectedField].position.x = centerPosition; // @ts-ignore
+        designer.current.updateTemplate(designer.current.template);
+
+        setPositionX(centerPosition);
+    }
+  };
 
   const setAlignVerticalCenter = () => {
     alert("setting align vertical!")
