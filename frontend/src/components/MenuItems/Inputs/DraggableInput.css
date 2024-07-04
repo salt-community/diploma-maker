@@ -31,7 +31,8 @@
     transition: all .15s ease-in;
 }
     .draggable-input::selection {
-        background: none;
+        /* background: none; */
+        background-color: #e85617;
     }
 
 .draggable-input-container p{
