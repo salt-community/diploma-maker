@@ -120,7 +120,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         });
 
         if (!isClickInside) {
-            handleFieldClickOutside();
+            handleFieldClickOutside(event);
         }
     };
 
@@ -167,15 +167,17 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     };
   }, []);
 
-  const handleFieldClickOutside = () => {
-    setPositionX(null);
-    setPositionY(null);
-    setSizeWidth(null);
-    setSizeHeight(null);
-    setAlign(null);
-    setFontSize(null);
-    setFont(null);
-    setFontColor(null);
+  const handleFieldClickOutside = (event: any) => {
+    if (!event.target.closest('.templatecreator-page__rightsidebar-menu')) {
+      setPositionX(null);
+      setPositionY(null);
+      setSizeWidth(null);
+      setSizeHeight(null);
+      setAlign(null);
+      setFontSize(null);
+      setFont(null);
+      setFontColor(null);
+    }
   }
 
 
