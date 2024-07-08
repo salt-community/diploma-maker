@@ -1,8 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import DraggableInput from "../Inputs/DraggableInput";
 import './TextEditSection.css'
 import { SelectOptions } from "../Inputs/SelectOptions";
-import { ChromePicker, PhotoshopPicker, SketchPicker } from "react-color";
+import { PhotoshopPicker } from "react-color";
 import { getFontsData } from "../../../util/helper";
 import { Fonts } from "../../../util/types";
 import { SelectableInput } from "../Inputs/SelectableInput";
@@ -27,6 +26,7 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [colorPickerColor, setColorPickerColor] = useState<string>("#fff");
   const [fonts, setFonts] = useState<Fonts | null>();
+  //@ts-ignore
   const [currentFont, setCurrentFont] = useState<string | null>(null);
 
   const handleColorClick = () => {

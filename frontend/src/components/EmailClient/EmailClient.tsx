@@ -5,7 +5,6 @@ import { CloseWindowIcon } from "../MenuItems/Icons/CloseWindowIcon";
 import { CogWheelIcon } from "../MenuItems/Icons/CogWheelIcon";
 import { SaveButton, SaveButtonType } from "../MenuItems/Buttons/SaveButton";
 import { PopupType } from "../MenuItems/Popups/AlertPopup";
-import { CircleIcon } from "../MenuItems/Icons/CircleIcon";
 import CustomCheckBoxRound from "../MenuItems/Inputs/CustomCheckBoxRound";
 
 type Props = {

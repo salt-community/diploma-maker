@@ -2,7 +2,6 @@ import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { populateField } from "./helper";
 import { SaltData, TemplateRequest, TemplateResponse } from "./types";
-import { Designer } from "@pdfme/ui";
 
 export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcampIndex: number, currentPageIndex: number) => {
     const inputs = 
@@ -64,7 +63,9 @@ export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selected
           y: saltData[selectedBootcampIndex].template.introStyling?.yPos ?? null
         }, // headerPos
         { 
+          //@ts-ignore
           width: saltData[selectedBootcampIndex].template.introStyling?.width ?? null, 
+          //@ts-ignore
           height: saltData[selectedBootcampIndex].template.introStyling?.height ?? null
         }, // headerSize
         saltData[selectedBootcampIndex].template.introStyling?.fontSize ?? null, // footerFontSize

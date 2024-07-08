@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import './DraggableInput.css';
-import { NextIcon } from "../Icons/NextIcon";
 
 interface DraggableInputProps {
   value: number;

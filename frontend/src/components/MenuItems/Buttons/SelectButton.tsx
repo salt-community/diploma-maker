@@ -11,7 +11,7 @@ export enum SelectButtonType {
   email,
 }
 
-export const SelectButton = ({ classOverride, onClick, selectButtonType, textfield }: Props) => (
+export const SelectButton = ({ classOverride, onClick, selectButtonType }: Props) => (
   <button className={"select-btn " + (selectButtonType === SelectButtonType.email && 'email ') + (classOverride && classOverride)} onClick={onClick}>
     {selectButtonType === SelectButtonType.email && 
       <svg fill="#000000" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> 
