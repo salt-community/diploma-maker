@@ -19,7 +19,7 @@ steps:
   #  args: ['run', 'deploy', 'backend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
 
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['run', 'deploy', 'frontend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated', '--port=5260']
+    args: ['run', 'deploy', 'frontend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
 
 images:
  ## - 'gcr.io/pgp-sandbox/diplomamakers-backend:latest'
