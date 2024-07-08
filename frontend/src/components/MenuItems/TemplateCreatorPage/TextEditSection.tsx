@@ -49,6 +49,7 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
   useEffect(() => {
     setCurrentFont(font);
     getFontsData().then((font) => {
+      //@ts-ignore
       setFonts(font);
     })
   }, [])

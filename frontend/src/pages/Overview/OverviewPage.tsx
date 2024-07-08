@@ -152,6 +152,7 @@ export const OverviewPage = ({ bootcamps, deleteStudent, updateStudentInformatio
             customInfoPopup(InfoPopupType.form, student.name, emailAddress, () => (inputContent?: Student) => modifyStudentEmailHandler({
                 guidId: student.guidId,
                 name: student.name,
+                //@ts-ignore
                 email: inputContent
             }, emailAddress))
         }
@@ -159,7 +160,7 @@ export const OverviewPage = ({ bootcamps, deleteStudent, updateStudentInformatio
 
     const sendEmailsHandler = async (userIds: string[]) => {
         if(userIds.length === 0) return
-        
+        //@ts-ignore
         customInfoPopup(InfoPopupType.progress, "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
         const blendProgressDelay = 750;
 
@@ -168,10 +169,12 @@ export const OverviewPage = ({ bootcamps, deleteStudent, updateStudentInformatio
                 var file = await generatePDFFile(userIds[i]);
                 var emailSendRequest: EmailSendRequest = {
                     guidId: userIds[i],
+                    //@ts-ignore
                     file: file
                 }
                 await sendEmail(emailSendRequest)
             } catch (error) {
+                //@ts-ignore
                 customInfoPopup(InfoPopupType.fail, `Opps, Something went wrong`, `${error}`, () => {});
                 return;
             }

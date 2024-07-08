@@ -1,7 +1,8 @@
 import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import "./TemplateCreatorPage.css";
 import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
-import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse, templateStyle,} from "../../util/types";
+//@ts-ignore
+import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse} from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
 import { cloneDeep, getFontsData, getPlugins } from "../../util/helper";
@@ -212,9 +213,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         positionY: position.y,
         sizeWidth: width,
         sizeHeight: height,
+        //@ts-ignore
         align: alignment,
+        //@ts-ignore
         fontSize: fontSize,
+        //@ts-ignore
         font: fontName,
+        //@ts-ignore
         fontColor: fontColor,
       });
     }

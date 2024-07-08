@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import DraggableInput from "../Inputs/DraggableInput";
 import './EditSection.css'
-import { HorizontalAlign, HorizontalAlignIcon } from "../Icons/HorizontalAlignIcon";
+import { HorizontalAlignIcon } from "../Icons/HorizontalAlignIcon";
 import { VerticalAlignIcon } from "../Icons/VerticalAlignIcon";
 
 type Props = {
