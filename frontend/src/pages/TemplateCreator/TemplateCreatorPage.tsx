@@ -477,7 +477,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         confirmationPopupType={confirmationPopupType}
         abortClick={() => globalAbortHandler()}
         // @ts-ignore
-        confirmClick={(inputContent?: string) =>confirmationPopupHandler()}
+        confirmClick={(inputContent?: string) => {confirmationPopupHandler(inputContent)}}
       />
       <AlertPopup
         title={popupContent[0]}
