@@ -1,7 +1,7 @@
 import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import "./TemplateCreatorPage.css";
 import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
-import { CustomTemplate, TemplateRequest, TemplateResponse,} from "../../util/types";
+import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse, templateStyle,} from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
 import { cloneDeep, getFontsData, getPlugins } from "../../util/helper";
@@ -17,6 +17,7 @@ import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
 import { EditSection } from "../../components/MenuItems/TemplateCreatorPage/EditSection";
 import { TextEditSection } from "../../components/MenuItems/TemplateCreatorPage/TextEditSection";
+import { HelpIcon } from "../../components/MenuItems/Icons/HelpIcon";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -33,7 +34,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const designer = useRef<Designer | null>(null);
 
   const [rightSideBarPage, setRightSideBarPage] = useState<number>(0);
-  const [leftSideBarPage, setLeftSideBarPage] = useState<number>(0);
 
   const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const {showConfirmationPopup,confirmationPopupContent,confirmationPopupType,confirmationPopupHandler,customPopup,closeConfirmationPopup} = useCustomConfirmationPopup();
@@ -42,18 +42,20 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [fileAdded, setFileAdded] = useState<boolean>(false);
   const [templateAdded, setTemplateAdded] = useState<boolean>(false);
 
-  const [positionX, setPositionX] = useState<number | null>(null);
-  const [positionY, setPositionY] = useState<number | null>(null);
-  const [sizeWidth, setSizeWidth] = useState<number | null>(null);
-  const [sizeHeight, setSizeHeight] = useState<number | null>(null);
-  const [align, setAlign] = useState<string | null>(null);
-  const [fontSize, setFontSize] = useState<number | null>(null);
-  const [font, setFont] = useState<string | null>(null);
-  const [fontColor, setFontColor] = useState<string | null>(null);
-
   const [selectedField, setSelectedField] = useState<string | null>(null);
   const [fieldWidth, setFieldWidth] = useState<number | null>(null);
   const [fieldHeight, setFieldHeight] = useState<number | null>(null);
+
+  const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
+    positionX: null,
+    positionY: null,
+    sizeWidth: null,
+    sizeHeight: null,
+    align: null,
+    fontSize: null,
+    font: null,
+    fontColor: null,
+  });
 
   useEffect(() => {
     if (templates && templates.length > 0) {
@@ -184,14 +186,16 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   const handleFieldClickOutside = (event: any) => {
     if (!event.target.closest('.templatecreator-page__rightsidebar-menu')) {
-      setPositionX(null);
-      setPositionY(null);
-      setSizeWidth(null);
-      setSizeHeight(null);
-      setAlign(null);
-      setFontSize(null);
-      setFont(null);
-      setFontColor(null);
+      setTemplateStyle({
+        positionX: null,
+        positionY: null,
+        sizeWidth: null,
+        sizeHeight: null,
+        align: null,
+        fontSize: null,
+        font: null,
+        fontColor: null,
+      });
     }
   }
 
@@ -199,24 +203,20 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const handleFieldClick = (event: any) => {
     const clickedField = event.currentTarget.getAttribute("title");
     setSelectedField(clickedField);
-    if(designer.current){                                                                       // @ts-ignore
-        const posX: number = designer.current.template.schemas[0][clickedField].position.x;     // @ts-ignore
-        const posY: number = designer.current.template.schemas[0][clickedField].position.y;     // @ts-ignore
-        const width: number = designer.current.template.schemas[0][clickedField].width;         // @ts-ignore
-        const height: number = designer.current.template.schemas[0][clickedField].height;       // @ts-ignore
-        const alignment: string = designer.current.template.schemas[0][clickedField].alignment; // @ts-ignore
-        const fontScale: number = designer.current.template.schemas[0][clickedField].fontSize;  // @ts-ignore
-        const font: string = designer.current.template.schemas[0][clickedField].fontmain;       // @ts-ignore
-        const fontcolor: string = designer.current.template.schemas[0][clickedField].fontColor; // @ts-ignore
-    
-        setPositionX(posX);
-        setPositionY(posY);
-        setSizeWidth(width);
-        setSizeHeight(height);
-        setAlign(alignment);
-        setFontSize(fontScale);
-        setFont(font);
-        setFontColor(fontcolor);
+    if (designer.current) {
+      // @ts-ignore
+      const { position, width, height, alignment, fontSize, fontName, fontColor } = designer.current.template.schemas[0][clickedField];
+  
+      setTemplateStyle({
+        positionX: position.x,
+        positionY: position.y,
+        sizeWidth: width,
+        sizeHeight: height,
+        align: alignment,
+        fontSize: fontSize,
+        font: fontName,
+        fontColor: fontColor,
+      });
     }
   };
 
@@ -359,113 +359,113 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   // SideMenu Field Editing Functions
   const setPositionXHandler = async (value: number) => {
-    setPositionX(value);
-    if (designer.current && selectedField) {                                    
+    setTemplateStyle(prevState => ({ ...prevState, positionX: value }));
+    if (designer.current && selectedField) {
       // @ts-ignore
-      designer.current.template.schemas[0][selectedField].position.x = value;   
+      designer.current.template.schemas[0][selectedField].position.x = value;
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
   };
   
   const setPositionYHandler = async (value: number) => {
-    setPositionY(value);
-    if (designer.current && selectedField) {                                    
+    setTemplateStyle(prevState => ({ ...prevState, positionY: value }));
+    if (designer.current && selectedField) {
       // @ts-ignore
-      designer.current.template.schemas[0][selectedField].position.y = value;   
+      designer.current.template.schemas[0][selectedField].position.y = value;
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
   };
   
   const setSizeWidthHandler = async (value: number) => {
-    setSizeWidth(value);
-    if (designer.current && selectedField) {                                   
-      // @ts-ignore 
-      designer.current.template.schemas[0][selectedField].width = value;     
-      // @ts-ignore   
+    setTemplateStyle(prevState => ({ ...prevState, sizeWidth: value }));
+    if (designer.current && selectedField) {
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].width = value;
+      // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
   };
   
   const setSizeHeightHandler = async (value: number) => {
-    setSizeHeight(value);
-    if (designer.current && selectedField) {                   
-      // @ts-ignore                 
-      designer.current.template.schemas[0][selectedField].height = value;       
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-    }
-  };
-
-  const textAlignHandler = async (value: string) => {
-    setAlign(value);
-    if (designer.current && selectedField) {                          
-      // @ts-ignore          
-      designer.current.template.schemas[0][selectedField].alignment = value;    
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-    }
-  };
-
-  const fontSizeHandler = async (value: number) => {
-    setFontSize(value);
-    if (designer.current && selectedField) {                                   
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].fontSize = value;     
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-    }
-  };
-
-  const setFontHandler = async (value: string) => {
-    setFont(value);
-    if (designer.current && selectedField) {                                    
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].fontmain = value;     
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-    }
-  }
-
-  const setFontColorHandler = async (value: string) => {
-    setFontColor(value);
+    setTemplateStyle(prevState => ({ ...prevState, sizeHeight: value }));
     if (designer.current && selectedField) {
-      // @ts-ignore                                    
-      designer.current.template.schemas[0][selectedField].fontColor = value;    
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].height = value;
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
-  }
+  };
+  
+  const textAlignHandler = async (value: string) => {
+    setTemplateStyle(prevState => ({ ...prevState, align: value }));
+    if (designer.current && selectedField) {
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].alignment = value;
+      // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+  
+  const fontSizeHandler = async (value: number) => {
+    setTemplateStyle(prevState => ({ ...prevState, fontSize: value }));
+    if (designer.current && selectedField) {
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].fontSize = value;
+      // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+  
+  const setFontHandler = async (value: string) => {
+    setTemplateStyle(prevState => ({ ...prevState, font: value }));
+    if (designer.current && selectedField) {
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].fontName = value;
+      // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
+  
+  const setFontColorHandler = async (value: string) => {
+    setTemplateStyle(prevState => ({ ...prevState, fontColor: value }));
+    if (designer.current && selectedField) {
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].fontColor = value;
+      // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+    }
+  };
 
   // Hardcoded width value of 215 since i cannot get the width right now of canvas in any other way through pdfme designer
   const setAlignHorizontalCenter = () => {
-    if (designer.current && selectedField) {                        
-        // @ts-ignore                            
-        const selectedFieldWidth = designer.current.template.schemas[0][selectedField].width;
-        const centerPosition = (215 - selectedFieldWidth) / 2;                                  
-        // @ts-ignore
-        designer.current.template.schemas[0][selectedField].position.x = centerPosition;   
-        // @ts-ignore     
-        designer.current.updateTemplate(designer.current.template);
-
-        setPositionX(centerPosition);
+    if (designer.current && selectedField) {
+      // @ts-ignore
+      const selectedFieldWidth = designer.current.template.schemas[0][selectedField].width;
+      const centerPosition = (215 - selectedFieldWidth) / 2;
+      // @ts-ignore
+      designer.current.template.schemas[0][selectedField].position.x = centerPosition;
+      // @ts-ignore
+      designer.current.updateTemplate(designer.current.template);
+  
+      setTemplateStyle(prevState => ({ ...prevState, positionX: centerPosition }));
     }
   };
-  //Same here: Hardcoded height value of 305
+  
   const setAlignVerticalCenter = () => {
-    if (designer.current && selectedField) {      
-      // @ts-ignore                                              
-      const selectedFieldWidth = designer.current.template.schemas[0][selectedField].height;
-      const centerPosition = (305 - selectedFieldWidth) / 2;                                    
+    if (designer.current && selectedField) {
+      // @ts-ignore
+      const selectedFieldHeight = designer.current.template.schemas[0][selectedField].height;
+      const centerPosition = (305 - selectedFieldHeight) / 2;
       // @ts-ignore
       designer.current.template.schemas[0][selectedField].position.y = centerPosition;
-      // @ts-ignore   
+      // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
-
-      setPositionY(centerPosition);
-  }
-  }
+  
+      setTemplateStyle(prevState => ({ ...prevState, positionY: centerPosition }));
+    }
+  };
 
   return (
     <main className="templatecreator-page">
@@ -488,28 +488,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       />
       <section className="templatecreator-page__leftsidebar">
         <div className="templatecreator-page__leftsidebar-menu">
-          <header className="templatecreator-page__leftsidebar-menu-header">
-            <button
-              onClick={() => setLeftSideBarPage(0)}
-              className={leftSideBarPage === 0 ? "active" : ""}
-            >
-              _
+          <section className="templatecreator-page__leftsidebar-menu-section">
+            <button className="help-btn">
+              <HelpIcon />
             </button>
-          </header>
-          {leftSideBarPage === 0 && (
-            <>
-              <section className="templatecreator-page__leftsidebar-menu-section">
-                <h3></h3>
-              </section>
-            </>
-          )}
-          {leftSideBarPage === 1 && (
-            <>
-              <section className="templatecreator-page__leftsidebar-menu-section">
-                <h3></h3>
-              </section>
-            </>
-          )}
+          </section>
         </div>
       </section>
       <section className="templatecreator-page__preview-container">
@@ -570,30 +553,31 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             <>
               <section className="templatecreator-page__rightsidebar-menu-section">
                 <h3>Layout</h3>
-                  <EditSection
-                      positionX={positionX}
-                      positionY={positionY}
-                      sizeWidth={sizeWidth}
-                      sizeHeight={sizeHeight}
-                      setPositionX={setPositionXHandler}
-                      setPositionY={setPositionYHandler}
-                      setSizeWidth={setSizeWidthHandler}
-                      setSizeHeight={setSizeHeightHandler}
-                      setAlignHorizontalCenter={setAlignHorizontalCenter}
-                      setAlignVerticalCenter={setAlignVerticalCenter}
-                      fieldWidth={fieldWidth}
-                      fieldHeight={fieldHeight}
-                  />
+                <EditSection
+                  positionX={templateStyle.positionX}
+                  positionY={templateStyle.positionY}
+                  sizeWidth={templateStyle.sizeWidth}
+                  sizeHeight={templateStyle.sizeHeight}
+                  setPositionX={setPositionXHandler}
+                  setPositionY={setPositionYHandler}
+                  setSizeWidth={setSizeWidthHandler}
+                  setSizeHeight={setSizeHeightHandler}
+                  setAlignHorizontalCenter={setAlignHorizontalCenter}
+                  setAlignVerticalCenter={setAlignVerticalCenter}
+                  fieldWidth={fieldWidth}
+                  fieldHeight={fieldHeight}
+                />
               </section>
               <section className="templatecreator-page__rightsidebar-menu-section">
                 <h3>Text</h3>
                 <TextEditSection
-                  align={align}
+                  align={templateStyle.align}
                   setAlign={(value: string) => textAlignHandler(value)}
-                  fontSize={fontSize}setFontSize={(value: number) => fontSizeHandler(value)}
-                  font={font}
+                  fontSize={templateStyle.fontSize}
+                  setFontSize={(value: number) => fontSizeHandler(value)}
+                  font={templateStyle.font}
                   setFont={(value: string) => setFontHandler(value)}
-                  fontColor={fontColor}
+                  fontColor={templateStyle.fontColor}
                   setFontColor={(value: string) => setFontColorHandler(value)}
                 />
               </section>

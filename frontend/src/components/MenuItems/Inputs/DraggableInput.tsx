@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import './DraggableInput.css';
+import { NextIcon } from "../Icons/NextIcon";
 
 interface DraggableInputProps {
   value: number;
@@ -30,12 +31,12 @@ const DraggableInput = ({ value, setValue, label, minValue, disabled = false }: 
   );
 
   useEffect(() => {
-  const onUpdate = (event: MouseEvent) => {
-    if (startVal) {
-      const newValue = snapshot + (event.clientX - startVal) / 5;
-      setValue(Math.max(minValue, parseFloat(newValue.toFixed(1))));
-    }
-  };
+    const onUpdate = (event: MouseEvent) => {
+      if (startVal && event.clientX % 5 === 0) {
+        const newValue = snapshot + (event.clientX - startVal) / 5;
+        setValue(Math.max(minValue, parseFloat(newValue.toFixed(1))));
+      }
+    };
 
   const onEnd = () => {
     setStartVal(0);

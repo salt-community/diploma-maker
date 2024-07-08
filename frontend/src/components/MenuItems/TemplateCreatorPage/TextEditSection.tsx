@@ -5,6 +5,11 @@ import { SelectOptions } from "../Inputs/SelectOptions";
 import { ChromePicker, PhotoshopPicker, SketchPicker } from "react-color";
 import { getFontsData } from "../../../util/helper";
 import { Fonts } from "../../../util/types";
+import { SelectableInput } from "../Inputs/SelectableInput";
+import { TextAlignLeftIcon } from "../Icons/TextAlignLeftIcon";
+import { TextAlignCenterIcon } from "../Icons/TextAlignCenterIcon";
+import { TextAlignRightIcon } from "../Icons/TextAlignRightIcon";
+import { TextAlignNormalIcon } from "../Icons/TextAlignNormalIcon";
 
 
 type Props = {
@@ -62,24 +67,16 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
           </div>
           <div className={"edittext__menusection--inputwrapper " + (!align && !fontSize && !font && !fontColor && ' disabled')}>
             <button onClick={() => setAlign("left")} className={'edittext__menusection--btn ' + (align === "left" && 'selected')}>
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> 
-                <path d="M3 10H16M3 14H21M3 18H16M3 6H21" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
-              </svg>
+              <TextAlignLeftIcon />
             </button>
             <button onClick={() => setAlign("center")} className={'edittext__menusection--btn ' + (align === "center" && 'selected')}>
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> 
-                <path d="M3 6H21M3 14H21M17 10H7M17 18H7" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
-              </svg>
+              <TextAlignCenterIcon />
             </button>
             <button onClick={() => setAlign("right")} className={'edittext__menusection--btn ' + (align === "right" && 'selected')}>
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> 
-                <path d="M3 8H21M3 12H21M3 20H21M10 16H21M10 4H21" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
-              </svg>
+              <TextAlignRightIcon />
             </button>
             <button onClick={() => setAlign("normal")} className={'edittext__menusection--btn ' + (align === "normal" && 'selected')}>
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> 
-                <path d="M3 8H21M3 12H21M3 16H21M3 20H15M3 4H21" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
-              </svg>
+              <TextAlignNormalIcon />
             </button>
           </div>
         </div>
@@ -97,6 +94,7 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
                 label: font.label
               }))
             ]}
+            value={font ?? ""}
             onChange={handleFontChange}
             disabled={align && fontSize && font && fontColor ? false : true}
           />
@@ -107,7 +105,7 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
             <label htmlFor="">Size</label>
           </div>
           <div className="edittext__menusection--inputwrapper">
-            <DraggableInput value={fontSize ?? 0} setValue={setFontSize} label="px" minValue={1} disabled={align && fontSize && font && fontColor ? false : true}/>
+            <SelectableInput value={fontSize ?? 0} setValue={setFontSize} label="px" minValue={1} disabled={align && fontSize && font && fontColor ? false : true}/>
           </div>
         </div>
         <div className="edittext__menusection">

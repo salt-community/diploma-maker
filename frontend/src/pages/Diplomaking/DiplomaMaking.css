@@ -25,3 +25,18 @@
 .pdfpreview-container div{
     background-color: #2e2e38;
 }
+
+
+.pdfpreview-container div div div div[title="header"]{
+    cursor: default !important;
+    pointer-events: none !important;
+}
+
+.pdfpreview-container div div div div[title="main"]{
+    cursor: text;
+}
+
+.pdfpreview-container div div div div[title="footer"]{
+    cursor: default !important;
+    pointer-events: none !important;
+}
