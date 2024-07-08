@@ -1,24 +1,24 @@
-# steps:
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: ['build', '-t', 'gcr.io/pgp-sandbox/backend:latest', '-f', 'Dockerfile', '.']
-#     dir: Backend
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/pgp-sandbox/diploma-maker-backend:latest', '-f', 'Dockerfile', '.']
+    dir: Backend/DiplomaMakerApi
 
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: ['build', '-t', 'gcr.io/pgp-sandbox/frontend:latest', '-f', 'Dockerfile', '.']
-#     dir: Frontend
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/pgp-sandbox/diploma-maker-frontend:latest', '-f', 'Dockerfile', '.']
+    dir: frontend
 
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: ['push', 'gcr.io/pgp-sandbox/backend:latest']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/pgp-sandbox/diploma-maker-backend:latest']
 
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: ['push', 'gcr.io/pgp-sandbox/frontend:latest']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/pgp-sandbox/diploma-maker-frontend:latest']
 
-#   - name: 'gcr.io/cloud-builders/gcloud'
-#     args: ['run', 'deploy', 'backend', '--image', 'gcr.io/pgp-sandbox/backend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['run', 'deploy', 'diploma-maker-backend', '--image', 'gcr.io/pgp-sandbox/diploma-maker-backend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
 
-#   - name: 'gcr.io/cloud-builders/gcloud'
-#     args: ['run', 'deploy', 'frontend', '--image', 'gcr.io/pgp-sandbox/frontend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['run', 'deploy', 'diploma-maker-frontend', '--image', 'gcr.io/pgp-sandbox/diploma-maker-frontend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
 
-# images:
-#   - 'gcr.io/pgp-sandbox/backend:latest'
-#   - 'gcr.io/pgp-sandbox/frontend:latest'
+images:
+  - 'gcr.io/pgp-sandbox/diploma-maker-backend:latest'
+  - 'gcr.io/pgp-sandbox/diploma-maker-frontend:latest'
