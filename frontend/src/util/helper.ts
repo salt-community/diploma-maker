@@ -13,8 +13,33 @@ const fontObjList = [
   },
   {
     fallback: false,
-    label: "NotoSansJP-Regular",
-    url: "/fonts/NotoSansJP-Regular.otf",
+    label: "Calibre",
+    url: "/fonts/CalibreRegular.otf",
+  },
+  {
+    fallback: false,
+    label: "Basilia",
+    url: "/fonts/Basilia-Reg.woff",
+  },
+  {
+    fallback: false,
+    label: "Futura",
+    url: "/fonts/Futura-Dem.otf",
+  },
+  {
+    fallback: false,
+    label: "Museo-Sans",
+    url: "/fonts/MuseoSans_500.otf",
+  },
+  {
+    fallback: false,
+    label: "Roboto",
+    url: "/fonts/Roboto-Regular.ttf",
+  },
+  {
+    fallback: false,
+    label: "TT-Corals",
+    url: "/fonts/TT-Corals Regular.ttf",
   },
 ];
 

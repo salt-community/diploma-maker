@@ -32,7 +32,7 @@ schemas: [
       rotate: 0,
       fontSize: footerFontSize !== null ? footerFontSize : 16,
       fontColor: footerFontColor !== null ? footerFontColor : "#ffffff",
-      fontmain: footerFont !== null ? footerFont : "NotoSerifJP-Regular",
+      fontName: footerFont !== null ? footerFont : "NotoSerifJP-Regular",
       alignment: footerAlignment !== null ? footerAlignment : "center",
     },
     header: {
@@ -43,7 +43,7 @@ schemas: [
       rotate: 0,
       fontSize: headerFontSize !== null ? headerFontSize : 16,
       fontColor: headerFontColor !== null ? headerFontColor : "#ffffff",
-      fontmain: headerFont !== null ? headerFont : "NotoSerifJP-Regular",
+      fontName: headerFont !== null ? headerFont : "NotoSerifJP-Regular",
       alignment: headerAlignment !== null ? headerAlignment : "center",
     },
     main: {
@@ -54,7 +54,7 @@ schemas: [
       rotate: 0,
       fontSize: mainFontSize !== null ? mainFontSize : 33,
       fontColor: mainFontColor !== null ? mainFontColor : "#ffffff",
-      fontmain: mainFont !== null ? mainFont : "NotoSerifJP-Regular",
+      fontName: mainFont !== null ? mainFont : "NotoSerifJP-Regular",
       alignment: mainAlignment !== null ? mainAlignment : "center",
     },
   },

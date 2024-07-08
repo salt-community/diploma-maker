@@ -232,23 +232,41 @@ export const mapTemplatesToTemplateData = (templateInput: TemplateResponse[]) =>
 export const createUpdatedTemplate = (currentTemplate: any, designer: any) => {
     const currentTemplateFields = designer.current.getTemplate();
     const updatedTemplate = {
-        ...currentTemplate,
-        intro: currentTemplateFields.sampledata[0].header,
-        introStyling: {
-            XPos: currentTemplateFields.schemas[0].header.position.x,
-            YPos: currentTemplateFields.schemas[0].header.position.y,
-        },
-        main: currentTemplateFields.sampledata[0].main,
-        mainStyling: {
-            XPos: currentTemplateFields.schemas[0].main.position.x,
-            YPos: currentTemplateFields.schemas[0].main.position.y
-        },
-        footer: currentTemplateFields.sampledata[0].footer,
-        footerStyling: {
-            XPos: currentTemplateFields.schemas[0].footer.position.x,
-            YPos: currentTemplateFields.schemas[0].footer.position.y,
-        },
-    }
+      ...currentTemplate,
+      intro: currentTemplateFields.sampledata[0].header,
+      introStyling: {
+        XPos: currentTemplateFields.schemas[0].header.position.x,
+        YPos: currentTemplateFields.schemas[0].header.position.y,
+        Width: currentTemplateFields.schemas[0].header.width,
+        Height: currentTemplateFields.schemas[0].header.height,
+        FontSize: currentTemplateFields.schemas[0].header.fontSize,
+        FontColor: currentTemplateFields.schemas[0].header.fontColor,
+        FontName: currentTemplateFields.schemas[0].header.fontName,
+        Alignment: currentTemplateFields.schemas[0].header.alignment,
+      },
+      main: currentTemplateFields.sampledata[0].main,
+      mainStyling: {
+        XPos: currentTemplateFields.schemas[0].main.position.x,
+        YPos: currentTemplateFields.schemas[0].main.position.y,
+        Width: currentTemplateFields.schemas[0].main.width,
+        Height: currentTemplateFields.schemas[0].main.height,
+        FontSize: currentTemplateFields.schemas[0].main.fontSize,
+        FontColor: currentTemplateFields.schemas[0].main.fontColor,
+        FontName: currentTemplateFields.schemas[0].main.fontName,
+        Alignment: currentTemplateFields.schemas[0].main.alignment,
+      },
+      footer: currentTemplateFields.sampledata[0].footer,
+      footerStyling: {
+        XPos: currentTemplateFields.schemas[0].footer.position.x,
+        YPos: currentTemplateFields.schemas[0].footer.position.y,
+        Width: currentTemplateFields.schemas[0].footer.width,
+        Height: currentTemplateFields.schemas[0].footer.height,
+        FontSize: currentTemplateFields.schemas[0].footer.fontSize,
+        FontColor: currentTemplateFields.schemas[0].footer.fontColor,
+        FontName: currentTemplateFields.schemas[0].footer.fontName,
+        Alignment: currentTemplateFields.schemas[0].footer.alignment,
+      },
+    };
     return updatedTemplate;
 }
 

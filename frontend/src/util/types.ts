@@ -116,3 +116,26 @@ export type Style = {
     fontName?: string;
     alignment?: string;
 }
+
+export type Font = {
+    fallback: boolean;
+    label: string;
+    url: string;
+    data: object;
+};
+  
+export type Fonts = {
+    [key: string]: Font;
+};
+
+
+export type TemplateInstanceStyle = {
+    positionX: number | null;
+    positionY: number | null;
+    sizeWidth: number | null;
+    sizeHeight: number | null;
+    align: string | null;
+    fontSize: number | null;
+    font: string | null;
+    fontColor: string | null;
+  };
