@@ -24,3 +24,6 @@ steps:
 images:
   - 'gcr.io/pgp-sandbox/diplomamakers-backend:latest'
   - 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest'
+
+options:
+  logging: NONE
