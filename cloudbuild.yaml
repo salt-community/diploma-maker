@@ -6,7 +6,7 @@ steps:
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '-f', 'Dockerfile', '.']
-    dir: Frontend
+    dir: frontend
 # Push the Containers to the Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest']
@@ -24,6 +24,6 @@ steps:
 images:
   - 'gcr.io/pgp-sandbox/diplomamakers-backend:latest'
   - 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest'
-  
+
 options:
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
