@@ -3,9 +3,12 @@ using JokesAPI.Configuration;
 using DiplomaMakerApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<DiplomaMakingContext>(options =>
+/* builder.Services.AddDbContext<DiplomaMakingContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DiplomaMakingContext") ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
+ */
 
+builder.Services.AddDbContext<DiplomaMakingContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnection") ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
 // Add services to the container.
 
 builder.Services.AddControllers();
