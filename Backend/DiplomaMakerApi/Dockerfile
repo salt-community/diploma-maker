@@ -20,10 +20,7 @@ WORKDIR /app
 
 # Copy the published output from the build stage
 
-COPY --from=build-env /app/out .
+COPY --from=build /app/out .
 
 # Start the application
 ENTRYPOINT ["dotnet", "DiplomaMakerApi.dll"]
-
-# Expose the port the application runs on
-EXPOSE 8080
