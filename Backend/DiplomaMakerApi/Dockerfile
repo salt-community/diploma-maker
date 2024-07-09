@@ -21,6 +21,5 @@ WORKDIR /app
 # Copy the published output from the build stage
 COPY --from=build-env /app/out .
 
-
 # Start the application
 ENTRYPOINT ["dotnet", "DiplomaMakerApi.dll"]
