@@ -9,12 +9,13 @@ builder.WebHost.UseKestrel(options =>
     var port = Environment.GetEnvironmentVariable("PORT") ?? "8080"; 
     options.ListenAnyIP(int.Parse(port));
 });
+
 /* builder.Services.AddDbContext<DiplomaMakingContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DiplomaMakingContext") ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
  */
 string? connectionstr = builder.Environment.IsDevelopment() ?
                         builder.Configuration.GetConnectionString("PostgreSQLConnectionLocal") :
-                        builder.Configuration.GetConnectionString("PostgreSQLConnection");
+                        builder.Configuration.GetConnectionString(Environment.GetEnvironmentVariable("PostgreConnection") ?? "PostgreSQLConnection");
 
 builder.Services.AddDbContext<DiplomaMakingContext>(options =>
     options.UseNpgsql(connectionstr ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
