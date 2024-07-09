@@ -4,6 +4,11 @@ using DiplomaMakerApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var logger = LoggerFactory.Create(loggingBuilder => 
+{
+    loggingBuilder.AddConsole();
+}).CreateLogger<Program>();
+
 builder.WebHost.UseKestrel(options =>
 {
     var port = Environment.GetEnvironmentVariable("PORT") ?? "8080"; 
@@ -16,6 +21,8 @@ builder.WebHost.UseKestrel(options =>
 string? connectionstr = builder.Environment.IsDevelopment() ?
                         builder.Configuration.GetConnectionString("PostgreSQLConnectionLocal") :
                         builder.Configuration.GetConnectionString(Environment.GetEnvironmentVariable("PostgreConnection") ?? "PostgreSQLConnection");
+
+logger.LogInformation("Connection string: {ConnectionString}", connectionstr);
 
 builder.Services.AddDbContext<DiplomaMakingContext>(options =>
     options.UseNpgsql(connectionstr ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
