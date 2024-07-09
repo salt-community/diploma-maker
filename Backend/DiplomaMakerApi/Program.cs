@@ -18,9 +18,10 @@ builder.WebHost.UseKestrel(options =>
 /* builder.Services.AddDbContext<DiplomaMakingContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DiplomaMakingContext") ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
  */
-string? connectionstr = builder.Environment.IsDevelopment() ?
+string? connectionstr = Environment.GetEnvironmentVariable("PostgreConnection") ;
+                  /*        builder.Environment.IsDevelopment() ?
                         builder.Configuration.GetConnectionString("PostgreSQLConnectionLocal") :
-                        builder.Configuration.GetConnectionString(Environment.GetEnvironmentVariable("PostgreConnection") ?? "PostgreSQLConnection");
+                        builder.Configuration.GetConnectionString(?? "PostgreSQLConnection"); */
 
 logger.LogInformation("Connection string: {ConnectionString}", connectionstr);
 
