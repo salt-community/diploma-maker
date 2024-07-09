@@ -6,9 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 /* builder.Services.AddDbContext<DiplomaMakingContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DiplomaMakingContext") ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
  */
+string connectionstr = builder.Environment.IsDevelopment() ? builder.Configuration.GetConnectionString("PostgreSQLConnectionLocal") : builder.Configuration.GetConnectionString("PostgreSQLConnection");
 
 builder.Services.AddDbContext<DiplomaMakingContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLConnection") ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
+    options.UseNpgsql(connectionstr ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
 // Add services to the container.
 
 builder.Services.AddControllers();
