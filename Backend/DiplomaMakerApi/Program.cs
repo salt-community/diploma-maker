@@ -4,26 +4,23 @@ using DiplomaMakerApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var logger = LoggerFactory.Create(loggingBuilder => 
+/* var logger = LoggerFactory.Create(loggingBuilder => 
 {
     loggingBuilder.AddConsole();
 }).CreateLogger<Program>();
+logger.LogInformation("Connection string: {ConnectionString}", connectionstr); */
+if(!builder.Environment.IsDevelopment()) {
+    builder.WebHost.UseKestrel(options =>
+    {
+        var port = Environment.GetEnvironmentVariable("PORT") ?? "8080"; 
+        options.ListenAnyIP(int.Parse(port));
+    });
+}
 
-builder.WebHost.UseKestrel(options =>
-{
-    var port = Environment.GetEnvironmentVariable("PORT") ?? "8080"; 
-    options.ListenAnyIP(int.Parse(port));
-});
-
-/* builder.Services.AddDbContext<DiplomaMakingContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DiplomaMakingContext") ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
- */
-string? connectionstr = Environment.GetEnvironmentVariable("PostgreConnection") ;
-                  /*        builder.Environment.IsDevelopment() ?
+string? connectionstr = builder.Environment.IsDevelopment() ?
                         builder.Configuration.GetConnectionString("PostgreSQLConnectionLocal") :
-                        builder.Configuration.GetConnectionString(?? "PostgreSQLConnection"); */
+                        Environment.GetEnvironmentVariable("PostgreConnection");
 
-logger.LogInformation("Connection string: {ConnectionString}", connectionstr);
 
 builder.Services.AddDbContext<DiplomaMakingContext>(options =>
     options.UseNpgsql(connectionstr ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
