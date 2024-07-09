@@ -1,0 +1,11 @@
+version: '3.2'
+services:
+  postgres-db:
+    container_name: diploma-maker-development-postgres-db
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: 'Password_2_Change_4_Real_Cases_&'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_DB: 'diploma_maker_db'
