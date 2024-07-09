@@ -22,7 +22,7 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 # Expose the port the application runs on
-EXPOSE 80
+EXPOSE 8080
 
 # Start the application
 ENTRYPOINT ["dotnet", "DiplomaMakerApi.dll"]
