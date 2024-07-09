@@ -1,4 +1,4 @@
-# Base image
+# Use the .NET SDK image to build the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 
 # Set the working directory
@@ -21,6 +21,8 @@ WORKDIR /app
 # Copy the published output from the build stage
 COPY --from=build-env /app/out .
 
+# Expose the port the application runs on
+EXPOSE 80
 
 # Start the application
 ENTRYPOINT ["dotnet", "DiplomaMakerApi.dll"]
