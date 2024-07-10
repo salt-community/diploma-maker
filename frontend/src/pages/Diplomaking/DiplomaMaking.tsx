@@ -31,8 +31,8 @@ type Props = {
 
 export default function DiplomaMaking({ bootcamps, templates, addMultipleStudents }: Props) {
 
-  const [saltData, setSaltData] = useState<SaltData[] | null>(null);
-  const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
+  const [saltData, setSaltData] = useState<SaltData[] | null>();
+  const [currentDisplayMode, setDisplayMode] = useState<displayMode>("viewer");
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);  
   const uiRef = useRef<HTMLDivElement | null>(null);

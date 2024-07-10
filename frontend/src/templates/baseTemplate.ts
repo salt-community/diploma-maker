@@ -26,35 +26,44 @@ schemas: [
   {
     footer: {
       type: "text",
+      //@ts-ignore
       position: checkPosition(footerPos) ?? { x: 35.08, y: 135.72 },
-      width: footerSize?.width !== null ? footerSize!.width : 145.76,
-      height: footerSize?.height !== null ? footerSize!.height : 21.08,
+      //@ts-ignore
+      width: footerSize?.width !== null ? footerSize.width : 145.76,
+      //@ts-ignore
+      height: footerSize?.height !== null ? footerSize.height : 21.08,
       rotate: 0,
       fontSize: footerFontSize !== null ? footerFontSize : 16,
       fontColor: footerFontColor !== null ? footerFontColor : "#ffffff",
-      fontmain: footerFont !== null ? footerFont : "NotoSerifJP-Regular",
+      fontName: footerFont !== null ? footerFont : "NotoSerifJP-Regular",
       alignment: footerAlignment !== null ? footerAlignment : "center",
     },
     header: {
       type: "text",
+      //@ts-ignore
       position: checkPosition(headerPos) ?? { x: 83.89, y: 98.63 },
-      width: headerSize?.width !== null ? headerSize!.width : 48.13,
-      height: headerSize?.height !== null ? headerSize!.height : 10.23,
+      //@ts-ignore
+      width: headerSize?.width !== null ? headerSize.width : 48.13,
+      //@ts-ignore
+      height: headerSize?.height !== null ? headerSize.height : 10.23,
       rotate: 0,
       fontSize: headerFontSize !== null ? headerFontSize : 16,
       fontColor: headerFontColor !== null ? headerFontColor : "#ffffff",
-      fontmain: headerFont !== null ? headerFont : "NotoSerifJP-Regular",
+      fontName: headerFont !== null ? headerFont : "NotoSerifJP-Regular",
       alignment: headerAlignment !== null ? headerAlignment : "center",
     },
     main: {
       type: "text",
+      //@ts-ignore
       position: checkPosition(mainPos) ?? { x: 35.08, y: 113.4 },
-      width: mainSize?.width !== null ? mainSize!.width : 145.76,
-      height: mainSize?.height !== null ? mainSize!.height : 16.83,
+      //@ts-ignore
+      width: mainSize?.width !== null ? mainSize.width : 145.76,
+      //@ts-ignore
+      height: mainSize?.height !== null ? mainSize.height : 16.83,
       rotate: 0,
       fontSize: mainFontSize !== null ? mainFontSize : 33,
       fontColor: mainFontColor !== null ? mainFontColor : "#ffffff",
-      fontmain: mainFont !== null ? mainFont : "NotoSerifJP-Regular",
+      fontName: mainFont !== null ? mainFont : "NotoSerifJP-Regular",
       alignment: mainAlignment !== null ? mainAlignment : "center",
     },
   },

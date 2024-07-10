@@ -6,11 +6,12 @@ namespace DiplomaMakerApi.Services;
 public class TemplateService
 {
     private readonly DiplomaMakingContext _context;
+    private readonly LocalFileStorageService _localFileStorageService;
 
-
-    public TemplateService(DiplomaMakingContext context)
+    public TemplateService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService)
     {
         _context = context;
+        _localFileStorageService = localFileStorageService;
     }
 
     public async Task<List<DiplomaTemplate>> GetTemplates(){
@@ -26,17 +27,14 @@ public class TemplateService
         return await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
     }
 
-    public async Task<DiplomaTemplate> PostTemplate(TemplateRequestDto templateRequest)
+    public async Task<DiplomaTemplate> PostTemplate(TemplatePostRequestDto templateRequest)
     {
         var newTemplate = new DiplomaTemplate()
         {
             Name = templateRequest.templateName,
-            // footer = templateRequest.footer,
-            // intro = templateRequest.intro,
-            // studentName = templateRequest.studentName,
-            // basePdf = templateRequest.basePdf,
         };
         try{
+            await _localFileStorageService.InitFileFromNewTemplate(templateRequest.templateName);
             await _context.DiplomaTemplates.AddAsync(newTemplate);
             await _context.SaveChangesAsync();
         }
@@ -62,10 +60,11 @@ public class TemplateService
         template.IntroStyling = templateRequest.introStyling;
         template.Main = templateRequest.main;
         template.MainStyling = templateRequest.mainStyling;
-        template.BasePdf = templateRequest.basePdf;
+        // template.BasePdf = templateRequest.basePdf;
 
         try
         {
+            await _localFileStorageService.SaveFile(templateRequest.basePdf, templateRequest.templateName);
             _context.DiplomaTemplates.Update(template);
             await _context.SaveChangesAsync();
         }
@@ -87,6 +86,7 @@ public class TemplateService
 
         try
         {
+            await _localFileStorageService.DeleteFile(template.Name);
             _context.DiplomaTemplates.Remove(template);
             await _context.SaveChangesAsync();
         }

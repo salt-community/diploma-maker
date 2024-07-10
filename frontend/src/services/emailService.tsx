@@ -11,8 +11,6 @@ export async function postEmail(emailRequest: EmailSendRequest): Promise<void> {
         body: formData
     });
 
-    console.log(response);
-
     if(response.status == 409)
         throw new Error("");
     if(response.status == 404)

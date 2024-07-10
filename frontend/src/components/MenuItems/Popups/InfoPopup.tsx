@@ -49,6 +49,7 @@ export const InfoPopup = ({ show, infoPopupType, title, text, confirmClick, abor
   }
 
   useEffect(() => {
+    //@ts-ignore
     if(currentProgress >= 99){
       setFinished(true);
     }

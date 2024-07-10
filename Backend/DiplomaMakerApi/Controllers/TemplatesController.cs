@@ -10,7 +10,6 @@ public class TemplatesController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly TemplateService _templateService;
-
     public TemplatesController(IMapper mapper, TemplateService templateService)
     {
         _mapper = mapper;
@@ -38,7 +37,7 @@ public class TemplatesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TemplateResponseDto>> PostTemplate(TemplateRequestDto templateRequestDto)
+    public async Task<ActionResult<TemplateResponseDto>> PostTemplate(TemplatePostRequestDto templateRequestDto)
     {
         var template = await _templateService.PostTemplate(templateRequestDto);
         var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);

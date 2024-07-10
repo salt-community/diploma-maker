@@ -46,6 +46,7 @@
     max-height: 90vh;
     grid-column: 1 / 2;
     z-index: 1;
+    max-width: 125px;
 }
     .templatecreator-page__leftsidebar-menu{
         background-color: #171721;
@@ -89,6 +90,24 @@
                 font-size: 1.1rem;
                 font-weight: 400;
                 cursor: default;
+            }
+
+            .help-btn{
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .help-btn svg{
+                width: 35px;
+            }
+            .help-btn svg path{
+                fill: #ababba;
+                transition: all .15s ease-in-out;
+            }
+            .help-btn:hover svg path{
+                fill: #fff;
+                transition: all .15s ease-in-out;
             }
 
 
@@ -178,3 +197,17 @@
     visibility: hidden;
     background-color: #197eff !important;
 }
+
+/* THESE ARE THE FIELD SELECTORS */
+
+/* .pdfpreview div div div div div[title="header"]{
+    background-color: blue !important;
+}
+
+.pdfpreview div div div div div[title="main"]{
+    background-color: red !important;
+}
+
+.pdfpreview div div div div div[title="footer"]{
+    background-color: green !important;
+} */

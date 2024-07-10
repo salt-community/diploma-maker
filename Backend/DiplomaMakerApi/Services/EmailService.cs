@@ -21,7 +21,7 @@ public class EmailService(IConfiguration configuration, ILogger<EmailService> lo
             throw new ArgumentException("Invalid guid");
         }
 
-        if (diplomaByGuid.Email == null)
+        if (diplomaByGuid.Email == null || _email == null)
         {
             _logger.LogError("Invalid email address.");
             throw new ArgumentException("The user have no email set for them");

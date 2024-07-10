@@ -7,6 +7,12 @@
     box-sizing: border-box;
     position: relative;
 }
+.select-wrapper.disabled{
+    filter: blur(1px);
+    opacity: .75;
+    transition: all .5s cubic-bezier(0.19,0.22,0.43,0.99);
+    pointer-events: none;
+}
 
 .select-wrapper select {
     width: 100%;

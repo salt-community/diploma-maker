@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace DiplomaMakerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class @new : Migration
+    public partial class newbasepdf : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,16 +16,16 @@ namespace DiplomaMakerApi.Migrations
                 name: "TemplateStyles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    XPos = table.Column<double>(type: "float", nullable: true),
-                    YPos = table.Column<double>(type: "float", nullable: true),
-                    Width = table.Column<double>(type: "float", nullable: true),
-                    Height = table.Column<double>(type: "float", nullable: true),
-                    FontSize = table.Column<double>(type: "float", nullable: true),
-                    FontColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FontName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Alignment = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    XPos = table.Column<double>(type: "double precision", nullable: true),
+                    YPos = table.Column<double>(type: "double precision", nullable: true),
+                    Width = table.Column<double>(type: "double precision", nullable: true),
+                    Height = table.Column<double>(type: "double precision", nullable: true),
+                    FontSize = table.Column<double>(type: "double precision", nullable: true),
+                    FontColor = table.Column<string>(type: "text", nullable: true),
+                    FontName = table.Column<string>(type: "text", nullable: true),
+                    Alignment = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -35,16 +36,15 @@ namespace DiplomaMakerApi.Migrations
                 name: "DiplomaTemplates",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Footer = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FooterStylingId = table.Column<int>(type: "int", nullable: true),
-                    Intro = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IntroStylingId = table.Column<int>(type: "int", nullable: true),
-                    Main = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MainStylingId = table.Column<int>(type: "int", nullable: true),
-                    BasePdf = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Footer = table.Column<string>(type: "text", nullable: false),
+                    FooterStylingId = table.Column<int>(type: "integer", nullable: true),
+                    Intro = table.Column<string>(type: "text", nullable: false),
+                    IntroStylingId = table.Column<int>(type: "integer", nullable: true),
+                    Main = table.Column<string>(type: "text", nullable: false),
+                    MainStylingId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -70,12 +70,12 @@ namespace DiplomaMakerApi.Migrations
                 name: "Bootcamps",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    GuidId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    GraduationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DiplomaTemplateId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    GuidId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    GraduationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DiplomaTemplateId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,12 +92,12 @@ namespace DiplomaMakerApi.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    GuidId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BootcampId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    GuidId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    BootcampId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
