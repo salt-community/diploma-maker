@@ -34,6 +34,7 @@ public class TemplateService
             Name = templateRequest.templateName,
         };
         try{
+            await _localFileStorageService.InitFileFromNewTemplate(templateRequest.templateName);
             await _context.DiplomaTemplates.AddAsync(newTemplate);
             await _context.SaveChangesAsync();
         }

@@ -45,7 +45,7 @@ namespace DiplomaMakerApi.Services
                 throw new InvalidOperationException("The default template cannot be deleted.");
             }
 
-            var filePath = Path.Combine(_storagePath, templateName);
+            var filePath = Path.Combine(_storagePath, templateName + ".pdf");
 
             if (File.Exists(filePath))
             {
@@ -55,7 +55,7 @@ namespace DiplomaMakerApi.Services
             return false;
         }
         // This Copies Default.pdf and renames it to new template
-        public void InitFileFromNewTemplate(string templateName)
+        public async Task InitFileFromNewTemplate(string templateName)
         {
             var sourceFilePath = Path.Combine(_storagePath, "Default.pdf");
             var destinationFilePath = Path.Combine(_storagePath, templateName + ".pdf");
