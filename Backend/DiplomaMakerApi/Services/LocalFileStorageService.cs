@@ -54,5 +54,18 @@ namespace DiplomaMakerApi.Services
             }
             return false;
         }
+        // This Copies Default.pdf and renames it to new template
+        public void InitFileFromNewTemplate(string templateName)
+        {
+            var sourceFilePath = Path.Combine(_storagePath, "Default.pdf");
+            var destinationFilePath = Path.Combine(_storagePath, templateName + ".pdf");
+
+            if (!File.Exists(sourceFilePath))
+            {
+                throw new FileNotFoundException("The default template file does not exist.");
+            }
+
+            File.Copy(sourceFilePath, destinationFilePath, overwrite: true);
+        }
     }
 }
