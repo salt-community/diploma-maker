@@ -28,5 +28,15 @@ namespace DiplomaMakerApi.Services
             }
             return filePath;
         }
+
+        public string GetFilePath(string templateName)
+        {
+            var filePath = Path.Combine(_storagePath, templateName);
+            if (File.Exists(filePath))
+            {
+                return filePath;
+            }
+            return null;
+        }
     }
 }
