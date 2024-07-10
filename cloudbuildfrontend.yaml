@@ -1,0 +1,18 @@
+steps:
+# Build container
+   - name: 'gcr.io/cloud-builders/docker'
+     args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '-f', 'Dockerfile', '.']
+     dir: frontend
+# Push the Containers to the Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest']
+
+# Deploy Containers to Cloud Run
+   - name: 'gcr.io/cloud-builders/gcloud'
+     args: ['run', 'deploy', 'frontend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+
+images:
+  - 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest'
+
+options:
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
