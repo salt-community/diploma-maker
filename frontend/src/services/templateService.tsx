@@ -12,6 +12,7 @@ export async function getAllTemplates(): Promise<TemplateResponse[]> {
     await Promise.all(results.map(async result => {
         result.basePdf = await getTemplatePdfFile(result.basePdf);
     }));
+    
     return results;
 }
 
@@ -23,6 +24,8 @@ export async function getTemplateById(id: string): Promise<TemplateResponse> {
         throw new Error('Failed to get Template!');
     }
     const result = await response.json() as TemplateResponse;
+    result.basePdf = await getTemplatePdfFile(result.basePdf);
+
     return result;
 }
 
