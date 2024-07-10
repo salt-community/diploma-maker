@@ -10,11 +10,13 @@ public class TemplatesController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly TemplateService _templateService;
+    private readonly LocalFileStorageService _localFileStorageService;
 
-    public TemplatesController(IMapper mapper, TemplateService templateService)
+    public TemplatesController(IMapper mapper, TemplateService templateService, LocalFileStorageService localFileStorageService)
     {
         _mapper = mapper;
         _templateService = templateService;
+        _localFileStorageService = localFileStorageService;
     }
 
     [HttpGet]
