@@ -12,7 +12,7 @@ export async function getAllTemplates(): Promise<TemplateResponse[]> {
     await Promise.all(results.map(async result => {
         result.basePdf = await getTemplatePdfFile(result.basePdf);
     }));
-    
+
     return results;
 }
 
@@ -67,14 +67,31 @@ export async function deleteTemplateById(id: number): Promise<void> {
 
 
 export async function putTemplate(id: number, templateRequest: TemplateRequest): Promise<TemplateResponse> {
-    const formattedRequest = {
-        ...templateRequest,
-    };
+    // const formattedRequest = {
+    //     ...templateRequest,
+    // };
+
+    // const response = await fetch(`${apiUrl}/api/templates/${id}`, {
+    //     method: 'PUT',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(formattedRequest)
+    // });
+
+    const basePdfBlob = stringToBlob(templateRequest.basePdf, 'application/pdf');
+
+    const formData = new FormData();
+
+    Object.entries(templateRequest).forEach(([key, value]) => {
+        if (key === 'basePdf') {
+            formData.append(key, basePdfBlob, 'basePdf.pdf');
+        } else if (value !== undefined) {
+            formData.append(key, value instanceof Object ? JSON.stringify(value) : value);
+        }
+    });
 
     const response = await fetch(`${apiUrl}/api/templates/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formattedRequest)
+        body: formData
     });
 
     if (response.status === 404) {
@@ -86,4 +103,14 @@ export async function putTemplate(id: number, templateRequest: TemplateRequest):
 
     const result = await response.json() as TemplateResponse;
     return result;
+}
+
+function stringToBlob(base64: string, contentType: string): Blob {
+    const byteCharacters = atob(base64.split(',')[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: contentType });
 }

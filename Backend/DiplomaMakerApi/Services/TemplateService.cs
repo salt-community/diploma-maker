@@ -6,11 +6,12 @@ namespace DiplomaMakerApi.Services;
 public class TemplateService
 {
     private readonly DiplomaMakingContext _context;
+    private readonly LocalFileStorageService _localFileStorageService;
 
-
-    public TemplateService(DiplomaMakingContext context)
+    public TemplateService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService)
     {
         _context = context;
+        _localFileStorageService = localFileStorageService;
     }
 
     public async Task<List<DiplomaTemplate>> GetTemplates(){
