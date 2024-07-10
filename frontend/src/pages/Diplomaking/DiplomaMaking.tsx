@@ -236,7 +236,6 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
             className="pdfpreview-container"
             ref={uiRef}
             style={{ width: "100%", height: "calc(82vh - 68px)" }}
-          // onBlur={saveInputFieldsHandler}
           />
         }
         {saltData &&
