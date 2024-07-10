@@ -55,7 +55,6 @@ export const templateInputsFromBootcampData = (selectedBootcampData: any, name: 
 }
 
 export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selectedBootcampIndex: number, inputs: any) => {
-    console.log(saltData[selectedBootcampIndex])
     const template: Template = getTemplate(
         inputs,
         { 
@@ -277,7 +276,6 @@ export const createBlankTemplate = (templateName: string) => {
         intro: "",
         main: "",
         footer: "",
-        basePdf: "",
       }
     return blankTemplate;
 }

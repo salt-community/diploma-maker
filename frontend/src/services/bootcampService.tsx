@@ -1,4 +1,5 @@
 import { BootcampRequest, BootcampResponse } from "../util/types";
+import { getTemplatePdfFile } from "./fileService";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -22,8 +23,13 @@ export async function getBootcamps(): Promise<BootcampResponse[]>{
     const response = await fetch(`${apiUrl}/api/Bootcamps`);
     if (!response.ok)
         throw new Error("Failed to get bootcamps!")
-    const result = await response.json() as BootcampResponse[]
-    return result;
+    const results = await response.json() as BootcampResponse[]
+
+    await Promise.all(results.map(async result => {
+        result.diplomaTemplate.basePdf = await getTemplatePdfFile(result.diplomaTemplate.basePdf);
+    }));
+
+    return results;
 }
 
 export async function getBootcampById(guidId: string): Promise<BootcampResponse>{
@@ -31,6 +37,9 @@ export async function getBootcampById(guidId: string): Promise<BootcampResponse>
     if (!response.ok)
         throw new Error("Failed to get bootcamp!")
     const result = await response.json() as  BootcampResponse;
+
+    result.diplomaTemplate.basePdf = await getTemplatePdfFile(result.diplomaTemplate.basePdf);
+    
     return result;
 }
 

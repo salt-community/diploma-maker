@@ -87,7 +87,7 @@ export type TemplateRequest = {
     introStyling?: Style;
     main: string;
     mainStyling?: Style;
-    basePdf: string;
+    basePdf?: string;
 }
 
 export type EmailSendRequest = {
