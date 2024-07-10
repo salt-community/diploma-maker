@@ -22,5 +22,8 @@ WORKDIR /app
 
 COPY --from=build /app/out .
 
+RUN mkdir -p /app/Blob/DiplomaPdfs
+COPY Blob/DiplomaPdfs/Default.pdf /app/Blob/DiplomaPdfs/Default.pdf
+
 # Start the application
 ENTRYPOINT ["dotnet", "DiplomaMakerApi.dll"]
