@@ -38,5 +38,21 @@ namespace DiplomaMakerApi.Services
             }
             return null;
         }
+
+        public bool DeleteFile(string templateName)
+        {
+            if(templateName == "Default"){
+                throw new InvalidOperationException("The default template cannot be deleted.");
+            }
+
+            var filePath = Path.Combine(_storagePath, templateName);
+            
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+                return true;
+            }
+            return false;
+        }
     }
 }
