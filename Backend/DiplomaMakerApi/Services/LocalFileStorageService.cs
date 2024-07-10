@@ -54,7 +54,7 @@ namespace DiplomaMakerApi.Services
             }
             return false;
         }
-        // This Copies Default.pdf and renames it to new template
+        // This Copies Default.pdf and renames it to new templateName.pdf
         public async Task InitFileFromNewTemplate(string templateName)
         {
             var sourceFilePath = Path.Combine(_storagePath, "Default.pdf");

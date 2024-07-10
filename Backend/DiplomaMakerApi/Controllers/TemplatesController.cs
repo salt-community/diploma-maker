@@ -10,13 +10,10 @@ public class TemplatesController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly TemplateService _templateService;
-    private readonly LocalFileStorageService _localFileStorageService;
-
-    public TemplatesController(IMapper mapper, TemplateService templateService, LocalFileStorageService localFileStorageService)
+    public TemplatesController(IMapper mapper, TemplateService templateService)
     {
         _mapper = mapper;
         _templateService = templateService;
-        _localFileStorageService = localFileStorageService;
     }
 
     [HttpGet]
@@ -72,13 +69,6 @@ public class TemplatesController : ControllerBase
         }
         var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);
         return Ok(templateResponseDto);
-    }
-
-    [HttpPost("/uploadfile")]
-    public async Task<ActionResult> PostFile(IFormFile formFile)
-    {
-        await _localFileStorageService.SaveFile(formFile, "Default");
-        return Ok();
     }
 }
 
