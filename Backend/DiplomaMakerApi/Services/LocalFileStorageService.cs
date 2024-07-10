@@ -2,7 +2,7 @@ namespace DiplomaMakerApi.Services
 {
     public class LocalFileStorageService
     {
-        private readonly string _storagePath = Path.Combine(Directory.GetCurrentDirectory(), "Blob/Pdfs");
+        private readonly string _storagePath = Path.Combine(Directory.GetCurrentDirectory(), "Blob/DiplomaPdfs");
 
         public LocalFileStorageService()
         {
