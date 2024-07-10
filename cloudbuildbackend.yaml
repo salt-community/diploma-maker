@@ -3,8 +3,6 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest', '-f', 'Dockerfile', '.']
     dir: Backend/DiplomaMakerApi/
-
-
 # Push the Containers to the Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest']
