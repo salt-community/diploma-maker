@@ -1,4 +1,5 @@
 import { TemplateRequest, TemplateResponse } from "../util/types";
+import { getTemplatePdfFile } from "./fileService";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -6,10 +7,15 @@ export async function getAllTemplates(): Promise<TemplateResponse[]> {
     const response = await fetch(`${apiUrl}/api/templates`);
     if (!response.ok)
         throw new Error("Failed to get templates!");
-    const result = await response.json() as TemplateResponse[];
-   
-    return result;
+    const results = await response.json() as TemplateResponse[];
+
+    await Promise.all(results.map(async result => {
+        result.basePdf = await getTemplatePdfFile(result.basePdf);
+    }));
+    return results;
 }
+
+
 
 export async function getTemplateById(id: string): Promise<TemplateResponse> {
     const response = await fetch(`${apiUrl}/api/templates/${id}`);
