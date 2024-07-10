@@ -12,9 +12,9 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public string SaveFile(IFormFile file, string fileName)
+       public string SaveFile(IFormFile file, string templateName)
         {
-            var filePath = Path.Combine(_storagePath, $"{Guid.NewGuid()}_{file.FileName}");
+            var filePath = Path.Combine(_storagePath, $"{templateName}");
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 file.CopyTo(stream);
