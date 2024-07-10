@@ -17,7 +17,12 @@ namespace DiplomaMakerApi.Controllers
         [HttpGet("{fileName}")]
         public IActionResult GetFile(string fileName)
         {
-            var filePath = _localFileStorageService.GetFilePath(fileName + ".pdf");
+            if (!fileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest();
+            }
+
+            var filePath = _localFileStorageService.GetFilePath(fileName);
 
             if (filePath == null)
             {

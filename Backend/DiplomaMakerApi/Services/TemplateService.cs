@@ -62,7 +62,7 @@ public class TemplateService
         template.IntroStyling = templateRequest.introStyling;
         template.Main = templateRequest.main;
         template.MainStyling = templateRequest.mainStyling;
-        template.BasePdf = templateRequest.basePdf;
+        // template.BasePdf = templateRequest.basePdf;
 
         try
         {
