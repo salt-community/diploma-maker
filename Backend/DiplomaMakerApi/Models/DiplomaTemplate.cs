@@ -14,6 +14,5 @@ public class DiplomaTemplate
 
     public string Main {get; set;} =  "{studentname}";
     public TemplateStyle? MainStyling { get; set; }
-
-    public string BasePdf  => Path.Combine("Blob", Name + ".pdf").Replace("\\", "/");
+    public string BasePdf => Path.Combine("Blob", Name + ".pdf").Replace("\\", "/");
 } 

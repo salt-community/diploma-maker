@@ -60,10 +60,6 @@ namespace DiplomaMakerApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BasePdf")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Footer")
                         .IsRequired()
                         .HasColumnType("text");

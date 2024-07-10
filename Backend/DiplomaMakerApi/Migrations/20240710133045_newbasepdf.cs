@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaMakerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class postgres : Migration
+    public partial class newbasepdf : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -44,8 +44,7 @@ namespace DiplomaMakerApi.Migrations
                     Intro = table.Column<string>(type: "text", nullable: false),
                     IntroStylingId = table.Column<int>(type: "integer", nullable: true),
                     Main = table.Column<string>(type: "text", nullable: false),
-                    MainStylingId = table.Column<int>(type: "integer", nullable: true),
-                    BasePdf = table.Column<string>(type: "text", nullable: false)
+                    MainStylingId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {

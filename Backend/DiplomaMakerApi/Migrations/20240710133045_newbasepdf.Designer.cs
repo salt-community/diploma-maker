@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaMakerApi.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240709105650_postgres")]
-    partial class postgres
+    [Migration("20240710133045_newbasepdf")]
+    partial class newbasepdf
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,10 +62,6 @@ namespace DiplomaMakerApi.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("BasePdf")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("Footer")
                         .IsRequired()

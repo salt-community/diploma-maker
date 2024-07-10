@@ -7,7 +7,7 @@ public static class SeedData
     {
         using (var _context = new DiplomaMakingContext(serviceProvider.GetRequiredService<DbContextOptions<DiplomaMakingContext>>()))
         {
-            _context.Database.EnsureDeleted();
+            // _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
             
             DiplomaTemplate diploma = new DiplomaTemplate { Name = "Default" };
