@@ -89,6 +89,7 @@ public class TemplateService
 
         try
         {
+            await _localFileStorageService.DeleteFile(template.Name);
             _context.DiplomaTemplates.Remove(template);
             await _context.SaveChangesAsync();
         }

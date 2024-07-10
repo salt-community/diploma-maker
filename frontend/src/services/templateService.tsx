@@ -30,6 +30,7 @@ export async function getTemplateById(id: string): Promise<TemplateResponse> {
 }
 
 export async function postTemplate(templateRequest: TemplateRequest): Promise<void> {
+    
     const formattedRequest = {
         ...templateRequest,
     };
