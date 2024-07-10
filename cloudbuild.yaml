@@ -1,29 +1,63 @@
 steps:
-# Build containers
+  # Check for changes in the backend directory
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'sh'
+    args: ['-c', 'if git diff --quiet HEAD^ HEAD -- Backend/DiplomaMakerApi/; then echo "NO_CHANGES"; else echo "CHANGES"; fi']
+    id: backend-check
+    waitFor: ["-"]
+
+  # Check for changes in the frontend directory
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'sh'
+    args: ['-c', 'if git diff --quiet HEAD^ HEAD -- frontend/; then echo "NO_CHANGES"; else echo "CHANGES"; fi']
+    id: frontend-check
+    waitFor: ["-"]
+
+  # Build backend container if changes are detected
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest', '-f', 'Dockerfile', '.']
     dir: Backend/DiplomaMakerApi/
+    waitFor: ['backend-check']
+    when:
+      condition: 
+        match:
+          value: '$BUILD_STEP_OUTPUT.backend-check.0'
+          match: 'CHANGES'
 
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '-f', 'Dockerfile', '.']
-  #   dir: frontend
-# Push the Containers to the Container Registry
+  # Build frontend container if changes are detected
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '-f', 'Dockerfile', '.']
+    dir: frontend
+    waitFor: ['frontend-check']
+    when:
+      condition: 
+        match:
+          value: '$BUILD_STEP_OUTPUT.frontend-check.0'
+          match: 'CHANGES'
+
+  # Push backend container if built
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest']
+    waitFor: ['+']
 
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest']
+  # Push frontend container if built
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest']
+    waitFor: ['+']
 
-# Deploy Containers to Cloud Run
+  # Deploy backend to Cloud Run if pushed
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['run', 'deploy', 'backend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+    waitFor: ['+']
 
-  # - name: 'gcr.io/cloud-builders/gcloud'
-  #   args: ['run', 'deploy', 'frontend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+  # Deploy frontend to Cloud Run if pushed
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['run', 'deploy', 'frontend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+    waitFor: ['+']
 
 images:
   - 'gcr.io/pgp-sandbox/diplomamakers-backend:latest'
-  # - 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest'
+  - 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest'
 
 options:
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
