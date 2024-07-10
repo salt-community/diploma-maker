@@ -1,7 +1,9 @@
 import { TemplateRequest, TemplateResponse } from "../util/types";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export async function getAllTemplates(): Promise<TemplateResponse[]> {
-    const response = await fetch(`http://localhost:5258/api/templates`);
+    const response = await fetch(`${apiUrl}/api/templates`);
     if (!response.ok)
         throw new Error("Failed to get templates!");
     const result = await response.json() as TemplateResponse[];
@@ -10,7 +12,7 @@ export async function getAllTemplates(): Promise<TemplateResponse[]> {
 }
 
 export async function getTemplateById(id: string): Promise<TemplateResponse> {
-    const response = await fetch(`http://localhost:5258/api/templates/${id}`);
+    const response = await fetch(`${apiUrl}/api/templates/${id}`);
     if (!response.ok) {
         throw new Error('Failed to get Template!');
     }
@@ -23,7 +25,7 @@ export async function postTemplate(templateRequest: TemplateRequest): Promise<vo
         ...templateRequest,
     };
 
-    const response = await fetch('http://localhost:5258/api/templates', {
+    const response = await fetch(`${apiUrl}/api/templates`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedRequest)
@@ -43,7 +45,7 @@ export async function postTemplate(templateRequest: TemplateRequest): Promise<vo
 }
 
 export async function deleteTemplateById(id: number): Promise<void> {
-    const response = await fetch(`http://localhost:5258/api/templates/${id}`, {
+    const response = await fetch(`${apiUrl}/api/templates/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
     });
@@ -60,7 +62,7 @@ export async function putTemplate(id: number, templateRequest: TemplateRequest):
         ...templateRequest,
     };
 
-    const response = await fetch(`http://localhost:5258/api/templates/${id}`, {
+    const response = await fetch(`${apiUrl}/api/templates/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedRequest)
