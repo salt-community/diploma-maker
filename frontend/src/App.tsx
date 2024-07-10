@@ -45,7 +45,7 @@ export default function App() {
     await refresh();
   }
 
-  // students
+  //students
   async function deleteStudent(id: string){
     await deleteStudentById(id);
     await refresh();
@@ -83,7 +83,7 @@ export default function App() {
     await deleteTemplateById(id);
     await refresh();
   }
-  // email
+  //email
   async function sendEmail(emailRequest: EmailSendRequest){
     await postEmail(emailRequest)
   }
