@@ -67,7 +67,7 @@ public class TemplateService
 
         try
         {
-            _localFileStorageService.SaveFile(templateRequest.basePdf, templateRequest.templateName);
+            await _localFileStorageService.SaveFile(templateRequest.basePdf, templateRequest.templateName);
             _context.DiplomaTemplates.Update(template);
             await _context.SaveChangesAsync();
         }

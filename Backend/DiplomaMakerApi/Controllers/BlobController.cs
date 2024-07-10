@@ -15,14 +15,14 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpGet("{fileName}")]
-        public IActionResult GetFile(string fileName)
+        public async Task<IActionResult> GetFile(string fileName)
         {
             if (!fileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest();
             }
 
-            var filePath = _localFileStorageService.GetFilePath(fileName);
+            var filePath = await _localFileStorageService.GetFilePath(fileName);
 
             if (filePath == null)
             {

@@ -12,7 +12,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public string SaveFile(IFormFile file, string templateName)
+        public async Task<string> SaveFile(IFormFile file, string templateName)
         {
             var fileExtension = Path.GetExtension(file.FileName);
 
@@ -29,7 +29,7 @@ namespace DiplomaMakerApi.Services
             return filePath;
         }
 
-        public string GetFilePath(string templateName)
+        public async Task<string> GetFilePath(string templateName)
         {
             var filePath = Path.Combine(_storagePath, templateName);
             if (File.Exists(filePath))
@@ -39,14 +39,14 @@ namespace DiplomaMakerApi.Services
             return null;
         }
 
-        public bool DeleteFile(string templateName)
+        public async Task<bool> DeleteFile(string templateName)
         {
             if(templateName == "Default"){
                 throw new InvalidOperationException("The default template cannot be deleted.");
             }
 
             var filePath = Path.Combine(_storagePath, templateName);
-            
+
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);

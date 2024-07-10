@@ -77,7 +77,7 @@ public class TemplatesController : ControllerBase
     [HttpPost("/uploadfile")]
     public async Task<ActionResult> PostFile(IFormFile formFile)
     {
-        _localFileStorageService.SaveFile(formFile, "Default");
+        await _localFileStorageService.SaveFile(formFile, "Default");
         return Ok();
     }
 }
