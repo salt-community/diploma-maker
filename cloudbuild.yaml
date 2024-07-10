@@ -2,58 +2,54 @@ steps:
   # Check for changes in the backend directory
   - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'sh'
-    args: ['-c', 'if git diff --quiet HEAD^ HEAD -- Backend/DiplomaMakerApi/; then echo "NO_CHANGES"; else echo "CHANGES"; fi']
+    args: ['-c', 'if git diff --quiet HEAD^ HEAD -- Backend/DiplomaMakerApi/; then echo "NO_CHANGES_BACKEND" > /workspace/backend_status; else echo "CHANGES_BACKEND" > /workspace/backend_status; fi']
     id: backend-check
     waitFor: ["-"]
 
   # Check for changes in the frontend directory
   - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'sh'
-    args: ['-c', 'if git diff --quiet HEAD^ HEAD -- frontend/; then echo "NO_CHANGES"; else echo "CHANGES"; fi']
+    args: ['-c', 'if git diff --quiet HEAD^ HEAD -- frontend/; then echo "NO_CHANGES_FRONTEND" > /workspace/frontend_status; else echo "CHANGES_FRONTEND" > /workspace/frontend_status; fi']
     id: frontend-check
     waitFor: ["-"]
 
   # Build backend container if changes are detected
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest', '-f', 'Dockerfile', '.']
+    entrypoint: 'sh'
+    args: ['-c', 'if [ $(cat /workspace/backend_status) = "CHANGES_BACKEND" ]; then docker build -t gcr.io/pgp-sandbox/diplomamakers-backend:latest -f Dockerfile .; fi']
     dir: Backend/DiplomaMakerApi/
     waitFor: ['backend-check']
-    when:
-      condition: 
-        match:
-          value: '$BUILD_STEP_OUTPUT.backend-check.0'
-          match: 'CHANGES'
 
   # Build frontend container if changes are detected
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '-f', 'Dockerfile', '.']
+    entrypoint: 'sh'
+    args: ['-c', 'if [ $(cat /workspace/frontend_status) = "CHANGES_FRONTEND" ]; then docker build -t gcr.io/pgp-sandbox/diplomamakers-frontend:latest -f Dockerfile .; fi']
     dir: frontend
     waitFor: ['frontend-check']
-    when:
-      condition: 
-        match:
-          value: '$BUILD_STEP_OUTPUT.frontend-check.0'
-          match: 'CHANGES'
 
   # Push backend container if built
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest']
-    waitFor: ['+']
+    entrypoint: 'sh'
+    args: ['-c', 'if [ $(cat /workspace/backend_status) = "CHANGES_BACKEND" ]; then docker push gcr.io/pgp-sandbox/diplomamakers-backend:latest; fi']
+    waitFor: ['backend-check']
 
   # Push frontend container if built
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest']
-    waitFor: ['+']
+    entrypoint: 'sh'
+    args: ['-c', 'if [ $(cat /workspace/frontend_status) = "CHANGES_FRONTEND" ]; then docker push gcr.io/pgp-sandbox/diplomamakers-frontend:latest; fi']
+    waitFor: ['frontend-check']
 
   # Deploy backend to Cloud Run if pushed
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['run', 'deploy', 'backend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
-    waitFor: ['+']
+    entrypoint: 'sh'
+    args: ['-c', 'if [ $(cat /workspace/backend_status) = "CHANGES_BACKEND" ]; then gcloud run deploy backend-diploma --image gcr.io/pgp-sandbox/diplomamakers-backend:latest --platform managed --region us-central1 --allow-unauthenticated; fi']
+    waitFor: ['backend-check']
 
   # Deploy frontend to Cloud Run if pushed
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['run', 'deploy', 'frontend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
-    waitFor: ['+']
+    entrypoint: 'sh'
+    args: ['-c', 'if [ $(cat /workspace/frontend_status) = "CHANGES_FRONTEND" ]; then gcloud run deploy frontend-diploma --image gcr.io/pgp-sandbox/diplomamakers-frontend:latest --platform managed --region us-central1 --allow-unauthenticated; fi']
+    waitFor: ['frontend-check']
 
 images:
   - 'gcr.io/pgp-sandbox/diplomamakers-backend:latest'
