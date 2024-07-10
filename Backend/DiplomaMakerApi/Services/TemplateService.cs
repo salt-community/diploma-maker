@@ -27,15 +27,11 @@ public class TemplateService
         return await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
     }
 
-    public async Task<DiplomaTemplate> PostTemplate(TemplateRequestDto templateRequest)
+    public async Task<DiplomaTemplate> PostTemplate(TemplatePostRequestDto templateRequest)
     {
         var newTemplate = new DiplomaTemplate()
         {
             Name = templateRequest.templateName,
-            // footer = templateRequest.footer,
-            // intro = templateRequest.intro,
-            // studentName = templateRequest.studentName,
-            // basePdf = templateRequest.basePdf,
         };
         try{
             await _context.DiplomaTemplates.AddAsync(newTemplate);

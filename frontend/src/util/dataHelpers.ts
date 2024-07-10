@@ -276,7 +276,6 @@ export const createBlankTemplate = (templateName: string) => {
         intro: "",
         main: "",
         footer: "",
-        basePdf: "",
       }
     return blankTemplate;
 }
