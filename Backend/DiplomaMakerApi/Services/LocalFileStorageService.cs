@@ -14,6 +14,13 @@ namespace DiplomaMakerApi.Services
 
         public string SaveFile(IFormFile file, string templateName)
         {
+            var fileExtension = Path.GetExtension(file.FileName);
+
+            if (!templateName.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                templateName += fileExtension;
+            }
+
             var filePath = Path.Combine(_storagePath, templateName);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {

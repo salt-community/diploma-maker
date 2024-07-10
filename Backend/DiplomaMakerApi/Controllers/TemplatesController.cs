@@ -73,5 +73,12 @@ public class TemplatesController : ControllerBase
         var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);
         return Ok(templateResponseDto);
     }
+
+    [HttpPost("/uploadfile")]
+    public async Task<ActionResult> PostFile(IFormFile formFile)
+    {
+        _localFileStorageService.SaveFile(formFile, "Default");
+        return Ok();
+    }
 }
 
