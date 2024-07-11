@@ -61,6 +61,7 @@ public class TemplateService
         template.Main = templateRequest.main;
         template.MainStyling = templateRequest.mainStyling;
         // template.BasePdf = templateRequest.basePdf;
+        template.LastUpdated = DateTime.UtcNow;
 
         try
         {
