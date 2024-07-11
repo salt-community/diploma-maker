@@ -16,4 +16,5 @@ public class TemplateResponseDto
     public TemplateStyle? MainStyling { get; set; }
 
     public required string BasePdf { get; set;}
+    public DateTime LastUpdated {get; set;}
 }
