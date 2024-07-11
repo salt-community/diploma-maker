@@ -25,6 +25,7 @@
     left: 50%;
     transform: translateY(-50%) translateX(-50%);
     color: #ababba;
+    opacity: .5;
     font-size: .85rem;
     font-weight: 600;
 }
