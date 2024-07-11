@@ -19,6 +19,7 @@ import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConf
 import { EditSection } from "../../components/MenuItems/TemplateCreatorPage/EditSection";
 import { TextEditSection } from "../../components/MenuItems/TemplateCreatorPage/TextEditSection";
 import { HelpIcon } from "../../components/MenuItems/Icons/HelpIcon";
+import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -504,6 +505,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         <div className="templatecreator-page__preview" style={{width: "100%",overflow: "hidden",height: `calc(50vh - 68px)`,}}>
           <h2>{currentTemplate?.templateName}</h2>
           <div className="pdfpreview" ref={designerRef} style={{ height: `80%` }} onClick={() => setRightSideBarPage(1)}/>
+          {!templates && <SpinnerDefault classOverride="spinner" />}
         </div>
       </section>
       <section className="templatecreator-page__rightsidebar">
@@ -607,5 +609,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         </div>
       </section>
     </main>
+    
   );
 };

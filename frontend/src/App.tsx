@@ -11,13 +11,16 @@ import { deleteStudentById, postMultipleStudents, updateSingleStudent } from "./
 import { TemplateCreatorPage } from "./pages/TemplateCreator/TemplateCreatorPage";
 import { deleteTemplateById, getAllTemplates, postTemplate, putTemplate } from "./services/templateService";
 import { postEmail } from "./services/emailService";
+import { delay } from "./util/helper";
+import { LoadingMessageProvider, useLoadingMessage } from "./components/Contexts/LoadingMessageContext";
 
 export default function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
   const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
+  const { setLoadingMessage, loadingMessage } = useLoadingMessage();
 
   async function getBootcampsFromBackend() {
-    const newBootcamps: BootcampResponse[] = await getBootcamps(); 
+    const newBootcamps: BootcampResponse[] = await getBootcamps(setLoadingMessage);
     setBootcamps(newBootcamps);
   }
 
@@ -64,7 +67,7 @@ export default function App() {
    
   // templates
   async function getTemplates() {
-    const templates: TemplateResponse[] = await getAllTemplates(); 
+    const templates: TemplateResponse[] = await getAllTemplates(setLoadingMessage); 
     setTemplates(templates);
   }
 
@@ -89,8 +92,8 @@ export default function App() {
   }
 
   async function refresh(){
-    const newBootcamps = await getBootcamps();
-    const newTemplates = await getAllTemplates();
+    const newBootcamps = await getBootcamps(setLoadingMessage);
+    const newTemplates = await getAllTemplates(setLoadingMessage);
     setBootcamps(newBootcamps);
     setTemplates(newTemplates);
   }

@@ -40,6 +40,12 @@
                 height: 100%;
                 min-width: 1000px !important;
             }
+            .spinner{
+                position: absolute;
+                top: 50%;
+                left: 40%;
+                transform: translateX(-50%) translateY(-50%);
+            }
 
 .templatecreator-page__leftsidebar{
     padding: 7% 0 0 7%;

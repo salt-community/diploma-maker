@@ -13,6 +13,22 @@
     align-self: center;
     width: 200px;
 }
+.spinner-diplomamaking{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+.loading-title{
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    color: #ababba;
+    opacity: .5;
+    font-size: .85rem;
+    font-weight: 600;
+}
 
 
 .pdfpreview-container div div div div:nth-of-type(1){
