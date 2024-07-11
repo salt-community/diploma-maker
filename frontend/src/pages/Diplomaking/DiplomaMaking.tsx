@@ -6,6 +6,7 @@ import {
   getPlugins,
   generatePDF,
   newGenerateCombinedPDF,
+  mapBootcampToSaltData,
 } from "../../util/helper";
 import DiplomaDataForm from "../../components/Forms/DiplomaDataForm";
 import { useParams } from "react-router-dom";
@@ -20,6 +21,7 @@ import { makeTemplateInput } from "../../templates/baseTemplate";
 import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../../util/dataHelpers";
 import { Template } from "@pdfme/common";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
+import { Popup404 } from "../../components/MenuItems/Popups/Popup404";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -46,28 +48,10 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
         setSelectedBootcampIndex(Number(selectedBootcamp));
       }
       if (bootcamps[selectedBootcampIndex].students.length === 0) {
-        setSaltData([saltDefaultData]);
-        
-      } else {
-
-        const initialSaltData: SaltData[] = bootcamps.map((bootcamp) => {
-          if (bootcamp.students.length === 0) {
-            return {
-              classname: bootcamp.name,
-              dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
-              students: saltDefaultData.students,
-              template: bootcamp.diplomaTemplate
-            };
-          } else {
-            return {
-              classname: bootcamp.name,
-              dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
-              students: bootcamp.students,
-              template: bootcamp.diplomaTemplate
-            };
-          }
-        });
-        setSaltData(initialSaltData);
+        setSaltData([saltDefaultData]); 
+      } 
+      else {
+        setSaltData(bootcamps.map(b => mapBootcampToSaltData(b)));
       }
     }
   }, [bootcamps]);
@@ -196,7 +180,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
   const saveInputFieldsHandler = () => {
     if (uiInstance.current && saltData) {
       const inputs = uiInstance.current.getInputs();
-      const newName = inputs[0].name;
+      const newName = inputs[0].main;
       const currentName = saltData[selectedBootcampIndex].students[currentPageIndex].name;
 
       if (currentName === newName) {
@@ -231,15 +215,14 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
           <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler} />
           <SaveButton textfield="" saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler} />
         </header>
-        {saltData &&
-          <div
+        { (saltData && saltData[selectedBootcampIndex].students.length > 0) ?
+        <>
+           <div
             className="pdfpreview-container"
             ref={uiRef}
             style={{ width: "100%", height: "calc(82vh - 68px)" }}
           // onBlur={saveInputFieldsHandler}
           />
-        }
-        {saltData &&
           <PaginationMenu
             containerClassOverride="flex justify-center mt-4 pagination-menu"
             currentPage={currentPageIndex + 1}
@@ -247,8 +230,9 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
             handleNextPage={nextTemplateInstanceHandler}
             handlePrevPage={prevTemplateInstanceHandler}
           />
-        }
-      </section>
+        </> : 
+         <Popup404 text='No student names found.'/>
+        }      </section>
       <section className="flex-1 flex flex-col ">
         {saltData &&
           <DiplomaDataForm
