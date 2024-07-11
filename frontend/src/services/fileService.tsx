@@ -1,12 +1,15 @@
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export async function getTemplatePdfFile(url: string, lastUpdated?: Date): Promise<string> {
+export async function getTemplatePdfFile(url: string, lastUpdated: Date): Promise<string> {
     const localStorageKey = `pdf_${url}`;
     const cachedPdf = localStorage.getItem(localStorageKey);
 
     if (cachedPdf) {
-        const { pdfData } = JSON.parse(cachedPdf);
-        return pdfData;
+        const { pdfData, dateAdded } = JSON.parse(cachedPdf);
+
+        if (lastUpdated && new Date(lastUpdated).toISOString() === dateAdded) {
+            return pdfData;
+        }
     }
 
     const pdfResponse = await fetch(`${apiUrl}/api/${url}`);
@@ -24,7 +27,7 @@ export async function getTemplatePdfFile(url: string, lastUpdated?: Date): Promi
 
     const dataToStore = {
         pdfData,
-        dateAdded: new Date().toISOString()
+        dateAdded: lastUpdated
     };
 
     localStorage.setItem(localStorageKey, JSON.stringify(dataToStore));
