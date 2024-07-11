@@ -77,6 +77,7 @@ export type TemplateResponse = {
     main: string;
     mainStyling?: Style;
     basePdf: string;
+    lastUpdated?: Date;
 }
 
 export type TemplateRequest = {

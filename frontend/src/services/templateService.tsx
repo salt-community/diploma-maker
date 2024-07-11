@@ -10,7 +10,7 @@ export async function getAllTemplates(): Promise<TemplateResponse[]> {
     const results = await response.json() as TemplateResponse[];
 
     await Promise.all(results.map(async result => {
-        result.basePdf = await getTemplatePdfFile(result.basePdf);
+        result.basePdf = await getTemplatePdfFile(result.basePdf, result.lastUpdated);
     }));
 
     return results;
@@ -24,7 +24,7 @@ export async function getTemplateById(id: string): Promise<TemplateResponse> {
         throw new Error('Failed to get Template!');
     }
     const result = await response.json() as TemplateResponse;
-    result.basePdf = await getTemplatePdfFile(result.basePdf);
+    result.basePdf = await getTemplatePdfFile(result.basePdf, result.lastUpdated);
 
     return result;
 }
@@ -77,7 +77,7 @@ export async function putTemplate(id: number, templateRequest: TemplateRequest):
     //     headers: { 'Content-Type': 'application/json' },
     //     body: JSON.stringify(formattedRequest)
     // });
-
+    localStorage.removeItem(`pdf_${templateRequest.templateName}.pdf`);
     const basePdfBlob = stringToBlob(templateRequest.basePdf, 'application/pdf');
 
     const formData = new FormData();
