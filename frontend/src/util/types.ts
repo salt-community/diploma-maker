@@ -32,11 +32,7 @@ export type Student = {
 
 
 // bootcamps
-export type BootcampInDiploma = {
-    guidId: string;
-    name: string;
-    graduationDate: Date;
-}
+
 export type BootcampRequest = {
     guidId?: string;
     name: string;
