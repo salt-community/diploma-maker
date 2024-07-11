@@ -77,7 +77,7 @@ export async function putTemplate(id: number, templateRequest: TemplateRequest):
     //     headers: { 'Content-Type': 'application/json' },
     //     body: JSON.stringify(formattedRequest)
     // });
-    localStorage.removeItem(`Blob/${templateRequest.templateName}.pdf`);
+    localStorage.removeItem(`pdf_${templateRequest.templateName}.pdf`);
     const basePdfBlob = stringToBlob(templateRequest.basePdf, 'application/pdf');
 
     const formData = new FormData();

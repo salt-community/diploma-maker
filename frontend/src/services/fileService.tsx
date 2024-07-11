@@ -1,13 +1,12 @@
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export async function getTemplatePdfFile(url: string): Promise<string> {
-    const localStorageURL = `${url}`;
-    console.log("LOCALSTORAGEURL");
-    console.log(localStorageURL);
-    const cachedPdf = localStorage.getItem(localStorageURL);
+    const localStorageKey = `pdf_${url}`;
+    const cachedPdf = localStorage.getItem(localStorageKey);
 
     if (cachedPdf) {
-        return cachedPdf;
+        const { pdfData } = JSON.parse(cachedPdf);
+        return pdfData;
     }
 
     const pdfResponse = await fetch(`${apiUrl}/api/${url}`);
@@ -23,6 +22,11 @@ export async function getTemplatePdfFile(url: string): Promise<string> {
         reader.readAsDataURL(pdfBlob);
     });
 
-    localStorage.setItem(localStorageURL, pdfData);
+    const dataToStore = {
+        pdfData,
+        dateAdded: new Date().toISOString()
+    };
+
+    localStorage.setItem(localStorageKey, JSON.stringify(dataToStore));
     return pdfData;
 }
