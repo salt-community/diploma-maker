@@ -20,6 +20,7 @@ import { makeTemplateInput } from "../../templates/baseTemplate";
 import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../../util/dataHelpers";
 import { Template } from "@pdfme/common";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
+import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -218,39 +219,37 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
 
   return (
     <div className="flex w-full h-screen justify-between pt-10 dark:bg-darkbg">
-      <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
-      <section className="flex-1 flex flex-col justify-start gap-1 ml-5" style={{ position: 'relative' }}>
-        <header className="flex items-center justify-start gap-3 mb-5 viewersidebar-container">
-          <div>
-            <SwitchComponent
-              checked={currentDisplayMode === "form"}
-              onToggle={handleToggle}
+      {saltData ?
+      <>
+        <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
+        <section className="flex-1 flex flex-col justify-start gap-1 ml-5" style={{ position: 'relative' }}>
+          <header className="flex items-center justify-start gap-3 mb-5 viewersidebar-container">
+            <div>
+              <SwitchComponent
+                checked={currentDisplayMode === "form"}
+                onToggle={handleToggle}
+              />
+            </div>
+            <PublishButton text="Generate PDF" onClick={generatePDFHandler} />
+            <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler} />
+            <SaveButton textfield="" saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler} />
+          </header>
+          
+            <div
+              className="pdfpreview-container"
+              ref={uiRef}
+              style={{ width: "100%", height: "calc(82vh - 68px)" }}
+            // onBlur={saveInputFieldsHandler}
             />
-          </div>
-          <PublishButton text="Generate PDF" onClick={generatePDFHandler} />
-          <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler} />
-          <SaveButton textfield="" saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler} />
-        </header>
-        {saltData &&
-          <div
-            className="pdfpreview-container"
-            ref={uiRef}
-            style={{ width: "100%", height: "calc(82vh - 68px)" }}
-          // onBlur={saveInputFieldsHandler}
-          />
-        }
-        {saltData &&
-          <PaginationMenu
-            containerClassOverride="flex justify-center mt-4 pagination-menu"
-            currentPage={currentPageIndex + 1}
-            totalPages={saltData[selectedBootcampIndex].students.length}
-            handleNextPage={nextTemplateInstanceHandler}
-            handlePrevPage={prevTemplateInstanceHandler}
-          />
-        }
-      </section>
-      <section className="flex-1 flex flex-col ">
-        {saltData &&
+            <PaginationMenu
+              containerClassOverride="flex justify-center mt-4 pagination-menu"
+              currentPage={currentPageIndex + 1}
+              totalPages={saltData[selectedBootcampIndex].students.length}
+              handleNextPage={nextTemplateInstanceHandler}
+              handlePrevPage={prevTemplateInstanceHandler}
+            />
+        </section>
+        <section className="flex-1 flex flex-col ">
           <DiplomaDataForm
             updateSaltData={updateSaltDataHandler}
             bootcamps={bootcamps}
@@ -259,8 +258,13 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
             saltData={saltData[selectedBootcampIndex]}
             templates={templates}
           />
-        }
-      </section>
+        </section>
+      </>
+      :
+      <>
+        <SpinnerDefault classOverride="spinner"/>
+      </>
+      }
     </div>
   );
 }

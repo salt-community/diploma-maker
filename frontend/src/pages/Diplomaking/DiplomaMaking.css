@@ -13,6 +13,12 @@
     align-self: center;
     width: 200px;
 }
+.spinner{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
 
 
 .pdfpreview-container div div div div:nth-of-type(1){

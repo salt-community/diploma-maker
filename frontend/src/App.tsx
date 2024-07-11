@@ -11,13 +11,15 @@ import { deleteStudentById, postMultipleStudents, updateSingleStudent } from "./
 import { TemplateCreatorPage } from "./pages/TemplateCreator/TemplateCreatorPage";
 import { deleteTemplateById, getAllTemplates, postTemplate, putTemplate } from "./services/templateService";
 import { postEmail } from "./services/emailService";
+import { delay } from "./util/helper";
 
 export default function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
   const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
 
   async function getBootcampsFromBackend() {
-    const newBootcamps: BootcampResponse[] = await getBootcamps(); 
+    const newBootcamps: BootcampResponse[] = await getBootcamps();
+    await delay(300000) 
     setBootcamps(newBootcamps);
   }
 
