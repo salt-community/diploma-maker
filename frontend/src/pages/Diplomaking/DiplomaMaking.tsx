@@ -219,7 +219,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
 
   return (
     <div className="flex w-full h-screen justify-between pt-10 dark:bg-darkbg">
-      {saltData ?
+      {saltData && templates ?
       <>
         <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
         <section className="flex-1 flex flex-col justify-start gap-1 ml-5" style={{ position: 'relative' }}>
