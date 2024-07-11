@@ -1,7 +1,9 @@
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export async function getTemplatePdfFile(url: string): Promise<string> {
-    const localStorageURL = `pdf_${url}`;
+    const localStorageURL = `${url}`;
+    console.log("LOCALSTORAGEURL");
+    console.log(localStorageURL);
     const cachedPdf = localStorage.getItem(localStorageURL);
 
     if (cachedPdf) {
