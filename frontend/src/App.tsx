@@ -19,7 +19,7 @@ export default function App() {
 
   async function getBootcampsFromBackend() {
     const newBootcamps: BootcampResponse[] = await getBootcamps();
-    await delay(300000) 
+    await delay(3000) 
     setBootcamps(newBootcamps);
   }
 
@@ -67,6 +67,7 @@ export default function App() {
   // templates
   async function getTemplates() {
     const templates: TemplateResponse[] = await getAllTemplates(); 
+    await delay(300000) 
     setTemplates(templates);
   }
 

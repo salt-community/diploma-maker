@@ -262,7 +262,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
       </>
       :
       <>
-        <SpinnerDefault classOverride="spinner"/>
+        <SpinnerDefault classOverride="spinner-diplomamaking"/>
       </>
       }
     </div>
