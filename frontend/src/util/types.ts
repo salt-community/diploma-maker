@@ -25,11 +25,10 @@ export type StudentResponse = {
 }
 
 export type Student = {
-    guidId: string;
+    guidId?: string;
     name: string;
     email: string;
 }
-
 
 
 // bootcamps
@@ -51,17 +50,12 @@ export type BootcampResponse = {
     students: Student[];
 }
 
-
-export type PersonalStudentData = {
-    name: string;
-    email?: string;
-}
-
 // Internal Data
 export type SaltData = {
+    guidId : string;
     classname: string;
     dategraduate: string;
-    students: PersonalStudentData[];
+    students: Student[];
     template: TemplateResponse;
 };
 

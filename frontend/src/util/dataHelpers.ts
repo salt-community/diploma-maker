@@ -33,7 +33,7 @@ export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcam
     return inputs;
 }
 
-export const templateInputsFromBootcampData = (selectedBootcampData: any, name: string) => {
+export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, name: string) => {
   return makeTemplateInput(
     populateField(
       selectedBootcampData.template.intro, 

@@ -6,6 +6,7 @@ import {
   getPlugins,
   generatePDF,
   newGenerateCombinedPDF,
+  mapBootcampToSaltData,
 } from "../../util/helper";
 import DiplomaDataForm from "../../components/Forms/DiplomaDataForm";
 import { useParams } from "react-router-dom";
@@ -49,24 +50,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
         setSaltData([saltDefaultData]);
         
       } else {
-
-        const initialSaltData: SaltData[] = bootcamps.map((bootcamp) => {
-          if (bootcamp.students.length === 0) {
-            return {
-              classname: bootcamp.name,
-              dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
-              students: saltDefaultData.students,
-              template: bootcamp.diplomaTemplate
-            };
-          } else {
-            return {
-              classname: bootcamp.name,
-              dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
-              students: bootcamp.students,
-              template: bootcamp.diplomaTemplate
-            };
-          }
-        });
+        const initialSaltData = bootcamps.map(b => mapBootcampToSaltData(b))
         setSaltData(initialSaltData);
       }
     }
