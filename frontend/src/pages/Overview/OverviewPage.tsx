@@ -10,7 +10,7 @@ import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, Em
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { delay, generatePDF, oldGenerateCombinedPDF, populateField } from '../../util/helper';
+import { delay, generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF, populateField } from '../../util/helper';
 import { getTemplate, makeTemplateInput } from '../../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../../components/MenuItems/Buttons/SaveButton';
@@ -18,9 +18,10 @@ import { SelectButton, SelectButtonType } from '../../components/MenuItems/Butto
 import { InfoPopup, InfoPopupType } from '../../components/MenuItems/Popups/InfoPopup';
 import { EmailClient } from '../../components/EmailClient/EmailClient';
 import { EmailIcon } from '../../components/MenuItems/Icons/EmailIcon';
-import { mapTemplateInputsBootcampsToTemplateViewer } from '../../util/dataHelpers';
+import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from '../../util/dataHelpers';
 import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
 import { useCustomInfoPopup } from '../../components/Hooks/useCustomInfoPopup';
+import { Template } from '@pdfme/common';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -94,19 +95,16 @@ export const OverviewPage = ({ bootcamps, deleteStudent, updateStudentInformatio
     };
 
     const generatePDFsHandler = async () => {
-        const inputsArray = selectedItems.map(item => {
-            const bootcamp = bootcamps?.find(b => b.students.some(student => student.guidId === item.guidId));
-            return bootcamp ? makeTemplateInput(
-                populateField(bootcamp.diplomaTemplate.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.name),
-                populateField(item.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.name),
-                populateField(bootcamp.diplomaTemplate.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), item.name),
-                bootcamp.diplomaTemplate.basePdf
-            ) : null;
-        }).filter(input => input !== null) as ReturnType<typeof makeTemplateInput>[];
-
-        const templates = inputsArray.map(input => getTemplate(input));
-
-        await oldGenerateCombinedPDF(templates, inputsArray);
+        var templatesArr: Template[] = [];
+        const inputsArray = selectedItems.map(student => {
+            const selectedBootcamp = bootcamps?.find(b => b.students.some(student => student.guidId === student.guidId));         
+            const inputs = templateInputsFromBootcampData( mapBootcampToSaltData(selectedBootcamp!), student.name)
+            templatesArr.push(
+                mapTemplateInputsBootcampsToTemplateViewer(selectedBootcamp, inputs)
+            )
+            return inputs;
+        })
+        await newGenerateCombinedPDF(templatesArr, inputsArray);
         customAlert(PopupType.success, "PDFs Generated", "The combined PDF has been successfully generated.")
     };
 

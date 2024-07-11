@@ -1,6 +1,6 @@
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
-import { PersonalStudentData } from '../util/types';
+import { Student } from '../util/types';
 
 type TabularData = {
   [key: string]: string ;
@@ -31,10 +31,10 @@ export const parseJSON = (fileData: string): TabularData[] => {
   return JSON.parse(fileData) as TabularData[];
 };
 
-export const ParseFileData = async (file: File): Promise<PersonalStudentData[]> => {
+export const ParseFileData = async (file: File): Promise<Student[]> => {
   if (!file) return [];
 
-  return new Promise<PersonalStudentData[]>((resolve) => {
+  return new Promise<Student[]>((resolve) => {
 
     const reader = new FileReader();
 
@@ -55,7 +55,7 @@ export const ParseFileData = async (file: File): Promise<PersonalStudentData[]> 
         }
         
         const emailRegex = new RegExp("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,4}$");
-        const data: PersonalStudentData[] = parsedData
+        const data: Student[] = parsedData
           .filter(item => item.Name)
           .map(item => {
             if (item.Email && emailRegex.test(item.Email)) {
