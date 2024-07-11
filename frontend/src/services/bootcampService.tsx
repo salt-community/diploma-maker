@@ -1,3 +1,4 @@
+import { delay } from "../util/helper";
 import { BootcampRequest, BootcampResponse } from "../util/types";
 import { getTemplatePdfFile } from "./fileService";
 
@@ -19,16 +20,22 @@ export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<vo
     if (!response.ok)
         throw new Error("Failed to post new bootcamp!")
 }
-export async function getBootcamps(): Promise<BootcampResponse[]>{
+export async function getBootcamps(setLoadingMessage: (message: string) => void): Promise<BootcampResponse[]> {
+    setLoadingMessage('Fetching bootcamps...');
+    await delay(5000);
     const response = await fetch(`${apiUrl}/api/Bootcamps`);
-    if (!response.ok)
-        throw new Error("Failed to get bootcamps!")
-    const results = await response.json() as BootcampResponse[]
+    if (!response.ok) {
+        setLoadingMessage('');
+        throw new Error("Failed to get bootcamps!");
+    }
+    const results = await response.json() as BootcampResponse[];
 
     await Promise.all(results.map(async result => {
         result.diplomaTemplate.basePdf = await getTemplatePdfFile(result.diplomaTemplate.basePdf, result.diplomaTemplate.lastUpdated);
     }));
 
+    setLoadingMessage('Bootcamps fetched successfully');
+    await delay(5000);
     return results;
 }
 

@@ -21,6 +21,7 @@ import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, temp
 import { Template } from "@pdfme/common";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
+import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -39,6 +40,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
 
   const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>();
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+  const { loadingMessage } = useLoadingMessage();
 
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
@@ -262,6 +264,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
       </>
       :
       <>
+        <h1 className="loading-title">Loading... {loadingMessage}</h1>
         <SpinnerDefault classOverride="spinner-diplomamaking"/>
       </>
       }
