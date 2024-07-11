@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaMakerApi.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240710133045_newbasepdf")]
-    partial class newbasepdf
+    [Migration("20240711093942_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,9 @@ namespace DiplomaMakerApi.Migrations
 
                     b.Property<int?>("IntroStylingId")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Main")
                         .IsRequired()

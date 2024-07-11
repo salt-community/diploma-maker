@@ -74,6 +74,9 @@ namespace DiplomaMakerApi.Migrations
                     b.Property<int?>("IntroStylingId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Main")
                         .IsRequired()
                         .HasColumnType("text");
