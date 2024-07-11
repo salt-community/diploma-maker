@@ -264,7 +264,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
       </>
       :
       <>
-        <h1 className="loading-title">Loading... {loadingMessage}</h1>
+        <h1 className="loading-title">{loadingMessage}</h1>
         <SpinnerDefault classOverride="spinner-diplomamaking"/>
       </>
       }

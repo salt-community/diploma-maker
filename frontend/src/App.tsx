@@ -67,7 +67,7 @@ export default function App() {
    
   // templates
   async function getTemplates() {
-    const templates: TemplateResponse[] = await getAllTemplates(); 
+    const templates: TemplateResponse[] = await getAllTemplates(setLoadingMessage); 
     setTemplates(templates);
   }
 
@@ -93,7 +93,7 @@ export default function App() {
 
   async function refresh(){
     const newBootcamps = await getBootcamps(setLoadingMessage);
-    const newTemplates = await getAllTemplates();
+    const newTemplates = await getAllTemplates(setLoadingMessage);
     setBootcamps(newBootcamps);
     setTemplates(newTemplates);
   }

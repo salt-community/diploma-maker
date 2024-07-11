@@ -21,10 +21,12 @@
 }
 .loading-title{
     position: absolute;
-    top: 40%;
+    top: 43%;
     left: 50%;
     transform: translateY(-50%) translateX(-50%);
     color: #ababba;
+    font-size: .85rem;
+    font-weight: 600;
 }
 
 
