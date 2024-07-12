@@ -67,13 +67,3 @@ export async function deleteBootcampById(guidId: string): Promise<void> {
         throw new Error('Failed to delete bootcamp!');
     }
 }
-
-
-const findUniqueTemplates = (results: BootcampResponse[]): number => {
-    const uniqueTemplates = new Set(results.map(result =>
-        {
-            result.diplomaTemplate.basePdf
-        }
-    ));
-    return uniqueTemplates.size;
-}
