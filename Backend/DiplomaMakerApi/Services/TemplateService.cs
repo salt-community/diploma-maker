@@ -65,7 +65,8 @@ public class TemplateService
 
         try
         {
-            await _localFileStorageService.SaveFile(templateRequest.basePdf, templateRequest.templateName);
+            IFormFile file = ConvertBase64ToIFormFile(templateRequest.basePdf, templateRequest.templateName);
+            await _localFileStorageService.SaveFile(file, templateRequest.templateName);
             _context.DiplomaTemplates.Update(template);
             await _context.SaveChangesAsync();
         }
@@ -97,5 +98,17 @@ public class TemplateService
         }
 
         return template;
+    }
+    private IFormFile ConvertBase64ToIFormFile(string base64String, string fileName)
+    {
+        var base64Data = base64String.Contains(",") ? base64String.Split(',')[1] : base64String;
+        
+        byte[] byteArray = Convert.FromBase64String(base64Data);
+        var stream = new MemoryStream(byteArray);
+        return new FormFile(stream, 0, byteArray.Length, fileName, $"{fileName}.pdf")
+        {
+            Headers = new HeaderDictionary(),
+            ContentType = "application/pdf"
+        };
     }
 }
