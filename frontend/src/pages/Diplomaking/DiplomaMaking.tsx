@@ -54,7 +54,6 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
         setSaltData([saltDefaultData]); 
       } 
       else {
-        console.log(bootcamps)
         setSaltData(bootcamps.map(b => mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId) )));
       }
     }
