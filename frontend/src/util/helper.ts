@@ -15,7 +15,7 @@ const fontObjList = [
   {
     fallback: false,
     label: "Calibre",
-    url: "/fonts/CalibreRegular.otf",
+    url: "/fonts/CalibreRegular.woff",
   },
   {
     fallback: false,
@@ -25,22 +25,22 @@ const fontObjList = [
   {
     fallback: false,
     label: "Futura",
-    url: "/fonts/Futura-Dem.otf",
+    url: "/fonts/Futura-Dem.woff",
   },
   {
     fallback: false,
     label: "Museo-Sans",
-    url: "/fonts/MuseoSans_500.otf",
+    url: "/fonts/MuseoSans_500.woff",
   },
   {
     fallback: false,
     label: "Roboto",
-    url: "/fonts/Roboto-Regular.ttf",
+    url: "/fonts/Roboto-Regular.woff",
   },
   {
     fallback: false,
     label: "TT-Corals",
-    url: "/fonts/TT-Corals Regular.ttf",
+    url: "/fonts/TT-Corals Regular.woff",
   },
 ];
 
