@@ -6,7 +6,7 @@ import { SelectOptions } from '../../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest } from '../../util/types';
+import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse } from '../../util/types';
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
@@ -28,9 +28,10 @@ type Props = {
     deleteStudent: (id: string) => Promise<void>;
     updateStudentInformation: (studentRequest: StudentUpdateRequestDto) => Promise<StudentResponse>;
     sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
+    templates: TemplateResponse[] | null;
 }
 
-export const OverviewPage = ({ bootcamps, deleteStudent, updateStudentInformation, sendEmail }: Props) => {
+export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -98,7 +99,7 @@ export const OverviewPage = ({ bootcamps, deleteStudent, updateStudentInformatio
         var templatesArr: Template[] = [];
         const inputsArray = selectedItems.map(student => {
             const selectedBootcamp = bootcamps?.find(b => b.students.some(student => student.guidId === student.guidId));         
-            const inputs = templateInputsFromBootcampData( mapBootcampToSaltData(selectedBootcamp!), student.name)
+            const inputs = templateInputsFromBootcampData( mapBootcampToSaltData(selectedBootcamp!,templates.find(t => t.id === selectedBootcamp.templateId)), student.name)
             templatesArr.push(
                 mapTemplateInputsBootcampsToTemplateViewer(selectedBootcamp, inputs)
             )
@@ -195,10 +196,10 @@ export const OverviewPage = ({ bootcamps, deleteStudent, updateStudentInformatio
         }
     
         const pdfInput = makeTemplateInput(
-            populateField(bootcamp.diplomaTemplate.intro, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            populateField(templates.find(t => t.id === bootcamp.templateId).intro , bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
             populateField(student.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
-            populateField(bootcamp.diplomaTemplate.footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
-            bootcamp.diplomaTemplate.basePdf
+            populateField(templates.find(t => t.id === bootcamp.templateId).footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            templates.find(t => t.id === bootcamp.templateId).basePdf
         );
 
         
