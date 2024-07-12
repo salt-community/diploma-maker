@@ -11,12 +11,17 @@ using DiplomaMakerApi.Dtos;
 [ApiController]
 public class BootcampsController : ControllerBase
 {
-    private readonly BootcampService _service;
     private readonly IMapper _mapper;
+    private readonly BootcampService _bootcampservice;
+    private readonly StudentService _studentservice;
 
-    public BootcampsController(BootcampService service, IMapper mapper)
+
+    public BootcampsController(BootcampService bootcampservice, StudentService studentservice, TemplateService templateservice,  IMapper mapper)
     {
-        _service = service;
+        _bootcampservice = bootcampservice;
+
+        _studentservice = studentservice;
+
         _mapper = mapper;
     }
 
@@ -26,7 +31,7 @@ public class BootcampsController : ControllerBase
         try
         {
             var bootcamp = _mapper.Map<Bootcamp>(requestDto);
-            Bootcamp createdBootcamp = await _service.PostBootcamp(bootcamp);
+            Bootcamp createdBootcamp = await _bootcampservice.PostBootcamp(bootcamp);
             var responseDto = _mapper.Map<BootcampResponseDto>(createdBootcamp);
             return CreatedAtAction(nameof(GetBootcamps), new { id = createdBootcamp.GuidId }, responseDto);
         }
@@ -39,7 +44,7 @@ public class BootcampsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<BootcampResponseDto>>> GetBootcamps()
     {
-        List<Bootcamp> bootcamps = await _service.GetBootcamps();
+        List<Bootcamp> bootcamps = await _bootcampservice.GetBootcamps();
         var bootcampResponseDtos = _mapper.Map<List<BootcampResponseDto>>(bootcamps);
         return Ok(bootcampResponseDtos);
     }
@@ -47,7 +52,7 @@ public class BootcampsController : ControllerBase
     [HttpGet("{guidId}")]
     public async Task<ActionResult<BootcampResponseDto>> GetBootcampByGuidId(Guid guidId)
     {
-        var bootcamp = await _service.GetBootcampByGuidId(guidId);
+        var bootcamp = await _bootcampservice.GetBootcampByGuidId(guidId);
         return bootcamp == null ?
             NotFound(new { message = "Bootcamp with that specific ID does not exist" }) :
             _mapper.Map<BootcampResponseDto>(bootcamp);
@@ -58,7 +63,7 @@ public class BootcampsController : ControllerBase
     {
         try
         {
-            await _service.DeleteBootcampByGuidId(guidId);
+            await _bootcampservice.DeleteBootcampByGuidId(guidId);
             return Ok();
         }
         catch (ArgumentException e)
@@ -73,7 +78,7 @@ public class BootcampsController : ControllerBase
     {
         try
         {
-            var bootcamp = await _service.PutBootcampAsync(guidId, requestDto);
+            var bootcamp = await _bootcampservice.PutBootcampAsync(guidId, requestDto);
             return Ok(bootcamp);
         }
         catch (ArgumentException ex)
@@ -86,6 +91,30 @@ public class BootcampsController : ControllerBase
         }
     }
 
+    [HttpPut("dynamicfields/{guidId}")]
+    public async Task<ActionResult> UpdatePreviewData(Guid guidId, BootcampRequestUpdateDto requestDto)
+    {
+        try
+        {
+            var Students = await _studentservice.ReplaceStudents(requestDto, guidId);
+            var UpdatedId =  await _bootcampservice.UpdateBootcampTemplate(guidId, requestDto.templateId);
+            return Ok();
+        
+        }
+        catch (StudentNotFoundException ex )
+        {
+            return NotFound(ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+             return NotFound(ex.Message);
+        }
+        catch (StudentExistsException ex)
+        {
+            return Conflict(new { message = ex.Message });
+        }
+        
+    }
 
 
 }

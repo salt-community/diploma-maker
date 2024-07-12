@@ -1,5 +1,5 @@
 import { delay } from "../util/helper";
-import { BootcampRequest, BootcampResponse } from "../util/types";
+import { BootcampRequest, BootcampResponse, FormDataUpdateRequest,  } from "../util/types";
 import { getTemplatePdfFile } from "./fileService";
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -67,3 +67,22 @@ export async function deleteBootcampById(guidId: string): Promise<void> {
         throw new Error('Failed to delete bootcamp!');
     }
 }
+
+export async function UpdateBootcampWithNewFormdata(FormDataUpdateRequest: FormDataUpdateRequest, guidId: string): Promise<any> {
+    console.log(JSON.stringify(FormDataUpdateRequest));
+
+    const response = await fetch(`${apiUrl}/api/Bootcamps/dynamicfields/${guidId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(FormDataUpdateRequest)
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to post diplomas!");
+    }
+
+    /* const result = await response.json()
+    return result; */
+    return "";
+}
+

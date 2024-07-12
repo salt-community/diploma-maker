@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 
 namespace DiplomaMakerApi.Services;
 
@@ -15,13 +16,13 @@ public class StudentService
         _context = context;
         _logger = logger;
     }
-    public async Task<List<Student>> ReplaceStudents(StudentsRequestDto requestDto)
+    public async Task<List<Student>> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
     {
         var bootcamp = await _context.Bootcamps.Include(b => b.Students)
-                .FirstOrDefaultAsync(b => b.GuidId == requestDto.BootcampGuidId)
-                ?? throw new Exception($"Bootcamp with ID {requestDto.BootcampGuidId} does not exist");
+                .FirstOrDefaultAsync(b => b.GuidId == BootcampGuidId)
+                ?? throw new Exception($"Bootcamp with ID {BootcampGuidId} does not exist");
         
-        if (requestDto.Students.Count == 0)
+        if (requestDto.students.Count == 0)
         {
             throw new StudentNotFoundException("You need to add students to perform this update"); 
         }
@@ -30,7 +31,7 @@ public class StudentService
         await _context.SaveChangesAsync();
 
         var Students = new List<Student>();
-        foreach (var Student in requestDto.Students)
+        foreach (var Student in requestDto.students)
         {
                 var newStudent = new Student
                 {

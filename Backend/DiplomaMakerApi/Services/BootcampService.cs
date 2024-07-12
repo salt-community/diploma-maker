@@ -24,13 +24,13 @@ public class BootcampService
     public async Task<List<Bootcamp>> GetBootcamps() =>
             await _context.Bootcamps
             .Include(b => b.Students)
-            .Include(b =>b.DiplomaTemplate)
+            .Include(b => b.DiplomaTemplate)
             .ToListAsync();
 
-    public async Task<Bootcamp?> GetBootcampByGuidId(Guid guidId) => 
+    public async Task<Bootcamp?> GetBootcampByGuidId(Guid guidId) =>
             await _context.Bootcamps
             .Include(b => b.Students)
-            .Include(b =>b.DiplomaTemplate)
+            .Include(b => b.DiplomaTemplate)
             .FirstOrDefaultAsync(b => b.GuidId == guidId);
 
     public async Task<Bootcamp> DeleteBootcampByGuidId(Guid guidId)
@@ -46,8 +46,27 @@ public class BootcampService
         return bootcamp;
     }
 
+    public async Task<int> UpdateBootcampTemplate(Guid bootcampId, int templateId)
+    {
+        var bootcamp = await _context.Bootcamps.FirstOrDefaultAsync(b => b.GuidId == bootcampId);
+        if (bootcamp == null)
+        {
+            throw new ArgumentException("The specific ID for Bootcamp does not exist");
+        }
 
-    public async Task<Bootcamp> PutBootcampAsync(Guid GuidID, BootcampRequestDto requestDto) 
+        var newDiplomaTemplate = await _context.DiplomaTemplates.FirstOrDefaultAsync(dt => dt.Id == templateId);
+        if (newDiplomaTemplate == null)
+        {
+            throw new ArgumentException("The template ID is not valid");
+        }
+
+        bootcamp.DiplomaTemplate = newDiplomaTemplate;
+        return await _context.SaveChangesAsync();
+    }
+
+
+
+    public async Task<Bootcamp> PutBootcampAsync(Guid GuidID, BootcampRequestDto requestDto)
     {
         try
         {
@@ -67,7 +86,7 @@ public class BootcampService
 
     }
 
-    
+
 
 
 }

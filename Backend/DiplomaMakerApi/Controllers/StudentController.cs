@@ -12,25 +12,6 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     private readonly StudentService _service = service;
     private readonly IMapper _mapper = mapper;
 
-    [HttpPost]
-    public async Task<ActionResult<List<StudentResponseDto>>> PostStudents(StudentsRequestDto requestDto)
-    {
-        try
-        {
-            var Students = await _service.ReplaceStudents(requestDto);
-            var responseDtos = Students.Select(d => _mapper.Map<StudentResponseDto>(d)).ToList();
-            return CreatedAtAction(nameof(GetStudents), responseDtos);
-      
-        }
-        catch (StudentNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (StudentExistsException ex)
-        {
-            return Conflict(new { message = ex.Message });
-        }
-    }
 
     [HttpPut("{GuidID}")]
     public async Task<ActionResult<StudentResponseDto>> UpdateStudents(Guid GuidID, StudentUpdateRequestDto updateDto)

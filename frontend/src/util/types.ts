@@ -7,9 +7,9 @@ export type StudentRequest = {
     email?: string;
 }
 
-export type StudentsRequestDto = {
+export type FormDataUpdateRequest = {
     students: StudentRequest[];
-    bootcampGuidId: string;
+    templateId: number;
 }
 
 export type StudentUpdateRequestDto = {

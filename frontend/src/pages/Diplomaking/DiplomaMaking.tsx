@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, StudentResponse, StudentsRequestDto, SaltData, displayMode, TemplateResponse } from "../../util/types";
+import { BootcampResponse, StudentResponse, SaltData, displayMode, TemplateResponse, FormDataUpdateRequest } from "../../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -24,14 +24,14 @@ import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 import { Popup404 } from "../../components/MenuItems/Popups/Popup404";
+import { UpdateBootcampWithNewFormdata } from "../../services/bootcampService";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
   templates: TemplateResponse[] | null;
-  addMultipleStudents: (studentsRequest: StudentsRequestDto) => Promise<StudentResponse[]>;
 };
 
-export default function DiplomaMaking({ bootcamps, templates, addMultipleStudents }: Props) {
+export default function DiplomaMaking({ bootcamps, templates }: Props) {
 
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
@@ -162,19 +162,20 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
   const postSelectedBootcampData = async () => {
     if (saltData && bootcamps) {
       const currentBootcamp = bootcamps[selectedBootcampIndex];
-      const studentsRequest: StudentsRequestDto = {
+      const updateFormDataRequest: FormDataUpdateRequest = {
         students: saltData[selectedBootcampIndex].students.map((student, index) => ({
           guidId: currentBootcamp.students[index]?.guidId || crypto.randomUUID(),
           name: student.name,
           email: student.email,    
         })),
-        bootcampGuidId: currentBootcamp.guidId
+        templateId: saltData[selectedBootcampIndex].template.id
       };
       try {
-        await addMultipleStudents(studentsRequest);
+        await UpdateBootcampWithNewFormdata(updateFormDataRequest, currentBootcamp.guidId );
         customAlert(PopupType.success, "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
       } catch (error) {
+        console.log(error)
         customAlert(PopupType.fail, "Failed to add diplomas:", `${error}`);
       }
     }
