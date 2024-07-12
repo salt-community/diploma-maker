@@ -204,7 +204,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
 
         
 
-        const template = mapTemplateInputsBootcampsToTemplateViewer(bootcamp, pdfInput);
+        const template = mapTemplateInputsBootcampsToTemplateViewer(templates.find(t => t.id === bootcamp.templateId), pdfInput);
         const pdfFile = await generatePDF(template, [pdfInput], true);
         return pdfFile;
     };
