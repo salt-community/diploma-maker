@@ -99,45 +99,45 @@ export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selected
     return template;
 }
 
-export const mapTemplateInputsBootcampsToTemplateViewer = (bootcamp: any, pdfInput: any) => {
+export const mapTemplateInputsBootcampsToTemplateViewer = (templateInput: TemplateResponse, pdfInput: any) => {
   const template: Template = getTemplate(
     pdfInput,
     {
-        x: bootcamp.diplomaTemplate.introStyling?.xPos ?? null,
-        y: bootcamp.diplomaTemplate.introStyling?.yPos ?? null,
+        x: templateInput.introStyling?.xPos ?? null,
+        y: templateInput.introStyling?.yPos ?? null,
     },
     {
-        width: bootcamp.diplomaTemplate.introStyling?.width ?? null,
-        height: bootcamp.diplomaTemplate.introStyling?.height ?? null,
+        width: templateInput.introStyling?.width ?? null,
+        height: templateInput.introStyling?.height ?? null,
     },
-    bootcamp.diplomaTemplate.introStyling?.fontSize ?? null,
-    bootcamp.diplomaTemplate.introStyling?.fontColor ?? null,
-    bootcamp.diplomaTemplate.introStyling?.fontName ?? null,
-    bootcamp.diplomaTemplate.introStyling?.alignment ?? null,
+    templateInput.introStyling?.fontSize ?? null,
+    templateInput.introStyling?.fontColor ?? null,
+    templateInput.introStyling?.fontName ?? null,
+    templateInput.introStyling?.alignment ?? null,
     {
-        x: bootcamp.diplomaTemplate.mainStyling?.xPos ?? null,
-        y: bootcamp.diplomaTemplate.mainStyling?.yPos ?? null,
-    },
-    {
-        width: bootcamp.diplomaTemplate.mainStyling?.width ?? null,
-        height: bootcamp.diplomaTemplate.mainStyling?.height ?? null,
-    },
-    bootcamp.diplomaTemplate.mainStyling?.fontSize ?? null,
-    bootcamp.diplomaTemplate.mainStyling?.fontColor ?? null,
-    bootcamp.diplomaTemplate.mainStyling?.fontName ?? null,
-    bootcamp.diplomaTemplate.mainStyling?.alignment ?? null,
-    {
-        x: bootcamp.diplomaTemplate.footerStyling?.xPos ?? null,
-        y: bootcamp.diplomaTemplate.footerStyling?.yPos ?? null,
+        x: templateInput.mainStyling?.xPos ?? null,
+        y: templateInput.mainStyling?.yPos ?? null,
     },
     {
-        width: bootcamp.diplomaTemplate.footerStyling?.width ?? null,
-        height: bootcamp.diplomaTemplate.footerStyling?.height ?? null,
+        width: templateInput.mainStyling?.width ?? null,
+        height: templateInput.mainStyling?.height ?? null,
     },
-    bootcamp.diplomaTemplate.footerStyling?.fontSize ?? null,
-    bootcamp.diplomaTemplate.footerStyling?.fontColor ?? null,
-    bootcamp.diplomaTemplate.footerStyling?.fontName ?? null,
-    bootcamp.diplomaTemplate.footerStyling?.alignment ?? null
+    templateInput.mainStyling?.fontSize ?? null,
+    templateInput.mainStyling?.fontColor ?? null,
+    templateInput.mainStyling?.fontName ?? null,
+    templateInput.mainStyling?.alignment ?? null,
+    {
+        x: templateInput.footerStyling?.xPos ?? null,
+        y: templateInput.footerStyling?.yPos ?? null,
+    },
+    {
+        width: templateInput.footerStyling?.width ?? null,
+        height: templateInput.footerStyling?.height ?? null,
+    },
+    templateInput.footerStyling?.fontSize ?? null,
+    templateInput.footerStyling?.fontColor ?? null,
+    templateInput.footerStyling?.fontName ?? null,
+    templateInput.footerStyling?.alignment ?? null
 );
   return template;
 }

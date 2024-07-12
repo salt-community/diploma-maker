@@ -4,12 +4,29 @@ using MailKit.Net.Smtp;
 using Microsoft.EntityFrameworkCore;
 
 
-public class EmailService(IConfiguration configuration, ILogger<EmailService> logger, DiplomaMakingContext context)
+public class EmailService
 {
-    private readonly string _email = configuration["EmailSettings:Email"] ?? throw new ArgumentNullException(nameof(_email));
-    private readonly string _appPassword = configuration["EmailSettings:AppPassword"] ?? throw new ArgumentNullException(nameof(_appPassword));
-    private readonly ILogger<EmailService> _logger = logger;
-    private readonly DiplomaMakingContext _context = context;
+    private readonly string _email;
+    private readonly string _appPassword;
+    private readonly ILogger<EmailService> _logger;
+    private readonly DiplomaMakingContext _context;
+
+    public EmailService(IConfiguration configuration, IWebHostEnvironment env, ILogger<EmailService> logger, DiplomaMakingContext context)
+    {
+        if (env.IsDevelopment())
+        {
+            _email = configuration["EmailSettings:Email"] ?? throw new ArgumentNullException(nameof(_email));
+            _appPassword = configuration["EmailSettings:AppPassword"] ?? throw new ArgumentNullException(nameof(_appPassword));
+        }
+        else
+        {
+            _email = Environment.GetEnvironmentVariable("Email") ?? throw new ArgumentNullException(nameof(_email));
+            _appPassword = Environment.GetEnvironmentVariable("AppPassword") ?? throw new ArgumentNullException(nameof(_appPassword));
+        }
+
+        _logger = logger;
+        _context = context;
+    }
 
     public async Task SendEmailWithAttachmentAsync(Guid guidid, IFormFile file)
     {
