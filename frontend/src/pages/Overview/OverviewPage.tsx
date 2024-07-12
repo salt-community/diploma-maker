@@ -96,17 +96,36 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     };
 
     const generatePDFsHandler = async () => {
-        var templatesArr: Template[] = [];
+        if (!bootcamps || !templates) {
+            customAlert(PopupType.fail, "Error", "Bootcamps or Templates data is missing.");
+            return;
+        }
+    
+        const templatesArr: Template[] = [];
         const inputsArray = selectedItems.map(student => {
-            const selectedBootcamp = bootcamps?.find(b => b.students.some(student => student.guidId === student.guidId));         
-            const inputs = templateInputsFromBootcampData( mapBootcampToSaltData(selectedBootcamp!,templates.find(t => t.id === selectedBootcamp.templateId)), student.name)
-            templatesArr.push(
-                mapTemplateInputsBootcampsToTemplateViewer(selectedBootcamp, inputs)
-            )
+            const selectedBootcamp = bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
+            if (!selectedBootcamp) {
+                customAlert(PopupType.fail, "Error", `Bootcamp for student ${student.name} not found.`);
+                return null;
+            }
+            const templateData = templates.find(t => t.id === selectedBootcamp.templateId);
+            if (!templateData) {
+                customAlert(PopupType.fail, "Error", `Template for bootcamp ${selectedBootcamp.name} not found.`);
+                return null;
+            }
+    
+            const inputs = templateInputsFromBootcampData(mapBootcampToSaltData(selectedBootcamp, templateData), student.name);
+            templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(templateData, inputs));
             return inputs;
-        })
+        }).filter(inputs => inputs !== null);
+    
+        if (inputsArray.length === 0) {
+            customAlert(PopupType.fail, "Error", "No valid inputs found for PDF generation.");
+            return;
+        }
+    
         await newGenerateCombinedPDF(templatesArr, inputsArray);
-        customAlert(PopupType.success, "PDFs Generated", "The combined PDF has been successfully generated.")
+        customAlert(PopupType.success, "PDFs Generated", "The combined PDF has been successfully generated.");
     };
 
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
