@@ -10,7 +10,7 @@ const fontObjList = [
   {
     fallback: true,
     label: "NotoSerifJP-Regular",
-    url: "/fonts/NotoSerifJP-Regular.woff",
+    url: "/fonts/NotoSerifJP-Regular.otf",
   },
   {
     fallback: false,
