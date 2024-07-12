@@ -43,7 +43,7 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
 
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
-    if (bootcamps) {
+    if (bootcamps && templates) {
       if(selectedBootcamp){
         setSelectedBootcampIndex(Number(selectedBootcamp));
       }
@@ -51,10 +51,11 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
         setSaltData([saltDefaultData]); 
       } 
       else {
-        setSaltData(bootcamps.map(b => mapBootcampToSaltData(b)));
+        console.log(bootcamps)
+        setSaltData(bootcamps.map(b => mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId) )));
       }
     }
-  }, [bootcamps]);
+  }, [bootcamps, templates]);
 
   // When Page Changes -> Loads into PDF preview
   useEffect(() => {
