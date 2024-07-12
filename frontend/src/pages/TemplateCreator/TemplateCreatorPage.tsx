@@ -318,6 +318,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       }
       try {
         await deleteTemplate(templateId);
+        setTemplateIndex(0);
         customAlert(PopupType.fail,"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
         setTemplateHasChanged(false);
       } catch (error) {
