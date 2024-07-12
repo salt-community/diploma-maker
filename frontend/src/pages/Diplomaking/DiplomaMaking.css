@@ -42,10 +42,28 @@
     background-color: #2e2e38;
 }
 
+#\@pdfme\/ui-paper0::before{
+    position: absolute;
+    content: '';
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 0;
+    pointer-events: all !important;
+    background-color: rgba(0, 42, 255, 0);
+}
 
 .pdfpreview-container div div div div[title="header"]{
     cursor: default !important;
     pointer-events: none !important;
+}
+.pdfpreview-container div div div div[title="header"]::before{
+    position: absolute;
+    content: '';
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 500;
+    pointer-events: all !important;
+    background-color: rgba(255, 0, 0, 0);
 }
 
 .pdfpreview-container div div div div[title="main"]{
@@ -53,6 +71,16 @@
 }
 
 .pdfpreview-container div div div div[title="footer"]{
+    position: relative;
     cursor: default !important;
-    pointer-events: none !important;
+}
+
+.pdfpreview-container div div div div[title="footer"]::before{
+    position: absolute;
+    content: '';
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 500;
+    pointer-events: all !important;
+    background-color: rgba(0, 0, 255, 0);
 }

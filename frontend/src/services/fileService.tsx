@@ -6,8 +6,7 @@ export async function getTemplatePdfFile(url: string, lastUpdated: Date): Promis
 
     if (cachedPdf) {
         const { pdfData, dateAdded } = JSON.parse(cachedPdf);
-
-        if (lastUpdated && new Date(lastUpdated).toISOString() === dateAdded) {
+        if (new Date(lastUpdated).toISOString() === dateAdded) {
             return pdfData;
         }
     }
@@ -27,7 +26,7 @@ export async function getTemplatePdfFile(url: string, lastUpdated: Date): Promis
 
     const dataToStore = {
         pdfData,
-        dateAdded: lastUpdated
+        dateAdded: new Date(lastUpdated).toISOString()  // Store the last updated date as ISO string
     };
 
     localStorage.setItem(localStorageKey, JSON.stringify(dataToStore));

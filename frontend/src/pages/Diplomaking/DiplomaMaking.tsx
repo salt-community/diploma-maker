@@ -34,7 +34,7 @@ type Props = {
 export default function DiplomaMaking({ bootcamps, templates, addMultipleStudents }: Props) {
 
   const [saltData, setSaltData] = useState<SaltData[] | null>();
-  const [currentDisplayMode, setDisplayMode] = useState<displayMode>("viewer");
+  const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0);  
   const uiRef = useRef<HTMLDivElement | null>(null);
@@ -54,7 +54,6 @@ export default function DiplomaMaking({ bootcamps, templates, addMultipleStudent
         setSaltData([saltDefaultData]); 
       } 
       else {
-        console.log(bootcamps)
         setSaltData(bootcamps.map(b => mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId) )));
       }
     }

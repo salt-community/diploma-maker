@@ -10,12 +10,12 @@ const fontObjList = [
   {
     fallback: true,
     label: "NotoSerifJP-Regular",
-    url: "/fonts/NotoSerifJP-Regular.otf",
+    url: "/fonts/NotoSerifJP-Regular.woff",
   },
   {
     fallback: false,
     label: "Calibre",
-    url: "/fonts/CalibreRegular.otf",
+    url: "/fonts/CalibreRegular.woff",
   },
   {
     fallback: false,
@@ -25,31 +25,40 @@ const fontObjList = [
   {
     fallback: false,
     label: "Futura",
-    url: "/fonts/Futura-Dem.otf",
+    url: "/fonts/Futura-Dem.woff",
   },
   {
     fallback: false,
     label: "Museo-Sans",
-    url: "/fonts/MuseoSans_500.otf",
+    url: "/fonts/MuseoSans_500.woff",
   },
   {
     fallback: false,
     label: "Roboto",
-    url: "/fonts/Roboto-Regular.ttf",
+    url: "/fonts/Roboto-Regular.woff",
   },
   {
     fallback: false,
     label: "TT-Corals",
-    url: "/fonts/TT-Corals Regular.ttf",
+    url: "/fonts/TT-Corals Regular.woff",
   },
 ];
 
+const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
+
 export const getFontsData = async () => {
   const fontDataList = await Promise.all(
-    fontObjList.map(async (font) => ({
-      ...font,
-      data: await fetch(font.url).then((res) => res.arrayBuffer()),
-    }))
+    fontObjList.map(async (font) => {
+      if (!fontCache.has(font.label)) {
+        let data = await getFontFromIndexedDB(font.label);
+        if (!data) {
+          data = await fetch(font.url).then((res) => res.arrayBuffer());
+          await storeFontInIndexedDB(font.label, data);
+        }
+        fontCache.set(font.label, { ...font, data });
+      }
+      return fontCache.get(font.label);
+    })
   );
 
   return fontDataList.reduce(
@@ -243,3 +252,56 @@ export function mapBootcampToSaltData(bootcamp: BootcampResponse, template: Temp
       template: template
   };
 }
+
+const openDB = () => {
+  return new Promise<IDBDatabase>((resolve, reject) => {
+    const request = indexedDB.open('fontDatabase', 1);
+
+    request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      db.createObjectStore('fonts');
+    };
+
+    request.onsuccess = (event: Event) => {
+      resolve((event.target as IDBOpenDBRequest).result);
+    };
+
+    request.onerror = (event: Event) => {
+      reject((event.target as IDBOpenDBRequest).error);
+    };
+  });
+};
+
+const storeFontInIndexedDB = async (label: string, fontData: ArrayBuffer) => {
+  const db = await openDB();
+  return new Promise<void>((resolve, reject) => {
+    const transaction = db.transaction(['fonts'], 'readwrite');
+    const store = transaction.objectStore('fonts');
+    const request = store.put(fontData, label);
+
+    request.onsuccess = () => {
+      resolve();
+    };
+
+    request.onerror = (event: Event) => {
+      reject((event.target as IDBRequest).error);
+    };
+  });
+};
+
+const getFontFromIndexedDB = async (label: string): Promise<ArrayBuffer | null> => {
+  const db = await openDB();
+  return new Promise<ArrayBuffer | null>((resolve, reject) => {
+    const transaction = db.transaction(['fonts'], 'readonly');
+    const store = transaction.objectStore('fonts');
+    const request = store.get(label);
+
+    request.onsuccess = (event: Event) => {
+      resolve((event.target as IDBRequest).result as ArrayBuffer | null);
+    };
+
+    request.onerror = (event: Event) => {
+      reject((event.target as IDBRequest).error);
+    };
+  });
+};

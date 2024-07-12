@@ -59,6 +59,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     fontColor: null,
   });
 
+  const [templateIndex, setTemplateIndex] = useState<number>(0);
+
   useEffect(() => {
     if (templates && templates.length > 0) {
       const templateData = mapTemplatesToTemplateData(templates);
@@ -68,7 +70,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         setCurrentTemplate(templateData[templateData.length - 1]);
         setTemplateAdded(false);
       } else {
-        setCurrentTemplate(templateData[0] || null);
+        setCurrentTemplate(templateData[templateIndex] || null);
       }
     }
   }, [templates]);
@@ -232,6 +234,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     } else {
       setFileAdded(false);
       setCurrentTemplate(templateData[index] || null);
+      setTemplateIndex(index);
     }
   };
 
@@ -275,6 +278,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         setTemplateHasChanged(false);
         if (goToIndex !== undefined) {
           setCurrentTemplate(templateData[goToIndex] || null);
+          setTemplateIndex(goToIndex);
           setFileAdded(false);
         }
       } catch (error) {
@@ -314,6 +318,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       }
       try {
         await deleteTemplate(templateId);
+        setTemplateIndex(0);
         customAlert(PopupType.fail,"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
         setTemplateHasChanged(false);
       } catch (error) {
@@ -338,8 +343,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   };
 
   const confirmChangeTemplateHandler = async () => {
+    const currentTemplateIndex = getTemplateIndex(currentTemplate);
     customPopup(
-      ConfirmationPopupType.question, "Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template", () => saveTemplate
+      ConfirmationPopupType.question, 
+      "Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(currentTemplateIndex)
     );
   };
 
