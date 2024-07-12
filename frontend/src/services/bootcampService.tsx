@@ -1,3 +1,4 @@
+import { delay } from "../util/helper";
 import { BootcampRequest, BootcampResponse } from "../util/types";
 import { getTemplatePdfFile } from "./fileService";
 
@@ -19,11 +20,13 @@ export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<vo
     if (!response.ok)
         throw new Error("Failed to post new bootcamp!")
 }
-export async function getBootcamps(): Promise<BootcampResponse[]>{
+export async function getBootcamps(setLoadingMessage: (message: string) => void): Promise<BootcampResponse[]> {
+    setLoadingMessage('Fetching bootcamps...');
     const response = await fetch(`${apiUrl}/api/Bootcamps`);
     if (!response.ok)
         throw new Error("Failed to get bootcamps!")
     const results = await response.json() as BootcampResponse[]
+
     return results;
 }
 
@@ -63,4 +66,14 @@ export async function deleteBootcampById(guidId: string): Promise<void> {
             throw new Error('Bootcamp not found');
         throw new Error('Failed to delete bootcamp!');
     }
+}
+
+
+const findUniqueTemplates = (results: BootcampResponse[]): number => {
+    const uniqueTemplates = new Set(results.map(result =>
+        {
+            result.diplomaTemplate.basePdf
+        }
+    ));
+    return uniqueTemplates.size;
 }
