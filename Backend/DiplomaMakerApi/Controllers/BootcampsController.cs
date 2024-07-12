@@ -37,7 +37,7 @@ public class BootcampsController : ControllerBase
 
     }
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Bootcamp>>> GetBootcamps()
+    public async Task<ActionResult<IEnumerable<BootcampResponseDto>>> GetBootcamps()
     {
         List<Bootcamp> bootcamps = await _service.GetBootcamps();
         var bootcampResponseDtos = _mapper.Map<List<BootcampResponseDto>>(bootcamps);

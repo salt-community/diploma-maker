@@ -6,6 +6,6 @@ public class BootcampResponseDto
     public required string Name { get; set; }
     public required DateTime GraduationDate{ get; set; }
 
-    public required DiplomaTemplate DiplomaTemplate { get; set; } 
+    public required int TemplateId { get; set; } 
     public required List<StudentResponseDto> Students { get; set; } 
 }

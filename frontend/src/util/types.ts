@@ -29,8 +29,6 @@ export type Student = {
     name: string;
     email: string;
 }
-
-
 // bootcamps
 
 export type BootcampRequest = {
@@ -42,7 +40,7 @@ export type BootcampResponse = {
     guidId: string;
     name: string;
     graduationDate: Date;
-    diplomaTemplate: TemplateResponse;
+    templateId: number;
     students: Student[];
 }
 

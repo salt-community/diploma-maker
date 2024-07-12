@@ -23,15 +23,9 @@ export async function postBootcamp(bootcampRequest: BootcampRequest): Promise<vo
 export async function getBootcamps(setLoadingMessage: (message: string) => void): Promise<BootcampResponse[]> {
     setLoadingMessage('Fetching bootcamps...');
     const response = await fetch(`${apiUrl}/api/Bootcamps`);
-    if (!response.ok) {
-        setLoadingMessage('');
-        throw new Error("Failed to get bootcamps!");
-    }
-    const results = await response.json() as BootcampResponse[];
-
-    await Promise.all(results.map(async result => {
-        result.diplomaTemplate.basePdf = await getTemplatePdfFile(result.diplomaTemplate.basePdf, result.diplomaTemplate.lastUpdated);
-    }));
+    if (!response.ok)
+        throw new Error("Failed to get bootcamps!")
+    const results = await response.json() as BootcampResponse[]
 
     return results;
 }
@@ -41,8 +35,6 @@ export async function getBootcampById(guidId: string): Promise<BootcampResponse>
     if (!response.ok)
         throw new Error("Failed to get bootcamp!")
     const result = await response.json() as  BootcampResponse;
-
-    result.diplomaTemplate.basePdf = await getTemplatePdfFile(result.diplomaTemplate.basePdf, result.diplomaTemplate.lastUpdated);
     
     return result;
 }
