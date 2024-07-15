@@ -1,4 +1,4 @@
-import { StudentResponse, StudentUpdateRequestDto,  } from "../util/types";
+import { StudentRequestNew, StudentResponse, StudentUpdateRequestDto,  } from "../util/types";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -34,10 +34,18 @@ export async function deleteStudentById(guidId: string): Promise<void> {
 }
 
 export async function updateSingleStudent(StudentRequest: StudentUpdateRequestDto): Promise<StudentResponse> {
-    const response = await fetch(`${apiUrl}/api/Students`, {
+    console.log("UPDATING STUDENT");
+    console.log(StudentRequest);
+
+    const studentReq: StudentRequestNew = {
+        name: StudentRequest.studentName,
+        email: StudentRequest.emailAddress
+    }
+
+    const response = await fetch(`${apiUrl}/api/Students/${StudentRequest.guidId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(StudentRequest)
+        body: JSON.stringify(studentReq)
     });
 
     if (!response.ok) {

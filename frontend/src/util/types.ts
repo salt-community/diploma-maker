@@ -128,3 +128,9 @@ export type TemplateInstanceStyle = {
     font: string | null;
     fontColor: string | null;
   };
+
+
+export type StudentRequestNew = {
+    name: string,
+    email: string
+}

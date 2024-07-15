@@ -154,7 +154,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             }
             closeInfoPopup();
             const emailUpdateResponse = await updateStudentInformation(emailUpdateRequest);
-            customAlert(PopupType.success, "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateResponse.studentName}`)
+            customAlert(PopupType.success, "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateRequest.studentName}`)
 
         } catch (error) {
             customAlert(PopupType.fail, "Something Went Wroing", `${error}`)
