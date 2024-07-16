@@ -13,6 +13,9 @@ import { deleteTemplateById, getAllTemplates, postTemplate, putTemplate } from "
 import { postEmail } from "./services/emailService";
 import { delay } from "./util/helper";
 import { LoadingMessageProvider, useLoadingMessage } from "./components/Contexts/LoadingMessageContext";
+import { initApiEndpoints } from "./services/apiFactory";
+
+const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
 export default function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
@@ -20,7 +23,7 @@ export default function App() {
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
 
   async function getBootcampsFromBackend() {
-    const newBootcamps: BootcampResponse[] = await getBootcamps(setLoadingMessage);
+    const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);
     setBootcamps(newBootcamps);
   }
 
@@ -34,23 +37,23 @@ export default function App() {
   // bootcamps
   async function deleteBootcamp(i: number){
     const guid = bootcamps![i].guidId;
-    await deleteBootcampById(guid);
+    await api.deleteBootcampById(guid);
     await refresh();
   }
   
   async function addNewBootcamp(bootcamp: BootcampRequest){
-    await postBootcamp(bootcamp);
+    await api.postBootcamp(bootcamp);
     await refresh();
   }
   
   async function updateBootcamp(bootcamp: BootcampRequest){
-    await updateBootcampService(bootcamp);
+    await api.updateBootcamp(bootcamp);
     await refresh();
   }
 
   //students
   async function deleteStudent(id: string){
-    await deleteStudentById(id);
+    await api.deleteStudentById(id);
     await refresh();
   }
 /*   async function addMultipleStudents(studentsRequest: StudentsRequestDto): Promise<StudentResponse[]> {
@@ -60,40 +63,40 @@ export default function App() {
   } */
   
   async function updateStudentInformation(StudentRequest: StudentUpdateRequestDto){
-      var StudentResponse = await updateSingleStudent(StudentRequest);
+      var StudentResponse = await api.updateSingleStudent(StudentRequest);
       await refresh();
       return StudentResponse
    }
    
   // templates
   async function getTemplates() {
-    const templates: TemplateResponse[] = await getAllTemplates(setLoadingMessage); 
+    const templates: TemplateResponse[] = await api.getAllTemplates(setLoadingMessage); 
     setTemplates(templates);
   }
 
   async function addNewTemplate(template: TemplateRequest){
-    await postTemplate(template);
+    await api.postTemplate(template);
     await refresh();
   }
 
   async function updateTemplate(id: number, templateRequest: TemplateRequest){
-    var templateResponse = await putTemplate(id, templateRequest);
+    var templateResponse = await api.putTemplate(id, templateRequest);
     await refresh();
     return templateResponse
   }
 
   async function deleteTemplate(id: number){
-    await deleteTemplateById(id);
+    await api.deleteTemplateById(id);
     await refresh();
   }
   //email
   async function sendEmail(emailRequest: EmailSendRequest){
-    await postEmail(emailRequest)
+    await api.postEmail(emailRequest)
   }
 
   async function refresh(){
-    const newBootcamps = await getBootcamps(setLoadingMessage);
-    const newTemplates = await getAllTemplates(setLoadingMessage);
+    const newBootcamps = await api.getBootcamps(setLoadingMessage);
+    const newTemplates = await api.getAllTemplates(setLoadingMessage);
     setBootcamps(newBootcamps);
     setTemplates(newTemplates);
   }

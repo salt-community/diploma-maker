@@ -15,13 +15,13 @@ import { getTemplate, makeTemplateInput } from '../../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../../components/MenuItems/Buttons/SelectButton';
-import { InfoPopup, InfoPopupType } from '../../components/MenuItems/Popups/InfoPopup';
 import { EmailClient } from '../../components/EmailClient/EmailClient';
 import { EmailIcon } from '../../components/MenuItems/Icons/EmailIcon';
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from '../../util/dataHelpers';
 import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
 import { useCustomInfoPopup } from '../../components/Hooks/useCustomInfoPopup';
 import { Template } from '@pdfme/common';
+import { InfoPopup } from '../../components/MenuItems/Popups/InfoPopup';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,

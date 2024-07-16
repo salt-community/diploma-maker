@@ -17,19 +17,19 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps }: Props)
 
     async function submitToAddBootcamp(){
         if(name == ""){
-            customAlert(PopupType.fail, "Input Validation Error", "Name cannot be empty");
+            customAlert('fail', "Input Validation Error", "Name cannot be empty");
             return;
         }
         bootcamps!.forEach(bootcamp => {
             if(bootcamp.name == name){
-                customAlert(PopupType.fail, "Input Validation Error", "The name already exists");
+                customAlert('fail', "Input Validation Error", "The name already exists");
                 return;
             }
         });
         const newBootcamp: BootcampRequest = {name: name,  graduationDate: gradDate}
         await addNewBootcamp(newBootcamp);
 
-        customAlert(PopupType.success, "Successfully added!", "Successfully added new bootcamp to database");
+        customAlert('success', "Successfully added!", "Successfully added new bootcamp to database");
     }
 
     return (

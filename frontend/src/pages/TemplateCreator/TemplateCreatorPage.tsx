@@ -346,7 +346,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   };
 
   const confirmAddNewTemplateHandler = async () => {
-    customPopup('question', "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent));
+    customPopup('form', "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent));
   };
 
   const confirmRemoveTemplateHandler = async () => {

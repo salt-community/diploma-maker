@@ -1,8 +1,6 @@
 import { EmailSendRequest } from "../util/types";
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
-export async function postEmail(emailRequest: EmailSendRequest): Promise<void> {
+export async function postEmail(apiUrl: string, emailRequest: EmailSendRequest): Promise<void> {
     const formData = new FormData();
     formData.append('file', emailRequest.file);
 
@@ -17,7 +15,6 @@ export async function postEmail(emailRequest: EmailSendRequest): Promise<void> {
         throw new Error("")
     if(response.status == 400){
         const errorData = await response.json();
-        console.log(response.json())
         throw new Error(errorData.message)
     }
     if (!response.ok) {
