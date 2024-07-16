@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
 import { getFontsData, getPlugins, populateField } from "../../util/helper";
 import { makeTemplateInput } from "../../templates/baseTemplate";
-import { mapTemplateInputsToTemplateViewer, mapTemplateInputsToTemplateViewerSingle } from "../../util/dataHelpers";
+import { mapTemplateInputsToTemplateViewer, mapTemplateInputsToTemplateViewerSingle, templateInputsSingleBootcampandTemplate } from "../../util/dataHelpers";
 
 type Props = {
     getStudentByVerificationCode: (verificationCode: string) => void
@@ -40,32 +40,7 @@ export function VertificationPage( { getStudentByVerificationCode, bootcamps, te
 
     useEffect(() => {
         if(templateData && bootcampData && studentData){
-            const inputs = [makeTemplateInput(
-                populateField(
-                  // @ts-ignore
-                  templateData.intro,
-                  bootcampData.name,
-                  bootcampData.graduationDate.toString().slice(0, 10),
-                  student.name
-                ),
-                populateField(
-                  // @ts-ignore
-                  templateData.main,
-                  bootcampData.name,
-                  bootcampData.graduationDate.toString().slice(0, 10),
-                  student.name
-                ),
-                populateField(
-                  // @ts-ignore
-                  templateData.footer,
-                  bootcampData.name,
-                  bootcampData.graduationDate.toString().slice(0, 10),
-                  student.name
-                ),
-                // @ts-ignore
-                templateData.basePdf,
-                student.verificationCode
-              )];
+            const inputs = templateInputsSingleBootcampandTemplate(bootcampData, templateData, student.name, student.verificationCode);
             const template = mapTemplateInputsToTemplateViewerSingle(templateData, inputs[0])
 
             getFontsData().then((font) => {

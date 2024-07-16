@@ -56,6 +56,35 @@ export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, n
   );
 }
 
+export const templateInputsSingleBootcampandTemplate = (bootcampData: BootcampResponse, templateData: TemplateResponse, studentName: string, studentVerificationCode: string) => {
+  return [makeTemplateInput(
+    populateField(
+      // @ts-ignore
+      templateData.intro,
+      bootcampData.name,
+      bootcampData.graduationDate.toString().slice(0, 10),
+      studentName
+    ),
+    populateField(
+      // @ts-ignore
+      templateData.main,
+      bootcampData.name,
+      bootcampData.graduationDate.toString().slice(0, 10),
+      studentName
+    ),
+    populateField(
+      // @ts-ignore
+      templateData.footer,
+      bootcampData.name,
+      bootcampData.graduationDate.toString().slice(0, 10),
+      studentName
+    ),
+    // @ts-ignore
+    templateData.basePdf,
+    studentVerificationCode
+  )]
+}
+
 export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selectedBootcampIndex: number, inputs: any) => {
     const template: Template = getTemplate(
         inputs,
