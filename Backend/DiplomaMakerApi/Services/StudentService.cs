@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
-using DiplomaMakerApi.Dtos;
+using DiplomaMakerApi.Exceptions;
+
 
 namespace DiplomaMakerApi.Services;
 
@@ -73,7 +74,7 @@ public class StudentService
     {
         var Student = await _context.Students.
             FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId)
-            ?? throw new StudentNotFoundException("this bootcamp does not exist");
+            ?? throw new StudentNotFoundException(guidId);
 
         _ = _context.Students.Remove(Student);
         await _context.SaveChangesAsync();
@@ -83,28 +84,18 @@ public class StudentService
     {
         var Student = await _context.Students.FirstOrDefaultAsync(b => b.GuidId == GuidID);
 
-        if (Student != null)
+        if (Student == null) 
         {
-            Student.Name = updateDto.Name;
-            Student.Email = updateDto.Email;
-
-            await _context.SaveChangesAsync();
-            return Student;
-        }
-        throw new StudentNotFoundException("This Student does not exist");
+            throw new StudentNotFoundException("Student", GuidID);    
+        } 
+        
+        Student.Name = updateDto.Name;
+        Student.Email = updateDto.Email;
+        await _context.SaveChangesAsync();
+        return Student;
+        
     }
     
 }
 
 
-
-
-public class StudentNotFoundException : Exception
-{
-    public StudentNotFoundException(string message) : base(message) { }
-}
-
-public class StudentExistsException : Exception
-{
-    public StudentExistsException(string message) : base(message) { }
-}

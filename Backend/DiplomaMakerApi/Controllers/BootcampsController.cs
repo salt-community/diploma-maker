@@ -6,6 +6,7 @@ using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using AutoMapper;
 using DiplomaMakerApi.Dtos;
+using DiplomaMakerApi.Exceptions;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -109,10 +110,7 @@ public class BootcampsController : ControllerBase
         {
              return NotFound(ex.Message);
         }
-        catch (StudentExistsException ex)
-        {
-            return Conflict(new { message = ex.Message });
-        }
+
         
     }
 

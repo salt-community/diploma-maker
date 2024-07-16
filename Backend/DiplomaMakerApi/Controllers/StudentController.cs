@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Models;
 using AutoMapper;
 using DiplomaMakerApi.Services;
+using DiplomaMakerApi.Exceptions;
 
 namespace StudentMakerApi.Controllers;
 
@@ -16,20 +17,9 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     [HttpPut("{GuidID}")]
     public async Task<ActionResult<StudentResponseDto>> UpdateStudents(Guid GuidID, StudentUpdateRequestDto updateDto)
     {
-        try
-        {
-            var updatedStudent = await _service.UpdateStudent(GuidID, updateDto);
-            if (updatedStudent == null)
-            {
-                return NotFound("Student not found");
-            }
-            var responseDto = _mapper.Map<StudentResponseDto>(updatedStudent);
-            return Ok(responseDto);
-        }
-        catch (StudentNotFoundException)
-        {
-            return NotFound("Bootcamp not found");
-        }
+        var updatedStudent = await _service.UpdateStudent(GuidID, updateDto);
+        var responseDto = _mapper.Map<StudentResponseDto>(updatedStudent);
+        return Ok(responseDto);
     }
 
     [HttpGet]
