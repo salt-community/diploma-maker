@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Models;
 using AutoMapper;
 using DiplomaMakerApi.Services;
-using DiplomaMakerApi.Exceptions;
+
 
 namespace StudentMakerApi.Controllers;
 
@@ -23,39 +23,26 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<StudentResponseDto>>> GetStudents([FromQuery] string keyword = "")
+    public async Task<ActionResult<List<StudentResponseDto>>> GetStudents()
     {
-        List<Student> students;
-
-        if (string.IsNullOrWhiteSpace(keyword))
-        {
-            students = await _service.GetAllStudents();
-        }
-        else
-        {
-            students = await _service.GetStudentsByKeyword(keyword);
-        }
-
+        
+        var students = await _service.GetAllStudents();
         var studentResponseDtos = _mapper.Map<List<StudentResponseDto>>(students);
         return Ok(studentResponseDtos);
     }
 
     [HttpGet("{guidId}")]
-    public async Task<ActionResult<StudentResponseDto>> GetStudentByGuidId(string guidId)
+    public async Task<ActionResult<StudentResponseDto>> GetStudentByGuidId(Guid guidId)
     {
         var Student = await _service.GetStudentByGuidId(guidId);
-        if (Student == null)
-            return NotFound();
         var responseDto = _mapper.Map<StudentResponseDto>(Student);
-
         return responseDto;
     }
 
     // DELETE: api/Student/5
     [HttpDelete("{guidId}")]
-    public async Task<IActionResult> DeleteStudent(string guidId)
+    public async Task<IActionResult> DeleteStudent(Guid guidId)
     {
-       
         await _service.DeleteStudentByGuidId(guidId);
         return NoContent();
     }

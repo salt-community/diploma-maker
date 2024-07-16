@@ -62,19 +62,20 @@ public class StudentService
         return Students;
     }
 
-    public async Task<Student?> GetStudentByGuidId(string guidId)
+    public async Task<Student?> GetStudentByGuidId(Guid guidId)
     {
         var Student = await _context.Students
             .Include(d => d.Bootcamp)
-            .FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId);
-        return Student;
+            .FirstOrDefaultAsync(b => b.GuidId == guidId);
+
+        return Student ?? throw new NotFoundByGuidException("Student", guidId);
     }
 
-    public async Task<Student> DeleteStudentByGuidId(string guidId)
+    public async Task<Student> DeleteStudentByGuidId(Guid guidId)
     {
         var Student = await _context.Students.
-            FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId)
-            ?? throw new NotFoundByGuidException(guidId);
+            FirstOrDefaultAsync(b => b.GuidId == guidId)
+            ?? throw new NotFoundByGuidException("Student", guidId);
 
         _ = _context.Students.Remove(Student);
         await _context.SaveChangesAsync();
