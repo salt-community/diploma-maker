@@ -34,75 +34,71 @@ export default function App() {
     }
   }, [bootcamps]);
 
-  // bootcamps
-  async function deleteBootcamp(i: number){
+  // Bootcamp Endpoint
+  const deleteBootcamp = async (i: number) =>{
     const guid = bootcamps![i].guidId;
     await api.deleteBootcampById(guid);
     await refresh();
   }
   
-  async function addNewBootcamp(bootcamp: BootcampRequest){
+  const addNewBootcamp = async (bootcamp: BootcampRequest) => {
     await api.postBootcamp(bootcamp);
     await refresh();
   }
   
-  async function updateBootcamp(bootcamp: BootcampRequest){
+  const updateBootcamp = async (bootcamp: BootcampRequest) =>{
     await api.updateBootcamp(bootcamp);
     await refresh();
   }
 
-  //students
-  async function deleteStudent(id: string){
+  const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
+    api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid)
+  }
+
+  // Students Endpoint
+  const deleteStudent = async (id: string) => {
     await api.deleteStudentById(id);
     await refresh();
   }
-/*   async function addMultipleStudents(studentsRequest: StudentsRequestDto): Promise<StudentResponse[]> {
-    const response = await postMultipleStudents(studentsRequest);
-    await refresh();
-    return response;
-  } */
   
-  async function updateStudentInformation(StudentRequest: StudentUpdateRequestDto){
-      var StudentResponse = await api.updateSingleStudent(StudentRequest);
-      await refresh();
-      return StudentResponse
-   }
+  const updateStudentInformation = async (StudentRequest: StudentUpdateRequestDto) => {
+    var StudentResponse = await api.updateSingleStudent(StudentRequest);
+    await refresh();
+    return StudentResponse
+  }
+
+  const apigetStudentById = async (guidId: string) => {
+    api.getStudentById(guidId);
+  }
    
-  // templates
-  async function getTemplates() {
+  // Templates Endpoint
+  const getTemplates = async () => {
     const templates: TemplateResponse[] = await api.getAllTemplates(setLoadingMessage); 
     setTemplates(templates);
   }
 
-  async function addNewTemplate(template: TemplateRequest){
+  const addNewTemplate = async (template: TemplateRequest) => {
     await api.postTemplate(template);
     await refresh();
   }
 
-  async function updateTemplate(id: number, templateRequest: TemplateRequest){
+  const updateTemplate = async (id: number, templateRequest: TemplateRequest) => {
     var templateResponse = await api.putTemplate(id, templateRequest);
     await refresh();
     return templateResponse
   }
 
-  async function deleteTemplate(id: number){
+  const deleteTemplate = async (id: number) => {
     await api.deleteTemplateById(id);
     await refresh();
   }
-  //email
-  async function sendEmail(emailRequest: EmailSendRequest){
+
+  // Email Endpoint
+  const sendEmail = async (emailRequest: EmailSendRequest) => {
     await api.postEmail(emailRequest)
   }
 
-  async function UpdateBootcampWithNewFormdata(updateFormDataRequest: FormDataUpdateRequest, guidid: string){
-    api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid)
-  }
-
-  async function apigetStudentById(guidId: string){
-    api.getStudentById(guidId);
-  }
-
-  async function refresh(){
+  const refresh = async () => {
     const newBootcamps = await api.getBootcamps(setLoadingMessage);
     const newTemplates = await api.getAllTemplates(setLoadingMessage);
     setBootcamps(newBootcamps);
