@@ -337,29 +337,20 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   };
 
   const shouldWeSaveHandler = async (index: number) => {
-    customPopup(
-      ConfirmationPopupType.question, "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index)
-    );
+    customPopup('question', "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index));
   };
 
   const confirmChangeTemplateHandler = async () => {
     const currentTemplateIndex = getTemplateIndex(currentTemplate);
-    customPopup(
-      ConfirmationPopupType.question, 
-      "Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(currentTemplateIndex)
-    );
+    customPopup('question', "Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(currentTemplateIndex));
   };
 
   const confirmAddNewTemplateHandler = async () => {
-    customPopup(
-      ConfirmationPopupType.form, "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent)
-    );
+    customPopup('question', "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent));
   };
 
   const confirmRemoveTemplateHandler = async () => {
-    customPopup(
-      ConfirmationPopupType.warning, `Are you sure you want to remove ${currentTemplate?.templateName}?`, "This will unlink the template for all bootcamps that use it.", () => () => removeTemplate()
-    );
+    customPopup('warning', `Are you sure you want to remove ${currentTemplate?.templateName}?`, "This will unlink the template for all bootcamps that use it.", () => () => removeTemplate());
   };
 
   const globalAbortHandler = () => {
