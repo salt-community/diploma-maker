@@ -96,6 +96,7 @@ namespace DiplomaMakerApi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     GuidId = table.Column<Guid>(type: "uuid", nullable: false),
+                    VerificationCode = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: true),
                     BootcampId = table.Column<int>(type: "integer", nullable: false)

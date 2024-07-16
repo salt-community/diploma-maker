@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaMakerApi.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240711093942_init")]
+    [Migration("20240716122146_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -120,6 +120,10 @@ namespace DiplomaMakerApi.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("VerificationCode")
                         .IsRequired()
                         .HasColumnType("text");
 

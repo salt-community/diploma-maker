@@ -120,6 +120,10 @@ namespace DiplomaMakerApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("VerificationCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BootcampId");
