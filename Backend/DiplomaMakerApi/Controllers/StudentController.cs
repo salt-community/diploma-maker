@@ -55,15 +55,8 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     [HttpDelete("{guidId}")]
     public async Task<IActionResult> DeleteStudent(string guidId)
     {
-        try
-        {
-            await _service.DeleteStudentByGuidId(guidId);
-        }
-        catch(StudentNotFoundException)
-        {
-            return NotFound("Bootcamp not found");
-        }
-
+       
+        await _service.DeleteStudentByGuidId(guidId);
         return NoContent();
     }
 

@@ -24,16 +24,16 @@ public class ErrorHandlingMiddleware
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unhandled exception has occurred.");
-            await HandleStudentExceptionAsync(context, ex);
+            await HandleGuidExceptionAsync(context, ex);
             // add more customhandlers here
         }
     }
 //define custom handler
-private static Task HandleStudentExceptionAsync(HttpContext context, Exception exception)
+private static Task HandleGuidExceptionAsync(HttpContext context, Exception exception)
 {
     context.Response.ContentType = "application/json";
 
-    if (exception is StudentNotFoundException ex)
+    if (exception is NotFoundByGuidException ex)
     {
         context.Response.StatusCode = (int)HttpStatusCode.NotFound;
         return context.Response.WriteAsJsonAsync(new 

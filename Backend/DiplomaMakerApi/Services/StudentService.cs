@@ -25,7 +25,7 @@ public class StudentService
         
         if (requestDto.students.Count == 0)
         {
-            throw new StudentNotFoundException("You need to add students to perform this update"); 
+            throw new NotFoundByGuidException("You need to add students to perform this update"); 
         }
 
         _context.Students.RemoveRange(bootcamp.Students);
@@ -74,7 +74,7 @@ public class StudentService
     {
         var Student = await _context.Students.
             FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId)
-            ?? throw new StudentNotFoundException(guidId);
+            ?? throw new NotFoundByGuidException(guidId);
 
         _ = _context.Students.Remove(Student);
         await _context.SaveChangesAsync();
@@ -86,7 +86,7 @@ public class StudentService
 
         if (Student == null) 
         {
-            throw new StudentNotFoundException("Student", GuidID);    
+            throw new NotFoundByGuidException("Student", GuidID);    
         } 
         
         Student.Name = updateDto.Name;

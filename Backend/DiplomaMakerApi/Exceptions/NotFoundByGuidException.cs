@@ -1,34 +1,34 @@
 namespace DiplomaMakerApi.Exceptions;
 
 
-public class StudentNotFoundException : Exception
+public class NotFoundByGuidException : Exception
 {   
     public string? ResourceName { get; }
     public Guid ResourceId { get; }
 
-    public StudentNotFoundException()
+    public NotFoundByGuidException()
     {
     }
 
-    public StudentNotFoundException(string message)
+    public NotFoundByGuidException(string message)
         : base(message)
     {
     }
 
-    public StudentNotFoundException(string message, Exception inner)
+    public NotFoundByGuidException(string message, Exception inner)
         : base(message, inner)
     {
     }
     
 
-    public StudentNotFoundException(string resourceName, Guid resourceId)
+    public NotFoundByGuidException(string resourceName, Guid resourceId)
         : base($"{resourceName} with id {resourceId} was not found.")
     {
         ResourceName = resourceName;
         ResourceId = resourceId;
     }
 
-    public StudentNotFoundException(string resourceName, Guid resourceId, Exception inner)
+    public NotFoundByGuidException(string resourceName, Guid resourceId, Exception inner)
         : base($"{resourceName} with id {resourceId} was not found.", inner)
     {
         ResourceName = resourceName;
