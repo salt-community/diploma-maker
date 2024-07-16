@@ -1,14 +1,13 @@
 import './VerificationPage.css'
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom"
-import QRCode from "react-qr-code";
-import { BootcampResponse, Student, StudentResponse, TemplateResponse } from "../../util/types";
+import { BootcampResponse, StudentResponse, TemplateResponse } from "../../util/types";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { generatePDF, getFontsData, getPlugins, populateField } from "../../util/helper";
+import { generatePDF, getFontsData, getPlugins } from "../../util/helper";
 import { makeTemplateInput } from "../../templates/baseTemplate";
-import { mapTemplateInputsToTemplateViewer, mapTemplateInputsToTemplateViewerSingle, templateInputsSingleBootcampandTemplate } from "../../util/dataHelpers";
+import { mapTemplateInputsToTemplateViewerSingle, templateInputsSingleBootcampandTemplate } from "../../util/dataHelpers";
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
 
 type Props = {
