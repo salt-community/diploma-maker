@@ -1,12 +1,11 @@
 namespace DiplomaMakerApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using AutoMapper;
 using DiplomaMakerApi.Dtos;
-using DiplomaMakerApi.Exceptions;
 
 [Route("api/[controller]")]
 [ApiController]

@@ -22,14 +22,14 @@ public class NotFoundByGuidException : Exception
     
 
     public NotFoundByGuidException(string resourceName, Guid resourceId)
-        : base($"{resourceName} with id {resourceId} was not found.")
+        : base($"{resourceName} with Guid {resourceId} was not found.")
     {
         ResourceName = resourceName;
         ResourceId = resourceId;
     }
 
     public NotFoundByGuidException(string resourceName, Guid resourceId, Exception inner)
-        : base($"{resourceName} with id {resourceId} was not found.", inner)
+        : base($"{resourceName} with Guid {resourceId} was not found.", inner)
     {
         ResourceName = resourceName;
         ResourceId = resourceId;

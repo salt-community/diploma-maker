@@ -18,8 +18,8 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     public async Task<ActionResult<StudentResponseDto>> UpdateStudents(Guid GuidID, StudentUpdateRequestDto updateDto)
     {
         var updatedStudent = await _service.UpdateStudent(GuidID, updateDto);
-        var responseDto = _mapper.Map<StudentResponseDto>(updatedStudent);
-        return Ok(responseDto);
+        return _mapper.Map<StudentResponseDto>(updatedStudent);
+        
     }
 
     [HttpGet]
@@ -27,16 +27,16 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     {
         
         var students = await _service.GetAllStudents();
-        var studentResponseDtos = _mapper.Map<List<StudentResponseDto>>(students);
-        return Ok(studentResponseDtos);
+        return _mapper.Map<List<StudentResponseDto>>(students);
+       
     }
 
     [HttpGet("{guidId}")]
     public async Task<ActionResult<StudentResponseDto>> GetStudentByGuidId(Guid guidId)
     {
         var Student = await _service.GetStudentByGuidId(guidId);
-        var responseDto = _mapper.Map<StudentResponseDto>(Student);
-        return responseDto;
+        return _mapper.Map<StudentResponseDto>(Student);
+        
     }
 
     // DELETE: api/Student/5
