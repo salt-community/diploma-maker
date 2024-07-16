@@ -18,8 +18,10 @@ type Props = {
 
 export function VertificationPage( { getStudentByVerificationCode, bootcamps, templates }: Props) {
     const { verificationCode } = useParams<{ verificationCode: string }>();
+
     const uiRef = useRef<HTMLDivElement | null>(null);
     const uiInstance = useRef<Form | Viewer | null>(null);
+
     const [studentData, setStudentData] = useState<StudentResponse>(null);
     const [bootcampData, setBootcampData] = useState<BootcampResponse>(null);
     const [templateData, setTemplateData] = useState<TemplateResponse>(null);
@@ -64,7 +66,7 @@ export function VertificationPage( { getStudentByVerificationCode, bootcamps, te
             }
             
         }
-    }, [uiRef, studentData, templateData, bootcampData])
+    }, [uiRef, templateData])
 
     const { isLoading, data: student, isError } = useQuery({
         queryKey: ['getDiplomaById'],
