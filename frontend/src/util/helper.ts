@@ -305,3 +305,19 @@ const getFontFromIndexedDB = async (label: string): Promise<ArrayBuffer | null> 
     };
   });
 };
+
+
+export const generateVerificationCode = (length = 5) => {
+  const guid = URL.createObjectURL(new Blob()).slice(-36).replace(/-/g, '');
+
+  const chars = guid.split('');
+
+  const random = () => Math.floor(Math.random() * chars.length);
+
+  let code = '';
+  for (let i = 0; i < length; i++) {
+      code += chars[random()];
+  }
+
+  return code;
+}

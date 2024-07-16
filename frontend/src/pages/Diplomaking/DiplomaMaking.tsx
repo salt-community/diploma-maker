@@ -7,6 +7,7 @@ import {
   generatePDF,
   newGenerateCombinedPDF,
   mapBootcampToSaltData,
+  generateVerificationCode,
 } from "../../util/helper";
 import DiplomaDataForm from "../../components/Forms/DiplomaDataForm";
 import { useParams } from "react-router-dom";
@@ -167,7 +168,8 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
         students: saltData[selectedBootcampIndex].students.map((student, index) => ({
           guidId: currentBootcamp.students[index]?.guidId || crypto.randomUUID(),
           name: student.name,
-          email: student.email,    
+          email: student.email,
+          verificationCode: currentBootcamp.students[index]?.verificationCode || generateVerificationCode()
         })),
         templateId: saltData[selectedBootcampIndex].template.id
       };

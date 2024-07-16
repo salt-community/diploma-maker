@@ -5,6 +5,7 @@ export type StudentRequest = {
     guidId?: string;
     name: string;
     email?: string;
+    verificationCode: string;
 }
 
 export type FormDataUpdateRequest = {
@@ -29,6 +30,7 @@ export type Student = {
     guidId?: string;
     name: string;
     email: string;
+    verificationCode?: string;
 }
 // bootcamps
 
