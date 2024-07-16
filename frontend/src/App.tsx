@@ -62,8 +62,10 @@ export default function App() {
     return StudentResponse
   }
 
-  const apigetStudentById = async (guidId: string) => {
-    api.getStudentById(guidId);
+  const getStudentByVerificationCode = async (verificationCode: string) => {
+    const studentResponse = api.getStudentByVerificationCode(verificationCode);
+    console.log(studentResponse);
+    return studentResponse;
   }
    
   // Templates Endpoint
@@ -106,7 +108,7 @@ export default function App() {
       <Routes>
         <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}/>} />
         <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} />
-        <Route path={`/:guidId`} element = {<VertificationPage apigetStudentById={apigetStudentById}/>} />
+        <Route path={`/verify/:guidId`} element = {<VertificationPage getStudentByVerificationCode={getStudentByVerificationCode}/>} />
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates}/>} />
         <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate}/>} />
