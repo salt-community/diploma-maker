@@ -274,7 +274,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       closeConfirmationPopup();
       try {
         await updateTemplate(currentTemplate?.id, currentTemplate);
-        customAlert(PopupType.success,"Template Successfully Updated!",`Successfully updated ${currentTemplate.diplomaTemplateName} to database`);
+        customAlert('success',"Template Successfully Updated!",`Successfully updated ${currentTemplate.diplomaTemplateName} to database`);
         setTemplateHasChanged(false);
         if (goToIndex !== undefined) {
           setCurrentTemplate(templateData[goToIndex] || null);
@@ -282,7 +282,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
           setFileAdded(false);
         }
       } catch (error) {
-        customAlert(PopupType.fail,"Template Update failure!",`${error} when trying to update template.`);
+        customAlert('fail',"Template Update failure!",`${error} when trying to update template.`);
       }
     }
   };
@@ -292,19 +292,19 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     if (
       templateData.some((template) => template.templateName === inputContent)
     ) {
-      customAlert(PopupType.fail,"Template Creation failure!",`Name already exists`);
+      customAlert('fail',"Template Creation failure!",`Name already exists`);
       return;
     }
     if (inputContent && inputContent.trim() != "") {
       try {
         await addNewTemplate(createBlankTemplate(inputContent));
-        customAlert(PopupType.success,"Succesfully added new template!",`Successfully added new template to database.`);
+        customAlert('success',"Succesfully added new template!",`Successfully added new template to database.`);
         setTemplateAdded(true);
       } catch (error) {
-        customAlert(PopupType.fail,"Template add failure!",`${error} when trying to add new template to database.`);
+        customAlert('fail',"Template add failure!",`${error} when trying to add new template to database.`);
       }
     } else {
-      customAlert(PopupType.fail,"Template Creation failure!",`Name field is blank`);
+      customAlert('fail',"Template Creation failure!",`Name field is blank`);
     }
   };
 
@@ -313,16 +313,16 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       closeConfirmationPopup();
       const templateId = currentTemplate?.id;
       if (templateId === 1) {
-        customAlert(PopupType.fail,`Cannot Delete the Default Template`,`You are not allowed to delete the baseTemplate.`);
+        customAlert('fail',`Cannot Delete the Default Template`,`You are not allowed to delete the baseTemplate.`);
         return;
       }
       try {
         await deleteTemplate(templateId);
         setTemplateIndex(0);
-        customAlert(PopupType.fail,"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
+        customAlert('fail',"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
         setTemplateHasChanged(false);
       } catch (error) {
-        customAlert(PopupType.fail,"Template Update failure!",`${error} when trying to update template.`);
+        customAlert('fail',"Template Update failure!",`${error} when trying to update template.`);
       }
     }
   };
@@ -332,7 +332,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       const updatedTemplate = createUpdatedTemplate(currentTemplate, designer);
       await setCurrentTemplate(updatedTemplate);
       setRightSideBarPage(0);
-      customAlert(PopupType.message, "Inputs Saved", `Remember to also save your template for changes to reflect in pdfcreator!`);
+      customAlert('message', "Inputs Saved", `Remember to also save your template for changes to reflect in pdfcreator!`);
     }
   };
 

@@ -19,7 +19,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
 
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [popupContent, setPopupContent] = useState<string[]>(["",""]);
-  const [popupType, setPopupType] = useState<PopupType>(PopupType.success);
+  const [popupType, setPopupType] = useState<PopupType>('success');
 
   function formatDate(date: Date){
     const dateConverted = new Date(date);
@@ -32,7 +32,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
     await deleteBootcamp(i);
     setShowConfirmAlert(-1);
     
-    setPopupType(PopupType.fail);
+    setPopupType('fail');
     setPopupContent(["Delete Successful", "Successfully removed bootcamp from database."]);
     setShowPopup(true);
   }
@@ -48,12 +48,12 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
       try{
         await updateBootcamp(newBootcamp);
 
-        setPopupType(PopupType.success);
+        setPopupType('success');
         setPopupContent(["Updated Bootcamps Successfully.", "Successfully removed bootcamp from database."]);
         setShowPopup(true);
       } catch (error) {
         
-        setPopupType(PopupType.fail);
+        setPopupType('fail');
         setPopupContent(["Error Updating Bootcamp", "Successfully removed bootcamp from database."]);
         setShowPopup(true);
       }

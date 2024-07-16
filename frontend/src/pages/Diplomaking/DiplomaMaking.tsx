@@ -172,11 +172,11 @@ export default function DiplomaMaking({ bootcamps, templates }: Props) {
       };
       try {
         await UpdateBootcampWithNewFormdata(updateFormDataRequest, currentBootcamp.guidId );
-        customAlert(PopupType.success, "Diplomas added successfully.", "Successfully added diplomas to the database.");
+        customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
       } catch (error) {
         console.log(error)
-        customAlert(PopupType.fail, "Failed to add diplomas:", `${error}`);
+        customAlert('fail', "Failed to add diplomas:", `${error}`);
       }
     }
   };

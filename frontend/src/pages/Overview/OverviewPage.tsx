@@ -92,12 +92,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
 
     const deleteHandler = async (id: string) => {
         await deleteStudent(id);
-        customAlert(PopupType.fail, "Successfully deleted", "Diploma has been successfully deleted from the database.")
+        customAlert('fail', "Successfully deleted", "Diploma has been successfully deleted from the database.")
     };
 
     const generatePDFsHandler = async () => {
         if (!bootcamps || !templates) {
-            customAlert(PopupType.fail, "Error", "Bootcamps or Templates data is missing.");
+            customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
             return;
         }
     
@@ -105,12 +105,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         const inputsArray = selectedItems.map(student => {
             const selectedBootcamp = bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
             if (!selectedBootcamp) {
-                customAlert(PopupType.fail, "Error", `Bootcamp for student ${student.name} not found.`);
+                customAlert('fail', "Error", `Bootcamp for student ${student.name} not found.`);
                 return null;
             }
             const templateData = templates.find(t => t.id === selectedBootcamp.templateId);
             if (!templateData) {
-                customAlert(PopupType.fail, "Error", `Template for bootcamp ${selectedBootcamp.name} not found.`);
+                customAlert('fail', "Error", `Template for bootcamp ${selectedBootcamp.name} not found.`);
                 return null;
             }
     
@@ -120,27 +120,27 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         }).filter(inputs => inputs !== null);
     
         if (inputsArray.length === 0) {
-            customAlert(PopupType.fail, "Error", "No valid inputs found for PDF generation.");
+            customAlert('fail', "Error", "No valid inputs found for PDF generation.");
             return;
         }
     
         await newGenerateCombinedPDF(templatesArr, inputsArray);
-        customAlert(PopupType.success, "PDFs Generated", "The combined PDF has been successfully generated.");
+        customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
     };
 
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
         if(!studentInput?.email || studentInput?.email === "No Email"){
-            customAlert(PopupType.fail, "Validation Error", "Email field is empty!")
+            customAlert('fail', "Validation Error", "Email field is empty!")
             closeInfoPopup();
             return;
         }
         if(!studentInput?.email.includes('@')){
-            customAlert(PopupType.fail, "Validation Error", "Please put in a valid email address")
+            customAlert('fail', "Validation Error", "Please put in a valid email address")
             closeInfoPopup();
             return;
         }
         if(studentInput?.email == originalEmail){
-            customAlert(PopupType.message, "No changes", "Email was unchanged so no changes were made")
+            customAlert('message', "No changes", "Email was unchanged so no changes were made")
             closeInfoPopup();
             return;
         }
@@ -154,10 +154,10 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             }
             closeInfoPopup();
             const emailUpdateResponse = await updateStudentInformation(emailUpdateRequest);
-            customAlert(PopupType.success, "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateRequest.studentName}`)
+            customAlert('success', "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateRequest.studentName}`)
 
         } catch (error) {
-            customAlert(PopupType.fail, "Something Went Wroing", `${error}`)
+            customAlert('fail', "Something Went Wroing", `${error}`)
         }
     }
 
@@ -205,12 +205,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const generatePDFFile = async (guidId: string): Promise<Blob | void> => {
         const student = items.find(item => item.guidId === guidId);
         if (!student) {
-            customAlert(PopupType.fail, "Selection Error:", "No Emails Selected");
+            customAlert('fail', "Selection Error:", "No Emails Selected");
             return;
         }
         const bootcamp = bootcamps?.find(b => b.students.some(d => d.guidId === guidId));
         if (!bootcamp) {
-            customAlert(PopupType.fail, "Bootcamp Error:", "Bootcamp not found");
+            customAlert('fail', "Bootcamp Error:", "Bootcamp not found");
             return;
         }
     
