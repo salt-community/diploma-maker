@@ -8,5 +8,5 @@ public class Student
     public required string Name { get; set; }
     public string? Email { get; set; }
     [JsonIgnore]
-    public Bootcamp Bootcamp {get; set;}
+    public required Bootcamp Bootcamp {get; set;}
 }
