@@ -482,140 +482,139 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   return (
     <main className="templatecreator-page">
-      <div className="bg-boundingbox" onClick={() => setRightSideBarPage(0)}></div>
-      <ConfirmationPopup
-        title={confirmationPopupContent[0]}
-        text={confirmationPopupContent[1]}
-        show={showConfirmationPopup}
-        confirmationPopupType={confirmationPopupType}
-        abortClick={() => globalAbortHandler()}
-        // @ts-ignore
-        confirmClick={(inputContent?: string) => {confirmationPopupHandler(inputContent)}}
-      />
-      <AlertPopup
-        title={popupContent[0]}
-        text={popupContent[1]}
-        popupType={popupType}
-        show={showPopup}
-        onClose={closeAlert}
-      />
-      <section className="templatecreator-page__leftsidebar">
-        <div className="templatecreator-page__leftsidebar-menu">
-          <section className="templatecreator-page__leftsidebar-menu-section">
-            <button className="help-btn">
-              <HelpIcon />
-            </button>
-          </section>
-        </div>
-      </section>
-      <section className="templatecreator-page__preview-container">
-        <div className="templatecreator-page__preview" style={{width: "100%",overflow: "hidden",height: `calc(50vh - 68px)`,}}>
-          <h2>{currentTemplate?.templateName}</h2>
-          <div className="pdfpreview" ref={designerRef} style={{ height: `80%` }} onClick={() => setRightSideBarPage(1)}/>
-          {!templates && <SpinnerDefault classOverride="spinner" />}
-        </div>
-      </section>
-      <section className="templatecreator-page__rightsidebar">
-        <div className="templatecreator-page__rightsidebar-menu">
-          <header className="templatecreator-page__rightsidebar-menu-header">
-            <button onClick={() => setRightSideBarPage(0)} className={rightSideBarPage === 0 ? "active" : ""}>
-              Browse
-            </button>
-            <button onClick={() => setRightSideBarPage(1)} className={rightSideBarPage === 1 ? "active" : ""}>
-              Edit
-            </button>
-          </header>
-          {rightSideBarPage === 0 && (
-            <>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Templates</h3>
-                <SelectOptions
-                  containerClassOverride="overview-page__select-container"
-                  selectClassOverride="overview-page__select-box"
-                  options={templateData.map((template, index) => ({
-                    value: index.toString(),
-                    label: template.templateName,
-                  }))}
-                  value={getTemplateIndex(currentTemplate).toString()}
-                  onChange={(event) =>
-                    templateChangeHandler(Number(event.target.value))
-                  }
-                />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Add Template</h3>
-                <AddButton onClick={confirmAddNewTemplateHandler} />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Add PDF Background</h3>
-                <PdfFileUpload
-                  fileResult={(file: File) => pdfFileUploadHandler(file)}
-                  fileAdded={fileAdded}
-                  setFileAdded={setFileAdded}
-                />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <SaveButton
-                  textfield="Save Template"
-                  saveButtonType={SaveButtonType.normal}
-                  onClick={confirmChangeTemplateHandler}
-                />
-              </section>
-            </>
-          )}
-          {rightSideBarPage === 1 && (
-            <>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Layout</h3>
-                <EditSection
-                  positionX={templateStyle.positionX}
-                  positionY={templateStyle.positionY}
-                  sizeWidth={templateStyle.sizeWidth}
-                  sizeHeight={templateStyle.sizeHeight}
-                  setPositionX={setPositionXHandler}
-                  setPositionY={setPositionYHandler}
-                  setSizeWidth={setSizeWidthHandler}
-                  setSizeHeight={setSizeHeightHandler}
-                  setAlignHorizontalCenter={setAlignHorizontalCenter}
-                  setAlignVerticalCenter={setAlignVerticalCenter}
-                  fieldWidth={fieldWidth}
-                  fieldHeight={fieldHeight}
-                />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Text</h3>
-                <TextEditSection
-                  align={templateStyle.align}
-                  setAlign={(value: string) => textAlignHandler(value)}
-                  fontSize={templateStyle.fontSize}
-                  setFontSize={(value: number) => fontSizeHandler(value)}
-                  font={templateStyle.font}
-                  setFont={(value: string) => setFontHandler(value)}
-                  fontColor={templateStyle.fontColor}
-                  setFontColor={(value: string) => setFontColorHandler(value)}
-                />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Edit Field {selectedField && selectedField}</h3>
-                <SaveButton
-                  textfield="Save Inputs"
-                  saveButtonType={SaveButtonType.normal}
-                  onClick={saveFieldsHandler}
-                  customIcon={<TextInputIcon />}
-                />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <SaveButton
-                  textfield="Remove Template"
-                  saveButtonType={SaveButtonType.remove}
-                  onClick={confirmRemoveTemplateHandler}
-                />
-              </section>
-            </>
-          )}
-        </div>
-      </section>
+        <div className="bg-boundingbox" onClick={() => setRightSideBarPage(0)}></div>
+        <ConfirmationPopup
+            title={confirmationPopupContent[0]}
+            text={confirmationPopupContent[1]}
+            show={showConfirmationPopup}
+            confirmationPopupType={confirmationPopupType}
+            abortClick={() => globalAbortHandler()}
+            // @ts-ignore
+            confirmClick={(inputContent?: string) => { confirmationPopupHandler(inputContent) }}
+        />
+        <AlertPopup
+            title={popupContent[0]}
+            text={popupContent[1]}
+            popupType={popupType}
+            show={showPopup}
+            onClose={closeAlert}
+        />
+        <section className="templatecreator-page__leftsidebar">
+            <div className="templatecreator-page__leftsidebar-menu">
+                <section className="templatecreator-page__leftsidebar-menu-section">
+                    <button className="help-btn">
+                        <HelpIcon />
+                    </button>
+                </section>
+            </div>
+        </section>
+        <section className="templatecreator-page__preview-container">
+            <div className="templatecreator-page__preview" style={{ width: "100%", overflow: "hidden", height: `calc(50vh - 68px)` }}>
+                <h2>{currentTemplate?.templateName}</h2>
+                <div className="pdfpreview" ref={designerRef} style={{ height: `80%` }} onClick={() => setRightSideBarPage(1)} />
+                {!templates && <SpinnerDefault classOverride="spinner" />}
+            </div>
+        </section>
+        <section className="templatecreator-page__rightsidebar">
+            <div className="templatecreator-page__rightsidebar-menu">
+                <header className="templatecreator-page__rightsidebar-menu-header">
+                    <button onClick={() => setRightSideBarPage(0)} className={rightSideBarPage === 0 ? "active" : ""}>
+                        Browse
+                    </button>
+                    <button onClick={() => setRightSideBarPage(1)} className={rightSideBarPage === 1 ? "active" : ""}>
+                        Edit
+                    </button>
+                </header>
+                {rightSideBarPage === 0 && (
+                    <>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Templates</h3>
+                            <SelectOptions
+                                containerClassOverride="overview-page__select-container"
+                                selectClassOverride="overview-page__select-box"
+                                options={templateData.map((template, index) => ({
+                                    value: index.toString(),
+                                    label: template.templateName,
+                                }))}
+                                value={getTemplateIndex(currentTemplate).toString()}
+                                onChange={(event) =>
+                                    templateChangeHandler(Number(event.target.value))
+                                }
+                            />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Add Template</h3>
+                            <AddButton onClick={confirmAddNewTemplateHandler} />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Add PDF Background</h3>
+                            <PdfFileUpload
+                                fileResult={(file: File) => pdfFileUploadHandler(file)}
+                                fileAdded={fileAdded}
+                                setFileAdded={setFileAdded}
+                            />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <SaveButton
+                                textfield="Save Template"
+                                saveButtonType={SaveButtonType.normal}
+                                onClick={confirmChangeTemplateHandler}
+                            />
+                        </section>
+                    </>
+                )}
+                {rightSideBarPage === 1 && (
+                    <>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Layout</h3>
+                            <EditSection
+                                positionX={templateStyle.positionX}
+                                positionY={templateStyle.positionY}
+                                sizeWidth={templateStyle.sizeWidth}
+                                sizeHeight={templateStyle.sizeHeight}
+                                setPositionX={setPositionXHandler}
+                                setPositionY={setPositionYHandler}
+                                setSizeWidth={setSizeWidthHandler}
+                                setSizeHeight={setSizeHeightHandler}
+                                setAlignHorizontalCenter={setAlignHorizontalCenter}
+                                setAlignVerticalCenter={setAlignVerticalCenter}
+                                fieldWidth={fieldWidth}
+                                fieldHeight={fieldHeight}
+                            />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Text</h3>
+                            <TextEditSection
+                                align={templateStyle.align}
+                                setAlign={(value: string) => textAlignHandler(value)}
+                                fontSize={templateStyle.fontSize}
+                                setFontSize={(value: number) => fontSizeHandler(value)}
+                                font={templateStyle.font}
+                                setFont={(value: string) => setFontHandler(value)}
+                                fontColor={templateStyle.fontColor}
+                                setFontColor={(value: string) => setFontColorHandler(value)}
+                            />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Edit Field {selectedField && selectedField}</h3>
+                            <SaveButton
+                                textfield="Save Inputs"
+                                saveButtonType={SaveButtonType.normal}
+                                onClick={saveFieldsHandler}
+                                customIcon={<TextInputIcon />}
+                            />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <SaveButton
+                                textfield="Remove Template"
+                                saveButtonType={SaveButtonType.remove}
+                                onClick={confirmRemoveTemplateHandler}
+                            />
+                        </section>
+                    </>
+                )}
+            </div>
+        </section>
     </main>
-    
   );
 };
