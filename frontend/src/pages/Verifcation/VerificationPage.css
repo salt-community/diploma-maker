@@ -100,7 +100,8 @@
             filter: invert();
         }
     .verificationinfo__title-wrapper.invalid p{
-        margin-top: 3rem;
+        margin-top: 3.5rem;
+        font-size: 1.15rem;
         color: #c9c9d9;
     }
         .verificationinfo__title-wrapper.invalid p span{
