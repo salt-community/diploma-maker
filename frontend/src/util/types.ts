@@ -20,8 +20,9 @@ export type StudentUpdateRequestDto = {
 
 export type StudentResponse = {
     guidId: string;
-    studentName: string;
+    name: string;
     email: string;
+    verificationCode: string;
 }
 
 export type Student = {
