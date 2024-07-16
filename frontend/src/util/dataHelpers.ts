@@ -28,7 +28,8 @@ export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcam
             saltData[selectedBootcampIndex].students.length > 0 ? saltData[selectedBootcampIndex].students[currentPageIndex].name : "noname"
           ),
           // @ts-ignore
-          saltData[selectedBootcampIndex].template.basePdf
+          saltData[selectedBootcampIndex].template.basePdf,
+          saltData[selectedBootcampIndex].students[currentPageIndex].verificationCode
         )];
     return inputs;
 }
@@ -50,7 +51,8 @@ export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, n
       selectedBootcampData.classname, 
       selectedBootcampData.dategraduate, 
       name),
-    selectedBootcampData.template.basePdf
+    selectedBootcampData.template.basePdf,
+    "Verification Field"
   );
 }
 

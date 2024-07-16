@@ -1,12 +1,14 @@
 import { Size, Template } from "@pdfme/common";
 import { XYPosition } from "../util/types";
+import { Link } from "react-router-dom";
 
-export const makeTemplateInput= (header: string, main: string, footer: string, pdfbase: string) => {
+export const makeTemplateInput= (header: string, main: string, footer: string, pdfbase: string, link: string) => {
   return {
     main,
     header,
     footer,
     pdfbase,
+    link,
   };
 };
 
@@ -16,7 +18,7 @@ const checkPosition = (pos?: XYPosition): XYPosition | undefined => {
 
 export const getTemplate = (
   input: { 
-    header: string; main: string; footer: string; pdfbase: string }, 
+    header: string; main: string; footer: string; pdfbase: string, link: string }, 
     headerPos?: XYPosition, headerSize?: Size, headerFontSize?: number, headerFontColor?: string, headerFont?: string, headerAlignment?: string,
     mainPos?: XYPosition, mainSize?: Size, mainFontSize?: number, mainFontColor?: string, mainFont?: string, mainAlignment?: string,
     footerPos?: XYPosition, footerSize?: Size, footerFontSize?: number, footerFontColor?: string, footerFont?: string, footerAlignment?: string
@@ -66,6 +68,20 @@ schemas: [
       fontName: mainFont !== null ? mainFont : "NotoSerifJP-Regular",
       alignment: mainAlignment !== null ? mainAlignment : "center",
     },
+    link: {
+      type: "text",
+      //@ts-ignore
+      position: { x: 190, y: 290 },
+      //@ts-ignore
+      width: 20,
+      //@ts-ignore
+      height: 8,
+      rotate: 0,
+      fontSize: 14,
+      fontColor: mainFontColor !== null ? mainFontColor : "#ffffff",
+      fontName: mainFont !== null ? mainFont : "NotoSerifJP-Regular",
+      alignment: "center",
+    },
   },
 ],
 basePdf: input.pdfbase,
@@ -74,7 +90,8 @@ sampledata: [
     footer: input.footer,
     header: input.header,
     main: input.main,
+    link: input.link
   }
 ],
-columns: ["footer", "header", "main"],
+columns: ["footer", "header", "main", "link"],
 });

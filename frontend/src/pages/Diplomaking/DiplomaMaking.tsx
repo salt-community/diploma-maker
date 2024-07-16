@@ -133,7 +133,8 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
           inputs[0].header,
           inputs[0].main,
           inputs[0].footer,
-          inputs[0].pdfbase
+          inputs[0].pdfbase,
+          inputs[0].link
       )
       const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, pdfInput)
      

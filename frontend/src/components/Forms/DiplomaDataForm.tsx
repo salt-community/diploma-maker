@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BootcampResponse, TemplateResponse, SaltData, Student } from "../../util/types";
 import { FileUpload } from "../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../services/InputFileService';
+import { generateVerificationCode } from "../../util/helper";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -99,7 +100,7 @@ export default function   ({ updateSaltData, bootcamps, setSelectedBootcampIndex
           Student Names
         </label>
         <TagsInput
-          selectedTags={(names: string[]) => setStudents(names.map(name => ({ name, email: '' })))} // Adjust this based on how TagsInput is implemented
+          selectedTags={(names: string[]) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))} // Adjust this based on how TagsInput is implemented
           tags={saltData.students.map(student => student.name)}
         />
       </div>

@@ -30,7 +30,7 @@ export type Student = {
     guidId?: string;
     name: string;
     email: string;
-    verificationCode?: string;
+    verificationCode: string;
 }
 // bootcamps
 
