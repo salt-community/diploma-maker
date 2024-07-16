@@ -2,7 +2,7 @@ import { BootcampRequest, EmailSendRequest, FormDataUpdateRequest, StudentUpdate
 import { deleteBootcampById, getBootcampById, getBootcamps, postBootcamp, updateBootcamp, UpdateBootcampWithNewFormdata } from "./bootcampService";
 import { postEmail } from "./emailService";
 import { getTemplatePdfFile } from "./fileService";
-import { deleteStudentById, getStudentById, getStudentsByKeyword, updateSingleStudent } from "./studentService";
+import { deleteStudentById, getStudentById, getStudentByVerificationCode, getStudentsByKeyword, updateSingleStudent } from "./studentService";
 import { deleteTemplateById, getAllTemplates, getTemplateById, postTemplate, putTemplate } from "./templateService";
 
 export const initApiEndpoints = (apiBaseUrl: string) => {
@@ -24,6 +24,7 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
 
         // Student Endpoint
         getStudentById: (guidId: string) => getStudentById(apiBaseUrl, guidId),
+        getStudentByVerificationCode: (verificationCode: string) => getStudentByVerificationCode(apiBaseUrl, verificationCode),
         getStudentsByKeyword: (keyword: string) => getStudentsByKeyword(apiBaseUrl, keyword),
         deleteStudentById: (guidId: string) => deleteStudentById(apiBaseUrl, guidId),
         updateSingleStudent: (studentRequest: StudentUpdateRequestDto) => updateSingleStudent(apiBaseUrl, studentRequest),
