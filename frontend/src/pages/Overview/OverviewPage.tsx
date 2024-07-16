@@ -239,8 +239,8 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
 
     return (
         <main className="overview-page">
-            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
-            <InfoPopup 
+            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} />
+            <InfoPopup
                 title={infoPopupContent[0]}
                 text={infoPopupContent[1]}
                 show={showInfoPopup}
@@ -251,42 +251,42 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                 currentProgress={progress}
                 setCurrentProgress={setProgress}
             />
-            {selectedItems.length > 0 && 
-                <EmailClient 
-                    title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'} 
+            {selectedItems.length > 0 &&
+                <EmailClient
+                    title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'}
                     clients={selectedItems}
-                    closeEmailClient={() => {setShowEmailClient(false)}}
+                    closeEmailClient={() => { setShowEmailClient(false) }}
                     show={showEmailClient}
-                    modifyStudentEmailHandler={modifyStudentEmailHandler} 
-                    sendEmails={(userIds: string[]) => {sendEmailsHandler(userIds)}}
+                    modifyStudentEmailHandler={modifyStudentEmailHandler}
+                    sendEmails={(userIds: string[]) => { sendEmailsHandler(userIds) }}
                     callCustomAlert={customAlert}
                 />
             }
-            <section className='overview-page__listmodule'>
-            <div className='overview-page__listmodule-cardcontainer'>
+            <section className='overview-page__list-module'>
+                <div className='overview-page__list-module-card-container'>
                     {loading ? (
-                        <SpinnerDefault classOverride="spinner"/>
+                        <SpinnerDefault classOverride="spinner" />
                     ) : (
                         // @ts-ignore
                         selectedItems.length > 0 ? selectedItems.map((student: Student, index) => (
-                            <button key={student.guidId} className='listmodule__item'>
-                                <p className='overview-page__item--title'>{student.name}</p>
-                                <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                                <section className='overview-page__item--menu'>
+                            <button key={student.guidId} className='list-module__item'>
+                                <p className='list-module__item-title'>{student.name}</p>
+                                <img className='list-module__item-bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
+                                <section className='list-module__item-menu'>
                                     <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
                                     <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
-                                    <SelectButton classOverride="email-btn" selectButtonType={SelectButtonType.email} onClick={() => showStudentInfohandler(student)}/>
+                                    <SelectButton classOverride="email-btn" selectButtonType={SelectButtonType.email} onClick={() => showStudentInfohandler(student)} />
                                 </section>
                             </button>
-                        )) : 
-                        <Popup404 text='No Diplomas Generated Yet For This Bootcamp'/>
+                        )) :
+                            <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />
                     )}
                 </div>
                 {selectedItems.length > 0 &&
                     <PaginationMenu
                         containerClassOverride='overview-page__footer'
-                        buttonClassOverride='overview-page__pagination-button'
-                        textContainerClassOverride='overview-page__pagination-info'
+                        buttonClassOverride='pagination-button'
+                        textContainerClassOverride='pagination-info'
                         currentPage={currentPage}
                         totalPages={totalPages}
                         handleNextPage={handleNextPage}
@@ -296,25 +296,25 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             </section>
             <section className='overview-page__sidebar'>
                 <div className='overview-page__sidebar-menu'>
-                    <header className="overview-page__sidebar-menu-header">
+                    <header className="sidebar-menu__header">
                         <button>
                             Browse
                         </button>
                     </header>
-                    <section className="overview-page__sidebar-menu-section">
+                    <section className="sidebar-menu__section">
                         <h3>Filtering</h3>
                         <SearchInput
-                            containerClassOverride='overview-page__header input-wrapper'
-                            inputClassOverride='overview-page__search-input'
+                            containerClassOverride='sidebar-menu__input-wrapper'
+                            inputClassOverride='sidebar-menu__search-input'
                             searchQuery={searchQuery}
                             handleSearchChange={handleSearchChange}
                         />
                     </section>
-                    <section className="overview-page__sidebar-menu-section">
+                    <section className="sidebar-menu__section">
                         <h3>Bootcamps</h3>
                         <SelectOptions
-                            containerClassOverride='overview-page__select-container'
-                            selectClassOverride='overview-page__select-box'
+                            containerClassOverride='sidebar-menu__select-container'
+                            selectClassOverride='sidebar-menu__select-box'
                             options={[
                                 { value: "", label: "All Bootcamps" },
                                 ...(bootcamps?.map(bootcamp => ({
@@ -325,12 +325,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                             onChange={handleBootcampChange}
                         />
                     </section>
-                    <section className="overview-page__sidebar-menu-section">
+                    <section className="sidebar-menu__section">
                         <h3>Generate</h3>
                         <PublishButton text='Generate PDFs' onClick={generatePDFsHandler} />
                     </section>
-                    <section className="overview-page__sidebar-menu-section">
-                        <SaveButton textfield="Email Management" saveButtonType={SaveButtonType.normal} onClick={() => setShowEmailClient(true)} customIcon={<EmailIcon />}/>
+                    <section className="sidebar-menu__section">
+                        <SaveButton textfield="Email Management" saveButtonType={SaveButtonType.normal} onClick={() => setShowEmailClient(true)} customIcon={<EmailIcon />} />
                     </section>
                 </div>
             </section>
