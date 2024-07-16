@@ -167,7 +167,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             if(!student.email){
                 emailAddress = "No Email"
             }
-            customInfoPopup(InfoPopupType.form, student.name, emailAddress, () => (inputContent?: Student) => modifyStudentEmailHandler({
+            customInfoPopup('form', student.name, emailAddress, () => (inputContent?: Student) => modifyStudentEmailHandler({
                 guidId: student.guidId,
                 name: student.name,
                 //@ts-ignore
