@@ -275,7 +275,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                                 <section className='list-module__item-menu'>
                                     <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
                                     <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
-                                    <SelectButton classOverride="email-btn" selectButtonType={SelectButtonType.email} onClick={() => showStudentInfohandler(student)} />
+                                    <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
                                 </section>
                             </button>
                         )) :
