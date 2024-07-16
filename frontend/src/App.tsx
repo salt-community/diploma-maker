@@ -2,7 +2,7 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest } from "./util/types";
 import { deleteBootcampById, getBootcamps, postBootcamp, updateBootcamp as updateBootcampService } from "./services/bootcampService";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
@@ -94,6 +94,14 @@ export default function App() {
     await api.postEmail(emailRequest)
   }
 
+  async function UpdateBootcampWithNewFormdata(updateFormDataRequest: FormDataUpdateRequest, guidid: string){
+    api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid)
+  }
+
+  async function apigetStudentById(guidId: string){
+    api.getStudentById(guidId);
+  }
+
   async function refresh(){
     const newBootcamps = await api.getBootcamps(setLoadingMessage);
     const newTemplates = await api.getAllTemplates(setLoadingMessage);
@@ -105,9 +113,9 @@ export default function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} />} />
-        <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} />} />
-        <Route path={`/:guidId`} element = {<VertificationPage />} />
+        <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}/>} />
+        <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} />
+        <Route path={`/:guidId`} element = {<VertificationPage apigetStudentById={apigetStudentById}/>} />
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates}/>} />
         <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate}/>} />

@@ -2,16 +2,21 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom"
 import { getStudentById } from "../../services/studentService";
 import QRCode from "react-qr-code";
+import { initApiEndpoints } from "../../services/apiFactory";
 /*
 https://www.npmjs.com/package/react-qr-code
 */
 
-export function VertificationPage() {
+type Props = {
+    apigetStudentById: (guidId: string) => void
+}
+
+export function VertificationPage( { apigetStudentById }: Props) {
     const { guidId } = useParams<{ guidId: string }>();
 
     const { isLoading, data: diploma } = useQuery({
         queryKey: ['getDiplomaById'],
-        queryFn: () => getStudentById(guidId || ''),
+        queryFn: () => apigetStudentById(guidId || ''),
         onSuccess: (data) => {
             console.log("Success", data);
         }

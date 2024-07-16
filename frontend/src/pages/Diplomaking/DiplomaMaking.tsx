@@ -29,9 +29,10 @@ import { UpdateBootcampWithNewFormdata } from "../../services/bootcampService";
 type Props = {
   bootcamps: BootcampResponse[] | null;
   templates: TemplateResponse[] | null;
+  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void
 };
 
-export default function DiplomaMaking({ bootcamps, templates }: Props) {
+export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
 
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
