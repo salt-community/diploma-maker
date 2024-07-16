@@ -88,7 +88,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 <button onClick={closeEmailClient} className='emailclient-close-btn'>
                     <CloseWindowIcon />
                 </button>
-                <SaveButton classNameOverride="send-emails-btn" saveButtonType={SaveButtonType.normal} textfield="Send Emails to Selected Clients" onClick={sendEmailsHandler}/>
+                <SaveButton classNameOverride="send-emails-btn" saveButtonType={'normal'} textfield="Send Emails to Selected Clients" onClick={sendEmailsHandler}/>
             </section>
             <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
         </>

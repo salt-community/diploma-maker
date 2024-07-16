@@ -11,27 +11,23 @@ type Props = {
   customIcon?: React.ReactNode;
 };
 
-export enum SaveButtonType {
-  grandTheftAuto,
-  normal,
-  remove
-}
+export type SaveButtonType = 'grandTheftAuto' | 'normal' | 'remove';
 
 export const SaveButton = ({ classNameOverride, onClick, saveButtonType, textfield, customIcon }: Props) => (
-  <button className={"save-btn " + classNameOverride + (saveButtonType === SaveButtonType.grandTheftAuto ? ' gta' : saveButtonType === SaveButtonType.remove ? ' remove' : ' normal')} onClick={onClick}>
+  <button className={"save-btn " + classNameOverride + (saveButtonType === 'grandTheftAuto' ? ' gta' : saveButtonType === 'remove' ? ' remove' : ' normal')} onClick={onClick}>
     {customIcon ? (
       <>
         {customIcon}
-        {saveButtonType !== SaveButtonType.grandTheftAuto && (
+        {saveButtonType !== 'grandTheftAuto' && (
           <label className='save-btn_title' htmlFor="">{textfield}</label>
         )}
       </>
-    ) : saveButtonType === SaveButtonType.normal ? (
+    ) : saveButtonType === 'normal' ? (
       <>
         <CloudUploadIcon />
         <label className='save-btn_title' htmlFor="">{textfield}</label>
       </>
-    ) : saveButtonType === SaveButtonType.grandTheftAuto ? (
+    ) : saveButtonType === 'grandTheftAuto' ? (
         <GtaSaveIcon />
     ) : (
       <>

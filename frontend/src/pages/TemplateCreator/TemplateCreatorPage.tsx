@@ -548,7 +548,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                         <section className="templatecreator-page__rightsidebar-menu-section">
                             <SaveButton
                                 textfield="Save Template"
-                                saveButtonType={SaveButtonType.normal}
+                                saveButtonType={'normal'}
                                 onClick={confirmChangeTemplateHandler}
                             />
                         </section>
@@ -590,7 +590,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                             <h3>Edit Field {selectedField && selectedField}</h3>
                             <SaveButton
                                 textfield="Save Inputs"
-                                saveButtonType={SaveButtonType.normal}
+                                saveButtonType={'normal'}
                                 onClick={saveFieldsHandler}
                                 customIcon={<TextInputIcon />}
                             />
@@ -598,7 +598,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                         <section className="templatecreator-page__rightsidebar-menu-section">
                             <SaveButton
                                 textfield="Remove Template"
-                                saveButtonType={SaveButtonType.remove}
+                                saveButtonType={'remove'}
                                 onClick={confirmRemoveTemplateHandler}
                             />
                         </section>

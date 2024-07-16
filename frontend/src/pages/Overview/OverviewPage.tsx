@@ -330,7 +330,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                         <PublishButton text='Generate PDFs' onClick={generatePDFsHandler} />
                     </section>
                     <section className="sidebar-menu__section">
-                        <SaveButton textfield="Email Management" saveButtonType={SaveButtonType.normal} onClick={() => setShowEmailClient(true)} customIcon={<EmailIcon />} />
+                        <SaveButton textfield="Email Management" saveButtonType={'normal'} onClick={() => setShowEmailClient(true)} customIcon={<EmailIcon />} />
                     </section>
                 </div>
             </section>

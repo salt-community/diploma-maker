@@ -219,7 +219,7 @@ export default function DiplomaMaking({ bootcamps, templates }: Props) {
             </div>
             <PublishButton text="Generate PDF" onClick={generatePDFHandler} />
             <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler} />
-            <SaveButton textfield="" saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler} />
+            <SaveButton textfield="" saveButtonType={'grandTheftAuto'} onClick={saveInputFieldsHandler} />
           </header>
           { (saltData && saltData[selectedBootcampIndex].students.length > 0) ?
           <>
