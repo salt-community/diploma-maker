@@ -12,15 +12,15 @@ export const NavBar = () => {
         <nav className="navbar">
             <ul className="navbar__menu">
                 <li className="navbar__item">
-                    <Link to="/" className={"navbar__link " + (location.pathname == '/' && "active")}>
-                        <PdfCreatorIcon />
-                        PDFcreator
-                    </Link>
-                </li>
-                <li className="navbar__item">
                     <Link to="/overview" className={"navbar__link " + ((location.pathname == '/overview' || location.pathname == '/Overview') && "active")}>
                         <DashBoardIcon />
                         Dashboard
+                    </Link>
+                </li>
+                <li className="navbar__item">
+                    <Link to="/" className={"navbar__link " + (location.pathname == '/' && "active")}>
+                        <PdfCreatorIcon />
+                        PDFcreator
                     </Link>
                 </li>
                 <li className="navbar__item">

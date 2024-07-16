@@ -172,11 +172,11 @@ export default function DiplomaMaking({ bootcamps, templates }: Props) {
       };
       try {
         await UpdateBootcampWithNewFormdata(updateFormDataRequest, currentBootcamp.guidId );
-        customAlert(PopupType.success, "Diplomas added successfully.", "Successfully added diplomas to the database.");
+        customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
       } catch (error) {
         console.log(error)
-        customAlert(PopupType.fail, "Failed to add diplomas:", `${error}`);
+        customAlert('fail', "Failed to add diplomas:", `${error}`);
       }
     }
   };
@@ -219,7 +219,7 @@ export default function DiplomaMaking({ bootcamps, templates }: Props) {
             </div>
             <PublishButton text="Generate PDF" onClick={generatePDFHandler} />
             <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler} />
-            <SaveButton textfield="" saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler} />
+            <SaveButton textfield="" saveButtonType={'grandTheftAuto'} onClick={saveInputFieldsHandler} />
           </header>
           { (saltData && saltData[selectedBootcampIndex].students.length > 0) ?
           <>

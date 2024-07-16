@@ -4,7 +4,7 @@ import { PopupType } from '../MenuItems/Popups/AlertPopup';
 export const useCustomAlert = () => {
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [popupContent, setPopupContent] = useState<string[]>(["",""]);
-    const [popupType, setPopupType] = useState<PopupType>(PopupType.success);
+    const [popupType, setPopupType] = useState<PopupType>('success');
 
     const customAlert = (alertType: PopupType, title: string, content: string) => {
         setPopupType(alertType);
