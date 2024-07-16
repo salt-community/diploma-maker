@@ -1,0 +1,11 @@
+.spinner-container{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+}
+
+nav{
+    visibility: hidden !important;
+    display: none !important;
+}

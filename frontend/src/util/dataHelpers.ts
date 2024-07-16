@@ -1,7 +1,7 @@
 import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { populateField } from "./helper";
-import { SaltData, TemplateRequest, TemplateResponse } from "./types";
+import { BootcampRequest, BootcampResponse, SaltData, TemplateRequest, TemplateResponse } from "./types";
 
 export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcampIndex: number, currentPageIndex: number) => {
     const inputs = 
@@ -99,6 +99,51 @@ export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selected
         saltData[selectedBootcampIndex].template.footerStyling?.alignment ?? null // footerAlignment
       );
     return template;
+}
+
+export const mapTemplateInputsToTemplateViewerSingle = (template: TemplateResponse, inputs: any) => {
+  const templateOutput: Template = getTemplate(
+      inputs,
+      { 
+        x: template.introStyling?.xPos ?? null, 
+        y: template.introStyling?.yPos ?? null
+      }, // headerPos
+      { 
+        //@ts-ignore
+        width: template.introStyling?.width ?? null, 
+        //@ts-ignore
+        height: template.introStyling?.height ?? null
+      }, // headerSize
+      template.introStyling?.fontSize ?? null, // footerFontSize
+      template.introStyling?.fontColor ?? null, // footerFontColor
+      template.introStyling?.fontName ?? null, // footerFont
+      template.introStyling?.alignment ?? null, // footerAlignment
+      { 
+        x: template.mainStyling?.xPos ?? null, 
+        y: template.mainStyling?.yPos ?? null
+      }, // mainPos
+      { 
+        width: template.mainStyling?.width ?? null, 
+        height: template.mainStyling?.height ?? null
+      }, // mainSize
+      template.mainStyling?.fontSize ?? null, // footerFontSize
+      template.mainStyling?.fontColor ?? null, // footerFontColor
+      template.mainStyling?.fontName ?? null, // footerFont
+      template.mainStyling?.alignment ?? null, // footerAlignment
+      { 
+        x: template.footerStyling?.xPos ?? null, 
+        y: template.footerStyling?.yPos ?? null 
+      }, // footerPos
+      { 
+        width: template.footerStyling?.width ?? null, 
+        height: template.footerStyling?.height ?? null
+      }, // footerSize
+      template.footerStyling?.fontSize ?? null, // footerFontSize
+      template.footerStyling?.fontColor ?? null, // footerFontColor
+      template.footerStyling?.fontName ?? null, // footerFont
+      template.footerStyling?.alignment ?? null // footerAlignment
+    );
+  return templateOutput;
 }
 
 export const mapTemplateInputsBootcampsToTemplateViewer = (templateInput: TemplateResponse, pdfInput: any) => {
