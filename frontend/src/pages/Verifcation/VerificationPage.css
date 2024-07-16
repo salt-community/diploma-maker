@@ -9,3 +9,31 @@ nav{
     visibility: hidden !important;
     display: none !important;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/*Disable text on hovering text-preview*/
+
+.pdfpreview-container div div div div[title="main"]{
+    position: relative;
+    cursor: default !important;
+}
+
+.pdfpreview-container div div div div[title="main"]::before{
+    position: absolute;
+    content: '';
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 500;
+    pointer-events: all !important;
+    background-color: rgba(0, 0, 255, 0);
+}
