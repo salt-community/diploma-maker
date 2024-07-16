@@ -61,7 +61,6 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
         return responseDto;
     }
 
-    // DELETE: api/Student/5
     [HttpDelete("{guidId}")]
     public async Task<IActionResult> DeleteStudent(string guidId)
     {
@@ -75,6 +74,17 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
         }
 
         return NoContent();
+    }
+
+    [HttpGet("verificationCode/{verificationCode}")]
+    public async Task<ActionResult<StudentResponseDto>> getStudentByVerificationCode(string verificationCode)
+    {
+        var Student = await _service.GetStudentByVerificationCode(verificationCode);
+        if (Student == null)
+            return NotFound();
+        var responseDto = _mapper.Map<StudentResponseDto>(Student);
+
+        return responseDto;
     }
 
 }
