@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaMakerApi.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240717083317_init")]
+    [Migration("20240717114054_init")]
     partial class init
     {
         /// <inheritdoc />
