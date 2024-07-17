@@ -45,6 +45,8 @@ namespace DiplomaMakerApi.Migrations
                     IntroStylingId = table.Column<int>(type: "integer", nullable: true),
                     Main = table.Column<string>(type: "text", nullable: false),
                     MainStylingId = table.Column<int>(type: "integer", nullable: true),
+                    Link = table.Column<string>(type: "text", nullable: false),
+                    LinkStylingId = table.Column<int>(type: "integer", nullable: true),
                     LastUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -58,6 +60,11 @@ namespace DiplomaMakerApi.Migrations
                     table.ForeignKey(
                         name: "FK_DiplomaTemplates_TemplateStyles_IntroStylingId",
                         column: x => x.IntroStylingId,
+                        principalTable: "TemplateStyles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DiplomaTemplates_TemplateStyles_LinkStylingId",
+                        column: x => x.LinkStylingId,
                         principalTable: "TemplateStyles",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -132,6 +139,11 @@ namespace DiplomaMakerApi.Migrations
                 name: "IX_DiplomaTemplates_IntroStylingId",
                 table: "DiplomaTemplates",
                 column: "IntroStylingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DiplomaTemplates_LinkStylingId",
+                table: "DiplomaTemplates",
+                column: "LinkStylingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DiplomaTemplates_MainStylingId",

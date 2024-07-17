@@ -11,7 +11,6 @@ public class DiplomaTemplate
 
     public string Intro {get; set;} = "This certifies that\n";
     public TemplateStyle? IntroStyling { get; set; }
-
     public string Main {get; set;} =  "{studentname}";
     public TemplateStyle? MainStyling { get; set; }
     public string Link { get; set; } = "{id}";
