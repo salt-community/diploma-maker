@@ -9,6 +9,7 @@ import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
 import { TemplateCreatorPage } from "./pages/TemplateCreator/TemplateCreatorPage";
 import { useLoadingMessage } from "./components/Contexts/LoadingMessageContext";
 import { initApiEndpoints } from "./services/apiFactory";
+import { VerificationInputPage } from "./pages/Verifcation/VerificationInputPage";
 
 const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
@@ -107,6 +108,7 @@ export default function App() {
       <Routes>
         <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}/>} />
         <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} />
+        <Route path={`/verify`} element={<VerificationInputPage />} />
         <Route path={`/verify/:verificationCode`} element = {<VertificationPage getStudentByVerificationCode={getStudentByVerificationCode} bootcamps={bootcamps} templates={templates}/>} />
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates}/>} />
