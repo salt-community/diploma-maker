@@ -237,7 +237,19 @@ export const mapTemplateInputsBootcampsToTemplateViewer = (templateInput: Templa
     templateInput.footerStyling?.fontSize ?? null,
     templateInput.footerStyling?.fontColor ?? null,
     templateInput.footerStyling?.fontName ?? null,
-    templateInput.footerStyling?.alignment ?? null
+    templateInput.footerStyling?.alignment ?? null,
+    {
+      x: templateInput.linkStyling?.xPos ?? null,
+      y: templateInput.linkStyling?.yPos ?? null,
+  },
+  {
+      width: templateInput.linkStyling?.width ?? null,
+      height: templateInput.linkStyling?.height ?? null,
+  },
+  templateInput.linkStyling?.fontSize ?? null,
+  templateInput.linkStyling?.fontColor ?? null,
+  templateInput.linkStyling?.fontName ?? null,
+  templateInput.linkStyling?.alignment ?? null
 );
   return template;
 }

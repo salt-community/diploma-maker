@@ -114,7 +114,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                 return null;
             }
     
-            const inputs = templateInputsFromBootcampData(mapBootcampToSaltData(selectedBootcamp, templateData), student.name);
+            const inputs = templateInputsFromBootcampData(mapBootcampToSaltData(selectedBootcamp, templateData), student.name, student.verificationCode);
             templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(templateData, inputs));
             return inputs;
         }).filter(inputs => inputs !== null);
