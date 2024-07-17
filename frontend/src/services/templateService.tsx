@@ -6,7 +6,8 @@ export async function getAllTemplates(apiUrl: string, setLoadingMessage: (messag
     
     const response = await fetch(`${apiUrl}/api/templates`);
     if (!response.ok) {
-        setLoadingMessage(`Failed to load initial templates!. ${response.body}`)
+        const errorData = await response.json();
+        setLoadingMessage(`Failed to load initial templates!. ${errorData.message || 'Unknown error'}`)
         throw new Error("Failed to get templates!");
     }
     
