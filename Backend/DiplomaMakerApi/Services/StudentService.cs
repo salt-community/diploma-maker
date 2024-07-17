@@ -80,14 +80,6 @@ public class StudentService
         return Student;
     }
 
-    public async Task<Student?> GetStudentByVerificationCode(string verificationCode)
-    {
-        var Student = await _context.Students
-            .Include(d => d.Bootcamp)
-            .FirstOrDefaultAsync(b => b.VerificationCode == verificationCode);
-        return Student;
-    }
-
     public async Task<Student> DeleteStudentByGuidId(Guid guidId)
     {
         var Student = await _context.Students.
