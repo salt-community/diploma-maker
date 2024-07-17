@@ -21,7 +21,8 @@ export const getTemplate = (
     header: string; main: string; footer: string; pdfbase: string, link: string }, 
     headerPos?: XYPosition, headerSize?: Size, headerFontSize?: number, headerFontColor?: string, headerFont?: string, headerAlignment?: string,
     mainPos?: XYPosition, mainSize?: Size, mainFontSize?: number, mainFontColor?: string, mainFont?: string, mainAlignment?: string,
-    footerPos?: XYPosition, footerSize?: Size, footerFontSize?: number, footerFontColor?: string, footerFont?: string, footerAlignment?: string
+    footerPos?: XYPosition, footerSize?: Size, footerFontSize?: number, footerFontColor?: string, footerFont?: string, footerAlignment?: string,
+    linkPos?: XYPosition, linkSize?: Size, linkFontSize?: number, linkFontColor?: string, linkFont?: string, linkAlignment?: string
   ): Template => ({
 
 schemas: [
@@ -71,16 +72,16 @@ schemas: [
     link: {
       type: "text",
       //@ts-ignore
-      position: { x: 190, y: 290 },
+      position: checkPosition(linkPos) ?? { x: 190, y: 290 },
       //@ts-ignore
-      width: 20,
+      width: linkSize?.width !== null ? linkSize.width : 20,
       //@ts-ignore
-      height: 8,
+      height: linkSize?.height !== null ? linkSize.height : 8,
       rotate: 0,
-      fontSize: 14,
-      fontColor: mainFontColor !== null ? mainFontColor : "#ffffff",
-      fontName: mainFont !== null ? mainFont : "NotoSerifJP-Regular",
-      alignment: "center",
+      fontSize: linkFontSize !== null ? linkFontSize : 14,
+      fontColor: linkFontColor !== null ? linkFontColor : "#ffffff",
+      fontName: linkFont !== null ? linkFont : "NotoSerifJP-Regular",
+      alignment: linkAlignment !== null ? linkAlignment : "center",
     },
   },
 ],
