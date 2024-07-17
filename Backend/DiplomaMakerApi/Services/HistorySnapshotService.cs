@@ -79,7 +79,7 @@ namespace DiplomaMakerApi.Services
                             FontName = templateUsed.LinkStyling.FontName ?? null,
                             Alignment = templateUsed.LinkStyling.Alignment ?? null,
                         },
-                        BasePdf = templateUsed?.BasePdf,
+                        BasePdf = templateBackgroundBackupLocation,
                         TemplateLastUpdated = templateUsed?.LastUpdated ?? default(DateTime),
                     };
                     _context.DiplomaGenerationLogs.Add(studentSnapshot);
