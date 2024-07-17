@@ -29,14 +29,17 @@ export function VerificationInputPage() {
                 show={showPopup}
                 onClose={closeAlert}
             />
-            <div className='verificationinfo-container'>
-                <div className='verificationinfo__logo-wrapper'>
-                    <img src="https://talent.salt.dev/logoBlack.png" alt="" />
-                </div>
-                <div className='verificationinfo__title-wrapper'>
+            <div className='verificationinput-container'>
+                <div className='verificationinput__title-wrapper'>
+                    <div className='verificationinput__logo-wrapper'>
+                        <img src="https://talent.salt.dev/logoBlack.png" alt="" />
+                    </div>
                     <p>Please put in your diploma verification code.</p>
                     <input type="text" onChange={(e) => setInputContent(e.target.value)} value={inputContent}/>
-                    <SaveButton classNameOverride='verificationinfo__title-wrapper--savebtn' textfield='Verify' customIcon={<VerifyIcon />} onClick={() => submitHandler()} saveButtonType={'normal'}/>
+                    <SaveButton classNameOverride='verificationinput__title-wrapper--savebtn' textfield='Verify' customIcon={<VerifyIcon />} onClick={() => submitHandler()} saveButtonType={'normal'}/>
+                </div>
+                <div className='verificationinput__footer-wrapper'>
+                    <p>This page verifies the authenticity of salt diplomas.</p>
                 </div>
             </div>
         </>

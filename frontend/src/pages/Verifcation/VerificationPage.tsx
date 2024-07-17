@@ -108,9 +108,6 @@ export function VertificationPage( { getStudentByVerificationCode, bootcamps, te
 
     if (isError) {
         return (
-            // <div className="text-center mt-4">
-            //     <h1 className="text-3xl font-bold text-gray-900">The diploma with Verification code: {verificationCode} is <span>not</span> authentic.</h1>
-            // </div>
             <>
                 <div className='verificationinfo-container invalid'>
                 <div className='verificationinfo__logo-wrapper invalid'>
