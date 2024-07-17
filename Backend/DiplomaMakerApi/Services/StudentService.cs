@@ -48,7 +48,7 @@ public class StudentService
         }
         await _context.SaveChangesAsync();
 
-        await _historySnapshotService.createHistorySnapshotFromBootcamp(requestDto, bootcamp);
+        await _historySnapshotService.CreateHistorySnapshotFromBootcamp(requestDto, bootcamp);
 
         return Students;
     }

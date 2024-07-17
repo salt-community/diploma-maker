@@ -2,7 +2,8 @@ using AutoMapper;
 
 namespace JokesAPI.Configuration;
 using DiplomaMakerApi.Models;
-using DiplomaMakerApi.Dtos; 
+using DiplomaMakerApi.Dtos;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 public class AutomapperConfig : Profile
 {
@@ -16,5 +17,6 @@ public class AutomapperConfig : Profile
         CreateMap<StudentResponseDto, Student>().ReverseMap();
         CreateMap<TemplateResponseDto, DiplomaTemplate>().ReverseMap();
         CreateMap<StudentUpdateRequestDto, Student>().ReverseMap();
+        CreateMap<DiplomaGenerationLogResponseDto, DiplomaGenerationLog>().ReverseMap();
     }
 }

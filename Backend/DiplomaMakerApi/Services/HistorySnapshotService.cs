@@ -1,5 +1,6 @@
 using DiplomaMakerApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace DiplomaMakerApi.Services
 {
@@ -8,7 +9,7 @@ namespace DiplomaMakerApi.Services
         private readonly DiplomaMakingContext _context = context;
         private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
 
-        public async Task createHistorySnapshotFromBootcamp(BootcampRequestUpdateDto requestDto, Bootcamp bootcampUsed) 
+        public async Task CreateHistorySnapshotFromBootcamp(BootcampRequestUpdateDto requestDto, Bootcamp bootcampUsed) 
         {
             var templateUsed = await _context.DiplomaTemplates
                 .Include(d => d.IntroStyling)
@@ -85,8 +86,11 @@ namespace DiplomaMakerApi.Services
                     await _context.SaveChangesAsync();
                 }
             }
-            
-            
+        }
+
+        public async Task<List<DiplomaGenerationLog>> GetHistorySnapshots()
+        {
+            return await _context.DiplomaGenerationLogs.ToListAsync();
         }
     }
 }
