@@ -1,10 +1,9 @@
+namespace StudentMakerApi.Controllers;
+
 using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Models;
 using AutoMapper;
 using DiplomaMakerApi.Services;
-
-
-namespace StudentMakerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -19,16 +18,13 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     {
         var updatedStudent = await _service.UpdateStudent(GuidID, updateDto);
         return _mapper.Map<StudentResponseDto>(updatedStudent);
-        
     }
 
     [HttpGet]
     public async Task<ActionResult<List<StudentResponseDto>>> GetStudents()
-    {
-        
+    {    
         var students = await _service.GetAllStudents();
         return _mapper.Map<List<StudentResponseDto>>(students);
-       
     }
 
     [HttpGet("{guidId}")]
@@ -36,10 +32,8 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     {
         var Student = await _service.GetStudentByGuidId(guidId);
         return _mapper.Map<StudentResponseDto>(Student);
-        
     }
 
-    // DELETE: api/Student/5
     [HttpDelete("{guidId}")]
     public async Task<IActionResult> DeleteStudent(Guid guidId)
     {

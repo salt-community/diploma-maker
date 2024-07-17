@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using AutoMapper;
+using DiplomaMakerApi.Exceptions;
 namespace DiplomaMakerApi.Controllers;
 
 [Route("api/[controller]")]
@@ -28,12 +29,8 @@ public class TemplatesController : ControllerBase
     public async Task<ActionResult<TemplateResponseDto>> GetTemplateById(int id)
     {
         var template = await _templateService.GetTemplate(id);
-        if (template == null)
-        {
-            return NotFound();
-        }
-        var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);
-        return Ok(templateResponseDto);
+        return _mapper.Map<TemplateResponseDto>(template);
+     
     }
 
     [HttpPost]
@@ -45,30 +42,22 @@ public class TemplatesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTemplate(int id)
+    public async Task<ActionResult<TemplateResponseDto>> DeleteTemplate(int id)
     {
         if(id == 1){
-            return BadRequest("You are not allowed to delete the base template");
+            throw new NotFoundByIdException("Student", id);
         }
         var template = await _templateService.DeleteTemplate(id);
-        if (template == null)
-        {
-            return NotFound();
-        }
-        var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);
-        return Ok(templateResponseDto);
+        return _mapper.Map<TemplateResponseDto>(template);
+        
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult<TemplateResponseDto>> PutTemplate(int id, TemplateRequestDto templateRequestDto)
     {
         var template = await _templateService.PutTemplate(id, templateRequestDto);
-        if (template == null)
-        {
-            return NotFound();
-        }
-        var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);
-        return Ok(templateResponseDto);
+        return _mapper.Map<TemplateResponseDto>(template);
+        
     }
 }
 

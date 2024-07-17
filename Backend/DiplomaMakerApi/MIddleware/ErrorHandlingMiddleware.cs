@@ -2,7 +2,7 @@ namespace DiplomaMakerApi.Middleware;
 
 using System.Net;
 using DiplomaMakerApi.Exceptions;
-
+using Microsoft.EntityFrameworkCore;
 
 public class ErrorHandlingMiddleware
 {
@@ -24,16 +24,16 @@ public class ErrorHandlingMiddleware
         catch (Exception ex)
         {
             _logger.LogError(ex, "An unhandled exception has occurred.");
-            await HandleGuidExceptionAsync(context, ex);
+            await HandleExceptionAsync(context, ex);
             // add more customhandlers here
         }
     }
 //define custom handler
-private static Task HandleGuidExceptionAsync(HttpContext context, Exception exception)
+private static Task HandleExceptionAsync(HttpContext context, Exception exception)
 {
     context.Response.ContentType = "application/json";
 
-    if (exception is NotFoundByGuidException ex)
+    if (exception is NotFoundException<int> ex)
     {
         context.Response.StatusCode = (int)HttpStatusCode.NotFound;
         return context.Response.WriteAsJsonAsync(new 
@@ -42,6 +42,18 @@ private static Task HandleGuidExceptionAsync(HttpContext context, Exception exce
             message = ex.Message,
             resource = ex.ResourceName,
             resourceId = ex.ResourceId
+        });
+    }
+
+    else if(exception is NotFoundException<Guid> ex2)
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+        return context.Response.WriteAsJsonAsync(new 
+        { 
+            status = context.Response.StatusCode, 
+            message = ex2.Message,
+            resource = ex2.ResourceName,
+            resourceId = ex2.ResourceId
         });
     }
     

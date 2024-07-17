@@ -1,7 +1,6 @@
 namespace DiplomaMakerApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using AutoMapper;
@@ -38,7 +37,6 @@ public class BootcampsController : ControllerBase
     {
         var bootcamps = await _bootcampservice.GetBootcamps();
         return _mapper.Map<List<BootcampResponseDto>>(bootcamps);
-       
     }
 
     [HttpGet("{guidId}")]
