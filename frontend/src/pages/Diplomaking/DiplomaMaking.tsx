@@ -66,6 +66,7 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
   useEffect(() => {
     
     if(saltData){
+      console.log(saltData);
       const inputs = templateInputsFromSaltData(saltData, selectedBootcampIndex, currentPageIndex);
       const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputs[0])
 

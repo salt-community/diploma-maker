@@ -39,7 +39,8 @@ public class StudentService
                     Name = Student.Name,
                     Email = Student.Email,
                     Bootcamp = bootcamp,
-                    VerificationCode = Student.VerificationCode
+                    VerificationCode = Student.VerificationCode,
+                    LastGenerated = DateTime.UtcNow,
                 };
                 _context.Students.Add(newStudent);
                 Students.Add(newStudent);

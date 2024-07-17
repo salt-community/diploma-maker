@@ -125,6 +125,9 @@ namespace DiplomaMakerApi.Migrations
                     b.Property<Guid>("GuidId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime?>("LastGenerated")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");

@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaMakerApi.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240717114054_init")]
+    [Migration("20240717123352_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -127,6 +127,9 @@ namespace DiplomaMakerApi.Migrations
 
                     b.Property<Guid>("GuidId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("LastGenerated")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()

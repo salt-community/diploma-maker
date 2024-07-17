@@ -106,6 +106,7 @@ namespace DiplomaMakerApi.Migrations
                     VerificationCode = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: true),
+                    LastGenerated = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     BootcampId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
