@@ -147,7 +147,7 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
     if (saltData) {
       const selectedBootcampData = saltData[selectedBootcampIndex];
       const inputsArray = selectedBootcampData.students.map((student) => {
-        return templateInputsFromBootcampData(selectedBootcampData, student.name);
+        return templateInputsFromBootcampData(selectedBootcampData, student.name, student.verificationCode);
       });
 
       var templatesArr: Template[] = [];

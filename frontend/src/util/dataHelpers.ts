@@ -34,7 +34,7 @@ export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcam
     return inputs;
 }
 
-export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, name: string) => {
+export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, name: string, verificationCode: string) => {
   return makeTemplateInput(
     populateField(
       selectedBootcampData.template.intro, 
@@ -52,7 +52,7 @@ export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, n
       selectedBootcampData.dategraduate, 
       name),
     selectedBootcampData.template.basePdf,
-    "Verification Field"
+    populateIdField(verificationCode)
   );
 }
 
