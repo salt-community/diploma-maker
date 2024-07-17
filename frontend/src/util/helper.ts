@@ -241,9 +241,9 @@ export const populateField = (input: string, classname: string, datebootcamp: st
     .replace('{studentname}', studentname)
 }
 
-export const populateIdField = (input: string): string => {
+export const populateIdField = (input: string, verificationCode: string): string => {
   return input
-    .replace('{id}', input)
+    .replace('{id}', verificationCode)
 }
 
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

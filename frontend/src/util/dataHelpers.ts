@@ -29,7 +29,7 @@ export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcam
           ),
           // @ts-ignore
           saltData[selectedBootcampIndex].template.basePdf,
-          populateIdField(saltData[selectedBootcampIndex].students[currentPageIndex].verificationCode)
+          populateIdField(saltData[selectedBootcampIndex].template.link, saltData[selectedBootcampIndex].students[currentPageIndex].verificationCode)
         )];
     return inputs;
 }
