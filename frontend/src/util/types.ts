@@ -67,6 +67,8 @@ export type TemplateResponse = {
     introStyling?: Style;
     main: string;
     mainStyling?: Style;
+    link: string;
+    linkStyling?: Style;
     basePdf: string;
     lastUpdated?: Date;
 }

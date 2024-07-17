@@ -1,6 +1,6 @@
 import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
-import { populateField } from "./helper";
+import { populateField, populateIdField } from "./helper";
 import { BootcampRequest, BootcampResponse, SaltData, TemplateRequest, TemplateResponse } from "./types";
 
 export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcampIndex: number, currentPageIndex: number) => {
@@ -29,7 +29,7 @@ export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcam
           ),
           // @ts-ignore
           saltData[selectedBootcampIndex].template.basePdf,
-          saltData[selectedBootcampIndex].students[currentPageIndex].verificationCode
+          populateIdField(saltData[selectedBootcampIndex].students[currentPageIndex].verificationCode)
         )];
     return inputs;
 }
