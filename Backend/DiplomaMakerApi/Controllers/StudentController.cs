@@ -1,9 +1,9 @@
+namespace StudentMakerApi.Controllers;
+
 using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Models;
 using AutoMapper;
 using DiplomaMakerApi.Services;
-
-namespace StudentMakerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -16,64 +16,28 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     [HttpPut("{GuidID}")]
     public async Task<ActionResult<StudentResponseDto>> UpdateStudents(Guid GuidID, StudentUpdateRequestDto updateDto)
     {
-        try
-        {
-            var updatedStudent = await _service.UpdateStudent(GuidID, updateDto);
-            if (updatedStudent == null)
-            {
-                return NotFound("Student not found");
-            }
-            var responseDto = _mapper.Map<StudentResponseDto>(updatedStudent);
-            return Ok(responseDto);
-        }
-        catch (StudentNotFoundException)
-        {
-            return NotFound("Bootcamp not found");
-        }
+        var updatedStudent = await _service.UpdateStudent(GuidID, updateDto);
+        return _mapper.Map<StudentResponseDto>(updatedStudent);
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<StudentResponseDto>>> GetStudents([FromQuery] string keyword = "")
-    {
-        List<Student> students;
-
-        if (string.IsNullOrWhiteSpace(keyword))
-        {
-            students = await _service.GetAllStudents();
-        }
-        else
-        {
-            students = await _service.GetStudentsByKeyword(keyword);
-        }
-
-        var studentResponseDtos = _mapper.Map<List<StudentResponseDto>>(students);
-        return Ok(studentResponseDtos);
+    public async Task<ActionResult<List<StudentResponseDto>>> GetStudents()
+    {    
+        var students = await _service.GetAllStudents();
+        return _mapper.Map<List<StudentResponseDto>>(students);
     }
 
     [HttpGet("{guidId}")]
-    public async Task<ActionResult<StudentResponseDto>> GetStudentByGuidId(string guidId)
+    public async Task<ActionResult<StudentResponseDto>> GetStudentByGuidId(Guid guidId)
     {
         var Student = await _service.GetStudentByGuidId(guidId);
-        if (Student == null)
-            return NotFound();
-        var responseDto = _mapper.Map<StudentResponseDto>(Student);
-
-        return responseDto;
+        return _mapper.Map<StudentResponseDto>(Student);
     }
 
-    // DELETE: api/Student/5
     [HttpDelete("{guidId}")]
-    public async Task<IActionResult> DeleteStudent(string guidId)
+    public async Task<IActionResult> DeleteStudent(Guid guidId)
     {
-        try
-        {
-            await _service.DeleteStudentByGuidId(guidId);
-        }
-        catch(StudentNotFoundException)
-        {
-            return NotFound("Bootcamp not found");
-        }
-
+        await _service.DeleteStudentByGuidId(guidId);
         return NoContent();
     }
 

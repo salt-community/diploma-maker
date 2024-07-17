@@ -68,8 +68,6 @@ public class BootcampService
 
     public async Task<Bootcamp> PutBootcampAsync(Guid GuidID, BootcampRequestDto requestDto)
     {
-        try
-        {
             var bootcamp = await _context.Bootcamps
                 .FirstOrDefaultAsync(b => b.GuidId == GuidID) ?? throw new ArgumentException("The specifc ID for Bootcamp does not exist");
 
@@ -78,11 +76,8 @@ public class BootcampService
 
             await _context.SaveChangesAsync();
             return bootcamp;
-        }
-        catch (DbUpdateException)
-        {
-            throw new DbUpdateException("Failed to save changes Bootcamp name needs to be unique");
-        }
+       
+     
 
     }
 

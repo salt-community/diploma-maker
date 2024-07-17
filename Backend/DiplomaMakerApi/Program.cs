@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using JokesAPI.Configuration;
 using DiplomaMakerApi.Services;
+using DiplomaMakerApi.Middleware;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,8 @@ builder.Services.AddTransient<LocalFileStorageService>();
 builder.Services.AddLogging();
 
 var app = builder.Build();
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
