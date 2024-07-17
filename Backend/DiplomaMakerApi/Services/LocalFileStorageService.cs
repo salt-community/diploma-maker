@@ -79,5 +79,28 @@ namespace DiplomaMakerApi.Services
 
             File.Copy(sourceFilePath, destinationFilePath, overwrite: true);
         }
+
+        public async Task<string> createBackup(string fileName)
+        {
+            var filePath = Path.Combine(_storagePath, fileName + ".pdf");
+            
+            int version = 1;
+            string newFileName;
+            string newFilePath;
+
+            do
+            {
+                newFileName = $"{fileName}.v{version}.pdf";
+                newFilePath = Path.Combine(_storagePath, newFileName);
+                version++;
+            } 
+            while (File.Exists(newFilePath));
+
+            File.Copy(filePath, newFilePath);
+
+            var relativePath = Path.Combine("Blob/", newFileName);
+
+            return relativePath;
+        }
     }
 }

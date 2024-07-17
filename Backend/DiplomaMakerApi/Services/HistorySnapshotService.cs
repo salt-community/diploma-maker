@@ -3,9 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services
 {
-    public class HistorySnapshotService(DiplomaMakingContext context)
+    public class HistorySnapshotService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService)
     {
         private readonly DiplomaMakingContext _context = context;
+        private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
 
         public async Task createHistorySnapshotFromBootcamp(BootcampRequestUpdateDto requestDto, Bootcamp bootcampUsed) 
         {
@@ -18,6 +19,7 @@ namespace DiplomaMakerApi.Services
 
             if(templateUsed != null)
             {
+                var templateBackgroundBackupLocation = await _localFileStorageService.createBackup(templateUsed.Name);
                 foreach(var student in requestDto.students){
                     var studentSnapshot = new DiplomaGenerationLog(){
                         GeneratedAt = DateTime.UtcNow,
@@ -35,7 +37,7 @@ namespace DiplomaMakerApi.Services
                         MainStyling = templateUsed.MainStyling,
                         Link = templateUsed.Link,
                         LinkStyling = templateUsed.LinkStyling,
-                        BasePdf = templateUsed.BasePdf,
+                        BasePdf = templateBackgroundBackupLocation,
                         TemplateLastUpdated = templateUsed.LastUpdated,
                     };
                     _context.DiplomaGenerationLogs.Add(studentSnapshot);
