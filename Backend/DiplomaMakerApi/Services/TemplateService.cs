@@ -19,6 +19,7 @@ public class TemplateService
             .Include(t => t.IntroStyling)
             .Include(t => t.MainStyling)
             .Include(t => t.FooterStyling)
+            .Include(t => t.LinkStyling)
             .ToListAsync();
     }
 
@@ -60,6 +61,8 @@ public class TemplateService
         template.IntroStyling = templateRequest.introStyling;
         template.Main = templateRequest.main;
         template.MainStyling = templateRequest.mainStyling;
+        template.Link = templateRequest.Link;
+        template.LinkStyling = templateRequest.LinkStyling;
         // template.BasePdf = templateRequest.basePdf;
         template.LastUpdated = DateTime.UtcNow;
 
