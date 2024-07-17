@@ -10,7 +10,7 @@ import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, Em
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { delay, generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF, populateField } from '../../util/helper';
+import { delay, generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF, populateField, populateIdField } from '../../util/helper';
 import { getTemplate, makeTemplateInput } from '../../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../../components/MenuItems/Buttons/SaveButton';
@@ -179,7 +179,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const sendEmailsHandler = async (userIds: string[]) => {
         if(userIds.length === 0) return
         //@ts-ignore
-        customInfoPopup(InfoPopupType.progress, "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
+        customInfoPopup("progress", "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
         const blendProgressDelay = 750;
 
         for (let i = 0; i < userIds.length; i++) {
@@ -218,7 +218,8 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             populateField(templates.find(t => t.id === bootcamp.templateId).intro , bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
             populateField(student.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
             populateField(templates.find(t => t.id === bootcamp.templateId).footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
-            templates.find(t => t.id === bootcamp.templateId).basePdf
+            templates.find(t => t.id === bootcamp.templateId).basePdf,
+            populateIdField(templates.find(t => t.id === bootcamp.templateId).link, student.verificationCode)
         );
 
         
