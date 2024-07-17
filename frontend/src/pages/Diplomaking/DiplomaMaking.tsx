@@ -165,21 +165,22 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
   const postSelectedBootcampData = async () => {
     if (saltData && bootcamps) {
       const currentBootcamp = bootcamps[selectedBootcampIndex];
+      
       const updateFormDataRequest: FormDataUpdateRequest = {
         students: saltData[selectedBootcampIndex].students.map((student, index) => ({
           guidId: currentBootcamp.students[index]?.guidId || crypto.randomUUID(),
           name: student.name,
           email: student.email,
-          verificationCode: currentBootcamp.students[index]?.verificationCode || generateVerificationCode()
+          verificationCode: student.verificationCode
         })),
         templateId: saltData[selectedBootcampIndex].template.id
       };
+      
       try {
         await UpdateBootcampWithNewFormdata(updateFormDataRequest, currentBootcamp.guidId );
         customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
       } catch (error) {
-        console.log(error)
         customAlert('fail', "Failed to add diplomas:", `${error}`);
       }
     }

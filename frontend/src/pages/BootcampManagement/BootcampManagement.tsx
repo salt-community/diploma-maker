@@ -38,7 +38,6 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   }
 
   async function handleUpdateBootcamp(data: FieldValues){
-    console.log("Updating...", data)
     for(let i=0; i<bootcamps!.length; i++){
       const newBootcamp: BootcampRequest = {
         guidId: bootcamps![i].guidId,
