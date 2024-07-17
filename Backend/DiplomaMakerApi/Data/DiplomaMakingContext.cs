@@ -13,7 +13,7 @@ public class DiplomaMakingContext : DbContext
     public DbSet<Student> Students { get; set; } = default!;
     public DbSet<DiplomaTemplate> DiplomaTemplates { get; set; } = default!;
     public DbSet<TemplateStyle> TemplateStyles { get; set; } = default!;
-    public DbSet<DiplomaGenerationHistory> diplomaGenerationHistory { get; set; } = default!;
+    public DbSet<DiplomaGenerationLog> DiplomaGenerationLogs { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaMakerApi.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240717123352_init")]
+    [Migration("20240717140910_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -53,6 +53,92 @@ namespace DiplomaMakerApi.Migrations
                         .IsUnique();
 
                     b.ToTable("Bootcamps");
+                });
+
+            modelBuilder.Entity("DiplomaMakerApi.Models.DiplomaGenerationLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BasePdf")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("BootcampGraduationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("BootcampName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("DiplomaTemplateId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Footer")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("FooterStylingId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("GeneratedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Intro")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("IntroStylingId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Link")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("LinkStylingId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Main")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("MainStylingId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("StudentGuidId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("StudentName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("TemplateLastUpdated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TemplateName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("VerificationCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiplomaTemplateId");
+
+                    b.HasIndex("FooterStylingId");
+
+                    b.HasIndex("IntroStylingId");
+
+                    b.HasIndex("LinkStylingId");
+
+                    b.HasIndex("MainStylingId");
+
+                    b.ToTable("DiplomaGenerationLogs");
                 });
 
             modelBuilder.Entity("DiplomaMakerApi.Models.DiplomaTemplate", b =>
@@ -192,6 +278,41 @@ namespace DiplomaMakerApi.Migrations
                         .IsRequired();
 
                     b.Navigation("DiplomaTemplate");
+                });
+
+            modelBuilder.Entity("DiplomaMakerApi.Models.DiplomaGenerationLog", b =>
+                {
+                    b.HasOne("DiplomaMakerApi.Models.DiplomaTemplate", "DiplomaTemplate")
+                        .WithMany()
+                        .HasForeignKey("DiplomaTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DiplomaMakerApi.Models.TemplateStyle", "FooterStyling")
+                        .WithMany()
+                        .HasForeignKey("FooterStylingId");
+
+                    b.HasOne("DiplomaMakerApi.Models.TemplateStyle", "IntroStyling")
+                        .WithMany()
+                        .HasForeignKey("IntroStylingId");
+
+                    b.HasOne("DiplomaMakerApi.Models.TemplateStyle", "LinkStyling")
+                        .WithMany()
+                        .HasForeignKey("LinkStylingId");
+
+                    b.HasOne("DiplomaMakerApi.Models.TemplateStyle", "MainStyling")
+                        .WithMany()
+                        .HasForeignKey("MainStylingId");
+
+                    b.Navigation("DiplomaTemplate");
+
+                    b.Navigation("FooterStyling");
+
+                    b.Navigation("IntroStyling");
+
+                    b.Navigation("LinkStyling");
+
+                    b.Navigation("MainStyling");
                 });
 
             modelBuilder.Entity("DiplomaMakerApi.Models.DiplomaTemplate", b =>
