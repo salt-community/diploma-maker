@@ -30,7 +30,7 @@ export type Student = {
     guidId?: string;
     name: string;
     email: string;
-    verificationCode: string;
+    verificationCode?: string;
 }
 // bootcamps
 
@@ -81,7 +81,7 @@ export type TemplateRequest = {
     introStyling?: Style;
     main: string;
     mainStyling?: Style;
-    link: string;
+    link?: string;
     linkStyling?: Style;
     basePdf?: string;
 }
