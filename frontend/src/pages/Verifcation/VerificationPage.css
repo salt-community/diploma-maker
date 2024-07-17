@@ -90,7 +90,8 @@
     }
 
 .verificationinfo-container.invalid{
-    height: 300px;
+    width: 1000px;
+    height: 350px;
 }
     .verificationinfo__logo-wrapper.invalid{
         width: 150px;
@@ -100,7 +101,7 @@
             filter: invert();
         }
     .verificationinfo__title-wrapper.invalid p{
-        margin-top: 3.5rem;
+        margin-top: 5rem;
         font-size: 1.15rem;
         color: #c9c9d9;
     }

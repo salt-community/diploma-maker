@@ -7,9 +7,11 @@
 
 .verificationinput-container{
     position: relative;
-    margin: 2rem auto 0 auto;
+    margin: 75px auto 0 auto;
     width: 90%;
     height: 75vh;
+    width: 1000px;
+    height: 350px;
 
     display: flex;
     flex-direction: column;
@@ -18,7 +20,7 @@
     background-color: #171722;
     border-radius: 1rem;
 
-    background-image: linear-gradient(to left bottom, #212b60, #1d2244, #1a1a30, #181625, #1a1c2b);
+    background-image: linear-gradient(to left bottom, #171722, #171722, #171722, #171722, #171722);
 
 }
     .verificationinput__logo-wrapper{
