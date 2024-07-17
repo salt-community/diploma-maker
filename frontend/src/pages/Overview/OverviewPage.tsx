@@ -279,7 +279,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                                     <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
                                     <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
                                         {student.lastGenerated && 
-                                            <div className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={utcFormatter(student.lastGenerated)}>
+                                            <div className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
                                                 <VerifyIcon />
                                             </div>
                                         }
