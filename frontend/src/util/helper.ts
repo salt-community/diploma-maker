@@ -241,6 +241,11 @@ export const populateField = (input: string, classname: string, datebootcamp: st
     .replace('{studentname}', studentname)
 }
 
+export const populateIdField = (input: string, verificationCode: string): string => {
+  return input
+    .replace('{id}', verificationCode)
+}
+
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export function mapBootcampToSaltData(bootcamp: BootcampResponse, template: TemplateResponse ): SaltData {
@@ -305,3 +310,19 @@ const getFontFromIndexedDB = async (label: string): Promise<ArrayBuffer | null> 
     };
   });
 };
+
+
+export const generateVerificationCode = (length = 5) => {
+  const guid = URL.createObjectURL(new Blob()).slice(-36).replace(/-/g, '');
+
+  const chars = guid.split('');
+
+  const random = () => Math.floor(Math.random() * chars.length);
+
+  let code = '';
+  for (let i = 0; i < length; i++) {
+      code += chars[random()];
+  }
+
+  return code;
+}

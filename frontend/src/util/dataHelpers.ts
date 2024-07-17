@@ -1,7 +1,7 @@
 import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
-import { populateField } from "./helper";
-import { SaltData, TemplateRequest, TemplateResponse } from "./types";
+import { populateField, populateIdField } from "./helper";
+import { BootcampRequest, BootcampResponse, SaltData, TemplateRequest, TemplateResponse } from "./types";
 
 export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcampIndex: number, currentPageIndex: number) => {
     const inputs = 
@@ -28,12 +28,13 @@ export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcam
             saltData[selectedBootcampIndex].students.length > 0 ? saltData[selectedBootcampIndex].students[currentPageIndex].name : "noname"
           ),
           // @ts-ignore
-          saltData[selectedBootcampIndex].template.basePdf
+          saltData[selectedBootcampIndex].template.basePdf,
+          populateIdField(saltData[selectedBootcampIndex].template.link, saltData[selectedBootcampIndex].students[currentPageIndex].verificationCode)
         )];
     return inputs;
 }
 
-export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, name: string) => {
+export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, name: string, verificationCode: string) => {
   return makeTemplateInput(
     populateField(
       selectedBootcampData.template.intro, 
@@ -50,8 +51,38 @@ export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, n
       selectedBootcampData.classname, 
       selectedBootcampData.dategraduate, 
       name),
-    selectedBootcampData.template.basePdf
+    selectedBootcampData.template.basePdf,
+    populateIdField(selectedBootcampData.template.link ,verificationCode)
   );
+}
+
+export const templateInputsSingleBootcampandTemplate = (bootcampData: BootcampResponse, templateData: TemplateResponse, studentName: string, studentVerificationCode: string) => {
+  return [makeTemplateInput(
+    populateField(
+      // @ts-ignore
+      templateData.intro,
+      bootcampData.name,
+      bootcampData.graduationDate.toString().slice(0, 10),
+      studentName
+    ),
+    populateField(
+      // @ts-ignore
+      templateData.main,
+      bootcampData.name,
+      bootcampData.graduationDate.toString().slice(0, 10),
+      studentName
+    ),
+    populateField(
+      // @ts-ignore
+      templateData.footer,
+      bootcampData.name,
+      bootcampData.graduationDate.toString().slice(0, 10),
+      studentName
+    ),
+    // @ts-ignore
+    templateData.basePdf,
+    studentVerificationCode
+  )]
 }
 
 export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selectedBootcampIndex: number, inputs: any) => {
@@ -94,9 +125,78 @@ export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selected
         saltData[selectedBootcampIndex].template.footerStyling?.fontSize ?? null, // footerFontSize
         saltData[selectedBootcampIndex].template.footerStyling?.fontColor ?? null, // footerFontColor
         saltData[selectedBootcampIndex].template.footerStyling?.fontName ?? null, // footerFont
-        saltData[selectedBootcampIndex].template.footerStyling?.alignment ?? null // footerAlignment
+        saltData[selectedBootcampIndex].template.footerStyling?.alignment ?? null, // footerAlignment
+        { 
+          x: saltData[selectedBootcampIndex].template.linkStyling?.xPos ?? null, 
+          y: saltData[selectedBootcampIndex].template.linkStyling?.yPos ?? null 
+        }, // linkPos
+        { 
+          width: saltData[selectedBootcampIndex].template.linkStyling?.width ?? null, 
+          height: saltData[selectedBootcampIndex].template.linkStyling?.height ?? null
+        }, // linkSize
+        saltData[selectedBootcampIndex].template.linkStyling?.fontSize ?? null, // linkFontSize
+        saltData[selectedBootcampIndex].template.linkStyling?.fontColor ?? null, // linkFontColor
+        saltData[selectedBootcampIndex].template.linkStyling?.fontName ?? null, // linkFont
+        saltData[selectedBootcampIndex].template.linkStyling?.alignment ?? null // linkAlignment
       );
     return template;
+}
+
+export const mapTemplateInputsToTemplateViewerSingle = (template: TemplateResponse, inputs: any) => {
+  const templateOutput: Template = getTemplate(
+      inputs,
+      { 
+        x: template.introStyling?.xPos ?? null, 
+        y: template.introStyling?.yPos ?? null
+      }, // headerPos
+      { 
+        //@ts-ignore
+        width: template.introStyling?.width ?? null, 
+        //@ts-ignore
+        height: template.introStyling?.height ?? null
+      }, // headerSize
+      template.introStyling?.fontSize ?? null, // footerFontSize
+      template.introStyling?.fontColor ?? null, // footerFontColor
+      template.introStyling?.fontName ?? null, // footerFont
+      template.introStyling?.alignment ?? null, // footerAlignment
+      { 
+        x: template.mainStyling?.xPos ?? null, 
+        y: template.mainStyling?.yPos ?? null
+      }, // mainPos
+      { 
+        width: template.mainStyling?.width ?? null, 
+        height: template.mainStyling?.height ?? null
+      }, // mainSize
+      template.mainStyling?.fontSize ?? null, // footerFontSize
+      template.mainStyling?.fontColor ?? null, // footerFontColor
+      template.mainStyling?.fontName ?? null, // footerFont
+      template.mainStyling?.alignment ?? null, // footerAlignment
+      { 
+        x: template.footerStyling?.xPos ?? null, 
+        y: template.footerStyling?.yPos ?? null 
+      }, // footerPos
+      { 
+        width: template.footerStyling?.width ?? null, 
+        height: template.footerStyling?.height ?? null
+      }, // footerSize
+      template.footerStyling?.fontSize ?? null, // footerFontSize
+      template.footerStyling?.fontColor ?? null, // footerFontColor
+      template.footerStyling?.fontName ?? null, // footerFont
+      template.footerStyling?.alignment ?? null, // footerAlignment
+      { 
+        x: template.linkStyling?.xPos ?? null, 
+        y: template.linkStyling?.yPos ?? null 
+      }, // linkPos
+      { 
+        width: template.linkStyling?.width ?? null, 
+        height: template.linkStyling?.height ?? null
+      }, // linkSize
+      template.linkStyling?.fontSize ?? null, // linkFontSize
+      template.linkStyling?.fontColor ?? null, // linkFontColor
+      template.linkStyling?.fontName ?? null, // linkFont
+      template.linkStyling?.alignment ?? null // linkAlignment
+    );
+  return templateOutput;
 }
 
 export const mapTemplateInputsBootcampsToTemplateViewer = (templateInput: TemplateResponse, pdfInput: any) => {
@@ -137,7 +237,19 @@ export const mapTemplateInputsBootcampsToTemplateViewer = (templateInput: Templa
     templateInput.footerStyling?.fontSize ?? null,
     templateInput.footerStyling?.fontColor ?? null,
     templateInput.footerStyling?.fontName ?? null,
-    templateInput.footerStyling?.alignment ?? null
+    templateInput.footerStyling?.alignment ?? null,
+    {
+      x: templateInput.linkStyling?.xPos ?? null,
+      y: templateInput.linkStyling?.yPos ?? null,
+  },
+  {
+      width: templateInput.linkStyling?.width ?? null,
+      height: templateInput.linkStyling?.height ?? null,
+  },
+  templateInput.linkStyling?.fontSize ?? null,
+  templateInput.linkStyling?.fontColor ?? null,
+  templateInput.linkStyling?.fontName ?? null,
+  templateInput.linkStyling?.alignment ?? null
 );
   return template;
 }
@@ -180,7 +292,19 @@ export const mapTemplateInputsToTemplateDesigner = (currentTemplate: any, inputs
         currentTemplate.footerStyling?.FontSize ?? null,
         currentTemplate.footerStyling?.FontColor ?? null,
         currentTemplate.footerStyling?.FontName ?? null,
-        currentTemplate.footerStyling?.Alignment ?? null
+        currentTemplate.footerStyling?.Alignment ?? null,
+        {
+          x: currentTemplate.linkStyling.XPos ?? null,
+          y: currentTemplate.linkStyling.YPos ?? null,
+        },
+        {
+            width: currentTemplate.linkStyling.Width ?? null,
+            height: currentTemplate.linkStyling.Height ?? null,
+        },
+        currentTemplate.linkStyling?.FontSize ?? null,
+        currentTemplate.linkStyling?.FontColor ?? null,
+        currentTemplate.linkStyling?.FontName ?? null,
+        currentTemplate.linkStyling?.Alignment ?? null
     );
 
     return template;
@@ -222,6 +346,17 @@ export const mapTemplatesToTemplateData = (templateInput: TemplateResponse[]) =>
             FontColor: template.mainStyling?.fontColor,
             FontName: template.mainStyling?.fontName,
             Alignment: template.mainStyling?.alignment
+        },
+        link: template.link,
+        linkStyling: {
+            XPos: template.linkStyling?.xPos,
+            YPos: template.linkStyling?.yPos,
+            Width: template.linkStyling?.width,
+            Height: template.linkStyling?.height,
+            FontSize: template.linkStyling?.fontSize,
+            FontColor: template.linkStyling?.fontColor,
+            FontName: template.linkStyling?.fontName,
+            Alignment: template.linkStyling?.alignment
         },
         basePdf: template.basePdf
     }));
@@ -265,6 +400,17 @@ export const createUpdatedTemplate = (currentTemplate: any, designer: any) => {
         FontColor: currentTemplateFields.schemas[0].footer.fontColor,
         FontName: currentTemplateFields.schemas[0].footer.fontName,
         Alignment: currentTemplateFields.schemas[0].footer.alignment,
+      },
+      link: currentTemplateFields.sampledata[0].link,
+      linkStyling: {
+        XPos: currentTemplateFields.schemas[0].link.position.x,
+        YPos: currentTemplateFields.schemas[0].link.position.y,
+        Width: currentTemplateFields.schemas[0].link.width,
+        Height: currentTemplateFields.schemas[0].link.height,
+        FontSize: currentTemplateFields.schemas[0].link.fontSize,
+        FontColor: currentTemplateFields.schemas[0].link.fontColor,
+        FontName: currentTemplateFields.schemas[0].link.fontName,
+        Alignment: currentTemplateFields.schemas[0].link.alignment,
       },
     };
     return updatedTemplate;

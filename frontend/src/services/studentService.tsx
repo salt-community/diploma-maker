@@ -18,6 +18,15 @@ export async function getStudentById(apiUrl: string, guidId: string): Promise<St
     return result;
 }
 
+export async function getStudentByVerificationCode(apiUrl: string, verificationCode: string): Promise<StudentResponse> {
+    const response = await fetch(`${apiUrl}/api/students/verificationCode/${verificationCode}`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch student!');
+    }
+    const result = await response.json() as StudentResponse;
+    return result;
+}
+
 export async function deleteStudentById(apiUrl: string, guidId: string): Promise<void> {
     const response = await fetch(`${apiUrl}/api/students/${guidId}`, {
         method: 'DELETE',

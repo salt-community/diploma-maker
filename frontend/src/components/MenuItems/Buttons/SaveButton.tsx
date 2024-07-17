@@ -22,13 +22,13 @@ export const SaveButton = ({ classNameOverride, onClick, saveButtonType, textfie
           <label className='save-btn_title' htmlFor="">{textfield}</label>
         )}
       </>
+    ) : saveButtonType === 'grandTheftAuto' ? (
+      <GtaSaveIcon />
     ) : saveButtonType === 'normal' ? (
       <>
         <CloudUploadIcon />
         <label className='save-btn_title' htmlFor="">{textfield}</label>
       </>
-    ) : saveButtonType === 'grandTheftAuto' ? (
-        <GtaSaveIcon />
     ) : (
       <>
         <DeleteTemplateIcon />

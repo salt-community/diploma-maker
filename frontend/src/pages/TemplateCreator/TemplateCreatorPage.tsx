@@ -64,7 +64,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   useEffect(() => {
     if (templates && templates.length > 0) {
       const templateData = mapTemplatesToTemplateData(templates);
-
       setTemplateData(templateData);
       if (templateAdded) {
         setCurrentTemplate(templateData[templateData.length - 1]);
@@ -82,7 +81,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
           currentTemplate.intro,
           currentTemplate.main,
           currentTemplate.footer,
-          currentTemplate.basePdf
+          currentTemplate.basePdf,
+          currentTemplate.link
         ),
       ];
       const template = mapTemplateInputsToTemplateDesigner(
@@ -120,6 +120,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             '.pdfpreview div div div div div[title="header"]',
             '.pdfpreview div div div div div[title="main"]',
             '.pdfpreview div div div div div[title="footer"]',
+            '.pdfpreview div div div div div[title="link"]',
         ];
 
         const isClickInside = selectors.some(selector => {
@@ -137,6 +138,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             '.pdfpreview div div div div div[title="header"]',
             '.pdfpreview div div div div div[title="main"]',
             '.pdfpreview div div div div div[title="footer"]',
+            '.pdfpreview div div div div div[title="link"]',
         ];
 
         selectors.forEach((selector) => {
@@ -164,6 +166,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             '.pdfpreview div div div div div[title="header"]',
             '.pdfpreview div div div div div[title="main"]',
             '.pdfpreview div div div div div[title="footer"]',
+            '.pdfpreview div div div div div[title="link"]',
         ];
 
         selectors.forEach((selector) => {

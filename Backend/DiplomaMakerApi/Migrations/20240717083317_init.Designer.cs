@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaMakerApi.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    [Migration("20240711093942_init")]
+    [Migration("20240717083317_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -80,6 +80,13 @@ namespace DiplomaMakerApi.Migrations
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Link")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("LinkStylingId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Main")
                         .IsRequired()
                         .HasColumnType("text");
@@ -96,6 +103,8 @@ namespace DiplomaMakerApi.Migrations
                     b.HasIndex("FooterStylingId");
 
                     b.HasIndex("IntroStylingId");
+
+                    b.HasIndex("LinkStylingId");
 
                     b.HasIndex("MainStylingId");
 
@@ -120,6 +129,10 @@ namespace DiplomaMakerApi.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("VerificationCode")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -188,6 +201,10 @@ namespace DiplomaMakerApi.Migrations
                         .WithMany()
                         .HasForeignKey("IntroStylingId");
 
+                    b.HasOne("DiplomaMakerApi.Models.TemplateStyle", "LinkStyling")
+                        .WithMany()
+                        .HasForeignKey("LinkStylingId");
+
                     b.HasOne("DiplomaMakerApi.Models.TemplateStyle", "MainStyling")
                         .WithMany()
                         .HasForeignKey("MainStylingId");
@@ -195,6 +212,8 @@ namespace DiplomaMakerApi.Migrations
                     b.Navigation("FooterStyling");
 
                     b.Navigation("IntroStyling");
+
+                    b.Navigation("LinkStyling");
 
                     b.Navigation("MainStyling");
                 });

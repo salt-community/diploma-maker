@@ -38,7 +38,8 @@ public class StudentService
                 {
                     Name = Student.Name,
                     Email = Student.Email,
-                    Bootcamp = bootcamp
+                    Bootcamp = bootcamp,
+                    VerificationCode = Student.VerificationCode
                 };
                 _context.Students.Add(newStudent);
                 Students.Add(newStudent);
@@ -69,6 +70,22 @@ public class StudentService
             .FirstOrDefaultAsync(b => b.GuidId == guidId);
 
         return Student ?? throw new NotFoundByGuidException("Student", guidId);
+    }
+
+    public async Task<Student?> GetStudentByVerificationCode(string verificationCode)
+    {
+        var Student = await _context.Students
+            .Include(d => d.Bootcamp)
+            .FirstOrDefaultAsync(b => b.VerificationCode == verificationCode);
+        return Student;
+    }
+
+    public async Task<Student?> GetStudentByVerificationCode(string verificationCode)
+    {
+        var Student = await _context.Students
+            .Include(d => d.Bootcamp)
+            .FirstOrDefaultAsync(b => b.VerificationCode == verificationCode);
+        return Student;
     }
 
     public async Task<Student> DeleteStudentByGuidId(Guid guidId)

@@ -5,6 +5,7 @@ export type StudentRequest = {
     guidId?: string;
     name: string;
     email?: string;
+    verificationCode: string;
 }
 
 export type FormDataUpdateRequest = {
@@ -20,14 +21,16 @@ export type StudentUpdateRequestDto = {
 
 export type StudentResponse = {
     guidId: string;
-    studentName: string;
+    name: string;
     email: string;
+    verificationCode: string;
 }
 
 export type Student = {
     guidId?: string;
     name: string;
     email: string;
+    verificationCode: string;
 }
 // bootcamps
 
@@ -64,6 +67,8 @@ export type TemplateResponse = {
     introStyling?: Style;
     main: string;
     mainStyling?: Style;
+    link: string;
+    linkStyling?: Style;
     basePdf: string;
     lastUpdated?: Date;
 }
@@ -76,6 +81,8 @@ export type TemplateRequest = {
     introStyling?: Style;
     main: string;
     mainStyling?: Style;
+    link: string;
+    linkStyling?: Style;
     basePdf?: string;
 }
 

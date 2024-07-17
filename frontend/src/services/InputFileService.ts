@@ -65,7 +65,6 @@ export const ParseFileData = async (file: File): Promise<Student[]> => {
             }
           });
         
-        console.log(data);
         resolve(data ?? []);
         
 

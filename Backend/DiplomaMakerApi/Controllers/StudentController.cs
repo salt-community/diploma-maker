@@ -41,5 +41,16 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
         return NoContent();
     }
 
+    [HttpGet("verificationCode/{verificationCode}")]
+    public async Task<ActionResult<StudentResponseDto>> getStudentByVerificationCode(string verificationCode)
+    {
+        var Student = await _service.GetStudentByVerificationCode(verificationCode);
+        if (Student == null)
+            return NotFound();
+        var responseDto = _mapper.Map<StudentResponseDto>(Student);
+
+        return responseDto;
+    }
+
 }
 

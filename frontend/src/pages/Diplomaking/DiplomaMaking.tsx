@@ -7,6 +7,7 @@ import {
   generatePDF,
   newGenerateCombinedPDF,
   mapBootcampToSaltData,
+  generateVerificationCode,
 } from "../../util/helper";
 import DiplomaDataForm from "../../components/Forms/DiplomaDataForm";
 import { useParams } from "react-router-dom";
@@ -132,7 +133,8 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
           inputs[0].header,
           inputs[0].main,
           inputs[0].footer,
-          inputs[0].pdfbase
+          inputs[0].pdfbase,
+          inputs[0].link
       )
       const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, pdfInput)
      
@@ -145,7 +147,7 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
     if (saltData) {
       const selectedBootcampData = saltData[selectedBootcampIndex];
       const inputsArray = selectedBootcampData.students.map((student) => {
-        return templateInputsFromBootcampData(selectedBootcampData, student.name);
+        return templateInputsFromBootcampData(selectedBootcampData, student.name, student.verificationCode);
       });
 
       var templatesArr: Template[] = [];
@@ -163,20 +165,22 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
   const postSelectedBootcampData = async () => {
     if (saltData && bootcamps) {
       const currentBootcamp = bootcamps[selectedBootcampIndex];
+      
       const updateFormDataRequest: FormDataUpdateRequest = {
         students: saltData[selectedBootcampIndex].students.map((student, index) => ({
           guidId: currentBootcamp.students[index]?.guidId || crypto.randomUUID(),
           name: student.name,
-          email: student.email,    
+          email: student.email,
+          verificationCode: student.verificationCode
         })),
         templateId: saltData[selectedBootcampIndex].template.id
       };
+      
       try {
         await UpdateBootcampWithNewFormdata(updateFormDataRequest, currentBootcamp.guidId );
         customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
       } catch (error) {
-        console.log(error)
         customAlert('fail', "Failed to add diplomas:", `${error}`);
       }
     }
