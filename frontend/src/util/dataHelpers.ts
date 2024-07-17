@@ -125,7 +125,19 @@ export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selected
         saltData[selectedBootcampIndex].template.footerStyling?.fontSize ?? null, // footerFontSize
         saltData[selectedBootcampIndex].template.footerStyling?.fontColor ?? null, // footerFontColor
         saltData[selectedBootcampIndex].template.footerStyling?.fontName ?? null, // footerFont
-        saltData[selectedBootcampIndex].template.footerStyling?.alignment ?? null // footerAlignment
+        saltData[selectedBootcampIndex].template.footerStyling?.alignment ?? null, // footerAlignment
+        { 
+          x: saltData[selectedBootcampIndex].template.linkStyling?.xPos ?? null, 
+          y: saltData[selectedBootcampIndex].template.linkStyling?.yPos ?? null 
+        }, // linkPos
+        { 
+          width: saltData[selectedBootcampIndex].template.linkStyling?.width ?? null, 
+          height: saltData[selectedBootcampIndex].template.linkStyling?.height ?? null
+        }, // linkSize
+        saltData[selectedBootcampIndex].template.linkStyling?.fontSize ?? null, // linkFontSize
+        saltData[selectedBootcampIndex].template.linkStyling?.fontColor ?? null, // linkFontColor
+        saltData[selectedBootcampIndex].template.linkStyling?.fontName ?? null, // linkFont
+        saltData[selectedBootcampIndex].template.linkStyling?.alignment ?? null // linkAlignment
       );
     return template;
 }
