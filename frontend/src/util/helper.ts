@@ -241,6 +241,11 @@ export const populateField = (input: string, classname: string, datebootcamp: st
     .replace('{studentname}', studentname)
 }
 
+export const populateIdField = (input: string): string => {
+  return input
+    .replace('{id}', input)
+}
+
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export function mapBootcampToSaltData(bootcamp: BootcampResponse, template: TemplateResponse ): SaltData {
