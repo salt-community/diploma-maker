@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
-using DiplomaMakerApi.Dtos;
+using DiplomaMakerApi.Exceptions;
+
 
 namespace DiplomaMakerApi.Services;
 
@@ -24,7 +25,7 @@ public class StudentService
         
         if (requestDto.students.Count == 0)
         {
-            throw new StudentNotFoundException("You need to add students to perform this update"); 
+            throw new NotFoundByGuidException("You need to add students to perform this update"); 
         }
 
         _context.Students.RemoveRange(bootcamp.Students);
@@ -62,11 +63,20 @@ public class StudentService
         return Students;
     }
 
-    public async Task<Student?> GetStudentByGuidId(string guidId)
+    public async Task<Student?> GetStudentByGuidId(Guid guidId)
     {
         var Student = await _context.Students
             .Include(d => d.Bootcamp)
-            .FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId);
+            .FirstOrDefaultAsync(b => b.GuidId == guidId);
+
+        return Student ?? throw new NotFoundByGuidException("Student", guidId);
+    }
+
+    public async Task<Student?> GetStudentByVerificationCode(string verificationCode)
+    {
+        var Student = await _context.Students
+            .Include(d => d.Bootcamp)
+            .FirstOrDefaultAsync(b => b.VerificationCode == verificationCode);
         return Student;
     }
 
@@ -78,11 +88,11 @@ public class StudentService
         return Student;
     }
 
-    public async Task<Student> DeleteStudentByGuidId(string guidId)
+    public async Task<Student> DeleteStudentByGuidId(Guid guidId)
     {
         var Student = await _context.Students.
-            FirstOrDefaultAsync(b => b.GuidId.ToString() == guidId)
-            ?? throw new StudentNotFoundException("this bootcamp does not exist");
+            FirstOrDefaultAsync(b => b.GuidId == guidId)
+            ?? throw new NotFoundByGuidException("Student", guidId);
 
         _ = _context.Students.Remove(Student);
         await _context.SaveChangesAsync();
@@ -92,28 +102,18 @@ public class StudentService
     {
         var Student = await _context.Students.FirstOrDefaultAsync(b => b.GuidId == GuidID);
 
-        if (Student != null)
+        if (Student == null) 
         {
-            Student.Name = updateDto.Name;
-            Student.Email = updateDto.Email;
-
-            await _context.SaveChangesAsync();
-            return Student;
-        }
-        throw new StudentNotFoundException("This Student does not exist");
+            throw new NotFoundByGuidException("Student", GuidID);    
+        } 
+        
+        Student.Name = updateDto.Name;
+        Student.Email = updateDto.Email;
+        await _context.SaveChangesAsync();
+        return Student;
+        
     }
     
 }
 
 
-
-
-public class StudentNotFoundException : Exception
-{
-    public StudentNotFoundException(string message) : base(message) { }
-}
-
-public class StudentExistsException : Exception
-{
-    public StudentExistsException(string message) : base(message) { }
-}
