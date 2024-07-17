@@ -26,6 +26,7 @@ import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefaul
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 import { Popup404 } from "../../components/MenuItems/Popups/Popup404";
 import { UpdateBootcampWithNewFormdata } from "../../services/bootcampService";
+import { ErrorIcon } from "../../components/MenuItems/Icons/ErrorIcon";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -34,7 +35,6 @@ type Props = {
 };
 
 export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
-
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
@@ -45,6 +45,7 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
   const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>();
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { loadingMessage } = useLoadingMessage();
+  const isFailed = loadingMessage.includes('Failed');
 
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
@@ -259,7 +260,14 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
       :
       <>
         <h1 className="loading-title">{loadingMessage}</h1>
-        <SpinnerDefault classOverride="spinner-diplomamaking"/>
+        {!isFailed ?
+          <SpinnerDefault classOverride="spinner-diplomamaking"/>
+        :
+          <div className="loading-error__icon">
+            <ErrorIcon />
+          </div>
+        }
+        
       </>
       }
     </div>

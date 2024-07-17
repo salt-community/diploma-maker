@@ -14,20 +14,20 @@ export async function getAllTemplates(apiUrl: string, setLoadingMessage: (messag
 
     for (const result of results) {
         setLoadingMessage(`Downloading template ${templateCount} of ${results.length}`);
-        result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.lastUpdated);
+        result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.lastUpdated, setLoadingMessage);
         templateCount++;
     }
 
     return results;
 }
 
-export async function getTemplateById(apiUrl: string, id: string): Promise<TemplateResponse> {
+export async function getTemplateById(apiUrl: string, id: string, setLoadingMessage: (message: string) => void): Promise<TemplateResponse> {
     const response = await fetch(`${apiUrl}/api/templates/${id}`);
     if (!response.ok) {
         throw new Error('Failed to get Template!');
     }
     const result = await response.json() as TemplateResponse;
-    result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.lastUpdated);
+    result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.lastUpdated, setLoadingMessage);
 
     return result;
 }

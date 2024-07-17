@@ -29,6 +29,18 @@
     font-size: .85rem;
     font-weight: 600;
 }
+.loading-error__icon{
+    position: absolute;
+    top: 51%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+
+    width: 65px;
+    height: 65px;
+}
+    .loading-error__icon svg path{
+        fill: rgb(220, 22, 22);
+    }
 
 
 .pdfpreview-container div div div div:nth-of-type(1){

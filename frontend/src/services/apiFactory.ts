@@ -9,7 +9,7 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
     return {
         // Template Endpoint
         getAllTemplates: (setLoadingMessage: (message: string) => void) => getAllTemplates(apiBaseUrl, setLoadingMessage),
-        getTemplateById: (id: string) => getTemplateById(apiBaseUrl, id),
+        getTemplateById: (id: string, setLoadingMessage: (message: string) => void) => getTemplateById(apiBaseUrl, id, setLoadingMessage),
         postTemplate: (templateRequest: TemplateRequest) => postTemplate(apiBaseUrl, templateRequest),
         deleteTemplateById: (id: number) => deleteTemplateById(apiBaseUrl, id),
         putTemplate: (id: number, templateRequest: TemplateRequest) => putTemplate(apiBaseUrl, id, templateRequest),
@@ -33,6 +33,6 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
         postEmail: (emailRequest: EmailSendRequest) => postEmail(apiBaseUrl, emailRequest),
 
         // File Endpoint
-        getTemplatePdfFile: (url: string, lastUpdated: Date) => getTemplatePdfFile(apiBaseUrl, url, lastUpdated),
+        getTemplatePdfFile: (url: string, lastUpdated: Date, setLoadingMessage: (message: string) => void) => getTemplatePdfFile(apiBaseUrl, url, lastUpdated, setLoadingMessage),
     };
 };
