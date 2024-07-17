@@ -31,7 +31,7 @@ export type Student = {
     name: string;
     email: string;
     verificationCode?: string;
-    LastGenerated?: Date;
+    lastGenerated?: Date;
 }
 // bootcamps
 
