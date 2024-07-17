@@ -278,12 +278,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                                     <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
                                     <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
                                     <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
-                                        {student.lastGenerated && 
-                                            <div className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
-                                                <VerifyIcon />
-                                            </div>
-                                        }
                                 </section>
+                                {student.lastGenerated && 
+                                    <div className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
+                                        <VerifyIcon />
+                                    </div>
+                                }
                             </button>
                         )) :
                             <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />
