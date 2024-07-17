@@ -389,6 +389,17 @@ export const createUpdatedTemplate = (currentTemplate: any, designer: any) => {
         FontName: currentTemplateFields.schemas[0].footer.fontName,
         Alignment: currentTemplateFields.schemas[0].footer.alignment,
       },
+      link: currentTemplateFields.sampledata[0].link,
+      linkStyling: {
+        XPos: currentTemplateFields.schemas[0].link.position.x,
+        YPos: currentTemplateFields.schemas[0].link.position.y,
+        Width: currentTemplateFields.schemas[0].link.width,
+        Height: currentTemplateFields.schemas[0].link.height,
+        FontSize: currentTemplateFields.schemas[0].link.fontSize,
+        FontColor: currentTemplateFields.schemas[0].link.fontColor,
+        FontName: currentTemplateFields.schemas[0].link.fontName,
+        Alignment: currentTemplateFields.schemas[0].link.alignment,
+      },
     };
     return updatedTemplate;
 }

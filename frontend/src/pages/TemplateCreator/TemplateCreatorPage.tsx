@@ -121,6 +121,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             '.pdfpreview div div div div div[title="header"]',
             '.pdfpreview div div div div div[title="main"]',
             '.pdfpreview div div div div div[title="footer"]',
+            '.pdfpreview div div div div div[title="link"]',
         ];
 
         const isClickInside = selectors.some(selector => {
@@ -138,6 +139,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             '.pdfpreview div div div div div[title="header"]',
             '.pdfpreview div div div div div[title="main"]',
             '.pdfpreview div div div div div[title="footer"]',
+            '.pdfpreview div div div div div[title="link"]',
         ];
 
         selectors.forEach((selector) => {
@@ -165,6 +167,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             '.pdfpreview div div div div div[title="header"]',
             '.pdfpreview div div div div div[title="main"]',
             '.pdfpreview div div div div div[title="footer"]',
+            '.pdfpreview div div div div div[title="link"]',
         ];
 
         selectors.forEach((selector) => {
