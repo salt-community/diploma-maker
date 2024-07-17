@@ -83,7 +83,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
           currentTemplate.main,
           currentTemplate.footer,
           currentTemplate.basePdf,
-          "1a9f3"
+          currentTemplate.link
         ),
       ];
       const template = mapTemplateInputsToTemplateDesigner(

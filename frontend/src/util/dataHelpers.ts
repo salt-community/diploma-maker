@@ -280,7 +280,19 @@ export const mapTemplateInputsToTemplateDesigner = (currentTemplate: any, inputs
         currentTemplate.footerStyling?.FontSize ?? null,
         currentTemplate.footerStyling?.FontColor ?? null,
         currentTemplate.footerStyling?.FontName ?? null,
-        currentTemplate.footerStyling?.Alignment ?? null
+        currentTemplate.footerStyling?.Alignment ?? null,
+        {
+          x: currentTemplate.linkStyling.XPos ?? null,
+          y: currentTemplate.linkStyling.YPos ?? null,
+        },
+        {
+            width: currentTemplate.linkStyling.Width ?? null,
+            height: currentTemplate.linkStyling.Height ?? null,
+        },
+        currentTemplate.linkStyling?.FontSize ?? null,
+        currentTemplate.linkStyling?.FontColor ?? null,
+        currentTemplate.linkStyling?.FontName ?? null,
+        currentTemplate.linkStyling?.Alignment ?? null
     );
 
     return template;
@@ -322,6 +334,17 @@ export const mapTemplatesToTemplateData = (templateInput: TemplateResponse[]) =>
             FontColor: template.mainStyling?.fontColor,
             FontName: template.mainStyling?.fontName,
             Alignment: template.mainStyling?.alignment
+        },
+        link: template.link,
+        linkStyling: {
+            XPos: template.linkStyling?.xPos,
+            YPos: template.linkStyling?.yPos,
+            Width: template.linkStyling?.width,
+            Height: template.linkStyling?.height,
+            FontSize: template.linkStyling?.fontSize,
+            FontColor: template.linkStyling?.fontColor,
+            FontName: template.linkStyling?.fontName,
+            Alignment: template.linkStyling?.alignment
         },
         basePdf: template.basePdf
     }));
