@@ -182,7 +182,19 @@ export const mapTemplateInputsToTemplateViewerSingle = (template: TemplateRespon
       template.footerStyling?.fontSize ?? null, // footerFontSize
       template.footerStyling?.fontColor ?? null, // footerFontColor
       template.footerStyling?.fontName ?? null, // footerFont
-      template.footerStyling?.alignment ?? null // footerAlignment
+      template.footerStyling?.alignment ?? null, // footerAlignment
+      { 
+        x: template.linkStyling?.xPos ?? null, 
+        y: template.linkStyling?.yPos ?? null 
+      }, // linkPos
+      { 
+        width: template.linkStyling?.width ?? null, 
+        height: template.linkStyling?.height ?? null
+      }, // linkSize
+      template.linkStyling?.fontSize ?? null, // linkFontSize
+      template.linkStyling?.fontColor ?? null, // linkFontColor
+      template.linkStyling?.fontName ?? null, // linkFont
+      template.linkStyling?.alignment ?? null // linkAlignment
     );
   return templateOutput;
 }
