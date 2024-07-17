@@ -52,7 +52,7 @@ export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, n
       selectedBootcampData.dategraduate, 
       name),
     selectedBootcampData.template.basePdf,
-    populateIdField(verificationCode)
+    populateIdField(selectedBootcampData.template.link ,verificationCode)
   );
 }
 
