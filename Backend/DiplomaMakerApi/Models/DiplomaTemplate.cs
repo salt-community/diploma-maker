@@ -14,6 +14,8 @@ public class DiplomaTemplate
 
     public string Main {get; set;} =  "{studentname}";
     public TemplateStyle? MainStyling { get; set; }
+    public string Link { get; set; } = "{id}";
+    public TemplateStyle? LinkStyling { get; set; }
     public string BasePdf => Path.Combine("Blob", Name + ".pdf").Replace("\\", "/");
     public DateTime LastUpdated {get; set;} = DateTime.UtcNow;
 } 
