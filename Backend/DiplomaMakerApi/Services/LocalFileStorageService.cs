@@ -1,15 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace DiplomaMakerApi.Services
 {
     public class LocalFileStorageService
     {
         private readonly string _storagePath = Path.Combine(Directory.GetCurrentDirectory(), "Blob/DiplomaPdfs");
+        private readonly DiplomaMakingContext _context;
 
-        public LocalFileStorageService()
+        public LocalFileStorageService(DiplomaMakingContext context)
         {
             if (!Directory.Exists(_storagePath))
             {
                 Directory.CreateDirectory(_storagePath);
             }
+            _context = context;
         }
 
         public async Task<string> SaveFile(IFormFile file, string templateName)
@@ -35,6 +39,14 @@ namespace DiplomaMakerApi.Services
             if (File.Exists(filePath))
             {
                 return filePath;
+            }
+
+            var templateNameNoExtension = Path.GetFileNameWithoutExtension(templateName);
+            var templateExists = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Name == templateNameNoExtension);
+
+            if(templateExists != null){
+                await InitFileFromNewTemplate(Path.GetFileNameWithoutExtension(templateName));
+                return Path.Combine(_storagePath, templateName);
             }
             return null;
         }
