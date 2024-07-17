@@ -11,6 +11,7 @@ import { mapTemplateInputsToTemplateViewerSingle, templateInputsSingleBootcampan
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
 import { SuccessIcon } from '../../components/MenuItems/Icons/SuccessIcon';
 import { NextIcon } from '../../components/MenuItems/Icons/NextIcon';
+import logoBlack from '/icons/logoBlack.png'
 
 type Props = {
     getStudentByVerificationCode: (verificationCode: string) => void
@@ -137,7 +138,7 @@ export function VertificationPage( { getStudentByVerificationCode, bootcamps, te
             <main>
                 <div className='verificationinfo-container'>
                     <div className='verificationinfo__logo-wrapper'>
-                        <img src="https://talent.salt.dev/logoBlack.png" alt="" />
+                        <img src={logoBlack} alt="" />
                     </div>
                     <div className='verificationinfo__title-wrapper'>
                         <h1>{student!.name}</h1>
