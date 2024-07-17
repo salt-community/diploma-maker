@@ -81,6 +81,8 @@ export type TemplateRequest = {
     introStyling?: Style;
     main: string;
     mainStyling?: Style;
+    link: string;
+    linkStyling?: Style;
     basePdf?: string;
 }
 
