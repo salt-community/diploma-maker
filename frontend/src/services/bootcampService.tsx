@@ -22,6 +22,7 @@ export async function getBootcamps(apiUrl: string, setLoadingMessage: (message: 
     setLoadingMessage('Fetching bootcamps...');
     const response = await fetch(`${apiUrl}/api/Bootcamps`);
     if (!response.ok){
+        setLoadingMessage(`Failed to load bootcamps!. ${response.body}`)
         throw new Error("Failed to get bootcamps!")
     }
 
