@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaMakerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class @new : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,19 @@ namespace DiplomaMakerApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TemplateStyles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tracks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tracks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,7 +94,7 @@ namespace DiplomaMakerApi.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     GuidId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    TrackId = table.Column<int>(type: "integer", nullable: false),
                     GraduationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DiplomaTemplateId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -92,6 +105,12 @@ namespace DiplomaMakerApi.Migrations
                         name: "FK_Bootcamps_DiplomaTemplates_DiplomaTemplateId",
                         column: x => x.DiplomaTemplateId,
                         principalTable: "DiplomaTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bootcamps_Tracks_TrackId",
+                        column: x => x.TrackId,
+                        principalTable: "Tracks",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -125,10 +144,9 @@ namespace DiplomaMakerApi.Migrations
                 column: "DiplomaTemplateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bootcamps_Name",
+                name: "IX_Bootcamps_TrackId",
                 table: "Bootcamps",
-                column: "Name",
-                unique: true);
+                column: "TrackId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DiplomaTemplates_FooterStylingId",
@@ -154,6 +172,12 @@ namespace DiplomaMakerApi.Migrations
                 name: "IX_Students_BootcampId",
                 table: "Students",
                 column: "BootcampId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tracks_Name",
+                table: "Tracks",
+                column: "Name",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -167,6 +191,9 @@ namespace DiplomaMakerApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "DiplomaTemplates");
+
+            migrationBuilder.DropTable(
+                name: "Tracks");
 
             migrationBuilder.DropTable(
                 name: "TemplateStyles");

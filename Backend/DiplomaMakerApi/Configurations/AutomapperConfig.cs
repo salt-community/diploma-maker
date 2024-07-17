@@ -8,10 +8,8 @@ public class AutomapperConfig : Profile
 {
     public AutomapperConfig()
     {
-        CreateMap<BootcampRequestDto, Bootcamp>().ReverseMap();
         CreateMap<BootcampResponseDto, Bootcamp>().ReverseMap()
-            .ForMember(dest => dest.TemplateId, opt => opt.MapFrom(src => src.DiplomaTemplate.Id))
-            .ReverseMap();
+            .ForMember(dest => dest.TemplateId, opt => opt.MapFrom(src => src.DiplomaTemplate.Id));
         CreateMap<StudentRequestDto, Student>().ReverseMap();
         CreateMap<StudentResponseDto, Student>().ReverseMap();
         CreateMap<TemplateResponseDto, DiplomaTemplate>().ReverseMap();
