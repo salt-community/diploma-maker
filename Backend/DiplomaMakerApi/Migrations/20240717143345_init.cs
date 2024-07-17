@@ -33,6 +33,55 @@ namespace DiplomaMakerApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DiplomaGenerationLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    GeneratedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    BootcampName = table.Column<string>(type: "text", nullable: false),
+                    BootcampGraduationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    StudentGuidId = table.Column<Guid>(type: "uuid", nullable: true),
+                    StudentName = table.Column<string>(type: "text", nullable: false),
+                    VerificationCode = table.Column<string>(type: "text", nullable: false),
+                    TemplateName = table.Column<string>(type: "text", nullable: false),
+                    Footer = table.Column<string>(type: "text", nullable: false),
+                    FooterStylingId = table.Column<int>(type: "integer", nullable: true),
+                    Intro = table.Column<string>(type: "text", nullable: false),
+                    IntroStylingId = table.Column<int>(type: "integer", nullable: true),
+                    Main = table.Column<string>(type: "text", nullable: false),
+                    MainStylingId = table.Column<int>(type: "integer", nullable: true),
+                    Link = table.Column<string>(type: "text", nullable: false),
+                    LinkStylingId = table.Column<int>(type: "integer", nullable: true),
+                    BasePdf = table.Column<string>(type: "text", nullable: false),
+                    TemplateLastUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiplomaGenerationLogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DiplomaGenerationLogs_TemplateStyles_FooterStylingId",
+                        column: x => x.FooterStylingId,
+                        principalTable: "TemplateStyles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DiplomaGenerationLogs_TemplateStyles_IntroStylingId",
+                        column: x => x.IntroStylingId,
+                        principalTable: "TemplateStyles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DiplomaGenerationLogs_TemplateStyles_LinkStylingId",
+                        column: x => x.LinkStylingId,
+                        principalTable: "TemplateStyles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DiplomaGenerationLogs_TemplateStyles_MainStylingId",
+                        column: x => x.MainStylingId,
+                        principalTable: "TemplateStyles",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DiplomaTemplates",
                 columns: table => new
                 {
@@ -97,62 +146,6 @@ namespace DiplomaMakerApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DiplomaGenerationLogs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    GeneratedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    BootcampName = table.Column<string>(type: "text", nullable: false),
-                    BootcampGraduationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    StudentGuidId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StudentName = table.Column<string>(type: "text", nullable: false),
-                    VerificationCode = table.Column<string>(type: "text", nullable: false),
-                    DiplomaTemplateId = table.Column<int>(type: "integer", nullable: false),
-                    TemplateName = table.Column<string>(type: "text", nullable: false),
-                    Footer = table.Column<string>(type: "text", nullable: false),
-                    FooterStylingId = table.Column<int>(type: "integer", nullable: true),
-                    Intro = table.Column<string>(type: "text", nullable: false),
-                    IntroStylingId = table.Column<int>(type: "integer", nullable: true),
-                    Main = table.Column<string>(type: "text", nullable: false),
-                    MainStylingId = table.Column<int>(type: "integer", nullable: true),
-                    Link = table.Column<string>(type: "text", nullable: false),
-                    LinkStylingId = table.Column<int>(type: "integer", nullable: true),
-                    BasePdf = table.Column<string>(type: "text", nullable: false),
-                    TemplateLastUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DiplomaGenerationLogs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DiplomaGenerationLogs_DiplomaTemplates_DiplomaTemplateId",
-                        column: x => x.DiplomaTemplateId,
-                        principalTable: "DiplomaTemplates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DiplomaGenerationLogs_TemplateStyles_FooterStylingId",
-                        column: x => x.FooterStylingId,
-                        principalTable: "TemplateStyles",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_DiplomaGenerationLogs_TemplateStyles_IntroStylingId",
-                        column: x => x.IntroStylingId,
-                        principalTable: "TemplateStyles",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_DiplomaGenerationLogs_TemplateStyles_LinkStylingId",
-                        column: x => x.LinkStylingId,
-                        principalTable: "TemplateStyles",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_DiplomaGenerationLogs_TemplateStyles_MainStylingId",
-                        column: x => x.MainStylingId,
-                        principalTable: "TemplateStyles",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Students",
                 columns: table => new
                 {
@@ -186,11 +179,6 @@ namespace DiplomaMakerApi.Migrations
                 table: "Bootcamps",
                 column: "Name",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DiplomaGenerationLogs_DiplomaTemplateId",
-                table: "DiplomaGenerationLogs",
-                column: "DiplomaTemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DiplomaGenerationLogs_FooterStylingId",

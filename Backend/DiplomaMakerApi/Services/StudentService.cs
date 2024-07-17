@@ -10,12 +10,13 @@ public class StudentService
 {
     private readonly DiplomaMakingContext _context;
     private readonly ILogger<StudentService> _logger;
+    private readonly HistorySnapshotService _historySnapshotService;
 
-
-    public StudentService(DiplomaMakingContext context, ILogger<StudentService> logger)
+    public StudentService(DiplomaMakingContext context, ILogger<StudentService> logger, HistorySnapshotService historySnapshotService)
     {
         _context = context;
         _logger = logger;
+        _historySnapshotService = historySnapshotService;
     }
     public async Task<List<Student>> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
     {
@@ -46,6 +47,9 @@ public class StudentService
                 Students.Add(newStudent);
         }
         await _context.SaveChangesAsync();
+
+        await _historySnapshotService.createHistorySnapshotFromBootcamp(requestDto, bootcamp);
+
         return Students;
     }
     public async Task<List<Student>> GetAllStudents(){

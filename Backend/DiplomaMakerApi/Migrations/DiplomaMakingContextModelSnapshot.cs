@@ -71,9 +71,6 @@ namespace DiplomaMakerApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("DiplomaTemplateId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Footer")
                         .IsRequired()
                         .HasColumnType("text");
@@ -105,7 +102,7 @@ namespace DiplomaMakerApi.Migrations
                     b.Property<int?>("MainStylingId")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("StudentGuidId")
+                    b.Property<Guid?>("StudentGuidId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("StudentName")
@@ -124,8 +121,6 @@ namespace DiplomaMakerApi.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DiplomaTemplateId");
 
                     b.HasIndex("FooterStylingId");
 
@@ -279,12 +274,6 @@ namespace DiplomaMakerApi.Migrations
 
             modelBuilder.Entity("DiplomaMakerApi.Models.DiplomaGenerationLog", b =>
                 {
-                    b.HasOne("DiplomaMakerApi.Models.DiplomaTemplate", "DiplomaTemplate")
-                        .WithMany()
-                        .HasForeignKey("DiplomaTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DiplomaMakerApi.Models.TemplateStyle", "FooterStyling")
                         .WithMany()
                         .HasForeignKey("FooterStylingId");
@@ -300,8 +289,6 @@ namespace DiplomaMakerApi.Migrations
                     b.HasOne("DiplomaMakerApi.Models.TemplateStyle", "MainStyling")
                         .WithMany()
                         .HasForeignKey("MainStylingId");
-
-                    b.Navigation("DiplomaTemplate");
 
                     b.Navigation("FooterStyling");
 
