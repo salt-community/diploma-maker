@@ -165,7 +165,7 @@ export function VertificationPage( { getStudentByVerificationCode, bootcamps, te
                     <div className='diploma-container-content'>
                         <PublishButton classNameOverride='diploma-container--downloadbtn' text="Download Diploma" onClick={generatePDFHandler} />
                         <div
-                            className="pdfpreview-container"
+                            className="pdfpreview-smallcontainer"
                             ref={uiRef}
                             style={{ width: "100%", height: "100%", marginBottom: '2rem'}}
                         />
