@@ -6,10 +6,9 @@ namespace DiplomaMakerApi.Models
         public required DateTime GeneratedAt { get; set; }
         public required string BootcampName { get; set; }
         public required DateTime BootcampGraduationDate { get; set; }
-        public required Guid StudentGuidId { get; set; }
+        public Guid? StudentGuidId { get; set; }
         public required string StudentName { get; set; }
         public required string VerificationCode { get; set; }
-        public required DiplomaTemplate DiplomaTemplate {get; set;}
         public required string TemplateName { get; set; }
         public required string Footer {get; set;}
         public TemplateStyle? FooterStyling {get; set;}
