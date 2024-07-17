@@ -39,6 +39,7 @@ builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<TemplateService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddTransient<LocalFileStorageService>();
+builder.Services.AddScoped<HistorySnapshotService>();
 builder.Services.AddLogging();
 
 var app = builder.Build();
