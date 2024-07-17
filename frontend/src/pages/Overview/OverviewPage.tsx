@@ -239,6 +239,11 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         }
     }
 
+    const navigateToVerificationPage = (verificationCode: string) => {
+        const url = `/verify/${verificationCode}`;
+        window.open(url, '_blank');
+    };
+
     return (
         <main className="overview-page">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} />
@@ -280,7 +285,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                                     <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
                                 </section>
                                 {student.lastGenerated && 
-                                    <div className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
+                                    <div onClick={() => navigateToVerificationPage(student.verificationCode)} className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
                                         <VerifyIcon />
                                     </div>
                                 }
