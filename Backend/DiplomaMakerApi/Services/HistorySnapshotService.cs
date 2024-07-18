@@ -1,6 +1,5 @@
 using DiplomaMakerApi.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace DiplomaMakerApi.Services
 {
@@ -20,20 +19,14 @@ namespace DiplomaMakerApi.Services
 
             if(templateUsed != null)
             {
-                var latestSnapshot = await _context.DiplomaGenerationLogs.FirstOrDefaultAsync(l =>  requestDto.students.Any(s => s.GuidId == l.StudentGuidId));
-                if(latestSnapshot.TemplateLastUpdated != templateUsed.LastUpdated)
-                {
-                    var templateBackgroundBackupLocation = await _localFileStorageService.createBackup(templateUsed.Name);
-                }
-                else{
-                    var templateBackgroundBackupLocation = templateUsed.BasePdf;
-                }
+                var templateBackgroundBackupLocation = await _localFileStorageService.createBackup(templateUsed.Name);
                 
                 foreach(var student in requestDto.students){
-                    var studentSnapshot = new DiplomaGenerationLog()
+                    var studentSnapshot = new DiplomaSnapshot()
                     {
                         GeneratedAt = DateTime.UtcNow,
                         BootcampName = bootcampUsed.Name,
+                        BootcampGuidId = bootcampUsed.GuidId,
                         BootcampGraduationDate = bootcampUsed.GraduationDate,
                         StudentGuidId = student.GuidId,
                         StudentName = student.Name,
@@ -90,15 +83,15 @@ namespace DiplomaMakerApi.Services
                         BasePdf = templateBackgroundBackupLocation,
                         TemplateLastUpdated = templateUsed?.LastUpdated ?? default(DateTime),
                     };
-                    _context.DiplomaGenerationLogs.Add(studentSnapshot);
+                    _context.DiplomaSnapshots.Add(studentSnapshot);
                     await _context.SaveChangesAsync();
                 }
             }
         }
 
-        public async Task<List<DiplomaGenerationLog>> GetHistorySnapshots()
+        public async Task<List<DiplomaSnapshot>> GetHistorySnapshots()
         {
-            return await _context.DiplomaGenerationLogs.ToListAsync();
+            return await _context.DiplomaSnapshots.ToListAsync();
         }
     }
 }

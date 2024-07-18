@@ -52,7 +52,7 @@ namespace DiplomaMakerApi.Migrations
                     b.ToTable("Bootcamps");
                 });
 
-            modelBuilder.Entity("DiplomaMakerApi.Models.DiplomaGenerationLog", b =>
+            modelBuilder.Entity("DiplomaMakerApi.Models.DiplomaSnapshot", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,6 +66,9 @@ namespace DiplomaMakerApi.Migrations
 
                     b.Property<DateTime>("BootcampGraduationDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("BootcampGuidId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("BootcampName")
                         .IsRequired()
@@ -130,7 +133,7 @@ namespace DiplomaMakerApi.Migrations
 
                     b.HasIndex("MainStylingId");
 
-                    b.ToTable("DiplomaGenerationLogs");
+                    b.ToTable("DiplomaSnapshots");
                 });
 
             modelBuilder.Entity("DiplomaMakerApi.Models.DiplomaTemplate", b =>
@@ -272,7 +275,7 @@ namespace DiplomaMakerApi.Migrations
                     b.Navigation("DiplomaTemplate");
                 });
 
-            modelBuilder.Entity("DiplomaMakerApi.Models.DiplomaGenerationLog", b =>
+            modelBuilder.Entity("DiplomaMakerApi.Models.DiplomaSnapshot", b =>
                 {
                     b.HasOne("DiplomaMakerApi.Models.TemplateStyle", "FooterStyling")
                         .WithMany()

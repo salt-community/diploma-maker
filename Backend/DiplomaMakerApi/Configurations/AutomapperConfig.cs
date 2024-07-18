@@ -17,6 +17,6 @@ public class AutomapperConfig : Profile
         CreateMap<StudentResponseDto, Student>().ReverseMap();
         CreateMap<TemplateResponseDto, DiplomaTemplate>().ReverseMap();
         CreateMap<StudentUpdateRequestDto, Student>().ReverseMap();
-        CreateMap<DiplomaGenerationLogResponseDto, DiplomaGenerationLog>().ReverseMap();
+        CreateMap<DiplomaSnapshotResponseDto, DiplomaSnapshot>().ReverseMap();
     }
 }

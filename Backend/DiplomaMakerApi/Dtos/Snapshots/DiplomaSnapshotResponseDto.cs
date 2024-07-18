@@ -1,10 +1,11 @@
 namespace DiplomaMakerApi.Models
 {
-    public class DiplomaGenerationLog
+    public class DiplomaSnapshotResponseDto
     {
         public int Id { get; set; }
         public required DateTime GeneratedAt { get; set; }
         public required string BootcampName { get; set; }
+        public Guid? BootcampGuidId { get; set; }
         public required DateTime BootcampGraduationDate { get; set; }
         public Guid? StudentGuidId { get; set; }
         public required string StudentName { get; set; }

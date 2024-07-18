@@ -33,13 +33,14 @@ namespace DiplomaMakerApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DiplomaGenerationLogs",
+                name: "DiplomaSnapshots",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     GeneratedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     BootcampName = table.Column<string>(type: "text", nullable: false),
+                    BootcampGuidId = table.Column<Guid>(type: "uuid", nullable: false),
                     BootcampGraduationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     StudentGuidId = table.Column<Guid>(type: "uuid", nullable: true),
                     StudentName = table.Column<string>(type: "text", nullable: false),
@@ -58,24 +59,24 @@ namespace DiplomaMakerApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DiplomaGenerationLogs", x => x.Id);
+                    table.PrimaryKey("PK_DiplomaSnapshots", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DiplomaGenerationLogs_TemplateStyles_FooterStylingId",
+                        name: "FK_DiplomaSnapshots_TemplateStyles_FooterStylingId",
                         column: x => x.FooterStylingId,
                         principalTable: "TemplateStyles",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_DiplomaGenerationLogs_TemplateStyles_IntroStylingId",
+                        name: "FK_DiplomaSnapshots_TemplateStyles_IntroStylingId",
                         column: x => x.IntroStylingId,
                         principalTable: "TemplateStyles",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_DiplomaGenerationLogs_TemplateStyles_LinkStylingId",
+                        name: "FK_DiplomaSnapshots_TemplateStyles_LinkStylingId",
                         column: x => x.LinkStylingId,
                         principalTable: "TemplateStyles",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_DiplomaGenerationLogs_TemplateStyles_MainStylingId",
+                        name: "FK_DiplomaSnapshots_TemplateStyles_MainStylingId",
                         column: x => x.MainStylingId,
                         principalTable: "TemplateStyles",
                         principalColumn: "Id");
@@ -181,23 +182,23 @@ namespace DiplomaMakerApi.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DiplomaGenerationLogs_FooterStylingId",
-                table: "DiplomaGenerationLogs",
+                name: "IX_DiplomaSnapshots_FooterStylingId",
+                table: "DiplomaSnapshots",
                 column: "FooterStylingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DiplomaGenerationLogs_IntroStylingId",
-                table: "DiplomaGenerationLogs",
+                name: "IX_DiplomaSnapshots_IntroStylingId",
+                table: "DiplomaSnapshots",
                 column: "IntroStylingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DiplomaGenerationLogs_LinkStylingId",
-                table: "DiplomaGenerationLogs",
+                name: "IX_DiplomaSnapshots_LinkStylingId",
+                table: "DiplomaSnapshots",
                 column: "LinkStylingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DiplomaGenerationLogs_MainStylingId",
-                table: "DiplomaGenerationLogs",
+                name: "IX_DiplomaSnapshots_MainStylingId",
+                table: "DiplomaSnapshots",
                 column: "MainStylingId");
 
             migrationBuilder.CreateIndex(
@@ -230,7 +231,7 @@ namespace DiplomaMakerApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DiplomaGenerationLogs");
+                name: "DiplomaSnapshots");
 
             migrationBuilder.DropTable(
                 name: "Students");

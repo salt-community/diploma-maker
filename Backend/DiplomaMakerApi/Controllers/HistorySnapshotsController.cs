@@ -19,10 +19,10 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<DiplomaGenerationLogResponseDto>>> GetHistory()
+        public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> GetHistory()
         {    
             var snapshots = await _historySnapShotService.GetHistorySnapshots();
-            return _mapper.Map<List<DiplomaGenerationLogResponseDto>>(snapshots);
+            return _mapper.Map<List<DiplomaSnapshotResponseDto>>(snapshots);
         }
     }
 }
