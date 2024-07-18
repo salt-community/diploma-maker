@@ -17,9 +17,23 @@ namespace DiplomaMakerApi.Services
                 .Include(d => d.LinkStyling)
                 .FirstOrDefaultAsync(t => t.Id == requestDto.templateId);
 
+            var lastSnapshot = await _context.DiplomaSnapshots
+                .Where(d => d.BootcampGuidId == bootcampUsed.GuidId)
+                .OrderByDescending(d => d.GeneratedAt)
+                .FirstOrDefaultAsync();
+
             if(templateUsed != null)
             {
-                var templateBackgroundBackupLocation = await _localFileStorageService.createBackup(templateUsed.Name);
+                var templateBackgroundBackupLocation = string.Empty;
+                
+                if(lastSnapshot != null && templateUsed.LastUpdated == lastSnapshot.TemplateLastUpdated)
+                {
+                    templateBackgroundBackupLocation = await _localFileStorageService.GetFilePath(Path.GetFileName(lastSnapshot.BasePdf));
+                }
+                else{
+                    templateBackgroundBackupLocation = await _localFileStorageService.createBackup(templateUsed.Name);
+                }
+                
                 
                 foreach(var student in requestDto.students){
                     var studentSnapshot = new DiplomaSnapshot()

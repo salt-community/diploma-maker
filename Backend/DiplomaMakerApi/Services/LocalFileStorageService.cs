@@ -33,6 +33,7 @@ namespace DiplomaMakerApi.Services
             return filePath;
         }
 
+        //The templateName should be something like Default.v2.pdf
         public async Task<string> GetFilePath(string templateName)
         {
             var filePath = Path.Combine(_storagePath, templateName);
