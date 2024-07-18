@@ -20,7 +20,15 @@ namespace DiplomaMakerApi.Services
 
             if(templateUsed != null)
             {
-                var templateBackgroundBackupLocation = await _localFileStorageService.createBackup(templateUsed.Name);
+                var latestSnapshot = await _context.DiplomaGenerationLogs.FirstOrDefaultAsync(l =>  requestDto.students.Any(s => s.GuidId == l.StudentGuidId));
+                if(latestSnapshot.TemplateLastUpdated != templateUsed.LastUpdated)
+                {
+                    var templateBackgroundBackupLocation = await _localFileStorageService.createBackup(templateUsed.Name);
+                }
+                else{
+                    var templateBackgroundBackupLocation = templateUsed.BasePdf;
+                }
+                
                 foreach(var student in requestDto.students){
                     var studentSnapshot = new DiplomaGenerationLog()
                     {
