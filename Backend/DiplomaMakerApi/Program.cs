@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using JokesAPI.Configuration;
 using DiplomaMakerApi.Services;
 using DiplomaMakerApi.Middleware;
+using DiplomaMakerApi.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);

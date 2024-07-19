@@ -12,6 +12,9 @@ public class TrackService
         _context = context;
     }
 
-    public Task<List<Track>> GetAllTracks() => _context.Tracks.ToListAsync();
+    public async Task<List<Track>> GetAllTracks() => await _context.Tracks
+        .Include(t => t.Bootcamps)
+        .ThenInclude(b=>b.Students)
+        .ToListAsync();
 
 }

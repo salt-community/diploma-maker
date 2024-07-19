@@ -1,6 +1,6 @@
 using AutoMapper;
 
-namespace JokesAPI.Configuration;
+namespace DiplomaMakerApi.Configuration;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Dtos; 
 
@@ -14,5 +14,6 @@ public class AutomapperConfig : Profile
         CreateMap<StudentResponseDto, Student>().ReverseMap();
         CreateMap<TemplateResponseDto, DiplomaTemplate>().ReverseMap();
         CreateMap<StudentUpdateRequestDto, Student>().ReverseMap();
+        CreateMap<Track,TracksResponseDto>();
     }
 }
