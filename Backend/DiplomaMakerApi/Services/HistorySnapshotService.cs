@@ -127,7 +127,8 @@ namespace DiplomaMakerApi.Services
                 .Include(d => d.MainStyling)
                 .Include(d => d.LinkStyling)
                 .ToListAsync();
-            if(historySnapshots == null){
+            if (!historySnapshots.Any())
+            {
                 throw new NotFoundByIdException($"Student with verification code '{verificationCode}' not found.");
             }
 
