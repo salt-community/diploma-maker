@@ -143,3 +143,25 @@ export type StudentRequestNew = {
     name: string,
     email: string
 }
+
+export type HistorySnapshotResponse = {
+    id: number;
+    generatedAt: string;
+    bootcampName: string;
+    bootcampGuidId: string;
+    bootcampGraduationDate: string;
+    studentGuidId: string;
+    studentName: string;
+    verificationCode: string;
+    templateName: string;
+    footer: string;
+    footerStyling: Style;
+    intro: string;
+    introStyling: Style;
+    main: string;
+    mainStyling: Style;
+    link: string;
+    linkStyling: Style;
+    basePdf: string;
+    templateLastUpdated: string;
+}
