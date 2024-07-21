@@ -36,7 +36,7 @@ namespace DiplomaMakerApi.Services
                 }
                 else{
                     var fileLocationResponse = await _localFileStorageService.GetFilePath(Path.GetFileName(lastSnapshot.BasePdf));
-                    // Temporary Fix -> when generating again it gives the absolute path for some strange reason. I can't fix it yet.
+                    // Temporary Fix: when generating a second time it gives the absolute path for some strange reason.
                     fileLocationResponse = "Blob/" + Path.GetFileName(fileLocationResponse);
                     templateBackgroundBackupLocation = fileLocationResponse;
                 }
@@ -138,6 +138,32 @@ namespace DiplomaMakerApi.Services
             }
 
             return historySnapshots;
+        }
+
+        public async Task MakeActiveHistorySnapshot(int id)
+        {
+            var historySnapshots = await _context.DiplomaSnapshots
+                .Where(h => h.Active)
+                .ToListAsync();
+            
+            var makeActiveSnapShot = await _context.DiplomaSnapshots
+                .FirstOrDefaultAsync(h => h.Id == id);
+            
+            if(makeActiveSnapShot == null)
+            {
+                throw new NotFoundByIdException($"Snapshot with id '{id}' not found.");
+            }
+            
+            foreach(var Snapshot in historySnapshots)
+            {
+                Snapshot.Active = false;
+                _context.DiplomaSnapshots.Update(Snapshot);
+            }
+
+            makeActiveSnapShot.Active = true;
+            _context.DiplomaSnapshots.Update(makeActiveSnapShot);
+            
+            await _context.SaveChangesAsync();
         }
     }
 }
