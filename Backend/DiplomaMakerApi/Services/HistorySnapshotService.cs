@@ -109,7 +109,12 @@ namespace DiplomaMakerApi.Services
 
         public async Task<List<DiplomaSnapshot>> GetHistorySnapshots()
         {
-            return await _context.DiplomaSnapshots.ToListAsync();
+            return await _context.DiplomaSnapshots
+                .Include(d => d.FooterStyling)
+                .Include(d => d.IntroStyling)
+                .Include(d => d.MainStyling)
+                .Include(d => d.LinkStyling)
+                .ToListAsync();
         }
     }
 }
