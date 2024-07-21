@@ -179,6 +179,9 @@ namespace DiplomaMakerApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("PdfBackgroundLastUpdated")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FooterStylingId");

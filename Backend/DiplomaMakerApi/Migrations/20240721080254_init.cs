@@ -97,7 +97,8 @@ namespace DiplomaMakerApi.Migrations
                     MainStylingId = table.Column<int>(type: "integer", nullable: true),
                     Link = table.Column<string>(type: "text", nullable: false),
                     LinkStylingId = table.Column<int>(type: "integer", nullable: true),
-                    LastUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    LastUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PdfBackgroundLastUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
