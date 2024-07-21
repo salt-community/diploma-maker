@@ -4,6 +4,10 @@ import { HistorySnapshotBundledData, HistorySnapshotResponse } from "../../util/
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useState } from "react";
 import { utcFormatter } from '../../util/helper';
+import { ArrowIcon } from '../../components/MenuItems/Icons/ArrowIcon';
+import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
+import { SortByIcon } from '../../components/MenuItems/Icons/SortbyIcon';
+import { SelectOptions } from '../../components/MenuItems/Inputs/SelectOptions';
 
 type Props = {
     getHistory: () => void;
@@ -16,10 +20,24 @@ type SortOrder =
     'number-of-students-ascending' | 'number-of-students-descending' | 'template-name-ascending' | 
     'template-name-descending' | 'status-ascending' | 'status-descending';
 
+const sortOrderOptions = [
+    { value: 'date-ascending', label: 'Date Ascending' },
+    { value: 'date-descending', label: 'Date Descending' },
+    { value: 'bootcamp-name-ascending', label: 'Bootcamp Name Ascending' },
+    { value: 'bootcamp-name-descending', label: 'Bootcamp Name Descending' },
+    { value: 'number-of-students-ascending', label: 'Number of Students Ascending' },
+    { value: 'number-of-students-descending', label: 'Number of Students Descending' },
+    { value: 'template-name-ascending', label: 'Template Name Ascending' },
+    { value: 'template-name-descending', label: 'Template Name Descending' },
+    { value: 'status-ascending', label: 'Status Ascending' },
+    { value: 'status-descending', label: 'Status Descending' },
+];
+
 export function HistoryPage({ getHistory }: Props) {
     const [history, setHistory] = useState<BundledDataWithGeneratedAt[]>();
     const [expandedRows, setExpandedRows] = useState<{ [key: string]: boolean }>({});
     const [sortOrder, setSortOrder] = useState<SortOrder>('date-descending');
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
     const { isLoading, data: student, isError } = useQuery({
         queryKey: ['getDiplomaById'],
@@ -42,7 +60,6 @@ export function HistoryPage({ getHistory }: Props) {
                 return acc;
             }, [] as BundledDataWithGeneratedAt[]);
 
-            console.log(bundledData);
             setHistory(bundledData);
         },
         retry: false
@@ -54,23 +71,13 @@ export function HistoryPage({ getHistory }: Props) {
 
     const handleSortChange = (sortType: SortOrder) => {
         setSortOrder(prevOrder => {
-            switch (sortType) {
-                case 'date-ascending':
-                case 'date-descending':
-                case 'bootcamp-name-ascending':
-                case 'bootcamp-name-descending':
-                case 'number-of-students-ascending':
-                case 'number-of-students-descending':
-                case 'template-name-ascending':
-                case 'template-name-descending':
-                case 'status-ascending':
-                case 'status-descending':
-                    return sortType;
-                default:
-                    return prevOrder;
+            if (prevOrder.startsWith(sortType.split('-')[0])) {
+                return prevOrder === sortType ? `${sortType.split('-')[0]}-ascending` as SortOrder : sortType;
+            } else {
+                return sortType;
             }
         });
-    
+        
         if (history) {
             const sortedHistory = [...history].sort((a, b) => {
                 switch (sortType) {
@@ -102,6 +109,32 @@ export function HistoryPage({ getHistory }: Props) {
         }
     };
 
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const filteredHistory = history?.filter(bundle =>
+        bundle.HistorySnapShots.some(snapshot =>
+            snapshot.bootcampName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            snapshot.templateName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            snapshot.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            snapshot.verificationCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            snapshot.bootcampGuidId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            snapshot.studentGuidId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            snapshot.footer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            snapshot.intro.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            snapshot.main.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            snapshot.link.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            snapshot.basePdf.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            utcFormatter(snapshot.generatedAt).toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (snapshot.status ? 'active' : 'inactive').includes(searchQuery.toLowerCase())
+        )
+    );
+
+    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        handleSortChange(e.target.value as SortOrder);
+    };
+
     if (isLoading) {
         return (
             <div className='spinner-container'>
@@ -119,39 +152,72 @@ export function HistoryPage({ getHistory }: Props) {
     }
 
     return (
-        <main className='historypage'>  
-            <section className='historypage__table-container'>
-                <h1 className='historypage__title'>History Snapshots</h1>
-                {history && history.length > 0 ? (
+        <main className='historypage'>
+            <div className='historypage__table-container'>
+                <h1 className='historypage__title'>Diploma Generation History</h1>
+                <section className='historypage__filtersection'>
+                    <SearchInput
+                        containerClassOverride='historypage__filtersection--input-wrapper'
+                        inputClassOverride='historypage__filtersection__search-input'
+                        searchQuery={searchQuery}
+                        handleSearchChange={handleSearchChange}
+                    />
+                    <div className='historypage__sortbysection'>
+                        <SortByIcon />
+                        <SelectOptions
+                            containerClassOverride='historypage__sort-by-section__select-container'
+                            selectClassOverride='historypage__sort-by-section__select-box'
+                            options={sortOrderOptions}
+                            onChange={handleSelectChange}
+                            value={sortOrder}
+                        />
+                    </div>
+                </section>
+                {filteredHistory && filteredHistory.length > 0 ? (
                     <table className='historypage__table'>
                         <thead className='historypage__table-head'>
                             <tr className='historypage__tablehead-row'>
-                                <th className='historypage__table-header' onClick={() => handleSortChange(sortOrder === 'date-descending' ? 'date-ascending' : 'date-descending')}>
-                                    Generated At {sortOrder.includes('date-ascending') ? '↑' : '↓'}
+                                <th
+                                    className={'historypage__table-header ' + (sortOrder.includes('date-ascending') || sortOrder.includes('date-descending') ? (sortOrder === 'date-descending' ? 'descending' : '') : '')}
+                                    onClick={() => handleSortChange(sortOrder === 'date-descending' ? 'date-ascending' : 'date-descending')}
+                                >
+                                    Generated At <div className={'icon-container ' + (!sortOrder.includes('date-ascending') && !sortOrder.includes('date-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'date-descending' ? 180 : 0} /></div>
                                 </th>
-                                <th className='historypage__table-header' onClick={() => handleSortChange(sortOrder === 'bootcamp-name-descending' ? 'bootcamp-name-ascending' : 'bootcamp-name-descending')}>
-                                    Bootcamp Name {sortOrder.includes('bootcamp-name-ascending') ? '↑' : '↓'}
+                                <th
+                                    className={'historypage__table-header ' + (sortOrder.includes('bootcamp-name-ascending') || sortOrder.includes('bootcamp-name-descending') ? (sortOrder === 'bootcamp-name-descending' ? 'descending' : '') : '')}
+                                    onClick={() => handleSortChange(sortOrder === 'bootcamp-name-descending' ? 'bootcamp-name-ascending' : 'bootcamp-name-descending')}
+                                >
+                                    Bootcamp Name <div className={'icon-container ' + (!sortOrder.includes('bootcamp-name-ascending') && !sortOrder.includes('bootcamp-name-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'bootcamp-name-descending' ? 180 : 0} /></div>
                                 </th>
-                                <th className='historypage__table-header' onClick={() => handleSortChange(sortOrder === 'number-of-students-descending' ? 'number-of-students-ascending' : 'number-of-students-descending')}>
-                                    Number Of Students {sortOrder.includes('number-of-students-ascending') ? '↑' : '↓'}
+                                <th
+                                    className={'historypage__table-header ' + (sortOrder.includes('number-of-students-ascending') || sortOrder.includes('number-of-students-descending') ? (sortOrder === 'number-of-students-descending' ? 'descending' : '') : '')}
+                                    onClick={() => handleSortChange(sortOrder === 'number-of-students-descending' ? 'number-of-students-ascending' : 'number-of-students-descending')}
+                                >
+                                    Number Of Students <div className={'icon-container ' + (!sortOrder.includes('number-of-students-ascending') && !sortOrder.includes('number-of-students-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'number-of-students-descending' ? 180 : 0} /></div>
                                 </th>
-                                <th className='historypage__table-header' onClick={() => handleSortChange(sortOrder === 'template-name-descending' ? 'template-name-ascending' : 'template-name-descending')}>
-                                    Template Name {sortOrder.includes('template-name-ascending') ? '↑' : '↓'}
+                                <th
+                                    className={'historypage__table-header ' + (sortOrder.includes('template-name-ascending') || sortOrder.includes('template-name-descending') ? (sortOrder === 'template-name-descending' ? 'descending' : '') : '')}
+                                    onClick={() => handleSortChange(sortOrder === 'template-name-descending' ? 'template-name-ascending' : 'template-name-descending')}
+                                >
+                                    Template Name <div className={'icon-container ' + (!sortOrder.includes('template-name-ascending') && !sortOrder.includes('template-name-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'template-name-descending' ? 180 : 0} /></div>
                                 </th>
-                                <th className='historypage__table-header' onClick={() => handleSortChange(sortOrder === 'status-descending' ? 'status-ascending' : 'status-descending')}>
-                                    Status {sortOrder.includes('status-ascending') ? '↑' : '↓'}
+                                <th
+                                    className={'historypage__table-header ' + (sortOrder.includes('status-ascending') || sortOrder.includes('status-descending') ? (sortOrder === 'status-descending' ? 'descending' : '') : '')}
+                                    onClick={() => handleSortChange(sortOrder === 'status-descending' ? 'status-ascending' : 'status-descending')}
+                                >
+                                    Status <div className={'icon-container ' + (!sortOrder.includes('status-ascending') && !sortOrder.includes('status-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'status-descending' ? 180 : 0} /></div>
                                 </th>
                             </tr>
                         </thead>
                         <tbody className='historypage__table-body'>
-                            {history.map((bundle, index) => (
+                            {filteredHistory.map((bundle, index) => (
                                 <>
                                     <tr key={bundle.generatedAt} className='historypage__table-row' onClick={() => handleRowClick(bundle.generatedAt)}>
                                         <td className='historypage__table-cell'>{utcFormatter(bundle.HistorySnapShots[0].generatedAt)}</td>
                                         <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].bootcampName}</td>
                                         <td className='historypage__table-cell'>{bundle.HistorySnapShots.length}</td>
                                         <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].basePdf.split('/').pop()}</td>
-                                        <td className='historypage__table-cell'>-</td>
+                                        <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].status ? 'active' : 'inactive'}</td>
                                     </tr>
                                     {expandedRows[bundle.generatedAt] && (
                                     <tr className='historypage__table-row expanded'>
@@ -185,7 +251,7 @@ export function HistoryPage({ getHistory }: Props) {
                 ) : (
                     <p className='historypage__no-data'>No history data available.</p>
                 )}
-            </section>
+            </div>
         </main>
     );
 }
