@@ -2,7 +2,7 @@ import { BootcampRequest, EmailSendRequest, FormDataUpdateRequest, StudentUpdate
 import { deleteBootcampById, getBootcampById, getBootcamps, postBootcamp, updateBootcamp, UpdateBootcampWithNewFormdata } from "./bootcampService";
 import { postEmail } from "./emailService";
 import { getTemplatePdfFile } from "./fileService";
-import { getHistorySnapshots } from "./historySnapShotService";
+import { getHistoryByVerificationCode, getHistorySnapshots } from "./historySnapShotService";
 import { deleteStudentById, getStudentById, getStudentByVerificationCode, getStudentsByKeyword, updateSingleStudent } from "./studentService";
 import { deleteTemplateById, getAllTemplates, getTemplateById, postTemplate, putTemplate } from "./templateService";
 
@@ -38,5 +38,6 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
 
         // HistorySnapshot Endpoint
         getHistorySnapshots: () => getHistorySnapshots(apiBaseUrl),
+        getHistoryByVerificationCode: (verificationCode: string) => getHistoryByVerificationCode(apiBaseUrl, verificationCode),
     };
 };
