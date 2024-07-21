@@ -354,9 +354,7 @@ const dateoptions: Intl.DateTimeFormatOptions = {
   day: '2-digit',
   hour: '2-digit',
   minute: '2-digit',
-  second: '2-digit',
-  timeZone: 'Europe/Stockholm',
-  timeZoneName: 'short'
+  timeZone: 'Europe/Stockholm'
 };
 
 export const dateFormatter = new Intl.DateTimeFormat('en-GB', dateoptions);
@@ -364,5 +362,5 @@ export const dateFormatter = new Intl.DateTimeFormat('en-GB', dateoptions);
 export const utcFormatter = (date: Date) => {
   const utcDate = new Date(date);
   const stockholmDateString = dateFormatter.format(utcDate);
-  return stockholmDateString
+  return stockholmDateString;
 }

@@ -146,7 +146,7 @@ export type StudentRequestNew = {
 
 export type HistorySnapshotResponse = {
     id: number;
-    generatedAt: string;
+    generatedAt: Date;
     bootcampName: string;
     bootcampGuidId: string;
     bootcampGraduationDate: Date;
@@ -164,4 +164,8 @@ export type HistorySnapshotResponse = {
     linkStyling: Style;
     basePdf: string;
     templateLastUpdated: Date;
+}
+
+export type HistorySnapshotBundledData = {
+    HistorySnapShots: HistorySnapshotResponse[]
 }

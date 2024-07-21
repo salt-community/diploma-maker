@@ -1,7 +1,44 @@
-.spinner-container{
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translateY(-50%) translateX(-50%);
+.historypage {
+    padding: 20px;
 }
 
+.historypage__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.historypage__table-head {
+    background-color: #333;
+    color: #fff;
+}
+
+.historypage__table-header, .historypage__table-cell {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.historypage__table-body {
+    background-color: #f9f9f9;
+}
+
+.historypage__subtable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    background-color: #f1f1f1;
+}
+
+.historypage__subtable-head {
+    background-color: #666;
+    color: #fff;
+}
+
+.historypage__subtable-header, .historypage__subtable-cell {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ccc;
+}
