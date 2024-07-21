@@ -57,13 +57,6 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
     const generatePDFHandler = async () => {
         if (uiInstance.current && studentData) {
           const inputs = uiInstance.current.getInputs();
-          const pdfInput = makeTemplateInput(
-              inputs[0].header,
-              inputs[0].main,
-              inputs[0].footer,
-              inputs[0].pdfbase,
-              inputs[0].link
-          )
           const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
          
           await generatePDFDownload(template, inputs, `${studentData.studentName} Diploma`);
