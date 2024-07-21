@@ -8,6 +8,11 @@ import { ArrowIcon } from '../../components/MenuItems/Icons/ArrowIcon';
 import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
 import { SortByIcon } from '../../components/MenuItems/Icons/SortbyIcon';
 import { SelectOptions } from '../../components/MenuItems/Inputs/SelectOptions';
+import { ModifyButton } from '../../components/MenuItems/Buttons/ModifyButton';
+import { AddButton } from '../../components/MenuItems/Buttons/AddButton';
+import { ViewTemplateIcon } from '../../components/MenuItems/Icons/ViewTemplateIcon';
+import CustomCheckBoxRound from '../../components/MenuItems/Inputs/CustomCheckBoxRound';
+import { SaveButton } from '../../components/MenuItems/Buttons/SaveButton';
 
 type Props = {
     getHistory: () => void;
@@ -217,25 +222,31 @@ export function HistoryPage({ getHistory }: Props) {
                                         <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].bootcampName}</td>
                                         <td className='historypage__table-cell'>{bundle.HistorySnapShots.length}</td>
                                         <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].basePdf.split('/').pop()}</td>
-                                        <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].status ? 'active' : 'inactive'}</td>
+                                        <td className={'historypage__table-cell status ' + (bundle.HistorySnapShots[0].status ? 'active' : 'inactive')}>{bundle.HistorySnapShots[0].status ? 'active' : 'Not Active'}</td>
                                     </tr>
-                                    {expandedRows[bundle.generatedAt] && (
+                                    {expandedRows[bundle.generatedAt] && 
                                     <tr className='historypage__table-row expanded'>
-                                        <td className='historypage__table-cell'></td>
+                                        <td className='historypage__table-cell'>
+                                            <div className='historypage__table-row--optionsmenu'>
+                                                <AddButton text='View Template' onClick={() => {}} icon={<ViewTemplateIcon />}/>
+                                                <SaveButton onClick={() => {}} saveButtonType={'normal'} textfield='Make Active Diploma'/>
+                                            </div>
+                                        </td>
                                         <td className='historypage__table-cell' colSpan={5}>
+                                            
                                             <table className='historypage__subtable'>
                                                 <thead className='historypage__subtable-head'>
                                                     <tr className='historypage__subtable-row'>
-                                                        <th className='historypage__subtable-header'>ID</th>
                                                         <th className='historypage__subtable-header'>Student Name</th>
+                                                        <th className='historypage__subtable-header'>Id</th>
                                                         <th className='historypage__subtable-header'>Verification Code</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className='historypage__subtable-body'>
                                                     {bundle.HistorySnapShots.map(snapshot => (
                                                         <tr key={snapshot.id} className='historypage__subtable-row'>
-                                                            <td className='historypage__subtable-cell'>{snapshot.studentGuidId}</td>
                                                             <td className='historypage__subtable-cell'>{snapshot.studentName}</td>
+                                                            <td className='historypage__subtable-cell'>{snapshot.studentGuidId}</td>
                                                             <td className='historypage__subtable-cell'>{snapshot.verificationCode}</td>
                                                         </tr>
                                                     ))}
@@ -243,7 +254,7 @@ export function HistoryPage({ getHistory }: Props) {
                                             </table>
                                         </td>
                                     </tr>
-                                )}
+                                }
                                 </>
                             ))}
                         </tbody>

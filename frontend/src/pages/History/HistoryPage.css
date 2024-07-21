@@ -110,7 +110,7 @@
             cursor: pointer;
         }
         .historypage__table-header:nth-of-type(1){
-            width: 150px;
+            width: 250px;
         }
         .historypage__table-header, .historypage__table-cell {
             padding: 10px;
@@ -124,11 +124,34 @@
     }
         .historypage__table-row:hover {
             cursor: pointer;
-            background-color: #20202a;
+            background-color: #262634;
+
+            transition: all 150ms ease;
         }
         .historypage__table-row:hover .historypage__table-row.expanded{
             cursor: pointer;
             background-color: #20202a;
+
+            transition: all 150ms ease;
+        }
+    .historypage__table-row--optionsmenu{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        
+        flex-direction: column;
+    }
+        .historypage__table-row--optionsmenu .add-btn{
+            margin-top: 0;
+            transform-origin: left;
+            transform: scale(.85);
+            min-width: 200px;
+        }
+        .historypage__table-row--optionsmenu .save-btn{
+            margin-top: 0;
+            transform-origin: left;
+            transform: scale(.85);
+            min-width: 200px;
         }
     .historypage__subtable {
         width: 100%;
@@ -137,8 +160,9 @@
         background-color: #171721;
     }
         .historypage__subtable-head {
-            background-color: #20202a;
+            background-color: #171721;
             color: #c7c7d2;
+            font-size: .8rem;
         }
         .historypage__subtable-row:hover{
             cursor: pointer;
@@ -147,7 +171,15 @@
         .historypage__subtable-header, .historypage__subtable-cell {
             padding: 8px;
             text-align: left;
-            border-bottom: 1px solid #dddddd3a;
+            border-bottom: 1px solid #dddddd18;
+
+            background-color: #091a30;
+            color: hsl(206, 100%, 79%);
+        }
+        .historypage__subtable-cell{
+            /* color: #c7c7d2f5; */
+            color: #199bff;
+            font-size: .8rem;
         }
 
 .historypage__no-data{
@@ -160,3 +192,39 @@
     color: #ff1919;
     background-color: #300909;
 }
+
+/* .status.inactive {
+    position: relative;
+    z-index: 1;
+}
+    .status.inactive::after {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        content: '';
+
+        border-radius: .75rem;
+        width: 70%;
+        height: 70%;
+        z-index: -1;
+    } */
+
+.status.active{
+    position: relative;
+    color: #19ff38;
+    z-index: 1;
+}
+    .status.active::after {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        content: '';
+        background-color: #0d3009;
+
+        border-radius: .75rem;
+        width: 70%;
+        height: 70%;
+        z-index: -1;
+    }

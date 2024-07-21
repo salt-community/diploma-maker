@@ -8,8 +8,8 @@
     color: #dbdbe5;
     font-weight: 600;
     font-size: .8rem;
-    margin: .7rem 0;
-    padding: .5rem 1.2rem;
+    margin: .5rem 0;
+    padding: .6rem 1.2rem;
     border-radius: .5rem;
     transition: all .2s ease-in-out;
 }
@@ -29,8 +29,16 @@
         stroke: #ababba;
         transition: all .2s ease-in-out;
     }
+    .add-btn svg circle{
+        fill: #ababba;
+        transition: all .2s ease-in-out;
+    }
     .add-btn:hover svg path{
         stroke: #ffffff;
+        transition: all .2s ease-in-out;
+    }
+    .add-btn:hover svg circle{
+        fill: #ffffff;
         transition: all .2s ease-in-out;
     }
     .add-btn:hover svg{
