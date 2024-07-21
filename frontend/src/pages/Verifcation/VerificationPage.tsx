@@ -5,11 +5,9 @@ import { BootcampResponse, HistorySnapshotResponse, StudentResponse, TemplateRes
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { generatePDF, generatePDFDownload, getFontsData, getPlugins } from "../../util/helper";
-import { makeTemplateInput } from "../../templates/baseTemplate";
+import { generatePDFDownload, getFontsData, getPlugins } from "../../util/helper";
 import { mapTemplateInputsToTemplateViewerFromSnapshot, mapTemplateInputsToTemplateViewerSingle, templateInputsFromHistorySnapshot, templateInputsSingleBootcampandTemplate } from "../../util/dataHelpers";
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
-import { SuccessIcon } from '../../components/MenuItems/Icons/SuccessIcon';
 import { NextIcon } from '../../components/MenuItems/Icons/NextIcon';
 import logoBlack from '/icons/logoBlack.png'
 
@@ -68,7 +66,8 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
         queryFn: () => getHistoryByVerificationCode(verificationCode || ''),
         onSuccess: (data: HistorySnapshotResponse[]) => {
             // Selects the first template that was generated.
-            setStudentData(data[0]);
+            const activeData = data.find(h => h.active === true);
+            setStudentData(activeData);
         },
         retry: false
     });
