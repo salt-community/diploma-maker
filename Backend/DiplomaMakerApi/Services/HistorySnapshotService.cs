@@ -28,7 +28,6 @@ namespace DiplomaMakerApi.Services
                 
                 if(
                     lastSnapshot != null && 
-                    templateUsed.LastUpdated == lastSnapshot.TemplateLastUpdated && 
                     templateUsed.PdfBackgroundLastUpdated == lastSnapshot.BasePdfBackgroundLastUpdated
                 )
                 {
