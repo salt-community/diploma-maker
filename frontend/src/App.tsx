@@ -95,6 +95,13 @@ export default function App() {
     await api.postEmail(emailRequest)
   }
 
+  // HistorySnapshot Endpoint
+
+  const getHistoryByVerificationCode = async (verificationCode: string) => {
+    const historySnapshots = await api.getHistoryByVerificationCode(verificationCode);
+    return historySnapshots;
+  }
+
   const refresh = async () => {
     const newBootcamps = await api.getBootcamps(setLoadingMessage);
     const newTemplates = await api.getAllTemplates(setLoadingMessage);
@@ -109,7 +116,7 @@ export default function App() {
         <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}/>} />
         <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} />
         <Route path={`/verify`} element={<VerificationInputPage />} />
-        <Route path={`/verify/:verificationCode`} element = {<VertificationPage getStudentByVerificationCode={getStudentByVerificationCode} bootcamps={bootcamps} templates={templates}/>} />
+        <Route path={`/verify/:verificationCode`} element = {<VertificationPage getStudentByVerificationCode={getStudentByVerificationCode} bootcamps={bootcamps} templates={templates} getHistoryByVerificationCode={getHistoryByVerificationCode}/>} />
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates}/>} />
         <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate}/>} />

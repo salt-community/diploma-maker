@@ -14,7 +14,8 @@ import { NextIcon } from '../../components/MenuItems/Icons/NextIcon';
 import logoBlack from '/icons/logoBlack.png'
 
 type Props = {
-    getStudentByVerificationCode: (verificationCode: string) => void
+    getStudentByVerificationCode: (verificationCode: string) => void;
+    getHistoryByVerificationCode: (verificationCode: string) => void;
     bootcamps: BootcampResponse[] | null;
     templates: TemplateResponse[] | null;
 }
