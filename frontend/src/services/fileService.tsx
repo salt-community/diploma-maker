@@ -1,4 +1,4 @@
-export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdated: Date, setLoadingMessage: (message: string) => void): Promise<string> {
+export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdated: Date, setLoadingMessage?: (message: string) => void): Promise<string> {
     const localStorageKey = `pdf_${url}`;
     const cachedPdf = localStorage.getItem(localStorageKey);
 

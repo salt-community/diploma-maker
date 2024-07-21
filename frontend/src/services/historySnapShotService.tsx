@@ -1,4 +1,5 @@
 import { HistorySnapshotResponse } from "../util/types";
+import { getTemplatePdfFile } from "./fileService";
 
 export async function getHistorySnapshots(apiUrl: string): Promise<HistorySnapshotResponse[]> {
     const response = await fetch(`${apiUrl}/api/HistorySnapshots`);
@@ -20,6 +21,10 @@ export async function getHistoryByVerificationCode(apiUrl: string, verificationC
     }
 
     const results = await response.json() as HistorySnapshotResponse[]
+
+    for (const result of results) {
+        result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.templateLastUpdated);
+    }
 
     return results;
 }

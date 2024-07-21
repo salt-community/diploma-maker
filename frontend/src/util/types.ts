@@ -149,7 +149,7 @@ export type HistorySnapshotResponse = {
     generatedAt: string;
     bootcampName: string;
     bootcampGuidId: string;
-    bootcampGraduationDate: string;
+    bootcampGraduationDate: Date;
     studentGuidId: string;
     studentName: string;
     verificationCode: string;
@@ -163,5 +163,5 @@ export type HistorySnapshotResponse = {
     link: string;
     linkStyling: Style;
     basePdf: string;
-    templateLastUpdated: string;
+    templateLastUpdated: Date;
 }
