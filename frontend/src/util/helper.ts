@@ -165,6 +165,26 @@ export const generatePDF = async (template: Template, inputs: any, returnFile?: 
   }
 };
 
+export const generatePDFDownload = async (template: Template, inputs: any, fileName: string): Promise<void> => {
+  if (!template) return;
+  const font = await getFontsData();
+
+  const pdf = await generate({
+    template,
+    inputs,
+    options: { font },
+    plugins: getPlugins(),
+  });
+
+  const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${fileName}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
   const font = await getFontsData();
 

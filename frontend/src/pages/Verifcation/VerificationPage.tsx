@@ -5,7 +5,7 @@ import { BootcampResponse, HistorySnapshotResponse, StudentResponse, TemplateRes
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { generatePDF, getFontsData, getPlugins } from "../../util/helper";
+import { generatePDF, generatePDFDownload, getFontsData, getPlugins } from "../../util/helper";
 import { makeTemplateInput } from "../../templates/baseTemplate";
 import { mapTemplateInputsToTemplateViewerFromSnapshot, mapTemplateInputsToTemplateViewerSingle, templateInputsFromHistorySnapshot, templateInputsSingleBootcampandTemplate } from "../../util/dataHelpers";
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
@@ -66,7 +66,7 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
           )
           const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
          
-          await generatePDF(template, inputs);
+          await generatePDFDownload(template, inputs, `${studentData.studentName} Diploma`);
         }
       };
 
