@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { HistorySnapshotBundledData, HistorySnapshotResponse } from "../../util/types";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useEffect, useRef, useState } from "react";
-import { getFontsData, getPlugins, utcFormatter } from '../../util/helper';
+import { delay, getFontsData, getPlugins, utcFormatter } from '../../util/helper';
 import { ArrowIcon } from '../../components/MenuItems/Icons/ArrowIcon';
 import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
 import { SortByIcon } from '../../components/MenuItems/Icons/SortbyIcon';
@@ -54,14 +54,15 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
     const [activeTemplate, setActiveTemplate] = useState<number>(1);
 
     useEffect(() => {
-        if(history && activeTemplate){
-            const inputs = templateInputsFromHistorySnapshot(history[activeTemplate].HistorySnapShots[0]);
-            const template = mapTemplateInputsToTemplateViewerFromSnapshot(history[activeTemplate].HistorySnapShots[0], inputs[0])
-
-            console.log(template);
-
-            getFontsData().then((font) => {
-                if(uiInstance.current){
+        const loadDiploma = async () => {
+            if (history && activeTemplate && showDiploma) {
+                await delay(400);
+                const inputs = templateInputsFromHistorySnapshot(history[activeTemplate].HistorySnapShots[0]);
+                const template = mapTemplateInputsToTemplateViewerFromSnapshot(history[activeTemplate].HistorySnapShots[0], inputs[0]);
+    
+                const font = await getFontsData();
+                
+                if (uiInstance.current) {
                     uiInstance.current.destroy();
                 }
                 uiInstance.current = new Viewer({
@@ -71,17 +72,18 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                     options: { font },
                     plugins: getPlugins()
                 });
-            })
-
-            return () => {
-                if(uiInstance.current){
-                    uiInstance.current.destroy();
-                    uiInstance.current = null;
-                }
             }
-            
-        }
-    }, [uiRef, history, activeTemplate])
+        };
+    
+        loadDiploma();
+    
+        return () => {
+            if (uiInstance.current) {
+                uiInstance.current.destroy();
+                uiInstance.current = null;
+            }
+        };
+    }, [uiRef, history, activeTemplate, showDiploma]);
 
     const { isLoading, data: student, isError } = useQuery({
         queryKey: ['getDiplomaById'],
@@ -311,11 +313,11 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
             <div onClick={() => {setShowDiploma(false)}} className={'diplomapreview-container ' + (showDiploma ? 'visible' : '')}>
                 <div className='diplomapreview-container-content'>
                     <CloseWindowIcon />
-                    <div
-                        className="pdfpreview-previewcontainer"
-                        ref={uiRef}
-                        style={{ width: "100%", height: "100%", marginBottom: '2rem'}}
-                    />
+                        <div
+                            className="pdfpreview-previewcontainer"
+                            ref={uiRef}
+                            style={{ width: "100%", height: "100%", marginBottom: '2rem'}}
+                        />
                 </div>
             </div>
         </main>
