@@ -116,5 +116,16 @@ namespace DiplomaMakerApi.Services
                 .Include(d => d.LinkStyling)
                 .ToListAsync();
         }
+
+        public async Task<List<DiplomaSnapshot>> GetHistorySnapshotsByVerificationCode(string VerificationCode)
+        {
+            return await _context.DiplomaSnapshots
+                .Where(d => d.VerificationCode == VerificationCode)
+                .Include(d => d.FooterStyling)
+                .Include(d => d.IntroStyling)
+                .Include(d => d.MainStyling)
+                .Include(d => d.LinkStyling)
+                .ToListAsync();
+        }
     }
 }
