@@ -17,4 +17,5 @@ public class DiplomaTemplate
     public TemplateStyle? LinkStyling { get; set; }
     public string BasePdf => Path.Combine("Blob", Name + ".pdf").Replace("\\", "/");
     public DateTime LastUpdated {get; set;} = DateTime.UtcNow;
+    public DateTime PdfBackgroundLastUpdated {get; set;} = DateTime.UtcNow;
 } 
