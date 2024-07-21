@@ -1,3 +1,4 @@
+using DiplomaMakerApi.Exceptions;
 using DiplomaMakerApi.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -119,13 +120,18 @@ namespace DiplomaMakerApi.Services
 
         public async Task<List<DiplomaSnapshot>> GetHistorySnapshotsByVerificationCode(string verificationCode)
         {
-            return await _context.DiplomaSnapshots
+            var historySnapshots = await _context.DiplomaSnapshots
                 .Where(d => d.VerificationCode == verificationCode)
                 .Include(d => d.FooterStyling)
                 .Include(d => d.IntroStyling)
                 .Include(d => d.MainStyling)
                 .Include(d => d.LinkStyling)
                 .ToListAsync();
+            if(historySnapshots == null){
+                throw new NotFoundByIdException($"Student with verification code '{verificationCode}' not found.");
+            }
+
+            return historySnapshots;
         }
     }
 }
