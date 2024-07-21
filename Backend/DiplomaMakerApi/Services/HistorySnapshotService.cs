@@ -27,14 +27,14 @@ namespace DiplomaMakerApi.Services
                 var templateBackgroundBackupLocation = string.Empty;
                 
                 if(
-                    lastSnapshot != null && 
-                    templateUsed.PdfBackgroundLastUpdated == lastSnapshot.BasePdfBackgroundLastUpdated
+                    lastSnapshot == null || 
+                    (templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
                 )
                 {
-                    templateBackgroundBackupLocation = await _localFileStorageService.GetFilePath(Path.GetFileName(lastSnapshot.BasePdf));
+                    templateBackgroundBackupLocation = await _localFileStorageService.createBackup(templateUsed.Name);
                 }
                 else{
-                    templateBackgroundBackupLocation = await _localFileStorageService.createBackup(templateUsed.Name);
+                    templateBackgroundBackupLocation = await _localFileStorageService.GetFilePath(Path.GetFileName(lastSnapshot.BasePdf));
                 }
                 
                 
