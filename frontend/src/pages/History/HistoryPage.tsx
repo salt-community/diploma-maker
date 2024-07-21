@@ -2,8 +2,8 @@ import './HistoryPage.css'
 import { useQuery } from "react-query";
 import { HistorySnapshotBundledData, HistorySnapshotResponse } from "../../util/types";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
-import { useState } from "react";
-import { utcFormatter } from '../../util/helper';
+import { useEffect, useRef, useState } from "react";
+import { getFontsData, getPlugins, utcFormatter } from '../../util/helper';
 import { ArrowIcon } from '../../components/MenuItems/Icons/ArrowIcon';
 import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
 import { SortByIcon } from '../../components/MenuItems/Icons/SortbyIcon';
@@ -13,9 +13,13 @@ import { AddButton } from '../../components/MenuItems/Buttons/AddButton';
 import { ViewTemplateIcon } from '../../components/MenuItems/Icons/ViewTemplateIcon';
 import CustomCheckBoxRound from '../../components/MenuItems/Inputs/CustomCheckBoxRound';
 import { SaveButton } from '../../components/MenuItems/Buttons/SaveButton';
+import { Viewer } from '@pdfme/ui';
+import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistorySnapshot } from '../../util/dataHelpers';
+import { CloseWindowIcon } from '../../components/MenuItems/Icons/CloseWindowIcon';
 
 type Props = {
     getHistory: () => void;
+    changeActiveHistorySnapShot: (id: number) => void;
 }
 
 type BundledDataWithGeneratedAt = HistorySnapshotBundledData & { generatedAt: string };
@@ -38,11 +42,46 @@ const sortOrderOptions = [
     { value: 'status-descending', label: 'Status Descending' },
 ];
 
-export function HistoryPage({ getHistory }: Props) {
+export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) {
     const [history, setHistory] = useState<BundledDataWithGeneratedAt[]>();
     const [expandedRows, setExpandedRows] = useState<{ [key: string]: boolean }>({});
     const [sortOrder, setSortOrder] = useState<SortOrder>('date-descending');
     const [searchQuery, setSearchQuery] = useState<string>('');
+
+    const uiRef = useRef<HTMLDivElement | null>(null);
+    const uiInstance = useRef<Viewer | null>(null);
+    const [showDiploma, setShowDiploma] = useState<boolean>(false);
+    const [activeTemplate, setActiveTemplate] = useState<number>(1);
+
+    useEffect(() => {
+        if(history && activeTemplate){
+            const inputs = templateInputsFromHistorySnapshot(history[activeTemplate].HistorySnapShots[0]);
+            const template = mapTemplateInputsToTemplateViewerFromSnapshot(history[activeTemplate].HistorySnapShots[0], inputs[0])
+
+            console.log(template);
+
+            getFontsData().then((font) => {
+                if(uiInstance.current){
+                    uiInstance.current.destroy();
+                }
+                uiInstance.current = new Viewer({
+                    domContainer: uiRef.current,
+                    template,
+                    inputs,
+                    options: { font },
+                    plugins: getPlugins()
+                });
+            })
+
+            return () => {
+                if(uiInstance.current){
+                    uiInstance.current.destroy();
+                    uiInstance.current = null;
+                }
+            }
+            
+        }
+    }, [uiRef, history, activeTemplate])
 
     const { isLoading, data: student, isError } = useQuery({
         queryKey: ['getDiplomaById'],
@@ -66,7 +105,6 @@ export function HistoryPage({ getHistory }: Props) {
                 return acc;
             }, [] as BundledDataWithGeneratedAt[]);
 
-            console.log(bundledData);
             setHistory(bundledData);
         },
         retry: false
@@ -101,9 +139,9 @@ export function HistoryPage({ getHistory }: Props) {
                     case 'number-of-students-descending':
                         return b.HistorySnapShots.length - a.HistorySnapShots.length;
                     case 'template-name-ascending':
-                        return a.HistorySnapShots[0].basePdf.split('/').pop()!.localeCompare(b.HistorySnapShots[0].basePdf.split('/').pop()!);
+                        return a.HistorySnapShots[0].basePdfName.split('/').pop()!.localeCompare(b.HistorySnapShots[0].basePdfName.split('/').pop()!);
                     case 'template-name-descending':
-                        return b.HistorySnapShots[0].basePdf.split('/').pop()!.localeCompare(a.HistorySnapShots[0].basePdf.split('/').pop()!);
+                        return b.HistorySnapShots[0].basePdfName.split('/').pop()!.localeCompare(a.HistorySnapShots[0].basePdfName.split('/').pop()!);
                     case 'status-ascending':
                         return (a.HistorySnapShots[0].active ? 1 : 0) - (b.HistorySnapShots[0].active ? 1 : 0);
                     case 'status-descending':
@@ -132,7 +170,7 @@ export function HistoryPage({ getHistory }: Props) {
             snapshot.intro.toLowerCase().includes(searchQuery.toLowerCase()) ||
             snapshot.main.toLowerCase().includes(searchQuery.toLowerCase()) ||
             snapshot.link.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            snapshot.basePdf.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            snapshot.basePdfName.toLowerCase().includes(searchQuery.toLowerCase()) ||
             utcFormatter(snapshot.generatedAt).toLowerCase().includes(searchQuery.toLowerCase()) ||
             (snapshot.active ? 'active' : 'inactive').includes(searchQuery.toLowerCase())
         )
@@ -228,15 +266,15 @@ export function HistoryPage({ getHistory }: Props) {
                                         <td className='historypage__table-cell'>{utcFormatter(bundle.HistorySnapShots[0].generatedAt)}</td>
                                         <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].bootcampName}</td>
                                         <td className='historypage__table-cell'>{bundle.HistorySnapShots.length}</td>
-                                        <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].basePdf.split('/').pop()}</td>
+                                        <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].basePdfName.split('/').pop()}</td>
                                         <td className={'historypage__table-cell status ' + (bundle.HistorySnapShots[0].active ? 'active' : 'inactive')}>{bundle.HistorySnapShots[0].active ? 'Current' : 'Not Active'}</td>
                                     </tr>
                                     {expandedRows[bundle.generatedAt] && 
                                     <tr className='historypage__table-row expanded'>
                                         <td className='historypage__table-cell'>
                                             <div className='historypage__table-row--optionsmenu'>
-                                                <AddButton text='View Template' onClick={() => {}} icon={<ViewTemplateIcon />}/>
-                                                <SaveButton onClick={() => {}} saveButtonType={'normal'} textfield='Make Active Diploma'/>
+                                                <AddButton text='View Template' onClick={() => {setActiveTemplate(index); setShowDiploma(true)}} icon={<ViewTemplateIcon />}/>
+                                                <SaveButton onClick={() => {changeActiveHistorySnapShot(index)}} saveButtonType={'normal'} textfield='Make Active Diploma'/>
                                             </div>
                                         </td>
                                         <td className='historypage__table-cell' colSpan={5}>
@@ -269,6 +307,16 @@ export function HistoryPage({ getHistory }: Props) {
                 ) : (
                     <p className='historypage__no-data'>No history data available.</p>
                 )}
+            </div>
+            <div onClick={() => {setShowDiploma(false)}} className={'diplomapreview-container ' + (showDiploma ? 'visible' : '')}>
+                <div className='diplomapreview-container-content'>
+                    <CloseWindowIcon />
+                    <div
+                        className="pdfpreview-previewcontainer"
+                        ref={uiRef}
+                        style={{ width: "100%", height: "100%", marginBottom: '2rem'}}
+                    />
+                </div>
             </div>
         </main>
     );

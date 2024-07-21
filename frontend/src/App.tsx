@@ -107,6 +107,10 @@ export default function App() {
     return historySnapshots;
   }
 
+  const changeActiveHistorySnapShot = async (id: number) => {
+    await api.makeActiveHistorySnapShot(id);
+  }
+
   const refresh = async () => {
     const newBootcamps = await api.getBootcamps(setLoadingMessage);
     const newTemplates = await api.getAllTemplates(setLoadingMessage);
@@ -125,7 +129,7 @@ export default function App() {
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates}/>} />
         <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate}/>} />
-        <Route path={"/history"} element={<HistoryPage getHistory={getHistory}/>} />
+        <Route path={"/history"} element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot}/>} />
       </Routes>
     </>
   );

@@ -147,21 +147,25 @@ namespace DiplomaMakerApi.Services
                 .ToListAsync();
             
             var makeActiveSnapShot = await _context.DiplomaSnapshots
-                .FirstOrDefaultAsync(h => h.Id == id);
+                .Where(h => h.Id == id)
+                .ToListAsync();
             
             if(makeActiveSnapShot == null)
             {
                 throw new NotFoundByIdException($"Snapshot with id '{id}' not found.");
             }
             
-            foreach(var Snapshot in historySnapshots)
+            foreach(var snapshot in historySnapshots)
             {
-                Snapshot.Active = false;
-                _context.DiplomaSnapshots.Update(Snapshot);
+                snapshot.Active = false;
+                _context.DiplomaSnapshots.Update(snapshot);
             }
 
-            makeActiveSnapShot.Active = true;
-            _context.DiplomaSnapshots.Update(makeActiveSnapShot);
+            foreach(var snapshot in makeActiveSnapShot)
+            {
+                snapshot.Active = true;
+                _context.DiplomaSnapshots.Update(snapshot);
+            }
             
             await _context.SaveChangesAsync();
         }

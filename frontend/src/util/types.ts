@@ -163,6 +163,7 @@ export type HistorySnapshotResponse = {
     link: string;
     linkStyling: Style;
     basePdf: string;
+    basePdfName?: string;
     templateLastUpdated: Date;
     active?: Boolean;
 }
