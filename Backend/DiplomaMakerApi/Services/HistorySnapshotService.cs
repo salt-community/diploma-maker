@@ -35,7 +35,10 @@ namespace DiplomaMakerApi.Services
                     templateBackgroundBackupLocation = await _localFileStorageService.createBackup(templateUsed.Name);
                 }
                 else{
-                    templateBackgroundBackupLocation = await _localFileStorageService.GetFilePath(Path.GetFileName(lastSnapshot.BasePdf));
+                    var fileLocationResponse = await _localFileStorageService.GetFilePath(Path.GetFileName(lastSnapshot.BasePdf));
+                    // Temporary Fix -> when generating again it gives the absolute path for some strange reason. I can't fix it yet.
+                    fileLocationResponse = "Blob/" + Path.GetFileName(fileLocationResponse);
+                    templateBackgroundBackupLocation = fileLocationResponse;
                 }
                 
                 
