@@ -1,4 +1,5 @@
 export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdated: Date, setLoadingMessage?: (message: string) => void): Promise<string> {
+    
     const localStorageKey = `pdf_${url}`;
     const cachedPdf = localStorage.getItem(localStorageKey);
 
@@ -9,6 +10,7 @@ export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdate
         }
     }
 
+    console.log(url)
     const pdfResponse = await fetch(`${apiUrl}/api/${url}`);
     if (!pdfResponse.ok) {
         setLoadingMessage(`Failed to fetch PDF file from ${url}. The file does not seem to exist.`)

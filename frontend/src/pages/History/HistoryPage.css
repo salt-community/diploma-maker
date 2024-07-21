@@ -181,6 +181,9 @@
             color: #199bff;
             font-size: .8rem;
         }
+        .historypage__subtable-row:hover{
+            filter: saturate(115%) brightness(115%);
+        }
 
 .historypage__no-data{
     width: 100%;
@@ -193,9 +196,10 @@
     background-color: #300909;
 }
 
-/* .status.inactive {
+.status.inactive {
     position: relative;
     z-index: 1;
+    color: #ff9191;
 }
     .status.inactive::after {
         position: absolute;
@@ -203,12 +207,13 @@
         left: 0;
         transform: translateY(-50%);
         content: '';
+        background-color: #2b0b0b;
 
-        border-radius: .75rem;
-        width: 70%;
+        border-radius: .4rem;
+        width: 100%;
         height: 70%;
         z-index: -1;
-    } */
+    }
 
 .status.active{
     position: relative;
@@ -223,8 +228,8 @@
         content: '';
         background-color: #0d3009;
 
-        border-radius: .75rem;
-        width: 70%;
+        border-radius: .4rem;
+        width: 100%;
         height: 70%;
         z-index: -1;
     }

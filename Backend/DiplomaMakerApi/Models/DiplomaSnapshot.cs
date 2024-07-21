@@ -22,5 +22,6 @@ namespace DiplomaMakerApi.Models
         public required string BasePdf { get; set; }
         public DateTime TemplateLastUpdated {get; set;}
         public DateTime BasePdfBackgroundLastUpdated { get; set; }
+        public bool Active { get; set; }
     }
 }

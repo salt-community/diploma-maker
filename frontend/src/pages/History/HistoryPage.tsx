@@ -65,6 +65,7 @@ export function HistoryPage({ getHistory }: Props) {
                 return acc;
             }, [] as BundledDataWithGeneratedAt[]);
 
+            console.log(bundledData);
             setHistory(bundledData);
         },
         retry: false
@@ -103,9 +104,9 @@ export function HistoryPage({ getHistory }: Props) {
                     case 'template-name-descending':
                         return b.HistorySnapShots[0].basePdf.split('/').pop()!.localeCompare(a.HistorySnapShots[0].basePdf.split('/').pop()!);
                     case 'status-ascending':
-                        return (a.HistorySnapShots[0].status ? 1 : 0) - (b.HistorySnapShots[0].status ? 1 : 0);
+                        return (a.HistorySnapShots[0].active ? 1 : 0) - (b.HistorySnapShots[0].active ? 1 : 0);
                     case 'status-descending':
-                        return (b.HistorySnapShots[0].status ? 1 : 0) - (a.HistorySnapShots[0].status ? 1 : 0);
+                        return (b.HistorySnapShots[0].active ? 1 : 0) - (a.HistorySnapShots[0].active ? 1 : 0);
                     default:
                         return 0;
                 }
@@ -132,12 +133,17 @@ export function HistoryPage({ getHistory }: Props) {
             snapshot.link.toLowerCase().includes(searchQuery.toLowerCase()) ||
             snapshot.basePdf.toLowerCase().includes(searchQuery.toLowerCase()) ||
             utcFormatter(snapshot.generatedAt).toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (snapshot.status ? 'active' : 'inactive').includes(searchQuery.toLowerCase())
+            (snapshot.active ? 'active' : 'inactive').includes(searchQuery.toLowerCase())
         )
     );
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         handleSortChange(e.target.value as SortOrder);
+    };
+
+    const navigateToVerificationPage = (verificationCode: string) => {
+        const url = `/verify/${verificationCode}`;
+        window.open(url, '_blank');
     };
 
     if (isLoading) {
@@ -222,7 +228,7 @@ export function HistoryPage({ getHistory }: Props) {
                                         <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].bootcampName}</td>
                                         <td className='historypage__table-cell'>{bundle.HistorySnapShots.length}</td>
                                         <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].basePdf.split('/').pop()}</td>
-                                        <td className={'historypage__table-cell status ' + (bundle.HistorySnapShots[0].status ? 'active' : 'inactive')}>{bundle.HistorySnapShots[0].status ? 'active' : 'Not Active'}</td>
+                                        <td className={'historypage__table-cell status ' + (bundle.HistorySnapShots[0].active ? 'active' : 'inactive')}>{bundle.HistorySnapShots[0].active ? 'Current' : 'Not Active'}</td>
                                     </tr>
                                     {expandedRows[bundle.generatedAt] && 
                                     <tr className='historypage__table-row expanded'>
@@ -244,7 +250,7 @@ export function HistoryPage({ getHistory }: Props) {
                                                 </thead>
                                                 <tbody className='historypage__subtable-body'>
                                                     {bundle.HistorySnapShots.map(snapshot => (
-                                                        <tr key={snapshot.id} className='historypage__subtable-row'>
+                                                        <tr key={snapshot.id} className='historypage__subtable-row' onClick={() => navigateToVerificationPage(snapshot.verificationCode)}>
                                                             <td className='historypage__subtable-cell'>{snapshot.studentName}</td>
                                                             <td className='historypage__subtable-cell'>{snapshot.studentGuidId}</td>
                                                             <td className='historypage__subtable-cell'>{snapshot.verificationCode}</td>

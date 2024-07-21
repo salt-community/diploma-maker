@@ -101,6 +101,7 @@ namespace DiplomaMakerApi.Services
                         BasePdf = templateBackgroundBackupLocation,
                         TemplateLastUpdated = templateUsed?.LastUpdated ?? default(DateTime),
                         BasePdfBackgroundLastUpdated = templateUsed?.PdfBackgroundLastUpdated ?? default(DateTime),
+                        Active = lastSnapshot == null
                     };
                     _context.DiplomaSnapshots.Add(studentSnapshot);
                     await _context.SaveChangesAsync();

@@ -164,7 +164,7 @@ export type HistorySnapshotResponse = {
     linkStyling: Style;
     basePdf: string;
     templateLastUpdated: Date;
-    status?: Boolean;
+    active?: Boolean;
 }
 
 export type HistorySnapshotBundledData = {
