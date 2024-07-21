@@ -26,7 +26,11 @@ namespace DiplomaMakerApi.Services
             {
                 var templateBackgroundBackupLocation = string.Empty;
                 
-                if(lastSnapshot != null && templateUsed.LastUpdated == lastSnapshot.TemplateLastUpdated)
+                if(
+                    lastSnapshot != null && 
+                    templateUsed.LastUpdated == lastSnapshot.TemplateLastUpdated && 
+                    templateUsed.PdfBackgroundLastUpdated == lastSnapshot.BasePdfBackgroundLastUpdated
+                )
                 {
                     templateBackgroundBackupLocation = await _localFileStorageService.GetFilePath(Path.GetFileName(lastSnapshot.BasePdf));
                 }
@@ -96,6 +100,7 @@ namespace DiplomaMakerApi.Services
                         },
                         BasePdf = templateBackgroundBackupLocation,
                         TemplateLastUpdated = templateUsed?.LastUpdated ?? default(DateTime),
+                        BasePdfBackgroundLastUpdated = templateUsed?.PdfBackgroundLastUpdated ?? default(DateTime),
                     };
                     _context.DiplomaSnapshots.Add(studentSnapshot);
                     await _context.SaveChangesAsync();
