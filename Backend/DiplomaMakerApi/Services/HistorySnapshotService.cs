@@ -40,12 +40,13 @@ namespace DiplomaMakerApi.Services
                     fileLocationResponse = "Blob/" + Path.GetFileName(fileLocationResponse);
                     templateBackgroundBackupLocation = fileLocationResponse;
                 }
-                
+
+                var timeUtcNow = DateTime.UtcNow;
                 
                 foreach(var student in requestDto.students){
                     var studentSnapshot = new DiplomaSnapshot()
                     {
-                        GeneratedAt = DateTime.UtcNow,
+                        GeneratedAt = timeUtcNow,
                         BootcampName = bootcampUsed.Name,
                         BootcampGuidId = bootcampUsed.GuidId,
                         BootcampGraduationDate = bootcampUsed.GraduationDate,

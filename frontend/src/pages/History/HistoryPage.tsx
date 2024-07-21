@@ -48,14 +48,15 @@ export function HistoryPage({ getHistory }: Props) {
         queryKey: ['getDiplomaById'],
         queryFn: () => getHistory(),
         onSuccess: (data: HistorySnapshotResponse[]) => {
-            const formatDateToMinute = (dateStr: string) => {
+            const formatDateToSecond = (dateStr: string) => {
                 const date = new Date(dateStr);
-                date.setSeconds(0, 0);
+                date.setMilliseconds(0);
                 return date.toISOString();
             };
 
+
             const bundledData = data.reduce((acc, curr) => {
-                const generatedAtMinute = formatDateToMinute(curr.generatedAt.toString());
+                const generatedAtMinute = formatDateToSecond(curr.generatedAt.toString());
                 const existingBundle = acc.find(bundle => bundle.generatedAt === generatedAtMinute);
                 if (existingBundle) {
                     existingBundle.HistorySnapShots.push(curr);

@@ -65,7 +65,7 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
         queryKey: ['getDiplomaById'],
         queryFn: () => getHistoryByVerificationCode(verificationCode || ''),
         onSuccess: (data: HistorySnapshotResponse[]) => {
-            // Selects the first template that was generated.
+            // Selects the first active template that was generated.
             const activeData = data.find(h => h.active === true);
             setStudentData(activeData);
         },
