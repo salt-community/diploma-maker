@@ -85,6 +85,7 @@ export type TemplateRequest = {
     link?: string;
     linkStyling?: Style;
     basePdf?: string;
+    PdfBackgroundLastUpdated?: Date;
 }
 
 export type EmailSendRequest = {
