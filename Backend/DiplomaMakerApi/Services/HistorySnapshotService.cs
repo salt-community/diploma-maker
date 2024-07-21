@@ -117,10 +117,10 @@ namespace DiplomaMakerApi.Services
                 .ToListAsync();
         }
 
-        public async Task<List<DiplomaSnapshot>> GetHistorySnapshotsByVerificationCode(string VerificationCode)
+        public async Task<List<DiplomaSnapshot>> GetHistorySnapshotsByVerificationCode(string verificationCode)
         {
             return await _context.DiplomaSnapshots
-                .Where(d => d.VerificationCode == VerificationCode)
+                .Where(d => d.VerificationCode == verificationCode)
                 .Include(d => d.FooterStyling)
                 .Include(d => d.IntroStyling)
                 .Include(d => d.MainStyling)

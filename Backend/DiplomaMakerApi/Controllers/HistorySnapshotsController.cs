@@ -24,5 +24,13 @@ namespace DiplomaMakerApi.Controllers
             var snapshots = await _historySnapShotService.GetHistorySnapshots();
             return _mapper.Map<List<DiplomaSnapshotResponseDto>>(snapshots);
         }
+
+        [HttpGet("{verificationCode}")]
+
+        public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> GetHistoryByVerificationCode(string verificationCode)
+        {
+            var snapshots = await _historySnapShotService.GetHistorySnapshotsByVerificationCode(verificationCode);
+            return _mapper.Map<List<DiplomaSnapshotResponseDto>>(snapshots);
+        }
     }
 }
