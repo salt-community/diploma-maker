@@ -21,5 +21,6 @@ namespace DiplomaMakerApi.Models
         public TemplateStyle? LinkStyling { get; set; }
         public required string BasePdf { get; set; }
         public DateTime TemplateLastUpdated {get; set;}
+        public DateTime BasePdfBackgroundLastUpdated { get; set; }
     }
 }
