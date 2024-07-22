@@ -163,14 +163,16 @@ namespace DiplomaMakerApi.Services
             {
                 snapshot.Active = false;
                 _context.DiplomaSnapshots.Update(snapshot);
+                
             }
+            await _context.SaveChangesAsync();
 
             foreach(var snapshot in makeActiveSnapShot)
             {
                 snapshot.Active = true;
                 _context.DiplomaSnapshots.Update(snapshot);
+                
             }
-            
             await _context.SaveChangesAsync();
         }
     }

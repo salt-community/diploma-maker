@@ -1,4 +1,4 @@
-import { BootcampRequest, EmailSendRequest, FormDataUpdateRequest, StudentUpdateRequestDto, TemplateRequest } from "../util/types";
+import { BootcampRequest, EmailSendRequest, FormDataUpdateRequest, MakeActiveSnapshotRequestDto, StudentUpdateRequestDto, TemplateRequest } from "../util/types";
 import { deleteBootcampById, getBootcampById, getBootcamps, postBootcamp, updateBootcamp, UpdateBootcampWithNewFormdata } from "./bootcampService";
 import { postEmail } from "./emailService";
 import { getTemplatePdfFile } from "./fileService";
@@ -39,6 +39,6 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
         // HistorySnapshot Endpoint
         getHistorySnapshots: () => getHistorySnapshots(apiBaseUrl),
         getHistoryByVerificationCode: (verificationCode: string) => getHistoryByVerificationCode(apiBaseUrl, verificationCode),
-        makeActiveHistorySnapShot: (ids: number[]) => makeActiveHistorySnapShot(apiBaseUrl, ids),
+        makeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => makeActiveHistorySnapShot(apiBaseUrl, snapshotUpdateRequest),
     };
 };

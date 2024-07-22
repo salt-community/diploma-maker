@@ -1,4 +1,4 @@
-import { HistorySnapshotResponse } from "../util/types";
+import { HistorySnapshotResponse, MakeActiveSnapshotRequestDto } from "../util/types";
 import { getTemplatePdfFile } from "./fileService";
 
 export async function getHistorySnapshots(apiUrl: string): Promise<HistorySnapshotResponse[]> {
@@ -35,14 +35,14 @@ export async function getHistoryByVerificationCode(apiUrl: string, verificationC
     return results;
 }
 
-export async function makeActiveHistorySnapShot(apiUrl: string, ids: number[]): Promise<HistorySnapshotResponse[]> {
-    const queryParams = new URLSearchParams(ids.map(id => ['ids', id.toString()]));
-
-    const response = await fetch(`${apiUrl}/api/make-active-historysnapshot?${queryParams}`, {
+export async function makeActiveHistorySnapShot(apiUrl: string, request: MakeActiveSnapshotRequestDto): Promise<HistorySnapshotResponse[]> {
+    console.log(request);
+    const response = await fetch(`${apiUrl}/api/make-active-historysnapshot`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify(request)
     });
     
     if (!response.ok){

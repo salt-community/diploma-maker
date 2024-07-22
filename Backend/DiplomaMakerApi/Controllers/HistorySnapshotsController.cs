@@ -32,11 +32,11 @@ namespace DiplomaMakerApi.Controllers
             return _mapper.Map<List<DiplomaSnapshotResponseDto>>(snapshots);
         }
 
-        [HttpPut("/api/make-active-historysnapshot/{id}")]
-        public async Task<ActionResult> MakeActiveHistorySnapshot(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
+        [HttpPut("/api/make-active-historysnapshot")]
+        public async Task<ActionResult> MakeActiveHistorySnapshot([FromBody] MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
         {
             await _historySnapShotService.MakeActiveHistorySnapshot(makeActiveSnapshotRequestDto);
-            return NoContent();
+            return Ok();
         }
     }
 }

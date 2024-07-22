@@ -1,6 +1,6 @@
 import './HistoryPage.css'
 import { useQuery } from "react-query";
-import { HistorySnapshotBundledData, HistorySnapshotResponse } from "../../util/types";
+import { HistorySnapshotBundledData, HistorySnapshotResponse, MakeActiveSnapshotRequestDto } from "../../util/types";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useEffect, useRef, useState } from "react";
 import { delay, getFontsData, getPlugins, utcFormatter } from '../../util/helper';
@@ -19,7 +19,7 @@ import { CloseWindowIcon } from '../../components/MenuItems/Icons/CloseWindowIco
 
 type Props = {
     getHistory: () => void;
-    changeActiveHistorySnapShot: (ids: number[]) => void;
+    changeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => void;
 }
 
 type BundledDataWithGeneratedAt = HistorySnapshotBundledData & { generatedAt: string };
@@ -276,7 +276,16 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                                         <td className='historypage__table-cell'>
                                             <div className='historypage__table-row--optionsmenu'>
                                                 <AddButton text='View Template' onClick={() => {setActiveTemplate(index); setShowDiploma(true)}} icon={<ViewTemplateIcon />}/>
-                                                <SaveButton onClick={() => { changeActiveHistorySnapShot(bundle.HistorySnapShots.map(snapshot => snapshot.id)) }} saveButtonType={'normal'} textfield='Make Active Diploma'/>
+                                                <SaveButton 
+                                                    onClick={() => { 
+                                                        changeActiveHistorySnapShot({
+                                                            Ids: bundle.HistorySnapShots.map(snapshot => snapshot.id),
+                                                            StudentGuidIds: bundle.HistorySnapShots.map(snapshot => snapshot.studentGuidId)
+                                                        }) 
+                                                    }} 
+                                                    saveButtonType="normal" 
+                                                    textfield="Make Active Diploma" 
+                                                />
                                             </div>
                                         </td>
                                         <td className='historypage__table-cell' colSpan={5}>

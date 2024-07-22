@@ -37,6 +37,7 @@ public class StudentService
         {
                 var newStudent = new Student
                 {
+                    GuidId = Student.GuidId,
                     Name = Student.Name,
                     Email = Student.Email,
                     Bootcamp = bootcamp,
