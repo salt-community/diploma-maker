@@ -67,7 +67,13 @@ public static class SeedData
                 Bootcamp = dotnetBootcamp2,
                 VerificationCode = "yx2g6"
             };
-            var students = new List<Student>{student1, student2, student3, student4};
+            var student5 = new Student 
+            { 
+                Name = "Max Andersson", 
+                Bootcamp = dotnetBootcamp2,
+                VerificationCode = "yx2g6"
+            };
+            var students = new List<Student>{student1, student2, student3, student4, student5};
             _context.AddRange(students);
             _context.SaveChanges();
 
