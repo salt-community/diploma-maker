@@ -30,6 +30,9 @@
     .popup_confirmation.question {
         background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
     }
+    .popup_confirmation.question2 {
+        background-image: linear-gradient(to left bottom, #212b60, #1d2244, #1a1a30, #181625, #1a1c2b);
+    }
     .popup_confirmation.warning {
         background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
     }
@@ -42,6 +45,9 @@
 }
     .popup_confirmation-content svg {
         width: 75px;
+    }
+    .popup_confirmation.question2 .popup_confirmation-content .fill{
+        fill: #c84444;
     }
     .popup_confirmation-content h1 {
         font-size: 1.3rem;

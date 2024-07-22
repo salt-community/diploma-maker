@@ -6,7 +6,7 @@ import { AttentionIcon } from '../Icons/AttentionIcon';
 import { SuccessIcon } from '../Icons/SuccessIcon';
 import { CloseWindowIcon } from '../Icons/CloseWindowIcon';
 
-export type ConfirmationPopupType = 'question' | 'form' | 'warning';
+export type ConfirmationPopupType = 'question' | 'form' | 'warning' | 'question2';
 
 type Props = {
   title: string;
@@ -41,11 +41,12 @@ export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, co
     <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
       <div className={`popup_confirmation 
           ${confirmationPopupType === 'question' ? 'question' 
+          : confirmationPopupType === 'question2' ? 'question2'
           : confirmationPopupType === 'form' ? 'success' : 'warning'} 
           ${show ? 'fade-in' : 'fade-out'}`}>
             
         <div className="popup_confirmation-content">
-          {confirmationPopupType === 'question' ?
+          {confirmationPopupType === 'question' || confirmationPopupType === 'question2' ?
             <QuestionIcon />
           : confirmationPopupType === 'form' ?
             <AttentionIcon />
@@ -56,7 +57,7 @@ export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, co
             <h1>{title}</h1>
             <p>{text}</p>
             <div className={'popup_confirmation-content-btn-container ' + (confirmationPopupType === 'form' && 'confirmation')}>
-              {confirmationPopupType === 'question' ?
+              {confirmationPopupType === 'question' || confirmationPopupType === 'question2' ?
               <>
                 <button onClick={() => confirmClickHandler()} className='popup_confirmation-content-btn'>
                   <SuccessIcon />

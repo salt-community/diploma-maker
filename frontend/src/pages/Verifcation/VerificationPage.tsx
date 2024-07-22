@@ -1,12 +1,12 @@
 import './VerificationPage.css'
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom"
-import { BootcampResponse, HistorySnapshotResponse, StudentResponse, TemplateResponse } from "../../util/types";
+import { HistorySnapshotResponse } from "../../util/types";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
 import { generatePDFDownload, getFontsData, getPlugins } from "../../util/helper";
-import { mapTemplateInputsToTemplateViewerFromSnapshot, mapTemplateInputsToTemplateViewerSingle, templateInputsFromHistorySnapshot, templateInputsSingleBootcampandTemplate } from "../../util/dataHelpers";
+import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistorySnapshot } from "../../util/dataHelpers";
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
 import { NextIcon } from '../../components/MenuItems/Icons/NextIcon';
 import logoBlack from '/icons/logoBlack.png'

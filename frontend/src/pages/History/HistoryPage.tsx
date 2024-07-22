@@ -16,6 +16,10 @@ import { SaveButton } from '../../components/MenuItems/Buttons/SaveButton';
 import { Viewer } from '@pdfme/ui';
 import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistorySnapshot } from '../../util/dataHelpers';
 import { CloseWindowIcon } from '../../components/MenuItems/Icons/CloseWindowIcon';
+import { ConfirmationPopup } from '../../components/MenuItems/Popups/ConfirmationPopup';
+import { AlertPopup } from '../../components/MenuItems/Popups/AlertPopup';
+import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
+import { useCustomConfirmationPopup } from '../../components/Hooks/useCustomConfirmationPopup';
 
 type Props = {
     getHistory: () => void;
@@ -52,6 +56,9 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
     const uiInstance = useRef<Viewer | null>(null);
     const [showDiploma, setShowDiploma] = useState<boolean>(false);
     const [activeTemplate, setActiveTemplate] = useState<number>(1);
+
+    const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+    const {showConfirmationPopup,confirmationPopupContent,confirmationPopupType,confirmationPopupHandler,customPopup, closeConfirmationPopup} = useCustomConfirmationPopup();
 
     useEffect(() => {
         const loadDiploma = async () => {
@@ -111,14 +118,6 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
         },
         retry: false
     });
-
-    const handleMakeActiveSnapshot = async (bundle: BundledDataWithGeneratedAt) => {
-        await changeActiveHistorySnapShot({
-            Ids: bundle.HistorySnapShots.map(snapshot => snapshot.id),
-            StudentGuidIds: bundle.HistorySnapShots.map(snapshot => snapshot.studentGuidId)
-        });
-        refetch();
-    };
 
     const handleRowClick = (generatedAt: string) => {
         setExpandedRows(prev => ({ ...prev, [generatedAt]: !prev[generatedAt] }));
@@ -195,6 +194,28 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
         window.open(url, '_blank');
     };
 
+    const handleMakeActiveSnapshot = async (bundle: BundledDataWithGeneratedAt) => {
+        try {
+            closeConfirmationPopup();
+            await changeActiveHistorySnapShot({
+                Ids: bundle.HistorySnapShots.map(snapshot => snapshot.id),
+                StudentGuidIds: bundle.HistorySnapShots.map(snapshot => snapshot.studentGuidId)
+            });
+            refetch();
+            customAlert('success',"Active template changed successfully!",`switched to new template`);
+        } catch (error) {
+            customAlert('fail',"Error trying to update active historysnapshot",`${error}`);
+        }
+    };
+
+    const confirmMakeActiveSnapshot = async (bundle: BundledDataWithGeneratedAt) => {
+        customPopup('question2', "Are you sure you want to change the active template?", "This will affect the verificationpage of all attatched students", () => () => handleMakeActiveSnapshot(bundle));
+    };
+
+    const globalAbortHandler = () => {
+        closeConfirmationPopup();
+    };
+
     if (isLoading) {
         return (
             <div className='spinner-container'>
@@ -212,126 +233,144 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
     }
 
     return (
-        <main className='historypage'>
-            <div className='historypage__table-container'>
-                <h1 className='historypage__title'>Diploma Generation History</h1>
-                <section className='historypage__filtersection'>
-                    <SearchInput
-                        containerClassOverride='historypage__filtersection--input-wrapper'
-                        inputClassOverride='historypage__filtersection__search-input'
-                        searchQuery={searchQuery}
-                        handleSearchChange={handleSearchChange}
-                    />
-                    <div className='historypage__sortbysection'>
-                        <SortByIcon />
-                        <SelectOptions
-                            containerClassOverride='historypage__sort-by-section__select-container'
-                            selectClassOverride='historypage__sort-by-section__select-box'
-                            options={sortOrderOptions}
-                            onChange={handleSelectChange}
-                            value={sortOrder}
+        <>
+            <ConfirmationPopup
+                title={confirmationPopupContent[0]}
+                text={confirmationPopupContent[1]}
+                show={showConfirmationPopup}
+                confirmationPopupType={confirmationPopupType}
+                abortClick={() => globalAbortHandler()}
+                // @ts-ignore
+                confirmClick={(inputContent?: string) => { confirmationPopupHandler(inputContent) }}
+            />
+            <AlertPopup
+                title={popupContent[0]}
+                text={popupContent[1]}
+                popupType={popupType}
+                show={showPopup}
+                onClose={closeAlert}
+            />
+            <main className='historypage'>
+                <div className='historypage__table-container'>
+                    <h1 className='historypage__title'>Diploma Generation History</h1>
+                    <section className='historypage__filtersection'>
+                        <SearchInput
+                            containerClassOverride='historypage__filtersection--input-wrapper'
+                            inputClassOverride='historypage__filtersection__search-input'
+                            searchQuery={searchQuery}
+                            handleSearchChange={handleSearchChange}
                         />
-                    </div>
-                </section>
-                {filteredHistory && filteredHistory.length > 0 ? (
-                    <table className='historypage__table'>
-                        <thead className='historypage__table-head'>
-                            <tr className='historypage__tablehead-row'>
-                                <th
-                                    className={'historypage__table-header ' + (sortOrder.includes('date-ascending') || sortOrder.includes('date-descending') ? (sortOrder === 'date-descending' ? 'descending' : '') : '')}
-                                    onClick={() => handleSortChange(sortOrder === 'date-descending' ? 'date-ascending' : 'date-descending')}
-                                >
-                                    Generated At <div className={'icon-container ' + (!sortOrder.includes('date-ascending') && !sortOrder.includes('date-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'date-descending' ? 180 : 0} /></div>
-                                </th>
-                                <th
-                                    className={'historypage__table-header ' + (sortOrder.includes('bootcamp-name-ascending') || sortOrder.includes('bootcamp-name-descending') ? (sortOrder === 'bootcamp-name-descending' ? 'descending' : '') : '')}
-                                    onClick={() => handleSortChange(sortOrder === 'bootcamp-name-descending' ? 'bootcamp-name-ascending' : 'bootcamp-name-descending')}
-                                >
-                                    Bootcamp Name <div className={'icon-container ' + (!sortOrder.includes('bootcamp-name-ascending') && !sortOrder.includes('bootcamp-name-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'bootcamp-name-descending' ? 180 : 0} /></div>
-                                </th>
-                                <th
-                                    className={'historypage__table-header ' + (sortOrder.includes('number-of-students-ascending') || sortOrder.includes('number-of-students-descending') ? (sortOrder === 'number-of-students-descending' ? 'descending' : '') : '')}
-                                    onClick={() => handleSortChange(sortOrder === 'number-of-students-descending' ? 'number-of-students-ascending' : 'number-of-students-descending')}
-                                >
-                                    Number Of Students <div className={'icon-container ' + (!sortOrder.includes('number-of-students-ascending') && !sortOrder.includes('number-of-students-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'number-of-students-descending' ? 180 : 0} /></div>
-                                </th>
-                                <th
-                                    className={'historypage__table-header ' + (sortOrder.includes('template-name-ascending') || sortOrder.includes('template-name-descending') ? (sortOrder === 'template-name-descending' ? 'descending' : '') : '')}
-                                    onClick={() => handleSortChange(sortOrder === 'template-name-descending' ? 'template-name-ascending' : 'template-name-descending')}
-                                >
-                                    Template Name <div className={'icon-container ' + (!sortOrder.includes('template-name-ascending') && !sortOrder.includes('template-name-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'template-name-descending' ? 180 : 0} /></div>
-                                </th>
-                                <th
-                                    className={'historypage__table-header ' + (sortOrder.includes('status-ascending') || sortOrder.includes('status-descending') ? (sortOrder === 'status-descending' ? 'descending' : '') : '')}
-                                    onClick={() => handleSortChange(sortOrder === 'status-descending' ? 'status-ascending' : 'status-descending')}
-                                >
-                                    Status <div className={'icon-container ' + (!sortOrder.includes('status-ascending') && !sortOrder.includes('status-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'status-descending' ? 180 : 0} /></div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className='historypage__table-body'>
-                            {filteredHistory.map((bundle, index) => (
-                                <>
-                                    <tr key={bundle.generatedAt} className='historypage__table-row' onClick={() => handleRowClick(bundle.generatedAt)}>
-                                        <td className='historypage__table-cell'>{utcFormatter(bundle.HistorySnapShots[0].generatedAt)}</td>
-                                        <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].bootcampName}</td>
-                                        <td className='historypage__table-cell'>{bundle.HistorySnapShots.length}</td>
-                                        <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].basePdfName.split('/').pop()}</td>
-                                        <td className={'historypage__table-cell status ' + (bundle.HistorySnapShots[0].active ? 'active' : 'inactive')}>{bundle.HistorySnapShots[0].active ? 'Current' : 'Not Active'}</td>
-                                    </tr>
-                                    {expandedRows[bundle.generatedAt] && 
-                                    <tr className='historypage__table-row expanded'>
-                                        <td className='historypage__table-cell'>
-                                            <div className='historypage__table-row--optionsmenu'>
-                                                <AddButton text='View Template' onClick={() => {setActiveTemplate(index); setShowDiploma(true)}} icon={<ViewTemplateIcon />}/>
-                                                <SaveButton 
-                                                    onClick={() => handleMakeActiveSnapshot(bundle)} 
-                                                    saveButtonType="normal" 
-                                                    textfield="Make Active Diploma" 
-                                                />
-                                            </div>
-                                        </td>
-                                        <td className='historypage__table-cell' colSpan={5}>
-                                            
-                                            <table className='historypage__subtable'>
-                                                <thead className='historypage__subtable-head'>
-                                                    <tr className='historypage__subtable-row'>
-                                                        <th className='historypage__subtable-header'>Student Name</th>
-                                                        <th className='historypage__subtable-header'>Id</th>
-                                                        <th className='historypage__subtable-header'>Verification Code</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className='historypage__subtable-body'>
-                                                    {bundle.HistorySnapShots.map(snapshot => (
-                                                        <tr key={snapshot.id} className='historypage__subtable-row' onClick={() => navigateToVerificationPage(snapshot.verificationCode)}>
-                                                            <td className='historypage__subtable-cell'>{snapshot.studentName}</td>
-                                                            <td className='historypage__subtable-cell'>{snapshot.studentGuidId}</td>
-                                                            <td className='historypage__subtable-cell'>{snapshot.verificationCode}</td>
+                        <div className='historypage__sortbysection'>
+                            <SortByIcon />
+                            <SelectOptions
+                                containerClassOverride='historypage__sort-by-section__select-container'
+                                selectClassOverride='historypage__sort-by-section__select-box'
+                                options={sortOrderOptions}
+                                onChange={handleSelectChange}
+                                value={sortOrder}
+                            />
+                        </div>
+                    </section>
+                    {filteredHistory && filteredHistory.length > 0 ? (
+                        <table className='historypage__table'>
+                            <thead className='historypage__table-head'>
+                                <tr className='historypage__tablehead-row'>
+                                    <th
+                                        className={'historypage__table-header ' + (sortOrder.includes('date-ascending') || sortOrder.includes('date-descending') ? (sortOrder === 'date-descending' ? 'descending' : '') : '')}
+                                        onClick={() => handleSortChange(sortOrder === 'date-descending' ? 'date-ascending' : 'date-descending')}
+                                    >
+                                        Generated At <div className={'icon-container ' + (!sortOrder.includes('date-ascending') && !sortOrder.includes('date-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'date-descending' ? 180 : 0} /></div>
+                                    </th>
+                                    <th
+                                        className={'historypage__table-header ' + (sortOrder.includes('bootcamp-name-ascending') || sortOrder.includes('bootcamp-name-descending') ? (sortOrder === 'bootcamp-name-descending' ? 'descending' : '') : '')}
+                                        onClick={() => handleSortChange(sortOrder === 'bootcamp-name-descending' ? 'bootcamp-name-ascending' : 'bootcamp-name-descending')}
+                                    >
+                                        Bootcamp Name <div className={'icon-container ' + (!sortOrder.includes('bootcamp-name-ascending') && !sortOrder.includes('bootcamp-name-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'bootcamp-name-descending' ? 180 : 0} /></div>
+                                    </th>
+                                    <th
+                                        className={'historypage__table-header ' + (sortOrder.includes('number-of-students-ascending') || sortOrder.includes('number-of-students-descending') ? (sortOrder === 'number-of-students-descending' ? 'descending' : '') : '')}
+                                        onClick={() => handleSortChange(sortOrder === 'number-of-students-descending' ? 'number-of-students-ascending' : 'number-of-students-descending')}
+                                    >
+                                        Number Of Students <div className={'icon-container ' + (!sortOrder.includes('number-of-students-ascending') && !sortOrder.includes('number-of-students-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'number-of-students-descending' ? 180 : 0} /></div>
+                                    </th>
+                                    <th
+                                        className={'historypage__table-header ' + (sortOrder.includes('template-name-ascending') || sortOrder.includes('template-name-descending') ? (sortOrder === 'template-name-descending' ? 'descending' : '') : '')}
+                                        onClick={() => handleSortChange(sortOrder === 'template-name-descending' ? 'template-name-ascending' : 'template-name-descending')}
+                                    >
+                                        Template Name <div className={'icon-container ' + (!sortOrder.includes('template-name-ascending') && !sortOrder.includes('template-name-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'template-name-descending' ? 180 : 0} /></div>
+                                    </th>
+                                    <th
+                                        className={'historypage__table-header ' + (sortOrder.includes('status-ascending') || sortOrder.includes('status-descending') ? (sortOrder === 'status-descending' ? 'descending' : '') : '')}
+                                        onClick={() => handleSortChange(sortOrder === 'status-descending' ? 'status-ascending' : 'status-descending')}
+                                    >
+                                        Status <div className={'icon-container ' + (!sortOrder.includes('status-ascending') && !sortOrder.includes('status-descending') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'status-descending' ? 180 : 0} /></div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className='historypage__table-body'>
+                                {filteredHistory.map((bundle, index) => (
+                                    <>
+                                        <tr key={bundle.generatedAt} className='historypage__table-row' onClick={() => handleRowClick(bundle.generatedAt)}>
+                                            <td className='historypage__table-cell'>{utcFormatter(bundle.HistorySnapShots[0].generatedAt)}</td>
+                                            <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].bootcampName}</td>
+                                            <td className='historypage__table-cell'>{bundle.HistorySnapShots.length}</td>
+                                            <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].basePdfName.split('/').pop()}</td>
+                                            <td className={'historypage__table-cell status ' + (bundle.HistorySnapShots[0].active ? 'active' : 'inactive')}>{bundle.HistorySnapShots[0].active ? 'Current' : 'Not Active'}</td>
+                                        </tr>
+                                        {expandedRows[bundle.generatedAt] && 
+                                        <tr className='historypage__table-row expanded'>
+                                            <td className='historypage__table-cell'>
+                                                <div className='historypage__table-row--optionsmenu'>
+                                                    <AddButton text='View Template' onClick={() => {setActiveTemplate(index); setShowDiploma(true)}} icon={<ViewTemplateIcon />}/>
+                                                    <SaveButton 
+                                                        onClick={() => confirmMakeActiveSnapshot(bundle)} 
+                                                        saveButtonType="normal" 
+                                                        textfield="Make Active Diploma" 
+                                                    />
+                                                </div>
+                                            </td>
+                                            <td className='historypage__table-cell' colSpan={5}>
+                                                
+                                                <table className='historypage__subtable'>
+                                                    <thead className='historypage__subtable-head'>
+                                                        <tr className='historypage__subtable-row'>
+                                                            <th className='historypage__subtable-header'>Student Name</th>
+                                                            <th className='historypage__subtable-header'>Id</th>
+                                                            <th className='historypage__subtable-header'>Verification Code</th>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                }
-                                </>
-                            ))}
-                        </tbody>
-                    </table>
-                ) : (
-                    <p className='historypage__no-data'>No history data available.</p>
-                )}
-            </div>
-            <div onClick={() => {setShowDiploma(false)}} className={'diplomapreview-container ' + (showDiploma ? 'visible' : '')}>
-                <div className='diplomapreview-container-content'>
-                    <CloseWindowIcon />
-                        <div
-                            className="pdfpreview-previewcontainer"
-                            ref={uiRef}
-                            style={{ width: "100%", height: "100%", marginBottom: '2rem'}}
-                        />
+                                                    </thead>
+                                                    <tbody className='historypage__subtable-body'>
+                                                        {bundle.HistorySnapShots.map(snapshot => (
+                                                            <tr key={snapshot.id} className='historypage__subtable-row' onClick={() => navigateToVerificationPage(snapshot.verificationCode)}>
+                                                                <td className='historypage__subtable-cell'>{snapshot.studentName}</td>
+                                                                <td className='historypage__subtable-cell'>{snapshot.studentGuidId}</td>
+                                                                <td className='historypage__subtable-cell'>{snapshot.verificationCode}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    }
+                                    </>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p className='historypage__no-data'>No history data available.</p>
+                    )}
                 </div>
-            </div>
-        </main>
+                <div onClick={() => {setShowDiploma(false)}} className={'diplomapreview-container ' + (showDiploma ? 'visible' : '')}>
+                    <div className='diplomapreview-container-content'>
+                        <CloseWindowIcon />
+                            <div
+                                className="pdfpreview-previewcontainer"
+                                ref={uiRef}
+                                style={{ width: "100%", height: "100%", marginBottom: '2rem'}}
+                            />
+                    </div>
+                </div>
+            </main>
+        </>
     );
 }
