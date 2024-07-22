@@ -50,7 +50,7 @@ const sortOrderOptions = [
 export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) {
     const [history, setHistory] = useState<BundledDataWithGeneratedAt[]>();
     const [expandedRows, setExpandedRows] = useState<{ [key: string]: boolean }>({});
-    const [sortOrder, setSortOrder] = useState<SortOrder>('date-descending');
+    const [sortOrder, setSortOrder] = useState<SortOrder>('date-ascending');
     const [searchQuery, setSearchQuery] = useState<string>('');
 
     const uiRef = useRef<HTMLDivElement | null>(null);
