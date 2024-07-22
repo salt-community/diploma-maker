@@ -27,8 +27,7 @@ public class BootcampsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<BootcampResponseDto>> PostBootcamp(BootcampRequestDto requestDto)
     {
-        var bootcamp = _mapper.Map<Bootcamp>(requestDto);
-        Bootcamp createdBootcamp = await _bootcampservice.PostBootcamp(bootcamp);
+        Bootcamp createdBootcamp = await _bootcampservice.PostBootcamp(requestDto);
         return CreatedAtAction(nameof(GetBootcamps), new { id = createdBootcamp.GuidId }, _mapper.Map<BootcampResponseDto>(createdBootcamp));
     }
 

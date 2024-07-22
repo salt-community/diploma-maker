@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaMakerApi.Migrations
 {
     [DbContext(typeof(DiplomaMakingContext))]
-    partial class DiplomaMakingContextModelSnapshot : ModelSnapshot
+    [Migration("20240717140354_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,9 +190,6 @@ namespace DiplomaMakerApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Tag")
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -207,7 +207,7 @@ namespace DiplomaMakerApi.Migrations
                         .IsRequired();
 
                     b.HasOne("DiplomaMakerApi.Models.Track", "Track")
-                        .WithMany("Bootcamps")
+                        .WithMany()
                         .HasForeignKey("TrackId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -258,11 +258,6 @@ namespace DiplomaMakerApi.Migrations
             modelBuilder.Entity("DiplomaMakerApi.Models.Bootcamp", b =>
                 {
                     b.Navigation("Students");
-                });
-
-            modelBuilder.Entity("DiplomaMakerApi.Models.Track", b =>
-                {
-                    b.Navigation("Bootcamps");
                 });
 #pragma warning restore 612, 618
         }
