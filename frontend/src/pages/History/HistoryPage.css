@@ -27,6 +27,7 @@
         }
             .historypage__filtersection--input-wrapper svg path{
                 stroke: #ababba;
+                transition: all 350ms ease;
             }
             .historypage__filtersection--input-wrapper svg{
                 position: absolute;
@@ -37,6 +38,18 @@
             }
         .historypage__filtersection__search-input{
             height: 40px;
+        }
+        .historypage__filtersection--input-wrapper:hover svg path{
+            stroke: #fff;
+
+            transition: all 350ms ease;
+        }
+        .historypage__filtersection__search-input::placeholder{
+            transition: all 350ms ease;
+        }
+        .historypage__filtersection--input-wrapper:hover .historypage__filtersection__search-input::placeholder{
+            color: #fff;
+            transition: all 350ms ease;
         }
 
     .historypage__sortbysection{
@@ -50,6 +63,7 @@
         }
         .historypage__sortbysection svg path{
             fill: #ababba;
+            transition: all 350ms ease;
         }
         .select-wrapper{
             max-width: 300px;
@@ -58,6 +72,23 @@
             max-width: 350px !important;
             font-size: .9rem !important;
             color: #ababba !important;
+
+            transition: all 350ms ease;
+        }
+        .historypage__sortbysection:hover .historypage__sort-by-section__select-box{
+            cursor: pointer;
+            color: #fff !important;
+            transition: all 350ms ease;
+        }
+        .historypage__sortbysection:hover svg{
+            cursor: pointer;
+        }
+        .historypage__sortbysection:hover svg path{
+            fill: #fff;
+            transition: all 350ms ease;
+        }
+        .historypage__sortbysection:hover{
+            cursor: pointer;
         }
 
 .historypage__table {
