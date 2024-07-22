@@ -33,9 +33,9 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpPut("/api/make-active-historysnapshot/{id}")]
-        public async Task<ActionResult> MakeActiveHistorySnapshot(int id)
+        public async Task<ActionResult> MakeActiveHistorySnapshot(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
         {
-            await _historySnapShotService.MakeActiveHistorySnapshot(id);
+            await _historySnapShotService.MakeActiveHistorySnapshot(makeActiveSnapshotRequestDto);
             return NoContent();
         }
     }

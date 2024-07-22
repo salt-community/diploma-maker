@@ -140,19 +140,19 @@ namespace DiplomaMakerApi.Services
             return historySnapshots;
         }
 
-        public async Task MakeActiveHistorySnapshot(int id)
+        public async Task MakeActiveHistorySnapshot(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
         {
             var historySnapshots = await _context.DiplomaSnapshots
-                .Where(h => h.Active)
+                .Where(h => h.Active && makeActiveSnapshotRequestDto.StudentGuidIds.Contains(h.StudentGuidId))
                 .ToListAsync();
             
             var makeActiveSnapShot = await _context.DiplomaSnapshots
-                .Where(h => h.Id == id)
+                .Where(h => makeActiveSnapshotRequestDto.Ids.Contains(h.Id))
                 .ToListAsync();
             
             if(makeActiveSnapShot == null)
             {
-                throw new NotFoundByIdException($"Snapshot with id '{id}' not found.");
+                throw new NotFoundByIdException($"Snapshots not found.");
             }
             
             foreach(var snapshot in historySnapshots)
