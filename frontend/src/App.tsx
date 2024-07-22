@@ -107,8 +107,8 @@ export default function App() {
     return historySnapshots;
   }
 
-  const changeActiveHistorySnapShot = async (id: number) => {
-    await api.makeActiveHistorySnapShot(id);
+  const changeActiveHistorySnapShot = async (ids: number[]) => {
+    await api.makeActiveHistorySnapShot(ids);
   }
 
   const refresh = async () => {

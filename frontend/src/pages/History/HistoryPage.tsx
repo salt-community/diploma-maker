@@ -19,7 +19,7 @@ import { CloseWindowIcon } from '../../components/MenuItems/Icons/CloseWindowIco
 
 type Props = {
     getHistory: () => void;
-    changeActiveHistorySnapShot: (id: number) => void;
+    changeActiveHistorySnapShot: (ids: number[]) => void;
 }
 
 type BundledDataWithGeneratedAt = HistorySnapshotBundledData & { generatedAt: string };
@@ -276,7 +276,7 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                                         <td className='historypage__table-cell'>
                                             <div className='historypage__table-row--optionsmenu'>
                                                 <AddButton text='View Template' onClick={() => {setActiveTemplate(index); setShowDiploma(true)}} icon={<ViewTemplateIcon />}/>
-                                                <SaveButton onClick={() => {changeActiveHistorySnapShot(index)}} saveButtonType={'normal'} textfield='Make Active Diploma'/>
+                                                <SaveButton onClick={() => { changeActiveHistorySnapShot(bundle.HistorySnapShots.map(snapshot => snapshot.id)) }} saveButtonType={'normal'} textfield='Make Active Diploma'/>
                                             </div>
                                         </td>
                                         <td className='historypage__table-cell' colSpan={5}>

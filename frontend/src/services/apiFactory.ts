@@ -39,6 +39,6 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
         // HistorySnapshot Endpoint
         getHistorySnapshots: () => getHistorySnapshots(apiBaseUrl),
         getHistoryByVerificationCode: (verificationCode: string) => getHistoryByVerificationCode(apiBaseUrl, verificationCode),
-        makeActiveHistorySnapShot: (id: number) => makeActiveHistorySnapShot(apiBaseUrl, id),
+        makeActiveHistorySnapShot: (ids: number[]) => makeActiveHistorySnapShot(apiBaseUrl, ids),
     };
 };
