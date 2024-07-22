@@ -20,6 +20,7 @@ import { ConfirmationPopup } from '../../components/MenuItems/Popups/Confirmatio
 import { AlertPopup } from '../../components/MenuItems/Popups/AlertPopup';
 import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
 import { useCustomConfirmationPopup } from '../../components/Hooks/useCustomConfirmationPopup';
+import React from 'react';
 
 type Props = {
     getHistory: () => void;
@@ -309,8 +310,8 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                             </thead>
                             <tbody className='historypage__table-body'>
                                 {filteredHistory.map((bundle, index) => (
-                                    <>
-                                        <tr key={bundle.generatedAt} className='historypage__table-row' onClick={() => handleRowClick(bundle.generatedAt)}>
+                                    <React.Fragment key={bundle.generatedAt}>
+                                        <tr key={`${bundle.generatedAt}-main`} className='historypage__table-row' onClick={() => handleRowClick(bundle.generatedAt)}>
                                             <td className='historypage__table-cell'>{utcFormatter(bundle.HistorySnapShots[0].generatedAt)}</td>
                                             <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].bootcampName}</td>
                                             <td className='historypage__table-cell'>{bundle.HistorySnapShots.length}</td>
@@ -318,41 +319,40 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                                             <td className={'historypage__table-cell status ' + (bundle.HistorySnapShots[0].active ? 'active' : 'inactive')}>{bundle.HistorySnapShots[0].active ? 'Current' : 'Not Active'}</td>
                                         </tr>
                                         {expandedRows[bundle.generatedAt] && 
-                                        <tr className='historypage__table-row expanded'>
-                                            <td className='historypage__table-cell'>
-                                                <div className='historypage__table-row--optionsmenu'>
-                                                    <AddButton text='View Template' onClick={() => {setActiveTemplate(index); setShowDiploma(true)}} icon={<ViewTemplateIcon />}/>
-                                                    <SaveButton 
-                                                        onClick={() => confirmMakeActiveSnapshot(bundle)} 
-                                                        saveButtonType="normal" 
-                                                        textfield="Make Active Diploma" 
-                                                    />
-                                                </div>
-                                            </td>
-                                            <td className='historypage__table-cell' colSpan={5}>
-                                                
-                                                <table className='historypage__subtable'>
-                                                    <thead className='historypage__subtable-head'>
-                                                        <tr className='historypage__subtable-row'>
-                                                            <th className='historypage__subtable-header'>Student Name</th>
-                                                            <th className='historypage__subtable-header'>Id</th>
-                                                            <th className='historypage__subtable-header'>Verification Code</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className='historypage__subtable-body'>
-                                                        {bundle.HistorySnapShots.map(snapshot => (
-                                                            <tr key={snapshot.id} className='historypage__subtable-row' onClick={() => navigateToVerificationPage(snapshot.verificationCode)}>
-                                                                <td className='historypage__subtable-cell'>{snapshot.studentName}</td>
-                                                                <td className='historypage__subtable-cell'>{snapshot.studentGuidId}</td>
-                                                                <td className='historypage__subtable-cell'>{snapshot.verificationCode}</td>
+                                            <tr key={`${bundle.generatedAt}-expanded`} className='historypage__table-row expanded'>
+                                                <td className='historypage__table-cell'>
+                                                    <div className='historypage__table-row--optionsmenu'>
+                                                        <AddButton text='View Template' onClick={() => {setActiveTemplate(index); setShowDiploma(true)}} icon={<ViewTemplateIcon />}/>
+                                                        <SaveButton 
+                                                            onClick={() => confirmMakeActiveSnapshot(bundle)} 
+                                                            saveButtonType="normal" 
+                                                            textfield="Make Active Diploma" 
+                                                        />
+                                                    </div>
+                                                </td>
+                                                <td className='historypage__table-cell' colSpan={5}>
+                                                    <table className='historypage__subtable'>
+                                                        <thead className='historypage__subtable-head'>
+                                                            <tr className='historypage__subtable-row'>
+                                                                <th className='historypage__subtable-header'>Student Name</th>
+                                                                <th className='historypage__subtable-header'>Id</th>
+                                                                <th className='historypage__subtable-header'>Verification Code</th>
                                                             </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    }
-                                    </>
+                                                        </thead>
+                                                        <tbody className='historypage__subtable-body'>
+                                                            {bundle.HistorySnapShots.map(snapshot => (
+                                                                <tr key={snapshot.id} className='historypage__subtable-row' onClick={() => navigateToVerificationPage(snapshot.verificationCode)}>
+                                                                    <td className='historypage__subtable-cell'>{snapshot.studentName}</td>
+                                                                    <td className='historypage__subtable-cell'>{snapshot.studentGuidId}</td>
+                                                                    <td className='historypage__subtable-cell'>{snapshot.verificationCode}</td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </React.Fragment>
                                 ))}
                             </tbody>
                         </table>
