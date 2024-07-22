@@ -56,7 +56,7 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
     const uiRef = useRef<HTMLDivElement | null>(null);
     const uiInstance = useRef<Viewer | null>(null);
     const [showDiploma, setShowDiploma] = useState<boolean>(false);
-    const [activeTemplate, setActiveTemplate] = useState<number>(1);
+    const [activeTemplate, setActiveTemplate] = useState<number>(2);
 
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const {showConfirmationPopup,confirmationPopupContent,confirmationPopupType,confirmationPopupHandler,customPopup, closeConfirmationPopup} = useCustomConfirmationPopup();
@@ -65,8 +65,8 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
         const loadDiploma = async () => {
             if (history && activeTemplate && showDiploma) {
                 await delay(400);
-                const inputs = templateInputsFromHistorySnapshot(history[activeTemplate].HistorySnapShots[0]);
-                const template = mapTemplateInputsToTemplateViewerFromSnapshot(history[activeTemplate].HistorySnapShots[0], inputs[0]);
+                const inputs = templateInputsFromHistorySnapshot(history[activeTemplate-1].HistorySnapShots[0]); // if you remove activeTemplate - 1 to activeTemplate, the first template will not render for some reason
+                const template = mapTemplateInputsToTemplateViewerFromSnapshot(history[activeTemplate-1].HistorySnapShots[0], inputs[0]);
     
                 const font = await getFontsData();
                 
@@ -322,7 +322,7 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                                             <tr key={`${bundle.generatedAt}-expanded`} className='historypage__table-row expanded'>
                                                 <td className='historypage__table-cell'>
                                                     <div className='historypage__table-row--optionsmenu'>
-                                                        <AddButton text='View Template' onClick={() => {setActiveTemplate(index); setShowDiploma(true)}} icon={<ViewTemplateIcon />}/>
+                                                        <AddButton text='View Template' onClick={() => {setShowDiploma(true); setActiveTemplate(index + 1);}} icon={<ViewTemplateIcon />}/>
                                                         <SaveButton 
                                                             onClick={() => confirmMakeActiveSnapshot(bundle)} 
                                                             saveButtonType="normal" 
