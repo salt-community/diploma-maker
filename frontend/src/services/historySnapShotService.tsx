@@ -36,7 +36,6 @@ export async function getHistoryByVerificationCode(apiUrl: string, verificationC
 }
 
 export async function makeActiveHistorySnapShot(apiUrl: string, request: MakeActiveSnapshotRequestDto): Promise<HistorySnapshotResponse[]> {
-    console.log(request);
     const response = await fetch(`${apiUrl}/api/make-active-historysnapshot`, {
         method: 'PUT',
         headers: {
