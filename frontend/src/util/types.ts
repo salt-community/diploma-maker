@@ -171,3 +171,8 @@ export type HistorySnapshotResponse = {
 export type HistorySnapshotBundledData = {
     HistorySnapShots: HistorySnapshotResponse[]
 }
+
+export type MakeActiveSnapshotRequestDto = {
+    Ids: number[];
+    StudentGuidIds: string[];
+}
