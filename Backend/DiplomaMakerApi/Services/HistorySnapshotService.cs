@@ -141,7 +141,7 @@ namespace DiplomaMakerApi.Services
             return historySnapshots;
         }
 
-        public async Task MakeActiveHistorySnapshot(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
+        public async Task<List<DiplomaSnapshot>> MakeActiveHistorySnapshot(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
         {
             var studentGuidIdsList = makeActiveSnapshotRequestDto.StudentGuidIds.ToList();
             var idsList = makeActiveSnapshotRequestDto.Ids.ToList();
@@ -174,6 +174,8 @@ namespace DiplomaMakerApi.Services
                 
             }
             await _context.SaveChangesAsync();
+
+            return makeActiveSnapShot;
         }
     }
 }
