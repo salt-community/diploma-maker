@@ -85,7 +85,7 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
         };
     }, [uiRef, history, activeTemplate, showDiploma]);
 
-    const { isLoading, data: student, isError } = useQuery({
+    const { isLoading, data: student, isError, refetch } = useQuery({
         queryKey: ['getDiplomaById'],
         queryFn: () => getHistory(),
         onSuccess: (data: HistorySnapshotResponse[]) => {
@@ -111,6 +111,14 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
         },
         retry: false
     });
+
+    const handleMakeActiveSnapshot = async (bundle: BundledDataWithGeneratedAt) => {
+        await changeActiveHistorySnapShot({
+            Ids: bundle.HistorySnapShots.map(snapshot => snapshot.id),
+            StudentGuidIds: bundle.HistorySnapShots.map(snapshot => snapshot.studentGuidId)
+        });
+        refetch();
+    };
 
     const handleRowClick = (generatedAt: string) => {
         setExpandedRows(prev => ({ ...prev, [generatedAt]: !prev[generatedAt] }));
@@ -277,12 +285,7 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                                             <div className='historypage__table-row--optionsmenu'>
                                                 <AddButton text='View Template' onClick={() => {setActiveTemplate(index); setShowDiploma(true)}} icon={<ViewTemplateIcon />}/>
                                                 <SaveButton 
-                                                    onClick={() => { 
-                                                        changeActiveHistorySnapShot({
-                                                            Ids: bundle.HistorySnapShots.map(snapshot => snapshot.id),
-                                                            StudentGuidIds: bundle.HistorySnapShots.map(snapshot => snapshot.studentGuidId)
-                                                        }) 
-                                                    }} 
+                                                    onClick={() => handleMakeActiveSnapshot(bundle)} 
                                                     saveButtonType="normal" 
                                                     textfield="Make Active Diploma" 
                                                 />
