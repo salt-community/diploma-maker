@@ -1,3 +1,4 @@
+using System.Linq;
 using DiplomaMakerApi.Exceptions;
 using DiplomaMakerApi.Models;
 using Microsoft.EntityFrameworkCore;
@@ -142,8 +143,11 @@ namespace DiplomaMakerApi.Services
 
         public async Task MakeActiveHistorySnapshot(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
         {
+            var studentGuidIdsList = makeActiveSnapshotRequestDto.StudentGuidIds.ToList();
+            var idsList = makeActiveSnapshotRequestDto.Ids.ToList();
+
             var historySnapshots = await _context.DiplomaSnapshots
-                .Where(h => h.Active && makeActiveSnapshotRequestDto.StudentGuidIds.Contains(h.StudentGuidId))
+                .Where(h => h.Active && h.StudentGuidId.HasValue && studentGuidIdsList.Contains(h.StudentGuidId.Value))
                 .ToListAsync();
             
             var makeActiveSnapShot = await _context.DiplomaSnapshots
