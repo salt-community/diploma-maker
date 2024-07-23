@@ -115,6 +115,7 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                 return acc;
             }, [] as BundledDataWithGeneratedAt[]);
 
+            console.log(bundledData);
             setHistory(bundledData);
         },
         retry: false
@@ -316,7 +317,7 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                                             <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].bootcampName}</td>
                                             <td className='historypage__table-cell'>{bundle.HistorySnapShots.length}</td>
                                             <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].basePdfName.split('/').pop()}</td>
-                                            <td className={'historypage__table-cell status ' + (bundle.HistorySnapShots[0].active ? 'active' : 'inactive')}>{bundle.HistorySnapShots[0].active ? 'Current' : 'Not Active'}</td>
+                                            <td className={'historypage__table-cell status ' + (bundle.HistorySnapShots.every(s => s.active) ? 'active' : bundle.HistorySnapShots.some(s => s.active) ? 'some-active' : 'inactive')}>{bundle.HistorySnapShots.every(s => s.active) ? 'Current' : bundle.HistorySnapShots.some(s => s.active) ? 'Some Active' : 'Not Active'}</td>
                                         </tr>
                                         {expandedRows[bundle.generatedAt] && 
                                             <tr key={`${bundle.generatedAt}-expanded`} className='historypage__table-row expanded'>
