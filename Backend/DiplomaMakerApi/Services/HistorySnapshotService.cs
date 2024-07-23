@@ -19,10 +19,12 @@ namespace DiplomaMakerApi.Services
                 .Include(d => d.LinkStyling)
                 .FirstOrDefaultAsync(t => t.Id == requestDto.templateId);
 
-            var lastSnapshot = await _context.DiplomaSnapshots
+            var lastSnapshots = await _context.DiplomaSnapshots
                 .Where(d => d.BootcampGuidId == bootcampUsed.GuidId)
                 .OrderByDescending(d => d.GeneratedAt)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
+            
+            var lastSnapshot = lastSnapshots.FirstOrDefault();
 
             if(templateUsed != null)
             {
@@ -37,8 +39,7 @@ namespace DiplomaMakerApi.Services
                 }
                 else{
                     var fileLocationResponse = await _localFileStorageService.GetFilePath(Path.GetFileName(lastSnapshot.BasePdf));
-                    // Temporary Fix: when generating a second time it gives the absolute path for some strange reason.
-                    fileLocationResponse = "Blob/" + Path.GetFileName(fileLocationResponse);
+                    fileLocationResponse = "Blob/" + Path.GetFileName(fileLocationResponse); // Temporary Fix: when generating a second time it gives the absolute path for some strange reason.
                     templateBackgroundBackupLocation = fileLocationResponse;
                 }
 
@@ -106,7 +107,7 @@ namespace DiplomaMakerApi.Services
                         BasePdf = templateBackgroundBackupLocation,
                         TemplateLastUpdated = templateUsed?.LastUpdated ?? default(DateTime),
                         BasePdfBackgroundLastUpdated = templateUsed?.PdfBackgroundLastUpdated ?? default(DateTime),
-                        Active = lastSnapshot == null
+                        Active = lastSnapshot == null || !lastSnapshots.Any(s => s.StudentGuidId == student.GuidId)
                     };
                     _context.DiplomaSnapshots.Add(studentSnapshot);
                     await _context.SaveChangesAsync();
