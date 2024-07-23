@@ -8,7 +8,6 @@ type Props = {
     bootcamps: BootcampResponse[] | null;
 }
 
-
 export default function AddNewBootcampForm({ addNewBootcamp, bootcamps }: Props) {
     const [name, setName] = useState<string>("");
     const [gradDate, setGradDate] = useState<Date>();
