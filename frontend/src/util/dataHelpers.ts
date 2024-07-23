@@ -81,7 +81,7 @@ export const templateInputsSingleBootcampandTemplate = (bootcampData: BootcampRe
     ),
     // @ts-ignore
     templateData.basePdf,
-    studentVerificationCode
+    populateIdField(templateData.link , studentVerificationCode)
   )]
 }
 
@@ -106,7 +106,7 @@ export const templateInputsFromHistorySnapshot = (historySnapshot: HistorySnapsh
       historySnapshot.studentName
     ),
     historySnapshot.basePdf,
-    historySnapshot.verificationCode
+    populateIdField(historySnapshot.link , historySnapshot.verificationCode)
   )]
 }
 
