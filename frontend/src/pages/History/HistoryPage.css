@@ -243,7 +243,7 @@
             right: 2rem;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 3000;
+            z-index: 500;
         }
         .historypage__subtable-cell--icon-wrapper::after {
             content: attr(hover-data);
@@ -263,7 +263,7 @@
             font-weight: 400;
             opacity: 0;
             visibility: hidden;
-            z-index: 3001;
+            z-index: 500;
             transition: opacity 0.3s ease, visibility 0.3s ease;
 
         }
