@@ -354,7 +354,9 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                                                                     <td className='historypage__subtable-cell'>{snapshot.studentGuidId}</td>
                                                                     <td className='historypage__subtable-cell'>{snapshot.verificationCode}</td>
                                                                     { snapshot.active &&
-                                                                        <VerifyIcon />
+                                                                        <div className='historypage__subtable-cell--icon-wrapper' hover-data={`${snapshot.studentName} is using this template`}>
+                                                                            <VerifyIcon />
+                                                                        </div>
                                                                     }
                                                                 </tr>
                                                             ))}
