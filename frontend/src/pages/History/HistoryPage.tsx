@@ -21,6 +21,7 @@ import { AlertPopup } from '../../components/MenuItems/Popups/AlertPopup';
 import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
 import { useCustomConfirmationPopup } from '../../components/Hooks/useCustomConfirmationPopup';
 import React from 'react';
+import { VerifyIcon } from '../../components/MenuItems/Icons/VerifyIcon';
 
 type Props = {
     getHistory: () => void;
@@ -317,7 +318,13 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                                             <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].bootcampName}</td>
                                             <td className='historypage__table-cell'>{bundle.HistorySnapShots.length}</td>
                                             <td className='historypage__table-cell'>{bundle.HistorySnapShots[0].basePdfName.split('/').pop()}</td>
-                                            <td className={'historypage__table-cell status ' + (bundle.HistorySnapShots.every(s => s.active) ? 'active' : bundle.HistorySnapShots.some(s => s.active) ? 'some-active' : 'inactive')}>{bundle.HistorySnapShots.every(s => s.active) ? 'Current' : bundle.HistorySnapShots.some(s => s.active) ? 'Some Active' : 'Not Active'}</td>
+                                            <td className={'historypage__table-cell status ' + (bundle.HistorySnapShots.every(s => s.active) ? 'active' : bundle.HistorySnapShots.some(s => s.active) ? 'some-active' : 'inactive')}>
+                                                {bundle.HistorySnapShots.every(s => s.active) 
+                                                    ? 'Current' 
+                                                    : bundle.HistorySnapShots.some(s => s.active) 
+                                                    ? `Current (${bundle.HistorySnapShots.filter(s => s.active).length})` 
+                                                    : 'Not Active'}
+                                            </td>
                                         </tr>
                                         {expandedRows[bundle.generatedAt] && 
                                             <tr key={`${bundle.generatedAt}-expanded`} className='historypage__table-row expanded'>
@@ -346,6 +353,9 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                                                                     <td className='historypage__subtable-cell'>{snapshot.studentName}</td>
                                                                     <td className='historypage__subtable-cell'>{snapshot.studentGuidId}</td>
                                                                     <td className='historypage__subtable-cell'>{snapshot.verificationCode}</td>
+                                                                    { snapshot.active &&
+                                                                        <VerifyIcon />
+                                                                    }
                                                                 </tr>
                                                             ))}
                                                         </tbody>
