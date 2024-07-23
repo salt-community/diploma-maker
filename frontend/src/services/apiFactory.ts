@@ -2,7 +2,7 @@ import { BootcampRequest, EmailSendRequest, FormDataUpdateRequest, MakeActiveSna
 import { deleteBootcampById, getBootcampById, getBootcamps, postBootcamp, updateBootcamp, UpdateBootcampWithNewFormdata } from "./bootcampService";
 import { postEmail } from "./emailService";
 import { getTemplatePdfFile } from "./fileService";
-import { getHistoryByVerificationCode, getHistorySnapshots, makeActiveHistorySnapShot } from "./historySnapshotService";
+import { getHistoryByVerificationCode, getHistorySnapshots, makeActiveHistorySnapShot } from "./historySnapShotService";
 import { deleteStudentById, getStudentById, getStudentByVerificationCode, getStudentsByKeyword, updateSingleStudent } from "./studentService";
 import { deleteTemplateById, getAllTemplates, getTemplateById, postTemplate, putTemplate } from "./templateService";
 
