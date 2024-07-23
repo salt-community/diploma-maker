@@ -81,7 +81,7 @@ namespace DiplomaMakerApi.Services
             File.Copy(sourceFilePath, destinationFilePath, overwrite: true);
         }
 
-        public async Task<string> createBackup(string fileName)
+        public async Task<string> CreateBackup(string fileName)
         {
             var filePath = Path.Combine(_storagePath, fileName + ".pdf");
             

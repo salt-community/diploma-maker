@@ -30,26 +30,17 @@ namespace DiplomaMakerApi.Services
             {
                 var templateBackgroundLocation = string.Empty;
                 
-                if(lastSnapshot == null)
+                if (lastSnapshot == null)
                 {
-                    var fileLocationResponse = await _localFileStorageService.GetFilePath(Path.GetFileName(templateUsed.Name + ".v1.pdf"));
-                    if(fileLocationResponse != null)
-                    {
-                        fileLocationResponse = "Blob/" + Path.GetFileName(fileLocationResponse);
-                        templateBackgroundLocation = fileLocationResponse;
-                    }
-                    else{
-                        templateBackgroundLocation = await _localFileStorageService.createBackup(templateUsed.Name);
-                    }
+                    templateBackgroundLocation = await GetFileLocation(templateUsed.Name + ".v1.pdf")  ?? await _localFileStorageService.CreateBackup(templateUsed.Name);
                 }
-                else if(templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
+                else if (templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
                 {
-                    templateBackgroundLocation = await _localFileStorageService.createBackup(templateUsed.Name);
+                    templateBackgroundLocation = await _localFileStorageService.CreateBackup(templateUsed.Name);
                 }
-                else{
-                    var fileLocationResponse = await _localFileStorageService.GetFilePath(Path.GetFileName(lastSnapshot.BasePdf));
-                    fileLocationResponse = "Blob/" + Path.GetFileName(fileLocationResponse); // Temporary Fix: when generating a second time it gives the absolute path for some strange reason.
-                    templateBackgroundLocation = fileLocationResponse;
+                else
+                {
+                    templateBackgroundLocation = await GetFileLocation(lastSnapshot.BasePdf); 
                 }
 
                 var timeUtcNow = DateTime.UtcNow;
@@ -122,6 +113,12 @@ namespace DiplomaMakerApi.Services
                     await _context.SaveChangesAsync();
                 }
             }
+        }
+
+        private async Task<string> GetFileLocation(string fileName)
+        {
+            var fileLocationResponse = await _localFileStorageService.GetFilePath(Path.GetFileName(fileName));
+            return fileLocationResponse != null ? "Blob/" + Path.GetFileName(fileLocationResponse) : null; // Temporary Fix: when generating a second time it gives the absolute path for some strange reason.
         }
 
         public async Task<List<DiplomaSnapshot>> GetHistorySnapshots()
