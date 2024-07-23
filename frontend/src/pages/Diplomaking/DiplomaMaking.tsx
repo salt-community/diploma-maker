@@ -36,13 +36,14 @@ type Props = {
 };
 
 export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
-  
+  const [EnablePreview, setEnablePreview] = useState<boolean>(false)
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0); // -> these 2 can be refactored into 1 state
   const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>();
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { loadingMessage } = useLoadingMessage();
   const isFailed = loadingMessage.includes('Failed');
+
 
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
@@ -70,6 +71,9 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
       );
     }
   };
+  
+
+  const TogglePreview = () => setEnablePreview(prev => !prev)
 
   const updateSaltNameForBootcamp = (name : string ) => {
     if (saltData) {
@@ -108,7 +112,13 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
     <div className="flex w-full h-screen justify-between pt-10 dark:bg-darkbg">
       {saltData && templates ?
         <>
+        
+        <button onClick={TogglePreview}>
+          {EnablePreview ? 'Show preview' : 'Hide preview'}
+        </button>
+
           <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
+          {EnablePreview &&
           <section className="flex-1 flex flex-col justify-start gap-1 ml-5" style={{ position: 'relative' }}>
             {saltData[selectedBootcampIndex].students.length > 0 ?
               (<PreviewDiploma 
@@ -118,7 +128,7 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
                 postSelectedBootcampData={postSelectedBootcampData}
               />) :
               (<Popup404 text="No student names found." />)}
-          </section>
+          </section>}
           <section className="flex-1 flex flex-col ">
             <DiplomaDataForm
               updateSaltData={updateSaltDataHandler}
