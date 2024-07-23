@@ -12,10 +12,12 @@ import { PaginationMenu } from "../components/MenuItems/PaginationMenu";
 
 type Props = {
   saltData: SaltData | null;
-  updateSaltNameForbootcamp: (name : string) => void
+  updateSaltNameForbootcamp: (name : string, index: number) => void;
+  selectedBootcampIndex: number
+  postSelectedBootcampData: (saltData: SaltData) => void
 };
 
-export default function PreviewDiploma({ saltData, updateSaltNameForbootcamp}: Props) {
+export default function PreviewDiploma({saltData, updateSaltNameForbootcamp, selectedBootcampIndex, postSelectedBootcampData}: Props) {
 
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const uiRef = useRef<HTMLDivElement | null>(null);
@@ -54,7 +56,7 @@ export default function PreviewDiploma({ saltData, updateSaltNameForbootcamp}: P
   };
 
   const generatePDFHandler = async () => {
-    if (uiInstance.current && saltData) {
+    if (uiInstance.current) {
       const inputs = uiInstance.current.getInputs();
       const pdfInput = makeTemplateInput(
         inputs[0].header,
@@ -64,16 +66,15 @@ export default function PreviewDiploma({ saltData, updateSaltNameForbootcamp}: P
         inputs[0].link
       );
       const template = mapTemplateInputsToTemplateViewer(saltData, pdfInput);
-
       await generatePDF(template, inputs);
-      //await postSelectedBootcampData();
+      await postSelectedBootcampData(saltData);
     }
   };
   const saveInputFieldsHandler = () => {
     if (uiInstance.current) {
       const inputs = uiInstance.current.getInputs();
       const newName = inputs[0].main;
-      updateSaltNameForbootcamp(newName);
+      updateSaltNameForbootcamp(newName, selectedBootcampIndex);
     }
   };
 
@@ -94,8 +95,7 @@ export default function PreviewDiploma({ saltData, updateSaltNameForbootcamp}: P
   };
 
   const generateCombinedPDFHandler = async () => {
-     
-      
+    
       const inputsArray = saltData.students.map((student) => {
         return templateInputsFromBootcampData(saltData, student.name, student.verificationCode);
       });
@@ -106,9 +106,8 @@ export default function PreviewDiploma({ saltData, updateSaltNameForbootcamp}: P
           mapTemplateInputsToTemplateViewer(saltData, inputsArray[i])
         );
       }
-
       await newGenerateCombinedPDF(templatesArr, inputsArray);
-  /*     await postSelectedBootcampData(); */
+      await postSelectedBootcampData(saltData); 
     
   };
 
