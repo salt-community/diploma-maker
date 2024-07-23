@@ -28,19 +28,28 @@ namespace DiplomaMakerApi.Services
 
             if(templateUsed != null)
             {
-                var templateBackgroundBackupLocation = string.Empty;
+                var templateBackgroundLocation = string.Empty;
                 
-                if(
-                    lastSnapshot == null || 
-                    (templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
-                )
+                if(lastSnapshot == null)
                 {
-                    templateBackgroundBackupLocation = await _localFileStorageService.createBackup(templateUsed.Name);
+                    var fileLocationResponse = await _localFileStorageService.GetFilePath(Path.GetFileName(templateUsed.Name + ".v1.pdf"));
+                    if(fileLocationResponse != null)
+                    {
+                        fileLocationResponse = "Blob/" + Path.GetFileName(fileLocationResponse);
+                        templateBackgroundLocation = fileLocationResponse;
+                    }
+                    else{
+                        templateBackgroundLocation = await _localFileStorageService.createBackup(templateUsed.Name);
+                    }
+                }
+                else if(templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
+                {
+                    templateBackgroundLocation = await _localFileStorageService.createBackup(templateUsed.Name);
                 }
                 else{
                     var fileLocationResponse = await _localFileStorageService.GetFilePath(Path.GetFileName(lastSnapshot.BasePdf));
                     fileLocationResponse = "Blob/" + Path.GetFileName(fileLocationResponse); // Temporary Fix: when generating a second time it gives the absolute path for some strange reason.
-                    templateBackgroundBackupLocation = fileLocationResponse;
+                    templateBackgroundLocation = fileLocationResponse;
                 }
 
                 var timeUtcNow = DateTime.UtcNow;
@@ -104,7 +113,7 @@ namespace DiplomaMakerApi.Services
                             FontName = templateUsed.LinkStyling.FontName ?? null,
                             Alignment = templateUsed.LinkStyling.Alignment ?? null,
                         },
-                        BasePdf = templateBackgroundBackupLocation,
+                        BasePdf = templateBackgroundLocation,
                         TemplateLastUpdated = templateUsed?.LastUpdated ?? default(DateTime),
                         BasePdfBackgroundLastUpdated = templateUsed?.PdfBackgroundLastUpdated ?? default(DateTime),
                         Active = lastSnapshot == null || !lastSnapshots.Any(s => s.StudentGuidId == student.GuidId)
