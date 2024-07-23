@@ -61,6 +61,7 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
 
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const {showConfirmationPopup,confirmationPopupContent,confirmationPopupType,confirmationPopupHandler,customPopup, closeConfirmationPopup} = useCustomConfirmationPopup();
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const loadDiploma = async () => {
@@ -98,6 +99,7 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
         queryKey: ['getDiplomaById'],
         queryFn: () => getHistory(),
         onSuccess: (data: HistorySnapshotResponse[]) => {
+            setLoading(true);
             const formatDateToSecond = (dateStr: string) => {
                 const date = new Date(dateStr);
                 date.setMilliseconds(0);
@@ -116,8 +118,8 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                 return acc;
             }, [] as BundledDataWithGeneratedAt[]);
 
-            console.log(bundledData);
             setHistory(bundledData);
+            setLoading(false);
         },
         retry: false
     });
@@ -369,7 +371,14 @@ export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) 
                                 ))}
                             </tbody>
                         </table>
-                    ) : (
+                    ) : 
+                    loading ?
+                        <div className='spinner-container'>
+                            <h1 className='spinner2__title'>Loading History...</h1>
+                            <SpinnerDefault classOverride="spinner2" />
+                        </div>
+                    :
+                    (   
                         <p className='historypage__no-data'>No history data available.</p>
                     )}
                 </div>
