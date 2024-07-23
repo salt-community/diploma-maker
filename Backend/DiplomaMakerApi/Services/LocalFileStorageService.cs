@@ -62,7 +62,7 @@ namespace DiplomaMakerApi.Services
 
             if (File.Exists(filePath))
             {
-                File.Delete(filePath);
+                await Task.Run(() => File.Delete(filePath));
                 return true;
             }
             return false;
@@ -78,7 +78,7 @@ namespace DiplomaMakerApi.Services
                 throw new FileNotFoundException("The default template file does not exist.");
             }
 
-            File.Copy(sourceFilePath, destinationFilePath, overwrite: true);
+            await Task.Run(() => File.Copy(sourceFilePath, destinationFilePath, overwrite: true));
         }
 
         public async Task<string> CreateBackup(string fileName)
@@ -97,7 +97,7 @@ namespace DiplomaMakerApi.Services
             } 
             while (File.Exists(newFilePath));
 
-            File.Copy(filePath, newFilePath);
+            await Task.Run(() => File.Copy(filePath, newFilePath));
 
             var relativePath = Path.Combine("Blob/", newFileName);
 
