@@ -12,16 +12,20 @@ public static class SeedData
             
             DiplomaTemplate diploma = new DiplomaTemplate { Name = "Default" };
 
+            var Dotnet = new Track { Name = "C# Dotnet", Tag = "dnfs"};
+            var Java = new Track { Name = "Java", Tag ="jfs"};
+            var Js = new Track { Name = "Javascript", Tag="jsfs"};
+            
             // Bootcamps
             var dotnetBootcamp1 = new Bootcamp
             {
-                Name = ".Net Fullstack Winter 2024",
+                Track = Dotnet,
                 GraduationDate = new DateTime(2024,2,5, 0, 0, 0, DateTimeKind.Utc),
                 DiplomaTemplate = diploma 
             };
             var dotnetBootcamp2 = new Bootcamp
             {
-                Name = ".Net Fullstack Autumn 2023",
+                Track = Java,
                 GraduationDate = new DateTime(2024,11,5, 0, 0, 0, DateTimeKind.Utc),
                 DiplomaTemplate = diploma 
              
@@ -29,7 +33,7 @@ public static class SeedData
             };
             var JavaBootcamp = new Bootcamp
             {
-                Name = "Java Fullstack Winter 2024",
+                Track = Js,
                 GraduationDate = new DateTime(2024,1,5, 0, 0, 0, DateTimeKind.Utc),
                 DiplomaTemplate = diploma 
               

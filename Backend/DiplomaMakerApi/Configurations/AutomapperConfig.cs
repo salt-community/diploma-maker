@@ -1,6 +1,6 @@
 using AutoMapper;
 
-namespace JokesAPI.Configuration;
+namespace DiplomaMakerApi.Configuration;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Dtos;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
@@ -9,7 +9,6 @@ public class AutomapperConfig : Profile
 {
     public AutomapperConfig()
     {
-        CreateMap<BootcampRequestDto, Bootcamp>().ReverseMap();
         CreateMap<BootcampResponseDto, Bootcamp>().ReverseMap()
             .ForMember(d => d.TemplateId, opt => opt.MapFrom(src => src.DiplomaTemplate.Id))
             .ReverseMap();
@@ -17,6 +16,7 @@ public class AutomapperConfig : Profile
         CreateMap<StudentResponseDto, Student>().ReverseMap();
         CreateMap<TemplateResponseDto, DiplomaTemplate>().ReverseMap();
         CreateMap<StudentUpdateRequestDto, Student>().ReverseMap();
+        CreateMap<Track,TracksResponseDto>();
         CreateMap<DiplomaSnapshotResponseDto, DiplomaSnapshot>().ReverseMap();
         CreateMap<StudentRequestDto, DiplomaSnapshot>()
             .ForMember(d => d.GeneratedAt, opt => opt.Ignore())

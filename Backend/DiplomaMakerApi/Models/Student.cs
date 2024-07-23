@@ -10,5 +10,5 @@ public class Student
     public string? Email { get; set; }
     public DateTime? LastGenerated { get; set; }
     [JsonIgnore]
-    public required Bootcamp Bootcamp {get; set;}
+    public required Bootcamp Bootcamp { get; set; }
 }

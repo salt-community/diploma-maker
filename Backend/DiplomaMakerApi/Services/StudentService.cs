@@ -64,7 +64,7 @@ public class StudentService
         var Students = await _context.Students
             .Include(d => d.Bootcamp)
             .Where(d => d.Name.ToLower().Contains(keyword) 
-                || d.Bootcamp.Name.ToLower().Contains(keyword))
+                || d.Bootcamp.Track.Name.Contains(keyword))
             .ToListAsync();
         return Students;
     }

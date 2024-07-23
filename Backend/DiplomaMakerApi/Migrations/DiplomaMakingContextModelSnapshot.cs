@@ -38,16 +38,14 @@ namespace DiplomaMakerApi.Migrations
                     b.Property<Guid>("GuidId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("TrackId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DiplomaTemplateId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.HasIndex("TrackId");
 
                     b.ToTable("Bootcamps");
                 });
@@ -267,6 +265,29 @@ namespace DiplomaMakerApi.Migrations
                     b.ToTable("TemplateStyles");
                 });
 
+            modelBuilder.Entity("DiplomaMakerApi.Models.Track", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Tag")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Tracks");
+                });
+
             modelBuilder.Entity("DiplomaMakerApi.Models.Bootcamp", b =>
                 {
                     b.HasOne("DiplomaMakerApi.Models.DiplomaTemplate", "DiplomaTemplate")
@@ -275,7 +296,15 @@ namespace DiplomaMakerApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DiplomaMakerApi.Models.Track", "Track")
+                        .WithMany("Bootcamps")
+                        .HasForeignKey("TrackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("DiplomaTemplate");
+
+                    b.Navigation("Track");
                 });
 
             modelBuilder.Entity("DiplomaMakerApi.Models.DiplomaSnapshot", b =>
@@ -346,6 +375,11 @@ namespace DiplomaMakerApi.Migrations
             modelBuilder.Entity("DiplomaMakerApi.Models.Bootcamp", b =>
                 {
                     b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("DiplomaMakerApi.Models.Track", b =>
+                {
+                    b.Navigation("Bootcamps");
                 });
 #pragma warning restore 612, 618
         }

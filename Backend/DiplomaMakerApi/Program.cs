@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using JokesAPI.Configuration;
 using DiplomaMakerApi.Services;
 using DiplomaMakerApi.Middleware;
+using DiplomaMakerApi.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +38,7 @@ builder.Services.AddScoped<BootcampService>();
 builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<TemplateService>();
 builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<TrackService>();
 builder.Services.AddTransient<LocalFileStorageService>();
 builder.Services.AddScoped<HistorySnapshotService>();
 builder.Services.AddLogging();
