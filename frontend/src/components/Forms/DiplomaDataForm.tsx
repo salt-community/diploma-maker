@@ -40,7 +40,9 @@ export default function DiplomaDataForm ({ updateSaltData, bootcamps, setSelecte
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
-   
+    dataFromFile.forEach(student => {
+      student.verificationCode = generateVerificationCode()
+    });
     setStudents(dataFromFile);
   };
 

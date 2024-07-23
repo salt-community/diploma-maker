@@ -10,7 +10,7 @@ import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, Em
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { delay, generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF, populateField, populateIdField } from '../../util/helper';
+import { delay, generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF, populateField, populateIdField, utcFormatter } from '../../util/helper';
 import { getTemplate, makeTemplateInput } from '../../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../../components/MenuItems/Buttons/SaveButton';
@@ -22,6 +22,7 @@ import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
 import { useCustomInfoPopup } from '../../components/Hooks/useCustomInfoPopup';
 import { Template } from '@pdfme/common';
 import { InfoPopup } from '../../components/MenuItems/Popups/InfoPopup';
+import { VerifyIcon } from '../../components/MenuItems/Icons/VerifyIcon';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -238,6 +239,11 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         }
     }
 
+    const navigateToVerificationPage = (verificationCode: string) => {
+        const url = `/verify/${verificationCode}`;
+        window.open(url, '_blank');
+    };
+
     return (
         <main className="overview-page">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} />
@@ -278,6 +284,11 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                                     <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
                                     <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
                                 </section>
+                                {student.lastGenerated && 
+                                    <div onClick={() => navigateToVerificationPage(student.verificationCode)} className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
+                                        <VerifyIcon />
+                                    </div>
+                                }
                             </button>
                         )) :
                             <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />

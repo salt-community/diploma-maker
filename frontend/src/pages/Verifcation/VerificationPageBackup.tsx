@@ -1,33 +1,55 @@
 import './VerificationPage.css'
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom"
-import { HistorySnapshotResponse } from "../../util/types";
+import { BootcampResponse, StudentResponse, TemplateResponse } from "../../util/types";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { generatePDFDownload, getFontsData, getPlugins } from "../../util/helper";
-import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistorySnapshot } from "../../util/dataHelpers";
+import { generatePDF, getFontsData, getPlugins } from "../../util/helper";
+import { makeTemplateInput } from "../../templates/baseTemplate";
+import { mapTemplateInputsToTemplateViewerSingle, templateInputsSingleBootcampandTemplate } from "../../util/dataHelpers";
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
+import { SuccessIcon } from '../../components/MenuItems/Icons/SuccessIcon';
 import { NextIcon } from '../../components/MenuItems/Icons/NextIcon';
 import logoBlack from '/icons/logoBlack.png'
 
 type Props = {
+    getStudentByVerificationCode: (verificationCode: string) => void;
     getHistoryByVerificationCode: (verificationCode: string) => void;
+    bootcamps: BootcampResponse[] | null;
+    templates: TemplateResponse[] | null;
 }
 
-export function VertificationPage( { getHistoryByVerificationCode }: Props) {
+export function VerificationPageBackup( { getStudentByVerificationCode, bootcamps, templates }: Props) {
     const { verificationCode } = useParams<{ verificationCode: string }>();
 
     const uiRef = useRef<HTMLDivElement | null>(null);
     const uiInstance = useRef<Form | Viewer | null>(null);
 
-    const [studentData, setStudentData] = useState<HistorySnapshotResponse>(null);
+    const [studentData, setStudentData] = useState<StudentResponse>(null);
+    const [bootcampData, setBootcampData] = useState<BootcampResponse>(null);
+    const [templateData, setTemplateData] = useState<TemplateResponse>(null);
+
     const [showDiploma, setShowDiploma] = useState<boolean>(false);
 
     useEffect(() => {
-        if(studentData){
-            const inputs = templateInputsFromHistorySnapshot(studentData);
-            const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
+        if(studentData && bootcamps && templates && !bootcampData){
+            const selectedBootcamp = bootcamps.find(bootcamp => 
+                bootcamp.students.some(student => student.guidId === studentData.guidId)
+            );
+            setBootcampData(selectedBootcamp);
+
+            const selectedTemplate = templates.find(template => 
+                template.id === selectedBootcamp.templateId
+            );
+            setTemplateData(selectedTemplate);
+        }
+    }, [bootcamps, templates, studentData])
+
+    useEffect(() => {
+        if(bootcamps && templates && templateData && bootcampData && studentData){
+            const inputs = templateInputsSingleBootcampandTemplate(bootcampData, templateData, student.name, student.verificationCode);
+            const template = mapTemplateInputsToTemplateViewerSingle(templateData, inputs[0])
 
             getFontsData().then((font) => {
                 if(uiInstance.current){
@@ -50,24 +72,29 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
             }
             
         }
-    }, [uiRef, studentData])
+    }, [uiRef, templateData])
 
     const generatePDFHandler = async () => {
-        if (uiInstance.current && studentData) {
+        if (uiInstance.current && templateData && bootcampData) {
           const inputs = uiInstance.current.getInputs();
-          const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
+          const pdfInput = makeTemplateInput(
+              inputs[0].header,
+              inputs[0].main,
+              inputs[0].footer,
+              inputs[0].pdfbase,
+              inputs[0].link
+          )
+          const template = mapTemplateInputsToTemplateViewerSingle(templateData, inputs[0])
          
-          await generatePDFDownload(template, inputs, `${studentData.studentName} Diploma`);
+          await generatePDF(template, inputs);
         }
       };
 
     const { isLoading, data: student, isError } = useQuery({
         queryKey: ['getDiplomaById'],
-        queryFn: () => getHistoryByVerificationCode(verificationCode || ''),
-        onSuccess: (data: HistorySnapshotResponse[]) => {
-            // Selects the first active template that was generated.
-            const activeData = data.find(h => h.active === true);
-            setStudentData(activeData);
+        queryFn: () => getStudentByVerificationCode(verificationCode || ''),
+        onSuccess: (data: StudentResponse) => {
+            setStudentData(data);
         },
         retry: false
     });
@@ -107,20 +134,20 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
 
     return (
         <>
-        {studentData &&
+        {bootcampData && templateData && studentData &&
             <main>
                 <div className='verificationinfo-container'>
                     <div className='verificationinfo__logo-wrapper'>
                         <img src={logoBlack} alt="" />
                     </div>
                     <div className='verificationinfo__title-wrapper'>
-                        <h1>{studentData.studentName}</h1>
+                        <h1>{student!.name}</h1>
                         <p>Has successfully graduated from School Of Applied Technology</p>
-                        <h2>{studentData.bootcampName}</h2>
+                        <h2>{bootcampData.name}</h2>
                     </div>
                     <div className='verificationinfo__footer-wrapper'>
-                        <p>Graduation Date: <span>{studentData.bootcampGraduationDate.toString().slice(0, 10)}</span></p>
-                        <p>Verification Code: <span>{studentData.verificationCode}</span></p>
+                        <p>Graduation Date: <span>{bootcampData.graduationDate.toString().slice(0, 10)}</span></p>
+                        <p>Verification Code: <span>{student!.verificationCode}</span></p>
                         <div className='verificationinfo__footer-wrapper--icon-container'>
                             <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31.709 31.709"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> 
                                 <path d="M10.595,25.719H4.696c-1.127,0-2.06-0.886-2.06-2.013V5.42c0-1.127,0.933-2.006,2.06-2.006h14.277 c1.127,0,2.047,0.879,2.047,2.006v15.323l2.637-3.135V3.462c0-1.482-1.172-2.684-2.652-2.684H2.559C1.136,0.778,0,1.932,0,3.354 v22.382c0,1.482,1.185,2.688,2.669,2.688h10.358l-1.224-1.063C11.267,26.896,10.864,26.327,10.595,25.719z"></path> <path d="M17.875,6.794H6.034c-0.728,0-1.314,0.591-1.314,1.318c0,0.726,0.587,1.317,1.314,1.317h11.84 c0.728,0,1.312-0.591,1.312-1.317C19.188,7.386,18.602,6.794,17.875,6.794z"></path> <path d="M17.875,11.187H6.034c-0.728,0-1.314,0.59-1.314,1.318c0,0.724,0.587,1.318,1.314,1.318h11.84 c0.728,0,1.312-0.594,1.312-1.318C19.188,11.777,18.602,11.187,17.875,11.187z"></path> 

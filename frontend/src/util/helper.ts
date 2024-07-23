@@ -165,6 +165,26 @@ export const generatePDF = async (template: Template, inputs: any, returnFile?: 
   }
 };
 
+export const generatePDFDownload = async (template: Template, inputs: any, fileName: string): Promise<void> => {
+  if (!template) return;
+  const font = await getFontsData();
+
+  const pdf = await generate({
+    template,
+    inputs,
+    options: { font },
+    plugins: getPlugins(),
+  });
+
+  const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${fileName}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
   const font = await getFontsData();
 
@@ -325,4 +345,23 @@ export const generateVerificationCode = (length = 5) => {
   }
 
   return code;
+}
+
+
+const dateoptions: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: 'numeric',
+  timeZone: 'Europe/Stockholm'
+};
+
+export const dateFormatter = new Intl.DateTimeFormat('en-GB', dateoptions);
+
+export const utcFormatter = (date: Date) => {
+  const utcDate = new Date(date);
+  const stockholmDateString = dateFormatter.format(utcDate);
+  return stockholmDateString;
 }

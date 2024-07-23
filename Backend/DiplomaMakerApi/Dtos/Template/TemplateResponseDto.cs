@@ -20,4 +20,5 @@ public class TemplateResponseDto
 
     public required string BasePdf { get; set;}
     public DateTime LastUpdated {get; set;}
+    public DateTime PdfBackgroundLastUpdated { get; set; }
 }

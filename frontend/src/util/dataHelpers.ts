@@ -1,7 +1,7 @@
 import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { populateField, populateIdField } from "./helper";
-import { BootcampRequest, BootcampResponse, SaltData, TemplateRequest, TemplateResponse } from "./types";
+import { BootcampRequest, BootcampResponse, HistorySnapshotResponse, SaltData, TemplateRequest, TemplateResponse } from "./types";
 
 export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcampIndex: number, currentPageIndex: number) => {
     const inputs = 
@@ -85,6 +85,31 @@ export const templateInputsSingleBootcampandTemplate = (bootcampData: BootcampRe
   )]
 }
 
+export const templateInputsFromHistorySnapshot = (historySnapshot: HistorySnapshotResponse) => {
+  return [makeTemplateInput(
+    populateField(
+      historySnapshot.intro,
+      historySnapshot.bootcampName, 
+      historySnapshot.bootcampGraduationDate.toString().slice(0, 10),
+      historySnapshot.studentName
+    ),
+    populateField(
+      historySnapshot.main,
+      historySnapshot.bootcampName,
+      historySnapshot.bootcampGraduationDate.toString().slice(0, 10),
+      historySnapshot.studentName
+    ),
+    populateField(
+      historySnapshot.footer,
+      historySnapshot.bootcampName,
+      historySnapshot.bootcampGraduationDate.toString().slice(0, 10),
+      historySnapshot.studentName
+    ),
+    historySnapshot.basePdf,
+    historySnapshot.verificationCode
+  )]
+}
+
 export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selectedBootcampIndex: number, inputs: any) => {
     const template: Template = getTemplate(
         inputs,
@@ -143,6 +168,63 @@ export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selected
 }
 
 export const mapTemplateInputsToTemplateViewerSingle = (template: TemplateResponse, inputs: any) => {
+  const templateOutput: Template = getTemplate(
+      inputs,
+      { 
+        x: template.introStyling?.xPos ?? null, 
+        y: template.introStyling?.yPos ?? null
+      }, // headerPos
+      { 
+        //@ts-ignore
+        width: template.introStyling?.width ?? null, 
+        //@ts-ignore
+        height: template.introStyling?.height ?? null
+      }, // headerSize
+      template.introStyling?.fontSize ?? null, // footerFontSize
+      template.introStyling?.fontColor ?? null, // footerFontColor
+      template.introStyling?.fontName ?? null, // footerFont
+      template.introStyling?.alignment ?? null, // footerAlignment
+      { 
+        x: template.mainStyling?.xPos ?? null, 
+        y: template.mainStyling?.yPos ?? null
+      }, // mainPos
+      { 
+        width: template.mainStyling?.width ?? null, 
+        height: template.mainStyling?.height ?? null
+      }, // mainSize
+      template.mainStyling?.fontSize ?? null, // footerFontSize
+      template.mainStyling?.fontColor ?? null, // footerFontColor
+      template.mainStyling?.fontName ?? null, // footerFont
+      template.mainStyling?.alignment ?? null, // footerAlignment
+      { 
+        x: template.footerStyling?.xPos ?? null, 
+        y: template.footerStyling?.yPos ?? null 
+      }, // footerPos
+      { 
+        width: template.footerStyling?.width ?? null, 
+        height: template.footerStyling?.height ?? null
+      }, // footerSize
+      template.footerStyling?.fontSize ?? null, // footerFontSize
+      template.footerStyling?.fontColor ?? null, // footerFontColor
+      template.footerStyling?.fontName ?? null, // footerFont
+      template.footerStyling?.alignment ?? null, // footerAlignment
+      { 
+        x: template.linkStyling?.xPos ?? null, 
+        y: template.linkStyling?.yPos ?? null 
+      }, // linkPos
+      { 
+        width: template.linkStyling?.width ?? null, 
+        height: template.linkStyling?.height ?? null
+      }, // linkSize
+      template.linkStyling?.fontSize ?? null, // linkFontSize
+      template.linkStyling?.fontColor ?? null, // linkFontColor
+      template.linkStyling?.fontName ?? null, // linkFont
+      template.linkStyling?.alignment ?? null // linkAlignment
+    );
+  return templateOutput;
+}
+
+export const mapTemplateInputsToTemplateViewerFromSnapshot = (template: HistorySnapshotResponse, inputs: any) => {
   const templateOutput: Template = getTemplate(
       inputs,
       { 

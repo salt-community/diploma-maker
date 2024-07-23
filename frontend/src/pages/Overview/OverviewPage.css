@@ -105,6 +105,53 @@
                 right: 3%;
             }
 
+            .list-module__item-menu--verifiedcontainer{
+                position: absolute;
+                top: 1%;
+                left: 1%;
+                width: 40px;
+                height: 40px;
+                
+                cursor: pointer;
+                transition: all 200ms ease-in-out;
+            }
+                .list-module__item-menu--verifiedcontainer:hover svg{
+                    scale: 1.1;
+                    filter: saturate(110%);
+
+                    transition: all 200ms ease-in-out;
+                }
+                .list-module__item-menu--verifiedcontainer svg{
+                    transition: all 200ms ease-in-out;
+                }
+                .list-module__item-menu--verifiedcontainer svg path{
+                    stroke: #65f25d;
+                    transition: all 200ms ease-in-out;
+                }
+                .list-module__item-menu--verifiedcontainer::after {
+                    content: attr(data-student-lastgenerated);
+                    position: absolute;
+                    width: 400%;
+                    height: 125%;
+                    top: 20%;
+                    left: 100%;
+                    /* background-color: #89ff57; */
+                    background-color: #103009;
+                    color: #000;
+                    color: #32f219;
+                    padding: 5px;
+                    border-radius: 5px;
+                    font-size: 0.8rem;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                }
+                
+                .list-module__item-menu--verifiedcontainer:hover::after {
+                    opacity: 1;
+                    visibility: visible;
+                }
+
 .overview-page__footer {
     position: absolute;
     bottom: 1%;

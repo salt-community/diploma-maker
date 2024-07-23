@@ -64,7 +64,6 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
 
   // When Page Changes -> Loads into PDF preview
   useEffect(() => {
-    
     if(saltData){
       const inputs = templateInputsFromSaltData(saltData, selectedBootcampIndex, currentPageIndex);
       const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputs[0])
