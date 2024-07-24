@@ -50,7 +50,7 @@ export default function App() {
     await refresh();
   }
 
-  const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
+   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
     api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid)
   }
 
@@ -109,8 +109,8 @@ export default function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}/>} />
-        <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} />
+        <Route path={"/"} element={<DiplomaMaking tracks={tracks}bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}/>} />
+     {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
         <Route path={`/verify`} element={<VerificationInputPage />} />
         <Route path={`/verify/:verificationCode`} element = {<VertificationPage getStudentByVerificationCode={getStudentByVerificationCode} bootcamps={bootcamps} templates={templates}/>} />
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 

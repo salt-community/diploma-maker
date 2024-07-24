@@ -51,17 +51,19 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
     if (bootcamps && templates) {
-      if (selectedBootcamp) {
+      /*   if (selectedBootcamp) {
         setSelectedBootcampIndex(Number(selectedBootcamp));
+        } */
+       if (bootcamps[selectedBootcampIndex].students.length === 0) {
+         setSaltData([saltDefaultData]);
+        }
+        else {
+          setSaltData(bootcamps.map(b => mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId))));
+        }
       }
-      if (bootcamps[selectedBootcampIndex].students.length === 0) {
-        setSaltData([saltDefaultData]);
-      }
-      else {
-        setSaltData(bootcamps.map(b => mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId))));
-      }
-    }
-  }, [bootcamps, templates]);
+    }, [bootcamps, templates]);
+    
+  const TogglePreview = () => setIsFullScreen(prev => !prev)
 
   const updateSaltDataHandler = (data: SaltData,) => {
     if (saltData) {
@@ -76,40 +78,6 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
   };
 
 
-  const TogglePreview = () => setIsFullScreen(prev => !prev)
-
-  const updateSaltNameForBootcamp = (name: string) => {
-    if (saltData) {
-      setSaltData(prevSaltInfoProper =>
-        (prevSaltInfoProper ?? []).map((item, index) =>
-          index === selectedBootcampIndex
-            ? { ...item, name: name }
-            : item
-        )
-      );
-    }
-  };
-
-  const postSelectedBootcampData = async (saltData: SaltData) => {
-    const updateFormDataRequest: FormDataUpdateRequest = {
-      students: saltData.students.map((student) => ({
-        guidId: saltData?.guidId || crypto.randomUUID(),
-        name: student.name,
-        email: student.email,
-        verificationCode: student.verificationCode
-      })),
-      templateId: saltData.template.id
-    };
-
-    try {
-      await UpdateBootcampWithNewFormdata(updateFormDataRequest, saltData.guidId);
-      customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
-
-    } catch (error) {
-      customAlert('fail', "Failed to add diplomas:", `${error}`);
-    }
-  }
-
   return (
     saltData && templates ? (
       <div className={`flex w-full h-screen pt-10 dark:bg-darkbg`}>
@@ -121,6 +89,7 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
         {IsFullScreen ? (
           <section className="flex-1 flex flex-col full-screen-mode items-center">
             <DiplomaDataForm
+              UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
               updateSaltData={updateSaltDataHandler}
               bootcamps={bootcamps}
               setSelectedBootcampIndex={(index) => { setSelectedBootcampIndex(index); }}
@@ -128,6 +97,7 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
               saltData={saltData[selectedBootcampIndex]}
               templates={templates}
               fullscreen = {IsFullScreen}
+              customAlert={customAlert}
             />
           </section>
         ) : (
@@ -136,9 +106,6 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
               {saltData[selectedBootcampIndex].students.length > 0 ? (
                 <PreviewDiploma
                   saltData={saltData[selectedBootcampIndex]}
-                  updateSaltNameForbootcamp={updateSaltNameForBootcamp}
-                  selectedBootcampIndex={selectedBootcampIndex}
-                  postSelectedBootcampData={postSelectedBootcampData}
                 />
               ) : (
                 <Popup404 text="No student names found." />
@@ -146,12 +113,15 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
             </section>
             <section className="flex-1 flex flex-col">
               <DiplomaDataForm
+                UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
                 updateSaltData={updateSaltDataHandler}
                 bootcamps={bootcamps}
                 setSelectedBootcampIndex={(index) => { setSelectedBootcampIndex(index); }}
                 selectedBootcampIndex={selectedBootcampIndex}
                 saltData={saltData[selectedBootcampIndex]}
                 templates={templates}
+                fullscreen = {IsFullScreen}
+                customAlert={customAlert}
               />
             </section>
           </>

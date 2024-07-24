@@ -1,31 +1,37 @@
 import { useForm } from "react-hook-form";
 import TagsInput from "../../components/TagsInput/TagsInput";
 import { useEffect, useState } from "react";
-import { BootcampResponse, TemplateResponse, SaltData, Student } from "../../util/types";
+import { BootcampResponse, TemplateResponse, SaltData, Student, FormDataUpdateRequest } from "../../util/types";
 import { FileUpload } from "../../components/MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../services/InputFileService';
-import { generateVerificationCode } from "../../util/helper";
+import { generateVerificationCode, mapBootcampToSaltData, newGenerateCombinedPDF } from "../../util/helper";
 import './DiplomaDataForm.css';
+import { UpdateBootcampWithNewFormdata } from "../../services/bootcampService";
+import { PopupType } from "../../components/MenuItems/Popups/AlertPopup";
+import { Template } from "@pdfme/common";
+import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../util/dataHelpers";
 
 type Props = {
+  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void;
   bootcamps: BootcampResponse[] | null;
   templates: TemplateResponse[] | null;
   saltData: SaltData;
   updateSaltData: (data: SaltData) => void;
   setSelectedBootcampIndex: (index: number) => void;
   selectedBootcampIndex: number;
-  fullscreen?: boolean;
+  fullscreen: boolean;
+  customAlert: (alertType: PopupType, title: string, content: string) => void;
 };
 
-export default function DiplomaDataForm ({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex, fullscreen}: Props) {
-  const { register } = useForm();
+export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex, fullscreen, UpdateBootcampWithNewFormdata, customAlert }: Props) {
+  const { register, handleSubmit } = useForm();
   const [students, setStudents] = useState<Student[]>(saltData.students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
   const [bootcampsCache, setBootcampsCache] = useState<BootcampResponse[] | null>();
 
   useEffect(() => {
     setBootcampsCache(bootcamps)
-    
+
     updateSaltData({
       ...saltData,
       template: selectedTemplate
@@ -39,26 +45,82 @@ export default function DiplomaDataForm ({ updateSaltData, bootcamps, setSelecte
     });
   }, [students]);
 
-
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
-   
     setStudents(dataFromFile);
   };
 
+  const postSelectedBootcampData = async () => {
+    const updateFormDataRequest: FormDataUpdateRequest = {
+      students: saltData.students.map((student) => ({
+        guidId: saltData?.guidId || crypto.randomUUID(),
+        name: student.name,
+        email: student.email,
+        verificationCode: student.verificationCode
+      })),
+      templateId: selectedTemplate.id
+    };
+
+    try {
+      await UpdateBootcampWithNewFormdata(updateFormDataRequest, saltData.guidId);
+      customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
+
+    } catch (error) {
+      customAlert('fail', "Failed to add diplomas:", `${error}`);
+    }
+  }
+  // should improve
+
+  const generatePDFHandler = async () => {
+    if (!bootcamps || !templates) {
+      customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
+      return;
+    }
+    const templatesArr: Template[] = [];
+    const inputsArray = students.map(student => {
+      const selectedBootcamp = bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
+      if (!selectedBootcamp) {
+        customAlert('fail', "Error", `Bootcamp for student ${student.name} not found.`);
+        return null;
+      }
+      const templateData = templates.find(t => t.id === selectedBootcamp.templateId);
+      if (!templateData) {
+        customAlert('fail', "Error", `Template for bootcamp ${selectedBootcamp.name} not found.`);
+        return null;
+      }
+
+      const inputs = templateInputsFromBootcampData(mapBootcampToSaltData(selectedBootcamp, templateData), student.name, student.verificationCode);
+      templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(templateData, inputs));
+      return inputs;
+    }).filter(inputs => inputs !== null);
+
+    if (inputsArray.length === 0) {
+      customAlert('fail', "Error", "No valid inputs found for PDF generation.");
+      return;
+    }
+
+    await newGenerateCombinedPDF(templatesArr, inputsArray);
+    customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
+  };
+
+  const onSubmit = (data: any) => {
+    postSelectedBootcampData()
+    generatePDFHandler()
+  };
+
   return (
-    <form className={`space-y-4 p-6 rounded shadow-md ml-10 mr-10 rounded-2xl dark: bg-darkbg2 ${fullscreen ? "full-screen-mode" : ""}`}>
+    <form className={`space-y-4 p-6 rounded shadow-md ml-10 mr-10 rounded-2xl dark: bg-darkbg2 ${fullscreen ? "full-screen-mode" : ""}`} onSubmit={handleSubmit(onSubmit)}>
       {/* Select bootcamp Class */}
       <div className="select-bootcamp mb-6">
-        <label htmlFor="classname" className="block text-lg font-medium text-gray-700 dark: text-white">
+        <label htmlFor="bootcamp" className="block text-lg font-medium text-gray-700 dark: text-white">
           Class Name
         </label>
         <select
-          id="classname"
-          {...register("classname")}
+          id="bootcamp"
+          {...register("bootcamp")}
           className="mt-2 w-8/12 py-2 px-3 order border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
-          onChange={(e) => { 
-            setSelectedBootcampIndex(e.target.selectedIndex) 
+          onChange={(e) => {
+            setSelectedBootcampIndex(e.target.selectedIndex)
             const selectedId = bootcampsCache![selectedBootcampIndex].templateId;
             const selectedTemplateObject = templates!.find(template => template.id === selectedId);
             setSelectedTemplate(selectedTemplateObject!);
@@ -75,11 +137,12 @@ export default function DiplomaDataForm ({ updateSaltData, bootcamps, setSelecte
 
       {/* Select Template name */}
       <div className="select-template mb-6">
-        <label htmlFor="name" className="block text-lg font-medium text-gray-700 dark: text-white">
+        <label htmlFor="template" className="block text-lg font-medium text-gray-700 dark: text-white">
           Template Name
         </label>
         <select
-          id="name"
+          id="template"
+          {...register("template")}
           className="mt-2 w-8/12 py-2 px-3 border border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
           onChange={(e) => {
             const selectedname = e.target.value;
@@ -113,6 +176,45 @@ export default function DiplomaDataForm ({ updateSaltData, bootcamps, setSelecte
         </label>
         <FileUpload FileHandler={handleFileUpload} />
       </div>
+
+      {/* Example Checkboxes */}
+      <div className="checkboxes mb-6">
+      <label htmlFor="upload" className="block text-lg font-medium text-gray-700 dark: text-white mb-2">
+        PDF creation options
+      </label>
+        <div className="flex flex-col space-y-2">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked 
+              {...register("optionA")}
+              className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+            />
+            <span className="ml-2 text-gray-700 dark:text-white">Update changes made to Bootcamp</span>
+          </label>  
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              {...register("optionB")}
+              className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+            />
+            <span className="ml-2 text-gray-700 dark:text-white">Generate pdf in new window</span>
+          </label>
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked 
+              {...register("optionC")}
+              className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+            />
+            <span className="ml-2 text-gray-700 dark:text-white">Email each student their diploma</span>
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" className="block w-full md:inline-block md:w-auto px-4 py-3 md:py-2 bg-red-200 text-red-700 rounded-lg font-semibold text-sm md:ml-2 md:order-2">
+        Submit
+      </button>
     </form>
   );
 }
