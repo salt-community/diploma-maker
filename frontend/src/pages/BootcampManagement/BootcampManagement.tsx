@@ -143,7 +143,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                     ))}
                 </tbody>
               </table>
-              <AddNewBootcampForm addNewBootcamp={addNewBootcamp} bootcamps={bootcamps}/>
+              <AddNewBootcampForm addNewBootcamp={addNewBootcamp} bootcamps={bootcamps} tracks={tracks}/>
             </div>
             {/*footer*/}
             <div className="footer-container">
