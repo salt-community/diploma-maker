@@ -91,7 +91,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                   {bootcamps &&
                     bootcamps.map((bootcamp, index) => (
                       // Display existing bootcamps
-                      <tr key={`tablecell_${bootcamp.guidId}`}>
+                      <tr className="table-row" key={`tablecell_${bootcamp.guidId}`}>
                         <td className="table-cell">
                           <input
                             type="text"
