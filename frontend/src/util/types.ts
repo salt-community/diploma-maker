@@ -47,10 +47,10 @@ export type BootcampResponse = {
     graduationDate: Date;
     templateId: number;
     students: Student[];
-    track: Track;
+    track: TrackResponse;
 }
 
-export type Track = {
+export type TrackResponse = {
     id: number;
     name?: string;
     tag?: string;

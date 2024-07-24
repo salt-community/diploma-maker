@@ -1,5 +1,5 @@
 import { FieldValues, useForm, useWatch } from "react-hook-form";
-import { BootcampRequest, BootcampResponse } from "../../util/types"
+import { BootcampRequest, BootcampResponse, TrackResponse } from "../../util/types"
 import { useEffect, useState } from "react";
 import AddNewBootcampForm from "../../components/Forms/AddNewBootcampForm";
 import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
@@ -11,21 +11,16 @@ type Props = {
   deleteBootcamp: (i: number) => Promise<void>;
   addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   updateBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
+  tracks: TrackResponse[];
 }
 
-export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp }: Props) {
+export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks }: Props) {
   const { register, handleSubmit, setValue, watch } = useForm();
   const [showConfirmAlert, setShowConfirmAlert] = useState<number>(-1); 
 
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [popupContent, setPopupContent] = useState<string[]>(["",""]);
   const [popupType, setPopupType] = useState<PopupType>('success');
-
-  useEffect(() => {
-    if(bootcamps){
-      console.log(bootcamps);
-    }
-  }, [bootcamps])
 
   const formatDate = (date: Date) => {
     const dateConverted = new Date(date);
@@ -96,7 +91,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                   {bootcamps &&
                     bootcamps.map((bootcamp, index) => (
                       // Display existing bootcamps
-                      <tr key={bootcamp.guidId}>
+                      <tr key={`tablecell_${bootcamp.guidId}`}>
                         <td className="table-cell">
                           <input
                             type="text"
@@ -112,28 +107,28 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                             type="date"
                             className="date-input"
                             defaultValue={formatDate(bootcamp.graduationDate)}
-                            key={bootcamp.guidId}
+                            key={`dategrad_${bootcamp.guidId}`}
                           />
                         </td>
                         <td className="table-cell">
                           <SelectOptions
-                                containerClassOverride='select-input__wrapper'
-                                selectClassOverride='select-input'
-                                options={[
-                                    ...(bootcamps?.map(b => ({
-                                        value: b.track.id.toString(),
-                                        label: b.track.name
-                                    })) || [])
-                                ]}
-                                value={watch(`track${index}`)}
-                                onChange={(e) => {
-                                    setValue(`track${index}`, e.target.value);
-                                    bootcamp.track.id = parseInt(e.target.value);
-                                }}
-                                reactHookForm={true}
-                                register={register}
-                                name={`track${index}`}
-                            />
+                            containerClassOverride='select-input__wrapper'
+                            selectClassOverride='select-input'
+                            options={[
+                              ...(tracks?.map(track => ({
+                                value: track.id.toString(),
+                                label: track.name
+                              })) || [])
+                            ]}
+                            value={watch(`track${index}`, bootcamp.track.id.toString())}
+                            onChange={(e) => {
+                              setValue(`track${index}`, e.target.value);
+                              bootcamp.track.id = parseInt(e.target.value);
+                            }}
+                            reactHookForm={true}
+                            register={register}
+                            name={`track${index}`}
+                          />
                         </td>
                         <td>
                           <button
