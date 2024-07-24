@@ -21,8 +21,10 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   const [popupType, setPopupType] = useState<PopupType>('success');
 
   useEffect(() => {
-    console.log(bootcamps);
-  }, [])
+    if(bootcamps){
+      console.log(bootcamps);
+    }
+  }, [bootcamps])
 
   const formatDate = (date: Date) => {
     const dateConverted = new Date(date);
