@@ -5,6 +5,7 @@ import { BootcampResponse, TemplateResponse, SaltData, Student } from "../util/t
 import { FileUpload } from "../components/MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../services/InputFileService';
 import { generateVerificationCode } from "../util/helper";
+import './DiplomaDataForm.css';
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -13,9 +14,10 @@ type Props = {
   updateSaltData: (data: SaltData) => void;
   setSelectedBootcampIndex: (index: number) => void;
   selectedBootcampIndex: number;
+  fullscreen: boolean;
 };
 
-export default function DiplomaDataForm ({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex}: Props) {
+export default function DiplomaDataForm ({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex, fullscreen}: Props) {
   const { register } = useForm();
   const [students, setStudents] = useState<Student[]>(saltData.students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
@@ -45,7 +47,7 @@ export default function DiplomaDataForm ({ updateSaltData, bootcamps, setSelecte
   };
 
   return (
-    <form className="space-y-4 p-6 rounded shadow-md ml-10 mr-10 rounded-2xl dark: bg-darkbg2">
+    <form className={`space-y-4 p-6 rounded shadow-md ml-10 mr-10 rounded-2xl dark: bg-darkbg2 ${fullscreen ? "full-screen-mode" : ""}`}>
       {/* Select bootcamp Class */}
       <div className="select-bootcamp mb-6">
         <label htmlFor="classname" className="block text-lg font-medium text-gray-700 dark: text-white">

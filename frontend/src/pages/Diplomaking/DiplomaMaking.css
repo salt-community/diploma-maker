@@ -112,3 +112,24 @@
     pointer-events: all !important;
     background-color: rgba(0, 0, 255, 0);
 }
+
+/* Hover Zone Styles */
+ 
+  /* Button Styles */
+  .toggle-button {
+    position: relative;
+    top: 30%;
+    width: 60px;
+    padding-right: 10px;
+    height: 130px;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+    border: none;
+    border-radius: 0 100vw 100vw 0;
+    cursor: pointer;
+  }
+
+  .toggle-button:hover {
+    background-color: rgba(0, 0, 0, 0.2); 
+    box-shadow: 6px 0 12px rgba(0, 0, 0, 0.1); 
+  }

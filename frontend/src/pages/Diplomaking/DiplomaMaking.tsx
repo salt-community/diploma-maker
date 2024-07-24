@@ -28,6 +28,7 @@ import { Popup404 } from "../../components/MenuItems/Popups/Popup404";
 import { UpdateBootcampWithNewFormdata } from "../../services/bootcampService";
 import { ErrorIcon } from "../../components/MenuItems/Icons/ErrorIcon";
 import PreviewDiploma from "../../feature/PreviewDiploma";
+import { NextIcon } from "../../components/MenuItems/Icons/NextIcon";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -36,7 +37,7 @@ type Props = {
 };
 
 export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
-  const [EnablePreview, setEnablePreview] = useState<boolean>(false)
+  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true)
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0); // -> these 2 can be refactored into 1 state
   const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>();
@@ -60,7 +61,7 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
     }
   }, [bootcamps, templates]);
 
-  const updateSaltDataHandler = (data: SaltData, ) => {
+  const updateSaltDataHandler = (data: SaltData,) => {
     if (saltData) {
       setSaltData(prevSaltInfoProper =>
         (prevSaltInfoProper ?? []).map((item, index) =>
@@ -71,11 +72,11 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
       );
     }
   };
-  
 
-  const TogglePreview = () => setEnablePreview(prev => !prev)
 
-  const updateSaltNameForBootcamp = (name : string ) => {
+  const TogglePreview = () => setIsFullScreen(prev => !prev)
+
+  const updateSaltNameForBootcamp = (name: string) => {
     if (saltData) {
       setSaltData(prevSaltInfoProper =>
         (prevSaltInfoProper ?? []).map((item, index) =>
@@ -86,8 +87,8 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
       );
     }
   };
-  
-   const postSelectedBootcampData = async (saltData: SaltData) => {
+
+  const postSelectedBootcampData = async (saltData: SaltData) => {
     const updateFormDataRequest: FormDataUpdateRequest = {
       students: saltData.students.map((student) => ({
         guidId: saltData?.guidId || crypto.randomUUID(),
@@ -104,32 +105,20 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
 
     } catch (error) {
       customAlert('fail', "Failed to add diplomas:", `${error}`);
-      }
-      } 
-     
+    }
+  }
+
 
   return (
-    <div className="flex w-full h-screen justify-between pt-10 dark:bg-darkbg">
-      {saltData && templates ?
-        <>
-        
-        <button onClick={TogglePreview}>
-          {EnablePreview ? 'Show preview' : 'Hide preview'}
+    saltData && templates ? (
+      <div className={`flex w-full h-screen pt-10 dark:bg-darkbg`}>
+        <button className="toggle-button" onClick={TogglePreview}>
+          {IsFullScreen ? <NextIcon /> : <NextIcon rotation={180} />}
         </button>
+        <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
 
-          <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
-          {EnablePreview &&
-          <section className="flex-1 flex flex-col justify-start gap-1 ml-5" style={{ position: 'relative' }}>
-            {saltData[selectedBootcampIndex].students.length > 0 ?
-              (<PreviewDiploma 
-                saltData={saltData[selectedBootcampIndex]}
-                updateSaltNameForbootcamp={updateSaltNameForBootcamp}
-                selectedBootcampIndex={selectedBootcampIndex}
-                postSelectedBootcampData={postSelectedBootcampData}
-              />) :
-              (<Popup404 text="No student names found." />)}
-          </section>}
-          <section className="flex-1 flex flex-col ">
+        {IsFullScreen ? (
+          <section className="flex-1 flex flex-col full-screen-mode items-center">
             <DiplomaDataForm
               updateSaltData={updateSaltDataHandler}
               bootcamps={bootcamps}
@@ -137,22 +126,49 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
               selectedBootcampIndex={selectedBootcampIndex}
               saltData={saltData[selectedBootcampIndex]}
               templates={templates}
+              fullscreen = {IsFullScreen}
             />
           </section>
-        </>
-        :
-        <>
-          <h1 className="loading-title">{loadingMessage}</h1>
-          {!isFailed ?
-            <SpinnerDefault classOverride="spinner-diplomamaking" />
-            :
-            <div className="loading-error__icon">
-              <ErrorIcon />
-            </div>
-          }
+        ) : (
+          <>
+            <section className="flex-1 flex flex-col justify-start gap-1 ml-5">
+              {saltData[selectedBootcampIndex].students.length > 0 ? (
+                <PreviewDiploma
+                  saltData={saltData[selectedBootcampIndex]}
+                  updateSaltNameForbootcamp={updateSaltNameForBootcamp}
+                  selectedBootcampIndex={selectedBootcampIndex}
+                  postSelectedBootcampData={postSelectedBootcampData}
+                />
+              ) : (
+                <Popup404 text="No student names found." />
+              )}
+            </section>
+            <section className="flex-1 flex flex-col">
+              <DiplomaDataForm
+                fullscreen = {IsFullScreen}
+                updateSaltData={updateSaltDataHandler}
+                bootcamps={bootcamps}
+                setSelectedBootcampIndex={(index) => { setSelectedBootcampIndex(index); }}
+                selectedBootcampIndex={selectedBootcampIndex}
+                saltData={saltData[selectedBootcampIndex]}
+                templates={templates}
+              />
+            </section>
+          </>
+        )}
+      </div>
+    ) : (
+    <>
+      <h1 className="loading-title">{loadingMessage}</h1>
+      {!isFailed ? (
+        <SpinnerDefault classOverride="spinner-diplomamaking" />
+      ) : (
+        <div className="loading-error__icon">
+          <ErrorIcon />
+        </div>
+      )}
+    </>
+  )
+)
 
-        </>
-      }
-    </div>
-  );
 };
