@@ -37,7 +37,7 @@ export type Student = {
 
 export type BootcampRequest = {
     guidId?: string;
-    name: string;
+    name?: string;
     graduationDate?: Date;
     trackId: number;
 }

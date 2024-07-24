@@ -50,12 +50,20 @@
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
 }
 
+.date-input{
+    max-width: 100%;
+}
+.date-cell:nth-of-type(1){
+    width: 30%;
+}
+.date-cell:nth-of-type(2){
+    width: 20%;
+}
+
 .add-button {
     position: relative;
-    margin-left: 0.5rem;
     color: #10b981;
-
-    margin-left: 0.5rem;
+    margin-top: .5%;
     padding: 0.3rem .7rem;
     border-radius: 0.375rem;
     color: #21d34e;

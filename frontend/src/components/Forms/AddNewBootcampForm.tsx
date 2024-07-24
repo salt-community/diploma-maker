@@ -25,10 +25,10 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks }
     }, [tracks])
 
     async function addBootcampHandler(){
-        if (name.trim() === "") {
-            customAlert('fail', "Input Validation Error", "Name cannot be empty");
-            return;
-        }
+        // if (name.trim() === "") {
+        //     customAlert('fail', "Input Validation Error", "Name cannot be empty");
+        //     return;
+        // }
         if (bootcamps!.some(bootcamp => bootcamp.name.toLowerCase() === name.toLowerCase())) {
             customAlert('fail', "Input Validation Error", "The name already exists");
             return;
@@ -37,7 +37,7 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks }
             customAlert('fail', "Input Validation Error", "Must select a date!");
             return;
         }
-        const newBootcamp: BootcampRequest = {name: name, graduationDate: gradDate, trackId: track.id};
+        const newBootcamp: BootcampRequest = {/*name: name,*/ graduationDate: gradDate, trackId: track.id};
         await addNewBootcamp(newBootcamp);
 
         customAlert('success', "Successfully added!", "Successfully added new bootcamp to database");
@@ -53,18 +53,20 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks }
                 </div>
                 <tbody>
                     <tr>
-                        <th>Bootcamp Name</th>
+                        {/* <th>Bootcamp Name</th> */}
                         <th>Graduation Date</th>
                         <th>Track</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     <tr>
-                        <td className="input-cell">
+                        {/* <td className="input-cell">
                             <input 
                                 type="text" 
                                 onChange={event => setName(event.target.value)} 
                                 className="text-input"
                             />
-                        </td>
+                        </td> */}
                         <td className="date-cell">
                             <input 
                                 type="date" 
