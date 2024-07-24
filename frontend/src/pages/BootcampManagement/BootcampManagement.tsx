@@ -112,8 +112,8 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                         </td>
                         <td className="table-cell">
                           <SelectOptions
-                            containerClassOverride='select-input__wrapper'
-                            selectClassOverride='select-input'
+                            containerClassOverride='normal'
+                            selectClassOverride='normal'
                             options={[
                               ...(tracks?.map(track => ({
                                 value: track.id.toString(),
