@@ -49,7 +49,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
         guidId: bootcamps![i].guidId,
         name: data[`name${i}`],
         graduationDate:  new Date (data[`dategraduate${i}`]),
-        track: { id: parseInt(data[`track${i}`]) }
+        trackId: parseInt(data[`track${i}`])
       };
 
       console.log(newBootcamp);
