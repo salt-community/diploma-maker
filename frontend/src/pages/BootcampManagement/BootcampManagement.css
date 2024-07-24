@@ -130,6 +130,10 @@
         }
 
 
+
+
+
+
 .overlay-bg {
     opacity: 0.25;
     position: fixed;
@@ -139,8 +143,7 @@
 }
 
 
-
-
+/*Popup*/
 .confirm-dialog {
     position: fixed;
     inset: 0;

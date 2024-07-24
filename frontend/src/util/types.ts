@@ -39,6 +39,7 @@ export type BootcampRequest = {
     guidId?: string;
     name: string;
     graduationDate?: Date;
+    track: Track;
 }
 export type BootcampResponse = {
     guidId: string;
@@ -51,8 +52,8 @@ export type BootcampResponse = {
 
 export type Track = {
     id: number;
-    name: string;
-    tag: string;
+    name?: string;
+    tag?: string;
 }
 
 // Internal Data
