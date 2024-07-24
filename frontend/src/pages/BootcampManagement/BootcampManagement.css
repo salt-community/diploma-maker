@@ -76,8 +76,12 @@
                 color: #cacad4;
                 transition: all 150ms ease;
             }
+                .date-input.disabled:hover{
+                    cursor: default;
+                }
                 .date-input:hover{
                     color: #fff;
+                    cursor: pointer;
                     transition: all 150ms ease;
                 }
                 .date-input:focus {
@@ -88,14 +92,17 @@
                 }
                     .date-input::-webkit-calendar-picker-indicator {
                         filter: invert(1) brightness(75%);
+                        cursor: pointer;
                         transition: all 150ms ease;
                     }
                     .date-input::-moz-calendar-picker-indicator {
                         filter: invert(1) brightness(75%);
+                        cursor: pointer;
                         transition: all 150ms ease;
                     }
                     .date-input::-ms-expand {
                         filter: invert(1) brightness(75%);
+                        cursor: pointer;
                         transition: all 150ms ease;
                     }
                         .date-input:hover::-webkit-calendar-picker-indicator {

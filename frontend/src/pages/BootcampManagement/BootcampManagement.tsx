@@ -97,7 +97,8 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                             type="text"
                             {...register(`name${index}`)}
                             defaultValue={bootcamp.name}
-                            className="date-input"
+                            className="date-input disabled"
+                            disabled
                           />
                         </td>
                         <td className="table-cell">

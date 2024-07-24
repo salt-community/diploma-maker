@@ -41,6 +41,7 @@
 }
     .select-wrapper select:hover{
         color: #fff;
+        cursor: pointer;
         background-color: #2c2c36;
         transition: all 150ms ease;
     }
