@@ -12,7 +12,7 @@ type Props = {
   updateBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 }
 
-export const BootcampManagement = ({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp }: Props) => {
+export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp }: Props) {
   const {register, handleSubmit} = useForm();
   const [showConfirmAlert, setShowConfirmAlert] = useState<number>(-1); 
 
@@ -87,18 +87,18 @@ export const BootcampManagement = ({ bootcamps, deleteBootcamp, addNewBootcamp, 
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                    bootcamps!.map((bootcamp, index) =>
+                  {bootcamps &&
+                    bootcamps.map((bootcamp, index) => (
                       // Display existing bootcamps
                       <tr key={bootcamp.guidId}>
-                      <td className="table-cell">
-                        <input
-                          type="text"
-                          {...register(`name${index}`)}
-                          defaultValue = {bootcamp.name} 
-                          className="date-input"
-                        />
-                      </td>
+                        <td className="table-cell">
+                          <input
+                            type="text"
+                            {...register(`name${index}`)}
+                            defaultValue={bootcamp.name}
+                            className="date-input"
+                          />
+                        </td>
                         <td className="table-cell">
                           <input
                             id={bootcamp.guidId + "1"}
@@ -110,11 +110,16 @@ export const BootcampManagement = ({ bootcamps, deleteBootcamp, addNewBootcamp, 
                           />
                         </td>
                         <td>
-                          <button type="button" onClick={() => setShowConfirmAlert(index)} className="delete-btn ">Delete</button>
+                          <button
+                            type="button"
+                            onClick={() => setShowConfirmAlert(index)}
+                            className="delete-btn"
+                          >
+                            Delete
+                          </button>
                         </td>
                       </tr>
-                    )
-                  }
+                    ))}
                 </tbody>
               </table>
               <AddNewBootcampForm addNewBootcamp={addNewBootcamp} bootcamps={bootcamps}/>
