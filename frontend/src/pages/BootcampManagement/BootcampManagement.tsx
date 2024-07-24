@@ -120,13 +120,6 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
             {/*footer*/}
             <div className="footer-container">
               <button
-                className="close-button"
-                type="button"
-                onClick={() => navigate(-1)}
-              >
-                Close
-              </button>
-              <button
                 className="submit-button"
                 type="submit"
               >
