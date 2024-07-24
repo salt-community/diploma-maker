@@ -1,5 +1,5 @@
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../util/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlertPopup, PopupType } from "../MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "../Hooks/useCustomAlert";
 import './AddNewBootcampForm.css'
@@ -13,28 +13,28 @@ type Props = {
 
 export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks }: Props) {
     const [name, setName] = useState<string>("");
-    const [track, setTrack] = useState<TrackResponse | null>(null);
+    const [track, setTrack] = useState<TrackResponse | null>();
     const [gradDate, setGradDate] = useState<Date | null>(null);
 
     const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
-    async function submitToAddBootcamp(){
-        if(name === ""){
+    useEffect(() => {
+        if(tracks){
+            setTrack(tracks[0])
+        }
+    }, [tracks])
+
+    async function addBootcampHandler(){
+        if (name.trim() === "") {
             customAlert('fail', "Input Validation Error", "Name cannot be empty");
             return;
         }
-        bootcamps!.forEach(bootcamp => {
-            if(bootcamp.name === name){
-                customAlert('fail', "Input Validation Error", "The name already exists");
-                return;
-            }
-        });
-        if (!track) {
-            customAlert('fail', "Input Validation Error", "Track must be selected");
+        if (bootcamps!.some(bootcamp => bootcamp.name.toLowerCase() === name.toLowerCase())) {
+            customAlert('fail', "Input Validation Error", "The name already exists");
             return;
         }
         if (!gradDate) {
-            customAlert('fail', "Input Validation Error", "Graduation date must be selected");
+            customAlert('fail', "Input Validation Error", "Must select a date!");
             return;
         }
         const newBootcamp: BootcampRequest = {name: name, graduationDate: gradDate, trackId: track.id};
@@ -90,7 +90,7 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks }
                             }
                         </td>
                         <td>
-                            <button onClick={submitToAddBootcamp} className="add-button">Add</button>
+                            <button type="button" onClick={addBootcampHandler} className="add-button">Add</button>
                         </td>
                     </tr>
                 </tbody>

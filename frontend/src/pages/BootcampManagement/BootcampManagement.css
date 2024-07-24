@@ -85,15 +85,30 @@
                     border-color: #6366f1;
                     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
                 }
-                .date-input::-webkit-calendar-picker-indicator {
-                    filter: invert(1);
-                }
-                .date-input::-moz-calendar-picker-indicator {
-                    filter: invert(1);
-                }
-                .date-input::-ms-expand {
-                    filter: invert(1);
-                }
+                    .date-input::-webkit-calendar-picker-indicator {
+                        filter: invert(1) brightness(75%);
+                        transition: all 150ms ease;
+                    }
+                    .date-input::-moz-calendar-picker-indicator {
+                        filter: invert(1) brightness(75%);
+                        transition: all 150ms ease;
+                    }
+                    .date-input::-ms-expand {
+                        filter: invert(1) brightness(75%);
+                        transition: all 150ms ease;
+                    }
+                        .date-input:hover::-webkit-calendar-picker-indicator {
+                            filter: invert(1) brightness(100%);
+                            transition: all 150ms ease;
+                        }
+                        .date-input:hover::-moz-calendar-picker-indicator {
+                            filter: invert(1) brightness(100%);
+                            transition: all 150ms ease;
+                        }
+                        .date-input:hover::-ms-expand {
+                            filter: invert(1) brightness(100%);
+                            transition: all 150ms ease;
+                        }
                 
             .delete-btn {
                 margin-left: 0.5rem;
