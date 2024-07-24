@@ -1,6 +1,6 @@
 import { FieldValues, useForm } from "react-hook-form";
 import { BootcampRequest, BootcampResponse } from "../../util/types"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddNewBootcampForm from "../../components/Forms/AddNewBootcampForm";
 import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
 import './BootcampManagement.css'
@@ -19,6 +19,10 @@ export const BootcampManagement = ({ bootcamps, deleteBootcamp, addNewBootcamp, 
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [popupContent, setPopupContent] = useState<string[]>(["",""]);
   const [popupType, setPopupType] = useState<PopupType>('success');
+
+  useEffect(() => {
+    console.log(bootcamps);
+  }, [])
 
   const formatDate = (date: Date) => {
     const dateConverted = new Date(date);
