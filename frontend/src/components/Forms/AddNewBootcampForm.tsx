@@ -2,6 +2,7 @@ import { BootcampRequest, BootcampResponse } from "../../util/types";
 import { useState } from "react";
 import { AlertPopup, PopupType } from "../MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "../Hooks/useCustomAlert";
+import './AddNewBootcampForm.css'
 
 type Props = {
     addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
@@ -33,29 +34,28 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps }: Props)
     }
 
     return (
-        <div className="relative flex-auto">
+        <div className="content-container">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
             <br />
-            <table className="table-auto">
+            <table className="auto-table">
                 <tbody>
                     <tr>
-                        <td className="pr-6 ">
+                        <td className="input-cell">
                             <input 
                                 type="text" 
                                 onChange={event => setName(event.target.value)} 
-                                className="w-full mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                                className="text-input"
                             />
                         </td>
-    
-                        <td className="pr-3">
+                        <td className="date-cell">
                             <input 
                                 type="date" 
                                 onChange={event => setGradDate(new Date(event.target.value))} 
-                                className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                                className="date-input"
                             />
                         </td>
                         <td>
-                            <button onClick={submitToAddBootcamp} className="left-full ml-2 text-green-500 ">Add</button>
+                            <button onClick={submitToAddBootcamp} className="add-button">Add</button>
                         </td>
                     </tr>
                 </tbody>
