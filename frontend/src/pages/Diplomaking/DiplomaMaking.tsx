@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, StudentResponse, SaltData, displayMode, TemplateResponse, FormDataUpdateRequest } from "../../util/types";
+import { BootcampResponse, StudentResponse, SaltData, displayMode, TemplateResponse, FormDataUpdateRequest, TrackResponse } from "../../util/types";
 import {
   getFontsData,
   getPlugins,
@@ -9,7 +9,7 @@ import {
   mapBootcampToSaltData,
   generateVerificationCode,
 } from "../../util/helper";
-import DiplomaDataForm from "../../feature/DiplomaDataForm";
+import DiplomaDataForm from "../../feature/Diplomadataform/DiplomaDataForm";
 import { useParams } from "react-router-dom";
 import { PaginationMenu } from "../../components/MenuItems/PaginationMenu";
 import { PublishButton } from "../../components/MenuItems/Buttons/PublishButton";
@@ -31,16 +31,18 @@ import PreviewDiploma from "../../feature/PreviewDiploma";
 import { NextIcon } from "../../components/MenuItems/Icons/NextIcon";
 
 type Props = {
+  tracks: TrackResponse[] | null;
   bootcamps: BootcampResponse[] | null;
   templates: TemplateResponse[] | null;
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void
 };
 
-export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
+export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
+
   const [IsFullScreen, setIsFullScreen] = useState<boolean>(true)
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0); // -> these 2 can be refactored into 1 state
-  const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>();
+  /* const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>(); */
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { loadingMessage } = useLoadingMessage();
   const isFailed = loadingMessage.includes('Failed');
@@ -108,12 +110,11 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
     }
   }
 
-
   return (
     saltData && templates ? (
       <div className={`flex w-full h-screen pt-10 dark:bg-darkbg`}>
         <button className="toggle-button" onClick={TogglePreview}>
-          {IsFullScreen ? <NextIcon /> : <NextIcon rotation={180} />}
+          {IsFullScreen ? <NextIcon rotation={180} /> : <NextIcon />}
         </button>
         <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
 
@@ -145,7 +146,6 @@ export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWith
             </section>
             <section className="flex-1 flex flex-col">
               <DiplomaDataForm
-                fullscreen = {IsFullScreen}
                 updateSaltData={updateSaltDataHandler}
                 bootcamps={bootcamps}
                 setSelectedBootcampIndex={(index) => { setSelectedBootcampIndex(index); }}

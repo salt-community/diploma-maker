@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
-import TagsInput from "../components/TagsInput/TagsInput";
+import TagsInput from "../../components/TagsInput/TagsInput";
 import { useEffect, useState } from "react";
-import { BootcampResponse, TemplateResponse, SaltData, Student } from "../util/types";
-import { FileUpload } from "../components/MenuItems/Inputs/FileUploader";
-import { ParseFileData } from '../services/InputFileService';
-import { generateVerificationCode } from "../util/helper";
+import { BootcampResponse, TemplateResponse, SaltData, Student } from "../../util/types";
+import { FileUpload } from "../../components/MenuItems/Inputs/FileUploader";
+import { ParseFileData } from '../../services/InputFileService';
+import { generateVerificationCode } from "../../util/helper";
 import './DiplomaDataForm.css';
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
   updateSaltData: (data: SaltData) => void;
   setSelectedBootcampIndex: (index: number) => void;
   selectedBootcampIndex: number;
-  fullscreen: boolean;
+  fullscreen?: boolean;
 };
 
 export default function DiplomaDataForm ({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex, fullscreen}: Props) {

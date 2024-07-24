@@ -2,7 +2,7 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse } from "./util/types";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
@@ -14,6 +14,7 @@ import { VerificationInputPage } from "./pages/Verifcation/VerificationInputPage
 const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
 export default function App() {
+  const [tracks, setTracks] = useState<TrackResponse[] | null>(null);
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
   const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
@@ -21,6 +22,8 @@ export default function App() {
   async function getBootcampsFromBackend() {
     const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);
     setBootcamps(newBootcamps);
+    const Tracks = await api.getAllTracks(setLoadingMessage)
+    setTracks(Tracks)
   }
 
   useEffect(() => {

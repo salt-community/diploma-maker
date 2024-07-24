@@ -1,5 +1,12 @@
 export type displayMode = "form" | "viewer";
 
+export type TrackResponse = {
+    id: number;
+    name: string;
+    tag: string,
+    bootcamps : BootcampResponse[] 
+}
+
 // Students
 export type StudentRequest = {
     guidId?: string;

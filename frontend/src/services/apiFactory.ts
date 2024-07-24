@@ -4,6 +4,7 @@ import { postEmail } from "./emailService";
 import { getTemplatePdfFile } from "./fileService";
 import { deleteStudentById, getStudentById, getStudentByVerificationCode, getStudentsByKeyword, updateSingleStudent } from "./studentService";
 import { deleteTemplateById, getAllTemplates, getTemplateById, postTemplate, putTemplate } from "./templateService";
+import { getAllTracks } from "./trackService";
 
 export const initApiEndpoints = (apiBaseUrl: string) => {
     return {
@@ -34,5 +35,8 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
 
         // File Endpoint
         getTemplatePdfFile: (url: string, lastUpdated: Date, setLoadingMessage: (message: string) => void) => getTemplatePdfFile(apiBaseUrl, url, lastUpdated, setLoadingMessage),
+    
+        // Track Endpoint
+        getAllTracks:(setLoadingMessage: (message: string) => void) => getAllTracks(apiBaseUrl, setLoadingMessage)
     };
 };
