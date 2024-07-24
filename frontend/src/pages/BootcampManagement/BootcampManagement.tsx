@@ -2,7 +2,6 @@ import { FieldValues, useForm } from "react-hook-form";
 import { BootcampRequest, BootcampResponse } from "../../util/types"
 import { useState } from "react";
 import AddNewBootcampForm from "../../components/Forms/AddNewBootcampForm";
-import { useNavigate } from "react-router-dom";
 import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
 import './BootcampManagement.css'
 
@@ -13,23 +12,22 @@ type Props = {
   updateBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 }
 
-export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp }: Props) {
+export const BootcampManagement = ({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp }: Props) => {
   const {register, handleSubmit} = useForm();
   const [showConfirmAlert, setShowConfirmAlert] = useState<number>(-1); 
-  const navigate = useNavigate();
 
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [popupContent, setPopupContent] = useState<string[]>(["",""]);
   const [popupType, setPopupType] = useState<PopupType>('success');
 
-  function formatDate(date: Date){
+  const formatDate = (date: Date) => {
     const dateConverted = new Date(date);
     dateConverted.setDate(dateConverted.getDate() + 1);
     var newDate = new Date(dateConverted).toISOString().split('T')[0]
     return newDate
   }
 
-  async function handleDeleteBootcamp(i: number){
+  const handleDeleteBootcamp = async (i: number) => {
     await deleteBootcamp(i);
     setShowConfirmAlert(-1);
     
@@ -38,7 +36,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
     setShowPopup(true);
   }
 
-  async function handleUpdateBootcamp(data: FieldValues){
+  const handleUpdateBootcamp = async (data: FieldValues) => {
     for(let i=0; i<bootcamps!.length; i++){
       const newBootcamp: BootcampRequest = {
         guidId: bootcamps![i].guidId,
