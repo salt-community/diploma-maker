@@ -82,7 +82,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                 <thead>
                   <tr>
                     <th>Bootcamp name</th>
-                    <th>Start date</th>
+                    <th>Graduation Date</th>
                     <th>Track</th>
                     <th></th>
                   </tr>

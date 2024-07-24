@@ -48,11 +48,14 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks }
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
             <br />
             <table className="auto-table">
+                <div className="newbootcamp-title-container">
+                    <h1 className="newbootcamp-title">Add New Bootcamp</h1>
+                </div>
                 <tbody>
                     <tr>
-                        <td>Bootcamp Name</td>
-                        <td>Graduation Date</td>
-                        <td>Track</td>
+                        <th>Bootcamp Name</th>
+                        <th>Graduation Date</th>
+                        <th>Track</th>
                     </tr>
                     <tr>
                         <td className="input-cell">
