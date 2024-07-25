@@ -65,7 +65,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   };
 
   const confirmDeleteBootcampHandler = async (index: number) => {
-    customPopup('question2', "Warning", <>By deleting this, you will lose <b style={{color: '#EF4444'}}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(index));
+    customPopup('warning2', "Warning", <>By deleting this, you will lose <b style={{color: '#EF4444'}}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(index));
   };
 
 

@@ -5,6 +5,7 @@ import { QuestionIcon } from '../Icons/QuestionIcon';
 import { AttentionIcon } from '../Icons/AttentionIcon';
 import { SuccessIcon } from '../Icons/SuccessIcon';
 import { CloseWindowIcon } from '../Icons/CloseWindowIcon';
+import { WarningIcon } from '../Icons/WarningIcon';
 
 export type ConfirmationPopupType = 'question' | 'form' | 'warning' | 'question2' | 'warning2';
 
@@ -51,6 +52,8 @@ export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, co
             <QuestionIcon />
           : confirmationPopupType === 'form' ?
             <AttentionIcon />
+          : confirmationPopupType === 'warning2' ?
+            <WarningIcon />
           :
             <ErrorIcon />
           }
@@ -68,6 +71,11 @@ export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, co
                   <ErrorIcon />
                   Abort
                 </button>
+              </>
+              : confirmationPopupType === 'warning2' ?
+              <>
+                <button onClick={abortClick} className='popup_confirmation-close-btn'>Cancel</button>
+                <button onClick={() => confirmClickHandler(inputContent)} className='popup_confirmation-content-btn'>Delete Permanently</button>
               </>
               : confirmationPopupType === 'form' ?
               <>

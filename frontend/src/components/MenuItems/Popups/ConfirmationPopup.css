@@ -36,6 +36,9 @@
     .popup_confirmation.warning {
         background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
     }
+    .popup_confirmation.warning2{
+        background-color: #171721;
+    }
 
 .popup_confirmation-content {
     display: flex;
