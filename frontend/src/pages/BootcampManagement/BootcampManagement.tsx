@@ -6,12 +6,12 @@ import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPo
 import './BootcampManagement.css';
 import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
+import { ArrowIcon } from '../../components/MenuItems/Icons/ArrowIcon';
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
+import { utcFormatterSlash } from "../../util/helper";
 import { ConfirmationPopup } from "../../components/MenuItems/Popups/ConfirmationPopup";
 import { DeleteButtonSimple } from "../../components/MenuItems/Buttons/DeleteButtonSimple";
 import { PaginationMenu } from "../../components/MenuItems/PaginationMenu";
-import { utcFormatterSlash } from "../../util/helper";
-import { ArrowIcon } from '../../components/MenuItems/Icons/ArrowIcon';
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -33,7 +33,8 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1920 ? 5 : 11);
   const [sortOrder, setSortOrder] = useState<SortOrder>('bootcampname-ascending');
-  
+  const [sortingChanged, setSortingChanged] = useState(false);
+
   useEffect(() => {
     const handleResize = () => {
       setItemsPerPage(window.innerWidth < 1920 ? 5 : 11);
@@ -51,10 +52,12 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    setSortingChanged(prev => !prev);
   };
 
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    setSortingChanged(prev => !prev);
   };
 
   const sortedBootcamps = bootcamps?.sort((a, b) => {
@@ -80,15 +83,16 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
 
   useEffect(() => {
     if (paginatedBootcamps) {
-      reset(paginatedBootcamps.reduce((acc, bootcamp, index) => {
+      const formValues = paginatedBootcamps.reduce((acc, bootcamp, index) => {
         const actualIndex = (currentPage - 1) * itemsPerPage + index;
         acc[`name${actualIndex}`] = bootcamp.name;
         acc[`dategraduate${actualIndex}`] = utcFormatterSlash(bootcamp.graduationDate);
         acc[`track${actualIndex}`] = bootcamp.track.id.toString();
         return acc;
-      }, {}));
+      }, {});
+      reset(formValues);
     }
-  }, [paginatedBootcamps, reset, currentPage, itemsPerPage]);
+  }, [sortingChanged]);
 
   const handleSortChange = (sortType: SortOrder) => {
     setSortOrder(prevOrder => {
@@ -98,6 +102,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
         return sortType;
       }
     });
+    setSortingChanged(prev => !prev);
   };
 
   const handleDeleteBootcamp = async (i: number) => {
