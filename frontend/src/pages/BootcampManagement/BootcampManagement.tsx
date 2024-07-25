@@ -92,7 +92,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
       }, {});
       reset(formValues);
     }
-  }, [sortingChanged]);
+  }, [sortingChanged, bootcamps]);
 
   const handleSortChange = (sortType: SortOrder) => {
     setSortOrder(prevOrder => {

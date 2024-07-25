@@ -53,6 +53,7 @@ export default function App() {
 
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
     api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid)
+    await refresh();
   }
 
   // Students Endpoint
