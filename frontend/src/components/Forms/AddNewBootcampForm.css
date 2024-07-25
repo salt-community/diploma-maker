@@ -59,21 +59,3 @@
 .date-cell:nth-of-type(2){
     width: 20%;
 }
-
-.add-button {
-    position: relative;
-    color: #10b981;
-    margin-top: .5%;
-    padding: 0.3rem .7rem;
-    border-radius: 0.375rem;
-    color: #21d34e;
-
-    background-color: #06240d;
-    transition: all 150ms ease;
-}
-
-.add-button:hover {
-    color: #54df77;
-    background-color: #12341a;
-    transition: all 150ms ease;
-}

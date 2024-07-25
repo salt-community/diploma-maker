@@ -8,6 +8,7 @@ import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
 import { ConfirmationPopup } from "../../components/MenuItems/Popups/ConfirmationPopup";
+import { DeleteButtonSimple } from "../../components/MenuItems/Buttons/DeleteButtonSimple";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -146,13 +147,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                             />
                           </td>
                           <td>
-                            <button
-                              type="button"
-                              onClick={() => confirmDeleteBootcampHandler(index)}
-                              className="delete-btn"
-                            >
-                              Delete
-                            </button>
+                            <DeleteButtonSimple onClick={() => confirmDeleteBootcampHandler(index)}/>
                           </td>
                         </tr>
                       ))}
