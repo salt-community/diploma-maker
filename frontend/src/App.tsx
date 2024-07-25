@@ -2,7 +2,7 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, MakeActiveSnapshotRequestDto } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, MakeActiveSnapshotRequestDto, TrackResponse } from "./util/types";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
@@ -17,6 +17,8 @@ const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 export default function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
   const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
+  const [tracks, setTracks] = useState<TrackResponse[] | null>(null);
+
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
 
   async function getBootcampsFromBackend() {
@@ -28,6 +30,7 @@ export default function App() {
     if(!bootcamps){
       getBootcampsFromBackend();
       getTemplates();
+      getTracks();
     }
   }, [bootcamps]);
 
@@ -50,6 +53,7 @@ export default function App() {
 
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
     api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid)
+    await refresh();
   }
 
   // Students Endpoint
@@ -111,6 +115,12 @@ export default function App() {
     await api.makeActiveHistorySnapShot(snapshotUpdateRequest);
   }
 
+  // Tracks Endpoint
+  const getTracks = async () => {
+    const tracks = await api.getTracks(setLoadingMessage);
+    setTracks(tracks);
+  }
+
   const refresh = async () => {
     const newBootcamps = await api.getBootcamps(setLoadingMessage);
     const newTemplates = await api.getAllTemplates(setLoadingMessage);
@@ -126,7 +136,7 @@ export default function App() {
         <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} />
         <Route path={`/verify`} element={<VerificationInputPage />} />
         <Route path={`/verify/:verificationCode`} element = {<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode}/>} />
-        <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
+        <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates}/>} />
         <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate}/>} />
         <Route path={"/history"} element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot}/>} />

@@ -1,3 +1,4 @@
+import React from 'react';
 import './SelectOptions.css';
 
 type Option = {
@@ -12,18 +13,31 @@ type Props = {
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     value?: string;
     disabled?: boolean;
+    reactHookForm?: boolean;
+    register?: (name: string) => { name: string };
+    name?: string;
 };
 
-export const SelectOptions = ({ options, containerClassOverride, selectClassOverride, onChange, value, disabled = false }: Props) => {
+export const SelectOptions = ({ options, containerClassOverride, selectClassOverride, onChange, value, disabled = false, reactHookForm = false, register, name}: Props) => {
     return (
-        <div className={"select-wrapper " + (disabled && ' disabled ') + (containerClassOverride || '')}>
-            <select value={value} onChange={onChange} className={selectClassOverride}>
-                {options.map(option => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </select>
+        <div className={"select-wrapper " + (disabled ? ' disabled ' : '') + (containerClassOverride || '')}>
+            {reactHookForm && register && name ? (
+                <select value={value} onChange={onChange} className={selectClassOverride} {...register(name)}>
+                    {options.map(option => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            ) : (
+                <select value={value} onChange={onChange} className={selectClassOverride}>
+                    {options.map(option => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            )}
         </div>
     );
 };
