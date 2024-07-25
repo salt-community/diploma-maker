@@ -39,6 +39,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
+    const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
 
     const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
@@ -56,13 +57,23 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     
     const itemsPerPage = 8;
     const startIndex = (currentPage - 1) * itemsPerPage;
+
+    const filteredBootcamps = !selectedTrack
+        ? bootcamps
+        : bootcamps?.filter(bootcamp => bootcamp.track.id.toString() === selectedTrack);
+
+    const sortedBootcamps = filteredBootcamps?.sort((a, b) => new Date(b.graduationDate).getTime() - new Date(a.graduationDate).getTime());
+
     const visibleItems = items.filter((item: any) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (!selectedBootcamp || bootcamps?.some(bootcamp => bootcamp.guidId === selectedBootcamp && bootcamp.students.includes(item)))
+        (!selectedBootcamp || filteredBootcamps?.some(bootcamp => bootcamp.guidId === selectedBootcamp && bootcamp.students.includes(item))) &&
+        (!selectedTrack || bootcamps?.some(bootcamp => bootcamp.track.id.toString() === selectedTrack && bootcamp.students.includes(item)))
     );
 
     const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
     const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
+
+    
 
     const handlePrevPage = () => {
         setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
@@ -79,6 +90,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
 
     const handleBootcampChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedBootcamp(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const handleTrackChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedTrack(e.target.value);
+        setSelectedBootcamp(null);
         setCurrentPage(1);
     };
 
@@ -322,14 +339,33 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                             handleSearchChange={handleSearchChange}
                         />
                     </section>
+                    <section className='sidebar-menu__section'>
+                        <h3>Track</h3>
+                        <SelectOptions
+                            containerClassOverride='overview-page__select-container'
+                            selectClassOverride='overview-page__select-box'
+                            options={[
+                                { value: "", label: "All Tracks" },
+                                ...(bootcamps?.flatMap(bootcamp => bootcamp.track).filter((value, index, self) => 
+                                    index === self.findIndex((t) => (
+                                        t.id === value.id
+                                    ))
+                                ).map(track => ({
+                                    value: track.id.toString(),
+                                    label: track.name
+                                })) || [])
+                            ]}
+                            onChange={handleTrackChange}
+                        />
+                    </section>
                     <section className="sidebar-menu__section">
-                        <h3>Bootcamps</h3>
+                        <h3>Bootcamp</h3>
                         <SelectOptions
                             containerClassOverride='sidebar-menu__select-container'
                             selectClassOverride='sidebar-menu__select-box'
                             options={[
                                 { value: "", label: "All Bootcamps" },
-                                ...(bootcamps?.map(bootcamp => ({
+                                ...(sortedBootcamps?.map(bootcamp => ({
                                     value: bootcamp.guidId,
                                     label: bootcamp.name
                                 })) || [])
