@@ -13,7 +13,7 @@ export const DeleteButtonSimple = ({ type = "button", classNameOverride, text = 
     return(
         <button
             type={type}
-            onClick={() => onclick}
+            onClick={onClick}
             className={`delete-btn--simple ${classNameOverride}`}
         >
             {text}
