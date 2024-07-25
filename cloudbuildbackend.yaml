@@ -1,13 +1,14 @@
 steps:
-# Build containers
+  # Build the container
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest', '-f', 'Dockerfile', '.']
     dir: Backend/DiplomaMakerApi/
-# Push the Containers to the Container Registry
+  
+  # Push the container to the Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest']
-
-# Deploy Containers to Cloud Run
+  
+  # Deploy the container to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['run', 'deploy', 'backend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
 
