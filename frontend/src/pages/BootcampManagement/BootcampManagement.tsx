@@ -20,7 +20,6 @@ type Props = {
 
 export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks }: Props) {
   const { register, handleSubmit, setValue, watch } = useForm();
-  const [showConfirmAlert, setShowConfirmAlert] = useState<number>(-1); 
 
   const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const {showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup} = useCustomConfirmationPopup();
@@ -35,7 +34,6 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   const handleDeleteBootcamp = async (i: number) => {
     closeConfirmationPopup();
     await deleteBootcamp(i);
-    setShowConfirmAlert(-1);
     
     customAlert('message',"Delete Successful",`Successfully removed bootcamp from database.`);
   }
@@ -169,34 +167,6 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
           </div>
         </div>
         <div className="overlay-bg"></div>
-
-        {/* confirm alert */}
-        {showConfirmAlert >= 0 && 
-          <div className="confirm-dialog">
-              <div className="dialog-container">
-                  <div className="dialog-overlay"></div>
-                  <div className="dialog-content">
-                      <div className="dialog-header">
-                          <div className="dialog-icon">
-                              <i className="bx bx-error">&#9888;</i>
-                          </div>
-                          <div className="dialog-message">
-                              <p className="dialog-title">Warning!</p>
-                              <p className="dialog-text">By deleting this, you will lose <b className="text-red-600">ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</p>
-                          </div>
-                      </div>
-                      <div className="dialog-actions">
-                          <button onClick={() => setShowConfirmAlert(-1)} id="confirm-cancel-btn" className="cancel-button">
-                              Cancel
-                          </button>
-                          <button type="button" onClick={() => handleDeleteBootcamp(showConfirmAlert)} id="confirm-delete-btn" className="delete-button">
-                              Delete Permanently
-                          </button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-        }
       </form>
     </>
   )
