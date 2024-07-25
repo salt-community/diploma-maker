@@ -40,6 +40,14 @@
                 border-top-left-radius: 0.5rem;
                 border-top-right-radius: 0.5rem;
             }
+            .sortable-header{
+                color: #ffffffdc;
+                transition: all 350ms ease;
+            }
+            .sortable-header:hover{
+                color: #fff;
+                transition: all 350ms ease;
+            }
                 .modal-title {
                     font-size: 1.5rem;
                     font-weight: 600;
