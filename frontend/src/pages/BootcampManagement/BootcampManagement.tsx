@@ -71,9 +71,9 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
       case 'graduationdate-descending':
         return new Date(b.graduationDate).getTime() - new Date(a.graduationDate).getTime();
       case 'track-ascending':
-        return a.track.name.localeCompare(b.track.name);
+        return a.track?.name.localeCompare(b.track?.name) ?? 0;
       case 'track-descending':
-        return b.track.name.localeCompare(a.track.name);
+        return b.track?.name.localeCompare(a.track?.name) ?? 0;
       default:
         return 0;
     }
