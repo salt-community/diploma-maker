@@ -5,6 +5,8 @@ import AddNewBootcampForm from "../../components/Forms/AddNewBootcampForm";
 import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
 import './BootcampManagement.css'
 import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
+import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
+import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -18,9 +20,8 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   const { register, handleSubmit, setValue, watch } = useForm();
   const [showConfirmAlert, setShowConfirmAlert] = useState<number>(-1); 
 
-  const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [popupContent, setPopupContent] = useState<string[]>(["",""]);
-  const [popupType, setPopupType] = useState<PopupType>('success');
+  const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+  const {showConfirmationPopup,confirmationPopupContent,confirmationPopupType,confirmationPopupHandler,customPopup,closeConfirmationPopup} = useCustomConfirmationPopup();
 
   const formatDate = (date: Date) => {
     const dateConverted = new Date(date);
@@ -33,9 +34,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
     await deleteBootcamp(i);
     setShowConfirmAlert(-1);
     
-    setPopupType('fail');
-    setPopupContent(["Delete Successful", "Successfully removed bootcamp from database."]);
-    setShowPopup(true);
+    customAlert('success',"Delete Successful",`Successfully removed bootcamp from database.`);
   }
 
   const handleUpdateBootcamp = async (data: FieldValues) => {
@@ -46,19 +45,14 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
         graduationDate:  new Date (data[`dategraduate${i}`]),
         trackId: parseInt(data[`track${i}`])
       };
-
-      console.log(newBootcamp);
+      
       try{
         await updateBootcamp(newBootcamp);
 
-        setPopupType('success');
-        setPopupContent(["Updated Bootcamps Successfully.", "Successfully removed bootcamp from database."]);
-        setShowPopup(true);
+        customAlert('success',"Updated Bootcamps Successfully.",`Successfully removed bootcamp from database.`);
       } catch (error) {
-        
-        setPopupType('fail');
-        setPopupContent(["Error Updating Bootcamp", "Successfully removed bootcamp from database."]);
-        setShowPopup(true);
+
+        customAlert('fail',"Error Updating Bootcamp",`${error}`);
       }
       
     }
@@ -67,7 +61,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
 
   return (
     <form onSubmit={handleSubmit(handleUpdateBootcamp)}>
-      <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={() => setShowPopup(false)}/>
+      <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
       <div className="modal-container">
         <div className="modal-content">
           {/*content*/}
