@@ -1,4 +1,3 @@
-using System.Linq;
 using AutoMapper;
 using DiplomaMakerApi.Exceptions;
 using DiplomaMakerApi.Models;
@@ -28,7 +27,7 @@ namespace DiplomaMakerApi.Services
             
             var lastSnapshot = lastSnapshots.FirstOrDefault();
 
-            if(templateUsed != null)
+            if (templateUsed != null)
             {
                 var templateBackgroundLocation = string.Empty;
                 
@@ -46,19 +45,27 @@ namespace DiplomaMakerApi.Services
                 }
 
                 var timeUtcNow = DateTime.UtcNow;
+
+                if (lastSnapshot != null)
+                {
+                    lastSnapshot.Active = false;
+                    _context.DiplomaSnapshots.Update(lastSnapshot);
+                    await _context.SaveChangesAsync();
+                }
                 
-                foreach(var student in requestDto.students)
+                foreach (var student in requestDto.students)
                 {
                     var studentSnapshot = _mapper.Map<DiplomaSnapshot>(student, opt => 
-                        {
-                            opt.Items["bootcampUsed"] = bootcampUsed;
-                            opt.Items["templateUsed"] = templateUsed;
-                            opt.Items["templateBackgroundLocation"] = templateBackgroundLocation;
-                            opt.Items["lastSnapshot"] = lastSnapshot;
-                            opt.Items["lastSnapshots"] = lastSnapshots;
-                            opt.Items["timeUtcNow"] = timeUtcNow;
-                        });
+                    {
+                        opt.Items["bootcampUsed"] = bootcampUsed;
+                        opt.Items["templateUsed"] = templateUsed;
+                        opt.Items["templateBackgroundLocation"] = templateBackgroundLocation;
+                        opt.Items["lastSnapshot"] = lastSnapshot;
+                        opt.Items["lastSnapshots"] = lastSnapshots;
+                        opt.Items["timeUtcNow"] = timeUtcNow;
+                    });
                     studentSnapshot.GeneratedAt = timeUtcNow;
+                    studentSnapshot.Active = true;
                     _context.DiplomaSnapshots.Add(studentSnapshot);
                     await _context.SaveChangesAsync();
                 }
@@ -90,6 +97,7 @@ namespace DiplomaMakerApi.Services
                 .Include(d => d.MainStyling)
                 .Include(d => d.LinkStyling)
                 .ToListAsync();
+
             if (!historySnapshots.Any())
             {
                 throw new NotFoundByIdException($"Student with verification code '{verificationCode}' not found.");
@@ -100,6 +108,7 @@ namespace DiplomaMakerApi.Services
 
         public async Task<List<DiplomaSnapshot>> MakeActiveHistorySnapshot(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
         {
+
             var studentGuidIdsList = makeActiveSnapshotRequestDto.StudentGuidIds.ToList();
             var idsList = makeActiveSnapshotRequestDto.Ids.ToList();
 
