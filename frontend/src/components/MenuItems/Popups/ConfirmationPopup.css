@@ -198,5 +198,18 @@
     width: 100%;
     height: 100%;
     z-index: 100;
-    transition: all .15s ease;
+
+    backdrop-filter: blur(10px);
+
+    transition: all .25s ease;
+}
+
+.popup_confirmation.fade-in {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.preventClickBG.fade-out {
+    opacity: 0;
+    pointer-events: none;
 }
