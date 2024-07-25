@@ -75,6 +75,18 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
     customPopup('warning2', "Warning", <>By deleting this, you will lose <b style={{color: '#EF4444'}}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(index));
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      setItemsPerPage(window.innerWidth < 1920 ? 5 : 11);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
 
   return (
     <>
