@@ -81,7 +81,7 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks }
                             }
                         </td>
                         <td>
-                            <AddButtonSimple onClick={addBootcampHandler}/>
+                            <AddButtonSimple onClick={() => addBootcampHandler()}/>
                         </td>
                     </tr>
                 </tbody>

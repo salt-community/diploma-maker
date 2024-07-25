@@ -10,7 +10,7 @@ export const useCustomConfirmationPopup = () => {
   const customPopup = (type: ConfirmationPopupType, title: string, content: React.ReactNode, handler: () => void) => {
       setConfirmationPopupType(type);
       setConfirmationPopupContent([title, content]);
-      setConfirmationPopupHandler(() => handler);
+      setConfirmationPopupHandler(handler);
       setShowConfirmationPopup(true);
   }
 

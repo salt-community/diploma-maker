@@ -33,6 +33,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   }
 
   const handleDeleteBootcamp = async (i: number) => {
+    closeConfirmationPopup();
     await deleteBootcamp(i);
     setShowConfirmAlert(-1);
     
