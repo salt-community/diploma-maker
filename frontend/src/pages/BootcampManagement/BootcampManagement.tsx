@@ -122,53 +122,55 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                     </thead>
                     <tbody>
                       {paginatedBootcamps &&
-                        paginatedBootcamps.map((bootcamp, index) => (
-                          // Display existing bootcamps
-                          <tr className="table-row" key={`tablecell_${bootcamp.guidId}`}>
-                            <td className="table-cell">
-                              <input
-                                type="text"
-                                {...register(`name${index}`)}
-                                defaultValue={bootcamp.name}
-                                className="date-input disabled"
-                                disabled
-                              />
-                            </td>
-                            <td className="table-cell">
-                              <input
-                                id={bootcamp.guidId + "1"}
-                                {...register(`dategraduate${index}`)}
-                                type="date"
-                                className="date-input"
-                                defaultValue={utcFormatterSlash(bootcamp.graduationDate)}
-                                key={`dategrad_${bootcamp.guidId}`}
-                              />
-                            </td>
-                            <td className="table-cell">
-                              <SelectOptions
-                                containerClassOverride='normal'
-                                selectClassOverride='normal'
-                                options={[
-                                  ...(tracks?.map(track => ({
-                                    value: track.id.toString(),
-                                    label: track.name
-                                  })) || [])
-                                ]}
-                                value={watch(`track${index}`, bootcamp.track.id.toString())}
-                                onChange={(e) => {
-                                  setValue(`track${index}`, e.target.value);
-                                  bootcamp.track.id = parseInt(e.target.value);
-                                }}
-                                reactHookForm={true}
-                                register={register}
-                                name={`track${index}`}
-                              />
-                            </td>
-                            <td>
-                              <DeleteButtonSimple onClick={() => confirmDeleteBootcampHandler(index)}/>
-                            </td>
-                          </tr>
-                        ))}
+                        paginatedBootcamps.map((bootcamp, index) => {
+                          const actualIndex = (currentPage - 1) * itemsPerPage + index;
+                          return (
+                            <tr className="table-row" key={`tablecell_${bootcamp.guidId}`}>
+                              <td className="table-cell">
+                                <input
+                                  type="text"
+                                  {...register(`name${actualIndex}`)}
+                                  defaultValue={bootcamp.name}
+                                  className="date-input disabled"
+                                  disabled
+                                />
+                              </td>
+                              <td className="table-cell">
+                                <input
+                                  id={bootcamp.guidId + "1"}
+                                  {...register(`dategraduate${actualIndex}`)}
+                                  type="date"
+                                  className="date-input"
+                                  defaultValue={utcFormatterSlash(bootcamp.graduationDate)}
+                                  key={`dategrad_${bootcamp.guidId}`}
+                                />
+                              </td>
+                              <td className="table-cell">
+                                <SelectOptions
+                                  containerClassOverride='normal'
+                                  selectClassOverride='normal'
+                                  options={[
+                                    ...(tracks?.map(track => ({
+                                      value: track.id.toString(),
+                                      label: track.name
+                                    })) || [])
+                                  ]}
+                                  value={watch(`track${actualIndex}`, bootcamp.track.id.toString())}
+                                  onChange={(e) => {
+                                    setValue(`track${actualIndex}`, e.target.value);
+                                    bootcamp.track.id = parseInt(e.target.value);
+                                  }}
+                                  reactHookForm={true}
+                                  register={register}
+                                  name={`track${actualIndex}`}
+                                />
+                              </td>
+                              <td>
+                                <DeleteButtonSimple onClick={() => confirmDeleteBootcampHandler(actualIndex)}/>
+                              </td>
+                            </tr>
+                          )
+                        })}
                     </tbody>
                 </table>
               </div>
@@ -202,5 +204,4 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
       </form>
     </>
   )
-
 }
