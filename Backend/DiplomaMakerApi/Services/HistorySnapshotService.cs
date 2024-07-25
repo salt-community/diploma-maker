@@ -68,7 +68,7 @@ namespace DiplomaMakerApi.Services
         private async Task<string> GetFileLocation(string fileName)
         {
             var fileLocationResponse = await _localFileStorageService.GetFilePath(Path.GetFileName(fileName));
-            return fileLocationResponse != null ? "Blob/" + Path.GetFileName(fileLocationResponse) : null; // Temporary Fix: when generating a second time it gives the absolute path for some strange reason.
+            return fileLocationResponse != null ? "Blob/" + Path.GetFileName(fileLocationResponse) : null; // Temp Fix: when generating a second time it gives the absolute path for some strange reason.
         }
 
         public async Task<List<DiplomaSnapshot>> GetHistorySnapshots()

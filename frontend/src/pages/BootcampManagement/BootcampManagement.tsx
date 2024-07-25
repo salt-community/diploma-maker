@@ -71,9 +71,9 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
       case 'graduationdate-descending':
         return new Date(b.graduationDate).getTime() - new Date(a.graduationDate).getTime();
       case 'track-ascending':
-        return a.track?.name.localeCompare(b.track?.name) ?? 0;
+        return a.track?.name.localeCompare(b.track?.name);
       case 'track-descending':
-        return b.track?.name.localeCompare(a.track?.name) ?? 0;
+        return b.track?.name.localeCompare(a.track?.name);
       default:
         return 0;
     }
@@ -87,9 +87,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
         const actualIndex = (currentPage - 1) * itemsPerPage + index;
         acc[`name${actualIndex}`] = bootcamp.name;
         acc[`dategraduate${actualIndex}`] = utcFormatterSlash(bootcamp.graduationDate);
-        if (bootcamp.track && bootcamp.track.id !== undefined) {
-          acc[`track${actualIndex}`] = bootcamp.track.id.toString();
-        }
+        acc[`track${actualIndex}`] = bootcamp.track.id.toString();
         return acc;
       }, {});
       reset(formValues);
