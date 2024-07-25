@@ -176,8 +176,13 @@
     }
     .modal-main-footer--pagination button:hover{
         background-color: #2c2c36;
+        background-color: #ff642b3a;
+        
         border: none;
         transition: all 150ms ease;
+    }
+    .modal-main-footer--pagination button:hover svg path{
+        stroke: #ff632b;
     }
 
 
