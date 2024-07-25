@@ -83,7 +83,7 @@
             .table-auto svg{
                 width: 20px;
             }
-            .table-auto.descending svg{
+            .table-auto .sortable-header.descending svg{
                 transform: rotate(180deg);
             }
                 .table-auto svg path{
