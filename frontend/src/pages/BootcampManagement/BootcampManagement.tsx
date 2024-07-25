@@ -25,7 +25,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const {showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup} = useCustomConfirmationPopup();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 11;
+  const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1920 ? 5 : 11);
   const totalPages = Math.ceil(bootcamps?.length / itemsPerPage);
   
   const handleNextPage = () => {
