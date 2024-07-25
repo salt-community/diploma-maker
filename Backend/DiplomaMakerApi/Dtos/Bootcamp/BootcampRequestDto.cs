@@ -1,4 +1,3 @@
-using DiplomaMakerApi.Models;
 namespace DiplomaMakerApi.Dtos;
 
 public class BootcampRequestDto
