@@ -32,7 +32,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1920 ? 5 : 11);
-  const [sortOrder, setSortOrder] = useState<SortOrder>('bootcampname-ascending');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('graduationdate-descending');
   const [sortingChanged, setSortingChanged] = useState(false);
 
   useEffect(() => {
@@ -109,6 +109,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
     closeConfirmationPopup();
     await deleteBootcamp(i);
     customAlert('message', "Delete Successful", `Successfully removed bootcamp from database.`);
+    setSortingChanged(prev => !prev);
   }
 
   const handleUpdateBootcamp = async (data: FieldValues) => {
@@ -124,6 +125,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
       try {
         await updateBootcamp(newBootcamp);
         customAlert('success', "Updated Bootcamps Successfully.", `Successfully updated bootcamp in the database.`);
+        setSortingChanged(prev => !prev);
       } catch (error) {
         customAlert('fail', "Error Updating Bootcamp", `${error}`);
       }
