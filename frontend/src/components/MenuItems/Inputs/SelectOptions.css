@@ -52,6 +52,19 @@
         outline: none;
     }
 
+    .select-wrapper select{
+        max-width: 350px;
+        color: #ababba;
+        font-weight: 600;
+        font-size: .9rem;
+        transition: all 350ms ease;
+    }
+    .select-wrapper:hover select{
+        cursor: pointer;
+        color: #fff;
+        transition: all 350ms ease;
+    }
+
 .select-wrapper::after {
     content: '▾';
     width: 5%;
