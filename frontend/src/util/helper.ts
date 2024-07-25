@@ -368,7 +368,8 @@ export const utcFormatter = (date: Date) => {
 
 export const utcFormatterSlash = (date: Date) => {
   const dateConverted = new Date(date);
-  dateConverted.setDate(dateConverted.getDate() + 1);
-  var newDate = new Date(dateConverted).toISOString().split('T')[0]
-  return newDate
+  const utcYear = dateConverted.getUTCFullYear();
+  const utcMonth = (dateConverted.getUTCMonth() + 1).toString().padStart(2, '0');
+  const utcDay = dateConverted.getUTCDate().toString().padStart(2, '0');
+  return `${utcYear}-${utcMonth}-${utcDay}`;
 }

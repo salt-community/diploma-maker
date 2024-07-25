@@ -25,6 +25,7 @@ public class BootcampService
 
         var bootcamp = new Bootcamp{
             DiplomaTemplate = template,
+            GraduationDate = requestDto.GraduationDate,
             Track = track
         };
 
