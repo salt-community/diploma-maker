@@ -52,13 +52,47 @@
     overflow: auto;
 }
     .table-auto {
+        position: relative;
         width: 100%;
         /* table-layout: auto; */
         overflow: hidden;
         max-height: 200px;
     }
+        .table-auto .icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 30px;
+            height: 20px;
+            border-radius: .3rem;
+            background-color: #091a307c;
+
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+
+            opacity: 1;
+            transition: all 350ms ease;
+        }
+        .table-auto .icon-container.hidden {
+            opacity: 0;
+            transition: all 350ms ease;
+        }
+            .table-auto svg{
+                width: 20px;
+            }
+            .table-auto.descending svg{
+                transform: rotate(180deg);
+            }
+                .table-auto svg path{
+                    stroke: #199bff;
+                }
     .table-auto th {
         text-align: center;
+        position: relative;
+        cursor: pointer;
     }
         .table-cell {
             /* padding-right: 0.75rem; */
