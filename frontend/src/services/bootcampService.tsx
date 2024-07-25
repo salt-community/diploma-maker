@@ -50,9 +50,6 @@ export async function updateBootcamp(apiUrl: string, bootcampRequest: BootcampRe
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
 
-    console.log("formattedRequest");
-    console.log(formattedRequest);
-
     const response = await fetch(`${apiUrl}/api/bootcamps/${bootcampRequest.guidId!}`,{
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
