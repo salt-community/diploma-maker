@@ -6,11 +6,11 @@ import { AttentionIcon } from '../Icons/AttentionIcon';
 import { SuccessIcon } from '../Icons/SuccessIcon';
 import { CloseWindowIcon } from '../Icons/CloseWindowIcon';
 
-export type ConfirmationPopupType = 'question' | 'form' | 'warning' | 'question2';
+export type ConfirmationPopupType = 'question' | 'form' | 'warning' | 'question2' | 'warning2';
 
 type Props = {
-  title: string;
-  text: string;
+  title: React.ReactNode;
+  text: React.ReactNode;
   show: boolean;
   confirmationPopupType: ConfirmationPopupType;
   confirmClick: (inputContent?: string) => void;
@@ -42,7 +42,8 @@ export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, co
       <div className={`popup_confirmation 
           ${confirmationPopupType === 'question' ? 'question' 
           : confirmationPopupType === 'question2' ? 'question2'
-          : confirmationPopupType === 'form' ? 'success' : 'warning'} 
+          : confirmationPopupType === 'form' ? 'success' 
+          : confirmationPopupType === 'warning' ? 'warning' : 'warning2'} 
           ${show ? 'fade-in' : 'fade-out'}`}>
             
         <div className="popup_confirmation-content">

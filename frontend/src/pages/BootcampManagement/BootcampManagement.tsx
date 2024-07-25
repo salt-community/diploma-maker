@@ -35,7 +35,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
     await deleteBootcamp(i);
     setShowConfirmAlert(-1);
     
-    customAlert('success',"Delete Successful",`Successfully removed bootcamp from database.`);
+    customAlert('message',"Delete Successful",`Successfully removed bootcamp from database.`);
   }
 
   const handleUpdateBootcamp = async (data: FieldValues) => {
@@ -61,7 +61,11 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
   }
 
   const confirmChangeBootcampHandler = async (data: FieldValues) => {
-    customPopup('question', "Are you sure you want to change existing bootcamps?", "This can be a destructive if you've already generated diplomas with that bootcamp.", () => () => handleUpdateBootcamp(data));
+    customPopup('question2', "Are you sure you want to change existing bootcamps?", "This can be a destructive if you've already generated diplomas with that bootcamp.", () => () => handleUpdateBootcamp(data));
+  };
+
+  const confirmDeleteBootcampHandler = async (index: number) => {
+    customPopup('question2', "Warning", <>By deleting this, you will lose <b style={{color: '#EF4444'}}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(index));
   };
 
 
@@ -144,7 +148,7 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
                           <td>
                             <button
                               type="button"
-                              onClick={() => setShowConfirmAlert(index)}
+                              onClick={() => confirmDeleteBootcampHandler(index)}
                               className="delete-btn"
                             >
                               Delete
