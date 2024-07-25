@@ -41,7 +41,7 @@ export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, co
 
   return (
     <>
-    <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
+    <div className={`preventClickBG ${(confirmationPopupType === 'warning' || confirmationPopupType === 'warning2') && 'warning'} ${show ? 'fade-in' : 'fade-out '}`}></div>
       <div className={`popup_confirmation 
           ${confirmationPopupType === 'question' ? 'question' 
           : confirmationPopupType === 'question2' ? 'question2'
