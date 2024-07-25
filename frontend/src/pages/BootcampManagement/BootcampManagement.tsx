@@ -87,7 +87,9 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
         const actualIndex = (currentPage - 1) * itemsPerPage + index;
         acc[`name${actualIndex}`] = bootcamp.name;
         acc[`dategraduate${actualIndex}`] = utcFormatterSlash(bootcamp.graduationDate);
-        acc[`track${actualIndex}`] = bootcamp.track.id.toString();
+        if (bootcamp.track && bootcamp.track.id !== undefined) {
+          acc[`track${actualIndex}`] = bootcamp.track.id.toString();
+        }
         return acc;
       }, {});
       reset(formValues);
