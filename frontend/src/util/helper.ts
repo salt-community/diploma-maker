@@ -365,3 +365,10 @@ export const utcFormatter = (date: Date) => {
   const stockholmDateString = dateFormatter.format(utcDate);
   return stockholmDateString;
 }
+
+export const utcFormatterSlash = (date: Date) => {
+  const dateConverted = new Date(date);
+  dateConverted.setDate(dateConverted.getDate() + 1);
+  var newDate = new Date(dateConverted).toISOString().split('T')[0]
+  return newDate
+}

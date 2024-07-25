@@ -48,10 +48,14 @@
     position: relative;
     padding: 1.5rem;
     flex: 1 1 auto;
+    max-height: 60vh;
+    overflow: auto;
 }
     .table-auto {
         width: 100%;
-        table-layout: auto;
+        /* table-layout: auto; */
+        overflow: hidden;
+        max-height: 200px;
     }
     .table-auto th {
         text-align: center;
@@ -117,6 +121,30 @@
                             filter: invert(1) brightness(100%);
                             transition: all 150ms ease;
                         }
+.modal-main-footer {
+    position: relative;
+    padding: 0rem 1.5rem;
+    flex: 1 1 auto;
+    overflow: visible;
+}
+    .modal-main-footer--pagination{
+        position: absolute;
+        top: 20%;
+        right: 10.25%;
+        margin: 0 1.5rem;
+        max-width: 200px;
+
+        
+    }
+    .modal-main-footer--pagination button{
+        background-color: #20202a84;
+        transition: all 150ms ease;
+    }
+    .modal-main-footer--pagination button:hover{
+        background-color: #2c2c36;
+        border: none;
+        transition: all 150ms ease;
+    }
 
 
 .footer-container {
