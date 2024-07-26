@@ -11,6 +11,16 @@ import { PopupType } from "../../components/MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../util/dataHelpers";
 
+//exportera till types folder när typerna är satta
+type FormData = {
+  bootcamp: string;
+  template: string;
+  optionA: boolean;
+  optionB: boolean;
+  optionC: boolean;
+  pdfGenerationScope: 'all' | 'selected';
+}
+
 type Props = {
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void;
   bootcamps: BootcampResponse[] | null;
@@ -24,7 +34,7 @@ type Props = {
 };
 
 export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex, fullscreen, UpdateBootcampWithNewFormdata, customAlert }: Props) {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [students, setStudents] = useState<Student[]>(saltData.students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
   const [bootcampsCache, setBootcampsCache] = useState<BootcampResponse[] | null>();
@@ -102,11 +112,20 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
     customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
   };
 
-  
+  const validateOptions = () => {
+    const optionA = watch('optionA');
+    const optionB = watch('optionB');
+    const optionC = watch('optionC');
+    return optionA || optionB || optionC || "At least one option must be selected.";
+  };
 
-  const onSubmit = (data: any) => {
-    postSelectedBootcampData()
-    generatePDFHandler()
+  const onSubmit = (data: FormData) => {
+    if(data.optionA){
+      postSelectedBootcampData()
+    }
+    if(data.optionB){
+      generatePDFHandler()
+    }
   };
 
   return (
@@ -188,7 +207,7 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
             <input
               type="checkbox"
               defaultChecked
-              {...register("optionA")}
+              {...register("optionA", { validate: validateOptions })}
               className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
             />
             <span className="ml-2 text-gray-700 dark:text-white">Update changes made to Bootcamp</span>
@@ -196,7 +215,7 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
           <label className="flex items-center">
             <input
               type="checkbox"
-              {...register("optionB")}
+              {...register("optionB", { validate: validateOptions })}
               className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
             />
             <span className="ml-2 text-gray-700 dark:text-white">Generate all PDF for students </span>
@@ -204,11 +223,39 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
           <label className="flex items-center">
             <input
               type="checkbox"
-              defaultChecked
-              {...register("optionC")}
+              {...register("optionC", { validate: validateOptions })}
               className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
             />
             <span className="ml-2 text-gray-700 dark:text-white">Email each student their diploma</span>
+          </label>
+        </div>
+        {errors.optionA && <p className="text-red-500">{errors.optionA.message}</p>}
+
+      </div>
+
+      <div className="radio-group mb-6">
+
+        <div className="flex flex-col space-y-2">
+          <label className="flex items-center">
+            <input
+              type="radio"
+              value="all"
+              defaultChecked
+              {...register("pdfGenerationScope")}
+              className="form-radio h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+            />
+            <span className="ml-2 text-gray-700 dark:text-white"> perform actions on all  students</span>
+
+          </label>
+          <label className="flex items-center">
+
+            <input
+              type="radio"
+              value="selected"
+              {...register("pdfGenerationScope")}
+              className="form-radio h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+            />
+            <span className="ml-2 text-gray-700 dark:text-white">ONLY perform actions on selected student</span>
           </label>
         </div>
       </div>
