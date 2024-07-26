@@ -1,14 +1,13 @@
-import { delay } from "../util/helper";
 import { TemplateRequest, TemplateResponse } from "../util/types";
 import { getTemplatePdfFile } from "./fileService";
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
-export async function getAllTemplates(setLoadingMessage: (message: string) => void): Promise<TemplateResponse[]> {
+export async function getAllTemplates(apiUrl: string, setLoadingMessage: (message: string) => void): Promise<TemplateResponse[]> {
     setLoadingMessage('Fetching Templates');
     
     const response = await fetch(`${apiUrl}/api/templates`);
     if (!response.ok) {
+        const errorData = await response.json();
+        setLoadingMessage(`Failed to load initial templates!. ${errorData.message || 'Unknown error'}`)
         throw new Error("Failed to get templates!");
     }
     
@@ -17,26 +16,25 @@ export async function getAllTemplates(setLoadingMessage: (message: string) => vo
 
     for (const result of results) {
         setLoadingMessage(`Downloading template ${templateCount} of ${results.length}`);
-        result.basePdf = await getTemplatePdfFile(result.basePdf, result.lastUpdated);
+        result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.lastUpdated, setLoadingMessage);
         templateCount++;
     }
 
     return results;
 }
 
-export async function getTemplateById(id: string): Promise<TemplateResponse> {
+export async function getTemplateById(apiUrl: string, id: string, setLoadingMessage: (message: string) => void): Promise<TemplateResponse> {
     const response = await fetch(`${apiUrl}/api/templates/${id}`);
     if (!response.ok) {
         throw new Error('Failed to get Template!');
     }
     const result = await response.json() as TemplateResponse;
-    result.basePdf = await getTemplatePdfFile(result.basePdf, result.lastUpdated);
+    result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.lastUpdated, setLoadingMessage);
 
     return result;
 }
 
-export async function postTemplate(templateRequest: TemplateRequest): Promise<void> {
-    
+export async function postTemplate(apiUrl: string, templateRequest: TemplateRequest): Promise<void> {
     const formattedRequest = {
         ...templateRequest,
     };
@@ -60,7 +58,7 @@ export async function postTemplate(templateRequest: TemplateRequest): Promise<vo
     }
 }
 
-export async function deleteTemplateById(id: number): Promise<void> {
+export async function deleteTemplateById(apiUrl: string, id: number): Promise<void> {
     const response = await fetch(`${apiUrl}/api/templates/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
@@ -72,8 +70,7 @@ export async function deleteTemplateById(id: number): Promise<void> {
         throw new Error('Failed to delete template!');
 }
 
-
-export async function putTemplate(id: number, templateRequest: TemplateRequest): Promise<TemplateResponse> {
+export async function putTemplate(apiUrl: string, id: number, templateRequest: TemplateRequest): Promise<TemplateResponse> {
     localStorage.removeItem(`pdf_${templateRequest.templateName}.pdf`);
 
     const formattedRequest = {

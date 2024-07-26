@@ -1,61 +1,87 @@
-import { BootcampRequest, BootcampResponse } from "../../util/types";
-import { useState } from "react";
+import { BootcampRequest, BootcampResponse, TrackResponse } from "../../util/types";
+import { useEffect, useState } from "react";
 import { AlertPopup, PopupType } from "../MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "../Hooks/useCustomAlert";
+import './AddNewBootcampForm.css'
+import { SelectOptions } from "../MenuItems/Inputs/SelectOptions";
+import { AddButtonSimple } from "../MenuItems/Buttons/AddButtonSimple";
 
 type Props = {
     addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
     bootcamps: BootcampResponse[] | null;
+    tracks: TrackResponse[]
 }
 
-
-export default function AddNewBootcampForm({ addNewBootcamp, bootcamps }: Props) {
+export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks }: Props) {
     const [name, setName] = useState<string>("");
-    const [gradDate, setGradDate] = useState<Date>();
+    const [track, setTrack] = useState<TrackResponse | null>();
+    const [gradDate, setGradDate] = useState<Date | null>(null);
 
     const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
-    async function submitToAddBootcamp(){
-        if(name == ""){
-            customAlert(PopupType.fail, "Input Validation Error", "Name cannot be empty");
+    useEffect(() => {
+        if(tracks){
+            setTrack(tracks[0])
+        }
+    }, [tracks])
+
+    async function addBootcampHandler(){
+        if (bootcamps!.some(bootcamp => bootcamp.name.toLowerCase() === name.toLowerCase())) {
+            customAlert('fail', "Input Validation Error", "The name already exists");
             return;
         }
-        bootcamps!.forEach(bootcamp => {
-            if(bootcamp.name == name){
-                customAlert(PopupType.fail, "Input Validation Error", "The name already exists");
-                return;
-            }
-        });
-        const newBootcamp: BootcampRequest = {name: name,  graduationDate: gradDate}
+        if (!gradDate) {
+            customAlert('fail', "Input Validation Error", "Must select a date!");
+            return;
+        }
+        const newBootcamp: BootcampRequest = {graduationDate: gradDate, trackId: track.id};
         await addNewBootcamp(newBootcamp);
 
-        customAlert(PopupType.success, "Successfully added!", "Successfully added new bootcamp to database");
+        customAlert('success', "Successfully added!", "Successfully added new bootcamp to database");
     }
 
     return (
-        <div className="relative flex-auto">
+        <div className="content-container">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
             <br />
-            <table className="table-auto">
+            <table className="auto-table">
+                <div className="newbootcamp-title-container">
+                    <h1 className="newbootcamp-title">Add New Bootcamp</h1>
+                </div>
                 <tbody>
                     <tr>
-                        <td className="pr-6 ">
-                            <input 
-                                type="text" 
-                                onChange={event => setName(event.target.value)} 
-                                className="w-full mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
-                            />
-                        </td>
-    
-                        <td className="pr-3">
+                        <th>Graduation Date</th>
+                        <th>Track</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td className="date-cell">
                             <input 
                                 type="date" 
                                 onChange={event => setGradDate(new Date(event.target.value))} 
-                                className="mt-1 block py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                                className="date-input"
                             />
                         </td>
+                        <td className="date-cell">
+                            {tracks && 
+                                <SelectOptions
+                                    containerClassOverride='normal'
+                                    selectClassOverride='normal'
+                                    options={tracks.map(track => ({
+                                        value: track.id.toString(),
+                                        label: track.name
+                                    }))}
+                                    value={track?.id.toString() || ""}
+                                    onChange={(e) => {
+                                        const selectedTrack = tracks.find(t => t.id.toString() === e.target.value);
+                                        setTrack(selectedTrack || null);
+                                    }}
+                                />
+                            }
+                        </td>
                         <td>
-                            <button onClick={submitToAddBootcamp} className="left-full ml-2 text-green-500 ">Add</button>
+                            <AddButtonSimple onClick={() => addBootcampHandler()}/>
                         </td>
                     </tr>
                 </tbody>

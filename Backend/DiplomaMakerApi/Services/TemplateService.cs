@@ -1,3 +1,4 @@
+using DiplomaMakerApi.Exceptions;
 using DiplomaMakerApi.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,12 +20,14 @@ public class TemplateService
             .Include(t => t.IntroStyling)
             .Include(t => t.MainStyling)
             .Include(t => t.FooterStyling)
+            .Include(t => t.LinkStyling)
             .ToListAsync();
     }
 
-    public async Task<DiplomaTemplate?> GetTemplate(int id)
+    public async Task<DiplomaTemplate> GetTemplate(int id)
     {
-        return await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
+        var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
+        return template ?? throw new NotFoundByIdException("Template", id);
     }
 
     public async Task<DiplomaTemplate> PostTemplate(TemplatePostRequestDto templateRequest)
@@ -33,15 +36,10 @@ public class TemplateService
         {
             Name = templateRequest.templateName,
         };
-        try{
-            await _localFileStorageService.InitFileFromNewTemplate(templateRequest.templateName);
-            await _context.DiplomaTemplates.AddAsync(newTemplate);
-            await _context.SaveChangesAsync();
-        }
-        catch(Exception ex){
-            throw new Exception(ex.ToString());
-        }
-        
+       
+        await _localFileStorageService.InitFileFromNewTemplate(templateRequest.templateName);
+        await _context.DiplomaTemplates.AddAsync(newTemplate);
+        await _context.SaveChangesAsync();
         return newTemplate;
     }
 
@@ -50,7 +48,7 @@ public class TemplateService
         var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
         if (template == null)
         {
-            throw new KeyNotFoundException("DiplomaTemplate not found.");
+            throw new NotFoundByIdException("Template", id);
         }
 
         template.Name = templateRequest.templateName;
@@ -60,20 +58,16 @@ public class TemplateService
         template.IntroStyling = templateRequest.introStyling;
         template.Main = templateRequest.main;
         template.MainStyling = templateRequest.mainStyling;
+        template.Link = templateRequest.Link;
+        template.LinkStyling = templateRequest.LinkStyling;
         // template.BasePdf = templateRequest.basePdf;
         template.LastUpdated = DateTime.UtcNow;
+        template.PdfBackgroundLastUpdated = templateRequest.PdfBackgroundLastUpdated;
 
-        try
-        {
-            IFormFile file = ConvertBase64ToIFormFile(templateRequest.basePdf, templateRequest.templateName);
-            await _localFileStorageService.SaveFile(file, templateRequest.templateName);
-            _context.DiplomaTemplates.Update(template);
-            await _context.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.ToString());
-        }
+        IFormFile file = ConvertBase64ToIFormFile(templateRequest.basePdf, templateRequest.templateName);
+        await _localFileStorageService.SaveFile(file, templateRequest.templateName);
+        _context.DiplomaTemplates.Update(template);
+        await _context.SaveChangesAsync();
 
         return template;
     }
@@ -83,19 +77,12 @@ public class TemplateService
         var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
         if (template == null)
         {
-            throw new KeyNotFoundException("DiplomaTemplate not found.");
+            throw new NotFoundByIdException("Template", id);
         }
 
-        try
-        {
-            await _localFileStorageService.DeleteFile(template.Name);
-            _context.DiplomaTemplates.Remove(template);
-            await _context.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.ToString());
-        }
+        await _localFileStorageService.DeleteFile(template.Name);
+        _context.DiplomaTemplates.Remove(template);
+        await _context.SaveChangesAsync();
 
         return template;
     }

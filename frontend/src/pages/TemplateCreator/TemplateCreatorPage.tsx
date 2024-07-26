@@ -24,13 +24,13 @@ import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefaul
 type Props = {
   templates: TemplateResponse[] | null;
   addNewTemplate: (templateRequest: TemplateRequest) => Promise<void>;
-  updateTemplate: (id: number,templateRequest: TemplateRequest) => Promise<TemplateResponse>;
+  updateTemplate: (id: number, templateRequest: TemplateRequest) => Promise<TemplateResponse>;
   deleteTemplate: (templateRequest: number) => Promise<void>;
 };
 
 export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate }: Props) => {
-  const [templateData, setTemplateData] = useState<CustomTemplate[]>([]);
-  const [currentTemplate, setCurrentTemplate] = useState<CustomTemplate | null>(null);
+  const [templateData, setTemplateData] = useState<any[]>([]);
+  const [currentTemplate, setCurrentTemplate] = useState<any | null>(null);
 
   const designerRef = useRef<HTMLDivElement | null>(null);
   const designer = useRef<Designer | null>(null);
@@ -41,6 +41,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const {showConfirmationPopup,confirmationPopupContent,confirmationPopupType,confirmationPopupHandler,customPopup,closeConfirmationPopup} = useCustomConfirmationPopup();
 
   const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
+  const [templateBasePdfHasChanged, settemplateBasePdfHasChanged] = useState<boolean>(false);
   const [fileAdded, setFileAdded] = useState<boolean>(false);
   const [templateAdded, setTemplateAdded] = useState<boolean>(false);
 
@@ -64,7 +65,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   useEffect(() => {
     if (templates && templates.length > 0) {
       const templateData = mapTemplatesToTemplateData(templates);
-
       setTemplateData(templateData);
       if (templateAdded) {
         setCurrentTemplate(templateData[templateData.length - 1]);
@@ -82,7 +82,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
           currentTemplate.intro,
           currentTemplate.main,
           currentTemplate.footer,
-          currentTemplate.basePdf
+          currentTemplate.basePdf,
+          currentTemplate.link
         ),
       ];
       const template = mapTemplateInputsToTemplateDesigner(
@@ -120,6 +121,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             '.pdfpreview div div div div div[title="header"]',
             '.pdfpreview div div div div div[title="main"]',
             '.pdfpreview div div div div div[title="footer"]',
+            '.pdfpreview div div div div div[title="link"]',
         ];
 
         const isClickInside = selectors.some(selector => {
@@ -137,6 +139,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             '.pdfpreview div div div div div[title="header"]',
             '.pdfpreview div div div div div[title="main"]',
             '.pdfpreview div div div div div[title="footer"]',
+            '.pdfpreview div div div div div[title="link"]',
         ];
 
         selectors.forEach((selector) => {
@@ -164,6 +167,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             '.pdfpreview div div div div div[title="header"]',
             '.pdfpreview div div div div div[title="main"]',
             '.pdfpreview div div div div div[title="footer"]',
+            '.pdfpreview div div div div div[title="link"]',
         ];
 
         selectors.forEach((selector) => {
@@ -265,6 +269,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         setTemplateData(updatedTemplateData);
       }
       setTemplateHasChanged(true);
+      settemplateBasePdfHasChanged(true);
       setFileAdded(true);
     }
   };
@@ -273,8 +278,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     if (currentTemplate) {
       closeConfirmationPopup();
       try {
-        await updateTemplate(currentTemplate?.id, currentTemplate);
-        customAlert(PopupType.success,"Template Successfully Updated!",`Successfully updated ${currentTemplate.diplomaTemplateName} to database`);
+        await updateTemplate(currentTemplate?.id, 
+          templateBasePdfHasChanged 
+            ? { ...currentTemplate, PdfBackgroundLastUpdated: new Date() }
+            : currentTemplate
+        );
+        
+        customAlert('success',"Template Successfully Updated!",`Successfully updated ${currentTemplate.diplomaTemplateName} to database`);
         setTemplateHasChanged(false);
         if (goToIndex !== undefined) {
           setCurrentTemplate(templateData[goToIndex] || null);
@@ -282,7 +292,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
           setFileAdded(false);
         }
       } catch (error) {
-        customAlert(PopupType.fail,"Template Update failure!",`${error} when trying to update template.`);
+        customAlert('fail',"Template Update failure!",`${error} when trying to update template.`);
       }
     }
   };
@@ -292,19 +302,19 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     if (
       templateData.some((template) => template.templateName === inputContent)
     ) {
-      customAlert(PopupType.fail,"Template Creation failure!",`Name already exists`);
+      customAlert('fail',"Template Creation failure!",`Name already exists`);
       return;
     }
     if (inputContent && inputContent.trim() != "") {
       try {
         await addNewTemplate(createBlankTemplate(inputContent));
-        customAlert(PopupType.success,"Succesfully added new template!",`Successfully added new template to database.`);
+        customAlert('success',"Succesfully added new template!",`Successfully added new template to database.`);
         setTemplateAdded(true);
       } catch (error) {
-        customAlert(PopupType.fail,"Template add failure!",`${error} when trying to add new template to database.`);
+        customAlert('fail',"Template add failure!",`${error} when trying to add new template to database.`);
       }
     } else {
-      customAlert(PopupType.fail,"Template Creation failure!",`Name field is blank`);
+      customAlert('fail',"Template Creation failure!",`Name field is blank`);
     }
   };
 
@@ -313,16 +323,16 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       closeConfirmationPopup();
       const templateId = currentTemplate?.id;
       if (templateId === 1) {
-        customAlert(PopupType.fail,`Cannot Delete the Default Template`,`You are not allowed to delete the baseTemplate.`);
+        customAlert('fail',`Cannot Delete the Default Template`,`You are not allowed to delete the baseTemplate.`);
         return;
       }
       try {
         await deleteTemplate(templateId);
         setTemplateIndex(0);
-        customAlert(PopupType.fail,"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
+        customAlert('fail',"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
         setTemplateHasChanged(false);
       } catch (error) {
-        customAlert(PopupType.fail,"Template Update failure!",`${error} when trying to update template.`);
+        customAlert('fail',"Template Update failure!",`${error} when trying to update template.`);
       }
     }
   };
@@ -332,34 +342,25 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       const updatedTemplate = createUpdatedTemplate(currentTemplate, designer);
       await setCurrentTemplate(updatedTemplate);
       setRightSideBarPage(0);
-      customAlert(PopupType.message, "Inputs Saved", `Remember to also save your template for changes to reflect in pdfcreator!`);
+      customAlert('message', "Inputs Saved", `Remember to also save your template for changes to reflect in pdfcreator!`);
     }
   };
 
   const shouldWeSaveHandler = async (index: number) => {
-    customPopup(
-      ConfirmationPopupType.question, "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index)
-    );
+    customPopup('question', "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index));
   };
 
   const confirmChangeTemplateHandler = async () => {
     const currentTemplateIndex = getTemplateIndex(currentTemplate);
-    customPopup(
-      ConfirmationPopupType.question, 
-      "Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(currentTemplateIndex)
-    );
+    customPopup('question', "Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(currentTemplateIndex));
   };
 
   const confirmAddNewTemplateHandler = async () => {
-    customPopup(
-      ConfirmationPopupType.form, "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent)
-    );
+    customPopup('form', "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent));
   };
 
   const confirmRemoveTemplateHandler = async () => {
-    customPopup(
-      ConfirmationPopupType.warning, `Are you sure you want to remove ${currentTemplate?.templateName}?`, "This will unlink the template for all bootcamps that use it.", () => () => removeTemplate()
-    );
+    customPopup('warning', `Are you sure you want to remove ${currentTemplate?.templateName}?`, "This will unlink the template for all bootcamps that use it.", () => () => removeTemplate());
   };
 
   const globalAbortHandler = () => {
@@ -482,140 +483,139 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   return (
     <main className="templatecreator-page">
-      <div className="bg-boundingbox" onClick={() => setRightSideBarPage(0)}></div>
-      <ConfirmationPopup
-        title={confirmationPopupContent[0]}
-        text={confirmationPopupContent[1]}
-        show={showConfirmationPopup}
-        confirmationPopupType={confirmationPopupType}
-        abortClick={() => globalAbortHandler()}
-        // @ts-ignore
-        confirmClick={(inputContent?: string) => {confirmationPopupHandler(inputContent)}}
-      />
-      <AlertPopup
-        title={popupContent[0]}
-        text={popupContent[1]}
-        popupType={popupType}
-        show={showPopup}
-        onClose={closeAlert}
-      />
-      <section className="templatecreator-page__leftsidebar">
-        <div className="templatecreator-page__leftsidebar-menu">
-          <section className="templatecreator-page__leftsidebar-menu-section">
-            <button className="help-btn">
-              <HelpIcon />
-            </button>
-          </section>
-        </div>
-      </section>
-      <section className="templatecreator-page__preview-container">
-        <div className="templatecreator-page__preview" style={{width: "100%",overflow: "hidden",height: `calc(50vh - 68px)`,}}>
-          <h2>{currentTemplate?.templateName}</h2>
-          <div className="pdfpreview" ref={designerRef} style={{ height: `80%` }} onClick={() => setRightSideBarPage(1)}/>
-          {!templates && <SpinnerDefault classOverride="spinner" />}
-        </div>
-      </section>
-      <section className="templatecreator-page__rightsidebar">
-        <div className="templatecreator-page__rightsidebar-menu">
-          <header className="templatecreator-page__rightsidebar-menu-header">
-            <button onClick={() => setRightSideBarPage(0)} className={rightSideBarPage === 0 ? "active" : ""}>
-              Browse
-            </button>
-            <button onClick={() => setRightSideBarPage(1)} className={rightSideBarPage === 1 ? "active" : ""}>
-              Edit
-            </button>
-          </header>
-          {rightSideBarPage === 0 && (
-            <>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Templates</h3>
-                <SelectOptions
-                  containerClassOverride="overview-page__select-container"
-                  selectClassOverride="overview-page__select-box"
-                  options={templateData.map((template, index) => ({
-                    value: index.toString(),
-                    label: template.templateName,
-                  }))}
-                  value={getTemplateIndex(currentTemplate).toString()}
-                  onChange={(event) =>
-                    templateChangeHandler(Number(event.target.value))
-                  }
-                />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Add Template</h3>
-                <AddButton onClick={confirmAddNewTemplateHandler} />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Add PDF Background</h3>
-                <PdfFileUpload
-                  fileResult={(file: File) => pdfFileUploadHandler(file)}
-                  fileAdded={fileAdded}
-                  setFileAdded={setFileAdded}
-                />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <SaveButton
-                  textfield="Save Template"
-                  saveButtonType={SaveButtonType.normal}
-                  onClick={confirmChangeTemplateHandler}
-                />
-              </section>
-            </>
-          )}
-          {rightSideBarPage === 1 && (
-            <>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Layout</h3>
-                <EditSection
-                  positionX={templateStyle.positionX}
-                  positionY={templateStyle.positionY}
-                  sizeWidth={templateStyle.sizeWidth}
-                  sizeHeight={templateStyle.sizeHeight}
-                  setPositionX={setPositionXHandler}
-                  setPositionY={setPositionYHandler}
-                  setSizeWidth={setSizeWidthHandler}
-                  setSizeHeight={setSizeHeightHandler}
-                  setAlignHorizontalCenter={setAlignHorizontalCenter}
-                  setAlignVerticalCenter={setAlignVerticalCenter}
-                  fieldWidth={fieldWidth}
-                  fieldHeight={fieldHeight}
-                />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Text</h3>
-                <TextEditSection
-                  align={templateStyle.align}
-                  setAlign={(value: string) => textAlignHandler(value)}
-                  fontSize={templateStyle.fontSize}
-                  setFontSize={(value: number) => fontSizeHandler(value)}
-                  font={templateStyle.font}
-                  setFont={(value: string) => setFontHandler(value)}
-                  fontColor={templateStyle.fontColor}
-                  setFontColor={(value: string) => setFontColorHandler(value)}
-                />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <h3>Edit Field {selectedField && selectedField}</h3>
-                <SaveButton
-                  textfield="Save Inputs"
-                  saveButtonType={SaveButtonType.normal}
-                  onClick={saveFieldsHandler}
-                  customIcon={<TextInputIcon />}
-                />
-              </section>
-              <section className="templatecreator-page__rightsidebar-menu-section">
-                <SaveButton
-                  textfield="Remove Template"
-                  saveButtonType={SaveButtonType.remove}
-                  onClick={confirmRemoveTemplateHandler}
-                />
-              </section>
-            </>
-          )}
-        </div>
-      </section>
+        <div className="bg-boundingbox" onClick={() => setRightSideBarPage(0)}></div>
+        <ConfirmationPopup
+            title={confirmationPopupContent[0]}
+            text={confirmationPopupContent[1]}
+            show={showConfirmationPopup}
+            confirmationPopupType={confirmationPopupType}
+            abortClick={() => globalAbortHandler()}
+            // @ts-ignore
+            confirmClick={(inputContent?: string) => { confirmationPopupHandler(inputContent) }}
+        />
+        <AlertPopup
+            title={popupContent[0]}
+            text={popupContent[1]}
+            popupType={popupType}
+            show={showPopup}
+            onClose={closeAlert}
+        />
+        <section className="templatecreator-page__leftsidebar">
+            <div className="templatecreator-page__leftsidebar-menu">
+                <section className="templatecreator-page__leftsidebar-menu-section">
+                    <button className="help-btn">
+                        <HelpIcon />
+                    </button>
+                </section>
+            </div>
+        </section>
+        <section className="templatecreator-page__preview-container">
+            <div className="templatecreator-page__preview" style={{ width: "100%", overflow: "hidden", height: `calc(50vh - 68px)` }}>
+                <h2>{currentTemplate?.templateName}</h2>
+                <div className="pdfpreview" ref={designerRef} style={{ height: `80%` }} onClick={() => setRightSideBarPage(1)} />
+                {!templates && <SpinnerDefault classOverride="spinner" />}
+            </div>
+        </section>
+        <section className="templatecreator-page__rightsidebar">
+            <div className="templatecreator-page__rightsidebar-menu">
+                <header className="templatecreator-page__rightsidebar-menu-header">
+                    <button onClick={() => setRightSideBarPage(0)} className={rightSideBarPage === 0 ? "active" : ""}>
+                        Browse
+                    </button>
+                    <button onClick={() => setRightSideBarPage(1)} className={rightSideBarPage === 1 ? "active" : ""}>
+                        Edit
+                    </button>
+                </header>
+                {rightSideBarPage === 0 && (
+                    <>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Templates</h3>
+                            <SelectOptions
+                                containerClassOverride="overview-page__select-container"
+                                selectClassOverride="overview-page__select-box"
+                                options={templateData.map((template, index) => ({
+                                    value: index.toString(),
+                                    label: template.templateName,
+                                }))}
+                                value={getTemplateIndex(currentTemplate).toString()}
+                                onChange={(event) =>
+                                    templateChangeHandler(Number(event.target.value))
+                                }
+                            />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Add Template</h3>
+                            <AddButton onClick={confirmAddNewTemplateHandler} />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Add PDF Background</h3>
+                            <PdfFileUpload
+                                fileResult={(file: File) => pdfFileUploadHandler(file)}
+                                fileAdded={fileAdded}
+                                setFileAdded={setFileAdded}
+                            />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <SaveButton
+                                textfield="Save Template"
+                                saveButtonType={'normal'}
+                                onClick={confirmChangeTemplateHandler}
+                            />
+                        </section>
+                    </>
+                )}
+                {rightSideBarPage === 1 && (
+                    <>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Layout</h3>
+                            <EditSection
+                                positionX={templateStyle.positionX}
+                                positionY={templateStyle.positionY}
+                                sizeWidth={templateStyle.sizeWidth}
+                                sizeHeight={templateStyle.sizeHeight}
+                                setPositionX={setPositionXHandler}
+                                setPositionY={setPositionYHandler}
+                                setSizeWidth={setSizeWidthHandler}
+                                setSizeHeight={setSizeHeightHandler}
+                                setAlignHorizontalCenter={setAlignHorizontalCenter}
+                                setAlignVerticalCenter={setAlignVerticalCenter}
+                                fieldWidth={fieldWidth}
+                                fieldHeight={fieldHeight}
+                            />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Text</h3>
+                            <TextEditSection
+                                align={templateStyle.align}
+                                setAlign={(value: string) => textAlignHandler(value)}
+                                fontSize={templateStyle.fontSize}
+                                setFontSize={(value: number) => fontSizeHandler(value)}
+                                font={templateStyle.font}
+                                setFont={(value: string) => setFontHandler(value)}
+                                fontColor={templateStyle.fontColor}
+                                setFontColor={(value: string) => setFontColorHandler(value)}
+                            />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <h3>Edit Field {selectedField && selectedField}</h3>
+                            <SaveButton
+                                textfield="Save Inputs"
+                                saveButtonType={'normal'}
+                                onClick={saveFieldsHandler}
+                                customIcon={<TextInputIcon />}
+                            />
+                        </section>
+                        <section className="templatecreator-page__rightsidebar-menu-section">
+                            <SaveButton
+                                textfield="Remove Template"
+                                saveButtonType={'remove'}
+                                onClick={confirmRemoveTemplateHandler}
+                            />
+                        </section>
+                    </>
+                )}
+            </div>
+        </section>
     </main>
-    
   );
 };

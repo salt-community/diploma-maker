@@ -4,11 +4,7 @@ import { PopupAlertIcon } from '../Icons/PopupAlertIcon';
 import { PopupSuccessIcon } from '../Icons/PopupSuccessIcon';
 import { AttentionIcon } from '../Icons/AttentionIcon';
 
-export enum PopupType {
-  success,
-  fail,
-  message
-}
+export type PopupType = 'success' | 'fail' | 'message'
 
 type Props = {
   title: string;
@@ -44,11 +40,11 @@ export const AlertPopup = ({ show, onClose, popupType, title, text, durationOver
   }, [visible, show, onClose]);
 
   return (
-    <div onClick={() => {}} className={`popup ${popupType === PopupType.fail ? 'fail' : popupType === PopupType.success ? 'success' : 'message'} ${visible ? 'fade-in' : 'fade-out'}`}>
+    <div onClick={() => {}} className={`popup ${popupType === 'fail' ? 'fail' : popupType === 'success' ? 'success' : 'message'} ${visible ? 'fade-in' : 'fade-out'}`}>
       <div className="popup-content">
-        {popupType === PopupType.fail ? 
+        {popupType === 'fail' ? 
             <PopupAlertIcon />
-        : popupType === PopupType.success ?  
+        : popupType === 'success' ?  
             <PopupSuccessIcon />
         :
             <AttentionIcon />

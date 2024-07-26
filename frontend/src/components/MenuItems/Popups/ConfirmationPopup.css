@@ -7,6 +7,7 @@
     padding: 3rem 3rem;
     max-height: fit-content;
     max-width: fit-content;
+    max-width: 900px;
 
     display: flex;
     align-items: center;
@@ -30,8 +31,17 @@
     .popup_confirmation.question {
         background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
     }
+    .popup_confirmation.question2 {
+        background-image: linear-gradient(to left bottom, #212b60, #1d2244, #1a1a30, #181625, #1a1c2b);
+    }
     .popup_confirmation.warning {
         background-image: linear-gradient(to left bottom, #583c50, #423244, #2f2736, #1e1d27, #101118);
+    }
+    .popup_confirmation.warning2{
+        background-color: #171721;
+    }
+    .popup_confirmation.warning2 .popup_confirmation-content-btn:nth-of-type(1){
+        max-width: 20%;
     }
 
 .popup_confirmation-content {
@@ -42,6 +52,9 @@
 }
     .popup_confirmation-content svg {
         width: 75px;
+    }
+    .popup_confirmation.question2 .popup_confirmation-content .fill{
+        fill: #b34e4e;
     }
     .popup_confirmation-content h1 {
         font-size: 1.3rem;
@@ -72,43 +85,53 @@
             color: #d7d7d7;
             background-color: #1f314360;
             border-radius: .5rem;
-            transition: all .15s ease-in-out;
+            transition: all .15s ease;
         }
         .popup_confirmation-content-btn svg path{
-            transition: all .15s ease-in-out;
+            transition: all .15s ease;
         }
         .popup_confirmation-content-btn svg{
             width: 25px;
-            transition: all .15s ease-in-out;
+            transition: all .15s ease;
         }
         .popup_confirmation-content-btn:hover{
             cursor: pointer;
             color: #fff;
-            transition: all .15s ease-in-out;
+            transition: all .15s ease;
         }
         .popup_confirmation-content-btn:hover svg path{
             fill: #000;
-            transition: all .15s ease-in-out;
+            transition: all .15s ease;
         }
         .popup_confirmation-content-btn:hover{
             color: #000;
-            transition: all .15s ease-in-out;
+            transition: all .15s ease;
         }
         .popup_confirmation-content-btn:nth-of-type(1):hover{
             background-color: #07ff0a;
-            transition: all .15s ease-in-out;
+            transition: all .15s ease;
         }
         .popup_confirmation-content-btn:nth-of-type(2):hover{
             background-color: #ff5563;
-            transition: all .15s ease-in-out;
+            transition: all .15s ease;
         }
         .popup_confirmation.warning .popup_confirmation-content-btn:nth-of-type(1):hover{
             background-color: #ff5563;
-            transition: all .15s ease-in-out;
+            transition: all .15s ease;
         }
         .popup_confirmation.warning .popup_confirmation-content-btn:nth-of-type(2):hover{
             background-color: #07ff0a;
-            transition: all .15s ease-in-out;
+            transition: all .15s ease;
+        }
+        .popup_confirmation.warning2 .popup_confirmation-content-btn:nth-of-type(1):hover{
+            background-color: #06240d;
+            color: #21d34e;
+            transition: all .15s ease;
+        }
+        .popup_confirmation.warning2 .popup_confirmation-content-btn:nth-of-type(2):hover{
+            background-color: #301313;
+            color: #ff5c5c;
+            transition: all .15s ease;
         }
         .popup_confirmation-close-btn{
             position: absolute;
@@ -131,11 +154,11 @@
         }
             .popup_confirmation-close-btn svg path{
                 fill: #ababba;
-                transition: all .1s ease-in-out;
+                transition: all .1s ease;
             }
             .popup_confirmation-close-btn:hover svg path{
                 fill: #fff;
-                transition: all .1s ease-in-out;
+                transition: all .1s ease;
             }
 
 .popup_confirmation.fade-in {
@@ -156,12 +179,12 @@
     background-color: #e9e9f9e9;
     font-weight: 600;
     /* min-width: 400px; */
-    transition: all .1s ease-in-out;
+    transition: all .1s ease;
 }
 .popup_confirmation-content-input:focus {
     outline: 2px solid #0084ff3b;
     background-color: #e9e9f9;
-    transition: all .1s ease-in-out;
+    transition: all .1s ease;
 }
 .popup_confirmation-content-btn-container.confirmation{
     gap: 1rem;
@@ -175,5 +198,19 @@
     width: 100%;
     height: 100%;
     z-index: 100;
-    transition: all .15s ease-in-out;
+    
+    transition: all .25s ease;
+}
+.preventClickBG.warning{
+    backdrop-filter: blur(10px);
+}
+
+.popup_confirmation.fade-in {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.preventClickBG.fade-out {
+    opacity: 0;
+    pointer-events: none;
 }

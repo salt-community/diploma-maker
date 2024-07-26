@@ -15,6 +15,10 @@ public class TemplateResponseDto
     public required string Main {get; set;}
     public TemplateStyle? MainStyling { get; set; }
 
+    public required string Link { get; set; }
+    public TemplateStyle? LinkStyling { get; set; }
+
     public required string BasePdf { get; set;}
     public DateTime LastUpdated {get; set;}
+    public DateTime PdfBackgroundLastUpdated { get; set; }
 }

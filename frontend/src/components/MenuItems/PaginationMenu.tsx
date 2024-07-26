@@ -14,13 +14,13 @@ type Props = {
 export const PaginationMenu = ({ currentPage, totalPages, handlePrevPage, handleNextPage, containerClassOverride, buttonClassOverride, textContainerClassOverride }: Props) => {
     return (
         <footer className={"pagination-container " + containerClassOverride}>
-            <button className={"iconbtn " + buttonClassOverride} onClick={handlePrevPage}>
+            <button type='button' className={"iconbtn " + buttonClassOverride} onClick={handlePrevPage}>
                 <NextIcon />
             </button>
             <span className={"pagination-info " + textContainerClassOverride}>
                 Page {currentPage} of {totalPages}
             </span>
-            <button className={"iconbtn " + buttonClassOverride} onClick={handleNextPage}>
+            <button type='button' className={"iconbtn " + buttonClassOverride} onClick={handleNextPage}>
                 <NextIcon rotation={180}/>
             </button>
         </footer>

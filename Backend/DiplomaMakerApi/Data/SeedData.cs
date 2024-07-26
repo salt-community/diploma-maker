@@ -12,16 +12,20 @@ public static class SeedData
             
             DiplomaTemplate diploma = new DiplomaTemplate { Name = "Default" };
 
+            var Dotnet = new Track { Name = "C# Dotnet", Tag = "dnfs"};
+            var Java = new Track { Name = "Java", Tag ="jfs"};
+            var Js = new Track { Name = "Javascript", Tag="jsfs"};
+            
             // Bootcamps
             var dotnetBootcamp1 = new Bootcamp
             {
-                Name = ".Net Fullstack Winter 2024",
+                Track = Dotnet,
                 GraduationDate = new DateTime(2024,2,5, 0, 0, 0, DateTimeKind.Utc),
                 DiplomaTemplate = diploma 
             };
             var dotnetBootcamp2 = new Bootcamp
             {
-                Name = ".Net Fullstack Autumn 2023",
+                Track = Java,
                 GraduationDate = new DateTime(2024,11,5, 0, 0, 0, DateTimeKind.Utc),
                 DiplomaTemplate = diploma 
              
@@ -29,7 +33,7 @@ public static class SeedData
             };
             var JavaBootcamp = new Bootcamp
             {
-                Name = "Java Fullstack Winter 2024",
+                Track = Js,
                 GraduationDate = new DateTime(2024,1,5, 0, 0, 0, DateTimeKind.Utc),
                 DiplomaTemplate = diploma 
               
@@ -44,26 +48,36 @@ public static class SeedData
             { 
                 Name = "Xinnan Luo", 
                 Email = "william.f.lindberg@hotmail.com",
-                Bootcamp = dotnetBootcamp1 
+                Bootcamp = dotnetBootcamp1,
+                VerificationCode = "1a9f3"
             };
             var student2 = new Student 
             { 
                 Name = "Zerophymyr Falk", 
                 Email = "Zzer0ph@gmail.com",
-                Bootcamp = dotnetBootcamp1 
+                Bootcamp = dotnetBootcamp1,
+                VerificationCode = "b4c2e"
             };
             var student3 = new Student 
             { 
                 Name = "William F Lindberg", 
                 Email = "lindberg.f.william@gmail.com",
-                Bootcamp = dotnetBootcamp1 
+                Bootcamp = dotnetBootcamp1,
+                VerificationCode = "5d7f8"
             };
             var student4 = new Student 
             { 
                 Name = "Silvia Dominguez", 
-                Bootcamp = dotnetBootcamp2 
+                Bootcamp = dotnetBootcamp2,
+                VerificationCode = "yx2g6"
             };
-            var students = new List<Student>{student1, student2, student3, student4};
+            var student5 = new Student 
+            { 
+                Name = "Max Andersson", 
+                Bootcamp = dotnetBootcamp2,
+                VerificationCode = "yx2g6"
+            };
+            var students = new List<Student>{student1, student2, student3, student4, student5};
             _context.AddRange(students);
             _context.SaveChanges();
 

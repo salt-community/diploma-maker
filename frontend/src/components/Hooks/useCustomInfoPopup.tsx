@@ -4,7 +4,7 @@ import { InfoPopupType } from '../MenuItems/Popups/InfoPopup';
 export const useCustomInfoPopup = () => {
   const [showInfoPopup, setShowInfoPopup] = useState<boolean>(false);
   const [infoPopupContent, setInfoPopupContent] = useState<string[]>(["",""]);
-  const [infoPopupType, setInfoPopupType] = useState<InfoPopupType>(InfoPopupType.form);
+  const [infoPopupType, setInfoPopupType] = useState<InfoPopupType>('form');
   const [infoPopupHandler, setInfoPopupHandler] = useState<() => void>(() => {});
 
   const [progress, setProgress] = useState(0);

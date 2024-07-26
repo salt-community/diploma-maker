@@ -1,38 +1,37 @@
-.templatecreator-page{
+.templatecreator-page {
     min-height: 100vh;
     background-color: #2e2e38;
-
     display: grid;
     grid-template-columns: .15fr .65fr .2fr;
-    
 }
-    .templatecreator-page__preview-container{
+
+    .templatecreator-page__preview-container {
         position: absolute;
         top: 0;
         left: 50%;
         transform: translateX(-50%);
-
         z-index: 0;
         width: 100%;
         height: 100%;
         padding: 5% 0 0 0;
-
         display: flex;
         flex-direction: column;
         align-items: center;
-
         width: 45%;
         overflow: hidden;
     }
-        .templatecreator-page__preview-container h2{
+
+        .templatecreator-page__preview-container h2 {
             color: #9898a7;
             font-size: .9rem;
         }
-        .templatecreator-page__preview{
+
+        .templatecreator-page__preview {
             width: 25%;
             height: 100%;
         }
-            .pdfpreview{
+
+            .pdfpreview {
                 position: absolute;
                 top: 15%;
                 left: -80%;
@@ -40,134 +39,139 @@
                 height: 100%;
                 min-width: 1000px !important;
             }
-            .spinner{
+
+            .spinner {
                 position: absolute;
                 top: 50%;
                 left: 40%;
                 transform: translateX(-50%) translateY(-50%);
             }
 
-.templatecreator-page__leftsidebar{
+.templatecreator-page__leftsidebar {
     padding: 7% 0 0 7%;
     max-height: 90vh;
     grid-column: 1 / 2;
     z-index: 1;
     max-width: 125px;
 }
-    .templatecreator-page__leftsidebar-menu{
+
+    .templatecreator-page__leftsidebar-menu {
         background-color: #171721;
         width: 100%;
         height: 110%;
-
         border-radius: 1rem;
     }
-        .templatecreator-page__leftsidebar-menu-header{
-            padding: 5% 7%;
 
+        .templatecreator-page__leftsidebar-menu-header {
+            padding: 5% 7%;
             display: flex;
             align-items: center;
             gap: 1.3rem;
-
             border-bottom: 1px solid #ababba5b;
         }
-        .templatecreator-page__leftsidebar-menu-header button{
-            color: #ababba;
-            font-size: 1.5rem;
-            font-weight: 600;
-            transition: all .1s ease-in-out;
-        }
-        .templatecreator-page__leftsidebar-menu-header button.active{
-            color: #ffffff;
-            font-size: 1.5rem;
-            font-weight: 600;
-            transition: all .1s ease-in-out;
-        }
-        .templatecreator-page__leftsidebar-menu-header button:hover{
-            color: #fffff1;
-            transition: all .1s ease-in-out;
-        }
-        .templatecreator-page__leftsidebar-menu-section{
-            padding: 3% 7%;
-            min-height: fit-content;
-            border-bottom: 1px solid #ababba5b;
-        }
-            .templatecreator-page__leftsidebar-menu-section h3{
-                color: #fffff1;
-                font-size: 1.1rem;
-                font-weight: 400;
-                cursor: default;
-            }
 
-            .help-btn{
-                width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .help-btn svg{
-                width: 35px;
-            }
-            .help-btn svg path{
-                fill: #ababba;
-                transition: all .15s ease-in-out;
-            }
-            .help-btn:hover svg path{
-                fill: #fff;
-                transition: all .15s ease-in-out;
-            }
-
-
-
-.templatecreator-page__rightsidebar{
-    padding: 7% 7% 0 0;
-    max-height: 90vh;
-    grid-column: 3 / -1;
-    z-index: 1;
-}
-    .templatecreator-page__rightsidebar-menu{
-        background-color: #171721;
-        width: 100%;
-        height: 110%;
-
-        border-radius: 1rem;
-    }
-        .templatecreator-page__rightsidebar-menu-header{
-            padding: 5% 7%;
-
-            display: flex;
-            align-items: center;
-            gap: 1.3rem;
-
-            border-bottom: 1px solid #ababba5b;
-        }
-            .templatecreator-page__rightsidebar-menu-header button{
+            .templatecreator-page__leftsidebar-menu-header button {
                 color: #ababba;
                 font-size: 1.5rem;
                 font-weight: 600;
                 transition: all .1s ease-in-out;
             }
-            .templatecreator-page__rightsidebar-menu-header button.active{
+
+            .templatecreator-page__leftsidebar-menu-header button.active {
                 color: #ffffff;
                 font-size: 1.5rem;
                 font-weight: 600;
-                transition: all .1s ease-in-out;
             }
-            .templatecreator-page__rightsidebar-menu-header button:hover{
+
+            .templatecreator-page__leftsidebar-menu-header button:hover {
                 color: #fffff1;
-                transition: all .1s ease-in-out;
             }
-            
-        .templatecreator-page__rightsidebar-menu-section{
+
+        .templatecreator-page__leftsidebar-menu-section {
             padding: 3% 7%;
             min-height: fit-content;
             border-bottom: 1px solid #ababba5b;
         }
-            .templatecreator-page__rightsidebar-menu-section h3{
+
+            .templatecreator-page__leftsidebar-menu-section h3 {
                 color: #fffff1;
                 font-size: 1.1rem;
                 font-weight: 400;
                 cursor: default;
             }
+
+            .help-btn {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+                .help-btn svg {
+                    width: 35px;
+                }
+
+                .help-btn svg path {
+                    fill: #ababba;
+                    transition: all .15s ease-in-out;
+                }
+
+                .help-btn:hover svg path {
+                    fill: #fff;
+                }
+
+.templatecreator-page__rightsidebar {
+    padding: 7% 7% 0 0;
+    max-height: 90vh;
+    grid-column: 3 / -1;
+    z-index: 1;
+}
+
+    .templatecreator-page__rightsidebar-menu {
+        background-color: #171721;
+        width: 100%;
+        height: 110%;
+        border-radius: 1rem;
+    }
+
+        .templatecreator-page__rightsidebar-menu-header {
+            padding: 5% 7%;
+            display: flex;
+            align-items: center;
+            gap: 1.3rem;
+            border-bottom: 1px solid #ababba5b;
+        }
+
+            .templatecreator-page__rightsidebar-menu-header button {
+                color: #ababba;
+                font-size: 1.5rem;
+                font-weight: 600;
+                transition: all .1s ease-in-out;
+            }
+
+            .templatecreator-page__rightsidebar-menu-header button.active {
+                color: #ffffff;
+                font-size: 1.5rem;
+                font-weight: 600;
+            }
+
+            .templatecreator-page__rightsidebar-menu-header button:hover {
+                color: #fffff1;
+            }
+
+        .templatecreator-page__rightsidebar-menu-section {
+            padding: 3% 7%;
+            min-height: fit-content;
+            border-bottom: 1px solid #ababba5b;
+        }
+
+            .templatecreator-page__rightsidebar-menu-section h3 {
+                color: #fffff1;
+                font-size: 1.1rem;
+                font-weight: 400;
+                cursor: default;
+            }
+
 
 
 

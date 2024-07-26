@@ -1,0 +1,61 @@
+.content-container {
+    position: relative;
+    flex: 1 1 auto;
+}
+
+.auto-table {
+    width: 97%;
+    /* table-layout: auto; */
+}
+.auto-table tr th{
+    text-align: center;
+}
+
+.newbootcamp-title-container{
+    padding: .5rem 0 .9rem .3rem;
+}
+    .newbootcamp-title{
+        font-size: 1.2rem;
+    }
+
+.input-cell {
+    padding-right: 0.75rem;
+    
+}
+
+.date-cell {
+    padding-right: 0.75rem;
+}
+
+.text-input,
+.date-input {
+    margin-top: 0.25rem;
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    font-size: 0.875rem;
+    background-color: #20202a;
+    border: none;
+    color: #cacad4;
+    transition: all 150ms ease;
+}
+
+.text-input:focus,
+.date-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+}
+
+.date-input{
+    max-width: 100%;
+}
+.date-cell:nth-of-type(1){
+    width: 30%;
+}
+.date-cell:nth-of-type(2){
+    width: 20%;
+}

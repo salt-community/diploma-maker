@@ -13,5 +13,9 @@ public class TemplateRequestDto
     public required string main {get; set;}
     public TemplateStyle? mainStyling { get; set; }
 
+    public required string Link { get; set; }
+    public TemplateStyle? LinkStyling { get; set; }
+
     public required string basePdf { get; set;}
+    public DateTime? PdfBackgroundLastUpdated { get; set; }
 }

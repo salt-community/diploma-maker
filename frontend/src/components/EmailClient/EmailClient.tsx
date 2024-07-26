@@ -51,7 +51,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
         const studentNullEmail = selectedStudents.find(student => !student.email);
 
         if (studentNullEmail) {
-            callCustomAlert(PopupType.fail, `Failure in sending emails`, `Cannot send email to ${studentNullEmail.name} as their email address is missing.`);
+            callCustomAlert('fail', `Failure in sending emails`, `Cannot send email to ${studentNullEmail.name} as their email address is missing.`);
             return;
         }
         sendEmails(selectedIds);
@@ -88,7 +88,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 <button onClick={closeEmailClient} className='emailclient-close-btn'>
                     <CloseWindowIcon />
                 </button>
-                <SaveButton classNameOverride="send-emails-btn" saveButtonType={SaveButtonType.normal} textfield="Send Emails to Selected Clients" onClick={sendEmailsHandler}/>
+                <SaveButton classNameOverride="send-emails-btn" saveButtonType={'normal'} textfield="Send Emails to Selected Clients" onClick={sendEmailsHandler}/>
             </section>
             <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
         </>

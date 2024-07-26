@@ -10,18 +10,19 @@ import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, Em
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { delay, generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF, populateField } from '../../util/helper';
+import { delay, generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF, populateField, populateIdField, utcFormatter } from '../../util/helper';
 import { getTemplate, makeTemplateInput } from '../../templates/baseTemplate';
 import { AlertPopup, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../../components/MenuItems/Buttons/SelectButton';
-import { InfoPopup, InfoPopupType } from '../../components/MenuItems/Popups/InfoPopup';
 import { EmailClient } from '../../components/EmailClient/EmailClient';
 import { EmailIcon } from '../../components/MenuItems/Icons/EmailIcon';
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from '../../util/dataHelpers';
 import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
 import { useCustomInfoPopup } from '../../components/Hooks/useCustomInfoPopup';
 import { Template } from '@pdfme/common';
+import { InfoPopup } from '../../components/MenuItems/Popups/InfoPopup';
+import { VerifyIcon } from '../../components/MenuItems/Icons/VerifyIcon';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -38,6 +39,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
+    const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
 
     const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
@@ -55,13 +57,23 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     
     const itemsPerPage = 8;
     const startIndex = (currentPage - 1) * itemsPerPage;
+
+    const filteredBootcamps = !selectedTrack
+        ? bootcamps
+        : bootcamps?.filter(bootcamp => bootcamp.track.id.toString() === selectedTrack);
+
+    const sortedBootcamps = filteredBootcamps?.sort((a, b) => new Date(b.graduationDate).getTime() - new Date(a.graduationDate).getTime());
+
     const visibleItems = items.filter((item: any) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (!selectedBootcamp || bootcamps?.some(bootcamp => bootcamp.guidId === selectedBootcamp && bootcamp.students.includes(item)))
+        (!selectedBootcamp || filteredBootcamps?.some(bootcamp => bootcamp.guidId === selectedBootcamp && bootcamp.students.includes(item))) &&
+        (!selectedTrack || bootcamps?.some(bootcamp => bootcamp.track.id.toString() === selectedTrack && bootcamp.students.includes(item)))
     );
 
     const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
     const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
+
+    
 
     const handlePrevPage = () => {
         setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
@@ -81,6 +93,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         setCurrentPage(1);
     };
 
+    const handleTrackChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedTrack(e.target.value);
+        setSelectedBootcamp(null);
+        setCurrentPage(1);
+    };
+
     const modifyHandler = (guidId: string) => {
        if (bootcamps) {
             const bootcampIndex = bootcamps.findIndex(bootcamp =>
@@ -92,12 +110,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
 
     const deleteHandler = async (id: string) => {
         await deleteStudent(id);
-        customAlert(PopupType.fail, "Successfully deleted", "Diploma has been successfully deleted from the database.")
+        customAlert('fail', "Successfully deleted", "Diploma has been successfully deleted from the database.")
     };
 
     const generatePDFsHandler = async () => {
         if (!bootcamps || !templates) {
-            customAlert(PopupType.fail, "Error", "Bootcamps or Templates data is missing.");
+            customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
             return;
         }
     
@@ -105,42 +123,42 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         const inputsArray = selectedItems.map(student => {
             const selectedBootcamp = bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
             if (!selectedBootcamp) {
-                customAlert(PopupType.fail, "Error", `Bootcamp for student ${student.name} not found.`);
+                customAlert('fail', "Error", `Bootcamp for student ${student.name} not found.`);
                 return null;
             }
             const templateData = templates.find(t => t.id === selectedBootcamp.templateId);
             if (!templateData) {
-                customAlert(PopupType.fail, "Error", `Template for bootcamp ${selectedBootcamp.name} not found.`);
+                customAlert('fail', "Error", `Template for bootcamp ${selectedBootcamp.name} not found.`);
                 return null;
             }
     
-            const inputs = templateInputsFromBootcampData(mapBootcampToSaltData(selectedBootcamp, templateData), student.name);
+            const inputs = templateInputsFromBootcampData(mapBootcampToSaltData(selectedBootcamp, templateData), student.name, student.verificationCode);
             templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(templateData, inputs));
             return inputs;
         }).filter(inputs => inputs !== null);
     
         if (inputsArray.length === 0) {
-            customAlert(PopupType.fail, "Error", "No valid inputs found for PDF generation.");
+            customAlert('fail', "Error", "No valid inputs found for PDF generation.");
             return;
         }
     
         await newGenerateCombinedPDF(templatesArr, inputsArray);
-        customAlert(PopupType.success, "PDFs Generated", "The combined PDF has been successfully generated.");
+        customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
     };
 
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
         if(!studentInput?.email || studentInput?.email === "No Email"){
-            customAlert(PopupType.fail, "Validation Error", "Email field is empty!")
+            customAlert('fail', "Validation Error", "Email field is empty!")
             closeInfoPopup();
             return;
         }
         if(!studentInput?.email.includes('@')){
-            customAlert(PopupType.fail, "Validation Error", "Please put in a valid email address")
+            customAlert('fail', "Validation Error", "Please put in a valid email address")
             closeInfoPopup();
             return;
         }
         if(studentInput?.email == originalEmail){
-            customAlert(PopupType.message, "No changes", "Email was unchanged so no changes were made")
+            customAlert('message', "No changes", "Email was unchanged so no changes were made")
             closeInfoPopup();
             return;
         }
@@ -154,10 +172,10 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             }
             closeInfoPopup();
             const emailUpdateResponse = await updateStudentInformation(emailUpdateRequest);
-            customAlert(PopupType.success, "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateResponse.studentName}`)
+            customAlert('success', "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateRequest.studentName}`)
 
         } catch (error) {
-            customAlert(PopupType.fail, "Something Went Wroing", `${error}`)
+            customAlert('fail', "Something Went Wroing", `${error}`)
         }
     }
 
@@ -167,7 +185,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             if(!student.email){
                 emailAddress = "No Email"
             }
-            customInfoPopup(InfoPopupType.form, student.name, emailAddress, () => (inputContent?: Student) => modifyStudentEmailHandler({
+            customInfoPopup('form', student.name, emailAddress, () => (inputContent?: Student) => modifyStudentEmailHandler({
                 guidId: student.guidId,
                 name: student.name,
                 //@ts-ignore
@@ -179,7 +197,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const sendEmailsHandler = async (userIds: string[]) => {
         if(userIds.length === 0) return
         //@ts-ignore
-        customInfoPopup(InfoPopupType.progress, "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
+        customInfoPopup("progress", "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
         const blendProgressDelay = 750;
 
         for (let i = 0; i < userIds.length; i++) {
@@ -205,12 +223,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const generatePDFFile = async (guidId: string): Promise<Blob | void> => {
         const student = items.find(item => item.guidId === guidId);
         if (!student) {
-            customAlert(PopupType.fail, "Selection Error:", "No Emails Selected");
+            customAlert('fail', "Selection Error:", "No Emails Selected");
             return;
         }
         const bootcamp = bootcamps?.find(b => b.students.some(d => d.guidId === guidId));
         if (!bootcamp) {
-            customAlert(PopupType.fail, "Bootcamp Error:", "Bootcamp not found");
+            customAlert('fail', "Bootcamp Error:", "Bootcamp not found");
             return;
         }
     
@@ -218,7 +236,8 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             populateField(templates.find(t => t.id === bootcamp.templateId).intro , bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
             populateField(student.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
             populateField(templates.find(t => t.id === bootcamp.templateId).footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
-            templates.find(t => t.id === bootcamp.templateId).basePdf
+            templates.find(t => t.id === bootcamp.templateId).basePdf,
+            populateIdField(templates.find(t => t.id === bootcamp.templateId).link, student.verificationCode)
         );
 
         
@@ -237,10 +256,15 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         }
     }
 
+    const navigateToVerificationPage = (verificationCode: string) => {
+        const url = `/verify/${verificationCode}`;
+        window.open(url, '_blank');
+    };
+
     return (
         <main className="overview-page">
-            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
-            <InfoPopup 
+            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} />
+            <InfoPopup
                 title={infoPopupContent[0]}
                 text={infoPopupContent[1]}
                 show={showInfoPopup}
@@ -251,42 +275,47 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                 currentProgress={progress}
                 setCurrentProgress={setProgress}
             />
-            {selectedItems.length > 0 && 
-                <EmailClient 
-                    title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'} 
+            {selectedItems.length > 0 &&
+                <EmailClient
+                    title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'}
                     clients={selectedItems}
-                    closeEmailClient={() => {setShowEmailClient(false)}}
+                    closeEmailClient={() => { setShowEmailClient(false) }}
                     show={showEmailClient}
-                    modifyStudentEmailHandler={modifyStudentEmailHandler} 
-                    sendEmails={(userIds: string[]) => {sendEmailsHandler(userIds)}}
+                    modifyStudentEmailHandler={modifyStudentEmailHandler}
+                    sendEmails={(userIds: string[]) => { sendEmailsHandler(userIds) }}
                     callCustomAlert={customAlert}
                 />
             }
-            <section className='overview-page__listmodule'>
-            <div className='overview-page__listmodule-cardcontainer'>
+            <section className='overview-page__list-module'>
+                <div className='overview-page__list-module-card-container'>
                     {loading ? (
-                        <SpinnerDefault classOverride="spinner"/>
+                        <SpinnerDefault classOverride="spinner" />
                     ) : (
                         // @ts-ignore
                         selectedItems.length > 0 ? selectedItems.map((student: Student, index) => (
-                            <button key={student.guidId} className='listmodule__item'>
-                                <p className='overview-page__item--title'>{student.name}</p>
-                                <img className='overview-page__item--bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                                <section className='overview-page__item--menu'>
+                            <button key={student.guidId} className='list-module__item'>
+                                <p className='list-module__item-title'>{student.name}</p>
+                                <img className='list-module__item-bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
+                                <section className='list-module__item-menu'>
                                     <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
                                     <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
-                                    <SelectButton classOverride="email-btn" selectButtonType={SelectButtonType.email} onClick={() => showStudentInfohandler(student)}/>
+                                    <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
                                 </section>
+                                {student.lastGenerated && 
+                                    <div onClick={() => navigateToVerificationPage(student.verificationCode)} className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
+                                        <VerifyIcon />
+                                    </div>
+                                }
                             </button>
-                        )) : 
-                        <Popup404 text='No Diplomas Generated Yet For This Bootcamp'/>
+                        )) :
+                            <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />
                     )}
                 </div>
                 {selectedItems.length > 0 &&
                     <PaginationMenu
                         containerClassOverride='overview-page__footer'
-                        buttonClassOverride='overview-page__pagination-button'
-                        textContainerClassOverride='overview-page__pagination-info'
+                        buttonClassOverride='pagination-button'
+                        textContainerClassOverride='pagination-info'
                         currentPage={currentPage}
                         totalPages={totalPages}
                         handleNextPage={handleNextPage}
@@ -296,28 +325,47 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             </section>
             <section className='overview-page__sidebar'>
                 <div className='overview-page__sidebar-menu'>
-                    <header className="overview-page__sidebar-menu-header">
+                    <header className="sidebar-menu__header">
                         <button>
                             Browse
                         </button>
                     </header>
-                    <section className="overview-page__sidebar-menu-section">
+                    <section className="sidebar-menu__section">
                         <h3>Filtering</h3>
                         <SearchInput
-                            containerClassOverride='overview-page__header input-wrapper'
-                            inputClassOverride='overview-page__search-input'
+                            containerClassOverride='sidebar-menu__input-wrapper'
+                            inputClassOverride='sidebar-menu__search-input'
                             searchQuery={searchQuery}
                             handleSearchChange={handleSearchChange}
                         />
                     </section>
-                    <section className="overview-page__sidebar-menu-section">
-                        <h3>Bootcamps</h3>
+                    <section className='sidebar-menu__section'>
+                        <h3>Track</h3>
                         <SelectOptions
                             containerClassOverride='overview-page__select-container'
                             selectClassOverride='overview-page__select-box'
                             options={[
+                                { value: "", label: "All Tracks" },
+                                ...(bootcamps?.flatMap(bootcamp => bootcamp.track).filter((value, index, self) => 
+                                    index === self.findIndex((t) => (
+                                        t.id === value.id
+                                    ))
+                                ).map(track => ({
+                                    value: track.id.toString(),
+                                    label: track.name
+                                })) || [])
+                            ]}
+                            onChange={handleTrackChange}
+                        />
+                    </section>
+                    <section className="sidebar-menu__section">
+                        <h3>Bootcamp</h3>
+                        <SelectOptions
+                            containerClassOverride='sidebar-menu__select-container'
+                            selectClassOverride='sidebar-menu__select-box'
+                            options={[
                                 { value: "", label: "All Bootcamps" },
-                                ...(bootcamps?.map(bootcamp => ({
+                                ...(sortedBootcamps?.map(bootcamp => ({
                                     value: bootcamp.guidId,
                                     label: bootcamp.name
                                 })) || [])
@@ -325,12 +373,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                             onChange={handleBootcampChange}
                         />
                     </section>
-                    <section className="overview-page__sidebar-menu-section">
+                    <section className="sidebar-menu__section">
                         <h3>Generate</h3>
                         <PublishButton text='Generate PDFs' onClick={generatePDFsHandler} />
                     </section>
-                    <section className="overview-page__sidebar-menu-section">
-                        <SaveButton textfield="Email Management" saveButtonType={SaveButtonType.normal} onClick={() => setShowEmailClient(true)} customIcon={<EmailIcon />}/>
+                    <section className="sidebar-menu__section">
+                        <SaveButton textfield="Email Management" saveButtonType={'normal'} onClick={() => setShowEmailClient(true)} customIcon={<EmailIcon />} />
                     </section>
                 </div>
             </section>

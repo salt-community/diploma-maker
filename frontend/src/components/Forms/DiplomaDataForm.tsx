@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BootcampResponse, TemplateResponse, SaltData, Student } from "../../util/types";
 import { FileUpload } from "../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../services/InputFileService';
+import { generateVerificationCode } from "../../util/helper";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
@@ -14,7 +15,7 @@ type Props = {
   selectedBootcampIndex: number;
 };
 
-export default function   ({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex}: Props) {
+export default function DiplomaDataForm ({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex}: Props) {
   const { register } = useForm();
   const [students, setStudents] = useState<Student[]>(saltData.students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
@@ -39,7 +40,9 @@ export default function   ({ updateSaltData, bootcamps, setSelectedBootcampIndex
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
-   
+    dataFromFile.forEach(student => {
+      student.verificationCode = generateVerificationCode()
+    });
     setStudents(dataFromFile);
   };
 
@@ -99,7 +102,7 @@ export default function   ({ updateSaltData, bootcamps, setSelectedBootcampIndex
           Student Names
         </label>
         <TagsInput
-          selectedTags={(names: string[]) => setStudents(names.map(name => ({ name, email: '' })))} // Adjust this based on how TagsInput is implemented
+          selectedTags={(names: string[]) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))} // Adjust this based on how TagsInput is implemented
           tags={saltData.students.map(student => student.name)}
         />
       </div>

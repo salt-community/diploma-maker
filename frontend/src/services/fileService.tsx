@@ -1,6 +1,4 @@
-const apiUrl = import.meta.env.VITE_API_URL;
-
-export async function getTemplatePdfFile(url: string, lastUpdated: Date): Promise<string> {
+export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdated: Date, setLoadingMessage?: (message: string) => void): Promise<string> {
     const localStorageKey = `pdf_${url}`;
     const cachedPdf = localStorage.getItem(localStorageKey);
 
@@ -13,6 +11,7 @@ export async function getTemplatePdfFile(url: string, lastUpdated: Date): Promis
 
     const pdfResponse = await fetch(`${apiUrl}/api/${url}`);
     if (!pdfResponse.ok) {
+        setLoadingMessage(`Failed to fetch PDF file from ${url}. The file does not seem to exist.`)
         throw new Error(`Failed to fetch PDF from ${url}`);
     }
 

@@ -1,15 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace DiplomaMakerApi.Services
 {
     public class LocalFileStorageService
     {
         private readonly string _storagePath = Path.Combine(Directory.GetCurrentDirectory(), "Blob/DiplomaPdfs");
+        private readonly DiplomaMakingContext _context;
 
-        public LocalFileStorageService()
+        public LocalFileStorageService(DiplomaMakingContext context)
         {
             if (!Directory.Exists(_storagePath))
             {
                 Directory.CreateDirectory(_storagePath);
             }
+            _context = context;
         }
 
         public async Task<string> SaveFile(IFormFile file, string templateName)
@@ -29,12 +33,21 @@ namespace DiplomaMakerApi.Services
             return filePath;
         }
 
+        //The templateName should be something like Default.v2.pdf
         public async Task<string> GetFilePath(string templateName)
         {
             var filePath = Path.Combine(_storagePath, templateName);
             if (File.Exists(filePath))
             {
                 return filePath;
+            }
+
+            var templateNameNoExtension = Path.GetFileNameWithoutExtension(templateName);
+            var templateExists = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Name == templateNameNoExtension);
+
+            if(templateExists != null){
+                await InitFileFromNewTemplate(Path.GetFileNameWithoutExtension(templateName));
+                return Path.Combine(_storagePath, templateName);
             }
             return null;
         }
@@ -49,7 +62,7 @@ namespace DiplomaMakerApi.Services
 
             if (File.Exists(filePath))
             {
-                File.Delete(filePath);
+                await Task.Run(() => File.Delete(filePath));
                 return true;
             }
             return false;
@@ -65,7 +78,30 @@ namespace DiplomaMakerApi.Services
                 throw new FileNotFoundException("The default template file does not exist.");
             }
 
-            File.Copy(sourceFilePath, destinationFilePath, overwrite: true);
+            await Task.Run(() => File.Copy(sourceFilePath, destinationFilePath, overwrite: true));
+        }
+
+        public async Task<string> CreateBackup(string fileName)
+        {
+            var filePath = Path.Combine(_storagePath, fileName + ".pdf");
+            
+            int version = 1;
+            string newFileName;
+            string newFilePath;
+
+            do
+            {
+                newFileName = $"{fileName}.v{version}.pdf";
+                newFilePath = Path.Combine(_storagePath, newFileName);
+                version++;
+            } 
+            while (File.Exists(newFilePath));
+
+            await Task.Run(() => File.Copy(filePath, newFilePath));
+
+            var relativePath = Path.Combine("Blob/", newFileName);
+
+            return relativePath;
         }
     }
 }

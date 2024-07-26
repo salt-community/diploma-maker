@@ -2,25 +2,27 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse } from "./util/types";
-import { deleteBootcampById, getBootcamps, postBootcamp, updateBootcamp as updateBootcampService } from "./services/bootcampService";
+import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, MakeActiveSnapshotRequestDto, TrackResponse } from "./util/types";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
-import { deleteStudentById,  updateSingleStudent } from "./services/studentService";
 import { TemplateCreatorPage } from "./pages/TemplateCreator/TemplateCreatorPage";
-import { deleteTemplateById, getAllTemplates, postTemplate, putTemplate } from "./services/templateService";
-import { postEmail } from "./services/emailService";
-import { delay } from "./util/helper";
-import { LoadingMessageProvider, useLoadingMessage } from "./components/Contexts/LoadingMessageContext";
+import { useLoadingMessage } from "./components/Contexts/LoadingMessageContext";
+import { initApiEndpoints } from "./services/apiFactory";
+import { VerificationInputPage } from "./pages/Verifcation/VerificationInputPage";
+import { HistoryPage } from "./pages/History/HistoryPage";
+
+const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
 export default function App() {
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
   const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
+  const [tracks, setTracks] = useState<TrackResponse[] | null>(null);
+
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
 
   async function getBootcampsFromBackend() {
-    const newBootcamps: BootcampResponse[] = await getBootcamps(setLoadingMessage);
+    const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);
     setBootcamps(newBootcamps);
   }
 
@@ -28,72 +30,100 @@ export default function App() {
     if(!bootcamps){
       getBootcampsFromBackend();
       getTemplates();
+      getTracks();
     }
   }, [bootcamps]);
 
-  // bootcamps
-  async function deleteBootcamp(i: number){
+  // Bootcamp Endpoint
+  const deleteBootcamp = async (i: number) =>{
     const guid = bootcamps![i].guidId;
-    await deleteBootcampById(guid);
+    await api.deleteBootcampById(guid);
     await refresh();
   }
   
-  async function addNewBootcamp(bootcamp: BootcampRequest){
-    await postBootcamp(bootcamp);
+  const addNewBootcamp = async (bootcamp: BootcampRequest) => {
+    await api.postBootcamp(bootcamp);
     await refresh();
   }
   
-  async function updateBootcamp(bootcamp: BootcampRequest){
-    await updateBootcampService(bootcamp);
+  const updateBootcamp = async (bootcamp: BootcampRequest) =>{
+    await api.updateBootcamp(bootcamp);
     await refresh();
   }
 
-  //students
-  async function deleteStudent(id: string){
-    await deleteStudentById(id);
+  const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
+    api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid)
     await refresh();
   }
-/*   async function addMultipleStudents(studentsRequest: StudentsRequestDto): Promise<StudentResponse[]> {
-    const response = await postMultipleStudents(studentsRequest);
+
+  // Students Endpoint
+  const deleteStudent = async (id: string) => {
+    await api.deleteStudentById(id);
     await refresh();
-    return response;
-  } */
+  }
   
-  async function updateStudentInformation(StudentRequest: StudentUpdateRequestDto){
-      var StudentResponse = await updateSingleStudent(StudentRequest);
-      await refresh();
-      return StudentResponse
-   }
+  const updateStudentInformation = async (StudentRequest: StudentUpdateRequestDto) => {
+    var StudentResponse = await api.updateSingleStudent(StudentRequest);
+    await refresh();
+    return StudentResponse
+  }
+
+  const getStudentByVerificationCode = async (verificationCode: string) => {
+    const studentResponse = api.getStudentByVerificationCode(verificationCode);
+    return studentResponse;
+  }
    
-  // templates
-  async function getTemplates() {
-    const templates: TemplateResponse[] = await getAllTemplates(setLoadingMessage); 
+  // Templates Endpoint
+  const getTemplates = async () => {
+    const templates: TemplateResponse[] = await api.getAllTemplates(setLoadingMessage); 
     setTemplates(templates);
   }
 
-  async function addNewTemplate(template: TemplateRequest){
-    await postTemplate(template);
+  const addNewTemplate = async (template: TemplateRequest) => {
+    await api.postTemplate(template);
     await refresh();
   }
 
-  async function updateTemplate(id: number, templateRequest: TemplateRequest){
-    var templateResponse = await putTemplate(id, templateRequest);
+  const updateTemplate = async (id: number, templateRequest: TemplateRequest) => {
+    var templateResponse = await api.putTemplate(id, templateRequest);
     await refresh();
     return templateResponse
   }
 
-  async function deleteTemplate(id: number){
-    await deleteTemplateById(id);
+  const deleteTemplate = async (id: number) => {
+    await api.deleteTemplateById(id);
     await refresh();
   }
-  //email
-  async function sendEmail(emailRequest: EmailSendRequest){
-    await postEmail(emailRequest)
+
+  // Email Endpoint
+  const sendEmail = async (emailRequest: EmailSendRequest) => {
+    await api.postEmail(emailRequest)
   }
 
-  async function refresh(){
-    const newBootcamps = await getBootcamps(setLoadingMessage);
-    const newTemplates = await getAllTemplates(setLoadingMessage);
+  // HistorySnapshot Endpoint
+  const getHistory = async () => {
+    const historySnapshots = await api.getHistorySnapshots();
+    return historySnapshots;
+  }
+  
+  const getHistoryByVerificationCode = async (verificationCode: string) => {
+    const historySnapshots = await api.getHistoryByVerificationCode(verificationCode);
+    return historySnapshots;
+  }
+
+  const changeActiveHistorySnapShot = async (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => {
+    await api.makeActiveHistorySnapShot(snapshotUpdateRequest);
+  }
+
+  // Tracks Endpoint
+  const getTracks = async () => {
+    const tracks = await api.getTracks(setLoadingMessage);
+    setTracks(tracks);
+  }
+
+  const refresh = async () => {
+    const newBootcamps = await api.getBootcamps(setLoadingMessage);
+    const newTemplates = await api.getAllTemplates(setLoadingMessage);
     setBootcamps(newBootcamps);
     setTemplates(newTemplates);
   }
@@ -102,12 +132,14 @@ export default function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} />} />
-        <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} />} />
-        <Route path={`/:guidId`} element = {<VertificationPage />} />
-        <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
+        <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}/>} />
+        <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} />
+        <Route path={`/verify`} element={<VerificationInputPage />} />
+        <Route path={`/verify/:verificationCode`} element = {<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode}/>} />
+        <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates}/>} />
         <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate}/>} />
+        <Route path={"/history"} element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot}/>} />
       </Routes>
     </>
   );

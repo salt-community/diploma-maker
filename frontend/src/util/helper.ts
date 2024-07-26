@@ -165,6 +165,26 @@ export const generatePDF = async (template: Template, inputs: any, returnFile?: 
   }
 };
 
+export const generatePDFDownload = async (template: Template, inputs: any, fileName: string): Promise<void> => {
+  if (!template) return;
+  const font = await getFontsData();
+
+  const pdf = await generate({
+    template,
+    inputs,
+    options: { font },
+    plugins: getPlugins(),
+  });
+
+  const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${fileName}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
   const font = await getFontsData();
 
@@ -241,6 +261,11 @@ export const populateField = (input: string, classname: string, datebootcamp: st
     .replace('{studentname}', studentname)
 }
 
+export const populateIdField = (input: string, verificationCode: string): string => {
+  return input
+    .replace('{id}', verificationCode)
+}
+
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export function mapBootcampToSaltData(bootcamp: BootcampResponse, template: TemplateResponse ): SaltData {
@@ -305,3 +330,46 @@ const getFontFromIndexedDB = async (label: string): Promise<ArrayBuffer | null> 
     };
   });
 };
+
+
+export const generateVerificationCode = (length = 5) => {
+  const guid = URL.createObjectURL(new Blob()).slice(-36).replace(/-/g, '');
+
+  const chars = guid.split('');
+
+  const random = () => Math.floor(Math.random() * chars.length);
+
+  let code = '';
+  for (let i = 0; i < length; i++) {
+      code += chars[random()];
+  }
+
+  return code;
+}
+
+
+const dateoptions: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: 'numeric',
+  timeZone: 'Europe/Stockholm'
+};
+
+export const dateFormatter = new Intl.DateTimeFormat('en-GB', dateoptions);
+
+export const utcFormatter = (date: Date) => {
+  const utcDate = new Date(date);
+  const stockholmDateString = dateFormatter.format(utcDate);
+  return stockholmDateString;
+}
+
+export const utcFormatterSlash = (date: Date) => {
+  const dateConverted = new Date(date);
+  const utcYear = dateConverted.getUTCFullYear();
+  const utcMonth = (dateConverted.getUTCMonth() + 1).toString().padStart(2, '0');
+  const utcDay = dateConverted.getUTCDate().toString().padStart(2, '0');
+  return `${utcYear}-${utcMonth}-${utcDay}`;
+}

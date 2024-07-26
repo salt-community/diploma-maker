@@ -7,6 +7,7 @@ import {
   generatePDF,
   newGenerateCombinedPDF,
   mapBootcampToSaltData,
+  generateVerificationCode,
 } from "../../util/helper";
 import DiplomaDataForm from "../../components/Forms/DiplomaDataForm";
 import { useParams } from "react-router-dom";
@@ -25,14 +26,15 @@ import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefaul
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 import { Popup404 } from "../../components/MenuItems/Popups/Popup404";
 import { UpdateBootcampWithNewFormdata } from "../../services/bootcampService";
+import { ErrorIcon } from "../../components/MenuItems/Icons/ErrorIcon";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;
   templates: TemplateResponse[] | null;
+  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void
 };
 
-export default function DiplomaMaking({ bootcamps, templates }: Props) {
-
+export default function DiplomaMaking({ bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [currentDisplayMode, setDisplayMode] = useState<displayMode>("form");
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
@@ -43,6 +45,7 @@ export default function DiplomaMaking({ bootcamps, templates }: Props) {
   const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>();
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { loadingMessage } = useLoadingMessage();
+  const isFailed = loadingMessage.includes('Failed');
 
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
@@ -61,7 +64,6 @@ export default function DiplomaMaking({ bootcamps, templates }: Props) {
 
   // When Page Changes -> Loads into PDF preview
   useEffect(() => {
-    
     if(saltData){
       const inputs = templateInputsFromSaltData(saltData, selectedBootcampIndex, currentPageIndex);
       const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, inputs[0])
@@ -131,7 +133,8 @@ export default function DiplomaMaking({ bootcamps, templates }: Props) {
           inputs[0].header,
           inputs[0].main,
           inputs[0].footer,
-          inputs[0].pdfbase
+          inputs[0].pdfbase,
+          inputs[0].link
       )
       const template = mapTemplateInputsToTemplateViewer(saltData, selectedBootcampIndex, pdfInput)
      
@@ -144,7 +147,7 @@ export default function DiplomaMaking({ bootcamps, templates }: Props) {
     if (saltData) {
       const selectedBootcampData = saltData[selectedBootcampIndex];
       const inputsArray = selectedBootcampData.students.map((student) => {
-        return templateInputsFromBootcampData(selectedBootcampData, student.name);
+        return templateInputsFromBootcampData(selectedBootcampData, student.name, student.verificationCode);
       });
 
       var templatesArr: Template[] = [];
@@ -162,21 +165,23 @@ export default function DiplomaMaking({ bootcamps, templates }: Props) {
   const postSelectedBootcampData = async () => {
     if (saltData && bootcamps) {
       const currentBootcamp = bootcamps[selectedBootcampIndex];
+      
       const updateFormDataRequest: FormDataUpdateRequest = {
         students: saltData[selectedBootcampIndex].students.map((student, index) => ({
           guidId: currentBootcamp.students[index]?.guidId || crypto.randomUUID(),
           name: student.name,
-          email: student.email,    
+          email: student.email,
+          verificationCode: student.verificationCode
         })),
         templateId: saltData[selectedBootcampIndex].template.id
       };
+      
       try {
         await UpdateBootcampWithNewFormdata(updateFormDataRequest, currentBootcamp.guidId );
-        customAlert(PopupType.success, "Diplomas added successfully.", "Successfully added diplomas to the database.");
+        customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
       } catch (error) {
-        console.log(error)
-        customAlert(PopupType.fail, "Failed to add diplomas:", `${error}`);
+        customAlert('fail', "Failed to add diplomas:", `${error}`);
       }
     }
   };
@@ -219,7 +224,7 @@ export default function DiplomaMaking({ bootcamps, templates }: Props) {
             </div>
             <PublishButton text="Generate PDF" onClick={generatePDFHandler} />
             <PublishButton text="Generate PDFs" onClick={generateCombinedPDFHandler} />
-            <SaveButton textfield="" saveButtonType={SaveButtonType.grandTheftAuto} onClick={saveInputFieldsHandler} />
+            <SaveButton textfield="" saveButtonType={'grandTheftAuto'} onClick={saveInputFieldsHandler} />
           </header>
           { (saltData && saltData[selectedBootcampIndex].students.length > 0) ?
           <>
@@ -254,7 +259,14 @@ export default function DiplomaMaking({ bootcamps, templates }: Props) {
       :
       <>
         <h1 className="loading-title">{loadingMessage}</h1>
-        <SpinnerDefault classOverride="spinner-diplomamaking"/>
+        {!isFailed ?
+          <SpinnerDefault classOverride="spinner-diplomamaking"/>
+        :
+          <div className="loading-error__icon">
+            <ErrorIcon />
+          </div>
+        }
+        
       </>
       }
     </div>
