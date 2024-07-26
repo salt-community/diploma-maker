@@ -48,8 +48,12 @@ namespace DiplomaMakerApi.Services
 
                 if (lastSnapshot != null)
                 {
-                    lastSnapshot.Active = false;
-                    _context.DiplomaSnapshots.Update(lastSnapshot);
+                    foreach(var snapshot in lastSnapshots)
+                    {
+                        snapshot.Active = false;
+                        _context.DiplomaSnapshots.Update(snapshot);
+                    }
+                    
                     await _context.SaveChangesAsync();
                 }
                 
