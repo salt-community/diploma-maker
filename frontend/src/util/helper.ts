@@ -24,6 +24,16 @@ const fontObjList = [
   },
   {
     fallback: false,
+    label: "Basilia-bold",
+    url: "/fonts/Basilia-Bold.woff",
+  },
+  {
+    fallback: false,
+    label: "Basilia-italic",
+    url: "/fonts/Basilia-Italic.woff",
+  },
+  {
+    fallback: false,
     label: "Futura",
     url: "/fonts/Futura-Dem.woff",
   },

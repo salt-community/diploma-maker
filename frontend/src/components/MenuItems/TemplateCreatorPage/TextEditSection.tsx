@@ -91,7 +91,9 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
             containerClassOverride='overview-page__select-container'
             selectClassOverride='overview-page__select-box'
             options={[
-              ...Object.values(fonts || {}).map(font => ({
+              ...Object.values(fonts || {})
+              .filter(font => !font.label.toLowerCase().includes('-bold') && !font.label.toLowerCase().includes('-italic'))
+              .map(font => ({
                 value: font.label,
                 label: font.label
               }))
