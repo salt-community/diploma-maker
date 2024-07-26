@@ -149,7 +149,6 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
             }
           </div>
         </div>
-        {font != `notoSerifJP-regular` && 
           <div className="edittext__menusection">
             <div className="edittext__menusection--title">
               <label htmlFor="">Style</label>
@@ -172,7 +171,6 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
                 </button> */}
             </div>
           </div>
-        }
       </div>
     </>
   );

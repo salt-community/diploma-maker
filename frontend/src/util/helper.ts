@@ -14,6 +14,16 @@ const fontObjList = [
   },
   {
     fallback: false,
+    label: "notoSerifJP-regular-bold",
+    url: "https://fonts.cdnfonts.com/s/12165/Roboto-Bold.woff",
+  },
+  {
+    fallback: false,
+    label: "notoSerifJP-regular-italic",
+    url: "https://fonts.cdnfonts.com/s/12165/Roboto-Italic.woff",
+  },
+  {
+    fallback: false,
     label: "basilia-bold",
     url: "/fonts/Basilia-Bold.woff",
   },
