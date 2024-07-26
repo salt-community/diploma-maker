@@ -1,4 +1,4 @@
-import BootcampManageTable from "../../components/Feature/bootcampManagement/BootcampManageTable";
+import BootcampManageTable from "../../components/Feature/BootcampManagement/BootcampManageTable";
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../util/types";
 
 type Props = {
