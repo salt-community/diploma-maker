@@ -24,12 +24,12 @@ const fontObjList = [
   },
   {
     fallback: false,
-    label: "Basilia-bold",
+    label: "Basilia-Bold",
     url: "/fonts/Basilia-Bold.woff",
   },
   {
     fallback: false,
-    label: "Basilia-italic",
+    label: "Basilia-Italic",
     url: "/fonts/Basilia-Italic.woff",
   },
   {
