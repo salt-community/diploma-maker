@@ -1,31 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { Form, Viewer } from "@pdfme/ui";
-import { BootcampResponse, StudentResponse, SaltData, displayMode, TemplateResponse, FormDataUpdateRequest, TrackResponse } from "../../util/types";
+import { useEffect, useState } from "react";
+import { BootcampResponse,  SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse } from "../../util/types";
 import {
-  getFontsData,
-  getPlugins,
-  generatePDF,
-  newGenerateCombinedPDF,
   mapBootcampToSaltData,
-  generateVerificationCode,
 } from "../../util/helper";
 import DiplomaDataForm from "../../feature/Diplomadataform/DiplomaDataForm";
-import { useParams } from "react-router-dom";
-import { PaginationMenu } from "../../components/MenuItems/PaginationMenu";
-import { PublishButton } from "../../components/MenuItems/Buttons/PublishButton";
 import './DiplomaMaking.css';
-import { SwitchComponent } from "../../components/MenuItems/Inputs/SwitchComponent";
-import { SaveButton, SaveButtonType } from "../../components/MenuItems/Buttons/SaveButton";
 import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
-import { saltDefaultData } from "../../data/data";
-import { makeTemplateInput } from "../../templates/baseTemplate";
-import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../../util/dataHelpers";
-import { Template } from "@pdfme/common";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 import { Popup404 } from "../../components/MenuItems/Popups/Popup404";
-import { UpdateBootcampWithNewFormdata } from "../../services/bootcampService";
 import { ErrorIcon } from "../../components/MenuItems/Icons/ErrorIcon";
 import PreviewDiploma from "../../feature/PreviewDiploma";
 import { NextIcon } from "../../components/MenuItems/Icons/NextIcon";
@@ -57,7 +41,7 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
 
 
   /* update saltdata with new student and template */
-  const updateSaltDataHandler = (data: SaltData,) => {
+  const updateSaltDataHandler = (data: SaltData) => {
       setSaltData(prevSaltInfoProper =>
         (prevSaltInfoProper ?? []).map((item) =>
          item.guidId == data.guidId

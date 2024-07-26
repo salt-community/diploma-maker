@@ -10,6 +10,7 @@ import { TemplateCreatorPage } from "./pages/TemplateCreator/TemplateCreatorPage
 import { useLoadingMessage } from "./components/Contexts/LoadingMessageContext";
 import { initApiEndpoints } from "./services/apiFactory";
 import { VerificationInputPage } from "./pages/Verifcation/VerificationInputPage";
+import { set } from "react-hook-form";
 
 const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
@@ -49,10 +50,20 @@ export default function App() {
     await api.updateBootcamp(bootcamp);
     await refresh();
   }
+  const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
+    const response = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
+    if (response) {
+      setBootcamps(prevbootcamps =>
+        prevbootcamps!.map((item) => 
+          item.guidId === guidid
+            ? { ...item, students: updateFormDataRequest.students, templateId: updateFormDataRequest.templateId} as BootcampResponse
+            : item
+        )
+      );
 
-   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
-    api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid)
-  }
+    }
+  };
+  
 
   // Students Endpoint
   const deleteStudent = async (id: string) => {

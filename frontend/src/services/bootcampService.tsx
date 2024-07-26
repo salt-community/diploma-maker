@@ -76,7 +76,7 @@ export async function deleteBootcampById(apiUrl: string, guidId: string): Promis
     }
 }
 
-export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpdateRequest: FormDataUpdateRequest, guidId: string): Promise<any> {
+export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpdateRequest: FormDataUpdateRequest, guidId: string): Promise<boolean> {
     const response = await fetch(`${apiUrl}/api/Bootcamps/dynamicfields/${guidId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -86,6 +86,6 @@ export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpda
     if (!response.ok) {
         throw new Error("Failed to post diplomas!");
     }
-    return "";
+    return true;
 }
 
