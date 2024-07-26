@@ -69,7 +69,16 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
       console.log(`${fontSelector.current.value}`)
       setFont(`${fontSelector.current.value}`)
     }
-    
+  }
+
+  const toggleItalic = () => {
+    if(fontStyle != "italic"){
+      console.log(`${fontSelector.current.value}-Italic`)
+      setFont(`${fontSelector.current.value}-Italic`)
+    } else{
+      console.log(`${fontSelector.current.value}`)
+      setFont(`${fontSelector.current.value}`)
+    }
   }
 
   return (
@@ -153,16 +162,16 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
                 <path id="Vector" d="M8 12H12.5M8 12V5H12.5C14.433 5 16 6.567 16 8.5C16 10.433 14.433 12 12.5 12M8 12V19H13.5C15.433 19 17 17.433 17 15.5C17 13.567 15.433 12 13.5 12H12.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g>
               </svg>
             </button>
-            <button onClick={() => {fontStyle === "italic" ? setFontStyle("normal") : setFontStyle("italic");}} className={'edittext__menusection--btn ' + (fontStyle === "italic" && 'selected')}>
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
+            <button onClick={() => {fontStyle === "italic" ? setFontStyle("normal") : setFontStyle("italic"); toggleItalic();}} className={'edittext__menusection--btn ' + (fontStyle === "italic" && 'selected')}>
+              <svg className="tweaksvg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier">
                 <path d="M10 3H20M4 21H14M15 3L9 21" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
               </svg>
             </button>
-            <button onClick={() => {fontStyle === "underline" ? setFontStyle("normal") : setFontStyle("underline");}} className={'edittext__menusection--btn ' + (fontStyle === "underline" && 'selected')}>
+            {/* <button onClick={() => {fontStyle === "underline" ? setFontStyle("normal") : setFontStyle("underline");}} className={'edittext__menusection--btn ' + (fontStyle === "underline" && 'selected')}>
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> 
                 <path d="M4 21H20M18 4V11C18 14.3137 15.3137 17 12 17C8.68629 17 6 14.3137 6 11V4M4 3H8M16 3H20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
               </svg>
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

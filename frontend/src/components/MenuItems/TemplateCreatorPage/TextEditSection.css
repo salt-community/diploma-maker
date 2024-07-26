@@ -23,6 +23,9 @@
     cursor: pointer;
     transition: all .15s ease-in-out;
   }
+  .tweaksvg{
+    width: 15px !important;
+  }
   .edittext__menusection--btn svg path{
     stroke: #ababba;
     transition: all .15s ease-in-out;
