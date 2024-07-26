@@ -40,9 +40,9 @@ type Props = {
 export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
 
   const [IsFullScreen, setIsFullScreen] = useState<boolean>(true)
+  // current data selected 
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0); // -> these 2 can be refactored into 1 state
-  /* const { selectedBootcamp } = useParams<{ selectedBootcamp: string }>(); */
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { loadingMessage } = useLoadingMessage();
   const isFailed = loadingMessage.includes('Failed');
@@ -51,32 +51,23 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
   // When page starts -> Puts backend data into saltData
   useEffect(() => {
     if (bootcamps && templates) {
-      /*   if (selectedBootcamp) {
-        setSelectedBootcampIndex(Number(selectedBootcamp));
-        } */
-       if (bootcamps[selectedBootcampIndex].students.length === 0) {
-         setSaltData([saltDefaultData]);
-        }
-        else {
-          setSaltData(bootcamps.map(b => mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId))));
-        }
+        setSaltData(bootcamps.map(b => mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId))));
       }
-    }, [bootcamps, templates]);
-    
-  const TogglePreview = () => setIsFullScreen(prev => !prev)
+  }, [bootcamps, templates]);
 
+
+  /* update saltdata with new student and template */
   const updateSaltDataHandler = (data: SaltData,) => {
-    if (saltData) {
       setSaltData(prevSaltInfoProper =>
-        (prevSaltInfoProper ?? []).map((item, index) =>
-          index === selectedBootcampIndex
+        (prevSaltInfoProper ?? []).map((item) =>
+         item.guidId == data.guidId
             ? { ...item, students: data.students, template: data.template }
             : item
         )
       );
-    }
   };
 
+  const TogglePreview = () => setIsFullScreen(prev => !prev)
 
   return (
     saltData && templates ? (
@@ -91,13 +82,16 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
             <DiplomaDataForm
               UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
               updateSaltData={updateSaltDataHandler}
-              bootcamps={bootcamps}
+              
               setSelectedBootcampIndex={(index) => { setSelectedBootcampIndex(index); }}
               selectedBootcampIndex={selectedBootcampIndex}
               saltData={saltData[selectedBootcampIndex]}
-              templates={templates}
-              fullscreen = {IsFullScreen}
+             
+              fullscreen={IsFullScreen}
               customAlert={customAlert}
+              
+              bootcamps={bootcamps}
+              templates={templates}
             />
           </section>
         ) : (
@@ -120,7 +114,7 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
                 selectedBootcampIndex={selectedBootcampIndex}
                 saltData={saltData[selectedBootcampIndex]}
                 templates={templates}
-                fullscreen = {IsFullScreen}
+                fullscreen={IsFullScreen}
                 customAlert={customAlert}
               />
             </section>
@@ -128,17 +122,17 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
         )}
       </div>
     ) : (
-    <>
-      <h1 className="loading-title">{loadingMessage}</h1>
-      {!isFailed ? (
-        <SpinnerDefault classOverride="spinner-diplomamaking" />
-      ) : (
-        <div className="loading-error__icon">
-          <ErrorIcon />
-        </div>
-      )}
-    </>
+      <>
+        <h1 className="loading-title">{loadingMessage}</h1>
+        {!isFailed ? (
+          <SpinnerDefault classOverride="spinner-diplomamaking" />
+        ) : (
+          <div className="loading-error__icon">
+            <ErrorIcon />
+          </div>
+        )}
+      </>
+    )
   )
-)
 
 };

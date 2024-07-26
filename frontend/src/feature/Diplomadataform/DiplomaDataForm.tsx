@@ -69,7 +69,6 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
       customAlert('fail', "Failed to add diplomas:", `${error}`);
     }
   }
-  // should improve
 
   const generatePDFHandler = async () => {
     if (!bootcamps || !templates) {
@@ -102,6 +101,8 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
     await newGenerateCombinedPDF(templatesArr, inputsArray);
     customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
   };
+
+  
 
   const onSubmit = (data: any) => {
     postSelectedBootcampData()
@@ -179,31 +180,31 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
 
       {/* Example Checkboxes */}
       <div className="checkboxes mb-6">
-      <label htmlFor="upload" className="block text-lg font-medium text-gray-700 dark: text-white mb-2">
-        PDF creation options
-      </label>
+        <label htmlFor="upload" className="block text-lg font-medium text-gray-700 dark: text-white mb-2">
+          PDF-Generation options
+        </label>
         <div className="flex flex-col space-y-2">
           <label className="flex items-center">
             <input
               type="checkbox"
-              checked 
+              defaultChecked
               {...register("optionA")}
               className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
             />
             <span className="ml-2 text-gray-700 dark:text-white">Update changes made to Bootcamp</span>
-          </label>  
+          </label>
           <label className="flex items-center">
             <input
               type="checkbox"
               {...register("optionB")}
               className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
             />
-            <span className="ml-2 text-gray-700 dark:text-white">Generate pdf in new window</span>
+            <span className="ml-2 text-gray-700 dark:text-white">Generate all PDF for students </span>
           </label>
           <label className="flex items-center">
             <input
               type="checkbox"
-              checked 
+              defaultChecked
               {...register("optionC")}
               className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
             />
