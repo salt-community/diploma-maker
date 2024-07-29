@@ -52,7 +52,15 @@
         stroke: #ababba;
         transition: all .15s ease-in-out;
     }
+    .save-btn svg circle{
+        stroke: #ababba;
+        transition: all .15s ease-in-out;
+    }
     .save-btn.normal:hover svg path{
+        stroke: #000000;
+        transition: all .15s ease-in-out;
+    }
+    .save-btn:hover svg circle{
         stroke: #000000;
         transition: all .15s ease-in-out;
     }

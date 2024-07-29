@@ -8,6 +8,7 @@ import { PopupType } from "../MenuItems/Popups/AlertPopup";
 import CustomCheckBoxRound from "../MenuItems/Inputs/CustomCheckBoxRound";
 import { ModifyButton } from "../MenuItems/Buttons/ModifyButton";
 import { ConfigureIcon } from "../MenuItems/Icons/ConfigureIcon";
+import { CloseIcon } from "../MenuItems/Icons/CloseIcon";
 
 type Props = {
     clients: Student[],
@@ -22,6 +23,7 @@ type Props = {
 export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStudentEmailHandler, sendEmails, callCustomAlert }: Props) => {
     const [emailChanges, setEmailChanges] = useState<{[key: string]: string}>({});
     const [checkedUsers, setCheckedUsers] = useState<{[key: string]: boolean}>({});
+    const [emailConfigActive, setEmailConfigActive] = useState<boolean>(false);
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, student: Student) => {
         setEmailChanges({
@@ -59,10 +61,6 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
         sendEmails(selectedIds);
     }
 
-    const openEmailConfiguration = () => {
-        alert("opened")
-    }
-
     return (
         <>
             <section className={"emailclient " + (show ? 'fade-in' : 'fade-out')}>
@@ -98,7 +96,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 </button>
                 <div className="emailclient__footer">
                     <SaveButton classNameOverride="send-emails-btn" saveButtonType={'normal'} textfield="Send Emails to Selected Clients" onClick={sendEmailsHandler}/>
-                    <SaveButton classNameOverride="send-emails-btn" saveButtonType={'normal'} customIcon={<ConfigureIcon />} textfield="Email Host Configuration" onClick={openEmailConfiguration}/>
+                    <SaveButton classNameOverride="send-emails-btn" saveButtonType={emailConfigActive ? 'remove' : 'normal'} customIcon={emailConfigActive ? <CloseIcon /> : <ConfigureIcon />} textfield={`${emailConfigActive ? 'Close Email Host' : 'Email Host Configuration'}`} onClick={() => setEmailConfigActive(!emailConfigActive)}/>
                 </div>
                 
             </section>
