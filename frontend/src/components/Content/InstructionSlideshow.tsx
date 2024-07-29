@@ -29,6 +29,8 @@ export const InstructionSlideshow = ({ slides, onClose, show }: SlideshowProps) 
         );
     };
 
+    const currentSlide = slides[currentIndex];
+
     return (
         <div className={`slideshow ${show ? 'visible' : 'hidden'}`}>
             <button className='slideshow__closebtn' onClick={onClose}>
@@ -47,8 +49,8 @@ export const InstructionSlideshow = ({ slides, onClose, show }: SlideshowProps) 
                     />
                 ))}
                 <div className="slideshow__info">
-                    <h2>{slides[currentIndex].title}</h2>
-                    <p>{slides[currentIndex].description}</p>
+                    <h2>{parseTextWithLinkTag(currentSlide.title)}</h2>
+                    <p>{parseTextWithLinkTag(currentSlide.description)}</p>
                 </div>
             </div>
             <button className="slideshow__arrow slideshow__arrow--right" onClick={goToNextSlide}>
@@ -56,4 +58,27 @@ export const InstructionSlideshow = ({ slides, onClose, show }: SlideshowProps) 
             </button>
         </div>
     );
+};
+
+const parseTextWithLinkTag = (text: string) => {
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g; // find [link](url)
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = linkRegex.exec(text)) !== null) {
+        const [fullMatch, linkText, linkUrl] = match;
+        if (match.index > lastIndex) {
+            parts.push(text.substring(lastIndex, match.index));
+        }
+        parts.push(
+            <a key={match.index} href={linkUrl} target="_blank" rel="noopener noreferrer">{linkText}</a>
+        );
+        lastIndex = linkRegex.lastIndex;
+    }
+    if (lastIndex < text.length) {
+        parts.push(text.substring(lastIndex));
+    }
+
+    return parts;
 };

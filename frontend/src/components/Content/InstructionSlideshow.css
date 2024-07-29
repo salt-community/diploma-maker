@@ -133,9 +133,43 @@
 .slideshow__info h2 {
     margin: 0;
     font-size: 1.5rem;
+    cursor: default;
 }
 
 .slideshow__info p {
     margin: 0;
     font-size: 1rem;
+    cursor: default;
 }
+
+.slideshow__info a{
+    position: relative;
+    margin: 0;
+    font-size: 1.5rem;
+    color: #2b7cf6;
+    transition: all 150ms ease;
+}
+.slideshow__info a::after {
+    content: '';
+    position: absolute;
+    transform: translateX(-50%) translateY(-50%);
+    top: 50%;
+    left: 50%;
+    width: 140%;
+    height: 110%;
+    background-color: #192538;
+    border-radius: .4rem;
+    z-index: -1;
+    transition: all 150ms ease;
+}
+
+.slideshow__info a:hover::after{
+    filter: brightness(120%) saturate(170%);
+    transition: all 150ms ease;
+}
+.slideshow__info a:hover{
+    filter: brightness(120%) saturate(170%);
+    transition: all 150ms ease;
+}
+
+
