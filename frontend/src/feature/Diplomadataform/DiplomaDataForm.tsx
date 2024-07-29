@@ -218,7 +218,7 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
               {...register("optionB", { validate: validateOptions })}
               className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
             />
-            <span className="ml-2 text-gray-700 dark:text-white">Generate all PDF for students </span>
+            <span className="ml-2 text-gray-700 dark:text-white">Generate all PDF in new window</span>
           </label>
           <label className="flex items-center">
             <input
