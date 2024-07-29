@@ -8,38 +8,50 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.441);
-    z-index: 1000;
-    overflow: hidden;
     backdrop-filter: blur(10px);
     z-index: 5000;
-    transition: all .25s ease;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
-.slideshow__closebtn{
+.slideshow.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.slideshow.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.slideshow__closebtn {
     position: absolute;
     top: 0;
     right: 0;
     width: 10rem;
     height: 7rem;
-
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 5001;
 }
-    .slideshow__closebtn svg{
-        width: 50px;
-        height: 50px;
-    }
-    .slideshow__closebtn svg path{
-        fill: #ababba;
-        transition: all 150ms ease;
-    }
-    .slideshow__closebtn:hover svg path{
-        fill: #fff;
-        transition: all 150ms ease;
-    }
- 
+
+.slideshow__closebtn svg {
+    width: 50px;
+    height: 50px;
+}
+
+.slideshow__closebtn svg path {
+    fill: #ababba;
+    transition: all 150ms ease;
+}
+
+.slideshow__closebtn:hover svg path {
+    fill: #fff;
+}
+
 .slideshow__arrow {
     width: 10rem;
     height: 100%;
@@ -47,34 +59,38 @@
     align-items: center;
     justify-content: center;
 }
-    .slideshow__arrow svg{
-        width: 50px;
-        height: 50px;
-    }
-.slideshow__arrow svg path{
+
+.slideshow__arrow svg {
+    width: 50px;
+    height: 50px;
+}
+
+.slideshow__arrow svg path {
     stroke: #ababba;
     transition: all 150ms ease;
 }
-.slideshow__arrow:hover svg path{
+
+.slideshow__arrow:hover svg path {
     stroke: #fff;
-    transition: all 150ms ease;
 }
 
 .slideshow__arrow--left {
     position: absolute;
     left: 0;
 }
-    .slideshow__arrow--left svg{
-        transform: rotate(-90deg);
-    }
+
+.slideshow__arrow--left svg {
+    transform: rotate(-90deg);
+}
 
 .slideshow__arrow--right {
     position: absolute;
     right: 0;
 }
-    .slideshow__arrow--right svg{
-        transform: rotate(90deg);
-    }
+
+.slideshow__arrow--right svg {
+    transform: rotate(90deg);
+}
 
 .slideshow__content {
     position: relative;

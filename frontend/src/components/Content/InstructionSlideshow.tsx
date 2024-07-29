@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import './InstructionSlideshow.css'
 import { ArrowIcon } from '../MenuItems/Icons/ArrowIcon';
-import { CloseIcon } from '../MenuItems/Icons/CloseIcon';
 import { CloseWindowIcon } from '../MenuItems/Icons/CloseWindowIcon';
 
 type Slide = {
@@ -14,9 +13,10 @@ type Slide = {
 type SlideshowProps = {
     slides: Slide[];
     onClose: () => void;
+    show: boolean;
 };
 
-export const InstructionSlideshow = ({ slides, onClose }: SlideshowProps) => {
+export const InstructionSlideshow = ({ slides, onClose, show }: SlideshowProps) => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const goToNextSlide = () => {
@@ -30,8 +30,8 @@ export const InstructionSlideshow = ({ slides, onClose }: SlideshowProps) => {
     };
 
     return (
-        <div className="slideshow">
-            <button className='slideshow__closebtn' onClick={() => onClose}>
+        <div className={`slideshow ${show ? 'visible' : 'hidden'}`}>
+            <button className='slideshow__closebtn' onClick={onClose}>
                 <CloseWindowIcon />
             </button>
             <button className="slideshow__arrow slideshow__arrow--left" onClick={goToPreviousSlide}>

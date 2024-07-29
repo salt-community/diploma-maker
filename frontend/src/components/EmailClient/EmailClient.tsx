@@ -40,9 +40,11 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
     const senderEmailInput = useRef(null);
     const senderCodeInput = useRef(null);
 
-    const [senderEmail, setSenderEmail] = useState('');
-    const [senderCode, setSenderCode] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+    const [senderEmail, setSenderEmail] = useState<string>('');
+    const [senderCode, setSenderCode] = useState<string>('');
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    
+    const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
 
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
@@ -168,7 +170,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                             </li>
                         </ul>
                         <section className="emailconfig-footer">
-                            <AddButton icon={<HelpIcon />} text='Instructions' onClick={() => {}} />
+                            <AddButton icon={<HelpIcon />} text='Instructions' onClick={() => {setShowInstructionSlideshow(true)}} />
                             <SaveButton classNameOverride="emailconfig__savebtn" saveButtonType='normal' textfield="Save Changes" customIcon={<SuccessIcon />} onClick={() => emailConfigSaveHandler()}/>
                         </section>
                     </>
@@ -214,7 +216,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 show={showPopup}
                 onClose={closeAlert}
             />
-            <InstructionSlideshow slides={EmailConfigInstructionSlides} onClose={}/>
+            <InstructionSlideshow show={showInstructionSlideshow}  slides={EmailConfigInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
         </>
     );
 };
