@@ -102,6 +102,8 @@ export type TemplateRequest = {
 export type EmailSendRequest = {
     guidId: string;
     file: Blob;
+    email: string;
+    senderCode: string;
 }
 
 export type XYPosition = {

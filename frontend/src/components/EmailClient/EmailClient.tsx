@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { EmailConfigRequestDto, Student } from "../../util/types";
 import './EmailClient.css';
 import { CloseWindowIcon } from "../MenuItems/Icons/CloseWindowIcon";
@@ -35,7 +35,21 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
     const senderEmailInput = useRef(null);
     const senderCodeInput = useRef(null);
 
+    const [senderEmail, setSenderEmail] = useState('');
+    const [senderCode, setSenderCode] = useState('');
+
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+
+    useEffect(() => {
+        const emailConfigRequest = JSON.parse(localStorage.getItem('emailConfigRequest'));
+        if (emailConfigRequest) {
+            setSenderEmail(emailConfigRequest.senderEmail || "");
+            setSenderCode(emailConfigRequest.senderCode || "");
+        } else {
+            setSenderEmail("");
+            setSenderCode("");
+        }
+    }, []);
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, student: Student) => {
         setEmailChanges({
@@ -83,12 +97,19 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
             return;
         }
         try{
-            console.log(emailConfigRequest);
+            localStorage.setItem('emailConfigRequest', JSON.stringify(emailConfigRequest));
             customAlert('success',"Successfully updated Email Host Configuration",`Email Host Configuration updated with email address ${emailConfigRequest.senderEmail}`);
         }catch(error){
             customAlert('fail',"Email Config Update failure!",`${error} when trying to update email configuration.`);
         }
-        
+    }
+
+    const handleSenderEmailChange = (event) => {
+        setSenderEmail(event.target.value);
+    }
+    
+    const handleSenderCodeChange = (event) => {
+        setSenderCode(event.target.value);
     }
 
     return (
@@ -109,6 +130,8 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                         className="emailclient__list--input" 
                                         type="text" 
                                         ref={senderEmailInput}
+                                        onChange={handleSenderEmailChange}
+                                        value={senderEmail}
                                     />
                                 </div>
                             </li>
@@ -120,6 +143,8 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                         className="emailclient__list--input" 
                                         type="text" 
                                         ref={senderCodeInput}
+                                        onChange={handleSenderCodeChange}
+                                        value={senderCode}
                                     />
                                 </div>
                             </li>
