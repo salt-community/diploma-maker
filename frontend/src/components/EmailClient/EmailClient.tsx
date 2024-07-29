@@ -16,6 +16,8 @@ import { AddIcon } from "../MenuItems/Icons/AddIcon";
 import { SuccessIcon } from "../MenuItems/Icons/SuccessIcon";
 import { PasswordIcon } from "../MenuItems/Icons/PasswordIcon";
 import { useCustomAlert } from "../Hooks/useCustomAlert";
+import { EyeIcon } from "../MenuItems/Icons/EyeIcon";
+import { MountainIcon } from "../MenuItems/Icons/MountainIcon";
 
 type Props = {
     clients: Student[],
@@ -37,6 +39,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
 
     const [senderEmail, setSenderEmail] = useState('');
     const [senderCode, setSenderCode] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
@@ -139,13 +142,25 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                 <PasswordIcon />
                                 <div className="emailclient__list--input-wrapper">
                                     <h3>Sender Code</h3>
-                                    <input 
-                                        className="emailclient__list--input" 
-                                        type="text" 
+                                    <input
+                                        className="emailclient__list--input"
+                                        type={showPassword ? "text" : "password"}
                                         ref={senderCodeInput}
                                         onChange={handleSenderCodeChange}
                                         value={senderCode}
                                     />
+                                    <div
+                                        className="password-visibility-toggle"
+                                        onMouseDown={() => setShowPassword(true)}
+                                        onMouseUp={() => setShowPassword(false)}
+                                        onMouseLeave={() => setShowPassword(false)}
+                                    >
+                                        {showPassword ? 
+                                            <MountainIcon />
+                                        : 
+                                            <EyeIcon /> 
+                                        }
+                                    </div>
                                 </div>
                             </li>
                         </ul>

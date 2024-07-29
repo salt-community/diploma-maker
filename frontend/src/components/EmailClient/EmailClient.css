@@ -92,24 +92,37 @@
                 display: block;
                 width: 1.5rem;
                 height: 1.5rem;
-                fill: #fff;
                 cursor: pointer;
                 pointer-events: none;
 
                 transition: all 1s ease-out;
             }
-                .emailclient__list--input-wrapper svg {
+                .emailclient__list--input-wrapper .rotatesvg {
                     opacity: 1;
                     visibility: visible;
                     fill: #5dc53e;
                     transition: all 1.5s ease-out;
                 }
-                .emailclient__list--input-wrapper:hover svg {
+                .emailclient__list--input-wrapper:hover .rotatesvg {
                     opacity: 1;
                     visibility: visible;
                     transform: rotate(180deg) translateY(50%);
                     transition: transform 1.5s ease-out, opacity 0.5s ease-in;
                 }
+                .password-visibility-toggle {
+                    position: absolute;
+                    right: 1rem;
+                    width: 50px;
+                    height: 100%;
+                    cursor: pointer;
+                }
+                    .password-visibility-toggle svg{
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translateX(-50%) translateY(-50%);
+                        width: 20px !important;
+                    }
             input.emailclient__list--input {
                 width: 100%;
                 min-width: 350px;
