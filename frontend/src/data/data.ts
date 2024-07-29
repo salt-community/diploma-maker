@@ -10,21 +10,27 @@ export const saltDefaultData: SaltData = {
 export const EmailConfigInstructionSlides = 
     [
       {
-          image: 'https://images.unsplash.com/photo-1721981036255-2f673a5cf7a5?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          title: 'Step 1 - Setup Google api press this [link](https://excalidraw.com/) here',
-          description: 'Description for Slide 1',
-          alt: 'Slide 1',
+          image: '/instructionslides/emailconfig_slide_1.webp',
+          title: 'Step 1 - Setup Google App Password ',
+          description: 'Login to your google account following this [link](https://myaccount.google.com/apppasswords?pli=1&rapt=AEjHL4OMlzz3HfDjNm4lZWbhLOqQ8_poQJ[…]fREkhU7ftg5bK8ST_ycSMdq1U0j-5tDI-EBAnG-MCeTtnkOOUQitYsFD_Q)',
+          alt: 'Login to google account',
       },
       {
-          image: 'https://images.unsplash.com/photo-1718844054457-7db4bf1bd0dc?q=80&w=1856&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          title: 'Title 2',
-          description: 'Description for Slide 2',
-          alt: 'Slide 2',
+          image: '/instructionslides/emailconfig_slide_2.webp',
+          title: 'Step 2 - Create an email sender',
+          description: 'Name it sender or similar',
+          alt: 'Create App Password',
       },
       {
-          image: 'https://plus.unsplash.com/premium_photo-1721514886605-87216da45ecb?q=80&w=1908&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          title: 'Title 3',
-          description: 'Description for Slide 3',
-          alt: 'Slide 3',
+        image: '/instructionslides/emailconfig_slide_3.webp',
+        title: 'Step 3 - Copy the app password to clipboard',
+        description: 'This is the code used to verify the sender',
+        alt: 'Generated app password',
+      },
+      {
+        image: '/instructionslides/emailconfig_slide_4.webp',
+        title: 'Step 4 - Paste your email + app password into the Sender Code field',
+        description: "That's it!",
+        alt: 'Email Sender view',
       },
   ]

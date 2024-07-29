@@ -132,20 +132,20 @@
 
 .slideshow__info h2 {
     margin: 0;
-    font-size: 1.5rem;
-    cursor: default;
+    font-size: 1.7rem;
 }
 
 .slideshow__info p {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.2rem;
     cursor: default;
+    color: #dfdfdf;
 }
 
 .slideshow__info a{
     position: relative;
-    margin: 0;
-    font-size: 1.5rem;
+    margin: 0 .3rem;
+    font-size: 1.2rem;
     color: #2b7cf6;
     transition: all 150ms ease;
 }
@@ -156,19 +156,19 @@
     top: 50%;
     left: 50%;
     width: 140%;
-    height: 110%;
-    background-color: #192538;
-    border-radius: .4rem;
+    height: 100%;
+    background-color: #192538c0;
+    border-radius: .5rem;
     z-index: -1;
     transition: all 150ms ease;
 }
 
 .slideshow__info a:hover::after{
-    filter: brightness(120%) saturate(170%);
+    background-color: rgba(30, 55, 95, 0.753);
     transition: all 150ms ease;
 }
 .slideshow__info a:hover{
-    filter: brightness(120%) saturate(170%);
+    color: #659ff6;
     transition: all 150ms ease;
 }
 
