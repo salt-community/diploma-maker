@@ -3,7 +3,7 @@ import { BootcampResponse,  SaltData, TemplateResponse, FormDataUpdateRequest, T
 import {
   mapBootcampToSaltData,
 } from "../../util/helper";
-import DiplomaDataForm from "../../feature/Diplomadataform/DiplomaDataForm";
+import DiplomaDataForm from "../../components/Feature/Diplomadataform/DiplomaDataForm";
 import './DiplomaMaking.css';
 import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
@@ -11,8 +11,8 @@ import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefaul
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 import { Popup404 } from "../../components/MenuItems/Popups/Popup404";
 import { ErrorIcon } from "../../components/MenuItems/Icons/ErrorIcon";
-import PreviewDiploma from "../../feature/PreviewDiploma";
-import { NextIcon } from "../../components/MenuItems/Icons/NextIcon";
+import PreviewDiploma from "../../components/Feature/PreviewDiploma/PreviewDiploma";
+/* import { NextIcon } from "../../components/MenuItems/Icons/NextIcon"; */
 
 type Props = {
   tracks: TrackResponse[] | null;

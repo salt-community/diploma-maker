@@ -1,13 +1,12 @@
 .navbar{
-    position: relative;
+    position: sticky;
     background-color: #181823;
     min-height: 50px;
     max-height: 80px;
-
     display: flex;
     align-items: center;
     justify-content: flex-start;
-
+    top: 0;
     padding: 1% 5%;
     z-index: 5000;
 }

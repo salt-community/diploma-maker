@@ -1,14 +1,10 @@
 import { useEffect, useState, useRef } from "react";
-import { displayMode, SaltData } from "../util/types";
-import { generatePDF, getFontsData, getPlugins, newGenerateCombinedPDF } from "../util/helper";
+import {  SaltData } from "../../../util/types"
+import {  getFontsData, getPlugins, newGenerateCombinedPDF } from "../../../util/helper";
 import { Form, Viewer } from "@pdfme/ui";
-import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../util/dataHelpers";
-import { makeTemplateInput } from "../templates/baseTemplate";
-import { Template } from "@pdfme/common";
-import { SwitchComponent } from "../components/MenuItems/Inputs/SwitchComponent";
-import { PublishButton } from "../components/MenuItems/Buttons/PublishButton";
-import { SaveButton } from "../components/MenuItems/Buttons/SaveButton";
-import { PaginationMenu } from "../components/MenuItems/PaginationMenu";
+import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../../../util/dataHelpers";
+
+import { PaginationMenu } from "../../MenuItems/PaginationMenu";
 
 type Props = {
   saltData: SaltData | null;

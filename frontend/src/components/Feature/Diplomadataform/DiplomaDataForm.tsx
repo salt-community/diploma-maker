@@ -1,15 +1,15 @@
 import { useForm } from "react-hook-form";
-import TagsInput from "../../components/TagsInput/TagsInput";
+import TagsInput from "../../TagsInput/TagsInput";
 import { useEffect, useState } from "react";
-import { BootcampResponse, TemplateResponse, SaltData, Student, FormDataUpdateRequest } from "../../util/types";
-import { FileUpload } from "../../components/MenuItems/Inputs/FileUploader";
-import { ParseFileData } from '../../services/InputFileService';
-import { generateVerificationCode, mapBootcampToSaltData, newGenerateCombinedPDF } from "../../util/helper";
+import { BootcampResponse, TemplateResponse, SaltData, Student, FormDataUpdateRequest } from "../../../util/types";
+import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
+import { ParseFileData } from '../../../services/InputFileService';
+import { generateVerificationCode, mapBootcampToSaltData, newGenerateCombinedPDF } from "../../../util/helper";
 import './DiplomaDataForm.css';
-import { UpdateBootcampWithNewFormdata } from "../../services/bootcampService";
-import { PopupType } from "../../components/MenuItems/Popups/AlertPopup";
+import { UpdateBootcampWithNewFormdata } from "../../../services/bootcampService";
+import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
-import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../util/dataHelpers";
+import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
 
 //exportera till types folder när typerna är satta
 type FormData = {
@@ -57,6 +57,9 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
+    dataFromFile.forEach(student => {
+      student.verificationCode = generateVerificationCode()
+    });
     setStudents(dataFromFile);
   };
 
@@ -188,6 +191,7 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
           selectedTags={(names: string[]) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))} // Adjust this based on how TagsInput is implemented
           tags={saltData.students.map(student => student.name)}
         />
+       
       </div>
 
       <div>
@@ -220,14 +224,14 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
             />
             <span className="ml-2 text-gray-700 dark:text-white">Generate all PDF in new window</span>
           </label>
-          <label className="flex items-center">
+    {/*       <label className="flex items-center">
             <input
               type="checkbox"
               {...register("optionC", { validate: validateOptions })}
               className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
             />
             <span className="ml-2 text-gray-700 dark:text-white">Email each student their diploma</span>
-          </label>
+          </label> */}
         </div>
         {errors.optionA && <p className="text-red-500">{errors.optionA.message}</p>}
 
