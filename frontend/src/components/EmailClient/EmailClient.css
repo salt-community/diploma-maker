@@ -40,6 +40,7 @@
         }
 
     .emailclient__list{
+        position: relative;
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -47,6 +48,13 @@
         
         background-color: rgba(108, 108, 201, 0.053);
     }
+        .emailclient__list-label{
+            position: absolute;
+            top: -1.5rem;
+            left: .5rem;
+            color: #ababba;
+            font-size: .6rem;
+        }
         .emailclient__list--item{
             display: flex;
             align-items: center;

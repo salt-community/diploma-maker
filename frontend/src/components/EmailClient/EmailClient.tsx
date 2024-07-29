@@ -71,8 +71,13 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                     <h2>Students</h2>
                 </header>
                 <ul className="emailclient__list">
+                    <label className="emailclient__list-label">Send Toggle</label>
                     {clients.map((student: Student) => (
                         <li key={student.guidId} className="emailclient__list--item">
+                            <CustomCheckBoxRound 
+                                checked={!!checkedUsers[student.guidId]} 
+                                onChange={(event) => checkboxChangeHandler(event, student.guidId)} 
+                            />
                             <h3>{student.name}</h3>
                             <div className="emailclient__list--input-wrapper">
                                 <input 
@@ -84,10 +89,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                 />
                                 <CogWheelIcon />
                             </div>
-                            <CustomCheckBoxRound 
-                                checked={!!checkedUsers[student.guidId]} 
-                                onChange={(event) => checkboxChangeHandler(event, student.guidId)} 
-                            />
+                            
                         </li>
                     ))}
                 </ul>
