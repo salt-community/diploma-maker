@@ -18,6 +18,7 @@ import { PasswordIcon } from "../MenuItems/Icons/PasswordIcon";
 import { useCustomAlert } from "../Hooks/useCustomAlert";
 import { EyeIcon } from "../MenuItems/Icons/EyeIcon";
 import { MountainIcon } from "../MenuItems/Icons/MountainIcon";
+import { HelpIcon } from "../MenuItems/Icons/HelpIcon";
 
 type Props = {
     clients: Student[],
@@ -164,7 +165,10 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                 </div>
                             </li>
                         </ul>
-                        <SaveButton classNameOverride="emailconfig__savebtn" saveButtonType='normal' textfield="Save Changes" customIcon={<SuccessIcon />} onClick={() => emailConfigSaveHandler()}/>
+                        <section className="emailconfig-footer">
+                            <AddButton icon={<HelpIcon />} text='Instructions' onClick={() => {}} />
+                            <SaveButton classNameOverride="emailconfig__savebtn" saveButtonType='normal' textfield="Save Changes" customIcon={<SuccessIcon />} onClick={() => emailConfigSaveHandler()}/>
+                        </section>
                     </>
                 :
                     <ul className="emailclient__list">

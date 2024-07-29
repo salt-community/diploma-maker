@@ -123,6 +123,12 @@
                         transform: translateX(-50%) translateY(-50%);
                         width: 20px !important;
                     }
+                .emailconfig-footer{
+                    display: flex;
+                    gap: 1rem;
+                    margin: 1rem 0 .5rem 0;
+                }
+
             input.emailclient__list--input {
                 width: 100%;
                 min-width: 350px;
