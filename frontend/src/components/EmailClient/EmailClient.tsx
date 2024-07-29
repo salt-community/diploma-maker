@@ -4,7 +4,7 @@ import './EmailClient.css';
 import { CloseWindowIcon } from "../MenuItems/Icons/CloseWindowIcon";
 import { CogWheelIcon } from "../MenuItems/Icons/CogWheelIcon";
 import { SaveButton, SaveButtonType } from "../MenuItems/Buttons/SaveButton";
-import { PopupType } from "../MenuItems/Popups/AlertPopup";
+import { AlertPopup, PopupType } from "../MenuItems/Popups/AlertPopup";
 import CustomCheckBoxRound from "../MenuItems/Inputs/CustomCheckBoxRound";
 import { ModifyButton } from "../MenuItems/Buttons/ModifyButton";
 import { ConfigureIcon } from "../MenuItems/Icons/ConfigureIcon";
@@ -15,6 +15,7 @@ import { AddButton } from "../MenuItems/Buttons/AddButton";
 import { AddIcon } from "../MenuItems/Icons/AddIcon";
 import { SuccessIcon } from "../MenuItems/Icons/SuccessIcon";
 import { PasswordIcon } from "../MenuItems/Icons/PasswordIcon";
+import { useCustomAlert } from "../Hooks/useCustomAlert";
 
 type Props = {
     clients: Student[],
@@ -33,6 +34,8 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
 
     const senderEmailInput = useRef(null);
     const senderCodeInput = useRef(null);
+
+    const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, student: Student) => {
         setEmailChanges({
@@ -75,8 +78,17 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
             senderEmail: senderEmailInput.current.value,
             senderCode: senderCodeInput.current.value
         }
-
-        console.log(emailConfigRequest);
+        if(emailConfigRequest.senderEmail.trim() === "" || emailConfigRequest.senderCode.trim() === ""){
+            customAlert('message',"Cannot update to empty field",`Make sure you don't have empty fields`);
+            return;
+        }
+        try{
+            console.log(emailConfigRequest);
+            customAlert('success',"Successfully updated Email Host Configuration",`Email Host Configuration updated with email address ${emailConfigRequest.senderEmail}`);
+        }catch(error){
+            customAlert('fail',"Email Config Update failure!",`${error} when trying to update email configuration.`);
+        }
+        
     }
 
     return (
@@ -149,6 +161,13 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 
             </section>
             <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
+            <AlertPopup
+                title={popupContent[0]}
+                text={popupContent[1]}
+                popupType={popupType}
+                show={showPopup}
+                onClose={closeAlert}
+            />
         </>
     );
 };
