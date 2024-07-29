@@ -121,6 +121,17 @@
                 background-color: #ced1ff24;
                 transition: all .15s ease-in-out;
             }
+.emailclient__footer{
+    display: flex;
+    gap: 3rem;
+}
+    .send-emails-btn{
+        margin-top: 1.5rem  !important;
+    }
+    .send-emails-btn:nth-of-type(2) svg{
+        width: 20px;
+    }
+
 
 .emailclient-close-btn{
     position: absolute;
@@ -153,6 +164,8 @@
 
 
 
+
+
 .emailclient.fade-in {
     opacity: 1;
     pointer-events: auto;
@@ -169,7 +182,4 @@
     height: 100%;
     z-index: 100;
     transition: all .15s ease-in-out;
-}
-.send-emails-btn{
-    margin-top: 1.5rem  !important;
 }

@@ -6,6 +6,8 @@ import { CogWheelIcon } from "../MenuItems/Icons/CogWheelIcon";
 import { SaveButton, SaveButtonType } from "../MenuItems/Buttons/SaveButton";
 import { PopupType } from "../MenuItems/Popups/AlertPopup";
 import CustomCheckBoxRound from "../MenuItems/Inputs/CustomCheckBoxRound";
+import { ModifyButton } from "../MenuItems/Buttons/ModifyButton";
+import { ConfigureIcon } from "../MenuItems/Icons/ConfigureIcon";
 
 type Props = {
     clients: Student[],
@@ -57,6 +59,10 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
         sendEmails(selectedIds);
     }
 
+    const openEmailConfiguration = () => {
+        alert("opened")
+    }
+
     return (
         <>
             <section className={"emailclient " + (show ? 'fade-in' : 'fade-out')}>
@@ -88,7 +94,11 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 <button onClick={closeEmailClient} className='emailclient-close-btn'>
                     <CloseWindowIcon />
                 </button>
-                <SaveButton classNameOverride="send-emails-btn" saveButtonType={'normal'} textfield="Send Emails to Selected Clients" onClick={sendEmailsHandler}/>
+                <div className="emailclient__footer">
+                    <SaveButton classNameOverride="send-emails-btn" saveButtonType={'normal'} textfield="Send Emails to Selected Clients" onClick={sendEmailsHandler}/>
+                    <SaveButton classNameOverride="send-emails-btn" saveButtonType={'normal'} customIcon={<ConfigureIcon />} textfield="Email Host Configuration" onClick={openEmailConfiguration}/>
+                </div>
+                
             </section>
             <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
         </>
