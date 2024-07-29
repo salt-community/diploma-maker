@@ -10,16 +10,18 @@ public class StudentService
 {
     private readonly DiplomaMakingContext _context;
     private readonly ILogger<StudentService> _logger;
+    private readonly HistorySnapshotService _historySnapshotService;
 
-
-    public StudentService(DiplomaMakingContext context, ILogger<StudentService> logger)
+    public StudentService(DiplomaMakingContext context, ILogger<StudentService> logger, HistorySnapshotService historySnapshotService)
     {
         _context = context;
         _logger = logger;
+        _historySnapshotService = historySnapshotService;
     }
     public async Task<List<Student>> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
     {
         var bootcamp = await _context.Bootcamps.Include(b => b.Students)
+                .Include(b => b.Track)
                 .FirstOrDefaultAsync(b => b.GuidId == BootcampGuidId)
                 ?? throw new Exception($"Bootcamp with ID {BootcampGuidId} does not exist");
         
@@ -36,15 +38,20 @@ public class StudentService
         {
                 var newStudent = new Student
                 {
+                    GuidId = Student.GuidId,
                     Name = Student.Name,
                     Email = Student.Email,
                     Bootcamp = bootcamp,
-                    VerificationCode = Student.VerificationCode
+                    VerificationCode = Student.VerificationCode,
+                    LastGenerated = DateTime.UtcNow,
                 };
                 _context.Students.Add(newStudent);
                 Students.Add(newStudent);
         }
         await _context.SaveChangesAsync();
+
+        await _historySnapshotService.CreateHistorySnapshotFromBootcamp(requestDto, bootcamp);
+
         return Students;
     }
     public async Task<List<Student>> GetAllStudents(){

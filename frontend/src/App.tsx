@@ -2,7 +2,7 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto } from "./util/types";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
@@ -11,6 +11,7 @@ import { useLoadingMessage } from "./components/Contexts/LoadingMessageContext";
 import { initApiEndpoints } from "./services/apiFactory";
 import { VerificationInputPage } from "./pages/Verifcation/VerificationInputPage";
 import { set } from "react-hook-form";
+import { HistoryPage } from "./pages/History/HistoryPage";
 
 const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
@@ -18,6 +19,7 @@ export default function App() {
   const [tracks, setTracks] = useState<TrackResponse[] | null>(null);
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
   const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
+
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
 
   async function getBootcampsFromBackend() {
@@ -31,6 +33,7 @@ export default function App() {
     if(!bootcamps){
       getBootcampsFromBackend();
       getTemplates();
+      getTracks();
     }
   }, [bootcamps]);
 
@@ -109,6 +112,27 @@ export default function App() {
     await api.postEmail(emailRequest)
   }
 
+  // HistorySnapshot Endpoint
+  const getHistory = async () => {
+    const historySnapshots = await api.getHistorySnapshots();
+    return historySnapshots;
+  }
+  
+  const getHistoryByVerificationCode = async (verificationCode: string) => {
+    const historySnapshots = await api.getHistoryByVerificationCode(verificationCode);
+    return historySnapshots;
+  }
+
+  const changeActiveHistorySnapShot = async (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => {
+    await api.makeActiveHistorySnapShot(snapshotUpdateRequest);
+  }
+
+  // Tracks Endpoint
+  const getTracks = async () => {
+    const tracks = await api.getAllTracks(setLoadingMessage);
+    setTracks(tracks);
+  }
+
   const refresh = async () => {
     const newBootcamps = await api.getBootcamps(setLoadingMessage);
     const newTemplates = await api.getAllTemplates(setLoadingMessage);
@@ -123,10 +147,11 @@ export default function App() {
         <Route path={"/"} element={<DiplomaMaking tracks={tracks}bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}/>} />
      {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
         <Route path={`/verify`} element={<VerificationInputPage />} />
-        <Route path={`/verify/:verificationCode`} element = {<VertificationPage getStudentByVerificationCode={getStudentByVerificationCode} bootcamps={bootcamps} templates={templates}/>} />
-        <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}/>} /> 
+        <Route path={`/verify/:verificationCode`} element = {<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode}/>} />
+        <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks}/>} /> 
         <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates}/>} />
         <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate}/>} />
+        <Route path={"/history"} element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot}/>} />
       </Routes>
     </>
   );

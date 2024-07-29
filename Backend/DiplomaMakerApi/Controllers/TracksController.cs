@@ -1,6 +1,5 @@
 using AutoMapper;
 using DiplomaMakerApi.Dtos;
-using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using Microsoft.AspNetCore.Mvc;
 

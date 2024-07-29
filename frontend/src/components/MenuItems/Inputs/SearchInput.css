@@ -47,3 +47,30 @@
         max-width: 600px;
     }
 }
+
+.input-wrapper{
+    width: 100%;
+}
+    .input-wrapper svg path{
+        stroke: #ababba;
+        transition: all 350ms ease;
+    }
+    .input-wrapper svg{
+        position: absolute;
+        top: 52%;
+        left: 5%;
+        transform: translateY(-50%);
+        width: 15px !important;
+    }
+.input-wrapper:hover svg path{
+    stroke: #fff;
+
+    transition: all 350ms ease;
+}
+.input-wrapper input::placeholder{
+    transition: all 350ms ease;
+}
+.input-wrapper:hover input::placeholder{
+    color: #fff;
+    transition: all 350ms ease;
+}

@@ -1,10 +1,11 @@
-import { BootcampRequest, EmailSendRequest, FormDataUpdateRequest, StudentUpdateRequestDto, TemplateRequest } from "../util/types";
+import { BootcampRequest, EmailSendRequest, FormDataUpdateRequest, MakeActiveSnapshotRequestDto, StudentUpdateRequestDto, TemplateRequest } from "../util/types";
 import { deleteBootcampById, getBootcampById, getBootcamps, postBootcamp, updateBootcamp, UpdateBootcampWithNewFormdata } from "./bootcampService";
 import { postEmail } from "./emailService";
 import { getTemplatePdfFile } from "./fileService";
+import { getHistoryByVerificationCode, getHistorySnapshots, makeActiveHistorySnapShot } from "./historySnapShotService";
 import { deleteStudentById, getStudentById, getStudentByVerificationCode, getStudentsByKeyword, updateSingleStudent } from "./studentService";
 import { deleteTemplateById, getAllTemplates, getTemplateById, postTemplate, putTemplate } from "./templateService";
-import { getAllTracks } from "./trackService";
+import { getAllTracks, getTracks } from "./trackService";
 
 export const initApiEndpoints = (apiBaseUrl: string) => {
     return {
@@ -37,6 +38,11 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
         getTemplatePdfFile: (url: string, lastUpdated: Date, setLoadingMessage: (message: string) => void) => getTemplatePdfFile(apiBaseUrl, url, lastUpdated, setLoadingMessage),
     
         // Track Endpoint
-        getAllTracks:(setLoadingMessage: (message: string) => void) => getAllTracks(apiBaseUrl, setLoadingMessage)
+        getAllTracks:(setLoadingMessage: (message: string) => void) => getAllTracks(apiBaseUrl, setLoadingMessage),
+
+        // HistorySnapshot Endpoint
+        getHistorySnapshots: () => getHistorySnapshots(apiBaseUrl),
+        getHistoryByVerificationCode: (verificationCode: string) => getHistoryByVerificationCode(apiBaseUrl, verificationCode),
+        makeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => makeActiveHistorySnapShot(apiBaseUrl, snapshotUpdateRequest),
     };
 };

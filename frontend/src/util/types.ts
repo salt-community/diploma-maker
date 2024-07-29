@@ -38,13 +38,15 @@ export type Student = {
     name: string;
     email: string;
     verificationCode?: string;
+    lastGenerated?: Date;
 }
 // bootcamps
 
 export type BootcampRequest = {
     guidId?: string;
-    name: string;
+    name?: string;
     graduationDate?: Date;
+    trackId: number;
 }
 export type BootcampResponse = {
     guidId: string;
@@ -52,6 +54,13 @@ export type BootcampResponse = {
     graduationDate: Date;
     templateId: number;
     students: Student[];
+    track: TrackResponse;
+}
+
+export type TrackResponse = {
+    id: number;
+    name?: string;
+    tag?: string;
 }
 
 // Internal Data
@@ -91,6 +100,7 @@ export type TemplateRequest = {
     link?: string;
     linkStyling?: Style;
     basePdf?: string;
+    PdfBackgroundLastUpdated?: Date;
 }
 
 export type EmailSendRequest = {
@@ -147,4 +157,37 @@ export type TemplateInstanceStyle = {
 export type StudentRequestNew = {
     name: string,
     email: string
+}
+
+export type HistorySnapshotResponse = {
+    id: number;
+    generatedAt: Date;
+    bootcampName: string;
+    bootcampGuidId: string;
+    bootcampGraduationDate: Date;
+    studentGuidId: string;
+    studentName: string;
+    verificationCode: string;
+    templateName: string;
+    footer: string;
+    footerStyling: Style;
+    intro: string;
+    introStyling: Style;
+    main: string;
+    mainStyling: Style;
+    link: string;
+    linkStyling: Style;
+    basePdf: string;
+    basePdfName?: string;
+    templateLastUpdated: Date;
+    active?: Boolean;
+}
+
+export type HistorySnapshotBundledData = {
+    HistorySnapShots: HistorySnapshotResponse[]
+}
+
+export type MakeActiveSnapshotRequestDto = {
+    Ids: number[];
+    StudentGuidIds: string[];
 }

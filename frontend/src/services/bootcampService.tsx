@@ -5,6 +5,9 @@ export async function postBootcamp(apiUrl: string, bootcampRequest: BootcampRequ
         ...bootcampRequest,
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
+    console.log("REQUEST");
+    console.log(formattedRequest);
+    
     const response = await fetch (`${apiUrl}/api/bootcamps`,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

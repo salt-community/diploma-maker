@@ -62,6 +62,7 @@ public class TemplateService
         template.LinkStyling = templateRequest.LinkStyling;
         // template.BasePdf = templateRequest.basePdf;
         template.LastUpdated = DateTime.UtcNow;
+        template.PdfBackgroundLastUpdated = templateRequest.PdfBackgroundLastUpdated;
 
         IFormFile file = ConvertBase64ToIFormFile(templateRequest.basePdf, templateRequest.templateName);
         await _localFileStorageService.SaveFile(file, templateRequest.templateName);

@@ -25,6 +25,7 @@ public class BootcampService
 
         var bootcamp = new Bootcamp{
             DiplomaTemplate = template,
+            GraduationDate = requestDto.GraduationDate,
             Track = track
         };
 
@@ -83,15 +84,22 @@ public class BootcampService
     public async Task<Bootcamp> PutBootcampAsync(Guid GuidID, BootcampRequestDto requestDto)
     {
 
-             var bootcamp = await _context.Bootcamps
+            var bootcamp = await _context.Bootcamps
                 .FirstOrDefaultAsync(b => b.GuidId == GuidID) ?? throw new NotFoundByGuidException("Template", GuidID);
+
+            var track = await _context.Tracks
+                .FirstOrDefaultAsync(t => t.Id == requestDto.TrackId);
+
+            if (track == null)
+            {
+                throw new NotFoundByIdException("Track", requestDto.TrackId);
+            }
+
             bootcamp.GraduationDate = requestDto.GraduationDate;
+            bootcamp.Track = track;
 
             await _context.SaveChangesAsync();
             return bootcamp;
-       
-     
-
     }
 
 

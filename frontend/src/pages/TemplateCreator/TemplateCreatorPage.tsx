@@ -24,13 +24,13 @@ import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefaul
 type Props = {
   templates: TemplateResponse[] | null;
   addNewTemplate: (templateRequest: TemplateRequest) => Promise<void>;
-  updateTemplate: (id: number,templateRequest: TemplateRequest) => Promise<TemplateResponse>;
+  updateTemplate: (id: number, templateRequest: TemplateRequest) => Promise<TemplateResponse>;
   deleteTemplate: (templateRequest: number) => Promise<void>;
 };
 
 export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate }: Props) => {
-  const [templateData, setTemplateData] = useState<CustomTemplate[]>([]);
-  const [currentTemplate, setCurrentTemplate] = useState<CustomTemplate | null>(null);
+  const [templateData, setTemplateData] = useState<any[]>([]);
+  const [currentTemplate, setCurrentTemplate] = useState<any | null>(null);
 
   const designerRef = useRef<HTMLDivElement | null>(null);
   const designer = useRef<Designer | null>(null);
@@ -41,6 +41,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const {showConfirmationPopup,confirmationPopupContent,confirmationPopupType,confirmationPopupHandler,customPopup,closeConfirmationPopup} = useCustomConfirmationPopup();
 
   const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
+  const [templateBasePdfHasChanged, settemplateBasePdfHasChanged] = useState<boolean>(false);
   const [fileAdded, setFileAdded] = useState<boolean>(false);
   const [templateAdded, setTemplateAdded] = useState<boolean>(false);
 
@@ -268,6 +269,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         setTemplateData(updatedTemplateData);
       }
       setTemplateHasChanged(true);
+      settemplateBasePdfHasChanged(true);
       setFileAdded(true);
     }
   };
@@ -276,7 +278,12 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     if (currentTemplate) {
       closeConfirmationPopup();
       try {
-        await updateTemplate(currentTemplate?.id, currentTemplate);
+        await updateTemplate(currentTemplate?.id, 
+          templateBasePdfHasChanged 
+            ? { ...currentTemplate, PdfBackgroundLastUpdated: new Date() }
+            : currentTemplate
+        );
+        
         customAlert('success',"Template Successfully Updated!",`Successfully updated ${currentTemplate.diplomaTemplateName} to database`);
         setTemplateHasChanged(false);
         if (goToIndex !== undefined) {

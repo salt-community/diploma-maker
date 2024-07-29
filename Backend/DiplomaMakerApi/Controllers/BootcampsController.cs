@@ -53,9 +53,14 @@ public class BootcampsController : ControllerBase
     }
 
     [HttpPut("{guidId}")]
-    public async Task<ActionResult<Bootcamp>> PutBootcamp(Guid guidId, [FromBody] BootcampRequestDto requestDto)
+    public async Task<ActionResult<BootcampResponseDto>> PutBootcamp(Guid guidId, [FromBody] BootcampRequestDto requestDto)
     {
-        return await _bootcampservice.PutBootcampAsync(guidId, requestDto);
+        var updatedBootcamp = await _bootcampservice.PutBootcampAsync(guidId, requestDto);
+        if (updatedBootcamp == null)
+        {
+            return NotFound();
+        }
+        return Ok(_mapper.Map<BootcampResponseDto>(updatedBootcamp));
     }
 
     [HttpPut("dynamicfields/{guidId}")]
