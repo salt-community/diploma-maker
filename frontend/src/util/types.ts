@@ -2,8 +2,8 @@ export type displayMode = "form" | "viewer";
 
 export type TrackResponse = {
     id: number;
-    name: string;
-    tag: string,
+    name?: string;
+    tag?: string,
     bootcamps : BootcampResponse[] 
 }
 
@@ -57,11 +57,7 @@ export type BootcampResponse = {
     track: TrackResponse;
 }
 
-export type TrackResponse = {
-    id: number;
-    name?: string;
-    tag?: string;
-}
+
 
 // Internal Data
 export type SaltData = {

@@ -5,7 +5,7 @@ import { getTemplatePdfFile } from "./fileService";
 import { getHistoryByVerificationCode, getHistorySnapshots, makeActiveHistorySnapShot } from "./historySnapShotService";
 import { deleteStudentById, getStudentById, getStudentByVerificationCode, getStudentsByKeyword, updateSingleStudent } from "./studentService";
 import { deleteTemplateById, getAllTemplates, getTemplateById, postTemplate, putTemplate } from "./templateService";
-import { getAllTracks, getTracks } from "./trackService";
+import { getAllTracks } from "./trackService";
 
 export const initApiEndpoints = (apiBaseUrl: string) => {
     return {
