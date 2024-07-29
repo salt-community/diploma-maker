@@ -9,12 +9,16 @@ type Props = {
   saveButtonType: SaveButtonType;
   textfield: string;
   customIcon?: React.ReactNode;
+  disabled?: boolean;
 };
 
 export type SaveButtonType = 'grandTheftAuto' | 'normal' | 'remove';
 
-export const SaveButton = ({ classNameOverride, onClick, saveButtonType, textfield, customIcon }: Props) => (
-  <button className={"save-btn " + classNameOverride + (saveButtonType === 'grandTheftAuto' ? ' gta' : saveButtonType === 'remove' ? ' remove' : ' normal')} onClick={onClick}>
+export const SaveButton = ({ classNameOverride, onClick, saveButtonType, textfield, customIcon, disabled }: Props) => (
+  <button 
+    className={"save-btn " + classNameOverride + (saveButtonType === 'grandTheftAuto' ? ' gta' : saveButtonType === 'remove' ? ' remove' : ' normal')} 
+    onClick={() => {!disabled && onClick()}}
+  >
     {customIcon ? (
       <>
         {customIcon}

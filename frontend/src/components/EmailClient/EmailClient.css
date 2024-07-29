@@ -62,6 +62,9 @@
             padding-left: 1.2rem;
             border-bottom: 1px solid #ababba19;
         }
+        .emailclient__list--item svg{
+            width: 20px;
+        }
         .emailclient__list--item h3 {
             font-size: 1rem;
             min-width: 150px;
