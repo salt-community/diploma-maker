@@ -3,33 +3,33 @@ import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
 import { populateField, populateIdField } from "./helper";
 import { BootcampRequest, BootcampResponse, HistorySnapshotResponse, SaltData, TemplateRequest, TemplateResponse } from "./types";
 
-export const templateInputsFromSaltData = (saltData: SaltData[], selectedBootcampIndex: number, currentPageIndex: number) => {
+export const templateInputsFromSaltData = (saltData: SaltData, currentPageIndex: number) => {
     const inputs = 
         [makeTemplateInput(
           populateField(
             // @ts-ignore
-            saltData[selectedBootcampIndex].template.intro,
-            saltData[selectedBootcampIndex].classname,
-            saltData[selectedBootcampIndex].dategraduate,
-            saltData[selectedBootcampIndex].students.length > 0 ? saltData[selectedBootcampIndex].students[currentPageIndex].name : "noname"
+            saltData.template.intro,
+            saltData.classname,
+            saltData.dategraduate,
+            saltData.students.length > 0 ? saltData.students[currentPageIndex].name : "noname"
           ),
           populateField(
             // @ts-ignore
-            saltData[selectedBootcampIndex].template.main,
-            saltData[selectedBootcampIndex].classname,
-            saltData[selectedBootcampIndex].dategraduate,
-            saltData[selectedBootcampIndex].students.length > 0 ? saltData[selectedBootcampIndex].students[currentPageIndex].name : "noname"
+            saltData.template.main,
+            saltData.classname,
+            saltData.dategraduate,
+            saltData.students.length > 0 ? saltData.students[currentPageIndex].name : "noname"
           ),
           populateField(
             // @ts-ignore
-            saltData[selectedBootcampIndex].template.footer,
-            saltData[selectedBootcampIndex].classname,
-            saltData[selectedBootcampIndex].dategraduate,
-            saltData[selectedBootcampIndex].students.length > 0 ? saltData[selectedBootcampIndex].students[currentPageIndex].name : "noname"
+            saltData.template.footer,
+            saltData.classname,
+            saltData.dategraduate,
+            saltData.students.length > 0 ? saltData.students[currentPageIndex].name : "noname"
           ),
           // @ts-ignore
-          saltData[selectedBootcampIndex].template.basePdf,
-          populateIdField(saltData[selectedBootcampIndex].template.link, saltData[selectedBootcampIndex].students[currentPageIndex].verificationCode)
+          saltData.template.basePdf,
+          populateIdField(saltData.template.link, saltData.students[currentPageIndex].verificationCode)
         )];
     return inputs;
 }
@@ -110,59 +110,59 @@ export const templateInputsFromHistorySnapshot = (historySnapshot: HistorySnapsh
   )]
 }
 
-export const mapTemplateInputsToTemplateViewer = (saltData: SaltData[], selectedBootcampIndex: number, inputs: any) => {
+export const mapTemplateInputsToTemplateViewer = (saltData: SaltData, inputs: any) => {
     const template: Template = getTemplate(
         inputs,
         { 
-          x: saltData[selectedBootcampIndex].template.introStyling?.xPos ?? null, 
-          y: saltData[selectedBootcampIndex].template.introStyling?.yPos ?? null
+          x: saltData.template.introStyling?.xPos ?? null, 
+          y: saltData.template.introStyling?.yPos ?? null
         }, // headerPos
         { 
           //@ts-ignore
-          width: saltData[selectedBootcampIndex].template.introStyling?.width ?? null, 
+          width: saltData.template.introStyling?.width ?? null, 
           //@ts-ignore
-          height: saltData[selectedBootcampIndex].template.introStyling?.height ?? null
+          height: saltData.template.introStyling?.height ?? null
         }, // headerSize
-        saltData[selectedBootcampIndex].template.introStyling?.fontSize ?? null, // footerFontSize
-        saltData[selectedBootcampIndex].template.introStyling?.fontColor ?? null, // footerFontColor
-        saltData[selectedBootcampIndex].template.introStyling?.fontName ?? null, // footerFont
-        saltData[selectedBootcampIndex].template.introStyling?.alignment ?? null, // footerAlignment
+        saltData.template.introStyling?.fontSize ?? null, // footerFontSize
+        saltData.template.introStyling?.fontColor ?? null, // footerFontColor
+        saltData.template.introStyling?.fontName ?? null, // footerFont
+        saltData.template.introStyling?.alignment ?? null, // footerAlignment
         { 
-          x: saltData[selectedBootcampIndex].template.mainStyling?.xPos ?? null, 
-          y: saltData[selectedBootcampIndex].template.mainStyling?.yPos ?? null
+          x: saltData.template.mainStyling?.xPos ?? null, 
+          y: saltData.template.mainStyling?.yPos ?? null
         }, // mainPos
         { 
-          width: saltData[selectedBootcampIndex].template.mainStyling?.width ?? null, 
-          height: saltData[selectedBootcampIndex].template.mainStyling?.height ?? null
+          width: saltData.template.mainStyling?.width ?? null, 
+          height: saltData.template.mainStyling?.height ?? null
         }, // mainSize
-        saltData[selectedBootcampIndex].template.mainStyling?.fontSize ?? null, // footerFontSize
-        saltData[selectedBootcampIndex].template.mainStyling?.fontColor ?? null, // footerFontColor
-        saltData[selectedBootcampIndex].template.mainStyling?.fontName ?? null, // footerFont
-        saltData[selectedBootcampIndex].template.mainStyling?.alignment ?? null, // footerAlignment
+        saltData.template.mainStyling?.fontSize ?? null, // footerFontSize
+        saltData.template.mainStyling?.fontColor ?? null, // footerFontColor
+        saltData.template.mainStyling?.fontName ?? null, // footerFont
+        saltData.template.mainStyling?.alignment ?? null, // footerAlignment
         { 
-          x: saltData[selectedBootcampIndex].template.footerStyling?.xPos ?? null, 
-          y: saltData[selectedBootcampIndex].template.footerStyling?.yPos ?? null 
+          x: saltData.template.footerStyling?.xPos ?? null, 
+          y: saltData.template.footerStyling?.yPos ?? null 
         }, // footerPos
         { 
-          width: saltData[selectedBootcampIndex].template.footerStyling?.width ?? null, 
-          height: saltData[selectedBootcampIndex].template.footerStyling?.height ?? null
+          width: saltData.template.footerStyling?.width ?? null, 
+          height: saltData.template.footerStyling?.height ?? null
         }, // footerSize
-        saltData[selectedBootcampIndex].template.footerStyling?.fontSize ?? null, // footerFontSize
-        saltData[selectedBootcampIndex].template.footerStyling?.fontColor ?? null, // footerFontColor
-        saltData[selectedBootcampIndex].template.footerStyling?.fontName ?? null, // footerFont
-        saltData[selectedBootcampIndex].template.footerStyling?.alignment ?? null, // footerAlignment
+        saltData.template.footerStyling?.fontSize ?? null, // footerFontSize
+        saltData.template.footerStyling?.fontColor ?? null, // footerFontColor
+        saltData.template.footerStyling?.fontName ?? null, // footerFont
+        saltData.template.footerStyling?.alignment ?? null, // footerAlignment
         { 
-          x: saltData[selectedBootcampIndex].template.linkStyling?.xPos ?? null, 
-          y: saltData[selectedBootcampIndex].template.linkStyling?.yPos ?? null 
+          x: saltData.template.linkStyling?.xPos ?? null, 
+          y: saltData.template.linkStyling?.yPos ?? null 
         }, // linkPos
         { 
-          width: saltData[selectedBootcampIndex].template.linkStyling?.width ?? null, 
-          height: saltData[selectedBootcampIndex].template.linkStyling?.height ?? null
+          width: saltData.template.linkStyling?.width ?? null, 
+          height: saltData.template.linkStyling?.height ?? null
         }, // linkSize
-        saltData[selectedBootcampIndex].template.linkStyling?.fontSize ?? null, // linkFontSize
-        saltData[selectedBootcampIndex].template.linkStyling?.fontColor ?? null, // linkFontColor
-        saltData[selectedBootcampIndex].template.linkStyling?.fontName ?? null, // linkFont
-        saltData[selectedBootcampIndex].template.linkStyling?.alignment ?? null // linkAlignment
+        saltData.template.linkStyling?.fontSize ?? null, // linkFontSize
+        saltData.template.linkStyling?.fontColor ?? null, // linkFontColor
+        saltData.template.linkStyling?.fontName ?? null, // linkFont
+        saltData.template.linkStyling?.alignment ?? null // linkAlignment
       );
     return template;
 }

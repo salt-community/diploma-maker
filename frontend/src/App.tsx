@@ -2,7 +2,7 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, MakeActiveSnapshotRequestDto, TrackResponse } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto } from "./util/types";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
@@ -10,20 +10,23 @@ import { TemplateCreatorPage } from "./pages/TemplateCreator/TemplateCreatorPage
 import { useLoadingMessage } from "./components/Contexts/LoadingMessageContext";
 import { initApiEndpoints } from "./services/apiFactory";
 import { VerificationInputPage } from "./pages/Verifcation/VerificationInputPage";
+import { set } from "react-hook-form";
 import { HistoryPage } from "./pages/History/HistoryPage";
 
 const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
 export default function App() {
+  const [tracks, setTracks] = useState<TrackResponse[] | null>(null);
   const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
   const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
-  const [tracks, setTracks] = useState<TrackResponse[] | null>(null);
 
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
 
   async function getBootcampsFromBackend() {
     const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);
     setBootcamps(newBootcamps);
+    const Tracks = await api.getAllTracks(setLoadingMessage)
+    setTracks(Tracks)
   }
 
   useEffect(() => {
@@ -50,11 +53,20 @@ export default function App() {
     await api.updateBootcamp(bootcamp);
     await refresh();
   }
-
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
-    api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid)
-    await refresh();
-  }
+    const response = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
+    if (response) {
+      setBootcamps(prevbootcamps =>
+        prevbootcamps!.map((item) => 
+          item.guidId === guidid
+            ? { ...item, students: updateFormDataRequest.students, templateId: updateFormDataRequest.templateId} as BootcampResponse
+            : item
+        )
+      );
+
+    }
+  };
+  
 
   // Students Endpoint
   const deleteStudent = async (id: string) => {
@@ -117,7 +129,7 @@ export default function App() {
 
   // Tracks Endpoint
   const getTracks = async () => {
-    const tracks = await api.getTracks(setLoadingMessage);
+    const tracks = await api.getAllTracks(setLoadingMessage);
     setTracks(tracks);
   }
 
@@ -132,8 +144,8 @@ export default function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path={"/"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}/>} />
-        <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} />
+        <Route path={"/"} element={<DiplomaMaking tracks={tracks}bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}/>} />
+     {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
         <Route path={`/verify`} element={<VerificationInputPage />} />
         <Route path={`/verify/:verificationCode`} element = {<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode}/>} />
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks}/>} /> 

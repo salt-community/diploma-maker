@@ -5,7 +5,7 @@ import { getTemplatePdfFile } from "./fileService";
 import { getHistoryByVerificationCode, getHistorySnapshots, makeActiveHistorySnapShot } from "./historySnapShotService";
 import { deleteStudentById, getStudentById, getStudentByVerificationCode, getStudentsByKeyword, updateSingleStudent } from "./studentService";
 import { deleteTemplateById, getAllTemplates, getTemplateById, postTemplate, putTemplate } from "./templateService";
-import { getTracks } from "./trackService";
+import { getAllTracks, getTracks } from "./trackService";
 
 export const initApiEndpoints = (apiBaseUrl: string) => {
     return {
@@ -36,13 +36,13 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
 
         // File Endpoint
         getTemplatePdfFile: (url: string, lastUpdated: Date, setLoadingMessage: (message: string) => void) => getTemplatePdfFile(apiBaseUrl, url, lastUpdated, setLoadingMessage),
+    
+        // Track Endpoint
+        getAllTracks:(setLoadingMessage: (message: string) => void) => getAllTracks(apiBaseUrl, setLoadingMessage),
 
         // HistorySnapshot Endpoint
         getHistorySnapshots: () => getHistorySnapshots(apiBaseUrl),
         getHistoryByVerificationCode: (verificationCode: string) => getHistoryByVerificationCode(apiBaseUrl, verificationCode),
         makeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => makeActiveHistorySnapShot(apiBaseUrl, snapshotUpdateRequest),
-
-        // Tracks Endpoint
-        getTracks: (setLoadingMessage: (message: string) => void) => getTracks(apiBaseUrl, setLoadingMessage)
     };
 };
