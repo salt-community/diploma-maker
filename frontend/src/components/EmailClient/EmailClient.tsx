@@ -19,6 +19,8 @@ import { useCustomAlert } from "../Hooks/useCustomAlert";
 import { EyeIcon } from "../MenuItems/Icons/EyeIcon";
 import { MountainIcon } from "../MenuItems/Icons/MountainIcon";
 import { HelpIcon } from "../MenuItems/Icons/HelpIcon";
+import { InstructionSlideshow } from "../Content/InstructionSlideshow";
+import { EmailConfigInstructionSlides } from "../../data/data";
 
 type Props = {
     clients: Student[],
@@ -212,6 +214,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 show={showPopup}
                 onClose={closeAlert}
             />
+            <InstructionSlideshow slides={EmailConfigInstructionSlides} onClose={}/>
         </>
     );
 };
