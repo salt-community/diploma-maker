@@ -29,11 +29,11 @@ type Props = {
   updateSaltData: (data: SaltData) => void;
   setSelectedBootcampIndex: (index: number) => void;
   selectedBootcampIndex: number;
-  fullscreen: boolean;
+/*   fullscreen: boolean; */
   customAlert: (alertType: PopupType, title: string, content: string) => void;
 };
 
-export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex, fullscreen, UpdateBootcampWithNewFormdata, customAlert }: Props) {
+export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex, UpdateBootcampWithNewFormdata, customAlert }: Props) {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [students, setStudents] = useState<Student[]>(saltData.students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
@@ -129,7 +129,7 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
   };
 
   return (
-    <form className={`space-y-4 p-6 rounded shadow-md ml-10 mr-10 rounded-2xl dark: bg-darkbg2 ${fullscreen ? "full-screen-mode" : ""}`} onSubmit={handleSubmit(onSubmit)}>
+    <form className={`space-y-4 p-6 rounded shadow-md ml-10 mr-10 rounded-2xl dark: bg-darkbg2`} onSubmit={handleSubmit(onSubmit)}>
       {/* Select bootcamp Class */}
       <div className="select-bootcamp mb-6">
         <label htmlFor="bootcamp" className="block text-lg font-medium text-gray-700 dark: text-white">

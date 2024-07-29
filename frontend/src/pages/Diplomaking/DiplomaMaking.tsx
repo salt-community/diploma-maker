@@ -23,7 +23,7 @@ type Props = {
 
 export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
 
-  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true)
+ /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
   // current data selected 
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0); // -> these 2 can be refactored into 1 state
@@ -51,35 +51,16 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
       );
   };
 
-  const TogglePreview = () => setIsFullScreen(prev => !prev)
+/*   const TogglePreview = () => setIsFullScreen(prev => !prev) */
 
   return (
     saltData && templates ? (
       <div className={`flex w-full h-screen pt-10 dark:bg-darkbg`}>
-        <button className="toggle-button" onClick={TogglePreview}>
+{/*        {  <button className="toggle-button" onClick={TogglePreview}>
           {IsFullScreen ? <NextIcon rotation={180} /> : <NextIcon />}
-        </button>
+        </button> } */}
         <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
-
-        {IsFullScreen ? (
-          <section className="flex-1 flex flex-col full-screen-mode items-center">
-            <DiplomaDataForm
-              UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
-              updateSaltData={updateSaltDataHandler}
-              
-              setSelectedBootcampIndex={(index) => { setSelectedBootcampIndex(index); }}
-              selectedBootcampIndex={selectedBootcampIndex}
-              saltData={saltData[selectedBootcampIndex]}
-             
-              fullscreen={IsFullScreen}
-              customAlert={customAlert}
-              
-              bootcamps={bootcamps}
-              templates={templates}
-            />
-          </section>
-        ) : (
-          <>
+           <>
             <section className="flex-1 flex flex-col justify-start gap-1 ml-5">
               {saltData[selectedBootcampIndex].students.length > 0 ? (
                 <PreviewDiploma
@@ -98,12 +79,12 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
                 selectedBootcampIndex={selectedBootcampIndex}
                 saltData={saltData[selectedBootcampIndex]}
                 templates={templates}
-                fullscreen={IsFullScreen}
+               /*  fullscreen={IsFullScreen} */
                 customAlert={customAlert}
               />
             </section>
           </>
-        )}
+      
       </div>
     ) : (
       <>
