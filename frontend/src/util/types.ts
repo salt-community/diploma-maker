@@ -187,3 +187,9 @@ export type MakeActiveSnapshotRequestDto = {
     Ids: number[];
     StudentGuidIds: string[];
 }
+
+// Email
+export type EmailConfigRequestDto = {
+    senderEmail: string;
+    senderCode: string;
+}

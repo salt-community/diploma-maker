@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Student } from "../../util/types";
+import { EmailConfigRequestDto, Student } from "../../util/types";
 import './EmailClient.css';
 import { CloseWindowIcon } from "../MenuItems/Icons/CloseWindowIcon";
 import { CogWheelIcon } from "../MenuItems/Icons/CogWheelIcon";
@@ -71,7 +71,12 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
     }
 
     const emailConfigSaveHandler = () => {
-        
+        const emailConfigRequest: EmailConfigRequestDto = {
+            senderEmail: senderEmailInput.current.value,
+            senderCode: senderCodeInput.current.value
+        }
+
+        console.log(emailConfigRequest);
     }
 
     return (
@@ -91,7 +96,6 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                     <input 
                                         className="emailclient__list--input" 
                                         type="text" 
-                                        value=''
                                         ref={senderEmailInput}
                                     />
                                 </div>
@@ -103,13 +107,12 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                     <input 
                                         className="emailclient__list--input" 
                                         type="text" 
-                                        value=''
                                         ref={senderCodeInput}
                                     />
                                 </div>
                             </li>
                         </ul>
-                        <SaveButton classNameOverride="emailconfig__savebtn" saveButtonType='normal' textfield="Save Changes" customIcon={<SuccessIcon />} onClick={() => {emailConfigSaveHandler}}/>
+                        <SaveButton classNameOverride="emailconfig__savebtn" saveButtonType='normal' textfield="Save Changes" customIcon={<SuccessIcon />} onClick={() => emailConfigSaveHandler()}/>
                     </>
                 :
                     <ul className="emailclient__list">
