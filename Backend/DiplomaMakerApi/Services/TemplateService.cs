@@ -5,15 +5,17 @@ using Microsoft.EntityFrameworkCore;
 namespace DiplomaMakerApi.Services;
 
 public class TemplateService
+(
+    DiplomaMakingContext context, 
+    LocalFileStorageService localFileStorageService, 
+    GoogleCloudStorageService googleCloudStorageService,
+    IWebHostEnvironment env
+)
 {
-    private readonly DiplomaMakingContext _context;
-    private readonly LocalFileStorageService _localFileStorageService;
-
-    public TemplateService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService)
-    {
-        _context = context;
-        _localFileStorageService = localFileStorageService;
-    }
+    private readonly DiplomaMakingContext _context = context;
+    private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
+    private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
+    private readonly IWebHostEnvironment _env = env;
 
     public async Task<List<DiplomaTemplate>> GetTemplates(){
         return await _context.DiplomaTemplates
@@ -36,8 +38,11 @@ public class TemplateService
         {
             Name = templateRequest.templateName,
         };
-       
-        await _localFileStorageService.InitFileFromNewTemplate(templateRequest.templateName);
+
+        await (_env.IsDevelopment()
+            ? _localFileStorageService.InitFileFromNewTemplate(templateRequest.templateName)
+            : _googleCloudStorageService.InitFileFromNewTemplate(templateRequest.templateName));
+
         await _context.DiplomaTemplates.AddAsync(newTemplate);
         await _context.SaveChangesAsync();
         return newTemplate;
@@ -65,7 +70,11 @@ public class TemplateService
         template.PdfBackgroundLastUpdated = templateRequest.PdfBackgroundLastUpdated;
 
         IFormFile file = ConvertBase64ToIFormFile(templateRequest.basePdf, templateRequest.templateName);
-        await _localFileStorageService.SaveFile(file, templateRequest.templateName);
+
+        await (_env.IsDevelopment()
+            ? _localFileStorageService.SaveFile(file, templateRequest.templateName)
+            : _googleCloudStorageService.SaveFile(file, templateRequest.templateName));
+
         _context.DiplomaTemplates.Update(template);
         await _context.SaveChangesAsync();
 
@@ -80,7 +89,10 @@ public class TemplateService
             throw new NotFoundByIdException("Template", id);
         }
 
-        await _localFileStorageService.DeleteFile(template.Name);
+        await (_env.IsDevelopment() 
+            ? _localFileStorageService.DeleteFile(template.Name)
+            : _googleCloudStorageService.DeleteFile(template.Name));
+
         _context.DiplomaTemplates.Remove(template);
         await _context.SaveChangesAsync();
 

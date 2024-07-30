@@ -5,11 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services
 {
-    public class HistorySnapshotService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService, IMapper mapper)
+    public class HistorySnapshotService
+    (
+        DiplomaMakingContext context, 
+        LocalFileStorageService localFileStorageService, 
+        GoogleCloudStorageService googleCloudStorageService, 
+        IMapper mapper,
+        IWebHostEnvironment env
+    )
     {
         private readonly DiplomaMakingContext _context = context;
         private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
+        private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
         private readonly IMapper _mapper = mapper;
+        private readonly IWebHostEnvironment _env = env;
 
         public async Task CreateHistorySnapshotFromBootcamp(BootcampRequestUpdateDto requestDto, Bootcamp bootcampUsed) 
         {
@@ -33,11 +42,16 @@ namespace DiplomaMakerApi.Services
                 
                 if (lastSnapshot == null)
                 {
-                    templateBackgroundLocation = await GetFileLocation(templateUsed.Name + ".v1.pdf")  ?? await _localFileStorageService.CreateBackup(templateUsed.Name);
+                    templateBackgroundLocation = await GetFileLocation(templateUsed.Name + ".v1.pdf") 
+                    ?? (_env.IsDevelopment() 
+                        ? await _localFileStorageService.CreateBackup(templateUsed.Name) 
+                        : await _googleCloudStorageService.CreateBackup(templateUsed.Name)).Replace("/DiplomaPdfs", "");
                 }
                 else if (templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
                 {
-                    templateBackgroundLocation = await _localFileStorageService.CreateBackup(templateUsed.Name);
+                    templateBackgroundLocation = _env.IsDevelopment() 
+                        ? await _localFileStorageService.CreateBackup(templateUsed.Name) 
+                        : await _googleCloudStorageService.CreateBackup(templateUsed.Name);
                 }
                 else
                 {
@@ -78,7 +92,10 @@ namespace DiplomaMakerApi.Services
 
         private async Task<string> GetFileLocation(string fileName)
         {
-            var fileLocationResponse = await _localFileStorageService.GetFilePath(Path.GetFileName(fileName));
+            var fileLocationResponse = _env.IsDevelopment()
+                ? await _localFileStorageService.GetFilePath(Path.GetFileName(fileName))
+                : await _googleCloudStorageService.GetFilePath(Path.GetFileName(fileName));
+            
             return fileLocationResponse != null ? "Blob/" + Path.GetFileName(fileLocationResponse) : null; // Temp Fix: when generating a second time it gives the absolute path for some strange reason.
         }
 

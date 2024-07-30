@@ -1,12 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Services;
 
 public static class SeedData 
 {
-    public static void Initialize (IServiceProvider serviceProvider)
+    public static void Initialize(IServiceProvider serviceProvider)
     {
+        
+
         using (var _context = new DiplomaMakingContext(serviceProvider.GetRequiredService<DbContextOptions<DiplomaMakingContext>>()))
         {
+            // Clears all pdfbackgroundfiles except Default.pdf
+            var _fileUtilityService = serviceProvider.GetRequiredService<FileUtilityService>();
+            var fileOperations = new LocalFileStorageService(_context, _fileUtilityService);
+            fileOperations.ClearFolderExceptDefault();
+            
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
             
@@ -28,15 +36,12 @@ public static class SeedData
                 Track = Java,
                 GraduationDate = new DateTime(2024,11,5, 0, 0, 0, DateTimeKind.Utc),
                 DiplomaTemplate = diploma 
-             
-                
             };
             var JavaBootcamp = new Bootcamp
             {
                 Track = Js,
                 GraduationDate = new DateTime(2024,1,5, 0, 0, 0, DateTimeKind.Utc),
                 DiplomaTemplate = diploma 
-              
             };
 
             var bootcamps = new List<Bootcamp>{dotnetBootcamp1, dotnetBootcamp2, JavaBootcamp};
@@ -80,9 +85,6 @@ public static class SeedData
             var students = new List<Student>{student1, student2, student3, student4, student5};
             _context.AddRange(students);
             _context.SaveChanges();
-
-
- 
         }
     }
 }
