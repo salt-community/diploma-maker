@@ -163,5 +163,26 @@ namespace DiplomaMakerApi.Services
                 return false;
             }
         }
+
+        public async Task<List<Google.Apis.Storage.v1.Data.Object>> ListObjectsAsync(string bucketName, string prefix)
+        {
+            var objects = new List<Google.Apis.Storage.v1.Data.Object>();
+            var storageObjects = _storageClient.ListObjects(bucketName, prefix);
+
+            await Task.Run(() =>
+            {
+                foreach (var obj in storageObjects)
+                {
+                    objects.Add(obj);
+                }
+            });
+
+            return objects;
+        }
+
+        public async Task DownloadObjectAsync(string bucketName, string objectName, MemoryStream destination)
+        {
+            await _storageClient.DownloadObjectAsync(bucketName, objectName, destination);
+        }
     }
 }

@@ -45,6 +45,7 @@ builder.Services.AddScoped<TrackService>();
 builder.Services.AddTransient<LocalFileStorageService>();
 builder.Services.AddScoped<HistorySnapshotService>();
 builder.Services.AddScoped<GoogleCloudStorageService>();
+builder.Services.AddTransient<FileUtilityService>();
 builder.Services.AddLogging();
 
 var app = builder.Build();

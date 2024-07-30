@@ -12,11 +12,14 @@ namespace DiplomaMakerApi.Controllers
         private readonly GoogleCloudStorageService _googleCloudStorageService;
         private readonly IWebHostEnvironment _env;
 
-        public BlobController(LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, IWebHostEnvironment env)
+        private readonly FileUtilityService _fileUtilityService;
+
+        public BlobController(LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, IWebHostEnvironment env, FileUtilityService fileUtilityService)
         {
             _localFileStorageService = localFileStorageService;
             _googleCloudStorageService = googleCloudStorageService;
             _env = env;
+            _fileUtilityService = fileUtilityService;
         }
 
         [HttpGet("{fileName}")]
@@ -53,7 +56,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpGet("download-all-templatebackgrounds")]
-        public IActionResult DownloadAllFiles()
+        public async Task<IActionResult> DownloadAllFiles()
         {
             var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Blob/DiplomaPdfs");
             var files = Directory.GetFiles(directoryPath);
@@ -63,27 +66,10 @@ namespace DiplomaMakerApi.Controllers
                 return NotFound("No files found.");
             }
 
-            var zipFileName = "DiplomaPdfs.zip";
-            var zipFilePath = Path.Combine(directoryPath, zipFileName);
+            var zipFileName = "TemplateBackgroundPdfs.zip";
+            var fileBytes = _fileUtilityService.CreateZipFromFiles(files, zipFileName);
 
-            using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
-            {
-                foreach (var file in files)
-                {
-                    zip.CreateEntryFromFile(file, Path.GetFileName(file));
-                }
-            }
-
-            var fileBytes = System.IO.File.ReadAllBytes(zipFilePath);
-            System.IO.File.Delete(zipFilePath);
             return File(fileBytes, "application/zip", zipFileName);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveFile(IFormFile file, string templateName)
-        {
-            await _googleCloudStorageService.SaveFile(file, templateName);
-            return Ok(file);
         }
 
     }
