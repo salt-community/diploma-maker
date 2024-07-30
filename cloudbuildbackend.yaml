@@ -2,7 +2,7 @@ steps:
   # Backup the existing Blob directory
   - name: 'google/cloud-sdk'
     entrypoint: 'bash'
-    args: ['-c', 'gsutil cp -r gs://backup/Blob /workspace/Blob']
+    args: ['-c', 'gsutil cp -r /workspace/backup/Blob gs://backup/Blob']
 
   # Build containers
   - name: 'gcr.io/cloud-builders/docker'
@@ -20,7 +20,7 @@ steps:
   # Restore the Blob directory
   - name: 'google/cloud-sdk'
     entrypoint: 'bash'
-    args: ['-c', 'gsutil cp -r /workspace/Blob gs://backup/Blob']
+    args: ['-c', 'gsutil cp -r gs://backup/Blob /workspace/backup/Blob']
 
 images:
   - 'gcr.io/pgp-sandbox/diplomamakers-backend:latest'
