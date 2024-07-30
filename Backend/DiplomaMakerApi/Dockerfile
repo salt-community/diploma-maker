@@ -19,17 +19,11 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
 # Copy the published output from the build stage
+
 COPY --from=build /app/out .
 
-# Ensure the Blob directory exists and copy the default PDF
 RUN mkdir -p /app/Blob/DiplomaPdfs
 COPY Blob/DiplomaPdfs/Default.pdf /app/Blob/DiplomaPdfs/Default.pdf
 
-# Copy the entrypoint script
-COPY entrypoint.sh /app/entrypoint.sh
-
-# Ensure the entrypoint script is executable
-RUN chmod +x /app/entrypoint.sh
-
-# Set the entrypoint to the script
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Start the application
+ENTRYPOINT ["dotnet", "DiplomaMakerApi.dll"]
