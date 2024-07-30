@@ -61,7 +61,7 @@ namespace DiplomaMakerApi.Controllers
             // var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Blob/DiplomaPdfs");
             // var files = Directory.GetFiles(directoryPath);
 
-            var files = await _googleCloudStorageService.DownloadTemplateBackgroundPdfs("Blob/DiplomaPdfs");
+            var files = await _googleCloudStorageService.GetFilesFromPath("Blob/DiplomaPdfs");
 
             // if (files.Length == 0)
             // {

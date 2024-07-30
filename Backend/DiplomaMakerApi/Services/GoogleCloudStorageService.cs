@@ -167,7 +167,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<FileContentResult> DownloadTemplateBackgroundPdfs(string folderPath)
+        public async Task<FileContentResult> GetFilesFromPath(string folderPath)
         {
             var storageObjects = _storageClient.ListObjects(_bucketName, folderPath);
             var files = new List<(Stream Stream, string FileName)>();
