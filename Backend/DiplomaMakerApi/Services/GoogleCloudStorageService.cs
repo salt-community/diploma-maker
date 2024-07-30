@@ -83,7 +83,7 @@ namespace DiplomaMakerApi.Services
                 throw new InvalidOperationException("The default template cannot be deleted.");
             }
 
-            var objectName = $"Blob/DiplomaPdfs/{templateName}";
+            var objectName = $"Blob/DiplomaPdfs/{templateName}.pdf";
 
             try
             {

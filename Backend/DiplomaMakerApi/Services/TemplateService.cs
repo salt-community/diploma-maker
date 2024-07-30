@@ -89,7 +89,7 @@ public class TemplateService
             throw new NotFoundByIdException("Template", id);
         }
 
-        await (_env.IsDevelopment() 
+        await (!_env.IsDevelopment() 
             ? _localFileStorageService.DeleteFile(template.Name)
             : _googleCloudStorageService.DeleteFile(template.Name));
 
