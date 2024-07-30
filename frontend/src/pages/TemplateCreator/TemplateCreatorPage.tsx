@@ -277,6 +277,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const saveTemplate = async (goToIndex?: number) => {
     if (currentTemplate) {
       closeConfirmationPopup();
+      customAlert('loading',"Saving Template...",``);
       try {
         await updateTemplate(currentTemplate?.id, 
           templateBasePdfHasChanged 
