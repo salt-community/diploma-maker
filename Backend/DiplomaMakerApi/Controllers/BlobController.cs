@@ -10,11 +10,13 @@ namespace DiplomaMakerApi.Controllers
     {
         private readonly LocalFileStorageService _localFileStorageService;
         private readonly GoogleCloudStorageService _googleCloudStorageService;
+        private readonly IWebHostEnvironment _env;
 
-        public BlobController(LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService)
+        public BlobController(LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, IWebHostEnvironment env)
         {
             _localFileStorageService = localFileStorageService;
             _googleCloudStorageService = googleCloudStorageService;
+            _env = env;
         }
 
         [HttpGet("{fileName}")]
@@ -22,22 +24,32 @@ namespace DiplomaMakerApi.Controllers
         {
             if (!fileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
             {
-                return BadRequest();
+                return BadRequest("Invalid file type.");
             }
+            
+            if (_env.IsDevelopment())
+            {
+                var filePath = await _localFileStorageService.GetFilePath(fileName);
 
-            // var filePath = await _localFileStorageService.GetFilePath(fileName);
+                if (filePath == null)
+                {
+                    return NotFound("File not found.");
+                }
 
-            // if (filePath == null)
-            // {
-            //     return NotFound();
-            // }
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                return File(fileBytes, "application/pdf", fileName);
+            }
+            else
+            {
+                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(fileName);
 
-            // var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            // return File(fileBytes, "application/pdf", fileName);
+                if (fileBytes == null)
+                {
+                    return NotFound("File not found.");
+                }
 
-            var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(fileName);
-
-            return File(fileBytes, contentType, fileName);
+                return File(fileBytes, contentType, fileName);
+            }
         }
 
         [HttpGet("download-all-templatebackgrounds")]
