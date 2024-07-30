@@ -52,8 +52,8 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
     const [senderCode, setSenderCode] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
     
-    const [emailTitle, setEmailTitle] = useState<string>(`<h1>Congratulations, {studentName}! 🎉</h1>`);
-    const [emailDescription, setEmailDescription] = useState<string>(`<p>We are thrilled to award you the Salt Diploma. Your hard work and dedication have paid off, and we are excited to see what you accomplish next.</p> <p>Keep striving for greatness, and remember that this is just the beginning of your journey. Well done on completing the bootcamp!</p>`);
+    const [emailTitle, setEmailTitle] = useState<string>('');
+    const [emailDescription, setEmailDescription] = useState<string>('');
     
     const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
 
@@ -68,6 +68,11 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
             setSenderEmail("");
             setSenderCode("");
         }
+    
+        const storedEmailTitle = localStorage.getItem('emailcontent_title');
+        const storedEmailDescription = localStorage.getItem('emailcontent_description');
+        setEmailTitle(storedEmailTitle ? JSON.parse(storedEmailTitle) : `<h1>Congratulations, {studentName}! 🎉</h1>`);
+        setEmailDescription(storedEmailDescription ? JSON.parse(storedEmailDescription) : `<p>We are thrilled to award you the Salt Diploma. Your hard work and dedication have paid off, and we are excited to see what you accomplish next.</p> <p>Keep striving for greatness, and remember that this is just the beginning of your journey. Well done on completing the bootcamp!</p>`);
     }, []);
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, student: Student) => {
@@ -121,6 +126,12 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
         }catch(error){
             customAlert('fail',"Email Config Update failure!",`${error} when trying to update email configuration.`);
         }
+    }
+
+    const emailContentSaveHandler = () => {
+        localStorage.setItem('emailcontent_title', JSON.stringify(emailTitle));
+        localStorage.setItem('emailcontent_description', JSON.stringify(emailDescription));
+        customAlert('success',"Successfully Saved Email Content",``);
     }
 
     const handleSenderEmailChange = (event) => {
@@ -230,7 +241,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                 saveButtonType='normal' 
                                 textfield={emailConfigActive && !emailContentConfig ? "Save Sender" : "Save Content"} 
                                 customIcon={<SuccessIcon />} 
-                                onClick={() => emailConfigSaveHandler()}
+                                onClick={() => (emailConfigActive && !emailContentConfig) ? emailConfigSaveHandler() : emailContentSaveHandler()}
                             />
                         </section>
                     </>
