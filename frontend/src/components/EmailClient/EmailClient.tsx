@@ -204,7 +204,8 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                 </>
                                 :
                                 <>
-                                    <li className="emailclient__list--item editfields">
+                                    <label className="label-contentpage">OBS! <span>{"{studentName}"}</span> is later replaced with the students name!</label>
+                                    <li className="emailclient__list--item editfields contentpage">
                                         <TitleIcon />
                                         <div className="emailclient__list--input-wrapper editfields">
                                             <h3>Title</h3>
