@@ -391,7 +391,7 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
   const mergedPdfBytes = await mergedPdf.save();
   setLoadingMessage("Creating Blobs");
   const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
-  setLoadingMessage("Finished Processing...");
+  setLoadingMessage("Finished Processing Pdfs...");
   window.open(URL.createObjectURL(blob));
 }
 
