@@ -27,7 +27,7 @@ public class EmailService
         _context = context;
     }
 
-    public async Task SendEmailWithAttachmentAsync(Guid guidid, IFormFile file, string email, string password)
+    public async Task SendEmailWithAttachmentAsync(Guid guidid, IFormFile file, string email, string password, string title, string description)
     {
         var diplomaByGuid = await _context.Students.FirstOrDefaultAsync(d => d.GuidId == guidid);
 
@@ -51,8 +51,9 @@ public class EmailService
 
         var body = new TextPart("html")
         {
-            Text =
-            $"<h1>Congratulations, {diplomaByGuid.Name}! 🎉</h1><p>We are thrilled to award you the Salt Diploma. Your hard work and dedication have paid off, and we are excited to see what you accomplish next.</p> <p>Keep striving for greatness, and remember that this is just the beginning of your journey. Well done on completing the bootcamp!</p>"
+            // Text =
+            // $"<h1>Congratulations, {diplomaByGuid.Name}! 🎉</h1><p>We are thrilled to award you the Salt Diploma. Your hard work and dedication have paid off, and we are excited to see what you accomplish next.</p> <p>Keep striving for greatness, and remember that this is just the beginning of your journey. Well done on completing the bootcamp!</p>"
+            Text = $"{title.Replace("{studentName}", diplomaByGuid.Name)}{description}",
         };
         multipart.Add(body);
 
