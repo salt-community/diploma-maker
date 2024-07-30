@@ -36,9 +36,11 @@ export const InstructionSlideshow = ({ slides, onClose, show }: SlideshowProps) 
             <button className='slideshow__closebtn' onClick={onClose}>
                 <CloseWindowIcon />
             </button>
-            <button className="slideshow__arrow slideshow__arrow--left" onClick={goToPreviousSlide}>
-                <ArrowIcon />
-            </button>
+            { !(currentIndex == 0) &&
+                <button className="slideshow__arrow slideshow__arrow--left" onClick={goToPreviousSlide}>
+                    <ArrowIcon />
+                </button>
+            }
             <div className="slideshow__content">
                 {slides.map((slide, index) => (
                     <img
@@ -53,9 +55,11 @@ export const InstructionSlideshow = ({ slides, onClose, show }: SlideshowProps) 
                     <p>{parseTextWithLinkTag(currentSlide.description)}</p>
                 </div>
             </div>
-            <button className="slideshow__arrow slideshow__arrow--right" onClick={goToNextSlide}>
-                <ArrowIcon />
-            </button>
+            { !(currentIndex == slides.length - 1) &&
+                <button className="slideshow__arrow slideshow__arrow--right" onClick={goToNextSlide}>
+                    <ArrowIcon />
+                </button>
+            }
         </div>
     );
 };
