@@ -62,6 +62,12 @@
             padding-left: 1.2rem;
             border-bottom: 1px solid #ababba19;
         }
+        .emailclient__list--item.textarea{
+            align-items: start;
+        }
+            .emailclient__list--item.textarea svg{
+                margin-top: .6rem;
+            }
         .emailclient__list--item svg{
             width: 20px;
         }
