@@ -75,9 +75,6 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
       templateId: selectedTemplate.id
     };
 
-    console.log("RUNNING DIPLOMADATAFORM")
-    console.log(updateFormDataRequest)
-
     try {
       await UpdateBootcampWithNewFormdata(updateFormDataRequest, saltData.guidId);
       customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
@@ -88,13 +85,16 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
   }
 
   const generatePDFHandler = async () => {
+    console.log("Starting Pdf Generation Handler")
     if (!bootcamps || !templates) {
       customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
       return;
     }
     const templatesArr: Template[] = [];
+    console.log(students);
     const inputsArray = students.map(student => {
       const selectedBootcamp = bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
+
       if (!selectedBootcamp) {
         customAlert('fail', "Error", `Bootcamp for student ${student.name} not found.`);
         return null;
@@ -109,6 +109,10 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
       templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(templateData, inputs));
       return inputs;
     }).filter(inputs => inputs !== null);
+
+    console.log(inputsArray);
+
+    console.log("InputsArray Ready")
 
     if (inputsArray.length === 0) {
       customAlert('fail', "Error", "No valid inputs found for PDF generation.");

@@ -368,6 +368,7 @@ export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray:
 
 
 export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
+  console.log("Generating combined pdf!")
   const font = await getFontsData();
   const mergedPdf = await PDFDocument.create();
 
@@ -381,10 +382,15 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
     const loadedPdf = await PDFDocument.load(pdf);
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
     copiedPages.forEach(page => mergedPdf.addPage(page));
+    console.log("Generating pdf: " + i)
   }
 
+  console.log("Merging Pdfs")
+
   const mergedPdfBytes = await mergedPdf.save();
+  console.log("Creating Blobs")
   const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+  console.log("Finished")
   window.open(URL.createObjectURL(blob));
 }
 
