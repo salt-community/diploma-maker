@@ -39,7 +39,6 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
       }
   }, [bootcamps, templates]);
 
-
   /* update saltdata with new student and template */
   const updateSaltDataHandler = (data: SaltData) => {
       setSaltData(prevSaltInfoProper =>
@@ -62,7 +61,8 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
         <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
            <>
             <section className="flex-1 flex flex-col justify-start gap-1 ml-5">
-              {saltData[selectedBootcampIndex].students.length > 0 ? (
+              {
+              saltData[selectedBootcampIndex].students.length > 0 ? (
                 <PreviewDiploma
                   saltData={saltData[selectedBootcampIndex]}
                 />

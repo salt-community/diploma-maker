@@ -35,11 +35,11 @@ type Props = {
 };
 
 export default function DiplomaDataForm({ updateSaltData, tracks, bootcamps, setSelectedBootcampIndex, saltData, templates, UpdateBootcampWithNewFormdata, customAlert }: Props) {
-
+  
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [TrackIndex, setTrackIndex] = useState<number>(1)
-  const [students, setStudents] = useState<Student[]>(tracks[TrackIndex].bootcamps[0].students);
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(templates.find(template => template.id === tracks[TrackIndex].bootcamps[0].templateId));
+  const [students, setStudents] = useState<Student[]>(tracks[0].bootcamps[0].students);
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(templates.find(template => template.id === tracks[0].bootcamps[0].templateId));
 
   useEffect(() => {
     updateSaltData({
@@ -51,9 +51,19 @@ export default function DiplomaDataForm({ updateSaltData, tracks, bootcamps, set
   useEffect(() => {
     updateSaltData({
       ...saltData,
-      students,
+      students, 
     });
   }, [students]);
+
+  useEffect(() => {
+    
+    const selectedBootcamp = tracks[TrackIndex - 1]?.bootcamps[0];
+    if (selectedBootcamp) {
+      setStudents(selectedBootcamp.students);
+      const selectedTemplateObject = templates?.find(template => template.id === selectedBootcamp.templateId);
+      setSelectedTemplate(selectedTemplateObject);
+    }
+  }, [TrackIndex, tracks, templates]);
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
@@ -144,10 +154,7 @@ export default function DiplomaDataForm({ updateSaltData, tracks, bootcamps, set
           onChange={
             (e) => {
               setTrackIndex(Number(e.target.value))
-              const selectedBootcamp = tracks[Number(e.target.value) - 1].bootcamps[0];
-              const selectedTemplateObject = templates.find(template => template.id === selectedBootcamp.templateId)
-              setSelectedTemplate(selectedTemplateObject);
-              setStudents(selectedBootcamp.students);
+        
             } 
           }
         >
