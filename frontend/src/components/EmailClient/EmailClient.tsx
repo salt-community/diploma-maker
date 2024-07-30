@@ -39,10 +39,15 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
 
     const senderEmailInput = useRef(null);
     const senderCodeInput = useRef(null);
+    const emailTitleInput = useRef(null);
+    const emailDescriptionInput = useRef(null)
 
     const [senderEmail, setSenderEmail] = useState<string>('');
     const [senderCode, setSenderCode] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    
+    const [emailTitle, setEmailTitle] = useState<string>(`<h1>Congratulations, {studentName}! 🎉</h1>`);
+    const [emailDescription, setEmailDescription] = useState<string>(`<p>We are thrilled to award you the Salt Diploma. Your hard work and dedication have paid off, and we are excited to see what you accomplish next.</p> <p>Keep striving for greatness, and remember that this is just the beginning of your journey. Well done on completing the bootcamp!</p>`);
     
     const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
 
@@ -120,6 +125,15 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
         setSenderCode(event.target.value);
     }
 
+    const handleEmailTitleChange = (event) => {
+        setEmailTitle(event.target.value);
+    }
+
+    const handleEmailDescriptionChange = (event) => {
+        setEmailDescription(event.target.value);
+    }
+
+
     return (
         <>
             <section className={"emailclient " + (show ? 'fade-in' : 'fade-out')}>
@@ -166,6 +180,32 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                             <EyeIcon /> 
                                         }
                                     </div>
+                                </div>
+                            </li>
+                            <li className="emailclient__list--item editfields">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 6V19M6 6H18" stroke="#ababba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                <div className="emailclient__list--input-wrapper editfields">
+                                    <h3>Title</h3>
+                                    <input
+                                        className="emailclient__list--input editfields"
+                                        type="text"
+                                        ref={emailTitleInput}
+                                        onChange={handleEmailTitleChange}
+                                        value={emailTitle}
+                                    />
+                                </div>
+                            </li>
+                            <li className="emailclient__list--item editfields">
+                                <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="var(--ci-primary-color, #ababba)" d="M334.627,16H48V496H472V153.373ZM440,166.627V168H320V48h1.373ZM80,464V48H288V200H440V464Z" className="ci-primary"></path> <rect width="224" height="32" x="136" y="296" fill="var(--ci-primary-color, #ababba)" className="ci-primary"></rect> <rect width="224" height="32" x="136" y="376" fill="var(--ci-primary-color, #ababba)" className="ci-primary"></rect> </g></svg>
+                                <div className="emailclient__list--input-wrapper editfields">
+                                    <h3>Description</h3>
+                                    <input
+                                        className="emailclient__list--input editfields"
+                                        type="text"
+                                        ref={emailDescriptionInput}
+                                        onChange={handleEmailDescriptionChange}
+                                        value={emailDescription}
+                                    />
                                 </div>
                             </li>
                         </ul>

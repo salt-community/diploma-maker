@@ -83,6 +83,9 @@
             position: relative;
             display: flex;
         }
+        .emailclient__list--input-wrapper.editfields{
+            width: 100%;
+        }
             .emailclient__list--input-wrapper svg{
                 position: absolute;
                 right: 5%;
