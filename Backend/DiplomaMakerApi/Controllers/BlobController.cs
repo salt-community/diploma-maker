@@ -9,10 +9,12 @@ namespace DiplomaMakerApi.Controllers
     public class BlobController : Controller
     {
         private readonly LocalFileStorageService _localFileStorageService;
+        private readonly GoogleCloudStorageService _googleCloudStorageService;
 
-        public BlobController(LocalFileStorageService localFileStorageService)
+        public BlobController(LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService)
         {
             _localFileStorageService = localFileStorageService;
+            _googleCloudStorageService = googleCloudStorageService;
         }
 
         [HttpGet("{fileName}")]
@@ -59,6 +61,12 @@ namespace DiplomaMakerApi.Controllers
             var fileBytes = System.IO.File.ReadAllBytes(zipFilePath);
             System.IO.File.Delete(zipFilePath);
             return File(fileBytes, "application/zip", zipFileName);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SaveFile(IFormFile file, string templateName)
+        {
+            await _googleCloudStorageService.SaveFile(file, templateName);
+            return Ok(file);
         }
 
     }
