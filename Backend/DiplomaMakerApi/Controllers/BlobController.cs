@@ -25,15 +25,19 @@ namespace DiplomaMakerApi.Controllers
                 return BadRequest();
             }
 
-            var filePath = await _localFileStorageService.GetFilePath(fileName);
+            // var filePath = await _localFileStorageService.GetFilePath(fileName);
 
-            if (filePath == null)
-            {
-                return NotFound();
-            }
+            // if (filePath == null)
+            // {
+            //     return NotFound();
+            // }
 
-            var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            return File(fileBytes, "application/pdf", fileName);
+            // var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            // return File(fileBytes, "application/pdf", fileName);
+
+            var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(fileName);
+
+            return File(fileBytes, contentType, fileName);
         }
 
         [HttpGet("download-all-templatebackgrounds")]
@@ -62,6 +66,7 @@ namespace DiplomaMakerApi.Controllers
             System.IO.File.Delete(zipFilePath);
             return File(fileBytes, "application/zip", zipFileName);
         }
+
         [HttpPost]
         public async Task<IActionResult> SaveFile(IFormFile file, string templateName)
         {
