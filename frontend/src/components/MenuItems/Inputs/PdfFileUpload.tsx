@@ -11,9 +11,6 @@ type Props = {
   fileAdded?: boolean
 }
 
-const A4_WIDTH = 595.28; // 210mm in points at 72 DPI
-const A4_HEIGHT = 841.89; // 297mm in points at 72 DPI
-
 export const PdfFileUpload = ({ fileResult, setFileAdded, fileAdded }: Props) => {
   const [isFileValid, setIsFileValid] = useState<boolean | null>(null);
 
@@ -26,11 +23,6 @@ export const PdfFileUpload = ({ fileResult, setFileAdded, fileAdded }: Props) =>
     if (isValid) {
       const arrayBuffer = await file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(arrayBuffer);
-      const pages = pdfDoc.getPages();
-
-      pages.forEach((page) => {
-        page.setSize(A4_WIDTH, A4_HEIGHT);
-      });
 
       const resizedPdfBytes = await pdfDoc.save();
       const resizedFile = new File([resizedPdfBytes], file.name, { type: file.type });
