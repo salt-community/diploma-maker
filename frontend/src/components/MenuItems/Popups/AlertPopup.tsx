@@ -57,7 +57,7 @@ export const AlertPopup = ({ show, onClose, popupType, title, text, durationOver
             <AttentionIcon />
         }
         <div className='popup-content-text'>
-          <h1>{title}Saving Template...</h1>
+          <h1>{title}</h1>
           <p>{text}</p>
         </div>
       </div>
