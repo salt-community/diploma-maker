@@ -198,6 +198,7 @@ export default function HistoryManageTable({ getHistory, changeActiveHistorySnap
     const handleMakeActiveSnapshot = async (bundle: BundledDataWithGeneratedAt) => {
         try {
             closeConfirmationPopup();
+            customAlert('loading', 'Changing Active Snapshot...', ``);
             await changeActiveHistorySnapShot({
                 Ids: bundle.HistorySnapShots.map(snapshot => snapshot.id),
                 StudentGuidIds: bundle.HistorySnapShots.map(snapshot => snapshot.studentGuidId)
