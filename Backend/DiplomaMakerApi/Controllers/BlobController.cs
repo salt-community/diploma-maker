@@ -34,7 +34,7 @@ namespace DiplomaMakerApi.Controllers
             return File(fileBytes, "application/pdf", fileName);
         }
 
-        [HttpGet("download-all")]
+        [HttpGet("download-all-templatebackgrounds")]
         public IActionResult DownloadAllFiles()
         {
             var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Blob/DiplomaPdfs");
