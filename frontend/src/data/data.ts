@@ -34,3 +34,31 @@ export const EmailConfigInstructionSlides =
         alt: 'Email Sender view',
       },
   ]
+
+  export const templateCreatorInstructionSlides = 
+  [
+    {
+        image: '/instructionslides/templatecreator_slide1.webp',
+        title: '{studentname} will be replaced with name',
+        description: 'OBS: Syntax is important here. It must match exactly.',
+        alt: 'Template creator instruction',
+    },
+    {
+        image: '/instructionslides/templatecreator_slide2.webp',
+        title: '{classname} gets replaces with bootcamp name',
+        description: '',
+        alt: 'Template creator instruction',
+    },
+    {
+      image: '/instructionslides/templatecreator_slide3.webp',
+      title: '{datebootcamp} reefers to the graduationdate of the bootcamp',
+      description: '',
+      alt: 'Template creator instruction',
+    },
+    {
+      image: '/instructionslides/templatecreator_slide4.webp',
+      title: '{id} is the verification code that gets generated for every student',
+      description: "You can use this code to verify authenticity of the diploma. Even embed the link if you want using a value like ex: baseurl/verify/{id}",
+      alt: 'Template creator instruction',
+    },
+]

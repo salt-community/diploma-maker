@@ -21,7 +21,7 @@ import { TextEditSection } from "../../components/MenuItems/TemplateCreatorPage/
 import { HelpIcon } from "../../components/MenuItems/Icons/HelpIcon";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { InstructionSlideshow } from "../../components/Content/InstructionSlideshow";
-import { EmailConfigInstructionSlides } from "../../data/data";
+import { EmailConfigInstructionSlides, templateCreatorInstructionSlides } from "../../data/data";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -504,7 +504,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             show={showPopup}
             onClose={closeAlert}
         />
-        <InstructionSlideshow show={showInstructionSlideshow}  slides={EmailConfigInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
+        <InstructionSlideshow show={showInstructionSlideshow}  slides={templateCreatorInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
                 <section className="templatecreator-page__leftsidebar-menu-section">
