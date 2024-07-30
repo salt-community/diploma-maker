@@ -11,12 +11,17 @@ namespace DiplomaMakerApi.Services
         private readonly StorageClient _storageClient;
         private readonly FileUtilityService _fileUtilityService;
 
-        public GoogleCloudStorageService(DiplomaMakingContext context, IConfiguration configuration, FileUtilityService fileUtilityService)
+        private readonly IWebHostEnvironment _env;
+
+        public GoogleCloudStorageService(DiplomaMakingContext context, IConfiguration configuration, FileUtilityService fileUtilityService, IWebHostEnvironment env)
         {
             _storageClient = StorageClient.Create();
             _context = context;
-            _bucketName = configuration["GoogleCloud:BucketName"];
+            _env = env;
             _fileUtilityService = fileUtilityService;
+            _bucketName = _env.IsDevelopment()
+                ? configuration["GoogleCloud:BucketName"]
+                : Environment.GetEnvironmentVariable("BucketName");
         }
 
         public async Task<string> GetFilePath(string templateName)
