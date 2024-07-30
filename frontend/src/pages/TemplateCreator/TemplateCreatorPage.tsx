@@ -5,7 +5,7 @@ import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse} from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { cloneDeep, getFontsData, getPlugins } from "../../util/helper";
+import { cloneDeep, delay, getFontsData, getPlugins } from "../../util/helper";
 import { makeTemplateInput } from "../../templates/baseTemplate";
 import { PDFDocument } from "pdf-lib";
 import { SaveButton, SaveButtonType,} from "../../components/MenuItems/Buttons/SaveButton";
@@ -300,6 +300,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   const addTemplate = async (inputContent?: string) => {
     closeConfirmationPopup();
+    customAlert('loading',"Adding new template...",``);
     if (
       templateData.some((template) => template.templateName === inputContent)
     ) {
@@ -320,8 +321,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   };
 
   const removeTemplate = async () => {
+    
     if (currentTemplate?.id) {
       closeConfirmationPopup();
+      customAlert('loading',"Removing Template...",``);
       const templateId = currentTemplate?.id;
       if (templateId === 1) {
         customAlert('fail',`Cannot Delete the Default Template`,`You are not allowed to delete the baseTemplate.`);
@@ -330,7 +333,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       try {
         await deleteTemplate(templateId);
         setTemplateIndex(0);
-        customAlert('fail',"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
+        customAlert('message',"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
         setTemplateHasChanged(false);
       } catch (error) {
         customAlert('fail',"Template Update failure!",`${error} when trying to update template.`);
@@ -340,6 +343,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   const saveFieldsHandler = async () => {
     if (designer.current && currentTemplate) {
+      customAlert('loading',"Saving Fields...",``);
       const updatedTemplate = createUpdatedTemplate(currentTemplate, designer);
       await setCurrentTemplate(updatedTemplate);
       setRightSideBarPage(0);
