@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using DiplomaMakerApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,5 +33,33 @@ namespace DiplomaMakerApi.Controllers
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
             return File(fileBytes, "application/pdf", fileName);
         }
+
+        [HttpGet("download-all")]
+        public IActionResult DownloadAllFiles()
+        {
+            var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Blob/DiplomaPdfs");
+            var files = Directory.GetFiles(directoryPath);
+
+            if (files.Length == 0)
+            {
+                return NotFound("No files found.");
+            }
+
+            var zipFileName = "DiplomaPdfs.zip";
+            var zipFilePath = Path.Combine(directoryPath, zipFileName);
+
+            using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+            {
+                foreach (var file in files)
+                {
+                    zip.CreateEntryFromFile(file, Path.GetFileName(file));
+                }
+            }
+
+            var fileBytes = System.IO.File.ReadAllBytes(zipFilePath);
+            System.IO.File.Delete(zipFilePath);
+            return File(fileBytes, "application/zip", zipFileName);
+        }
+
     }
 }
