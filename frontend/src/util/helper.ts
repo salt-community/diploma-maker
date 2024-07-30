@@ -5,6 +5,7 @@ import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
 import { BootcampResponse, SaltData, TemplateResponse } from "./types";
+import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
 
 const fontObjList = [
   {
@@ -367,8 +368,9 @@ export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray:
 }
 
 
-export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
-  console.log("Generating combined pdf!")
+export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
+  setLoadingMessage("Generating combined pdf!");
+  console.log("Generating combined pdf!");
   const font = await getFontsData();
   const mergedPdf = await PDFDocument.create();
 
@@ -382,15 +384,19 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
     const loadedPdf = await PDFDocument.load(pdf);
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
     copiedPages.forEach(page => mergedPdf.addPage(page));
-    console.log("Generating pdf: " + i)
+    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length - 1}`);
+    console.log(`Generating pdf for file: ${i + 1}/${templates.length - 1}`);
   }
 
-  console.log("Merging Pdfs")
+  setLoadingMessage("Merging Pdfs");
+  console.log("Merging Pdfs");
 
   const mergedPdfBytes = await mergedPdf.save();
-  console.log("Creating Blobs")
+  setLoadingMessage("Creating Blobs");
+  console.log("Creating Blobs");
   const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
-  console.log("Finished")
+  setLoadingMessage("Finished");
+  console.log("Finished");
   window.open(URL.createObjectURL(blob));
 }
 
