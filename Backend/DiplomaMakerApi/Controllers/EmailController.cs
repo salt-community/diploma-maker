@@ -19,7 +19,7 @@ public class EmailController : ControllerBase
     {
         try
         {
-            await _emailService.SendEmailWithAttachmentAsync(guidID, req.File, req.Email, req.Password);
+            await _emailService.SendEmailWithAttachmentAsync(guidID, req.File, req.Email, req.Password, req.Title, req.Description);
         }
         catch (Exception ex)
         {
