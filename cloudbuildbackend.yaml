@@ -2,7 +2,7 @@ steps:
   # Backup the existing Blob directory
   - name: 'google/cloud-sdk'
     entrypoint: 'bash'
-    args: ['-c', 'gsutil ls gs://pgp-sandbox_cloudbuild/']
+    args: ['-c', 'gsutil ls gs://pgp-sandbox_cloudbuild/source/']
 
   - name: 'google/cloud-sdk'
     entrypoint: 'bash'
