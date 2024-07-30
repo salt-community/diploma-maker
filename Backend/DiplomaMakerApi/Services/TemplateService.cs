@@ -5,17 +5,17 @@ using Microsoft.EntityFrameworkCore;
 namespace DiplomaMakerApi.Services;
 
 public class TemplateService
+(
+    DiplomaMakingContext context, 
+    LocalFileStorageService localFileStorageService, 
+    GoogleCloudStorageService googleCloudStorageService,
+    IWebHostEnvironment env
+)
 {
-    private readonly DiplomaMakingContext _context;
-    private readonly LocalFileStorageService _localFileStorageService;
-    private readonly GoogleCloudStorageService _googleCloudStorageService;
-
-    public TemplateService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService)
-    {
-        _context = context;
-        _localFileStorageService = localFileStorageService;
-        _googleCloudStorageService = googleCloudStorageService;
-    }
+    private readonly DiplomaMakingContext _context = context;
+    private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
+    private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
+    private readonly IWebHostEnvironment _env = env;
 
     public async Task<List<DiplomaTemplate>> GetTemplates(){
         return await _context.DiplomaTemplates

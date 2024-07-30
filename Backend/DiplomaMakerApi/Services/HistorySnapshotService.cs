@@ -5,12 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services
 {
-    public class HistorySnapshotService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, IMapper mapper)
+    public class HistorySnapshotService
+    (
+        DiplomaMakingContext context, 
+        LocalFileStorageService localFileStorageService, 
+        GoogleCloudStorageService googleCloudStorageService, 
+        IMapper mapper,
+        IWebHostEnvironment env
+    )
     {
         private readonly DiplomaMakingContext _context = context;
         private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
         private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
         private readonly IMapper _mapper = mapper;
+        private readonly IWebHostEnvironment _env = env;
 
         public async Task CreateHistorySnapshotFromBootcamp(BootcampRequestUpdateDto requestDto, Bootcamp bootcampUsed) 
         {

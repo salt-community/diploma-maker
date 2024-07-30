@@ -30,7 +30,7 @@ namespace DiplomaMakerApi.Controllers
                 return BadRequest("Invalid file type.");
             }
             
-            if (_env.IsDevelopment())
+            if (!_env.IsDevelopment())
             {
                 var filePath = await _localFileStorageService.GetFilePath(fileName);
 
@@ -58,7 +58,7 @@ namespace DiplomaMakerApi.Controllers
         [HttpGet("download-all-templatebackgrounds")]
         public async Task<IActionResult> DownloadAllFiles()
         {
-            if (_env.IsDevelopment())
+            if (!_env.IsDevelopment())
             {
                 return await _localFileStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
             }
