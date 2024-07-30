@@ -24,7 +24,7 @@ type Props = {
 export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
 
  /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
-  // current data selected 
+  // bootcamps mirror
   const [saltData, setSaltData] = useState<SaltData[] | null>();
   const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0); // -> these 2 can be refactored into 1 state
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
@@ -72,6 +72,7 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
             </section>
             <section className="flex-1 flex flex-col">
               <DiplomaDataForm
+                tracks = {tracks}
                 UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
                 updateSaltData={updateSaltDataHandler}
                 bootcamps={bootcamps}

@@ -16,7 +16,7 @@ public class Bootcamp
     {
         get
         {
-             return $"{Track.Tag ?? Track.Name}_{GraduationDate:yyyy-MM-dd}";
+             return $"{Track.Tag ?? Track.Name}-{GraduationDate:yyyy-MM-dd}";
         }
     }
 
