@@ -19,22 +19,6 @@ namespace DiplomaMakerApi.Services
             _fileUtilityService = fileUtilityService;
         }
 
-        public async Task<string> SaveFile(IFormFile file, string templateName)
-        {
-            var fileExtension = Path.GetExtension(file.FileName);
-            if (!templateName.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase))
-            {
-                templateName += fileExtension;
-            }
-
-            var objectName = $"Blob/DiplomaPdfs/{templateName}";
-            using (var stream = file.OpenReadStream())
-            {
-                await _storageClient.UploadObjectAsync(_bucketName, objectName, file.ContentType, stream);
-            }
-            return objectName;
-        }
-
         public async Task<string> GetFilePath(string templateName)
         {
             var objectName = templateName.Equals("Default.pdf", StringComparison.OrdinalIgnoreCase)
@@ -74,6 +58,22 @@ namespace DiplomaMakerApi.Services
                 await _storageClient.DownloadObjectAsync(_bucketName, filePath, memoryStream);
                 return (memoryStream.ToArray(), "application/pdf");
             }
+        }
+
+        public async Task<string> SaveFile(IFormFile file, string templateName)
+        {
+            var fileExtension = Path.GetExtension(file.FileName);
+            if (!templateName.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                templateName += fileExtension;
+            }
+
+            var objectName = $"Blob/DiplomaPdfs/{templateName}";
+            using (var stream = file.OpenReadStream())
+            {
+                await _storageClient.UploadObjectAsync(_bucketName, objectName, file.ContentType, stream);
+            }
+            return objectName;
         }
 
         public async Task<bool> DeleteFile(string templateName)

@@ -20,23 +20,6 @@ namespace DiplomaMakerApi.Services
             _fileUtilityService = fileUtilityService;
         }
 
-        public async Task<string> SaveFile(IFormFile file, string templateName)
-        {
-            var fileExtension = Path.GetExtension(file.FileName);
-
-            if (!templateName.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase))
-            {
-                templateName += fileExtension;
-            }
-
-            var filePath = Path.Combine(_storagePath, templateName);
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-            return filePath;
-        }
-
         //The templateName should be something like Default.v2.pdf
         public async Task<string> GetFilePath(string templateName)
         {
@@ -54,6 +37,40 @@ namespace DiplomaMakerApi.Services
                 return Path.Combine(_storagePath, templateName);
             }
             return null;
+        }
+
+        public async Task<FileContentResult> GetFilesFromPath(string folderPath, string zipFileName)
+        {
+            var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+            var files = Directory.GetFiles(directoryPath);
+
+            if (files.Length == 0)
+            {
+                throw new FileNotFoundException("No files found in the directory.");
+            }
+            var fileBytes = _fileUtilityService.CreateZipFromFiles(files, zipFileName);
+
+            return new FileContentResult(fileBytes, "application/zip")
+            {
+                FileDownloadName = zipFileName
+            };
+        }
+
+        public async Task<string> SaveFile(IFormFile file, string templateName)
+        {
+            var fileExtension = Path.GetExtension(file.FileName);
+
+            if (!templateName.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                templateName += fileExtension;
+            }
+
+            var filePath = Path.Combine(_storagePath, templateName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+            return filePath;
         }
 
         public async Task<bool> DeleteFile(string templateName)
@@ -119,23 +136,6 @@ namespace DiplomaMakerApi.Services
                     File.Delete(file);
                 }
             }
-        }
-
-       public async Task<FileContentResult> GetFilesFromPath(string folderPath, string zipFileName)
-        {
-            var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
-            var files = Directory.GetFiles(directoryPath);
-
-            if (files.Length == 0)
-            {
-                throw new FileNotFoundException("No files found in the directory.");
-            }
-            var fileBytes = _fileUtilityService.CreateZipFromFiles(files, zipFileName);
-
-            return new FileContentResult(fileBytes, "application/zip")
-            {
-                FileDownloadName = zipFileName
-            };
         }
     }
 }
