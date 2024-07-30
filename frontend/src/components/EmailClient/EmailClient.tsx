@@ -33,7 +33,7 @@ type Props = {
     show: boolean,
     closeEmailClient: () => void,
     modifyStudentEmailHandler: (studentInput?: Student, originalEmail?: string) => void,
-    sendEmails: (userIds: string[]) => void,
+    sendEmails: (userIds: string[], title: string, description: string) => void,
     callCustomAlert: (alertType: PopupType, title: string, content: string) => void,
 };
 
@@ -108,7 +108,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
             callCustomAlert('fail', `Failure in sending emails`, `Cannot send email to ${studentNullEmail.name} as their email address is missing.`);
             return;
         }
-        sendEmails(selectedIds);
+        sendEmails(selectedIds, emailTitle, emailDescription);
     }
 
     const emailConfigSaveHandler = () => {

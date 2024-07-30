@@ -194,7 +194,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         }
     }
 
-    const sendEmailsHandler = async (userIds: string[]) => {
+    const sendEmailsHandler = async (userIds: string[], title: string, description: string) => {
         if(userIds.length === 0) return
         //@ts-ignore
         customInfoPopup("progress", "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
@@ -215,8 +215,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                     //@ts-ignore
                     file: file,
                     email: emailConfigRequest.senderEmail,
-                    senderCode: emailConfigRequest.senderCode
+                    senderCode: emailConfigRequest.senderCode,
+                    title: title,
+                    description: description,
                 }
+
+                
                 await sendEmail(emailSendRequest)
             } catch (error) {
                 //@ts-ignore
@@ -291,7 +295,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                     closeEmailClient={() => { setShowEmailClient(false) }}
                     show={showEmailClient}
                     modifyStudentEmailHandler={modifyStudentEmailHandler}
-                    sendEmails={(userIds: string[]) => { sendEmailsHandler(userIds) }}
+                    sendEmails={(userIds: string[], title: string, description: string) => { sendEmailsHandler(userIds, title, description) }}
                     callCustomAlert={customAlert}
                 />
             }
