@@ -31,9 +31,10 @@ type Props = {
   selectedBootcampIndex: number;
   fullscreen: boolean;
   customAlert: (alertType: PopupType, title: string, content: string) => void;
+  setLoadingMessage: (message: string) => void;
 };
 
-export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex, fullscreen, UpdateBootcampWithNewFormdata, customAlert }: Props) {
+export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelectedBootcampIndex, saltData, templates, selectedBootcampIndex, fullscreen, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage }: Props) {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [students, setStudents] = useState<Student[]>(saltData.students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(saltData.template);
@@ -64,7 +65,8 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
     setStudents(updatedStudents);
   };
 
-  const postSelectedBootcampData = async () => {
+  const postSelectedBootcampData = async (both?: Boolean) => {
+    customAlert('loading', 'Adding Diplomas...', '');
     const updateFormDataRequest: FormDataUpdateRequest = {
       students: saltData.students.map((student) => ({
         guidId: saltData?.guidId || crypto.randomUUID(),
@@ -77,21 +79,25 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
 
     try {
       await UpdateBootcampWithNewFormdata(updateFormDataRequest, saltData.guidId);
-      customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
+      both 
+        ? customAlert('loading', 'Diplomas added...', '')
+        : customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
     } catch (error) {
       customAlert('fail', "Failed to add diplomas:", `${error}`);
     }
+
+    
+    
   }
 
   const generatePDFHandler = async () => {
-    console.log("Starting Pdf Generation Handler")
+    customAlert('loading', 'Processing Template Data...', '');
     if (!bootcamps || !templates) {
       customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
       return;
     }
     const templatesArr: Template[] = [];
-    console.log(students);
     const inputsArray = students.map(student => {
       const selectedBootcamp = bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
 
@@ -110,16 +116,19 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
       return inputs;
     }).filter(inputs => inputs !== null);
 
-    console.log(inputsArray);
-
-    console.log("InputsArray Ready")
+    customAlert('loading', 'Generating Pdfs...', '');
 
     if (inputsArray.length === 0) {
       customAlert('fail', "Error", "No valid inputs found for PDF generation.");
       return;
     }
 
-    await newGenerateCombinedPDF(templatesArr, inputsArray);
+    const setLoadingMessageAndAlert = (message: string) => {
+      setLoadingMessage(message);
+      customAlert('loading', message, '');
+    };
+
+    await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert);
     customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
   };
 
@@ -131,7 +140,10 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
   };
 
   const onSubmit = (data: FormData) => {
-    if(data.optionA){
+    if(data.optionA && data.optionB){
+      postSelectedBootcampData(true)
+    }
+    else if(data.optionA){
       postSelectedBootcampData()
     }
     if(data.optionB){

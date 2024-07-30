@@ -370,7 +370,6 @@ export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray:
 
 export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
   setLoadingMessage("Generating combined pdf!");
-  console.log("Generating combined pdf!");
   const font = await getFontsData();
   const mergedPdf = await PDFDocument.create();
 
@@ -385,18 +384,14 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
     copiedPages.forEach(page => mergedPdf.addPage(page));
     setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length - 1}`);
-    console.log(`Generating pdf for file: ${i + 1}/${templates.length - 1}`);
   }
 
   setLoadingMessage("Merging Pdfs");
-  console.log("Merging Pdfs");
 
   const mergedPdfBytes = await mergedPdf.save();
   setLoadingMessage("Creating Blobs");
-  console.log("Creating Blobs");
   const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
-  setLoadingMessage("Finished");
-  console.log("Finished");
+  setLoadingMessage("Finished Processing...");
   window.open(URL.createObjectURL(blob));
 }
 
