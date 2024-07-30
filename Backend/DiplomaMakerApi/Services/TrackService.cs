@@ -15,6 +15,8 @@ public class TrackService
     public async Task<List<Track>> GetAllTracks() => await _context.Tracks
         .Include(t => t.Bootcamps)
         .ThenInclude(b=>b.Students)
+        .Include(t => t.Bootcamps)
+        .ThenInclude(b => b.DiplomaTemplate)
         .ToListAsync();
 
 }
