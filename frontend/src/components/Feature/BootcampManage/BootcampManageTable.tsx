@@ -107,13 +107,25 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
 
   const handleDeleteBootcamp = async (i: number) => {
     closeConfirmationPopup();
+    customAlert('loading', "Deleting Bootcamp...", ``);
     await deleteBootcamp(i);
     customAlert('message', "Delete Successful", `Successfully removed bootcamp from database.`);
     setSortingChanged(prev => !prev);
   }
 
+  const addNewBootcampHandler = async (bootcamp: BootcampRequest) => {
+    customAlert('loading', "Adding New Bootcamp...", ``);
+    try {
+      await addNewBootcamp(bootcamp)
+      customAlert('success', "Added Bootcamp Successfully.", `Successfully added bootcamp to the database.`);
+    } catch (error) {
+      customAlert('fail', "Error Adding Bootcamp", `${error}`);
+    }
+  }
+
   const handleUpdateBootcamp = async (data: FieldValues) => {
     closeConfirmationPopup();
+    customAlert('loading', "Updating Bootcamp...", ``);
     for (let i = 0; i < bootcamps!.length; i++) {
       const newBootcamp: BootcampRequest = {
         guidId: bootcamps![i].guidId,
@@ -243,7 +255,7 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
                 </table>
               </div>
               <div className="modal-main-footer">
-                <AddNewBootcampForm addNewBootcamp={addNewBootcamp} bootcamps={bootcamps} tracks={tracks} />
+                <AddNewBootcampForm addNewBootcamp={addNewBootcampHandler} bootcamps={bootcamps} tracks={tracks} />
                 {bootcamps && bootcamps.length > itemsPerPage && (
                   <PaginationMenu
                     containerClassOverride='modal-main-footer--pagination'
