@@ -8,17 +8,10 @@ export async function postEmail(apiUrl: string, emailRequest: EmailSendRequest):
     formData.append('title', emailRequest.title);
     formData.append('description', emailRequest.description);
 
-    console.log(formData);
-
     const response = await fetch(`${apiUrl}/api/Email/email-student/${emailRequest.guidId}`, {
         method: 'POST',
         body: formData,
     });
-
-    // const response = await fetch(`${apiUrl}/api/Email/email-student/${emailRequest.guidId}?Email=${encodeURIComponent(emailRequest.email)}&Password=${encodeURIComponent(emailRequest.senderCode)}`, {
-    //     method: 'POST',
-    //     body: formData,
-    // });
 
     if (response.status === 409)
         throw new Error("Conflict");
