@@ -57,7 +57,11 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
-    setStudents(dataFromFile);
+    const updatedStudents = dataFromFile.map(student => ({
+      ...student,
+      verificationCode: generateVerificationCode()
+    }));
+    setStudents(updatedStudents);
   };
 
   const postSelectedBootcampData = async () => {
@@ -70,6 +74,9 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
       })),
       templateId: selectedTemplate.id
     };
+
+    console.log("RUNNING DIPLOMADATAFORM")
+    console.log(updateFormDataRequest)
 
     try {
       await UpdateBootcampWithNewFormdata(updateFormDataRequest, saltData.guidId);
