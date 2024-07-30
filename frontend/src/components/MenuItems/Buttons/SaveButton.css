@@ -44,6 +44,9 @@
 
         transition: all .15s ease-in-out;
     }
+    .save-btn.casual:hover{
+        background-color: #6f2bf6;
+    }
     .save-btn.normal svg{
         width: 25px;
         transition: all .15s ease-in-out;

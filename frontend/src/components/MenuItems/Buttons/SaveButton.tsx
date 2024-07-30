@@ -12,7 +12,7 @@ type Props = {
   disabled?: boolean;
 };
 
-export type SaveButtonType = 'grandTheftAuto' | 'normal' | 'remove';
+export type SaveButtonType = 'grandTheftAuto' | 'normal' | 'remove' | 'warning';
 
 export const SaveButton = ({ classNameOverride, onClick, saveButtonType, textfield, customIcon, disabled }: Props) => (
   <button 
