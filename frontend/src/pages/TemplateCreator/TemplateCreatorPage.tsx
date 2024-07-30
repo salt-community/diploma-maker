@@ -500,6 +500,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             show={showPopup}
             onClose={closeAlert}
         />
+        <AlertPopup
+            title={popupContent[0]}
+            text={popupContent[1]}
+            popupType={'loading'}
+            show={true}
+            onClose={closeAlert}
+        />
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
                 <section className="templatecreator-page__leftsidebar-menu-section">
