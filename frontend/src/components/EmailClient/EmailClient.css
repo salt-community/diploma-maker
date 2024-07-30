@@ -132,6 +132,7 @@
                     margin: 1rem 0 .5rem 0;
                 }
 
+            textarea.emailclient__list--input,
             input.emailclient__list--input {
                 width: 100%;
                 min-width: 350px;
@@ -149,7 +150,11 @@
                 cursor: text;
                 transition: all .15s ease-in-out;
             }
-            input.emailclient__list--input:hover{
+            textarea.emailclient__list--input{
+                min-height: 150px;
+            }
+            textarea.emailclient__list--input:hover,
+            input.emailclient__list--input:hover {
                 color: #e5e6ec;
                 background-color: #ced1ff24;
                 transition: all .15s ease-in-out;
