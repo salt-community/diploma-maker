@@ -103,7 +103,18 @@ namespace DiplomaMakerApi.Services
 
             return relativePath;
         }
+        public void ClearFolderExceptDefault()
+        {
+            string directoryPath = Path.Combine("Blob", "DiplomaPdfs");
+            string defaultFile = "Default.pdf";
 
-        
+            foreach (string file in Directory.GetFiles(directoryPath))
+            {
+                if (Path.GetFileName(file) != defaultFile)
+                {
+                    File.Delete(file);
+                }
+            }
+        }
     }
 }
