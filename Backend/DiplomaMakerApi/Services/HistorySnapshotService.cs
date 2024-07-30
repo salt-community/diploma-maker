@@ -45,7 +45,7 @@ namespace DiplomaMakerApi.Services
                     templateBackgroundLocation = await GetFileLocation(templateUsed.Name + ".v1.pdf") 
                     ?? (!_env.IsDevelopment() 
                         ? await _localFileStorageService.CreateBackup(templateUsed.Name) 
-                        : await _googleCloudStorageService.CreateBackup(templateUsed.Name));
+                        : await _googleCloudStorageService.CreateBackup(templateUsed.Name)).Replace("/DiplomaPdfs", "");
                 }
                 else if (templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
                 {
