@@ -24,5 +24,25 @@ namespace DiplomaMakerApi.Services
                 return memoryStream.ToArray();
             }
         }
+
+        public byte[] CreateZipFromStreams(IEnumerable<(Stream Stream, string FileName)> files)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (var file in files)
+                    {
+                        var entry = archive.CreateEntry(file.FileName);
+                        using (var entryStream = entry.Open())
+                        {
+                            file.Stream.CopyTo(entryStream);
+                        }
+                    }
+                }
+
+                return memoryStream.ToArray();
+            }
+        }
     }
 }

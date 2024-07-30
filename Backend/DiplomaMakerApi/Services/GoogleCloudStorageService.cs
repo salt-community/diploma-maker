@@ -1,4 +1,5 @@
 using Google.Cloud.Storage.V1;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services
@@ -8,12 +9,14 @@ namespace DiplomaMakerApi.Services
         private readonly string _bucketName;
         private readonly DiplomaMakingContext _context;
         private readonly StorageClient _storageClient;
+        private readonly FileUtilityService _fileUtilityService;
 
-        public GoogleCloudStorageService(DiplomaMakingContext context, IConfiguration configuration)
+        public GoogleCloudStorageService(DiplomaMakingContext context, IConfiguration configuration, FileUtilityService fileUtilityService)
         {
             _storageClient = StorageClient.Create();
             _context = context;
             _bucketName = configuration["GoogleCloud:BucketName"];
+            _fileUtilityService = fileUtilityService;
         }
 
         public async Task<string> SaveFile(IFormFile file, string templateName)
@@ -164,25 +167,30 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<List<Google.Apis.Storage.v1.Data.Object>> ListObjectsAsync(string bucketName, string prefix)
+        public async Task<FileContentResult> DownloadTemplateBackgroundPdfs(string folderPath)
         {
-            var objects = new List<Google.Apis.Storage.v1.Data.Object>();
-            var storageObjects = _storageClient.ListObjects(bucketName, prefix);
+            var storageObjects = _storageClient.ListObjects(_bucketName, folderPath);
+            var files = new List<(Stream Stream, string FileName)>();
 
-            await Task.Run(() =>
+            foreach (var storageObject in storageObjects)
             {
-                foreach (var obj in storageObjects)
+                var memoryStream = new MemoryStream();
+                await _storageClient.DownloadObjectAsync(_bucketName, storageObject.Name, memoryStream);
+                memoryStream.Position = 0;
+                var fileName = Path.GetFileName(storageObject.Name);
+                if (!string.IsNullOrEmpty(fileName))
                 {
-                    objects.Add(obj);
+                    files.Add((memoryStream, fileName));
                 }
-            });
+            }
 
-            return objects;
-        }
+            var zipFileName = "TemplateBackgroundPdfs.zip";
+            var fileBytes = _fileUtilityService.CreateZipFromStreams(files);
 
-        public async Task DownloadObjectAsync(string bucketName, string objectName, MemoryStream destination)
-        {
-            await _storageClient.DownloadObjectAsync(bucketName, objectName, destination);
+            return new FileContentResult(fileBytes, "application/zip")
+            {
+                FileDownloadName = zipFileName
+            };
         }
     }
 }
