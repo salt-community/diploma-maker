@@ -42,13 +42,16 @@ namespace DiplomaMakerApi.Services
                 
                 if (lastSnapshot == null)
                 {
-                    // templateBackgroundLocation = await GetFileLocation(templateUsed.Name + ".v1.pdf")  ?? await _localFileStorageService.CreateBackup(templateUsed.Name);'
-                    templateBackgroundLocation = await GetFileLocation(templateUsed.Name + ".v1.pdf")  ?? await _googleCloudStorageService.CreateBackup(templateUsed.Name);
+                    templateBackgroundLocation = await GetFileLocation(templateUsed.Name + ".v1.pdf") 
+                    ?? (!_env.IsDevelopment() 
+                        ? await _localFileStorageService.CreateBackup(templateUsed.Name) 
+                        : await _googleCloudStorageService.CreateBackup(templateUsed.Name));
                 }
                 else if (templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
                 {
-                    // templateBackgroundLocation = await _localFileStorageService.CreateBackup(templateUsed.Name);
-                    templateBackgroundLocation = await _googleCloudStorageService.CreateBackup(templateUsed.Name);
+                    templateBackgroundLocation = !_env.IsDevelopment() 
+                        ? await _localFileStorageService.CreateBackup(templateUsed.Name) 
+                        : await _googleCloudStorageService.CreateBackup(templateUsed.Name);
                 }
                 else
                 {
@@ -89,8 +92,10 @@ namespace DiplomaMakerApi.Services
 
         private async Task<string> GetFileLocation(string fileName)
         {
-            // var fileLocationResponse = await _localFileStorageService.GetFilePath(Path.GetFileName(fileName));
-            var fileLocationResponse = await _googleCloudStorageService.GetFilePath(Path.GetFileName(fileName));
+            var fileLocationResponse = !_env.IsDevelopment()
+                ? await _localFileStorageService.GetFilePath(Path.GetFileName(fileName))
+                : await _googleCloudStorageService.GetFilePath(Path.GetFileName(fileName));
+            
             return fileLocationResponse != null ? "Blob/" + Path.GetFileName(fileLocationResponse) : null; // Temp Fix: when generating a second time it gives the absolute path for some strange reason.
         }
 
