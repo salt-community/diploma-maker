@@ -32,9 +32,9 @@ namespace DiplomaMakerApi.Controllers
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
             return File(fileBytes, "application/pdf", fileName);
         }
-        // public async Task<IActionResult> getBlob()
-        // {
-        //     return Ok();
-        // }
+        public async Task<IActionResult> getBlob()
+        {
+            return Ok();
+        }
     }
 }

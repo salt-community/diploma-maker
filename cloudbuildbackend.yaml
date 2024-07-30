@@ -2,11 +2,15 @@ steps:
   # Backup the existing Blob directory
   - name: 'google/cloud-sdk'
     entrypoint: 'bash'
-    args: ['-c', 'gsutil ls gs://pgp-sandbox_cloudbuild/source/']
+    args: ['-c', 'gsutil ls gs://gcf-v2-sources-735865474111-europe-north1/']
 
   - name: 'google/cloud-sdk'
     entrypoint: 'bash'
     args: ['-c', 'gsutil cp -r gs://pgp-sandbox_cloudbuild/Blob gs://backup/Blob']
+
+  - name: 'google/cloud-sdk'
+    entrypoint: 'bash'
+    args: ['-c', 'gsutil ls gs://backup/Blob']
 
   # Build containers
   - name: 'gcr.io/cloud-builders/docker'
