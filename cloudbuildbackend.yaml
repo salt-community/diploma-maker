@@ -1,12 +1,12 @@
 steps:
-  # Backup the existing Blob directory
-  - name: 'google/cloud-sdk'
-    entrypoint: 'bash'
-    args: ['-c', 'gsutil ls']
-
-  - name: 'google/cloud-sdk'
-    entrypoint: 'bash'
-    args: ['-c', 'gsutil cp -r /workspace/Blob gs://backup/Blob']
+  # Back up the Blob folder from the current container
+  - name: 'Backup Blob folder'
+    run: |
+      gcloud auth activate-service-account --key-file=${{ secrets.GCP_SA_KEY }}
+      gcloud config set project ${{ secrets.GCP_PROJECT }}
+      gcloud run services describe backend-diploma --platform managed --region us-central1 --format "value(status.url)" > service_url.txt
+      SERVICE_URL=$(cat service_url.txt)
+      curl -o blob_backup.tar.gz $SERVICE_URL/Blob/backup
 
   # Build containers
   - name: 'gcr.io/cloud-builders/docker'
@@ -21,10 +21,14 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['run', 'deploy', 'backend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
 
-  # Restore the Blob directory
-  - name: 'google/cloud-sdk'
-    entrypoint: 'bash'
-    args: ['-c', 'gsutil cp -r gs://backup/Blob /workspace/Blob']
+  # Restore the Blob folder to the new container
+  - name: 'Restore Blob folder'
+    run: |
+      gcloud auth activate-service-account --key-file=${{ secrets.GCP_SA_KEY }}
+      gcloud config set project ${{ secrets.GCP_PROJECT }}
+      gcloud run services describe backend-diploma --platform managed --region us-central1 --format "value(status.url)" > service_url.txt
+      SERVICE_URL=$(cat service_url.txt)
+      curl -X POST -F "blob_backup=@blob_backup.tar.gz" $SERVICE_URL/Blob/restore
 
 images:
   - 'gcr.io/pgp-sandbox/diplomamakers-backend:latest'
