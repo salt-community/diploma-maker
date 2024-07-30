@@ -167,7 +167,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<FileContentResult> GetFilesFromPath(string folderPath)
+        public async Task<FileContentResult> GetFilesFromPath(string folderPath, string zipFileName)
         {
             var storageObjects = _storageClient.ListObjects(_bucketName, folderPath);
             var files = new List<(Stream Stream, string FileName)>();
@@ -183,8 +183,7 @@ namespace DiplomaMakerApi.Services
                     files.Add((memoryStream, fileName));
                 }
             }
-
-            var zipFileName = "TemplateBackgroundPdfs.zip";
+            
             var fileBytes = _fileUtilityService.CreateZipFromStreams(files);
 
             return new FileContentResult(fileBytes, "application/zip")

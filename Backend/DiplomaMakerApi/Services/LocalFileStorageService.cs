@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services
@@ -7,13 +8,16 @@ namespace DiplomaMakerApi.Services
         private readonly string _storagePath = Path.Combine(Directory.GetCurrentDirectory(), "Blob/DiplomaPdfs");
         private readonly DiplomaMakingContext _context;
 
-        public LocalFileStorageService(DiplomaMakingContext context)
+        private readonly FileUtilityService _fileUtilityService;
+
+        public LocalFileStorageService(DiplomaMakingContext context, FileUtilityService fileUtilityService)
         {
             if (!Directory.Exists(_storagePath))
             {
                 Directory.CreateDirectory(_storagePath);
             }
             _context = context;
+            _fileUtilityService = fileUtilityService;
         }
 
         public async Task<string> SaveFile(IFormFile file, string templateName)
@@ -115,6 +119,23 @@ namespace DiplomaMakerApi.Services
                     File.Delete(file);
                 }
             }
+        }
+
+       public async Task<FileContentResult> GetFilesFromPath(string folderPath, string zipFileName)
+        {
+            var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+            var files = Directory.GetFiles(directoryPath);
+
+            if (files.Length == 0)
+            {
+                throw new FileNotFoundException("No files found in the directory.");
+            }
+            var fileBytes = _fileUtilityService.CreateZipFromFiles(files, zipFileName);
+
+            return new FileContentResult(fileBytes, "application/zip")
+            {
+                FileDownloadName = zipFileName
+            };
         }
     }
 }

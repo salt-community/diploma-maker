@@ -10,7 +10,9 @@ public static class SeedData
 
         using (var _context = new DiplomaMakingContext(serviceProvider.GetRequiredService<DbContextOptions<DiplomaMakingContext>>()))
         {
-            var fileOperations = new LocalFileStorageService(_context);
+            // Clears all pdfbackgroundfiles except Default.pdf
+            var _fileUtilityService = serviceProvider.GetRequiredService<FileUtilityService>();
+            var fileOperations = new LocalFileStorageService(_context, _fileUtilityService);
             fileOperations.ClearFolderExceptDefault();
             
             _context.Database.EnsureDeleted();

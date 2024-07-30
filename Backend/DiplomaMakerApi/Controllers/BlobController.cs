@@ -58,21 +58,13 @@ namespace DiplomaMakerApi.Controllers
         [HttpGet("download-all-templatebackgrounds")]
         public async Task<IActionResult> DownloadAllFiles()
         {
-            // var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Blob/DiplomaPdfs");
-            // var files = Directory.GetFiles(directoryPath);
-
-            var files = await _googleCloudStorageService.GetFilesFromPath("Blob/DiplomaPdfs");
-
-            // if (files.Length == 0)
-            // {
-            //     return NotFound("No files found.");
-            // }
-
-            // var zipFileName = "TemplateBackgroundPdfs.zip";
-            // var fileBytes = _fileUtilityService.CreateZipFromFiles(files, zipFileName);
-
-            // return File(fileBytes, "application/zip", zipFileName);
-            return files;
+            if (_env.IsDevelopment())
+            {
+                return await _localFileStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
+            }
+            else{
+                return await _googleCloudStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
+            }
         }
 
     }
