@@ -16,39 +16,19 @@ import PreviewDiploma from "../../components/Feature/PreviewDiploma/PreviewDiplo
 
 type Props = {
   tracks: TrackResponse[] | null;
-  bootcamps: BootcampResponse[] | null;
   templates: TemplateResponse[] | null;
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void
 };
 
-export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
+export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata }: Props) {
 
  /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
   // bootcamps mirror
-  const [saltData, setSaltData] = useState<SaltData[] | null>();
-  const [selectedBootcampIndex, setSelectedBootcampIndex] = useState<number>(0); // -> these 2 can be refactored into 1 state
+  const [saltData, setSaltData] = useState<SaltData | null>();
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { loadingMessage } = useLoadingMessage();
   const isFailed = loadingMessage.includes('Failed');
 
-
-  // When page starts -> Puts backend data into saltData
-  useEffect(() => {
-    if (bootcamps && templates) {
-        setSaltData(bootcamps.map(b => mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId))));
-      }
-  }, [bootcamps, templates]);
-
-  /* update saltdata with new student and template */
-  const updateSaltDataHandler = (data: SaltData) => {
-      setSaltData(prevSaltInfoProper =>
-        (prevSaltInfoProper ?? []).map((item) =>
-         item.guidId == data.guidId
-            ? { ...item, students: data.students, template: data.template }
-            : item
-        )
-      );
-  };
 
 /*   const TogglePreview = () => setIsFullScreen(prev => !prev) */
 
@@ -62,9 +42,9 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
            <>
             <section className="flex-1 flex flex-col justify-start gap-1 ml-5">
               {
-              saltData[selectedBootcampIndex].students.length > 0 ? (
+              saltData.students.length > 0 ? (
                 <PreviewDiploma
-                  saltData={saltData[selectedBootcampIndex]}
+                  saltData={saltData}
                 />
               ) : (
                 <Popup404 text="No student names found." />
@@ -72,16 +52,12 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
             </section>
             <section className="flex-1 flex flex-col">
               <DiplomaDataForm
+                setSaltData={setSaltData}
                 tracks = {tracks}
                 UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
-                updateSaltData={updateSaltDataHandler}
-                bootcamps={bootcamps}
-                setSelectedBootcampIndex={(index) => { setSelectedBootcampIndex(index); }}
-                selectedBootcampIndex={selectedBootcampIndex}
-                saltData={saltData[selectedBootcampIndex]}
                 templates={templates}
-               /*  fullscreen={IsFullScreen} */
                 customAlert={customAlert}
+                /*  fullscreen={IsFullScreen} */
               />
             </section>
           </>

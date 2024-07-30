@@ -23,45 +23,46 @@ type FormData = {
 
 type Props = {
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void;
-  bootcamps: BootcampResponse[] | null;
+  setSaltData: (data : SaltData) => void;
   templates: TemplateResponse[] | null;
-  saltData: SaltData;
   tracks: TrackResponse[]
-  updateSaltData: (data: SaltData) => void;
-  setSelectedBootcampIndex: (index: number) => void;
-  selectedBootcampIndex: number;
-  /*   fullscreen: boolean; */
   customAlert: (alertType: PopupType, title: string, content: string) => void;
+
+  /*   fullscreen: boolean; */
 };
 
-export default function DiplomaDataForm({ updateSaltData, tracks, bootcamps, setSelectedBootcampIndex, saltData, templates, UpdateBootcampWithNewFormdata, customAlert }: Props) {
+export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert }: Props) {
   
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [TrackIndex, setTrackIndex] = useState<number>(1)
   const [students, setStudents] = useState<Student[]>(tracks[0].bootcamps[0].students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(templates.find(template => template.id === tracks[0].bootcamps[0].templateId));
 
+
+  /* bootcamps.map(b => mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId) */
+
   useEffect(() => {
-    updateSaltData({
+    updateSaltDataHandler({
       ...saltData,
       template: selectedTemplate
     });
   }, [selectedTemplate]);
 
   useEffect(() => {
-    updateSaltData({
+    updateSaltDataHandler({
       ...saltData,
       students, 
     });
   }, [students]);
 
   useEffect(() => {
-    
-    const selectedBootcamp = tracks[TrackIndex - 1]?.bootcamps[0];
-    if (selectedBootcamp) {
-      setStudents(selectedBootcamp.students);
-      const selectedTemplateObject = templates?.find(template => template.id === selectedBootcamp.templateId);
-      setSelectedTemplate(selectedTemplateObject);
+    if(tracks && templates) {
+      const selectedBootcamp = tracks[TrackIndex - 1]?.bootcamps[0];
+      if (selectedBootcamp) {
+        setStudents(selectedBootcamp.students);
+        const selectedTemplateObject = templates?.find(template => template.id === selectedBootcamp.templateId);
+        setSelectedTemplate(selectedTemplateObject);
+      }
     }
   }, [TrackIndex, tracks, templates]);
 
@@ -124,6 +125,7 @@ export default function DiplomaDataForm({ updateSaltData, tracks, bootcamps, set
     await newGenerateCombinedPDF(templatesArr, inputsArray);
     customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
   };
+
 
   const validateOptions = () => {
     const optionA = watch('optionA');
