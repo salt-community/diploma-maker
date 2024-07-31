@@ -9,21 +9,21 @@ export const templateInputsFromSaltData = (saltData: SaltData, currentPageIndex:
           populateField(
             // @ts-ignore
             saltData.template.intro,
-            saltData.classname,
+            saltData.displayName,
             saltData.dategraduate,
             saltData.students.length > 0 ? saltData.students[currentPageIndex].name : "noname"
           ),
           populateField(
             // @ts-ignore
             saltData.template.main,
-            saltData.classname,
+            saltData.displayName,
             saltData.dategraduate,
             saltData.students.length > 0 ? saltData.students[currentPageIndex].name : "noname"
           ),
           populateField(
             // @ts-ignore
             saltData.template.footer,
-            saltData.classname,
+            saltData.displayName,
             saltData.dategraduate,
             saltData.students.length > 0 ? saltData.students[currentPageIndex].name : "noname"
           ),
@@ -38,17 +38,17 @@ export const templateInputsFromBootcampData = (selectedBootcampData: SaltData, n
   return makeTemplateInput(
     populateField(
       selectedBootcampData.template.intro, 
-      selectedBootcampData.classname, 
+      selectedBootcampData.displayName, 
       selectedBootcampData.dategraduate, 
       name),
     populateField(
       selectedBootcampData.template.main, 
-      selectedBootcampData.classname, 
+      selectedBootcampData.displayName, 
       selectedBootcampData.dategraduate, 
       name),
     populateField(
       selectedBootcampData.template.footer, 
-      selectedBootcampData.classname, 
+      selectedBootcampData.displayName, 
       selectedBootcampData.dategraduate, 
       name),
     selectedBootcampData.template.basePdf,

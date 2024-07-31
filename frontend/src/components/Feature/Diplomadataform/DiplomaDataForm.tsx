@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
-import { generateVerificationCode, mapBootcampToSaltData, newGenerateCombinedPDF } from "../../../util/helper";
+import { generateVerificationCode, mapBootcampToSaltData, mapBootcampToSaltData2, newGenerateCombinedPDF } from "../../../util/helper";
 import './DiplomaDataForm.css';
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
@@ -45,7 +45,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       selectedBootcamp.students = students;
       updatedAllTrackData[TrackIndex].bootcamps[BootcampIndex] = selectedBootcamp;
       setAllTrackData(updatedAllTrackData);
-      const saltData = mapBootcampToSaltData(selectedBootcamp, templates!.find(t => t.id === selectedBootcamp.templateId));
+      const saltData = mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, templates!.find(t => t.id === selectedBootcamp.templateId));
       setSaltData(saltData);
 
   }, [students, selectedTemplate]);
@@ -106,8 +106,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         customAlert('fail', "Error", `Template for bootcamp ${selectedBootcamp.name} not found.`);
         return null;
       }
-
-      const inputs = templateInputsFromBootcampData(mapBootcampToSaltData(selectedBootcamp, templateData), student.name, student.verificationCode);
+      const inputs = templateInputsFromBootcampData(mapBootcampToSaltData2(AllTrackData[TrackIndex].name,selectedBootcamp, templateData), student.name, student.verificationCode);
       templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(templateData, inputs));
       return inputs;
     }).filter(inputs => inputs !== null);

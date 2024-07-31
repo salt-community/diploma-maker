@@ -438,6 +438,17 @@ export function mapBootcampToSaltData(bootcamp: BootcampResponse, template: Temp
   };
 }
 
+export function mapBootcampToSaltData2(TrackName: string, bootcamp: BootcampResponse, template: TemplateResponse ): SaltData {
+  return {
+      guidId: bootcamp.guidId,
+      classname: bootcamp.name ,
+      dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
+      students: bootcamp.students,
+      template: template,
+      displayName: "Fullstack " + TrackName 
+  };
+}
+
 const openDB = () => {
   return new Promise<IDBDatabase>((resolve, reject) => {
     const request = indexedDB.open('fontDatabase', 1);

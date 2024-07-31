@@ -66,6 +66,7 @@ export type SaltData = {
     dategraduate: string;
     students: Student[];
     template: TemplateResponse;
+    displayName?: string;
 };
 
 // Template
