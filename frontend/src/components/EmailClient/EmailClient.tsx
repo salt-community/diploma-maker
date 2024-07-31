@@ -27,6 +27,7 @@ import { CloudUploadIcon } from "../MenuItems/Icons/CloudUploadIcon";
 import { ArrowIcon } from "../MenuItems/Icons/ArrowIcon";
 import { NextIcon } from "../MenuItems/Icons/NextIcon";
 import { EmailContentConfigSection } from "./EmailContentConfigSection";
+import { EmailHostConfigSection } from "./EmailHostConfigSection";
 
 type Props = {
     clients: Student[],
@@ -163,46 +164,16 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                     <>
                         <ul className="emailclient__list">
                             {(emailConfigActive && !emailContentConfig) ? 
-                                <>
-                                    <li className="emailclient__list--item">
-                                        <EmailIcon />
-                                        <div className="emailclient__list--input-wrapper">
-                                            <h3>Sender Email</h3>
-                                            <input 
-                                                className="emailclient__list--input" 
-                                                type="text" 
-                                                ref={senderEmailInput}
-                                                onChange={handleSenderEmailChange}
-                                                value={senderEmail}
-                                            />
-                                        </div>
-                                    </li>
-                                    <li className="emailclient__list--item">
-                                        <PasswordIcon />
-                                        <div className="emailclient__list--input-wrapper">
-                                            <h3>Sender Code</h3>
-                                            <input
-                                                className="emailclient__list--input"
-                                                type={showPassword ? "text" : "password"}
-                                                ref={senderCodeInput}
-                                                onChange={handleSenderCodeChange}
-                                                value={senderCode}
-                                            />
-                                            <div
-                                                className="password-visibility-toggle"
-                                                onMouseDown={() => setShowPassword(true)}
-                                                onMouseUp={() => setShowPassword(false)}
-                                                onMouseLeave={() => setShowPassword(false)}
-                                            >
-                                                {showPassword ? 
-                                                    <MountainIcon />
-                                                : 
-                                                    <EyeIcon /> 
-                                                }
-                                            </div>
-                                        </div>
-                                    </li>
-                                </>
+                                <EmailHostConfigSection
+                                    senderEmail={senderEmail}
+                                    senderCode={senderCode}
+                                    senderEmailInput={senderEmailInput}
+                                    senderCodeInput={senderCodeInput}
+                                    handleSenderEmailChange={handleSenderEmailChange}
+                                    handleSenderCodeChange={handleSenderCodeChange}
+                                    showPassword={showPassword}
+                                    setShowPassword={setShowPassword}
+                                />
                                 :
                                 <EmailContentConfigSection
                                     emailTitle={emailTitle}
