@@ -1,19 +1,46 @@
 steps:
-  # Build container
+## Build Development -----------------------------------------
+  # Build container for default deployment
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '-f', 'Dockerfile', '.']
     dir: frontend
+    id: BuildDefaultFrontend
 
-  # Push the Containers to the Container Registry
+  # Push the default container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest']
+    id: PushDefaultFrontend
+    waitFor: ['BuildDefaultFrontend']
 
-  # Deploy Containers to Cloud Run
+  # Deploy the default container image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['run', 'deploy', 'frontend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+    id: DeployDefaultFrontend
+    waitFor: ['PushDefaultFrontend']
+    
+## Build Production -----------------------------------------
+  # Build container for production deployment
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-frontend-production:latest', '-f', 'Dockerfile', '.']
+    dir: frontend
+    id: BuildProductionFrontend
+    waitFor: ['DeployDefaultFrontend']
+
+  # Push the production container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-frontend-production:latest']
+    id: PushProductionFrontend
+    waitFor: ['BuildProductionFrontend']
+
+  # Deploy the production container image to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['run', 'deploy', 'frontend-diploma-production', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend-production:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+    id: DeployProductionFrontend
+    waitFor: ['PushProductionFrontend']
 
 images:
   - 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest'
+  - 'gcr.io/pgp-sandbox/diplomamakers-frontend-production:latest'
 
 options:
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
