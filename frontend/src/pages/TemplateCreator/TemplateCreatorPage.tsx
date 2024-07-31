@@ -20,6 +20,8 @@ import { EditSection } from "../../components/MenuItems/TemplateCreatorPage/Edit
 import { TextEditSection } from "../../components/MenuItems/TemplateCreatorPage/TextEditSection";
 import { HelpIcon } from "../../components/MenuItems/Icons/HelpIcon";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
+import { InstructionSlideshow } from "../../components/Content/InstructionSlideshow";
+import { EmailConfigInstructionSlides, templateCreatorInstructionSlides } from "../../data/data";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -48,6 +50,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [selectedField, setSelectedField] = useState<string | null>(null);
   const [fieldWidth, setFieldWidth] = useState<number | null>(null);
   const [fieldHeight, setFieldHeight] = useState<number | null>(null);
+
+  const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
 
   const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
     positionX: null,
@@ -505,10 +509,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             show={showPopup}
             onClose={closeAlert}
         />
+        <InstructionSlideshow show={showInstructionSlideshow}  slides={templateCreatorInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
                 <section className="templatecreator-page__leftsidebar-menu-section">
-                    <button className="help-btn">
+                    <button onClick={() => setShowInstructionSlideshow(true)} className="help-btn">
                         <HelpIcon />
                     </button>
                 </section>
