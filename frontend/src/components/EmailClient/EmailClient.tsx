@@ -253,7 +253,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 </div>
                 
             </section>
-            <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
+            
             <AlertPopup
                 title={popupContent[0]}
                 text={popupContent[1]}
@@ -262,6 +262,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 onClose={closeAlert}
             />
             <InstructionSlideshow show={showInstructionSlideshow}  slides={EmailConfigInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
+            <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
         </>
     );
 };
