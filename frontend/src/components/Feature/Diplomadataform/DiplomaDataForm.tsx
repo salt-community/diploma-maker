@@ -95,21 +95,12 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       return;
     }
     const templatesArr: Template[] = [];
+    const selectedBootcamp = tracks[TrackIndex].bootcamps[BootcampIndex]; 
     const inputsArray = students.map(student => {
-      const selectedBootcamp = tracks[TrackIndex].bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
-      if (!selectedBootcamp) {
-        customAlert('fail', "Error", `Bootcamp for student ${student.name} not found.`);
-        return null;
-      }
-      const templateData = templates.find(t => t.id === selectedBootcamp.templateId);
-      if (!templateData) {
-        customAlert('fail', "Error", `Template for bootcamp ${selectedBootcamp.name} not found.`);
-        return null;
-      }
-      const inputs = templateInputsFromBootcampData(mapBootcampToSaltData2(AllTrackData[TrackIndex].name,selectedBootcamp, templateData), student.name, student.verificationCode);
-      templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(templateData, inputs));
+      const inputs = templateInputsFromBootcampData(mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, selectedTemplate), student.name, student.verificationCode);
+      templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(selectedTemplate, inputs));
       return inputs;
-    }).filter(inputs => inputs !== null);
+    })
 
     if (inputsArray.length === 0) {
       customAlert('fail', "Error", "No valid inputs found for PDF generation.");
@@ -130,6 +121,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
   const onSubmit = (data: FormData) => {
     if (data.optionA) {
+      
       postSelectedBootcampData()
     }
     if (data.optionB) {
