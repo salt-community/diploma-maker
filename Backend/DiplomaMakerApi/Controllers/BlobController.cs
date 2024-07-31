@@ -48,7 +48,6 @@ namespace DiplomaMakerApi.Controllers
 
                 if (fileBytes == null)
                 {
-                    Console.WriteLine("");
                     return NotFound("File not found.");
                 }
                 return File(fileBytes, contentType, fileName);
