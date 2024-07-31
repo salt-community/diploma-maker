@@ -133,3 +133,13 @@
     background-color: rgba(0, 0, 0, 0.2); 
     box-shadow: 6px 0 12px rgba(0, 0, 0, 0.1); 
   }
+
+  .popup404-wrapper {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the Popup404 horizontally and vertically */
+    width: 100%; /* Optional: adjust as needed */
+    height: 100%; /* Optional: adjust as needed */
+    pointer-events: none; /* Optional: allow clicks through the wrapper */
+  }

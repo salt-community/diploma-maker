@@ -61,12 +61,10 @@ export default function PreviewDiploma({ saltData }: Props) {
 
   return (
     <>
-        <h1 className="block text-lg font-medium text-gray-700 dark: text-white mb-2">
-          Currently selected: {saltData.classname} 
-        </h1>
+   
       <div
         className="pdfpreview-container"
-        ref={uiRef}
+        ref={uiRef }
         style={{ width: "100%", height: "calc(82vh - 68px)" }}
       />
       <PaginationMenu

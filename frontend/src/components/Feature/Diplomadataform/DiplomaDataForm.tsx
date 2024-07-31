@@ -1,12 +1,11 @@
 import { useForm } from "react-hook-form";
 import TagsInput from "../../TagsInput/TagsInput";
 import { useEffect, useState } from "react";
-import { BootcampResponse, TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse } from "../../../util/types";
+import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
 import { generateVerificationCode, mapBootcampToSaltData, newGenerateCombinedPDF } from "../../../util/helper";
 import './DiplomaDataForm.css';
-import { updateBootcamp, UpdateBootcampWithNewFormdata } from "../../../services/bootcampService";
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
@@ -38,13 +37,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [students, setStudents] = useState<Student[]>(tracks[0].bootcamps[0].students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(templates.find(template => template.id === tracks[0].bootcamps[0].templateId));
 
-  /*  useEffect(() => {
-      
-      const updateBootcamp = mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId) 
-      setSaltData(updateBootcamp)
-    }, [selectedTemplate]);
-  */
-
   useEffect(() => {
       const updatedAllTrackData = [...AllTrackData];
       const selectedTrack = updatedAllTrackData[TrackIndex];
@@ -69,7 +61,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   }, [TrackIndex, BootcampIndex, AllTrackData]);
 
 
-
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
     dataFromFile.forEach(student => {
@@ -81,7 +72,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const postSelectedBootcampData = async () => {
     const updateFormDataRequest: FormDataUpdateRequest = {
       students: students.map((student: Student) => ({
-        guidId: student.guidId || crypto.randomUUID(),
+        guidId: student.guidId,
         name: student.name,
         email: student.email,
         verificationCode: student.verificationCode
@@ -164,7 +155,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           }
         >
           {AllTrackData && (
-            AllTrackData.map((track, index) =>
+            AllTrackData.filter(track => track.bootcamps.length > 0).map((track, index) =>
               <option key={index} value={track.id}>{track.name}</option>
             )
           )}
