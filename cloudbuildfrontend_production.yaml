@@ -1,23 +1,29 @@
 steps:
+## List files in gcr.io/pgp-sandbox folder -----------------------------------------
+  # List the files in the gcr.io/pgp-sandbox folder
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['container', 'images', 'list', '--repository=gcr.io/pgp-sandbox']
+    id: ListGCRImages
+
 ## Build Production -----------------------------------------
   # Build container for production deployment
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamaker-frontend-production:latest', '-f', 'Dockerfile', '.']
+    args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-frontend-production:latest', '-f', 'Dockerfile', '.']
     dir: frontend
     id: BuildProductionFrontend
 
   # Push the production container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/pgp-sandbox/diplomamaker-frontend-production:latest']
+    args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-frontend-production:latest']
     id: PushProductionFrontend
 
   # Deploy the production container image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['run', 'deploy', 'diploma-frontend-production', '--image', 'gcr.io/pgp-sandbox/diplomamaker-frontend-production:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+    args: ['run', 'deploy', 'frontend-diploma-production', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend-production:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
     id: DeployProductionFrontend
 
 images:
-  - 'gcr.io/pgp-sandbox/diplomamaker-frontend-production:latest'
+  - 'gcr.io/pgp-sandbox/diplomamakers-frontend-production:latest'
 
 options:
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
