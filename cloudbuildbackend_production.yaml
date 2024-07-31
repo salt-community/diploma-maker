@@ -1,0 +1,23 @@
+steps:
+## Build Production -----------------------------------------
+  # Build containers for production deployment
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-backend-production:latest', '-f', 'Dockerfile', '.']
+    dir: Backend/DiplomaMakerApi/
+    id: BuildProductionImage
+
+  # Push the production container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-backend-production:latest']
+    id: PushProductionImage
+
+  # Deploy the production container image to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['run', 'deploy', 'backend-diploma-production', '--image', 'gcr.io/pgp-sandbox/diplomamakers-backend-production:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+    id: DeployProduction
+
+images:
+  - 'gcr.io/pgp-sandbox/diplomamakers-backend-production:latest'
+
+options:
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET

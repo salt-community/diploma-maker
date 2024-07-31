@@ -67,7 +67,7 @@
             display: flex;
             align-items: center;
             gap: 1.3rem;
-            border-bottom: 1px solid #ababba5b;
+            /* border-bottom: 1px solid #ababba5b; */
         }
 
             .templatecreator-page__leftsidebar-menu-header button {
@@ -90,7 +90,7 @@
         .templatecreator-page__leftsidebar-menu-section {
             padding: 3% 7%;
             min-height: fit-content;
-            border-bottom: 1px solid #ababba5b;
+            /* border-bottom: 1px solid #ababba5b; */
         }
 
             .templatecreator-page__leftsidebar-menu-section h3 {
@@ -105,19 +105,35 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                transition: all 350ms ease;
             }
 
                 .help-btn svg {
-                    width: 35px;
+                    width: 40px;
+                    height: 40px;
                 }
 
                 .help-btn svg path {
                     fill: #ababba;
-                    transition: all .15s ease-in-out;
+                    animation: shiftColors 1.5s forwards 1s;
+                    transition: fill 350ms ease;
                 }
-
-                .help-btn:hover svg path {
-                    fill: #fff;
+                    .help-btn:hover svg path{
+                        animation: none;
+                        fill: #fff !important;
+                        transition: fill 350ms ease;
+                    }
+                
+                @keyframes shiftColors {
+                    0% {
+                        fill: #ababba;
+                    }
+                    50% {
+                        fill: #0091ff;
+                    }
+                    100% {
+                        fill: #ababba;
+                    }
                 }
 
 .templatecreator-page__rightsidebar {

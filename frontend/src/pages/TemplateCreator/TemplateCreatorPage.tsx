@@ -5,7 +5,7 @@ import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse} from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { cloneDeep, getFontsData, getPlugins } from "../../util/helper";
+import { cloneDeep, delay, getFontsData, getPdfDimensions, getPlugins } from "../../util/helper";
 import { makeTemplateInput } from "../../templates/baseTemplate";
 import { PDFDocument } from "pdf-lib";
 import { SaveButton, SaveButtonType,} from "../../components/MenuItems/Buttons/SaveButton";
@@ -20,6 +20,9 @@ import { EditSection } from "../../components/MenuItems/TemplateCreatorPage/Edit
 import { TextEditSection } from "../../components/MenuItems/TemplateCreatorPage/TextEditSection";
 import { HelpIcon } from "../../components/MenuItems/Icons/HelpIcon";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
+import { InstructionSlideshow } from "../../components/Content/InstructionSlideshow";
+import { EmailConfigInstructionSlides, templateCreatorInstructionSlides } from "../../data/data";
+import { Size } from "@pdfme/common";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -49,6 +52,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [fieldWidth, setFieldWidth] = useState<number | null>(null);
   const [fieldHeight, setFieldHeight] = useState<number | null>(null);
 
+  const [pdfSize, setPdfSize] = useState<Size>();
+
+  const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
+
   const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
     positionX: null,
     positionY: null,
@@ -75,8 +82,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   }, [templates]);
 
+  const SetPdfSizeHandler = async () => {
+    setPdfSize(await getPdfDimensions(currentTemplate.basePdf))
+  }
+
   useEffect(() => {
     if (currentTemplate) {
+      SetPdfSizeHandler();
       const inputs = [
         makeTemplateInput(
           currentTemplate.intro,
@@ -277,6 +289,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const saveTemplate = async (goToIndex?: number) => {
     if (currentTemplate) {
       closeConfirmationPopup();
+      customAlert('loading',"Saving Template...",``);
       try {
         await updateTemplate(currentTemplate?.id, 
           templateBasePdfHasChanged 
@@ -299,6 +312,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   const addTemplate = async (inputContent?: string) => {
     closeConfirmationPopup();
+    customAlert('loading',"Adding new template...",``);
     if (
       templateData.some((template) => template.templateName === inputContent)
     ) {
@@ -319,8 +333,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   };
 
   const removeTemplate = async () => {
+    
     if (currentTemplate?.id) {
       closeConfirmationPopup();
+      customAlert('loading',"Removing Template...",``);
       const templateId = currentTemplate?.id;
       if (templateId === 1) {
         customAlert('fail',`Cannot Delete the Default Template`,`You are not allowed to delete the baseTemplate.`);
@@ -329,7 +345,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       try {
         await deleteTemplate(templateId);
         setTemplateIndex(0);
-        customAlert('fail',"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
+        customAlert('message',"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
         setTemplateHasChanged(false);
       } catch (error) {
         customAlert('fail',"Template Update failure!",`${error} when trying to update template.`);
@@ -339,6 +355,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   const saveFieldsHandler = async () => {
     if (designer.current && currentTemplate) {
+      customAlert('loading',"Saving Fields...",``);
       const updatedTemplate = createUpdatedTemplate(currentTemplate, designer);
       await setCurrentTemplate(updatedTemplate);
       setRightSideBarPage(0);
@@ -452,12 +469,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   };
 
-  // Hardcoded width value of 215 since i cannot get the width right now of canvas in any other way through pdfme designer
+  // Hardcoded width value of 215 for a4
   const setAlignHorizontalCenter = () => {
-    if (designer.current && selectedField) {
+    if (designer.current && selectedField && pdfSize) {
       // @ts-ignore
       const selectedFieldWidth = designer.current.template.schemas[0][selectedField].width;
-      const centerPosition = (215 - selectedFieldWidth) / 2;
+
+      const centerPosition = ((calculateCanvasSizeFromPdfSize(pdfSize.width)) - selectedFieldWidth) / 2;
       // @ts-ignore
       designer.current.template.schemas[0][selectedField].position.x = centerPosition;
       // @ts-ignore
@@ -467,11 +485,12 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   };
   
+  // Hardcoded width value of 305 for a4
   const setAlignVerticalCenter = () => {
-    if (designer.current && selectedField) {
+    if (designer.current && selectedField && pdfSize) {
       // @ts-ignore
       const selectedFieldHeight = designer.current.template.schemas[0][selectedField].height;
-      const centerPosition = (305 - selectedFieldHeight) / 2;
+      const centerPosition = ((calculateCanvasSizeFromPdfSize(pdfSize.height)) - selectedFieldHeight) / 2;
       // @ts-ignore
       designer.current.template.schemas[0][selectedField].position.y = centerPosition;
       // @ts-ignore
@@ -480,6 +499,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       setTemplateStyle(prevState => ({ ...prevState, positionY: centerPosition }));
     }
   };
+
+  const calculateCanvasSizeFromPdfSize = (size: number) => {
+    const averageMultiplier = 0.353;
+    const canvasSize = size * averageMultiplier;
+
+    return canvasSize
+  }
 
   return (
     <main className="templatecreator-page">
@@ -500,10 +526,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             show={showPopup}
             onClose={closeAlert}
         />
+        <InstructionSlideshow show={showInstructionSlideshow}  slides={templateCreatorInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
                 <section className="templatecreator-page__leftsidebar-menu-section">
-                    <button className="help-btn">
+                    <button onClick={() => setShowInstructionSlideshow(true)} className="help-btn">
                         <HelpIcon />
                     </button>
                 </section>

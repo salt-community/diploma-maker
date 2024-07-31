@@ -4,7 +4,8 @@ import { generate } from "@pdfme/generator";
 import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
-import { BootcampResponse, SaltData, TemplateResponse } from "./types";
+import { BootcampResponse, SaltData, Size, TemplateResponse } from "./types";
+import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
 
 const fontObjList = [
   {
@@ -367,11 +368,13 @@ export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray:
 }
 
 
-export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
+export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
+  setLoadingMessage("Generating combined pdf!");
   const font = await getFontsData();
   const mergedPdf = await PDFDocument.create();
 
   for (let i = 0; i < templates.length; i++) {
+    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
     const pdf = await generate({
       template: templates[i],
       inputs: [inputsArray[i]],
@@ -383,8 +386,12 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
     copiedPages.forEach(page => mergedPdf.addPage(page));
   }
 
+  setLoadingMessage("Merging Pdfs");
+
   const mergedPdfBytes = await mergedPdf.save();
+  setLoadingMessage("Creating Blobs");
   const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+  setLoadingMessage("Finished Processing Pdfs...");
   window.open(URL.createObjectURL(blob));
 }
 
@@ -544,3 +551,11 @@ export const utcFormatterSlash = (date: Date) => {
   const utcDay = dateConverted.getUTCDate().toString().padStart(2, '0');
   return `${utcYear}-${utcMonth}-${utcDay}`;
 }
+
+
+export const getPdfDimensions = async (pdfString: string): Promise<Size> => {
+  const pdfDoc = await PDFDocument.load(pdfString);
+  const firstPage = pdfDoc.getPage(0);
+  const { width, height } = firstPage.getSize();
+  return { width, height };
+};

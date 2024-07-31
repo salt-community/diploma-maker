@@ -48,3 +48,14 @@
     .add-btn_title{
         cursor: pointer;
     }
+
+    .add-btn svg .fill{
+        fill: #ababba;
+        stroke: none;
+        transition: all .2s ease-in-out;
+    }
+    .add-btn:hover svg .fill{
+        fill: #ffffff;
+        stroke: none;
+        transition: all .2s ease-in-out;
+    }

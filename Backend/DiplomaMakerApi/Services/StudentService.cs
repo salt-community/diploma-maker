@@ -34,17 +34,18 @@ public class StudentService
         await _context.SaveChangesAsync();
 
         var Students = new List<Student>();
-        foreach (var Student in requestDto.students)
+        foreach (var student in requestDto.students)
         {
                 var newStudent = new Student
                 {
-                    GuidId = Student.GuidId,
-                    Name = Student.Name,
-                    Email = Student.Email,
+                    Name = student.Name,
+                    Email = student.Email,
                     Bootcamp = bootcamp,
-                    VerificationCode = Student.VerificationCode,
+                    VerificationCode = student.VerificationCode,
                     LastGenerated = DateTime.UtcNow,
                 };
+                newStudent.GuidId = student.GuidId ?? newStudent.GuidId;
+
                 _context.Students.Add(newStudent);
                 Students.Add(newStudent);
         }

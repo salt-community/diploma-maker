@@ -6,7 +6,7 @@ import { SelectOptions } from '../../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse } from '../../util/types';
+import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse, EmailConfigRequestDto } from '../../util/types';
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +23,7 @@ import { useCustomInfoPopup } from '../../components/Hooks/useCustomInfoPopup';
 import { Template } from '@pdfme/common';
 import { InfoPopup } from '../../components/MenuItems/Popups/InfoPopup';
 import { VerifyIcon } from '../../components/MenuItems/Icons/VerifyIcon';
+import { useLoadingMessage } from '../../components/Contexts/LoadingMessageContext';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -30,9 +31,10 @@ type Props = {
     updateStudentInformation: (studentRequest: StudentUpdateRequestDto) => Promise<StudentResponse>;
     sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
     templates: TemplateResponse[] | null;
+    setLoadingMessage: (message: string) => void;
 }
 
-export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail }: Props) => {
+export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail, setLoadingMessage }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -43,6 +45,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
 
     const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
+    const { loadingMessage } = useLoadingMessage();
 
     useEffect(() => {
         if (bootcamps) {
@@ -109,8 +112,14 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     };
 
     const deleteHandler = async (id: string) => {
-        await deleteStudent(id);
-        customAlert('fail', "Successfully deleted", "Diploma has been successfully deleted from the database.")
+        customAlert('loading', `Deleting Student...`, ``);
+        try {
+            await deleteStudent(id);
+            customAlert('message', "Successfully deleted", "Diploma has been successfully deleted from the database.")
+        } catch (error) {
+            customAlert('fail', "Something went wrong.", `${error}`)
+        }
+        
     };
 
     const generatePDFsHandler = async () => {
@@ -118,9 +127,12 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
             return;
         }
+
+        customAlert('loading', `Generating Pdfs...`, ``);
     
         const templatesArr: Template[] = [];
-        const inputsArray = selectedItems.map(student => {
+        const inputsArray = visibleItems
+            .map(student => {
             const selectedBootcamp = bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
             if (!selectedBootcamp) {
                 customAlert('fail', "Error", `Bootcamp for student ${student.name} not found.`);
@@ -141,8 +153,14 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             customAlert('fail', "Error", "No valid inputs found for PDF generation.");
             return;
         }
+
+        const setLoadingMessageAndAlert = (message: string) => {
+            setLoadingMessage(message);
+            customAlert('loading', message, '');
+          };
     
-        await newGenerateCombinedPDF(templatesArr, inputsArray);
+        await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert);
+
         customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
     };
 
@@ -162,6 +180,8 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             closeInfoPopup();
             return;
         }
+        
+        customAlert('loading', `Changing ${studentInput.name}s email...`, ``);
         
         try {
             
@@ -194,7 +214,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         }
     }
 
-    const sendEmailsHandler = async (userIds: string[]) => {
+    const sendEmailsHandler = async (userIds: string[], title: string, description: string) => {
         if(userIds.length === 0) return
         //@ts-ignore
         customInfoPopup("progress", "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
@@ -203,15 +223,28 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         for (let i = 0; i < userIds.length; i++) {
             try {
                 var file = await generatePDFFile(userIds[i]);
+                const emailConfigRequest: EmailConfigRequestDto = JSON.parse(localStorage.getItem('emailConfigRequest'));
+
+                if (!emailConfigRequest.senderEmail || !emailConfigRequest.senderCode) {
+                    //@ts-ignore
+                    customInfoPopup('fail', `Opps, Something went wrong`, `Email configuration fields cannot be empty`, () => {});
+                }
+
                 var emailSendRequest: EmailSendRequest = {
                     guidId: userIds[i],
                     //@ts-ignore
-                    file: file
+                    file: file,
+                    email: emailConfigRequest.senderEmail,
+                    senderCode: emailConfigRequest.senderCode,
+                    title: title,
+                    description: description,
                 }
+
+                
                 await sendEmail(emailSendRequest)
             } catch (error) {
                 //@ts-ignore
-                customInfoPopup(InfoPopupType.fail, `Opps, Something went wrong`, `${error}`, () => {});
+                customInfoPopup('fail', `Opps, Something went wrong`, `${error}`, () => {});
                 return;
             }
            
@@ -231,6 +264,8 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             customAlert('fail', "Bootcamp Error:", "Bootcamp not found");
             return;
         }
+
+        customAlert('loading', `Generating Pdf File...`, ``);
     
         const pdfInput = makeTemplateInput(
             populateField(templates.find(t => t.id === bootcamp.templateId).intro , bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
@@ -278,11 +313,11 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             {selectedItems.length > 0 &&
                 <EmailClient
                     title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'}
-                    clients={selectedItems}
+                    clients={visibleItems}
                     closeEmailClient={() => { setShowEmailClient(false) }}
                     show={showEmailClient}
                     modifyStudentEmailHandler={modifyStudentEmailHandler}
-                    sendEmails={(userIds: string[]) => { sendEmailsHandler(userIds) }}
+                    sendEmails={(userIds: string[], title: string, description: string) => { sendEmailsHandler(userIds, title, description) }}
                     callCustomAlert={customAlert}
                 />
             }

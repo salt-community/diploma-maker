@@ -57,7 +57,6 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
   }, [])
 
   useEffect(() => {
-    console.log(font);
     if(font){
       font.toLowerCase().includes('-bold') ? setFontStyle("bold") :
       font.toLowerCase().includes('-italic') ? setFontStyle("italic")

@@ -1,16 +1,20 @@
 steps:
-  # Build container
+## Build Development -----------------------------------------
+  # Build container for default deployment
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '-f', 'Dockerfile', '.']
     dir: frontend
+    id: BuildDefaultFrontend
 
-  # Push the Containers to the Container Registry
+  # Push the default container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest']
+    id: PushDefaultFrontend
 
-  # Deploy Containers to Cloud Run
+  # Deploy the default container image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['run', 'deploy', 'frontend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+    id: DeployDefaultFrontend
 
 images:
   - 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest'

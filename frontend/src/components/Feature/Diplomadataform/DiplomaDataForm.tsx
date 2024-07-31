@@ -24,11 +24,11 @@ type Props = {
   templates: TemplateResponse[] | null;
   tracks: TrackResponse[]
   customAlert: (alertType: PopupType, title: string, content: string) => void;
-
+  setLoadingMessage: (message: string) => void;
   /*   fullscreen: boolean; */
 };
 
-export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert }: Props) {
+export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage }: Props) {
 
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>(tracks);
@@ -38,15 +38,15 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(templates.find(template => template.id === tracks[0].bootcamps[0].templateId));
 
   useEffect(() => {
-      const updatedAllTrackData = [...AllTrackData];
-      const selectedTrack = updatedAllTrackData[TrackIndex];
-      const selectedBootcamp = selectedTrack.bootcamps[BootcampIndex];
-      selectedBootcamp.templateId = selectedTemplate.id;
-      selectedBootcamp.students = students;
-      updatedAllTrackData[TrackIndex].bootcamps[BootcampIndex] = selectedBootcamp;
-      setAllTrackData(updatedAllTrackData);
-      const saltData = mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, templates!.find(t => t.id === selectedBootcamp.templateId));
-      setSaltData(saltData);
+    const updatedAllTrackData = [...AllTrackData];
+    const selectedTrack = updatedAllTrackData[TrackIndex];
+    const selectedBootcamp = selectedTrack.bootcamps[BootcampIndex];
+    selectedBootcamp.templateId = selectedTemplate.id;
+    selectedBootcamp.students = students;
+    updatedAllTrackData[TrackIndex].bootcamps[BootcampIndex] = selectedBootcamp;
+    setAllTrackData(updatedAllTrackData);
+    const saltData = mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, templates!.find(t => t.id === selectedBootcamp.templateId));
+    setSaltData(saltData);
 
   }, [students, selectedTemplate]);
 
@@ -63,13 +63,15 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
-    dataFromFile.forEach(student => {
-      student.verificationCode = generateVerificationCode()
-    });
-    setStudents(dataFromFile);
+    const updatedStudents = dataFromFile.map(student => ({
+      ...student,
+      verificationCode: generateVerificationCode()
+    }));
+    setStudents(updatedStudents);
   };
 
-  const postSelectedBootcampData = async () => {
+  const postSelectedBootcampData = async (both?: Boolean) => {
+    customAlert('loading', 'Adding Diplomas...', '');
     const updateFormDataRequest: FormDataUpdateRequest = {
       students: students.map((student: Student) => ({
         guidId: student.guidId,
@@ -81,12 +83,18 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     };
 
     try {
+
       await UpdateBootcampWithNewFormdata(updateFormDataRequest, AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId);
-      customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
+      both
+        ? customAlert('loading', 'Diplomas added...', '')
+        : customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
     } catch (error) {
       customAlert('fail', "Failed to add diplomas:", `${error}`);
     }
+
+
+
   }
 
   const generatePDFHandler = async () => {
@@ -95,19 +103,26 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       return;
     }
     const templatesArr: Template[] = [];
-    const selectedBootcamp = tracks[TrackIndex].bootcamps[BootcampIndex]; 
+    const selectedBootcamp = tracks[TrackIndex].bootcamps[BootcampIndex];
     const inputsArray = students.map(student => {
       const inputs = templateInputsFromBootcampData(mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, selectedTemplate), student.name, student.verificationCode);
       templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(selectedTemplate, inputs));
       return inputs;
     })
 
+    customAlert('loading', 'Generating Pdfs...', '');
+
     if (inputsArray.length === 0) {
       customAlert('fail', "Error", "No valid inputs found for PDF generation.");
       return;
     }
 
-    await newGenerateCombinedPDF(templatesArr, inputsArray);
+    const setLoadingMessageAndAlert = (message: string) => {
+      setLoadingMessage(message);
+      customAlert('loading', message, '');
+    };
+
+    await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert);
     customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
   };
 
@@ -120,8 +135,11 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   };
 
   const onSubmit = (data: FormData) => {
-    if (data.optionA) {
-      
+    if(data.optionA && data.optionB){
+      console.log("test")
+      postSelectedBootcampData(true)
+    }
+    else if(data.optionA){
       postSelectedBootcampData()
     }
     if (data.optionB) {
@@ -142,7 +160,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           onChange={
             (e) => {
               setTrackIndex(Number(e.target.value) - 1)
-              setBootcampIndex(0)            }
+              setBootcampIndex(0)
+            }
           }
         >
           {AllTrackData && (
@@ -180,7 +199,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       <div className="select-template mb-6">
         <label htmlFor="template" className="block text-lg font-medium text-gray-700 dark: text-white">
           Template Options
-        </label>  
+        </label>
         <select
           value={selectedTemplate.id}
           id="template"

@@ -22,9 +22,8 @@
     .emailclient__header{
         width: 90%;
         text-align: center;
-
         border-bottom: 1px solid #ababba42;
-        
+        padding-bottom: 1.2rem;
     }
         .emailclient h1{
             color: #e2e2e3;
@@ -40,13 +39,24 @@
         }
 
     .emailclient__list{
+        position: relative;
         display: flex;
         flex-direction: column;
         height: 100%;
         width: 90%;
-        
+        max-height: 55vh;
         background-color: rgba(108, 108, 201, 0.053);
     }
+    .emailclient__list .overflow-container{
+        overflow: auto;
+    }
+        .emailclient__list-label{ 
+            position: absolute;
+            top: -1.5rem;
+            left: .5rem;
+            color: #ababba;
+            font-size: .6rem;
+        }
         .emailclient__list--item{
             display: flex;
             align-items: center;
@@ -54,11 +64,22 @@
             padding-left: 1.2rem;
             border-bottom: 1px solid #ababba19;
         }
+        .emailclient__list--item.textarea{
+            align-items: start;
+        }
+            .emailclient__list--item.textarea svg{
+                margin-top: .6rem;
+            }
+        .emailclient__list--item svg{
+            width: 20px;
+        }
         .emailclient__list--item h3 {
             font-size: 1rem;
             min-width: 150px;
             color: #fff;
             padding: .5rem .4rem;
+            width: 25%;
+            margin-left: 1.5rem;
         }
         .emailclient__list--item p {
             max-width: 100%;
@@ -66,11 +87,18 @@
             margin-top: .2rem;
             font-size: 1rem;
             color: #858698;
+            background-color: greenyellow;
         }
 
         .emailclient__list--input-wrapper{
             position: relative;
             display: flex;
+            width: 40%;
+            max-width: 400px;
+        }
+        .emailclient__list--input-wrapper.editfields{
+            width: 100%;
+            max-width: 100%;
         }
             .emailclient__list--input-wrapper svg{
                 position: absolute;
@@ -81,24 +109,54 @@
                 display: block;
                 width: 1.5rem;
                 height: 1.5rem;
-                fill: #fff;
                 cursor: pointer;
                 pointer-events: none;
 
                 transition: all 1s ease-out;
             }
-                .emailclient__list--input-wrapper svg {
+                .emailclient__list--input-wrapper .rotatesvg {
                     opacity: 1;
                     visibility: visible;
                     fill: #5dc53e;
                     transition: all 1.5s ease-out;
                 }
-                .emailclient__list--input-wrapper:hover svg {
+                .emailclient__list--input-wrapper:hover .rotatesvg {
                     opacity: 1;
                     visibility: visible;
                     transform: rotate(180deg) translateY(50%);
                     transition: transform 1.5s ease-out, opacity 0.5s ease-in;
                 }
+                .password-visibility-toggle {
+                    position: absolute;
+                    right: 1rem;
+                    width: 50px;
+                    height: 100%;
+                    cursor: pointer;
+                }
+                    .password-visibility-toggle svg{
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translateX(-50%) translateY(-50%);
+                        width: 20px !important;
+                    }
+                .emailconfig-footer{
+                    display: flex;
+                    gap: 1rem;
+                    margin: 1rem 0 .5rem 0;
+                }
+
+            .label-contentpage{
+                position: absolute;
+                top: -16%;
+                left: .2rem;
+                color: #ababba;
+                font-size: 1rem;
+            }
+            .label-contentpage span{
+                color: #c53ebe;
+            }
+            textarea.emailclient__list--input,
             input.emailclient__list--input {
                 width: 100%;
                 min-width: 350px;
@@ -116,11 +174,26 @@
                 cursor: text;
                 transition: all .15s ease-in-out;
             }
-            input.emailclient__list--input:hover{
+            textarea.emailclient__list--input{
+                min-height: 150px;
+            }
+            textarea.emailclient__list--input:hover,
+            input.emailclient__list--input:hover {
                 color: #e5e6ec;
                 background-color: #ced1ff24;
                 transition: all .15s ease-in-out;
             }
+.emailclient__footer{
+    display: flex;
+    gap: 3rem;
+}
+    .send-emails-btn{
+        margin-top: 1.5rem  !important;
+    }
+    .send-emails-btn:nth-of-type(2) svg{
+        width: 20px;
+    }
+
 
 .emailclient-close-btn{
     position: absolute;
@@ -153,6 +226,8 @@
 
 
 
+
+
 .emailclient.fade-in {
     opacity: 1;
     pointer-events: auto;
@@ -167,9 +242,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 100;
+    backdrop-filter: blur(10px);
+    z-index: 5001;
     transition: all .15s ease-in-out;
-}
-.send-emails-btn{
-    margin-top: 1.5rem  !important;
 }

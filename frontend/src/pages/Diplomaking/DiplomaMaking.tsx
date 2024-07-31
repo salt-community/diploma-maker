@@ -18,9 +18,11 @@ type Props = {
   tracks: TrackResponse[] | null;
   templates: TemplateResponse[] | null;
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void
+  setLoadingMessage: (message: string) => void;
 };
 
-export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata }: Props) {
+
+export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage }: Props) {
 
   /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
   // bootcamps mirror

@@ -8,7 +8,6 @@ public class EmailService
 {
     private readonly string _email;
     private readonly string _appPassword;
-    private readonly ILogger<EmailService> _logger;
     private readonly DiplomaMakingContext _context;
 
     public EmailService(IConfiguration configuration, IWebHostEnvironment env, ILogger<EmailService> logger, DiplomaMakingContext context)
@@ -24,28 +23,27 @@ public class EmailService
             _appPassword = Environment.GetEnvironmentVariable("AppPassword") ?? throw new ArgumentNullException(nameof(_appPassword));
         }
 
-        _logger = logger;
+  
         _context = context;
     }
 
-    public async Task SendEmailWithAttachmentAsync(Guid guidid, IFormFile file)
+    public async Task SendEmailWithAttachmentAsync(Guid guidid, IFormFile file, string email, string password, string title, string description)
     {
         var diplomaByGuid = await _context.Students.FirstOrDefaultAsync(d => d.GuidId == guidid);
 
         if (diplomaByGuid == null)
         {
-            _logger.LogError("Invalid GUID: {GuidId}", guidid);
+          
             throw new ArgumentException("Invalid guid");
         }
 
-        if (diplomaByGuid.Email == null || _email == null)
+        if (diplomaByGuid.Email == null || email == null)
         {
-            _logger.LogError("Invalid email address.");
             throw new ArgumentException("The user have no email set for them");
         }
 
         var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("DiplomaMakers", _email));
+        message.From.Add(new MailboxAddress("DiplomaMakers", email));
         message.To.Add(new MailboxAddress("Salt Graduate", diplomaByGuid.Email));
         message.Subject = "Salt Diploma";
 
@@ -53,8 +51,9 @@ public class EmailService
 
         var body = new TextPart("html")
         {
-            Text =
-            $"<h1>Congratulations, {diplomaByGuid.Name}! 🎉</h1><p>We are thrilled to award you the Salt Diploma. Your hard work and dedication have paid off, and we are excited to see what you accomplish next.</p> <p>Keep striving for greatness, and remember that this is just the beginning of your journey. Well done on completing the bootcamp!</p>"
+            // Text =
+            // $"<h1>Congratulations, {diplomaByGuid.Name}! 🎉</h1><p>We are thrilled to award you the Salt Diploma. Your hard work and dedication have paid off, and we are excited to see what you accomplish next.</p> <p>Keep striving for greatness, and remember that this is just the beginning of your journey. Well done on completing the bootcamp!</p>"
+            Text = $"{title.Replace("{studentName}", diplomaByGuid.Name)}{description}",
         };
         multipart.Add(body);
 
@@ -71,7 +70,7 @@ public class EmailService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while processing the file for GUID: {GuidId}", guidid);
+
             throw new ArgumentException("FileContent is of the wrong format");
         }
 
@@ -82,13 +81,13 @@ public class EmailService
             try
             {
                 await client.ConnectAsync("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-                await client.AuthenticateAsync(_email, _appPassword);
+                await client.AuthenticateAsync(email, password);
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while sending email for GUID: {GuidId}", guidid);
+                throw new Exception(ex.Message);
             }
         }
     }

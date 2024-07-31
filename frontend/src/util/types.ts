@@ -103,6 +103,10 @@ export type TemplateRequest = {
 export type EmailSendRequest = {
     guidId: string;
     file: Blob;
+    email: string;
+    senderCode: string;
+    title: string;
+    description: string;
 }
 
 export type XYPosition = {
@@ -187,4 +191,10 @@ export type HistorySnapshotBundledData = {
 export type MakeActiveSnapshotRequestDto = {
     Ids: number[];
     StudentGuidIds: string[];
+}
+
+// Email
+export type EmailConfigRequestDto = {
+    senderEmail: string;
+    senderCode: string;
 }
