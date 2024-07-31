@@ -23,6 +23,7 @@ import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefaul
 import { InstructionSlideshow } from "../../components/Content/InstructionSlideshow";
 import { EmailConfigInstructionSlides, templateCreatorInstructionSlides } from "../../data/data";
 import { Size } from "@pdfme/common";
+import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -55,6 +56,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [pdfSize, setPdfSize] = useState<Size>();
 
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
+  const { loadingMessage } = useLoadingMessage();
 
   const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
     positionX: null,
@@ -70,6 +72,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [templateIndex, setTemplateIndex] = useState<number>(0);
 
   useEffect(() => {
+    customAlert('loading', `${loadingMessage}`, '')
     if (templates && templates.length > 0) {
       const templateData = mapTemplatesToTemplateData(templates);
       setTemplateData(templateData);
@@ -79,8 +82,9 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       } else {
         setCurrentTemplate(templateData[templateIndex] || null);
       }
+      customAlert('loadingfadeout', `Templates Fetched successfully`, '')
     }
-  }, [templates]);
+  }, [templates, loadingMessage]);
 
   const SetPdfSizeHandler = async () => {
     setPdfSize(await getPdfDimensions(currentTemplate.basePdf))
