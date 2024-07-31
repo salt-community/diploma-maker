@@ -65,6 +65,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
               UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
               templates={templates}
               customAlert={customAlert}
+              setLoadingMessage={setLoadingMessage}
             /*  fullscreen={IsFullScreen} */
             />
           </section>
