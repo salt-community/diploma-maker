@@ -77,8 +77,6 @@ export async function putTemplate(apiUrl: string, id: number, templateRequest: T
         ...templateRequest,
     };
 
-    console.log("")
-
     const response = await fetch(`${apiUrl}/api/templates/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

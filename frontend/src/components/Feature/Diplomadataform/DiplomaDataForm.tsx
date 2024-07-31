@@ -136,7 +136,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
   const onSubmit = (data: FormData) => {
     if(data.optionA && data.optionB){
-      console.log("test")
       postSelectedBootcampData(true)
     }
     else if(data.optionA){
