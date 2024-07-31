@@ -15,7 +15,7 @@ public static class SeedData
             var fileOperations = new LocalFileStorageService(_context, _fileUtilityService);
             fileOperations.ClearFolderExceptDefault();
             
-             _context.Database.EnsureDeleted();
+            _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
             
             DiplomaTemplate diploma = new DiplomaTemplate { Name = "Default" };
