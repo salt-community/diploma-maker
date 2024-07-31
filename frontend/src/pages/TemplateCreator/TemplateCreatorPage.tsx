@@ -5,7 +5,7 @@ import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse} from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { cloneDeep, delay, getFontsData, getPlugins } from "../../util/helper";
+import { cloneDeep, delay, getFontsData, getPdfDimensions, getPlugins } from "../../util/helper";
 import { makeTemplateInput } from "../../templates/baseTemplate";
 import { PDFDocument } from "pdf-lib";
 import { SaveButton, SaveButtonType,} from "../../components/MenuItems/Buttons/SaveButton";
@@ -22,6 +22,7 @@ import { HelpIcon } from "../../components/MenuItems/Icons/HelpIcon";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { InstructionSlideshow } from "../../components/Content/InstructionSlideshow";
 import { EmailConfigInstructionSlides, templateCreatorInstructionSlides } from "../../data/data";
+import { Size } from "@pdfme/common";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -51,6 +52,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [fieldWidth, setFieldWidth] = useState<number | null>(null);
   const [fieldHeight, setFieldHeight] = useState<number | null>(null);
 
+  const [pdfSize, setPdfSize] = useState<Size>();
+
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
 
   const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
@@ -79,8 +82,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   }, [templates]);
 
+  const SetPdfSizeHandler = async () => {
+    setPdfSize(await getPdfDimensions(currentTemplate.basePdf))
+  }
+
   useEffect(() => {
     if (currentTemplate) {
+      SetPdfSizeHandler();
       const inputs = [
         makeTemplateInput(
           currentTemplate.intro,
@@ -461,12 +469,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   };
 
-  // Hardcoded width value of 215 since i cannot get the width right now of canvas in any other way through pdfme designer
+  // Hardcoded width value of 215 for a4
   const setAlignHorizontalCenter = () => {
-    if (designer.current && selectedField) {
+    if (designer.current && selectedField && pdfSize) {
       // @ts-ignore
       const selectedFieldWidth = designer.current.template.schemas[0][selectedField].width;
-      const centerPosition = (215 - selectedFieldWidth) / 2;
+
+      const centerPosition = ((calculateCanvasSizeFromPdfSize(pdfSize.width)) - selectedFieldWidth) / 2;
       // @ts-ignore
       designer.current.template.schemas[0][selectedField].position.x = centerPosition;
       // @ts-ignore
@@ -476,11 +485,12 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   };
   
+  // Hardcoded width value of 305 for a4
   const setAlignVerticalCenter = () => {
-    if (designer.current && selectedField) {
+    if (designer.current && selectedField && pdfSize) {
       // @ts-ignore
       const selectedFieldHeight = designer.current.template.schemas[0][selectedField].height;
-      const centerPosition = (305 - selectedFieldHeight) / 2;
+      const centerPosition = ((calculateCanvasSizeFromPdfSize(pdfSize.height)) - selectedFieldHeight) / 2;
       // @ts-ignore
       designer.current.template.schemas[0][selectedField].position.y = centerPosition;
       // @ts-ignore
@@ -489,6 +499,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       setTemplateStyle(prevState => ({ ...prevState, positionY: centerPosition }));
     }
   };
+
+  const calculateCanvasSizeFromPdfSize = (size: number) => {
+    const averageMultiplier = 0.353;
+    const canvasSize = size * averageMultiplier;
+
+    return canvasSize
+  }
 
   return (
     <main className="templatecreator-page">

@@ -4,7 +4,7 @@ import { generate } from "@pdfme/generator";
 import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
-import { BootcampResponse, SaltData, TemplateResponse } from "./types";
+import { BootcampResponse, SaltData, Size, TemplateResponse } from "./types";
 import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
 
 const fontObjList = [
@@ -540,3 +540,11 @@ export const utcFormatterSlash = (date: Date) => {
   const utcDay = dateConverted.getUTCDate().toString().padStart(2, '0');
   return `${utcYear}-${utcMonth}-${utcDay}`;
 }
+
+
+export const getPdfDimensions = async (pdfString: string): Promise<Size> => {
+  const pdfDoc = await PDFDocument.load(pdfString);
+  const firstPage = pdfDoc.getPage(0);
+  const { width, height } = firstPage.getSize();
+  return { width, height };
+};
