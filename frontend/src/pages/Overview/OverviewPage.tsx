@@ -131,7 +131,8 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         customAlert('loading', `Generating Pdfs...`, ``);
     
         const templatesArr: Template[] = [];
-        const inputsArray = selectedItems.map(student => {
+        const inputsArray = visibleItems
+            .map(student => {
             const selectedBootcamp = bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
             if (!selectedBootcamp) {
                 customAlert('fail', "Error", `Bootcamp for student ${student.name} not found.`);

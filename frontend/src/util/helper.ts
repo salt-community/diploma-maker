@@ -374,6 +374,7 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
   const mergedPdf = await PDFDocument.create();
 
   for (let i = 0; i < templates.length; i++) {
+    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
     const pdf = await generate({
       template: templates[i],
       inputs: [inputsArray[i]],
@@ -383,7 +384,6 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
     const loadedPdf = await PDFDocument.load(pdf);
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
     copiedPages.forEach(page => mergedPdf.addPage(page));
-    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length - 1}`);
   }
 
   setLoadingMessage("Merging Pdfs");
