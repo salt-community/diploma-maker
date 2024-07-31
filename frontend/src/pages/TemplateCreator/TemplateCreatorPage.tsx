@@ -72,7 +72,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [templateIndex, setTemplateIndex] = useState<number>(0);
 
   useEffect(() => {
-    customAlert('loading', `${loadingMessage}`, '')
+    customAlert('loadingfadeout', `Fetching Templates...`, '')
     if (templates && templates.length > 0) {
       const templateData = mapTemplatesToTemplateData(templates);
       setTemplateData(templateData);
@@ -84,7 +84,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       }
       customAlert('loadingfadeout', `Templates Fetched successfully`, '')
     }
-  }, [templates, loadingMessage]);
+  }, [templates]);
 
   const SetPdfSizeHandler = async () => {
     setPdfSize(await getPdfDimensions(currentTemplate.basePdf))
