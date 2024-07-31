@@ -114,7 +114,7 @@ export default function App() {
 
   // HistorySnapshot Endpoint
   const getHistory = async () => {
-    const historySnapshots = await api.getHistorySnapshots();
+    const historySnapshots = await api.getHistorySnapshots(setLoadingMessage);
     return historySnapshots;
   }
   

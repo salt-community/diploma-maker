@@ -41,7 +41,7 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
         getAllTracks:(setLoadingMessage: (message: string) => void) => getAllTracks(apiBaseUrl, setLoadingMessage),
 
         // HistorySnapshot Endpoint
-        getHistorySnapshots: () => getHistorySnapshots(apiBaseUrl),
+        getHistorySnapshots: (setLoadingMessage: (message: string) => void) => getHistorySnapshots(apiBaseUrl, setLoadingMessage),
         getHistoryByVerificationCode: (verificationCode: string) => getHistoryByVerificationCode(apiBaseUrl, verificationCode),
         makeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => makeActiveHistorySnapShot(apiBaseUrl, snapshotUpdateRequest),
     };

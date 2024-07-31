@@ -1,7 +1,8 @@
 import { HistorySnapshotResponse, MakeActiveSnapshotRequestDto } from "../util/types";
 import { getTemplatePdfFile } from "./fileService";
 
-export async function getHistorySnapshots(apiUrl: string): Promise<HistorySnapshotResponse[]> {
+export async function getHistorySnapshots(apiUrl: string, setLoadingMessage?: (message: string) => void): Promise<HistorySnapshotResponse[]> {
+    setLoadingMessage("Fetching History Snapshots...")
     const response = await fetch(`${apiUrl}/api/HistorySnapshots`);
     if (!response.ok){
         const errorData = await response.json();

@@ -2,7 +2,7 @@ import { TemplateRequest, TemplateResponse } from "../util/types";
 import { getTemplatePdfFile } from "./fileService";
 
 export async function getAllTemplates(apiUrl: string, setLoadingMessage: (message: string) => void): Promise<TemplateResponse[]> {
-    setLoadingMessage('Fetching Templates');
+    setLoadingMessage('Fetching Templates...');
     
     const response = await fetch(`${apiUrl}/api/templates`);
     if (!response.ok) {
