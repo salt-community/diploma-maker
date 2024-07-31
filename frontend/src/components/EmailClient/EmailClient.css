@@ -22,9 +22,8 @@
     .emailclient__header{
         width: 90%;
         text-align: center;
-
         border-bottom: 1px solid #ababba42;
-        
+        padding-bottom: 1.2rem;
     }
         .emailclient h1{
             color: #e2e2e3;
@@ -62,6 +61,12 @@
             padding-left: 1.2rem;
             border-bottom: 1px solid #ababba19;
         }
+        .emailclient__list--item.textarea{
+            align-items: start;
+        }
+            .emailclient__list--item.textarea svg{
+                margin-top: .6rem;
+            }
         .emailclient__list--item svg{
             width: 20px;
         }
@@ -82,6 +87,9 @@
         .emailclient__list--input-wrapper{
             position: relative;
             display: flex;
+        }
+        .emailclient__list--input-wrapper.editfields{
+            width: 100%;
         }
             .emailclient__list--input-wrapper svg{
                 position: absolute;
@@ -129,6 +137,17 @@
                     margin: 1rem 0 .5rem 0;
                 }
 
+            .label-contentpage{
+                position: absolute;
+                top: -16%;
+                left: .2rem;
+                color: #ababba;
+                font-size: 1rem;
+            }
+            .label-contentpage span{
+                color: #c53ebe;
+            }
+            textarea.emailclient__list--input,
             input.emailclient__list--input {
                 width: 100%;
                 min-width: 350px;
@@ -146,7 +165,11 @@
                 cursor: text;
                 transition: all .15s ease-in-out;
             }
-            input.emailclient__list--input:hover{
+            textarea.emailclient__list--input{
+                min-height: 150px;
+            }
+            textarea.emailclient__list--input:hover,
+            input.emailclient__list--input:hover {
                 color: #e5e6ec;
                 background-color: #ced1ff24;
                 transition: all .15s ease-in-out;

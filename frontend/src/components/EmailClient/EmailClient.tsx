@@ -21,6 +21,14 @@ import { MountainIcon } from "../MenuItems/Icons/MountainIcon";
 import { HelpIcon } from "../MenuItems/Icons/HelpIcon";
 import { InstructionSlideshow } from "../Content/InstructionSlideshow";
 import { EmailConfigInstructionSlides } from "../../data/data";
+import { DescriptionIcon } from "../MenuItems/Icons/DescriptionIcon";
+import { TitleIcon } from "../MenuItems/Icons/TitleIcon";
+import { CloudUploadIcon } from "../MenuItems/Icons/CloudUploadIcon";
+import { ArrowIcon } from "../MenuItems/Icons/ArrowIcon";
+import { NextIcon } from "../MenuItems/Icons/NextIcon";
+import { EmailContentConfigSection } from "./EmailContentConfigSection";
+import { EmailHostConfigSection } from "./EmailHostConfigSection";
+import { EmailSendSection } from "./EmailSendSection";
 
 type Props = {
     clients: Student[],
@@ -28,7 +36,7 @@ type Props = {
     show: boolean,
     closeEmailClient: () => void,
     modifyStudentEmailHandler: (studentInput?: Student, originalEmail?: string) => void,
-    sendEmails: (userIds: string[]) => void,
+    sendEmails: (userIds: string[], title: string, description: string) => void,
     callCustomAlert: (alertType: PopupType, title: string, content: string) => void,
 };
 
@@ -36,13 +44,19 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
     const [emailChanges, setEmailChanges] = useState<{[key: string]: string}>({});
     const [checkedUsers, setCheckedUsers] = useState<{[key: string]: boolean}>({});
     const [emailConfigActive, setEmailConfigActive] = useState<boolean>(false);
+    const [emailContentConfig, setEmailContentConfig] = useState<boolean>(false);
 
     const senderEmailInput = useRef(null);
     const senderCodeInput = useRef(null);
+    const emailTitleInput = useRef(null);
+    const emailDescriptionInput = useRef(null)
 
     const [senderEmail, setSenderEmail] = useState<string>('');
     const [senderCode, setSenderCode] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    
+    const [emailTitle, setEmailTitle] = useState<string>('');
+    const [emailDescription, setEmailDescription] = useState<string>('');
     
     const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
 
@@ -57,7 +71,19 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
             setSenderEmail("");
             setSenderCode("");
         }
+    
+        const storedEmailTitle = localStorage.getItem('emailcontent_title');
+        const storedEmailDescription = localStorage.getItem('emailcontent_description');
+        setEmailTitle(storedEmailTitle ? JSON.parse(storedEmailTitle) : `<h1>Congratulations, {studentName}! 🎉</h1>`);
+        setEmailDescription(storedEmailDescription ? JSON.parse(storedEmailDescription) : `<p>We are thrilled to award you the Salt Diploma. Your hard work and dedication have paid off, and we are excited to see what you accomplish next.</p> <p>Keep striving for greatness, and remember that this is just the beginning of your journey. Well done on completing the bootcamp!</p>`);
     }, []);
+
+    // To Prevent Sending to students that are not visible in dom
+    useEffect(() => {
+        if (show) {
+            setCheckedUsers({});
+        }
+    }, [show]);
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, student: Student) => {
         setEmailChanges({
@@ -92,7 +118,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
             callCustomAlert('fail', `Failure in sending emails`, `Cannot send email to ${studentNullEmail.name} as their email address is missing.`);
             return;
         }
-        sendEmails(selectedIds);
+        sendEmails(selectedIds, emailTitle, emailDescription);
     }
 
     const emailConfigSaveHandler = () => {
@@ -112,6 +138,12 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
         }
     }
 
+    const emailContentSaveHandler = () => {
+        localStorage.setItem('emailcontent_title', JSON.stringify(emailTitle));
+        localStorage.setItem('emailcontent_description', JSON.stringify(emailDescription));
+        customAlert('success',"Successfully Saved Email Content",``);
+    }
+
     const handleSenderEmailChange = (event) => {
         setSenderEmail(event.target.value);
     }
@@ -119,6 +151,15 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
     const handleSenderCodeChange = (event) => {
         setSenderCode(event.target.value);
     }
+
+    const handleEmailTitleChange = (event) => {
+        setEmailTitle(event.target.value);
+    }
+
+    const handleEmailDescriptionChange = (event) => {
+        setEmailDescription(event.target.value);
+    }
+
 
     return (
         <>
@@ -130,81 +171,85 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 {emailConfigActive ?
                     <>
                         <ul className="emailclient__list">
-                            <li className="emailclient__list--item">
-                                <EmailIcon />
-                                <div className="emailclient__list--input-wrapper">
-                                    <h3>Sender Email</h3>
-                                    <input 
-                                        className="emailclient__list--input" 
-                                        type="text" 
-                                        ref={senderEmailInput}
-                                        onChange={handleSenderEmailChange}
-                                        value={senderEmail}
-                                    />
-                                </div>
-                            </li>
-                            <li className="emailclient__list--item">
-                                <PasswordIcon />
-                                <div className="emailclient__list--input-wrapper">
-                                    <h3>Sender Code</h3>
-                                    <input
-                                        className="emailclient__list--input"
-                                        type={showPassword ? "text" : "password"}
-                                        ref={senderCodeInput}
-                                        onChange={handleSenderCodeChange}
-                                        value={senderCode}
-                                    />
-                                    <div
-                                        className="password-visibility-toggle"
-                                        onMouseDown={() => setShowPassword(true)}
-                                        onMouseUp={() => setShowPassword(false)}
-                                        onMouseLeave={() => setShowPassword(false)}
-                                    >
-                                        {showPassword ? 
-                                            <MountainIcon />
-                                        : 
-                                            <EyeIcon /> 
-                                        }
-                                    </div>
-                                </div>
-                            </li>
+                            {(emailConfigActive && !emailContentConfig) ? 
+                                <EmailHostConfigSection
+                                    senderEmail={senderEmail}
+                                    senderCode={senderCode}
+                                    senderEmailInput={senderEmailInput}
+                                    senderCodeInput={senderCodeInput}
+                                    handleSenderEmailChange={handleSenderEmailChange}
+                                    handleSenderCodeChange={handleSenderCodeChange}
+                                    showPassword={showPassword}
+                                    setShowPassword={setShowPassword}
+                                />
+                                :
+                                <EmailContentConfigSection
+                                    emailTitle={emailTitle}
+                                    emailDescription={emailDescription}
+                                    emailTitleInput={emailTitleInput}
+                                    emailDescriptionInput={emailDescriptionInput}
+                                    handleEmailTitleChange={handleEmailTitleChange}
+                                    handleEmailDescriptionChange={handleEmailDescriptionChange}
+                                />
+                            }  
                         </ul>
                         <section className="emailconfig-footer">
-                            <AddButton icon={<HelpIcon />} text='Instructions' onClick={() => {setShowInstructionSlideshow(true)}} />
-                            <SaveButton classNameOverride="emailconfig__savebtn" saveButtonType='normal' textfield="Save Changes" customIcon={<SuccessIcon />} onClick={() => emailConfigSaveHandler()}/>
+                            {emailConfigActive && !emailContentConfig && 
+                                <AddButton icon={<HelpIcon />} text='Instructions' onClick={() => {setShowInstructionSlideshow(true)}} />
+                            }
+                            <SaveButton 
+                                classNameOverride="emailconfig__savebtn" 
+                                saveButtonType='normal' 
+                                textfield={emailConfigActive && !emailContentConfig ? "Save Sender" : "Save Content"} 
+                                customIcon={<SuccessIcon />} 
+                                onClick={() => (emailConfigActive && !emailContentConfig) ? emailConfigSaveHandler() : emailContentSaveHandler()}
+                            />
                         </section>
                     </>
                 :
-                    <ul className="emailclient__list">
-                        <label className="emailclient__list-label">Send Toggle</label>
-                        {clients.map((student: Student) => (
-                            <li key={student.guidId} className="emailclient__list--item">
-                                <CustomCheckBoxRound 
-                                    checked={!!checkedUsers[student.guidId]} 
-                                    onChange={(event) => checkboxChangeHandler(event, student.guidId)} 
-                                />
-                                <h3>{student.name}</h3>
-                                <div className="emailclient__list--input-wrapper">
-                                    <input 
-                                        className="emailclient__list--input" 
-                                        type="text" 
-                                        value={emailChanges[student.guidId] || student.email || 'No Email'} 
-                                        onChange={(event) => inputChangeHandler(event, student)} 
-                                        onBlur={() => inputBlurHandler(student)} 
-                                    />
-                                    <CogWheelIcon />
-                                </div>
-                                
-                            </li>
-                        ))}
-                    </ul>
+                    <EmailSendSection
+                        clients={clients}
+                        checkedUsers={checkedUsers}
+                        emailChanges={emailChanges}
+                        checkboxChangeHandler={checkboxChangeHandler}
+                        inputChangeHandler={inputChangeHandler}
+                        inputBlurHandler={inputBlurHandler}
+                    />
                 }
                 <button onClick={closeEmailClient} className='emailclient-close-btn'>
                     <CloseWindowIcon />
                 </button>
                 <div className="emailclient__footer">
-                    <SaveButton disabled={emailConfigActive} classNameOverride="send-emails-btn" saveButtonType={'normal'} textfield="Send Emails to Selected Clients" onClick={sendEmailsHandler}/>
-                    <SaveButton classNameOverride="send-emails-btn" saveButtonType={emailConfigActive ? 'remove' : 'normal'} customIcon={emailConfigActive ? <CloseIcon /> : <ConfigureIcon />} textfield={`${emailConfigActive ? 'Close Email Host' : 'Email Host Configuration'}`} onClick={() => setEmailConfigActive(!emailConfigActive)}/>
+                    <SaveButton 
+                        classNameOverride="send-emails-btn" 
+                        saveButtonType={(emailConfigActive && emailContentConfig) ? 'normal' : 'normal'} 
+                        textfield={`${(emailContentConfig && emailConfigActive) ? 'Go back' : emailConfigActive ? 'Edit Email Content'   : 'Send Emails to Selected Clients'}`}
+                        onClick={
+                            () => 
+                                (emailConfigActive && emailContentConfig) ? setEmailContentConfig(false) 
+                                : emailConfigActive ? setEmailContentConfig(true) 
+                                : sendEmailsHandler()
+                            }
+                        customIcon={
+                                (emailConfigActive && emailContentConfig) ? <NextIcon /> 
+                                : emailConfigActive ? <TitleIcon />
+                                : <CloudUploadIcon />
+                            } 
+                    />
+                    <SaveButton 
+                        classNameOverride="send-emails-btn" 
+                        saveButtonType={emailConfigActive ? 'remove' : 'normal'} 
+                        customIcon={emailConfigActive ? <CloseIcon /> : <ConfigureIcon />} 
+                        textfield={`${emailConfigActive ? 'Close Email Host' : 'Email Host Configuration'}`}
+                        onClick={() => {
+                            if (emailConfigActive) {
+                                setEmailConfigActive(false);
+                                setEmailContentConfig(false);
+                            } else {
+                                setEmailConfigActive(!emailConfigActive);
+                            }
+                        }}
+                    />
                 </div>
                 
             </section>

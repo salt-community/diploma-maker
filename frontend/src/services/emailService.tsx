@@ -3,8 +3,12 @@ import { EmailSendRequest } from "../util/types";
 export async function postEmail(apiUrl: string, emailRequest: EmailSendRequest): Promise<void> {
     const formData = new FormData();
     formData.append('file', emailRequest.file);
+    formData.append('email', emailRequest.email);
+    formData.append('password', emailRequest.senderCode);
+    formData.append('title', emailRequest.title);
+    formData.append('description', emailRequest.description);
 
-    const response = await fetch(`${apiUrl}/api/Email/email-student/${emailRequest.guidId}?Email=${encodeURIComponent(emailRequest.email)}&Password=${encodeURIComponent(emailRequest.senderCode)}`, {
+    const response = await fetch(`${apiUrl}/api/Email/email-student/${emailRequest.guidId}`, {
         method: 'POST',
         body: formData,
     });

@@ -104,6 +104,8 @@ export type EmailSendRequest = {
     file: Blob;
     email: string;
     senderCode: string;
+    title: string;
+    description: string;
 }
 
 export type XYPosition = {
