@@ -14,27 +14,32 @@ type Props = {
 
 export const EmailSendSection = ({ clients, checkedUsers, emailChanges, checkboxChangeHandler, inputChangeHandler, inputBlurHandler }: Props) => {
     return (
-        <ul className="emailclient__list">
-            <label className="emailclient__list-label">Send Toggle</label>
-            {clients.map((student: Student) => (
-                <li key={student.guidId} className="emailclient__list--item">
-                    <CustomCheckBoxRound 
-                        checked={!!checkedUsers[student.guidId]} 
-                        onChange={(event) => checkboxChangeHandler(event, student.guidId)} 
-                    />
-                    <h3>{student.name}</h3>
-                    <div className="emailclient__list--input-wrapper">
-                        <input 
-                            className="emailclient__list--input" 
-                            type="text" 
-                            value={emailChanges[student.guidId] || student.email || 'No Email'} 
-                            onChange={(event) => inputChangeHandler(event, student)} 
-                            onBlur={() => inputBlurHandler(student)} 
-                        />
-                        <CogWheelIcon />
-                    </div>
-                </li>
-            ))}
-        </ul>
+        <>
+            
+            <ul className="emailclient__list">
+                <label className="emailclient__list-label">Send Toggle</label>
+                <div className='overflow-container'>
+                    {clients.map((student: Student) => (
+                        <li key={student.guidId} className="emailclient__list--item">
+                            <CustomCheckBoxRound 
+                                checked={!!checkedUsers[student.guidId]} 
+                                onChange={(event) => checkboxChangeHandler(event, student.guidId)} 
+                            />
+                            <h3>{student.name}</h3>
+                            <div className="emailclient__list--input-wrapper">
+                                <input 
+                                    className="emailclient__list--input" 
+                                    type="text" 
+                                    value={emailChanges[student.guidId] || student.email || 'No Email'} 
+                                    onChange={(event) => inputChangeHandler(event, student)} 
+                                    onBlur={() => inputBlurHandler(student)} 
+                                />
+                                <CogWheelIcon />
+                            </div>
+                        </li>
+                    ))}
+                </div>
+            </ul>
+        </>
     );
 };

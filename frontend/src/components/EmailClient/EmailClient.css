@@ -44,10 +44,13 @@
         flex-direction: column;
         height: 100%;
         width: 90%;
-        
+        max-height: 55vh;
         background-color: rgba(108, 108, 201, 0.053);
     }
-        .emailclient__list-label{
+    .emailclient__list .overflow-container{
+        overflow: auto;
+    }
+        .emailclient__list-label{ 
             position: absolute;
             top: -1.5rem;
             left: .5rem;
@@ -75,6 +78,8 @@
             min-width: 150px;
             color: #fff;
             padding: .5rem .4rem;
+            width: 25%;
+            margin-left: 1.5rem;
         }
         .emailclient__list--item p {
             max-width: 100%;
@@ -82,11 +87,14 @@
             margin-top: .2rem;
             font-size: 1rem;
             color: #858698;
+            background-color: greenyellow;
         }
 
         .emailclient__list--input-wrapper{
             position: relative;
             display: flex;
+            width: 40%;
+            max-width: 400px;
         }
         .emailclient__list--input-wrapper.editfields{
             width: 100%;
