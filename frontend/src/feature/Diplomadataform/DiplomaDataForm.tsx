@@ -69,7 +69,7 @@ export default function DiplomaDataForm({ updateSaltData, bootcamps, setSelected
     customAlert('loading', 'Adding Diplomas...', '');
     const updateFormDataRequest: FormDataUpdateRequest = {
       students: saltData.students.map((student) => ({
-        guidId: saltData?.guidId || crypto.randomUUID(),
+        guidId: student?.guidId,
         name: student.name,
         email: student.email,
         verificationCode: student.verificationCode

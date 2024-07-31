@@ -78,6 +78,7 @@ export async function deleteBootcampById(apiUrl: string, guidId: string): Promis
 }
 
 export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpdateRequest: FormDataUpdateRequest, guidId: string): Promise<boolean> {
+    console.log(FormDataUpdateRequest);
     const response = await fetch(`${apiUrl}/api/Bootcamps/dynamicfields/${guidId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
