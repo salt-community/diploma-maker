@@ -28,6 +28,7 @@ import { ArrowIcon } from "../MenuItems/Icons/ArrowIcon";
 import { NextIcon } from "../MenuItems/Icons/NextIcon";
 import { EmailContentConfigSection } from "./EmailContentConfigSection";
 import { EmailHostConfigSection } from "./EmailHostConfigSection";
+import { EmailSendSection } from "./EmailSendSection";
 
 type Props = {
     clients: Student[],
@@ -199,35 +200,19 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                         </section>
                     </>
                 :
-                    <ul className="emailclient__list">
-                        <label className="emailclient__list-label">Send Toggle</label>
-                        {clients.map((student: Student) => (
-                            <li key={student.guidId} className="emailclient__list--item">
-                                <CustomCheckBoxRound 
-                                    checked={!!checkedUsers[student.guidId]} 
-                                    onChange={(event) => checkboxChangeHandler(event, student.guidId)} 
-                                />
-                                <h3>{student.name}</h3>
-                                <div className="emailclient__list--input-wrapper">
-                                    <input 
-                                        className="emailclient__list--input" 
-                                        type="text" 
-                                        value={emailChanges[student.guidId] || student.email || 'No Email'} 
-                                        onChange={(event) => inputChangeHandler(event, student)} 
-                                        onBlur={() => inputBlurHandler(student)} 
-                                    />
-                                    <CogWheelIcon />
-                                </div>
-                                
-                            </li>
-                        ))}
-                    </ul>
+                    <EmailSendSection
+                        clients={clients}
+                        checkedUsers={checkedUsers}
+                        emailChanges={emailChanges}
+                        checkboxChangeHandler={checkboxChangeHandler}
+                        inputChangeHandler={inputChangeHandler}
+                        inputBlurHandler={inputBlurHandler}
+                    />
                 }
                 <button onClick={closeEmailClient} className='emailclient-close-btn'>
                     <CloseWindowIcon />
                 </button>
                 <div className="emailclient__footer">
-                    {}
                     <SaveButton 
                         classNameOverride="send-emails-btn" 
                         saveButtonType={(emailConfigActive && emailContentConfig) ? 'normal' : 'normal'} 

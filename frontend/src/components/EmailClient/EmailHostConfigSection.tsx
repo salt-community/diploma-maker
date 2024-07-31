@@ -15,7 +15,7 @@ type Props = {
     setShowPassword: (show: boolean) => void;
 };
 
-export const EmailHostConfigSection: React.FC<Props> = ({ senderEmail, senderCode, senderEmailInput, senderCodeInput, handleSenderEmailChange, handleSenderCodeChange, showPassword, setShowPassword }) => {
+export const EmailHostConfigSection = ({ senderEmail, senderCode, senderEmailInput, senderCodeInput, handleSenderEmailChange, handleSenderCodeChange, showPassword, setShowPassword }: Props) => {
     return (
         <>
             <li className="emailclient__list--item">
