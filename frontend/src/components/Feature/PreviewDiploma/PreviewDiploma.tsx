@@ -62,7 +62,7 @@ export default function PreviewDiploma({ saltData }: Props) {
   return (
     <>
         <h1 className="block text-lg font-medium text-gray-700 dark: text-white mb-2">
-          Currently viewing: {saltData.classname} 
+          Currently selected: {saltData.classname} 
         </h1>
       <div
         className="pdfpreview-container"

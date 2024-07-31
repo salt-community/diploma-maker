@@ -6,15 +6,13 @@ import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
 import { generateVerificationCode, mapBootcampToSaltData, newGenerateCombinedPDF } from "../../../util/helper";
 import './DiplomaDataForm.css';
-import { UpdateBootcampWithNewFormdata } from "../../../services/bootcampService";
+import { updateBootcamp, UpdateBootcampWithNewFormdata } from "../../../services/bootcampService";
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
 
 //exportera till types folder när typerna är satta
 type FormData = {
-  bootcamp: string;
-  template: string;
   optionA: boolean;
   optionB: boolean;
   optionC: boolean;
@@ -23,7 +21,7 @@ type FormData = {
 
 type Props = {
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void;
-  setSaltData: (data : SaltData) => void;
+  setSaltData: (data: SaltData) => void;
   templates: TemplateResponse[] | null;
   tracks: TrackResponse[]
   customAlert: (alertType: PopupType, title: string, content: string) => void;
@@ -32,39 +30,45 @@ type Props = {
 };
 
 export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert }: Props) {
-  
+
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
-  const [TrackIndex, setTrackIndex] = useState<number>(1)
+  const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>(tracks);
+  const [TrackIndex, setTrackIndex] = useState<number>(0)
+  const [BootcampIndex, setBootcampIndex] = useState<number>(0);
   const [students, setStudents] = useState<Student[]>(tracks[0].bootcamps[0].students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(templates.find(template => template.id === tracks[0].bootcamps[0].templateId));
 
-
-  /* bootcamps.map(b => mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId) */
-
-  useEffect(() => {
-    updateSaltDataHandler({
-      ...saltData,
-      template: selectedTemplate
-    });
-  }, [selectedTemplate]);
+  /*  useEffect(() => {
+      
+      const updateBootcamp = mapBootcampToSaltData(b, templates.find(t => t.id === b.templateId) 
+      setSaltData(updateBootcamp)
+    }, [selectedTemplate]);
+  */
 
   useEffect(() => {
-    updateSaltDataHandler({
-      ...saltData,
-      students, 
-    });
-  }, [students]);
+      const updatedAllTrackData = [...AllTrackData];
+      const selectedTrack = updatedAllTrackData[TrackIndex];
+      const selectedBootcamp = selectedTrack.bootcamps[BootcampIndex];
+      selectedBootcamp.templateId = selectedTemplate.id;
+      selectedBootcamp.students = students;
+      updatedAllTrackData[TrackIndex].bootcamps[BootcampIndex] = selectedBootcamp;
+      setAllTrackData(updatedAllTrackData);
+      const saltData = mapBootcampToSaltData(selectedBootcamp, templates!.find(t => t.id === selectedBootcamp.templateId));
+      setSaltData(saltData);
+
+  }, [students, selectedTemplate]);
+
 
   useEffect(() => {
-    if(tracks && templates) {
-      const selectedBootcamp = tracks[TrackIndex - 1]?.bootcamps[0];
-      if (selectedBootcamp) {
-        setStudents(selectedBootcamp.students);
-        const selectedTemplateObject = templates?.find(template => template.id === selectedBootcamp.templateId);
-        setSelectedTemplate(selectedTemplateObject);
-      }
+    if (AllTrackData && templates) {
+      const selectedBootcamp = AllTrackData[TrackIndex].bootcamps[BootcampIndex];
+      setStudents(selectedBootcamp.students);
+      const template = templates?.find(t => t.id === selectedBootcamp.templateId);
+      setSelectedTemplate(template);
     }
-  }, [TrackIndex, tracks, templates]);
+  }, [TrackIndex, BootcampIndex, AllTrackData]);
+
+
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
@@ -76,8 +80,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
   const postSelectedBootcampData = async () => {
     const updateFormDataRequest: FormDataUpdateRequest = {
-      students: saltData.students.map((student) => ({
-        guidId: saltData?.guidId || crypto.randomUUID(),
+      students: students.map((student: Student) => ({
+        guidId: student.guidId || crypto.randomUUID(),
         name: student.name,
         email: student.email,
         verificationCode: student.verificationCode
@@ -86,7 +90,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     };
 
     try {
-      await UpdateBootcampWithNewFormdata(updateFormDataRequest, saltData.guidId);
+      await UpdateBootcampWithNewFormdata(updateFormDataRequest, AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId);
       customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
     } catch (error) {
@@ -95,13 +99,13 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   }
 
   const generatePDFHandler = async () => {
-    if (!bootcamps || !templates) {
+    if (!tracks || !templates) {
       customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
       return;
     }
     const templatesArr: Template[] = [];
     const inputsArray = students.map(student => {
-      const selectedBootcamp = bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
+      const selectedBootcamp = tracks[TrackIndex].bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
       if (!selectedBootcamp) {
         customAlert('fail', "Error", `Bootcamp for student ${student.name} not found.`);
         return null;
@@ -155,13 +159,12 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           className="mt-2 w-8/12 py-2 px-3 order border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
           onChange={
             (e) => {
-              setTrackIndex(Number(e.target.value))
-        
-            } 
+              setTrackIndex(Number(e.target.value) - 1)
+              setBootcampIndex(0)            }
           }
         >
-          {tracks && (
-            tracks.map((track, index) =>
+          {AllTrackData && (
+            AllTrackData.map((track, index) =>
               <option key={index} value={track.id}>{track.name}</option>
             )
           )}
@@ -174,21 +177,17 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         </label>
         <select
           id="bootcamp"
-          {...register("bootcamp")}
+          value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
           className="mt-2 w-8/12 py-2 px-3 border border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
           onChange={(e) => {
-
-            const selectedBootcampGuidId = e.target.value;
-            const selectedBootcamp = bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcampGuidId);
-            const selectedTemplateObject = templates.find(template => template.id === selectedBootcamp.templateId)
-    
-            setSelectedTemplate(selectedTemplateObject);
-            setStudents(selectedBootcamp.students);
+            const selectedGuidId = e.target.value;
+            const selectedBootcampIndex = AllTrackData[TrackIndex].bootcamps.findIndex(bootcamp => bootcamp.guidId === selectedGuidId);
+            setBootcampIndex(selectedBootcampIndex);
           }}
 
         >
-          {bootcamps && (
-            bootcamps.filter(bootcamp => bootcamp.track.id === TrackIndex).map((bootcamp, index) =>
+          {AllTrackData[TrackIndex].bootcamps && (
+            AllTrackData[TrackIndex].bootcamps.map((bootcamp, index) =>
               <option key={index} value={bootcamp.guidId}>{bootcamp.name}</option>
             )
           )}
@@ -199,20 +198,20 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       <div className="select-template mb-6">
         <label htmlFor="template" className="block text-lg font-medium text-gray-700 dark: text-white">
           Template Options
-        </label>
+        </label>  
         <select
+          value={selectedTemplate.id}
           id="template"
-          {...register("template")}
           className="mt-2 w-8/12 py-2 px-3 border border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
           onChange={(e) => {
-            const selectedname = e.target.value;
-            const selectedTemplateObject = templates!.find(template => template.name === selectedname);
+            const selectedId = Number(e.target.value);
+            const selectedTemplateObject = templates!.find(template => template.id === selectedId);
             setSelectedTemplate(selectedTemplateObject!);
           }}
         >
           {templates && (
             templates.map((template, index) =>
-              <option key={index} value={template.name}>{template.name}</option>
+              <option key={index} value={template.id}>{template.name}</option>
             )
           )}
         </select>
@@ -225,7 +224,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         </label>
         <TagsInput
           selectedTags={(names: string[]) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))} // Adjust this based on how TagsInput is implemented
-          tags={saltData.students.map(student => student.name)}
+          tags={students.map(student => student.name)}
         />
 
       </div>

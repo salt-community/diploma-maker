@@ -431,7 +431,7 @@ export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, 
 export function mapBootcampToSaltData(bootcamp: BootcampResponse, template: TemplateResponse ): SaltData {
   return {
       guidId: bootcamp.guidId,
-      classname: bootcamp.name,
+      classname: bootcamp.name ,
       dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
       students: bootcamp.students,
       template: template

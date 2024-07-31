@@ -33,7 +33,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
 /*   const TogglePreview = () => setIsFullScreen(prev => !prev) */
 
   return (
-    saltData && templates ? (
+    tracks && templates ? (
       <div className={`flex w-full h-screen pt-10 dark:bg-darkbg`}>
 {/*        {  <button className="toggle-button" onClick={TogglePreview}>
           {IsFullScreen ? <NextIcon rotation={180} /> : <NextIcon />}
@@ -42,7 +42,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
            <>
             <section className="flex-1 flex flex-col justify-start gap-1 ml-5">
               {
-              saltData.students.length > 0 ? (
+              saltData && saltData.students.length > 0 ? (
                 <PreviewDiploma
                   saltData={saltData}
                 />
