@@ -313,7 +313,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             {selectedItems.length > 0 &&
                 <EmailClient
                     title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'}
-                    clients={selectedItems}
+                    clients={visibleItems}
                     closeEmailClient={() => { setShowEmailClient(false) }}
                     show={showEmailClient}
                     modifyStudentEmailHandler={modifyStudentEmailHandler}
