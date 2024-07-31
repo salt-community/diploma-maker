@@ -30,6 +30,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { loadingMessage } = useLoadingMessage();
   const isFailed = loadingMessage.includes('Failed');
+  // const
 
 
   /*   const TogglePreview = () => setIsFullScreen(prev => !prev) */

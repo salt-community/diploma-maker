@@ -47,6 +47,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     setAllTrackData(updatedAllTrackData);
     const saltData = mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, templates!.find(t => t.id === selectedBootcamp.templateId));
     setSaltData(saltData);
+    console.log("")
 
   }, [students, selectedTemplate]);
 
