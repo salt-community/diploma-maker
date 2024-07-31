@@ -26,6 +26,7 @@ import { TitleIcon } from "../MenuItems/Icons/TitleIcon";
 import { CloudUploadIcon } from "../MenuItems/Icons/CloudUploadIcon";
 import { ArrowIcon } from "../MenuItems/Icons/ArrowIcon";
 import { NextIcon } from "../MenuItems/Icons/NextIcon";
+import { EmailContentConfigSection } from "./EmailContentConfigSection";
 
 type Props = {
     clients: Student[],
@@ -203,34 +204,14 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                                     </li>
                                 </>
                                 :
-                                <>
-                                    <label className="label-contentpage">OBS! <span>{"{studentName}"}</span> is later replaced with the students name!</label>
-                                    <li className="emailclient__list--item editfields contentpage">
-                                        <TitleIcon />
-                                        <div className="emailclient__list--input-wrapper editfields">
-                                            <h3>Title</h3>
-                                            <input
-                                                className="emailclient__list--input editfields"
-                                                type="text"
-                                                ref={emailTitleInput}
-                                                onChange={handleEmailTitleChange}
-                                                value={emailTitle}
-                                            />
-                                        </div>
-                                    </li>
-                                    <li className="emailclient__list--item editfields textarea">
-                                        <DescriptionIcon />
-                                        <div className="emailclient__list--input-wrapper editfields">
-                                            <h3>Description</h3>
-                                            <textarea
-                                                className="emailclient__list--input editfields"
-                                                ref={emailDescriptionInput}
-                                                onChange={handleEmailDescriptionChange}
-                                                value={emailDescription}
-                                            />
-                                        </div>
-                                    </li>
-                                </>
+                                <EmailContentConfigSection
+                                    emailTitle={emailTitle}
+                                    emailDescription={emailDescription}
+                                    emailTitleInput={emailTitleInput}
+                                    emailDescriptionInput={emailDescriptionInput}
+                                    handleEmailTitleChange={handleEmailTitleChange}
+                                    handleEmailDescriptionChange={handleEmailDescriptionChange}
+                                />
                             }  
                         </ul>
                         <section className="emailconfig-footer">
