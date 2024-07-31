@@ -11,7 +11,8 @@ namespace DiplomaMakerApi.Services
         LocalFileStorageService localFileStorageService, 
         GoogleCloudStorageService googleCloudStorageService, 
         IMapper mapper,
-        IWebHostEnvironment env
+        IWebHostEnvironment env,
+        IConfiguration configuration
     )
     {
         private readonly DiplomaMakingContext _context = context;
@@ -19,6 +20,7 @@ namespace DiplomaMakerApi.Services
         private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
         private readonly IMapper _mapper = mapper;
         private readonly IWebHostEnvironment _env = env;
+        private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
 
         public async Task CreateHistorySnapshotFromBootcamp(BootcampRequestUpdateDto requestDto, Bootcamp bootcampUsed) 
         {
@@ -43,13 +45,13 @@ namespace DiplomaMakerApi.Services
                 if (lastSnapshot == null)
                 {
                     templateBackgroundLocation = await GetFileLocation(templateUsed.Name + ".v1.pdf") 
-                    ?? (_env.IsDevelopment() 
+                    ?? ((_env.IsDevelopment() && !_useBlobStorage) 
                         ? await _localFileStorageService.CreateBackup(templateUsed.Name) 
                         : await _googleCloudStorageService.CreateBackup(templateUsed.Name)).Replace("/DiplomaPdfs", "");
                 }
                 else if (templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
                 {
-                    templateBackgroundLocation = _env.IsDevelopment() 
+                    templateBackgroundLocation = (_env.IsDevelopment() && !_useBlobStorage) 
                         ? await _localFileStorageService.CreateBackup(templateUsed.Name) 
                         : await _googleCloudStorageService.CreateBackup(templateUsed.Name);
                 }
@@ -92,7 +94,7 @@ namespace DiplomaMakerApi.Services
 
         private async Task<string> GetFileLocation(string fileName)
         {
-            var fileLocationResponse = _env.IsDevelopment()
+            var fileLocationResponse = (_env.IsDevelopment() && !_useBlobStorage)
                 ? await _localFileStorageService.GetFilePath(Path.GetFileName(fileName))
                 : await _googleCloudStorageService.GetFilePath(Path.GetFileName(fileName));
             

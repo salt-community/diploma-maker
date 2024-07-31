@@ -12,11 +12,14 @@ namespace DiplomaMakerApi.Controllers
         private readonly GoogleCloudStorageService _googleCloudStorageService;
         private readonly IWebHostEnvironment _env;
 
-        public BlobController(LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, IWebHostEnvironment env)
+        private readonly bool _useBlobStorage;
+
+        public BlobController(LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, IWebHostEnvironment env, IConfiguration configuration)
         {
             _localFileStorageService = localFileStorageService;
             _googleCloudStorageService = googleCloudStorageService;
             _env = env;
+            _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
         }
 
         [HttpGet("{fileName}")]
@@ -27,7 +30,7 @@ namespace DiplomaMakerApi.Controllers
                 return BadRequest("Invalid file type.");
             }
             
-            if (_env.IsDevelopment())
+            if (_env.IsDevelopment() && !_useBlobStorage)
             {
                 var filePath = await _localFileStorageService.GetFilePath(fileName);
 
@@ -55,7 +58,7 @@ namespace DiplomaMakerApi.Controllers
         [HttpGet("download-all-templatebackgrounds")]
         public async Task<IActionResult> DownloadAllFiles()
         {
-            if (_env.IsDevelopment())
+            if (_env.IsDevelopment() && !_useBlobStorage)
             {
                 return await _localFileStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
             }

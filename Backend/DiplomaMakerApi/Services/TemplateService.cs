@@ -9,13 +9,15 @@ public class TemplateService
     DiplomaMakingContext context, 
     LocalFileStorageService localFileStorageService, 
     GoogleCloudStorageService googleCloudStorageService,
-    IWebHostEnvironment env
+    IWebHostEnvironment env,
+    IConfiguration configuration
 )
 {
     private readonly DiplomaMakingContext _context = context;
     private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
     private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
     private readonly IWebHostEnvironment _env = env;
+    private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
 
     public async Task<List<DiplomaTemplate>> GetTemplates(){
         return await _context.DiplomaTemplates
@@ -39,7 +41,7 @@ public class TemplateService
             Name = templateRequest.templateName,
         };
 
-        await (_env.IsDevelopment()
+        await ((_env.IsDevelopment() && !_useBlobStorage)
             ? _localFileStorageService.InitFileFromNewTemplate(templateRequest.templateName)
             : _googleCloudStorageService.InitFileFromNewTemplate(templateRequest.templateName));
 
@@ -71,7 +73,7 @@ public class TemplateService
 
         IFormFile file = ConvertBase64ToIFormFile(templateRequest.basePdf, templateRequest.templateName);
 
-        await (_env.IsDevelopment()
+        await ((_env.IsDevelopment() && !_useBlobStorage)
             ? _localFileStorageService.SaveFile(file, templateRequest.templateName)
             : _googleCloudStorageService.SaveFile(file, templateRequest.templateName));
 
@@ -89,7 +91,7 @@ public class TemplateService
             throw new NotFoundByIdException("Template", id);
         }
 
-        await (_env.IsDevelopment() 
+        await ((_env.IsDevelopment() && !_useBlobStorage) 
             ? _localFileStorageService.DeleteFile(template.Name)
             : _googleCloudStorageService.DeleteFile(template.Name));
 
