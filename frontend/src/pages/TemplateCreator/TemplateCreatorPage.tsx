@@ -58,6 +58,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
   const { loadingMessage } = useLoadingMessage();
 
+  const [firstRun, setFirstRun] = useState<boolean>(true)
+
   const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
     positionX: null,
     positionY: null,
@@ -72,7 +74,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [templateIndex, setTemplateIndex] = useState<number>(0);
 
   useEffect(() => {
-    customAlert('loadingfadeout', `Fetching Templates...`, '')
+    firstRun && customAlert('loadingfadeout', `Fetching Templates...`, '')
     if (templates && templates.length > 0) {
       const templateData = mapTemplatesToTemplateData(templates);
       setTemplateData(templateData);
@@ -82,7 +84,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       } else {
         setCurrentTemplate(templateData[templateIndex] || null);
       }
-      customAlert('loadingfadeout', `Templates Fetched successfully`, '')
+      firstRun && customAlert('loading', `Templates Fetched successfully`, '')
     }
   }, [templates]);
 
@@ -92,6 +94,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   useEffect(() => {
     if (currentTemplate) {
+      firstRun && customAlert('loading', `Loading Template Into Renderer...`, '')
       SetPdfSizeHandler();
       const inputs = [
         makeTemplateInput(
@@ -120,6 +123,9 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
           });
         }
       });
+
+      firstRun && customAlert('loadingfadeout', `Loaded templates successfully`, '')
+      firstRun && setFirstRun(false);
 
       return () => {
         if (designer.current) {
