@@ -121,11 +121,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             options: { font },
             plugins: getPlugins(),
           });
+
+          customAlert('loadingfadeout', `Loaded: Waiting For Renderer...`, '');
+          setFirstRun(false);
         }
       });
 
-      firstRun && customAlert('loadingfadeout', `Loaded templates successfully`, '')
-      firstRun && setFirstRun(false);
+      
 
       return () => {
         if (designer.current) {
