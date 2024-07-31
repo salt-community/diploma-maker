@@ -15,7 +15,7 @@
     color: #ababba;
     padding: 1.2rem 2rem;
     border-radius: 1.5rem;
-    cursor: pointer;
+    cursor: default;
     z-index: 1;
     transition: all .2s ease-in-out;
 }

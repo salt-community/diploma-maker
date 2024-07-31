@@ -23,7 +23,7 @@ export const AlertPopup = ({ show, onClose, popupType, title, text, durationOver
     let timer: any;
     let visibleTime = durationOverride ? durationOverride : 2500;
     if(popupType === 'loadingfadeout'){
-      visibleTime = 1000;
+      visibleTime = 750;
     }
   
     if (show && popupType !== 'loading') {

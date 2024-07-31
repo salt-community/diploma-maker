@@ -138,8 +138,8 @@
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center; /* Center the Popup404 horizontally and vertically */
-    width: 100%; /* Optional: adjust as needed */
-    height: 100%; /* Optional: adjust as needed */
-    pointer-events: none; /* Optional: allow clicks through the wrapper */
+    justify-content: center;
+    width: 100%;
+    height: 100%;
   }
+  
