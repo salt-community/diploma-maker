@@ -19,9 +19,10 @@ type Props = {
   bootcamps: BootcampResponse[] | null;
   templates: TemplateResponse[] | null;
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void
+  setLoadingMessage: (message: string) => void;
 };
 
-export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBootcampWithNewFormdata }: Props) {
+export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBootcampWithNewFormdata, setLoadingMessage }: Props) {
 
   const [IsFullScreen, setIsFullScreen] = useState<boolean>(true)
   // current data selected 
@@ -76,6 +77,8 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
               
               bootcamps={bootcamps}
               templates={templates}
+
+              setLoadingMessage={setLoadingMessage}
             />
           </section>
         ) : (
@@ -100,6 +103,8 @@ export default function DiplomaMaking({ tracks, bootcamps, templates, UpdateBoot
                 templates={templates}
                 fullscreen={IsFullScreen}
                 customAlert={customAlert}
+
+                setLoadingMessage={setLoadingMessage}
               />
             </section>
           </>
