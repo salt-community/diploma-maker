@@ -135,7 +135,7 @@
   }
 
   .popup404-wrapper {
-    position: absolute;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center; /* Center the Popup404 horizontally and vertically */
