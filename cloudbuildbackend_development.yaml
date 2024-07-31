@@ -4,19 +4,16 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest', '-f', 'Dockerfile', '.']
     dir: Backend/DiplomaMakerApi/
-    id: BuildDefaultImage
 
   # Push the default container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest']
     id: PushDefaultImage
-    waitFor: ['BuildDefaultImage']
 
   # Deploy the default container image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['run', 'deploy', 'backend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-backend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
     id: DeployDefault
-    waitFor: ['PushDefaultImage']
 
 images:
   - 'gcr.io/pgp-sandbox/diplomamakers-backend:latest'

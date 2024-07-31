@@ -5,19 +5,16 @@ steps:
     args: ['build', '-t', 'gcr.io/pgp-sandbox/diplomamakers-backend-production:latest', '-f', 'Dockerfile', '.']
     dir: Backend/DiplomaMakerApi/
     id: BuildProductionImage
-    waitFor: ['DeployDefault']
 
   # Push the production container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/pgp-sandbox/diplomamakers-backend-production:latest']
     id: PushProductionImage
-    waitFor: ['BuildProductionImage']
 
   # Deploy the production container image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['run', 'deploy', 'backend-diploma-production', '--image', 'gcr.io/pgp-sandbox/diplomamakers-backend-production:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
     id: DeployProduction
-    waitFor: ['PushProductionImage']
 
 images:
   - 'gcr.io/pgp-sandbox/diplomamakers-backend-production:latest'
