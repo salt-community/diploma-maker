@@ -78,6 +78,13 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
         setEmailDescription(storedEmailDescription ? JSON.parse(storedEmailDescription) : `<p>We are thrilled to award you the Salt Diploma. Your hard work and dedication have paid off, and we are excited to see what you accomplish next.</p> <p>Keep striving for greatness, and remember that this is just the beginning of your journey. Well done on completing the bootcamp!</p>`);
     }, []);
 
+    // To Prevent Sending to students that are not visible in dom
+    useEffect(() => {
+        if (show) {
+            setCheckedUsers({});
+        }
+    }, [show]);
+
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, student: Student) => {
         setEmailChanges({
             ...emailChanges,
