@@ -73,6 +73,7 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
               className="right-click-boundingbox"
               onMouseEnter={() => handleMouseEnter('hover-right', index)}
               onMouseLeave={handleMouseLeave}
+              onClick={() => removeTags(index)}
             ></span>
             <TrashCanDeleteIcon 
               className="tag-close-icon"
