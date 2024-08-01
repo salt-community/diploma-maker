@@ -9,13 +9,10 @@ import './DiplomaDataForm.css';
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
-<<<<<<< HEAD
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
-=======
 import { CheckboxGroup } from "../../MenuItems/Inputs/CheckBoxGroup";
 import { UpdateIcon } from "../../MenuItems/Icons/UpdateIcon";
 import { OpenIcon } from "../../MenuItems/Icons/OpenIcon";
->>>>>>> f5719d5df859f63bb7f6f9ef45b085820563cb9a
 
 //exportera till types folder när typerna är satta
 type FormData = {
@@ -157,7 +154,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   return (
     <form className="diploma-making-form" onSubmit={handleSubmit(onSubmit)}>
       {/* Select Track */}
-      <div className="diploma-making-form__select-track">
+      <div className="diploma-making-form__select-track diploma-making-form__select-container">
         <label htmlFor="track" className="diploma-making-form__label">
           Track
         </label>
@@ -177,7 +174,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         />
       </div>
       {/* Select bootcamp Class */}
-      <div className="diploma-making-form__select-bootcamp">
+      <div className="diploma-making-form__select-bootcamp diploma-making-form__select-container">
         <label htmlFor="bootcamp" className="diploma-making-form__label">
           Bootcamps
         </label>
@@ -201,7 +198,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       </div>
 
       {/* Select Template name */}
-      <div className="diploma-making-form__select-template">
+      <div className="diploma-making-form__select-template diploma-making-form__select-container" >
         <label htmlFor="template" className="diploma-making-form__label">
           Template Options
         </label>
@@ -224,7 +221,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       </div>
 
       {/* Display student data */}
-      <div className="diploma-making-form__student-data">
+      <div className="diploma-making-form__student-data diploma-making-form__select-container">
         <label htmlFor="students" className="diploma-making-form__label">
           Student Names
         </label>
@@ -234,7 +231,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         />
       </div>
 
-      <div className="diploma-making-form__upload">
+      <div className="diploma-making-form__upload diploma-making-form__select-container">
         <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
           Upload Student Information
         </label>
