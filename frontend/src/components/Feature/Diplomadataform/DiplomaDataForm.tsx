@@ -55,12 +55,27 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     setSaltData(saltData);
   }, [students, selectedTemplate]);
 
+  // useEffect(() => {
+  //   if (AllTrackData && templates) {
+  //     const selectedBootcamp = AllTrackData[TrackIndex].bootcamps[BootcampIndex];
+  //     setStudents(selectedBootcamp.students);
+  //     const template = templates?.find(t => t.id === selectedBootcamp.templateId);
+  //     setSelectedTemplate(template);
+  //   }
+  // }, [TrackIndex, BootcampIndex, AllTrackData]);
+
   useEffect(() => {
     if (AllTrackData && templates) {
-      const selectedBootcamp = AllTrackData[TrackIndex].bootcamps[BootcampIndex];
-      setStudents(selectedBootcamp.students);
-      const template = templates?.find(t => t.id === selectedBootcamp.templateId);
-      setSelectedTemplate(template);
+      const selectedTrack = AllTrackData[TrackIndex];
+      const selectedBootcamp = selectedTrack?.bootcamps[BootcampIndex];
+      if (selectedBootcamp) {
+        setStudents(selectedBootcamp.students);
+        const template = templates?.find(t => t.id === selectedBootcamp.templateId);
+        setSelectedTemplate(template);
+      } else {
+        setStudents([]);
+        setSelectedTemplate(null);
+      }
     }
   }, [TrackIndex, BootcampIndex, AllTrackData]);
 
