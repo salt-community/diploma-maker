@@ -241,7 +241,9 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
           Upload Student Information
         </label>
-        <FileUpload FileHandler={handleFileUpload} />
+        <div className="diploma-making-form__upload--fileupload-wrapper">
+          <FileUpload FileHandler={handleFileUpload} />
+        </div>
       </div>
 
       {/* Example Checkboxes */}
@@ -250,20 +252,20 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           PDF-Generation options
         </label>
         <div className="diploma-making-form__checkbox-group">
-        <CheckboxGroup items={[
-              { 
-                  icon: <UpdateIcon />, 
-                  label: 'Update changes made to Bootcamp', 
-                  validationOptions: {...register("optionA")}
-              },
-              { 
-                  icon: <OpenIcon />, 
-                  label: 'Open PDFs after generating', 
-                  validationOptions: {...register("optionB")}
-              },
-          ]} 
-          defaultChecked={[0, 1]} 
-        />
+          <CheckboxGroup items={[
+                { 
+                    icon: <UpdateIcon />, 
+                    label: 'Update changes made to Bootcamp', 
+                    validationOptions: {...register("optionA")}
+                },
+                { 
+                    icon: <OpenIcon />, 
+                    label: 'Open PDFs after generating', 
+                    validationOptions: {...register("optionB")}
+                },
+            ]} 
+            defaultChecked={[0, 1]} 
+          />
         </div>
         {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
       </div>
@@ -286,7 +288,9 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           />
         </div>
       </div>
-      <PublishButton classNameOverride="diploma-making-form__submit-button" text='Submit' onClick={() => {}} />
+      <div className="diploma-making-form__submit-group">
+        <PublishButton classNameOverride="diploma-making-form__submit-button" text='Submit' onClick={() => {}} />
+      </div>
     </form>
   );
 

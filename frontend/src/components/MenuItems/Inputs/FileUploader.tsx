@@ -54,7 +54,7 @@ export const FileUpload = ({ FileHandler }: Props) => {
           {isDragActive ? (isFileValid ? 'Valid File' : 'Invalid File Format') : 'Add new File'}
         </h4>
         <p className='fileupload_section'>
-          {isDragActive ? (isFileValid ? 'Drag & drop' : 'File should be .csv, .xlsx or .json') : 'Drag & drop'}
+          {isDragActive ? (isFileValid ? 'Drag & drop' : 'File should be .csv, .xlsx or .json') : 'Drag & drop .csv .xlsx or .json'}
         </p>
       </>
     </div>
