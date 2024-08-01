@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import TagsInput from "../../TagsInput/TagsInput";
 import { useEffect, useState } from "react";
 import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
@@ -15,6 +14,7 @@ import { UpdateIcon } from "../../MenuItems/Icons/UpdateIcon";
 import { OpenIcon } from "../../MenuItems/Icons/OpenIcon";
 import { ExclusiveCheckBoxGroup } from "../../MenuItems/Inputs/ExclusiveCheckBoxGroup";
 import { PublishButton } from "../../MenuItems/Buttons/PublishButton";
+import { TagsInput } from "../../TagsInput/TagsInput";
 
 //exportera till types folder när typerna är satta
 type FormData = {
@@ -227,7 +227,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       </div>
 
       {/* Display student data */}
-      {/* <div className="diploma-making-form__student-data diploma-making-form__select-container">
+      <div className="diploma-making-form__student-data diploma-making-form__select-container">
         <label htmlFor="students" className="diploma-making-form__label">
           Student Names
         </label>
@@ -235,7 +235,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
           tags={students.map(student => student.name)}
         />
-      </div> */}
+      </div>
 
       <div className="diploma-making-form__upload diploma-making-form__select-container">
         <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
