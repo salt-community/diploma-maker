@@ -1,9 +1,23 @@
+.diploma-making-form__label {
+    color: #fffff1;
+    font-size: 1.1rem;
+    font-weight: 400;
+    cursor: default;
+}
+
+.diploma-making-form__select-container {
+    padding: 2% 3%;
+    min-height: fit-content;
+    border-bottom:1px solid #ababba5b
+}
+
 .full-screen-mode {
     width: 80vw;
 } 
 
 .diploma-making-form{
     background-color: #171721;
+    border-radius: 1rem;
 }
     .diploma-making-form__label{
         color: #ebebeb;
