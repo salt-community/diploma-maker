@@ -110,6 +110,7 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
                   className="tag-close-icon"
                   onMouseEnter={() => handleMouseEnter('hover-right', index)}
                   onMouseLeave={handleMouseLeave}
+                  onClick={() => removeTags(index)}
                 />
               </>
             }
