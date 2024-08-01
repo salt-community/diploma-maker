@@ -199,3 +199,10 @@
                 font-weight: 400;
                 cursor: default;
             }
+.full-screen-mode {
+    width: 80vw;
+} 
+
+.diploma-making-form{
+    background-color: #171721;
+}

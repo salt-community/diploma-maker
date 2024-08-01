@@ -9,7 +9,13 @@ import './DiplomaDataForm.css';
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
+<<<<<<< HEAD
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
+=======
+import { CheckboxGroup } from "../../MenuItems/Inputs/CheckBoxGroup";
+import { UpdateIcon } from "../../MenuItems/Icons/UpdateIcon";
+import { OpenIcon } from "../../MenuItems/Icons/OpenIcon";
+>>>>>>> f5719d5df859f63bb7f6f9ef45b085820563cb9a
 
 //exportera till types folder när typerna är satta
 type FormData = {
@@ -241,23 +247,20 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           PDF-Generation options
         </label>
         <div className="diploma-making-form__checkbox-group">
-          <label className="diploma-making-form__checkbox-label">
-            <input
-              type="checkbox"
-              defaultChecked
-              {...register("optionA", { validate: validateOptions })}
-              className="diploma-making-form__checkbox-input"
-            />
-            <span className="diploma-making-form__checkbox-text">Update changes made to Bootcamp</span>
-          </label>
-          <label className="diploma-making-form__checkbox-label">
-            <input
-              type="checkbox"
-              {...register("optionB", { validate: validateOptions })}
-              className="diploma-making-form__checkbox-input"
-            />
-            <span className="diploma-making-form__checkbox-text">Generate all PDF in new window</span>
-          </label>
+          <CheckboxGroup items={[
+              { 
+                icon: <UpdateIcon />, 
+                label: 'Update changes made to Bootcamp', 
+                validationOptions: {...register("optionA", { validate: validateOptions })}
+              },
+              { 
+                icon: <OpenIcon />, 
+                label: 'Generate all PDF in new window', 
+                validationOptions: {...register("optionB", { validate: validateOptions })}
+              },
+            ]} 
+            defaultChecked={[1, 4]} 
+          />
         </div>
         {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
       </div>
