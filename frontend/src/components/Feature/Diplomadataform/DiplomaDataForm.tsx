@@ -88,7 +88,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     try {
       await UpdateBootcampWithNewFormdata(updateFormDataRequest, AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId);
       both
-        ? customAlert('loading', 'Diplomas added...', '')
+        ? ''
         : customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
     } catch (error) {
       customAlert('fail', "Failed to add diplomas:", `${error}`);
