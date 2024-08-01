@@ -148,21 +148,19 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   };
 
   return (
-    <form className={`space-y-4 p-6 rounded shadow-md ml-10 mr-10 rounded-2xl dark: bg-darkbg2`} onSubmit={handleSubmit(onSubmit)}>
+    <form className="diploma-making-form" onSubmit={handleSubmit(onSubmit)}>
       {/* Select Track */}
-      <div className="select-track mb-6">
-        <label htmlFor="track" className="block text-lg font-medium text-gray-700 dark:text-white">
+      <div className="diploma-making-form__select-track">
+        <label htmlFor="track" className="diploma-making-form__label">
           Track
         </label>
         <select
           id="track"
-          className="mt-2 w-8/12 py-2 px-3 order border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
-          onChange={
-            (e) => {
-              setTrackIndex(Number(e.target.value) - 1)
-              setBootcampIndex(0)
-            }
-          }
+          className="diploma-making-form__select"
+          onChange={(e) => {
+            setTrackIndex(Number(e.target.value) - 1);
+            setBootcampIndex(0);
+          }}
         >
           {AllTrackData && (
             AllTrackData.filter(track => track.bootcamps.length > 0).map((track, index) =>
@@ -172,20 +170,19 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         </select>
       </div>
       {/* Select bootcamp Class */}
-      <div className="select-bootcamp mb-6">
-        <label htmlFor="bootcamp" className="block text-lg font-medium text-gray-700 dark:text-white">
+      <div className="diploma-making-form__select-bootcamp">
+        <label htmlFor="bootcamp" className="diploma-making-form__label">
           Bootcamps
         </label>
         <select
           id="bootcamp"
           value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
-          className="mt-2 w-8/12 py-2 px-3 border border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
+          className="diploma-making-form__select"
           onChange={(e) => {
             const selectedGuidId = e.target.value;
             const selectedBootcampIndex = AllTrackData[TrackIndex].bootcamps.findIndex(bootcamp => bootcamp.guidId === selectedGuidId);
             setBootcampIndex(selectedBootcampIndex);
           }}
-
         >
           {AllTrackData[TrackIndex].bootcamps && (
             AllTrackData[TrackIndex].bootcamps.map((bootcamp, index) =>
@@ -194,20 +191,20 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           )}
         </select>
       </div>
-
+  
       {/* Select Template name */}
-      <div className="select-template mb-6">
-        <label htmlFor="template" className="block text-lg font-medium text-gray-700 dark: text-white">
+      <div className="diploma-making-form__select-template">
+        <label htmlFor="template" className="diploma-making-form__label">
           Template Options
         </label>
         <select
           value={selectedTemplate.id}
           id="template"
-          className="mt-2 w-8/12 py-2 px-3 border border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
+          className="diploma-making-form__select"
           onChange={(e) => {
             const selectedId = Number(e.target.value);
-            const selectedTemplateObject = templates!.find(template => template.id === selectedId);
-            setSelectedTemplate(selectedTemplateObject!);
+            const selectedTemplateObject = templates.find(template => template.id === selectedId);
+            setSelectedTemplate(selectedTemplateObject);
           }}
         >
           {templates && (
@@ -217,92 +214,80 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           )}
         </select>
       </div>
-
+  
       {/* Display student data */}
-      <div>
-        <label htmlFor="students" className="block text-lg font-medium text-gray-700 dark: text-white">
+      <div className="diploma-making-form__student-data">
+        <label htmlFor="students" className="diploma-making-form__label">
           Student Names
         </label>
         <TagsInput
-          selectedTags={(names: string[]) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))} // Adjust this based on how TagsInput is implemented
+          selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
           tags={students.map(student => student.name)}
         />
-
       </div>
-
-      <div>
-        <label htmlFor="upload" className="block text-lg font-medium text-gray-700 dark: text-white mb-2">
+  
+      <div className="diploma-making-form__upload">
+        <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
           Upload Student Information
         </label>
         <FileUpload FileHandler={handleFileUpload} />
       </div>
-
+  
       {/* Example Checkboxes */}
-      <div className="checkboxes mb-6">
-        <label htmlFor="upload" className="block text-lg font-medium text-gray-700 dark: text-white mb-2">
+      <div className="diploma-making-form__checkboxes">
+        <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
           PDF-Generation options
         </label>
-        <div className="flex flex-col space-y-2">
-          <label className="flex items-center">
+        <div className="diploma-making-form__checkbox-group">
+          <label className="diploma-making-form__checkbox-label">
             <input
               type="checkbox"
               defaultChecked
               {...register("optionA", { validate: validateOptions })}
-              className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+              className="diploma-making-form__checkbox-input"
             />
-            <span className="ml-2 text-gray-700 dark:text-white">Update changes made to Bootcamp</span>
+            <span className="diploma-making-form__checkbox-text">Update changes made to Bootcamp</span>
           </label>
-          <label className="flex items-center">
+          <label className="diploma-making-form__checkbox-label">
             <input
               type="checkbox"
               {...register("optionB", { validate: validateOptions })}
-              className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+              className="diploma-making-form__checkbox-input"
             />
-            <span className="ml-2 text-gray-700 dark:text-white">Generate all PDF in new window</span>
+            <span className="diploma-making-form__checkbox-text">Generate all PDF in new window</span>
           </label>
-          {/*       <label className="flex items-center">
-            <input
-              type="checkbox"
-              {...register("optionC", { validate: validateOptions })}
-              className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
-            />
-            <span className="ml-2 text-gray-700 dark:text-white">Email each student their diploma</span>
-          </label> */}
         </div>
-        {errors.optionA && <p className="text-red-500">{errors.optionA.message}</p>}
-
+        {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
       </div>
-
-      <div className="radio-group mb-6">
-
-        <div className="flex flex-col space-y-2">
-          <label className="flex items-center">
+  
+      <div className="diploma-making-form__radio-group">
+        <div className="diploma-making-form__radio-options">
+          <label className="diploma-making-form__radio-label">
             <input
               type="radio"
               value="all"
               defaultChecked
               {...register("pdfGenerationScope")}
-              className="form-radio h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+              className="diploma-making-form__radio-input"
             />
-            <span className="ml-2 text-gray-700 dark:text-white"> perform actions on all  students</span>
-
+            <span className="diploma-making-form__radio-text"> perform actions on all students</span>
           </label>
-          <label className="flex items-center">
-
+          <label className="diploma-making-form__radio-label">
             <input
               type="radio"
               value="selected"
               {...register("pdfGenerationScope")}
-              className="form-radio h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+              className="diploma-making-form__radio-input"
             />
-            <span className="ml-2 text-gray-700 dark:text-white">ONLY perform actions on selected student</span>
+            <span className="diploma-making-form__radio-text">ONLY perform actions on selected student</span>
           </label>
         </div>
       </div>
-
-      <button type="submit" className="block w-full md:inline-block md:w-auto px-4 py-3 md:py-2 bg-red-200 text-red-700 rounded-lg font-semibold text-sm md:ml-2 md:order-2">
+  
+      <button type="submit" className="diploma-making-form__submit-button">
         Submit
       </button>
     </form>
   );
+  
 }
