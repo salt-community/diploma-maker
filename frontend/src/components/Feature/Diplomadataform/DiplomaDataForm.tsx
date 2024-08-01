@@ -88,7 +88,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     try {
       await UpdateBootcampWithNewFormdata(updateFormDataRequest, AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId);
       both
-        ? customAlert('loading', 'Diplomas added...', '')
+        ? ''
         : customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
     } catch (error) {
       customAlert('fail', "Failed to add diplomas:", `${error}`);
@@ -130,9 +130,19 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       customAlert('loading', message, '');
     };
 
-    await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert);
-    customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
+    try {
+      await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert);
+      customAlert('loadingfadeout', '', '');
+      await alertSuccess();
+    } catch (error) {
+      customAlert('fail', "Failed to generate pdfs", `${error}`);
+    }
+    
   };
+
+  const alertSuccess = async () => {
+    customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
+  }
 
   const validateOptions = () => {
     const optionA = watch('optionA');
@@ -142,6 +152,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   };
 
   const onSubmit = (data: FormData) => {
+    
     if (!validateOptions()) {
       customAlert('message', "", "At least one PDF generation option must be selected.");
       return;
