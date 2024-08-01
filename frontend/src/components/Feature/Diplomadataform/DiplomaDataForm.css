@@ -5,3 +5,10 @@
 .diploma-making-form{
     background-color: #171721;
 }
+    .diploma-making-form__label{
+        color: #ebebeb;
+    }
+    .diploma-making-form__submit-button{
+        font-size: .8rem !important;
+        border: 1px solid rgba(255, 255, 255, 0.035);
+    }

@@ -12,6 +12,8 @@ import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampD
 import { CheckboxGroup } from "../../MenuItems/Inputs/CheckBoxGroup";
 import { UpdateIcon } from "../../MenuItems/Icons/UpdateIcon";
 import { OpenIcon } from "../../MenuItems/Icons/OpenIcon";
+import { ExclusiveCheckBoxGroup } from "../../MenuItems/Inputs/ExclusiveCheckBoxGroup";
+import { PublishButton } from "../../MenuItems/Buttons/PublishButton";
 
 //exportera till types folder när typerna är satta
 type FormData = {
@@ -135,18 +137,22 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     const optionA = watch('optionA');
     const optionB = watch('optionB');
     const optionC = watch('optionC');
-    return optionA || optionB || optionC || "At least one option must be selected.";
+    return optionA || optionB || optionC;
   };
 
   const onSubmit = (data: FormData) => {
-    if(data.optionA && data.optionB){
-      postSelectedBootcampData(true)
+    const isValid = validateOptions();
+    if (!isValid) {
+      customAlert('message', "", "At least one pdf generation option must be selected.");
+      return;
     }
-    else if(data.optionA){
-      postSelectedBootcampData()
+    if (data.optionA && data.optionB) {
+      postSelectedBootcampData(true);
+    } else if (data.optionA) {
+      postSelectedBootcampData();
     }
     if (data.optionB) {
-      generatePDFHandler()
+      generatePDFHandler();
     }
   };
 
@@ -242,51 +248,43 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           PDF-Generation options
         </label>
         <div className="diploma-making-form__checkbox-group">
-          <CheckboxGroup items={[
+        <CheckboxGroup items={[
               { 
-                icon: <UpdateIcon />, 
-                label: 'Update changes made to Bootcamp', 
-                validationOptions: {...register("optionA", { validate: validateOptions })}
+                  icon: <UpdateIcon />, 
+                  label: 'Update changes made to Bootcamp', 
+                  validationOptions: {...register("optionA")}
               },
               { 
-                icon: <OpenIcon />, 
-                label: 'Generate all PDF in new window', 
-                validationOptions: {...register("optionB", { validate: validateOptions })}
+                  icon: <OpenIcon />, 
+                  label: 'Open PDFs after generating', 
+                  validationOptions: {...register("optionB")}
               },
-            ]} 
-            defaultChecked={[1, 4]} 
-          />
+          ]} 
+          defaultChecked={[0, 1]} 
+        />
         </div>
         {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
       </div>
   
       <div className="diploma-making-form__radio-group">
         <div className="diploma-making-form__radio-options">
-          <label className="diploma-making-form__radio-label">
-            <input
-              type="radio"
-              value="all"
-              defaultChecked
-              {...register("pdfGenerationScope")}
-              className="diploma-making-form__radio-input"
-            />
-            <span className="diploma-making-form__radio-text"> perform actions on all students</span>
-          </label>
-          <label className="diploma-making-form__radio-label">
-            <input
-              type="radio"
-              value="selected"
-              {...register("pdfGenerationScope")}
-              className="diploma-making-form__radio-input"
-            />
-            <span className="diploma-making-form__radio-text">ONLY perform actions on selected student</span>
-          </label>
+        <ExclusiveCheckBoxGroup 
+            items={[
+              { 
+                label: 'Generate pdfs for selected bootcamp',
+                validationOptions: {...register("pdfGenerationScope", { value: 'all' })}
+              },
+              {
+                label: 'Generate pdf for selected student',
+                validationOptions: {...register("pdfGenerationScope", { value: 'selected' })}
+              }
+            ]}
+            scope="pdfGenerationScope"
+            defaultChecked={0}
+          />
         </div>
       </div>
-  
-      <button type="submit" className="diploma-making-form__submit-button">
-        Submit
-      </button>
+      <PublishButton classNameOverride="diploma-making-form__submit-button" text='Submit' onClick={() => {}} />
     </form>
   );
   
