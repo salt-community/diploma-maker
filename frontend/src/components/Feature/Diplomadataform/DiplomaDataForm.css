@@ -1,6 +1,34 @@
 .full-screen-mode {
     width: 80vw;
-} 
+}
+
+.diploma-making-form__select-track,
+.diploma-making-form__select-bootcamp,
+.diploma-making-form__select-template {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+    .diploma-making-form__select-track .overview-page__select-container,
+    .diploma-making-form__select-bootcamp .overview-page__select-container,
+    .diploma-making-form__select-template .overview-page__select-container {
+        margin-top: .7rem;
+    }
+        .diploma-making-form__select-track .diploma-making-form__label,
+        .diploma-making-form__select-bootcamp .diploma-making-form__label,
+        .diploma-making-form__select-template .diploma-making-form__label {
+            min-width: 238px;
+            transition: all 350ms ease;
+        }
+            .diploma-making-form__select-track:hover .diploma-making-form__label,
+            .diploma-making-form__select-bootcamp:hover .diploma-making-form__label,
+            .diploma-making-form__select-template:hover .diploma-making-form__label {
+                color: #fff;
+                transition: all 350ms ease;
+            }
+    .diploma-making-form__label {
+        transition: all 350ms ease;
+    }
 
 .diploma-making-form__label {
     color: #fffff1;

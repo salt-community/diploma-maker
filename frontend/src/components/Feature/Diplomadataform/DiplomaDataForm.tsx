@@ -162,7 +162,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       {/* Select Track */}
       <div className="diploma-making-form__select-track diploma-making-form__select-container">
         <label htmlFor="track" className="diploma-making-form__label">
-          Track
+          Track group
         </label>
         <SelectOptions
           containerClassOverride='overview-page__select-container'
@@ -182,7 +182,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       {/* Select bootcamp Class */}
       <div className="diploma-making-form__select-bootcamp diploma-making-form__select-container">
         <label htmlFor="bootcamp" className="diploma-making-form__label">
-          Bootcamps
+          Bootcamp
         </label>
         <SelectOptions
           containerClassOverride='overview-page__select-container'
@@ -206,7 +206,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       {/* Select Template name */}
       <div className="diploma-making-form__select-template diploma-making-form__select-container" >
         <label htmlFor="template" className="diploma-making-form__label">
-          Template Options
+          Applied Template
         </label>
         <SelectOptions
           containerClassOverride='overview-page__select-container'
@@ -227,7 +227,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       </div>
 
       {/* Display student data */}
-      <div className="diploma-making-form__student-data diploma-making-form__select-container">
+      {/* <div className="diploma-making-form__student-data diploma-making-form__select-container">
         <label htmlFor="students" className="diploma-making-form__label">
           Student Names
         </label>
@@ -235,7 +235,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
           tags={students.map(student => student.name)}
         />
-      </div>
+      </div> */}
 
       <div className="diploma-making-form__upload diploma-making-form__select-container">
         <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
