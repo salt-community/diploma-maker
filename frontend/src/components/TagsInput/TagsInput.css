@@ -1,4 +1,5 @@
 .tags-input {
+	position: relative;
 	display: flex;
 	align-items: flex-start;
 	flex-wrap: wrap;
@@ -13,6 +14,12 @@
 	border-radius: 0.5rem;
 	width: 552px;
 	transition: all 0.2s ease;
+  }
+  
+  @media (min-width: 1200px) {
+	.tags-input {
+		width: fit-content;
+	}
   }
   
   .tags-input:focus-within {
@@ -164,3 +171,19 @@
 	}
   }
   
+
+  .not-implemented {
+	position: absolute;
+	left: 150px;
+	top: -30px;
+	color: #ababba;
+	visibility: hidden;
+	font-size: .8rem;
+	opacity: 0;
+	transition: visibility 2s, opacity 2s ease;
+  }
+  
+  .not-implemented.visible {
+	visibility: visible;
+	opacity: 1;
+  }

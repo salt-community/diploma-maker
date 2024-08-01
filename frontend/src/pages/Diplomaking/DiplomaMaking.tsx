@@ -40,13 +40,13 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
 
   return (
     tracks && templates ? (
-      <div className={`flex w-full h-screen pt-10 dark:bg-darkbg`}>
+      <div className={'diplomamaking-container'}>
         {/*        {  <button className="toggle-button" onClick={TogglePreview}>
           {IsFullScreen ? <NextIcon rotation={180} /> : <NextIcon />}
         </button> } */}
         <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
         <>
-          <section className="flex-1 flex flex-col justify-start gap-1 ml-5">
+          <section className="previewdiploma-container">
             {saltData && (
               <>
                 <h1 className="text-lg font-medium text-gray-700 dark:text-white mb-2 text-center">
@@ -62,7 +62,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
               </>
             )}
           </section>
-          <section className="flex-1 flex flex-col">
+          <section className="diplomadataform-container">
             <DiplomaDataForm
               selectedStudentIndex={selectedStudentIndex}
               setSaltData={setSaltData}
@@ -74,6 +74,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
             /*  fullscreen={IsFullScreen} */
             />
           </section>
+          <div className="far-right-space"></div>
         </>
 
       </div>

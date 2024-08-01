@@ -1,0 +1,16 @@
+
+.pdfpreview-container{
+    position: relative;
+}
+
+.pdfpreview__pagination-menu-wrapper{
+    position: relative;
+}
+
+.pdfpreview__pagination-menu{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 250px;
+}

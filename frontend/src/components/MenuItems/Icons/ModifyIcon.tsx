@@ -1,10 +1,11 @@
 type Props = {
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
+    onClick?: () => void;
     className?: string;
   };
 
-export const ModifyIcon = ({ onMouseEnter, onMouseLeave, className }: Props) => {
+export const ModifyIcon = ({ onMouseEnter, onMouseLeave, onClick, className }: Props) => {
   return (
     <svg
       className="tag-open-icon"
@@ -13,6 +14,7 @@ export const ModifyIcon = ({ onMouseEnter, onMouseLeave, className }: Props) => 
       xmlns="http://www.w3.org/2000/svg"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onClick={onClick}
     >
       <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
       <g

@@ -9,6 +9,25 @@
     border-radius: 1rem;
     padding: .5rem;
 }
+.diplomamaking-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    padding-top: 2.5rem;
+    background-color: var(--darkbg);
+  }
+  
+  .previewdiploma-container {
+    flex: 3;
+  }
+  
+  .diplomadataform-container {
+    flex: 2;
+  }
+  
+  .far-right-space {
+    flex: .25;
+  }
 .pagination-menu{
     align-self: center;
     width: 200px;

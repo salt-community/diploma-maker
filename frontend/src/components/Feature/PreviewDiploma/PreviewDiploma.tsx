@@ -3,6 +3,7 @@ import {  SaltData } from "../../../util/types"
 import {  getFontsData, getPlugins, newGenerateCombinedPDF } from "../../../util/helper";
 import { Form, Viewer } from "@pdfme/ui";
 import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../../../util/dataHelpers";
+import './PreviewDiploma.css'
 
 import { PaginationMenu } from "../../MenuItems/PaginationMenu";
 
@@ -68,13 +69,15 @@ export default function PreviewDiploma({ setSelectedStudentIndex, saltData }: Pr
         ref={uiRef }
         style={{ width: "100%", height: "calc(82vh - 68px)" }}
       />
-      <PaginationMenu
-        containerClassOverride="flex justify-center mt-4 pagination-menu"
-        currentPage={currentPageIndex + 1}
-        totalPages={saltData.students.length}
-        handleNextPage={nextTemplateInstanceHandler}
-        handlePrevPage={prevTemplateInstanceHandler}
-      />
+      <div className="pdfpreview__pagination-menu-wrapper pdfpreview-container" style={{ width: "100%", height: "calc(82vh - 68px)" }}>
+        <PaginationMenu
+          containerClassOverride="pdfpreview__pagination-menu"
+          currentPage={currentPageIndex + 1}
+          totalPages={saltData.students.length}
+          handleNextPage={nextTemplateInstanceHandler}
+          handlePrevPage={prevTemplateInstanceHandler}
+        />
+      </div>
     </>
   );
 }
