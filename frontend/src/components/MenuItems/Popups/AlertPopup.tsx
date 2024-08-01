@@ -5,7 +5,7 @@ import { PopupSuccessIcon } from '../Icons/PopupSuccessIcon';
 import { AttentionIcon } from '../Icons/AttentionIcon';
 import { SpinnerIcon } from '../Icons/SpinnerIcon';
 
-export type PopupType = 'success' | 'fail' | 'message' | 'loading'
+export type PopupType = 'success' | 'fail' | 'message' | 'loading' | 'loadingfadeout'
 
 type Props = {
   title: string;
@@ -22,6 +22,9 @@ export const AlertPopup = ({ show, onClose, popupType, title, text, durationOver
   useEffect(() => {
     let timer: any;
     let visibleTime = durationOverride ? durationOverride : 2500;
+    if(popupType === 'loadingfadeout'){
+      visibleTime = 750;
+    }
   
     if (show && popupType !== 'loading') {
       setVisible(true);
@@ -43,13 +46,13 @@ export const AlertPopup = ({ show, onClose, popupType, title, text, durationOver
   }, [visible, show, onClose]);
 
   return (
-    <div onClick={() => {}} className={`popup ${popupType === 'fail' ? 'fail' : popupType === 'success' ? 'success' : popupType === 'loading' ? 'loading' : 'message'}  ${visible ? 'fade-in' : 'fade-out'}`}>
+    <div onClick={() => {}} className={`popup ${popupType === 'fail' ? 'fail' : popupType === 'success' ? 'success' : (popupType === 'loading' || 'loadingfadeout') ? 'loading' : 'message'}  ${visible ? 'fade-in' : 'fade-out'}`}>
       <div className="popup-content">
         {popupType === 'fail' ? 
             <PopupAlertIcon />
         : popupType === 'success' ?  
             <PopupSuccessIcon />
-        : popupType === 'loading' ?
+        : (popupType === 'loading' || 'loadingfadeout') ?
           <div className='spinner-wrapper'>
             <SpinnerIcon />
           </div>

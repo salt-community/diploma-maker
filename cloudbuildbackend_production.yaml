@@ -13,7 +13,7 @@ steps:
 
   # Deploy the production container image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['run', 'deploy', 'backend-diploma-production', '--image', 'gcr.io/pgp-sandbox/diplomamakers-backend-production:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+    args: ['run', 'deploy', 'backend-diploma-production', '--image', 'gcr.io/pgp-sandbox/diplomamakers-backend-production:latest', '--platform', 'managed', '--region', 'europe-west10', '--allow-unauthenticated']
     id: DeployProduction
 
 images:

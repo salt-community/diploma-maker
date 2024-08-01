@@ -13,7 +13,7 @@ steps:
 
   # Deploy the default container image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['run', 'deploy', 'frontend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '--platform', 'managed', '--region', 'us-central1', '--allow-unauthenticated']
+    args: ['run', 'deploy', 'frontend-diploma', '--image', 'gcr.io/pgp-sandbox/diplomamakers-frontend:latest', '--platform', 'managed', '--region', 'europe-west10', '--allow-unauthenticated']
     id: DeployDefaultFrontend
 
 images:

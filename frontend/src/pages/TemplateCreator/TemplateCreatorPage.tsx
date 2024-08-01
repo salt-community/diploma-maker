@@ -23,6 +23,7 @@ import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefaul
 import { InstructionSlideshow } from "../../components/Content/InstructionSlideshow";
 import { EmailConfigInstructionSlides, templateCreatorInstructionSlides } from "../../data/data";
 import { Size } from "@pdfme/common";
+import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -55,6 +56,9 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [pdfSize, setPdfSize] = useState<Size>();
 
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
+  const { loadingMessage } = useLoadingMessage();
+
+  const [firstRun, setFirstRun] = useState<boolean>(true)
 
   const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
     positionX: null,
@@ -70,6 +74,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [templateIndex, setTemplateIndex] = useState<number>(0);
 
   useEffect(() => {
+    firstRun && customAlert('loadingfadeout', `Fetching Templates...`, '')
     if (templates && templates.length > 0) {
       const templateData = mapTemplatesToTemplateData(templates);
       setTemplateData(templateData);
@@ -79,6 +84,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       } else {
         setCurrentTemplate(templateData[templateIndex] || null);
       }
+      firstRun && customAlert('loading', `Templates Fetched successfully`, '')
     }
   }, [templates]);
 
@@ -88,6 +94,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   useEffect(() => {
     if (currentTemplate) {
+      firstRun && customAlert('loading', `Loading Template Into Renderer...`, '')
       SetPdfSizeHandler();
       const inputs = [
         makeTemplateInput(
@@ -114,8 +121,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             options: { font },
             plugins: getPlugins(),
           });
+
+          customAlert('loadingfadeout', `Loaded: Waiting For Renderer...`, '');
+          setFirstRun(false);
         }
       });
+
+      
 
       return () => {
         if (designer.current) {
