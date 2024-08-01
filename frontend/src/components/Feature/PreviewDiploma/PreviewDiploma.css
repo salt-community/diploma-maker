@@ -1,10 +1,10 @@
 
 .pdfpreview-container{
-    position: relative;
+    position: sticky;
 }
 
 .pdfpreview__pagination-menu-wrapper{
-    position: relative;
+    position: sticky;
 }
 
 .pdfpreview__pagination-menu{

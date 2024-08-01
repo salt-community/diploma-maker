@@ -8,6 +8,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    height: 5rem;
 }
     .diploma-making-form__select-track .overview-page__select-container,
     .diploma-making-form__select-bootcamp .overview-page__select-container,
@@ -36,6 +37,15 @@
     font-weight: 400;
     cursor: default;
 }
+    .diploma-making-form__student-data__label-wrapper{
+        display: flex;
+        justify-content: space-between;
+    }
+    .diploma-making-form__student-data__items-wrapper{
+        display: flex;
+        gap: .2rem;
+        justify-content: space-between;
+    }
 
 .diploma-making-form__select-container,
 .diploma-making-form__checkboxes, 
@@ -71,7 +81,8 @@
     gap: 1.5rem;
 }
     .diploma-making-form__upload--fileupload-wrapper{
-        min-width: 250px;
+        margin-top: .5rem;
+        min-width: 200px;
     }
 
 

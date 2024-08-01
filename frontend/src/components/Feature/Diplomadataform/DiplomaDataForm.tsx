@@ -226,23 +226,33 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
       {/* Display student data */}
       <div className="diploma-making-form__student-data diploma-making-form__select-container">
-        <label htmlFor="students" className="diploma-making-form__label">
-          Student Names
-        </label>
-        <TagsInput
-          selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
-          tags={students.map(student => student.name)}
-        />
+        <div className="diploma-making-form__student-data__label-wrapper">
+          <label htmlFor="students" className="diploma-making-form__label">
+            Student Names
+          </label>
+          <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
+            Upload Student Information
+          </label>
+        </div>
+        <div className="diploma-making-form__student-data__items-wrapper">
+          <TagsInput
+            selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
+            tags={students.map(student => student.name)}
+          />
+          <div className="diploma-making-form__upload--fileupload-wrapper">
+            <FileUpload FileHandler={handleFileUpload} />
+          </div>
+        </div>
       </div>
 
-      <div className="diploma-making-form__upload diploma-making-form__select-container">
+      {/* <div className="diploma-making-form__upload diploma-making-form__select-container">
         <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
           Upload Student Information
         </label>
         <div className="diploma-making-form__upload--fileupload-wrapper">
           <FileUpload FileHandler={handleFileUpload} />
         </div>
-      </div>
+      </div> */}
 
       {/* Checkboxes */}
       <div className="diploma-making-form__checkboxes">
