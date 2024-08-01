@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
-import { generateVerificationCode, mapBootcampToSaltData, mapBootcampToSaltData2, newGenerateCombinedPDF } from "../../../util/helper";
+import { generateVerificationCode, mapBootcampToSaltData2, newGenerateCombinedPDF } from "../../../util/helper";
 import './DiplomaDataForm.css';
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
@@ -16,7 +16,7 @@ import { ExclusiveCheckBoxGroup } from "../../MenuItems/Inputs/ExclusiveCheckBox
 import { PublishButton } from "../../MenuItems/Buttons/PublishButton";
 import { TagsInput } from "../../TagsInput/TagsInput";
 
-//exportera till types folder när typerna är satta
+// Export types
 type FormData = {
   optionA: boolean;
   optionB: boolean;
@@ -28,17 +28,17 @@ type Props = {
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void;
   setSaltData: (data: SaltData) => void;
   templates: TemplateResponse[] | null;
-  tracks: TrackResponse[]
+  tracks: TrackResponse[];
   customAlert: (alertType: PopupType, title: string, content: string) => void;
   setLoadingMessage: (message: string) => void;
-  /*   fullscreen: boolean; */
+  selectedStudentIndex: number | null;
 };
 
-export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage }: Props) {
+export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage, selectedStudentIndex }: Props) {
 
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>(tracks);
-  const [TrackIndex, setTrackIndex] = useState<number>(0)
+  const [TrackIndex, setTrackIndex] = useState<number>(0);
   const [BootcampIndex, setBootcampIndex] = useState<number>(0);
   const [students, setStudents] = useState<Student[]>(tracks[0].bootcamps[0].students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(templates.find(template => template.id === tracks[0].bootcamps[0].templateId));
@@ -53,10 +53,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     setAllTrackData(updatedAllTrackData);
     const saltData = mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, templates!.find(t => t.id === selectedBootcamp.templateId));
     setSaltData(saltData);
-    console.log("")
-
   }, [students, selectedTemplate]);
-
 
   useEffect(() => {
     if (AllTrackData && templates) {
@@ -66,7 +63,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       setSelectedTemplate(template);
     }
   }, [TrackIndex, BootcampIndex, AllTrackData]);
-
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
@@ -90,34 +86,39 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     };
 
     try {
-
       await UpdateBootcampWithNewFormdata(updateFormDataRequest, AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId);
       both
         ? customAlert('loading', 'Diplomas added...', '')
         : customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
-
     } catch (error) {
       customAlert('fail', "Failed to add diplomas:", `${error}`);
     }
-
-
-
   }
 
-  const generatePDFHandler = async () => {
+  const generatePDFHandler = async (pdfGenerationScope: 'all' | 'selected') => {
     if (!tracks || !templates) {
       customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
       return;
     }
-    const templatesArr: Template[] = [];
+
     const selectedBootcamp = tracks[TrackIndex].bootcamps[BootcampIndex];
-    const inputsArray = students.map(student => {
+    const templatesArr: Template[] = [];
+    let inputsArray;
+
+    if (pdfGenerationScope === 'selected' && selectedStudentIndex !== null) {
+      const student = students[selectedStudentIndex];
       const inputs = templateInputsFromBootcampData(mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, selectedTemplate), student.name, student.verificationCode);
       templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(selectedTemplate, inputs));
-      return inputs;
-    })
+      inputsArray = [inputs];
+    } else {
+      inputsArray = students.map(student => {
+        const inputs = templateInputsFromBootcampData(mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, selectedTemplate), student.name, student.verificationCode);
+        templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(selectedTemplate, inputs));
+        return inputs;
+      });
+    }
 
-    customAlert('loading', 'Generating Pdfs...', '');
+    customAlert('loading', 'Generating PDFs...', '');
 
     if (inputsArray.length === 0) {
       customAlert('fail', "Error", "No valid inputs found for PDF generation.");
@@ -133,7 +134,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
   };
 
-
   const validateOptions = () => {
     const optionA = watch('optionA');
     const optionB = watch('optionB');
@@ -142,9 +142,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   };
 
   const onSubmit = (data: FormData) => {
-    const isValid = validateOptions();
-    if (!isValid) {
-      customAlert('message', "", "At least one pdf generation option must be selected.");
+    if (!validateOptions()) {
+      customAlert('message', "", "At least one PDF generation option must be selected.");
       return;
     }
     if (data.optionA && data.optionB) {
@@ -153,7 +152,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       postSelectedBootcampData();
     }
     if (data.optionB) {
-      generatePDFHandler();
+      generatePDFHandler(data.pdfGenerationScope);
     }
   };
 
@@ -188,7 +187,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           containerClassOverride='overview-page__select-container'
           selectClassOverride='overview-page__select-box'
           options={[
-            ... AllTrackData[TrackIndex].bootcamps.map((bootcamp) => ({
+            ...AllTrackData[TrackIndex].bootcamps.map((bootcamp) => ({
               value: bootcamp.guidId,
               label: bootcamp.name
             }))
@@ -200,11 +199,10 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           }}
           value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
         />
-        
       </div>
 
       {/* Select Template name */}
-      <div className="diploma-making-form__select-template diploma-making-form__select-container" >
+      <div className="diploma-making-form__select-template diploma-making-form__select-container">
         <label htmlFor="template" className="diploma-making-form__label">
           Applied Template
         </label>
@@ -246,41 +244,42 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         </div>
       </div>
 
-      {/* Example Checkboxes */}
+      {/* Checkboxes */}
       <div className="diploma-making-form__checkboxes">
         <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
           PDF-Generation options
         </label>
         <div className="diploma-making-form__checkbox-group">
           <CheckboxGroup items={[
-                { 
-                    icon: <UpdateIcon />, 
-                    label: 'Update changes made to Bootcamp', 
-                    validationOptions: {...register("optionA")}
-                },
-                { 
-                    icon: <OpenIcon />, 
-                    label: 'Open PDFs after generating', 
-                    validationOptions: {...register("optionB")}
-                },
-            ]} 
-            defaultChecked={[0, 1]} 
+            { 
+              icon: <UpdateIcon />, 
+              label: 'Update changes made to Bootcamp', 
+              validationOptions: { ...register("optionA") }
+            },
+            { 
+              icon: <OpenIcon />, 
+              label: 'Open PDFs after generating', 
+              validationOptions: { ...register("optionB") }
+            }
+          ]} 
+          defaultChecked={[0, 1]} 
           />
         </div>
         {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
       </div>
 
+      {/* Radio Group for PDF Generation Scope */}
       <div className="diploma-making-form__radio-group">
         <div className="diploma-making-form__radio-options">
-        <ExclusiveCheckBoxGroup 
+          <ExclusiveCheckBoxGroup
             items={[
-              { 
-                label: 'Generate pdfs for selected bootcamp',
-                validationOptions: {...register("pdfGenerationScope", { value: 'all' })}
+              {
+                label: 'Generate PDFs for selected bootcamp',
+                validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'all' }
               },
               {
-                label: 'Generate pdf for selected student',
-                validationOptions: {...register("pdfGenerationScope", { value: 'selected' })}
+                label: 'Generate PDF for selected student',
+                validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'selected' }
               }
             ]}
             scope="pdfGenerationScope"
@@ -288,10 +287,10 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           />
         </div>
       </div>
+      
       <div className="diploma-making-form__submit-group">
         <PublishButton classNameOverride="diploma-making-form__submit-button" text='Submit' onClick={() => {}} />
       </div>
     </form>
   );
-
 }

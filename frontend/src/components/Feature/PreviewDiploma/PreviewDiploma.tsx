@@ -8,9 +8,10 @@ import { PaginationMenu } from "../../MenuItems/PaginationMenu";
 
 type Props = {
   saltData: SaltData | null;
+  setSelectedStudentIndex: (index: number) => void;
 };
 
-export default function PreviewDiploma({ saltData }: Props) {
+export default function PreviewDiploma({ setSelectedStudentIndex, saltData }: Props) {
 
   const uiRef = useRef<HTMLDivElement | null>(null);
   const uiInstance = useRef<Form | Viewer | null>(null);
@@ -35,6 +36,7 @@ export default function PreviewDiploma({ saltData }: Props) {
         });
       }
     });
+    setSelectedStudentIndex(currentPageIndex)
     return () => {
       if (uiInstance.current) {
         uiInstance.current.destroy();
