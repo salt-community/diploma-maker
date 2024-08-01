@@ -1,3 +1,154 @@
 .full-screen-mode {
     width: 80vw;
-} 
+}
+
+.diploma-making-form__select-track,
+.diploma-making-form__select-bootcamp,
+.diploma-making-form__select-template {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 5rem;
+}
+    .diploma-making-form__select-track .overview-page__select-container,
+    .diploma-making-form__select-bootcamp .overview-page__select-container,
+    .diploma-making-form__select-template .overview-page__select-container {
+        margin-top: .7rem;
+    }
+        .diploma-making-form__select-track .diploma-making-form__label,
+        .diploma-making-form__select-bootcamp .diploma-making-form__label,
+        .diploma-making-form__select-template .diploma-making-form__label {
+            min-width: 238px;
+            transition: all 350ms ease;
+        }
+            .diploma-making-form__select-track:hover .diploma-making-form__label,
+            .diploma-making-form__select-bootcamp:hover .diploma-making-form__label,
+            .diploma-making-form__select-template:hover .diploma-making-form__label {
+                color: #fff;
+                transition: all 350ms ease;
+            }
+    .diploma-making-form__label {
+        transition: all 350ms ease;
+    }
+
+.diploma-making-form__label {
+    color: #fffff1;
+    font-size: 1.1rem;
+    font-weight: 400;
+    cursor: default;
+}
+    .diploma-making-form__student-data__label-wrapper{
+        display: flex;
+        justify-content: space-between;
+    }
+    .diploma-making-form__student-data__items-wrapper{
+        display: flex;
+        gap: .2rem;
+        justify-content: space-between;
+    }
+
+.diploma-making-form__select-container,
+.diploma-making-form__checkboxes, 
+.diploma-making-form__radio-group{
+    padding: 1.5% 3%;
+    min-height: fit-content;
+    border-bottom:1px solid #ababba4d
+}
+
+    .diploma-making-form__upload{
+
+    }
+        .diploma-making-form__upload label{
+            min-width: 280px;
+        }
+    .diploma-making-form__checkboxes{
+        border-bottom:1px solid #ababba17;
+        padding-bottom: 0;
+    }
+        .diploma-making-form__checkbox-group{
+            margin-top: .5rem;
+        }
+    .diploma-making-form__submit-group{
+        padding: 1% 3%;
+        min-height: fit-content;
+    }
+
+
+
+.diploma-making-form__upload{
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+    .diploma-making-form__upload--fileupload-wrapper{
+        margin-top: .5rem;
+        min-width: 200px;
+    }
+
+
+.diploma-making-form{
+    background-color: #171721;
+    border-radius: 1rem;
+}
+    .diploma-making-form__label{
+        color: #ebebeb;
+    }
+    .diploma-making-form__submit-button{
+        font-size: .9rem !important;
+        border: 1px solid rgba(255, 255, 255, 0.035);
+        margin-left: .5rem !important;
+    }
+
+
+@media (max-width: 1920px) {
+    .diploma-making-form__select-track,
+    .diploma-making-form__select-bootcamp,
+    .diploma-making-form__select-template {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        height: 3rem;
+    }
+    .diploma-making-form__label{
+        font-size: .9rem;
+        min-width: 180px !important;
+    }
+    .diploma-making-form .overview-page__select-box{
+        font-size: .7rem;
+        padding: 0.4em 1em;
+    }
+    .diploma-making-form .select-wrapper{
+        max-width: 200px;
+    }
+
+    .diploma-making-form__student-data{
+        padding-top: .6rem;
+    }
+    .diploma-making-form__upload--fileupload-wrapper{
+        margin-top: .5rem;
+        min-width: 200px;
+    }
+        .fileupload-wrapper{
+            width: 85%;
+        }
+        .diploma-making-form__upload--fileupload-wrapper .fileupload_title{
+            font-size: .8rem;
+        }
+        .diploma-making-form__upload--fileupload-wrapper p{
+            font-size: .7rem;
+        }
+    .diploma-making-form__checkboxes{
+        
+    }
+    .pdf-generation-options{
+        display: flex;
+        align-items: end;
+    }
+        .pdf-generation-options .diploma-making-form__radio-group{
+            display: flex;
+            padding: 0;
+            align-items: flex-end;
+            border: none;
+            margin-left: .5rem;
+        }
+}

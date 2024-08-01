@@ -9,6 +9,31 @@
     border-radius: 1rem;
     padding: .5rem;
 }
+.diplomamaking-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    padding-top: 2.5rem;
+    background-color: var(--darkbg);
+  }
+  @media (max-width: 1920px){
+    .diplomamaking-container{
+        padding-top: 2.5rem;
+    }
+}
+  
+    .previewdiploma-container {
+        flex: 3;
+    }
+  
+  .diplomadataform-container {
+    flex: 2;
+  }
+  
+  .far-right-space {
+    flex: .25;
+  }
+
 .pagination-menu{
     align-self: center;
     width: 200px;
@@ -138,8 +163,14 @@
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+    justify-content: center; /* Center the Popup404 horizontally and vertically */
+    width: 100%; /* Optional: adjust as needed */
+    height: 100%; /* Optional: adjust as needed */
+    pointer-events: none; /* Optional: allow clicks through the wrapper */
   }
-  
+  .chosen__bootcamp{
+    color: #fffff1;
+    font-size: 1.1rem;
+    font-weight: 400;
+    cursor: default;
+  }

@@ -25,32 +25,35 @@ type Props = {
 export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage }: Props) {
 
   /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
-  // bootcamps mirror
   const [saltData, setSaltData] = useState<SaltData | null>();
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { loadingMessage } = useLoadingMessage();
   const isFailed = loadingMessage.includes('Failed');
-  // const
+  const [selectedStudentIndex, setSelectedStudentIndex] = useState<number |null>(null);
+
+  const handleIndexChange = (index: number) => {
+    setSelectedStudentIndex(index);
+  };
 
 
   /*   const TogglePreview = () => setIsFullScreen(prev => !prev) */
 
   return (
     tracks && templates ? (
-      <div className={`flex w-full h-screen pt-10 dark:bg-darkbg`}>
+      <div className={'diplomamaking-container'}>
         {/*        {  <button className="toggle-button" onClick={TogglePreview}>
           {IsFullScreen ? <NextIcon rotation={180} /> : <NextIcon />}
         </button> } */}
         <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
         <>
-          <section className="flex-1 flex flex-col justify-start gap-1 ml-5">
+          <section className="previewdiploma-container">
             {saltData && (
               <>
-                <h1 className="text-lg font-medium text-gray-700 dark:text-white mb-2 text-center">
+                <h1 className="text-lg font-medium text-gray-700 dark:text-white mb-2 text-center chosen__bootcamp">
                   Currently selected: {saltData.classname}
                 </h1>
                 {saltData.students.length > 0 ? (
-                  <PreviewDiploma saltData={saltData} />
+                  <PreviewDiploma setSelectedStudentIndex={handleIndexChange} saltData={saltData} />
                 ) : (
                   <div className="popup404-wrapper">
                     <Popup404 text="No student names found." />
@@ -59,8 +62,9 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
               </>
             )}
           </section>
-          <section className="flex-1 flex flex-col">
+          <section className="diplomadataform-container">
             <DiplomaDataForm
+              selectedStudentIndex={selectedStudentIndex}
               setSaltData={setSaltData}
               tracks={tracks}
               UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
@@ -70,6 +74,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
             /*  fullscreen={IsFullScreen} */
             />
           </section>
+          <div className="far-right-space"></div>
         </>
 
       </div>

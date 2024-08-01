@@ -3,14 +3,16 @@ import {  SaltData } from "../../../util/types"
 import {  getFontsData, getPlugins, newGenerateCombinedPDF } from "../../../util/helper";
 import { Form, Viewer } from "@pdfme/ui";
 import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../../../util/dataHelpers";
+import './PreviewDiploma.css'
 
 import { PaginationMenu } from "../../MenuItems/PaginationMenu";
 
 type Props = {
   saltData: SaltData | null;
+  setSelectedStudentIndex: (index: number) => void;
 };
 
-export default function PreviewDiploma({ saltData }: Props) {
+export default function PreviewDiploma({ setSelectedStudentIndex, saltData }: Props) {
 
   const uiRef = useRef<HTMLDivElement | null>(null);
   const uiInstance = useRef<Form | Viewer | null>(null);
@@ -35,6 +37,7 @@ export default function PreviewDiploma({ saltData }: Props) {
         });
       }
     });
+    setSelectedStudentIndex(currentPageIndex)
     return () => {
       if (uiInstance.current) {
         uiInstance.current.destroy();
@@ -66,13 +69,15 @@ export default function PreviewDiploma({ saltData }: Props) {
         ref={uiRef }
         style={{ width: "100%", height: "calc(82vh - 68px)" }}
       />
-      <PaginationMenu
-        containerClassOverride="flex justify-center mt-4 pagination-menu"
-        currentPage={currentPageIndex + 1}
-        totalPages={saltData.students.length}
-        handleNextPage={nextTemplateInstanceHandler}
-        handlePrevPage={prevTemplateInstanceHandler}
-      />
+      <div className="pdfpreview__pagination-menu-wrapper pdfpreview-container" style={{ width: "100%", height: "calc(82vh - 68px)" }}>
+        <PaginationMenu
+          containerClassOverride="pdfpreview__pagination-menu"
+          currentPage={currentPageIndex + 1}
+          totalPages={saltData.students.length}
+          handleNextPage={nextTemplateInstanceHandler}
+          handlePrevPage={prevTemplateInstanceHandler}
+        />
+      </div>
     </>
   );
 }

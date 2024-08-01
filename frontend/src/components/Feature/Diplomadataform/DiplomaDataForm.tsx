@@ -1,16 +1,22 @@
 import { useForm } from "react-hook-form";
-import TagsInput from "../../TagsInput/TagsInput";
 import { useEffect, useState } from "react";
 import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
-import { generateVerificationCode, mapBootcampToSaltData, mapBootcampToSaltData2, newGenerateCombinedPDF } from "../../../util/helper";
+import { generateVerificationCode, mapBootcampToSaltData2, newGenerateCombinedPDF } from "../../../util/helper";
 import './DiplomaDataForm.css';
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
+import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
+import { CheckboxGroup } from "../../MenuItems/Inputs/CheckBoxGroup";
+import { UpdateIcon } from "../../MenuItems/Icons/UpdateIcon";
+import { OpenIcon } from "../../MenuItems/Icons/OpenIcon";
+import { ExclusiveCheckBoxGroup } from "../../MenuItems/Inputs/ExclusiveCheckBoxGroup";
+import { PublishButton } from "../../MenuItems/Buttons/PublishButton";
+import { TagsInput } from "../../TagsInput/TagsInput";
 
-//exportera till types folder när typerna är satta
+// Export types
 type FormData = {
   optionA: boolean;
   optionB: boolean;
@@ -22,17 +28,17 @@ type Props = {
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void;
   setSaltData: (data: SaltData) => void;
   templates: TemplateResponse[] | null;
-  tracks: TrackResponse[]
+  tracks: TrackResponse[];
   customAlert: (alertType: PopupType, title: string, content: string) => void;
   setLoadingMessage: (message: string) => void;
-  /*   fullscreen: boolean; */
+  selectedStudentIndex: number | null;
 };
 
-export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage }: Props) {
+export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage, selectedStudentIndex }: Props) {
 
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>(tracks);
-  const [TrackIndex, setTrackIndex] = useState<number>(0)
+  const [TrackIndex, setTrackIndex] = useState<number>(0);
   const [BootcampIndex, setBootcampIndex] = useState<number>(0);
   const [students, setStudents] = useState<Student[]>(tracks[0].bootcamps[0].students);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(templates.find(template => template.id === tracks[0].bootcamps[0].templateId));
@@ -47,9 +53,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     setAllTrackData(updatedAllTrackData);
     const saltData = mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, templates!.find(t => t.id === selectedBootcamp.templateId));
     setSaltData(saltData);
-
   }, [students, selectedTemplate]);
-
 
   useEffect(() => {
     if (AllTrackData && templates) {
@@ -59,7 +63,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       setSelectedTemplate(template);
     }
   }, [TrackIndex, BootcampIndex, AllTrackData]);
-
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file);
@@ -83,34 +86,39 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     };
 
     try {
-
       await UpdateBootcampWithNewFormdata(updateFormDataRequest, AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId);
       both
         ? customAlert('loading', 'Diplomas added...', '')
         : customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
-
     } catch (error) {
       customAlert('fail', "Failed to add diplomas:", `${error}`);
     }
-
-
-
   }
 
-  const generatePDFHandler = async () => {
+  const generatePDFHandler = async (pdfGenerationScope: 'all' | 'selected') => {
     if (!tracks || !templates) {
       customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
       return;
     }
-    const templatesArr: Template[] = [];
+
     const selectedBootcamp = tracks[TrackIndex].bootcamps[BootcampIndex];
-    const inputsArray = students.map(student => {
+    const templatesArr: Template[] = [];
+    let inputsArray;
+
+    if (pdfGenerationScope === 'selected' && selectedStudentIndex !== null) {
+      const student = students[selectedStudentIndex];
       const inputs = templateInputsFromBootcampData(mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, selectedTemplate), student.name, student.verificationCode);
       templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(selectedTemplate, inputs));
-      return inputs;
-    })
+      inputsArray = [inputs];
+    } else {
+      inputsArray = students.map(student => {
+        const inputs = templateInputsFromBootcampData(mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, selectedTemplate), student.name, student.verificationCode);
+        templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(selectedTemplate, inputs));
+        return inputs;
+      });
+    }
 
-    customAlert('loading', 'Generating Pdfs...', '');
+    customAlert('loading', 'Generating PDFs...', '');
 
     if (inputsArray.length === 0) {
       customAlert('fail', "Error", "No valid inputs found for PDF generation.");
@@ -126,182 +134,175 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
   };
 
-
   const validateOptions = () => {
     const optionA = watch('optionA');
     const optionB = watch('optionB');
     const optionC = watch('optionC');
-    return optionA || optionB || optionC || "At least one option must be selected.";
+    return optionA || optionB || optionC;
   };
 
   const onSubmit = (data: FormData) => {
-    if(data.optionA && data.optionB){
-      postSelectedBootcampData(true)
+    if (!validateOptions()) {
+      customAlert('message', "", "At least one PDF generation option must be selected.");
+      return;
     }
-    else if(data.optionA){
-      postSelectedBootcampData()
+    if (data.optionA && data.optionB) {
+      postSelectedBootcampData(true);
+    } else if (data.optionA) {
+      postSelectedBootcampData();
     }
     if (data.optionB) {
-      generatePDFHandler()
+      generatePDFHandler(data.pdfGenerationScope);
     }
   };
 
   return (
-    <form className={`space-y-4 p-6 rounded shadow-md ml-10 mr-10 rounded-2xl dark: bg-darkbg2`} onSubmit={handleSubmit(onSubmit)}>
+    <form className="diploma-making-form" onSubmit={handleSubmit(onSubmit)}>
       {/* Select Track */}
-      <div className="select-track mb-6">
-        <label htmlFor="track" className="block text-lg font-medium text-gray-700 dark:text-white">
-          Track
+      <div className="diploma-making-form__select-track diploma-making-form__select-container">
+        <label htmlFor="track" className="diploma-making-form__label">
+          Track group
         </label>
-        <select
-          id="track"
-          className="mt-2 w-8/12 py-2 px-3 order border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
-          onChange={
-            (e) => {
-              setTrackIndex(Number(e.target.value) - 1)
-              setBootcampIndex(0)
-            }
-          }
-        >
-          {AllTrackData && (
-            AllTrackData.filter(track => track.bootcamps.length > 0).map((track, index) =>
-              <option key={index} value={track.id}>{track.name}</option>
-            )
-          )}
-        </select>
+        <SelectOptions
+          containerClassOverride='overview-page__select-container'
+          selectClassOverride='overview-page__select-box'
+          options={[
+            ...AllTrackData.filter(track => track.bootcamps.length > 0).map((track) => ({
+              value: track.id.toString(),
+              label: track.name
+            }))
+          ]}
+          onChange={(e) => {
+            setTrackIndex(Number(e.target.value) - 1);
+            setBootcampIndex(0);
+          }}
+        />
       </div>
       {/* Select bootcamp Class */}
-      <div className="select-bootcamp mb-6">
-        <label htmlFor="bootcamp" className="block text-lg font-medium text-gray-700 dark:text-white">
-          Bootcamps
+      <div className="diploma-making-form__select-bootcamp diploma-making-form__select-container">
+        <label htmlFor="bootcamp" className="diploma-making-form__label">
+          Bootcamp
         </label>
-        <select
-          id="bootcamp"
-          value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
-          className="mt-2 w-8/12 py-2 px-3 border border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
+        <SelectOptions
+          containerClassOverride='overview-page__select-container'
+          selectClassOverride='overview-page__select-box'
+          options={[
+            ...AllTrackData[TrackIndex].bootcamps.map((bootcamp) => ({
+              value: bootcamp.guidId,
+              label: bootcamp.name
+            }))
+          ]}
           onChange={(e) => {
             const selectedGuidId = e.target.value;
             const selectedBootcampIndex = AllTrackData[TrackIndex].bootcamps.findIndex(bootcamp => bootcamp.guidId === selectedGuidId);
             setBootcampIndex(selectedBootcampIndex);
           }}
-
-        >
-          {AllTrackData[TrackIndex].bootcamps && (
-            AllTrackData[TrackIndex].bootcamps.map((bootcamp, index) =>
-              <option key={index} value={bootcamp.guidId}>{bootcamp.name}</option>
-            )
-          )}
-        </select>
+          value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
+        />
       </div>
 
       {/* Select Template name */}
-      <div className="select-template mb-6">
-        <label htmlFor="template" className="block text-lg font-medium text-gray-700 dark: text-white">
-          Template Options
+      <div className="diploma-making-form__select-template diploma-making-form__select-container">
+        <label htmlFor="template" className="diploma-making-form__label">
+          Applied Template
         </label>
-        <select
-          value={selectedTemplate.id}
-          id="template"
-          className="mt-2 w-8/12 py-2 px-3 border border-gray-300 dark:border-none bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-darkbg dark:text-white"
+        <SelectOptions
+          containerClassOverride='overview-page__select-container'
+          selectClassOverride='overview-page__select-box'
+          options={[
+            ...templates.map((template) => ({
+              value: template.id.toString(),
+              label: template.name
+            }))
+          ]}
           onChange={(e) => {
             const selectedId = Number(e.target.value);
-            const selectedTemplateObject = templates!.find(template => template.id === selectedId);
-            setSelectedTemplate(selectedTemplateObject!);
+            const selectedTemplateObject = templates.find(template => template.id === selectedId);
+            setSelectedTemplate(selectedTemplateObject);
           }}
-        >
-          {templates && (
-            templates.map((template, index) =>
-              <option key={index} value={template.id}>{template.name}</option>
-            )
-          )}
-        </select>
+          value={selectedTemplate.id.toString()}
+        />
       </div>
 
       {/* Display student data */}
-      <div>
-        <label htmlFor="students" className="block text-lg font-medium text-gray-700 dark: text-white">
-          Student Names
-        </label>
-        <TagsInput
-          selectedTags={(names: string[]) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))} // Adjust this based on how TagsInput is implemented
-          tags={students.map(student => student.name)}
-        />
-
+      <div className="diploma-making-form__student-data diploma-making-form__select-container">
+        <div className="diploma-making-form__student-data__label-wrapper">
+          <label htmlFor="students" className="diploma-making-form__label">
+            Student Names
+          </label>
+          <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
+            Upload Student Information
+          </label>
+        </div>
+        <div className="diploma-making-form__student-data__items-wrapper">
+          <TagsInput
+            selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
+            tags={students.map(student => student.name)}
+          />
+          <div className="diploma-making-form__upload--fileupload-wrapper">
+            <FileUpload FileHandler={handleFileUpload} />
+          </div>
+        </div>
       </div>
 
-      <div>
-        <label htmlFor="upload" className="block text-lg font-medium text-gray-700 dark: text-white mb-2">
+      {/* <div className="diploma-making-form__upload diploma-making-form__select-container">
+        <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
           Upload Student Information
         </label>
-        <FileUpload FileHandler={handleFileUpload} />
-      </div>
-
-      {/* Example Checkboxes */}
-      <div className="checkboxes mb-6">
-        <label htmlFor="upload" className="block text-lg font-medium text-gray-700 dark: text-white mb-2">
-          PDF-Generation options
-        </label>
-        <div className="flex flex-col space-y-2">
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              defaultChecked
-              {...register("optionA", { validate: validateOptions })}
-              className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
-            />
-            <span className="ml-2 text-gray-700 dark:text-white">Update changes made to Bootcamp</span>
-          </label>
-          <label className="flex items-center">
-            <input
-              type="checkbox"
-              {...register("optionB", { validate: validateOptions })}
-              className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
-            />
-            <span className="ml-2 text-gray-700 dark:text-white">Generate all PDF in new window</span>
-          </label>
-          {/*       <label className="flex items-center">
-            <input
-              type="checkbox"
-              {...register("optionC", { validate: validateOptions })}
-              className="form-checkbox h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
-            />
-            <span className="ml-2 text-gray-700 dark:text-white">Email each student their diploma</span>
-          </label> */}
+        <div className="diploma-making-form__upload--fileupload-wrapper">
+          <FileUpload FileHandler={handleFileUpload} />
         </div>
-        {errors.optionA && <p className="text-red-500">{errors.optionA.message}</p>}
+      </div> */}
 
-      </div>
-
-      <div className="radio-group mb-6">
-
-        <div className="flex flex-col space-y-2">
-          <label className="flex items-center">
-            <input
-              type="radio"
-              value="all"
-              defaultChecked
-              {...register("pdfGenerationScope")}
-              className="form-radio h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
-            />
-            <span className="ml-2 text-gray-700 dark:text-white"> perform actions on all  students</span>
-
+      {/* Checkboxes */}
+      <div className="pdf-generation-options">
+        <div className="diploma-making-form__checkboxes">
+          <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
+            PDF-Generation options
           </label>
-          <label className="flex items-center">
-
-            <input
-              type="radio"
-              value="selected"
-              {...register("pdfGenerationScope")}
-              className="form-radio h-5 w-5 text-indigo-600 transition duration-150 ease-in-out"
+          <div className="diploma-making-form__checkbox-group">
+            <CheckboxGroup items={[
+              { 
+                icon: <UpdateIcon />, 
+                label: 'Update changes made to Bootcamp', 
+                validationOptions: { ...register("optionA") }
+              },
+              { 
+                icon: <OpenIcon />, 
+                label: 'Open PDFs after generating', 
+                validationOptions: { ...register("optionB") }
+              }
+            ]} 
+            defaultChecked={[0, 1]} 
             />
-            <span className="ml-2 text-gray-700 dark:text-white">ONLY perform actions on selected student</span>
-          </label>
+          </div>
+          {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
+        </div>
+
+        {/* Radio Group for PDF Generation Scope */}
+        <div className="diploma-making-form__radio-group">
+          <div className="diploma-making-form__radio-options">
+            <ExclusiveCheckBoxGroup
+              items={[
+                {
+                  label: 'Generate PDFs for selected bootcamp',
+                  validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'all' }
+                },
+                {
+                  label: 'Generate PDF for selected student',
+                  validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'selected' }
+                }
+              ]}
+              scope="pdfGenerationScope"
+              defaultChecked={0}
+            />
+          </div>
         </div>
       </div>
-
-      <button type="submit" className="block w-full md:inline-block md:w-auto px-4 py-3 md:py-2 bg-red-200 text-red-700 rounded-lg font-semibold text-sm md:ml-2 md:order-2">
-        Submit
-      </button>
+      
+      <div className="diploma-making-form__submit-group">
+        <PublishButton classNameOverride="diploma-making-form__submit-button" text='Submit' onClick={() => {}} />
+      </div>
     </form>
   );
 }
