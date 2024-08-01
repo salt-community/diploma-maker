@@ -9,6 +9,7 @@ import './DiplomaDataForm.css';
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
+import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
 
 //exportera till types folder när typerna är satta
 type FormData = {
@@ -136,10 +137,10 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   };
 
   const onSubmit = (data: FormData) => {
-    if(data.optionA && data.optionB){
+    if (data.optionA && data.optionB) {
       postSelectedBootcampData(true)
     }
-    else if(data.optionA){
+    else if (data.optionA) {
       postSelectedBootcampData()
     }
     if (data.optionB) {
@@ -154,67 +155,68 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         <label htmlFor="track" className="diploma-making-form__label">
           Track
         </label>
-        <select
-          id="track"
-          className="diploma-making-form__select"
+        <SelectOptions
+          containerClassOverride='overview-page__select-container'
+          selectClassOverride='overview-page__select-box'
+          options={[
+            ...AllTrackData.filter(track => track.bootcamps.length > 0).map((track) => ({
+              value: track.id.toString(),
+              label: track.name
+            }))
+          ]}
           onChange={(e) => {
             setTrackIndex(Number(e.target.value) - 1);
             setBootcampIndex(0);
           }}
-        >
-          {AllTrackData && (
-            AllTrackData.filter(track => track.bootcamps.length > 0).map((track, index) =>
-              <option key={index} value={track.id}>{track.name}</option>
-            )
-          )}
-        </select>
+        />
       </div>
       {/* Select bootcamp Class */}
       <div className="diploma-making-form__select-bootcamp">
         <label htmlFor="bootcamp" className="diploma-making-form__label">
           Bootcamps
         </label>
-        <select
-          id="bootcamp"
-          value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
-          className="diploma-making-form__select"
+        <SelectOptions
+          containerClassOverride='overview-page__select-container'
+          selectClassOverride='overview-page__select-box'
+          options={[
+            ... AllTrackData[TrackIndex].bootcamps.map((bootcamp) => ({
+              value: bootcamp.guidId,
+              label: bootcamp.name
+            }))
+          ]}
           onChange={(e) => {
             const selectedGuidId = e.target.value;
             const selectedBootcampIndex = AllTrackData[TrackIndex].bootcamps.findIndex(bootcamp => bootcamp.guidId === selectedGuidId);
             setBootcampIndex(selectedBootcampIndex);
           }}
-        >
-          {AllTrackData[TrackIndex].bootcamps && (
-            AllTrackData[TrackIndex].bootcamps.map((bootcamp, index) =>
-              <option key={index} value={bootcamp.guidId}>{bootcamp.name}</option>
-            )
-          )}
-        </select>
+          value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
+        />
+        
       </div>
-  
+
       {/* Select Template name */}
       <div className="diploma-making-form__select-template">
         <label htmlFor="template" className="diploma-making-form__label">
           Template Options
         </label>
-        <select
-          value={selectedTemplate.id}
-          id="template"
-          className="diploma-making-form__select"
+        <SelectOptions
+          containerClassOverride='overview-page__select-container'
+          selectClassOverride='overview-page__select-box'
+          options={[
+            ...templates.map((template) => ({
+              value: template.id.toString(),
+              label: template.name
+            }))
+          ]}
           onChange={(e) => {
             const selectedId = Number(e.target.value);
             const selectedTemplateObject = templates.find(template => template.id === selectedId);
             setSelectedTemplate(selectedTemplateObject);
           }}
-        >
-          {templates && (
-            templates.map((template, index) =>
-              <option key={index} value={template.id}>{template.name}</option>
-            )
-          )}
-        </select>
+          value={selectedTemplate.id.toString()}
+        />
       </div>
-  
+
       {/* Display student data */}
       <div className="diploma-making-form__student-data">
         <label htmlFor="students" className="diploma-making-form__label">
@@ -225,14 +227,14 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           tags={students.map(student => student.name)}
         />
       </div>
-  
+
       <div className="diploma-making-form__upload">
         <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
           Upload Student Information
         </label>
         <FileUpload FileHandler={handleFileUpload} />
       </div>
-  
+
       {/* Example Checkboxes */}
       <div className="diploma-making-form__checkboxes">
         <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
@@ -259,7 +261,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         </div>
         {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
       </div>
-  
+
       <div className="diploma-making-form__radio-group">
         <div className="diploma-making-form__radio-options">
           <label className="diploma-making-form__radio-label">
@@ -283,11 +285,11 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           </label>
         </div>
       </div>
-  
+
       <button type="submit" className="diploma-making-form__submit-button">
         Submit
       </button>
     </form>
   );
-  
+
 }
