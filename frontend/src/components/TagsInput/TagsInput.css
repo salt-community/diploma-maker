@@ -13,7 +13,16 @@
 	border: 1px solid #ababba5b;
 	border-radius: 0.5rem;
 	width: 552px;
+	min-width: 552px;
 	transition: all 0.2s ease;
+  }
+
+  @media (max-width: 1920px) {
+	.tags-input {
+		padding: 0.4em .6em;
+		margin: 0.4rem 0.2rem;
+		background-color: transparent;
+	  }
   }
   
   @media (min-width: 1200px) {
@@ -43,6 +52,12 @@
 	color: white;
 	transition: all 0.2s ease;
 	background-color: #20202a;
+  }
+  @media (max-width: 1920px) {
+	.taginputbox{
+		padding: 0.3em .7em;
+		font-size: .85rem;
+	}
   }
   
   .taginputbox:focus {
@@ -78,6 +93,7 @@
 	cursor: pointer;
 	transition: all 0.2s ease;
   }
+ 
   
   .tag:hover {
 	/* border-color: #fa633e;
@@ -90,6 +106,15 @@
 	margin-right: 0.25rem;
 	font-size: .7rem;
 	line-height: 1rem;
+  }
+  @media (max-width: 1920px) {
+	.tag{
+		font-size: .4rem;
+	}
+	.tag-title {
+		font-size: .5rem;
+		line-height: 1rem;
+	  }
   }
   .left-click-boundingbox{
 	position: absolute;

@@ -16,6 +16,11 @@
     padding-top: 2.5rem;
     background-color: var(--darkbg);
   }
+  @media (max-width: 1920px){
+    .diplomamaking-container{
+        padding-top: .5rem;
+    }
+}
   
     .previewdiploma-container {
         flex: 3;

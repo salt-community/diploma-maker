@@ -151,3 +151,12 @@
                 color: #d6d6dd;
                 transition: all 250ms ease;
             }
+
+            @media (max-width: 1920px){
+                .checkbox-tile{
+                    height: 2.5rem;
+                }
+                .checkbox-label {
+                    font-size: .7rem;
+                }
+            }

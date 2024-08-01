@@ -99,3 +99,56 @@
         margin-left: .5rem !important;
     }
 
+
+@media (max-width: 1920px) {
+    .diploma-making-form__select-track,
+    .diploma-making-form__select-bootcamp,
+    .diploma-making-form__select-template {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        height: 3rem;
+    }
+    .diploma-making-form__label{
+        font-size: .9rem;
+        min-width: 180px !important;
+    }
+    .diploma-making-form .overview-page__select-box{
+        font-size: .7rem;
+        padding: 0.4em 1em;
+    }
+    .diploma-making-form .select-wrapper{
+        max-width: 200px;
+    }
+
+    .diploma-making-form__student-data{
+        padding-top: .6rem;
+    }
+    .diploma-making-form__upload--fileupload-wrapper{
+        margin-top: .5rem;
+        min-width: 200px;
+    }
+        .fileupload-wrapper{
+            width: 85%;
+        }
+        .diploma-making-form__upload--fileupload-wrapper .fileupload_title{
+            font-size: .8rem;
+        }
+        .diploma-making-form__upload--fileupload-wrapper p{
+            font-size: .7rem;
+        }
+    .diploma-making-form__checkboxes{
+        
+    }
+    .pdf-generation-options{
+        display: flex;
+        align-items: end;
+    }
+        .pdf-generation-options .diploma-making-form__radio-group{
+            display: flex;
+            padding: 0;
+            align-items: flex-end;
+            border: none;
+            margin-left: .5rem;
+        }
+}

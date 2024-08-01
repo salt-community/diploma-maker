@@ -255,46 +255,48 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       </div> */}
 
       {/* Checkboxes */}
-      <div className="diploma-making-form__checkboxes">
-        <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
-          PDF-Generation options
-        </label>
-        <div className="diploma-making-form__checkbox-group">
-          <CheckboxGroup items={[
-            { 
-              icon: <UpdateIcon />, 
-              label: 'Update changes made to Bootcamp', 
-              validationOptions: { ...register("optionA") }
-            },
-            { 
-              icon: <OpenIcon />, 
-              label: 'Open PDFs after generating', 
-              validationOptions: { ...register("optionB") }
-            }
-          ]} 
-          defaultChecked={[0, 1]} 
-          />
-        </div>
-        {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
-      </div>
-
-      {/* Radio Group for PDF Generation Scope */}
-      <div className="diploma-making-form__radio-group">
-        <div className="diploma-making-form__radio-options">
-          <ExclusiveCheckBoxGroup
-            items={[
-              {
-                label: 'Generate PDFs for selected bootcamp',
-                validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'all' }
+      <div className="pdf-generation-options">
+        <div className="diploma-making-form__checkboxes">
+          <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
+            PDF-Generation options
+          </label>
+          <div className="diploma-making-form__checkbox-group">
+            <CheckboxGroup items={[
+              { 
+                icon: <UpdateIcon />, 
+                label: 'Update changes made to Bootcamp', 
+                validationOptions: { ...register("optionA") }
               },
-              {
-                label: 'Generate PDF for selected student',
-                validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'selected' }
+              { 
+                icon: <OpenIcon />, 
+                label: 'Open PDFs after generating', 
+                validationOptions: { ...register("optionB") }
               }
-            ]}
-            scope="pdfGenerationScope"
-            defaultChecked={0}
-          />
+            ]} 
+            defaultChecked={[0, 1]} 
+            />
+          </div>
+          {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
+        </div>
+
+        {/* Radio Group for PDF Generation Scope */}
+        <div className="diploma-making-form__radio-group">
+          <div className="diploma-making-form__radio-options">
+            <ExclusiveCheckBoxGroup
+              items={[
+                {
+                  label: 'Generate PDFs for selected bootcamp',
+                  validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'all' }
+                },
+                {
+                  label: 'Generate PDF for selected student',
+                  validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'selected' }
+                }
+              ]}
+              scope="pdfGenerationScope"
+              defaultChecked={0}
+            />
+          </div>
         </div>
       </div>
       
