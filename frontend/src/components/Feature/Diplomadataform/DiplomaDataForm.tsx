@@ -146,6 +146,10 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       customAlert('message', "", "At least one PDF generation option must be selected.");
       return;
     }
+    if(students.length < 1){
+      customAlert('message', "Failed!", "Your bootcamp needs students, Please add one or a few");
+      return;
+    }
     if (data.optionA && data.optionB) {
       postSelectedBootcampData(true);
     } else if (data.optionA) {
