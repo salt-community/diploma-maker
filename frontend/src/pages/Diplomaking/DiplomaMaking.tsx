@@ -49,7 +49,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
           <section className="previewdiploma-container">
             {saltData && (
               <>
-                <h1 className="text-lg font-medium text-gray-700 dark:text-white mb-2 text-center">
+                <h1 className="text-lg font-medium text-gray-700 dark:text-white mb-2 text-center chosen__bootcamp">
                   Currently selected: {saltData.classname}
                 </h1>
                 {saltData.students.length > 0 ? (
