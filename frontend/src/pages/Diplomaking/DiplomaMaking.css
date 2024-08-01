@@ -143,3 +143,9 @@
     height: 100%; /* Optional: adjust as needed */
     pointer-events: none; /* Optional: allow clicks through the wrapper */
   }
+  .chosen__bootcamp{
+    color: #fffff1;
+    font-size: 1.1rem;
+    font-weight: 400;
+    cursor: default;
+  }
