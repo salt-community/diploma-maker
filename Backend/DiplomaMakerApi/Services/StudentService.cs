@@ -18,7 +18,8 @@ public class StudentService
         _logger = logger;
         _historySnapshotService = historySnapshotService;
     }
-    public async Task<List<Student>> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
+    // public async Task<List<Student>> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
+    public async Task<Bootcamp> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
     {
         var bootcamp = await _context.Bootcamps.Include(b => b.Students)
                 .Include(b => b.Track)
@@ -27,7 +28,7 @@ public class StudentService
         
         if (requestDto.students.Count == 0)
         {
-            throw new NotFoundByGuidException("You need to add students to perform this update"); 
+            throw new NotFoundByGuidException("You need to add students to perform this update");
         }
 
         _context.Students.RemoveRange(bootcamp.Students);
@@ -53,7 +54,11 @@ public class StudentService
 
         await _historySnapshotService.CreateHistorySnapshotFromBootcamp(requestDto, bootcamp);
 
-        return Students;
+        var updatedBootcamp = await _context.Bootcamps.Include(b => b.Students)
+            .Include(b => b.Track)
+            .FirstOrDefaultAsync(b => b.GuidId == BootcampGuidId);
+
+        return updatedBootcamp;
     }
     public async Task<List<Student>> GetAllStudents(){
         return await _context.Students

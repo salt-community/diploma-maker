@@ -54,12 +54,13 @@ export default function App() {
     await refresh();
   }
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
-    const response = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
-    if (response) {
+    const bootcampResponse = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
+    console.log(bootcampResponse);
+    if (bootcampResponse) {
       setBootcamps(prevbootcamps =>
         prevbootcamps!.map((item) => 
           item.guidId === guidid
-            ? { ...item, students: updateFormDataRequest.students, templateId: updateFormDataRequest.templateId} as BootcampResponse
+            ? { ...item, students: bootcampResponse.students, templateId: bootcampResponse.templateId } as BootcampResponse
             : item
         )
       );

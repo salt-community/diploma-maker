@@ -64,11 +64,11 @@ public class BootcampsController : ControllerBase
     }
 
     [HttpPut("dynamicfields/{guidId}")]
-    public async Task<ActionResult> UpdatePreviewData(Guid guidId, BootcampRequestUpdateDto requestDto)
+    public async Task<ActionResult<BootcampResponseDto>> UpdatePreviewData(Guid guidId, BootcampRequestUpdateDto requestDto)
     {
-        await _studentservice.ReplaceStudents(requestDto, guidId);
+        var updatedBootcamp = await _studentservice.ReplaceStudents(requestDto, guidId);
         await _bootcampservice.UpdateBootcampTemplate(guidId, requestDto.templateId);
-        return Ok();
+        return _mapper.Map<BootcampResponseDto>(updatedBootcamp);
     }
 
 }
