@@ -55,6 +55,7 @@ export type BootcampResponse = {
     templateId: number;
     students: Student[];
     track: TrackResponse;
+    displayName?: string;
 }
 
 

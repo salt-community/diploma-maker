@@ -55,6 +55,8 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             setLoading(true);
         }
     }, [bootcamps]);
+
+    
     
     const items = bootcamps?.flatMap(bootcamp => bootcamp.students) || []; // Flatmap instead of map to flatten [][] into []
     
@@ -76,7 +78,11 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
     const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
 
-    
+    useEffect(() => {
+        if(visibleItems){
+            console.log(visibleItems)
+        }
+    }, [visibleItems])
 
     const handlePrevPage = () => {
         setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
@@ -216,6 +222,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
 
     const sendEmailsHandler = async (userIds: string[], title: string, description: string) => {
         if(userIds.length === 0) return
+        console.log(userIds);
         //@ts-ignore
         customInfoPopup("progress", "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
         const blendProgressDelay = 750;
@@ -266,11 +273,13 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         }
 
         customAlert('loading', `Generating Pdf File...`, ``);
-    
+        
+        // displayName: "Fullstack " + TrackName 
+
         const pdfInput = makeTemplateInput(
-            populateField(templates.find(t => t.id === bootcamp.templateId).intro , bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
-            populateField(student.name, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
-            populateField(templates.find(t => t.id === bootcamp.templateId).footer, bootcamp.name, bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            populateField(templates.find(t => t.id === bootcamp.templateId).intro , ("Fullstack " + bootcamp.track.name), bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            populateField(student.name, ("Fullstack " + bootcamp.track.name), bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            populateField(templates.find(t => t.id === bootcamp.templateId).footer, ("Fullstack " + bootcamp.track.name), bootcamp.graduationDate.toString().slice(0, 10), student.name),
             templates.find(t => t.id === bootcamp.templateId).basePdf,
             populateIdField(templates.find(t => t.id === bootcamp.templateId).link, student.verificationCode)
         );
