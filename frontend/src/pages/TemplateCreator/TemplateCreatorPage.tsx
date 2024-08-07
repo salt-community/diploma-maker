@@ -665,7 +665,6 @@ useEffect(() => {
                     <>
                         <section className="templatecreator-page__rightsidebar-menu-section">
                             <h3>Layout</h3>
-                            <h2 style={{color: '#fff'}}>{fieldsChanged ? 'true' : 'false'}</h2>
                             <EditSection
                                 positionX={templateStyle.positionX}
                                 positionY={templateStyle.positionY}
