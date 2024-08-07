@@ -218,45 +218,93 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   }, [designer.current, selectedField]);
 
-useEffect(() => {
-    if (designer.current && selectedField) {
-        const handleMouseUp = async () => {
-            // @ts-ignore
-            const prevStartPost = designer.current.template.schemas[0][selectedField]?.position;
-            await delay(10)
-            // @ts-ignore
-            const startpos = designer.current.template.schemas[0][selectedField]?.position;
-            prevStartPost !== startpos && setFieldsChanged(true);
-            // @ts-ignore
-            setCurrentFieldPosition(startpos);
-            setTemplateStyle(prevState => ({
-                ...prevState,
-                positionX: startpos?.x,
-                positionY: startpos?.y
-            }));
-        };
+  const mousePosition = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
+  const isDragging = useRef<boolean>(false);
+  let intervalId: NodeJS.Timeout;
 
-        const handleMouseDown = () => {
-          // @ts-ignore
-          const startpos = designer.current.template.schemas[0][selectedField]?.position;
-          // @ts-ignore
-          setCurrentFieldPosition(startpos);
-          setTemplateStyle(prevState => ({
-              ...prevState,
-              positionX: startpos?.x,
-              positionY: startpos?.y
-          }));
-      };
+  useEffect(() => {
+      if (designer.current && selectedField) {
+          const updateMousePosition = (event: MouseEvent) => {
+              mousePosition.current = { x: event.clientX, y: event.clientY };
+          };
 
-        window.addEventListener('mouseup', handleMouseUp);
-        window.addEventListener('mousedown', handleMouseDown);
+          const handleMouseUp = async () => {
+              isDragging.current = false;
+              clearInterval(intervalId);
+              const element = document.querySelector(`[title="${selectedField}"]`);
+              simulateRelease(element as HTMLElement);
+              window.removeEventListener('mousemove', updateMousePosition);
+              // @ts-ignore
+              const startpos = designer.current.template.schemas[0][selectedField]?.position;
+              // @ts-ignore
+              setCurrentFieldPosition(startpos);
+              setTemplateStyle(prevState => ({
+                  ...prevState,
+                  positionX: startpos?.x,
+                  positionY: startpos?.y
+              }));
+              console.log(startpos);
+          };
 
-        return () => {
-            window.removeEventListener('mouseup', handleMouseUp);
-            window.removeEventListener('mousedown', handleMouseDown);
-        };
-    }
-}, [designer.current, selectedField]);
+          const handleMouseDown = async () => {
+              isDragging.current = true;
+              window.addEventListener('mousemove', updateMousePosition);
+              intervalId = setInterval(() => {
+                  if (isDragging.current) {
+                      console.log("isdragging!")
+                      const element = document.querySelector(`[title="${selectedField}"]`);
+                      if (element) {
+                          simulateReleaseAndClick(element as HTMLElement);
+                      }
+                  }
+              }, 1500);
+          };
+
+          window.addEventListener('mouseup', handleMouseUp);
+          window.addEventListener('mousedown', handleMouseDown);
+
+          return () => {
+              clearInterval(intervalId);
+              window.removeEventListener('mouseup', handleMouseUp);
+              window.removeEventListener('mousedown', handleMouseDown);
+          };
+      }
+  }, [designer.current, selectedField]);
+
+  const simulateReleaseAndClick = (element: HTMLElement) => {
+      const { x, y } = mousePosition.current;
+
+      const mouseUpEvent = new MouseEvent('mouseup', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+          clientX: x,
+          clientY: y
+      });
+      element.dispatchEvent(mouseUpEvent);
+
+      const mouseDownEvent = new MouseEvent('mousedown', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+          clientX: x,
+          clientY: y
+      });
+      element.dispatchEvent(mouseDownEvent);
+  };
+
+  const simulateRelease = (element: HTMLElement) => {
+    const { x, y } = mousePosition.current;
+
+    const mouseUpEvent = new MouseEvent('mouseup', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        clientX: x,
+        clientY: y
+    });
+    element.dispatchEvent(mouseUpEvent);
+};
 
   const handleFieldClickOutside = (event: any) => {
     if (!event.target.closest('.templatecreator-page__rightsidebar-menu')) {
@@ -276,6 +324,7 @@ useEffect(() => {
 
   const handleFieldClick = (event: any) => {
     const clickedField = event.currentTarget.getAttribute("title");
+    console.log(clickedField);
     setSelectedField(clickedField);
     if (designer.current) {
       // @ts-ignore
@@ -451,7 +500,7 @@ useEffect(() => {
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
-    setFieldsChanged(true)
+    console.log("Fields Changed");
   };
   
   const setPositionYHandler = async (value: number) => {
@@ -462,7 +511,7 @@ useEffect(() => {
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
-    setFieldsChanged(true)
+    console.log("Fields Changed");
   };
   
   const setSizeWidthHandler = async (value: number) => {
@@ -473,7 +522,7 @@ useEffect(() => {
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
-    setFieldsChanged(true)
+    console.log("Fields Changed");
   };
   
   const setSizeHeightHandler = async (value: number) => {
@@ -484,7 +533,7 @@ useEffect(() => {
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
-    setFieldsChanged(true)
+    console.log("Fields Changed");
   };
   
   const textAlignHandler = async (value: string) => {
@@ -494,7 +543,7 @@ useEffect(() => {
       designer.current.template.schemas[0][selectedField].alignment = value;
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
-      setFieldsChanged(true)
+      console.log("Fields Changed");
     }
   };
   
@@ -505,7 +554,7 @@ useEffect(() => {
       designer.current.template.schemas[0][selectedField].fontSize = value;
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
-      setFieldsChanged(true)
+      console.log("Fields Changed");
     }
   };
   
@@ -516,7 +565,7 @@ useEffect(() => {
       designer.current.template.schemas[0][selectedField].fontName = value;
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
-      setFieldsChanged(true)
+      console.log("Fields Changed");
     }
   };
   
@@ -527,7 +576,7 @@ useEffect(() => {
       designer.current.template.schemas[0][selectedField].fontColor = value;
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
-      setFieldsChanged(true)
+      console.log("Fields Changed");
     }
   };
 
@@ -544,7 +593,7 @@ useEffect(() => {
       designer.current.updateTemplate(designer.current.template);
   
       setTemplateStyle(prevState => ({ ...prevState, positionX: centerPosition }));
-      setFieldsChanged(true)
+      console.log("Fields Changed");
     }
   };
   
@@ -560,7 +609,7 @@ useEffect(() => {
       designer.current.updateTemplate(designer.current.template);
   
       setTemplateStyle(prevState => ({ ...prevState, positionY: centerPosition }));
-      setFieldsChanged(true)
+      console.log("Fields Changed");
     }
   };
 
@@ -573,7 +622,7 @@ useEffect(() => {
 
   return (
     <main className="templatecreator-page">
-        <div className="bg-boundingbox" onClick={() => {setRightSideBarPage(0); fieldsChanged && saveFieldsHandler();}}></div>
+        <div className="bg-boundingbox" onClick={() => setRightSideBarPage(0)}></div>
         <ConfirmationPopup
             title={confirmationPopupContent[0]}
             text={confirmationPopupContent[1]}
@@ -610,7 +659,7 @@ useEffect(() => {
         <section className="templatecreator-page__rightsidebar">
             <div className="templatecreator-page__rightsidebar-menu">
                 <header className="templatecreator-page__rightsidebar-menu-header">
-                    <button onClick={() => {setRightSideBarPage(0); fieldsChanged && saveFieldsHandler();}} className={rightSideBarPage === 0 ? "active" : ""}>
+                    <button onClick={() => {setRightSideBarPage(0); saveFieldsHandler();}} className={rightSideBarPage === 0 ? "active" : ""}>
                         Browse
                     </button>
                     <button onClick={() => setRightSideBarPage(1)} className={rightSideBarPage === 1 ? "active" : ""}>
@@ -659,6 +708,7 @@ useEffect(() => {
                     <>
                         <section className="templatecreator-page__rightsidebar-menu-section">
                             <h3>Layout</h3>
+                            <h2 style={{color: '#fff'}}>{templateStyle.positionX} / {templateStyle.positionY}</h2>
                             <EditSection
                                 positionX={templateStyle.positionX}
                                 positionY={templateStyle.positionY}
