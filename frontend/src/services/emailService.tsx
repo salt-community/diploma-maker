@@ -1,7 +1,6 @@
 import { EmailSendRequest } from "../util/types";
 
 export async function postEmail(apiUrl: string, emailRequest: EmailSendRequest): Promise<void> {
-    console.log("")
     const formData = new FormData();
     formData.append('file', emailRequest.file);
     formData.append('email', emailRequest.email);

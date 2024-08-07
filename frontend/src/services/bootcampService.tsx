@@ -45,14 +45,11 @@ export async function getBootcampById(apiUrl: string, guidId: string): Promise<B
 }
 
 
-export async function updateBootcamp(apiUrl: string, bootcampRequest: BootcampRequest): Promise<void>{
+export async function updateBootcamp(apiUrl: string, bootcampRequest: BootcampRequest): Promise<BootcampResponse>{
     const formattedRequest = {
         ...bootcampRequest,
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
-
-    console.log("Request!");
-    console.log(formattedRequest);
 
     const response = await fetch(`${apiUrl}/api/bootcamps/${bootcampRequest.guidId!}`,{
         method: 'PUT',
@@ -63,7 +60,8 @@ export async function updateBootcamp(apiUrl: string, bootcampRequest: BootcampRe
     if (!response.ok){
         throw new Error("Failed to update bootcamp!")
     }
-        
+
+    return response.json()
 }
 
 export async function deleteBootcampById(apiUrl: string, guidId: string): Promise<void> {

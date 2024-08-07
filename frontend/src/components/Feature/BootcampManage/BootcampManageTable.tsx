@@ -135,8 +135,6 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
         trackId: parseInt(data[`track${i}`])
       };
 
-      console.log(newBootcamp);
-
       try {
         await updateBootcamp(newBootcamp);
         customAlert('success', "Updated Bootcamps Successfully.", `Successfully updated bootcamp in the database.`);

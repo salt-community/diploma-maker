@@ -78,12 +78,6 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
     const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
 
-    useEffect(() => {
-        if(visibleItems){
-            console.log(visibleItems)
-        }
-    }, [visibleItems])
-
     const handlePrevPage = () => {
         setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
     };

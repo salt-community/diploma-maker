@@ -53,9 +53,9 @@ export default function App() {
     await api.updateBootcamp(bootcamp);
     await refresh();
   }
+
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
     const bootcampResponse = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
-    console.log(bootcampResponse);
     if (bootcampResponse) {
       setBootcamps(prevbootcamps =>
         prevbootcamps!.map((item) => 
@@ -139,6 +139,7 @@ export default function App() {
     const newTemplates = await api.getAllTemplates(setLoadingMessage);
     setBootcamps(newBootcamps);
     setTemplates(newTemplates);
+    getTracks();
   }
 
   return (

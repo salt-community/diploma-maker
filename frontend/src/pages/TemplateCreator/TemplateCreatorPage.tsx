@@ -124,7 +124,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             plugins: getPlugins(),
           });
 
-          customAlert('loadingfadeout', `Loaded: Waiting For Renderer...`, '');
+          fieldsChanged 
+            ? customAlert('loadingfadeout', `Saving Fields...`, '') 
+            : customAlert('loadingfadeout', `Loaded: Waiting For Renderer...`, '')
+
           setFirstRun(false);
         }
       });
@@ -218,93 +221,47 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   }, [designer.current, selectedField]);
 
-  const mousePosition = useRef<{ x: number, y: number }>({ x: 0, y: 0 });
-  const isDragging = useRef<boolean>(false);
-  let intervalId: NodeJS.Timeout;
+useEffect(() => {
+    if (designer.current && selectedField) {
+        const handleMouseUp = async () => {
+            // @ts-ignore
+            const prevStartPost = designer.current.template.schemas[0][selectedField]?.position;
+            await delay(10)
+            // @ts-ignore
+            const startpos = designer.current.template.schemas[0][selectedField]?.position;
+            if((prevStartPost.x != startpos.x) || (prevStartPost.y != startpos.y)){
+              setFieldsChanged(true);
+            }
+            // @ts-ignore
+            setCurrentFieldPosition(startpos);
+            setTemplateStyle(prevState => ({
+                ...prevState,
+                positionX: startpos?.x,
+                positionY: startpos?.y
+            }));
+        };
 
-  useEffect(() => {
-      if (designer.current && selectedField) {
-          const updateMousePosition = (event: MouseEvent) => {
-              mousePosition.current = { x: event.clientX, y: event.clientY };
-          };
+        const handleMouseDown = () => {
+          // @ts-ignore
+          const startpos = designer.current.template.schemas[0][selectedField]?.position;
+          // @ts-ignore
+          setCurrentFieldPosition(startpos);
+          setTemplateStyle(prevState => ({
+              ...prevState,
+              positionX: startpos?.x,
+              positionY: startpos?.y
+          }));
+      };
 
-          const handleMouseUp = async () => {
-              isDragging.current = false;
-              clearInterval(intervalId);
-              const element = document.querySelector(`[title="${selectedField}"]`);
-              simulateRelease(element as HTMLElement);
-              window.removeEventListener('mousemove', updateMousePosition);
-              // @ts-ignore
-              const startpos = designer.current.template.schemas[0][selectedField]?.position;
-              // @ts-ignore
-              setCurrentFieldPosition(startpos);
-              setTemplateStyle(prevState => ({
-                  ...prevState,
-                  positionX: startpos?.x,
-                  positionY: startpos?.y
-              }));
-              console.log(startpos);
-          };
+        window.addEventListener('mouseup', handleMouseUp);
+        window.addEventListener('mousedown', handleMouseDown);
 
-          const handleMouseDown = async () => {
-              isDragging.current = true;
-              window.addEventListener('mousemove', updateMousePosition);
-              intervalId = setInterval(() => {
-                  if (isDragging.current) {
-                      console.log("isdragging!")
-                      const element = document.querySelector(`[title="${selectedField}"]`);
-                      if (element) {
-                          simulateReleaseAndClick(element as HTMLElement);
-                      }
-                  }
-              }, 1500);
-          };
-
-          window.addEventListener('mouseup', handleMouseUp);
-          window.addEventListener('mousedown', handleMouseDown);
-
-          return () => {
-              clearInterval(intervalId);
-              window.removeEventListener('mouseup', handleMouseUp);
-              window.removeEventListener('mousedown', handleMouseDown);
-          };
-      }
-  }, [designer.current, selectedField]);
-
-  const simulateReleaseAndClick = (element: HTMLElement) => {
-      const { x, y } = mousePosition.current;
-
-      const mouseUpEvent = new MouseEvent('mouseup', {
-          bubbles: true,
-          cancelable: true,
-          view: window,
-          clientX: x,
-          clientY: y
-      });
-      element.dispatchEvent(mouseUpEvent);
-
-      const mouseDownEvent = new MouseEvent('mousedown', {
-          bubbles: true,
-          cancelable: true,
-          view: window,
-          clientX: x,
-          clientY: y
-      });
-      element.dispatchEvent(mouseDownEvent);
-  };
-
-  const simulateRelease = (element: HTMLElement) => {
-    const { x, y } = mousePosition.current;
-
-    const mouseUpEvent = new MouseEvent('mouseup', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-        clientX: x,
-        clientY: y
-    });
-    element.dispatchEvent(mouseUpEvent);
-};
+        return () => {
+            window.removeEventListener('mouseup', handleMouseUp);
+            window.removeEventListener('mousedown', handleMouseDown);
+        };
+    }
+}, [designer.current, selectedField]);
 
   const handleFieldClickOutside = (event: any) => {
     if (!event.target.closest('.templatecreator-page__rightsidebar-menu')) {
@@ -324,7 +281,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   const handleFieldClick = (event: any) => {
     const clickedField = event.currentTarget.getAttribute("title");
-    console.log(clickedField);
     setSelectedField(clickedField);
     if (designer.current) {
       // @ts-ignore
@@ -457,12 +413,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   };
 
   const saveFieldsHandler = async () => {
-    if (designer.current && currentTemplate) {
+    if (designer.current && currentTemplate && fieldsChanged) {
       customAlert('loading',"Saving Fields...",``);
       const updatedTemplate = createUpdatedTemplate(currentTemplate, designer);
       await setCurrentTemplate(updatedTemplate);
       setRightSideBarPage(0);
       customAlert('message', "Inputs Saved", `Remember to also save your template for changes to reflect in pdfcreator!`);
+      setFieldsChanged(false);
     }
   };
 
@@ -500,7 +457,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
-    console.log("Fields Changed");
+    setFieldsChanged(true)
   };
   
   const setPositionYHandler = async (value: number) => {
@@ -511,7 +468,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
-    console.log("Fields Changed");
+    setFieldsChanged(true)
   };
   
   const setSizeWidthHandler = async (value: number) => {
@@ -522,7 +479,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
-    console.log("Fields Changed");
+    setFieldsChanged(true)
   };
   
   const setSizeHeightHandler = async (value: number) => {
@@ -533,7 +490,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
     }
-    console.log("Fields Changed");
+    setFieldsChanged(true)
   };
   
   const textAlignHandler = async (value: string) => {
@@ -543,7 +500,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       designer.current.template.schemas[0][selectedField].alignment = value;
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
-      console.log("Fields Changed");
+      setFieldsChanged(true)
     }
   };
   
@@ -554,7 +511,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       designer.current.template.schemas[0][selectedField].fontSize = value;
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
-      console.log("Fields Changed");
+      setFieldsChanged(true)
     }
   };
   
@@ -565,7 +522,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       designer.current.template.schemas[0][selectedField].fontName = value;
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
-      console.log("Fields Changed");
+      setFieldsChanged(true)
     }
   };
   
@@ -576,7 +533,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       designer.current.template.schemas[0][selectedField].fontColor = value;
       // @ts-ignore
       designer.current.updateTemplate(designer.current.template);
-      console.log("Fields Changed");
+      setFieldsChanged(true)
     }
   };
 
@@ -593,7 +550,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       designer.current.updateTemplate(designer.current.template);
   
       setTemplateStyle(prevState => ({ ...prevState, positionX: centerPosition }));
-      console.log("Fields Changed");
+      setFieldsChanged(true)
     }
   };
   
@@ -609,7 +566,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       designer.current.updateTemplate(designer.current.template);
   
       setTemplateStyle(prevState => ({ ...prevState, positionY: centerPosition }));
-      console.log("Fields Changed");
+      setFieldsChanged(true)
     }
   };
 
@@ -622,7 +579,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   return (
     <main className="templatecreator-page">
-        <div className="bg-boundingbox" onClick={() => setRightSideBarPage(0)}></div>
+        <div className="bg-boundingbox" onClick={() => {setRightSideBarPage(0); saveFieldsHandler();}}></div>
         <ConfirmationPopup
             title={confirmationPopupContent[0]}
             text={confirmationPopupContent[1]}
@@ -708,7 +665,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                     <>
                         <section className="templatecreator-page__rightsidebar-menu-section">
                             <h3>Layout</h3>
-                            <h2 style={{color: '#fff'}}>{templateStyle.positionX} / {templateStyle.positionY}</h2>
                             <EditSection
                                 positionX={templateStyle.positionX}
                                 positionY={templateStyle.positionY}
