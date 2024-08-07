@@ -222,14 +222,13 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
 
     const sendEmailsHandler = async (userIds: string[], title: string, description: string) => {
         if(userIds.length === 0) return
-        console.log(userIds);
         //@ts-ignore
         customInfoPopup("progress", "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
         const blendProgressDelay = 750;
 
         for (let i = 0; i < userIds.length; i++) {
             try {
-                var file = await generatePDFFile(userIds[i]);
+                var file = await generatePDFFile(userIds[i], true);
                 const emailConfigRequest: EmailConfigRequestDto = JSON.parse(localStorage.getItem('emailConfigRequest'));
 
                 if (!emailConfigRequest.senderEmail || !emailConfigRequest.senderCode) {
@@ -260,7 +259,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         }
     }
 
-    const generatePDFFile = async (guidId: string): Promise<Blob | void> => {
+    const generatePDFFile = async (guidId: string, emails?: boolean): Promise<Blob | void> => {
         const student = items.find(item => item.guidId === guidId);
         if (!student) {
             customAlert('fail', "Selection Error:", "No Emails Selected");
@@ -272,7 +271,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             return;
         }
 
-        customAlert('loading', `Generating Pdf File...`, ``);
+        !emails && customAlert('loading', `Generating Pdf File...`, ``);
         
         // displayName: "Fullstack " + TrackName 
 
@@ -283,8 +282,6 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             templates.find(t => t.id === bootcamp.templateId).basePdf,
             populateIdField(templates.find(t => t.id === bootcamp.templateId).link, student.verificationCode)
         );
-
-        
 
         const template = mapTemplateInputsBootcampsToTemplateViewer(templates.find(t => t.id === bootcamp.templateId), pdfInput);
         const pdfFile = await generatePDF(template, [pdfInput], true);
