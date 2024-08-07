@@ -71,7 +71,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
               templates={templates}
               customAlert={customAlert}
               setLoadingMessage={setLoadingMessage}
-              /*  fullscreen={IsFullScreen} */
+            /*  fullscreen={IsFullScreen} */
             />
           </section>
           <div className="far-right-space"></div>
