@@ -94,4 +94,3 @@ export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpda
     const result = await response.json()
     return result;
 }
-
