@@ -37,22 +37,28 @@ type Props = {
 export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage, selectedStudentIndex }: Props) {
 
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
-  const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>(tracks);
+  const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>();
   const [TrackIndex, setTrackIndex] = useState<number>(0);
   const [BootcampIndex, setBootcampIndex] = useState<number>(0);
-  const [students, setStudents] = useState<Student[]>(tracks[0].bootcamps[0].students);
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>(templates.find(template => template.id === tracks[0].bootcamps[0].templateId));
+  const [students, setStudents] = useState<Student[]>();
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>();
 
   useEffect(() => {
-    const updatedAllTrackData = [...AllTrackData];
-    const selectedTrack = updatedAllTrackData[TrackIndex];
-    const selectedBootcamp = selectedTrack.bootcamps[BootcampIndex];
-    selectedBootcamp.templateId = selectedTemplate.id;
-    selectedBootcamp.students = students;
-    updatedAllTrackData[TrackIndex].bootcamps[BootcampIndex] = selectedBootcamp;
-    setAllTrackData(updatedAllTrackData);
-    const saltData = mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, templates!.find(t => t.id === selectedBootcamp.templateId));
-    setSaltData(saltData);
+    if(tracks && templates){
+      const filteredTracks = tracks.filter(t => t.bootcamps.length > 0);
+      setAllTrackData(filteredTracks);
+    }
+    if(AllTrackData){
+      const updatedAllTrackData = [...AllTrackData];
+      const selectedTrack = updatedAllTrackData[TrackIndex];
+      const selectedBootcamp = selectedTrack.bootcamps[BootcampIndex];
+      selectedBootcamp.templateId = selectedTemplate.id;
+      selectedBootcamp.students = students;
+      updatedAllTrackData[TrackIndex].bootcamps[BootcampIndex] = selectedBootcamp;
+      setAllTrackData(updatedAllTrackData);
+      const saltData = mapBootcampToSaltData2(AllTrackData[TrackIndex].name, selectedBootcamp, templates!.find(t => t.id === selectedBootcamp.templateId));
+      setSaltData(saltData);
+    }
   }, [students, selectedTemplate]);
 
   // useEffect(() => {
@@ -193,42 +199,47 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         <label htmlFor="track" className="diploma-making-form__label">
           Track group
         </label>
-        <SelectOptions
-          containerClassOverride='overview-page__select-container'
-          selectClassOverride='overview-page__select-box'
-          options={[
-            ...AllTrackData.filter(track => track.bootcamps.length > 0).map((track) => ({
-              value: track.id.toString(),
-              label: track.name
-            }))
-          ]}
-          onChange={(e) => {
-            setTrackIndex(Number(e.target.value) - 1);
-            setBootcampIndex(0);
-          }}
-        />
+        {AllTrackData && 
+          <SelectOptions
+            containerClassOverride='overview-page__select-container'
+            selectClassOverride='overview-page__select-box'
+            options={[
+              ...AllTrackData.filter(track => track.bootcamps.length > 0).map((track, idx) => ({
+                // value: track.id.toString(),
+                value: idx.toString(),
+                label: track.name
+              }))
+            ]}
+            onChange={(e) => {
+              setTrackIndex(Number(e.target.value));
+              setBootcampIndex(0);
+            }}
+          />
+        }
       </div>
       {/* Select bootcamp Class */}
       <div className="diploma-making-form__select-bootcamp diploma-making-form__select-container">
         <label htmlFor="bootcamp" className="diploma-making-form__label">
           Bootcamp
         </label>
-        <SelectOptions
-          containerClassOverride='overview-page__select-container'
-          selectClassOverride='overview-page__select-box'
-          options={[
-            ...AllTrackData[TrackIndex].bootcamps.map((bootcamp) => ({
-              value: bootcamp.guidId,
-              label: bootcamp.name
-            }))
-          ]}
-          onChange={(e) => {
-            const selectedGuidId = e.target.value;
-            const selectedBootcampIndex = AllTrackData[TrackIndex].bootcamps.findIndex(bootcamp => bootcamp.guidId === selectedGuidId);
-            setBootcampIndex(selectedBootcampIndex);
-          }}
-          value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
-        />
+        {AllTrackData &&
+          <SelectOptions
+            containerClassOverride='overview-page__select-container'
+            selectClassOverride='overview-page__select-box'
+            options={[
+              ...AllTrackData[TrackIndex].bootcamps.map((bootcamp) => ({
+                value: bootcamp.guidId,
+                label: bootcamp.name
+              }))
+            ]}
+            onChange={(e) => {
+              const selectedGuidId = e.target.value;
+              const selectedBootcampIndex = AllTrackData[TrackIndex].bootcamps.findIndex(bootcamp => bootcamp.guidId === selectedGuidId);
+              setBootcampIndex(selectedBootcampIndex);
+            }}
+            value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
+          />
+        }
       </div>
 
       {/* Select Template name */}
@@ -236,22 +247,24 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         <label htmlFor="template" className="diploma-making-form__label">
           Applied Template
         </label>
-        <SelectOptions
-          containerClassOverride='overview-page__select-container'
-          selectClassOverride='overview-page__select-box'
-          options={[
-            ...templates.map((template) => ({
-              value: template.id.toString(),
-              label: template.name
-            }))
-          ]}
-          onChange={(e) => {
-            const selectedId = Number(e.target.value);
-            const selectedTemplateObject = templates.find(template => template.id === selectedId);
-            setSelectedTemplate(selectedTemplateObject);
-          }}
-          value={selectedTemplate.id.toString()}
-        />
+        {selectedTemplate && 
+          <SelectOptions
+            containerClassOverride='overview-page__select-container'
+            selectClassOverride='overview-page__select-box'
+            options={[
+              ...templates.map((template) => ({
+                value: template.id.toString(),
+                label: template.name
+              }))
+            ]}
+            onChange={(e) => {
+              const selectedId = Number(e.target.value);
+              const selectedTemplateObject = templates.find(template => template.id === selectedId);
+              setSelectedTemplate(selectedTemplateObject);
+            }}
+            value={selectedTemplate.id.toString()}
+          />
+        }
       </div>
 
       {/* Display student data */}
@@ -265,10 +278,12 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           </label>
         </div>
         <div className="diploma-making-form__student-data__items-wrapper">
-          <TagsInput
-            selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
-            tags={students.map(student => student.name)}
-          />
+          {students && 
+            <TagsInput
+              selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
+              tags={students.map(student => student.name)}
+            />
+          }
           <div className="diploma-making-form__upload--fileupload-wrapper">
             <FileUpload FileHandler={handleFileUpload} />
           </div>
