@@ -124,7 +124,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             plugins: getPlugins(),
           });
 
-          customAlert('loadingfadeout', `Loaded: Waiting For Renderer...`, '');
+          fieldsChanged 
+            ? customAlert('loadingfadeout', `Saving Fields...`, '') 
+            : customAlert('loadingfadeout', `Loaded: Waiting For Renderer...`, '')
+
           setFirstRun(false);
         }
       });
@@ -226,7 +229,9 @@ useEffect(() => {
             await delay(10)
             // @ts-ignore
             const startpos = designer.current.template.schemas[0][selectedField]?.position;
-            prevStartPost !== startpos && setFieldsChanged(true);
+            if((prevStartPost.x != startpos.x) || (prevStartPost.y != startpos.y)){
+              setFieldsChanged(true);
+            }
             // @ts-ignore
             setCurrentFieldPosition(startpos);
             setTemplateStyle(prevState => ({
@@ -408,12 +413,13 @@ useEffect(() => {
   };
 
   const saveFieldsHandler = async () => {
-    if (designer.current && currentTemplate) {
+    if (designer.current && currentTemplate && fieldsChanged) {
       customAlert('loading',"Saving Fields...",``);
       const updatedTemplate = createUpdatedTemplate(currentTemplate, designer);
       await setCurrentTemplate(updatedTemplate);
       setRightSideBarPage(0);
       customAlert('message', "Inputs Saved", `Remember to also save your template for changes to reflect in pdfcreator!`);
+      setFieldsChanged(false);
     }
   };
 
@@ -573,7 +579,7 @@ useEffect(() => {
 
   return (
     <main className="templatecreator-page">
-        <div className="bg-boundingbox" onClick={() => {setRightSideBarPage(0); fieldsChanged && saveFieldsHandler();}}></div>
+        <div className="bg-boundingbox" onClick={() => {setRightSideBarPage(0); saveFieldsHandler();}}></div>
         <ConfirmationPopup
             title={confirmationPopupContent[0]}
             text={confirmationPopupContent[1]}
@@ -610,7 +616,7 @@ useEffect(() => {
         <section className="templatecreator-page__rightsidebar">
             <div className="templatecreator-page__rightsidebar-menu">
                 <header className="templatecreator-page__rightsidebar-menu-header">
-                    <button onClick={() => {setRightSideBarPage(0); fieldsChanged && saveFieldsHandler();}} className={rightSideBarPage === 0 ? "active" : ""}>
+                    <button onClick={() => {setRightSideBarPage(0); saveFieldsHandler();}} className={rightSideBarPage === 0 ? "active" : ""}>
                         Browse
                     </button>
                     <button onClick={() => setRightSideBarPage(1)} className={rightSideBarPage === 1 ? "active" : ""}>
@@ -659,6 +665,7 @@ useEffect(() => {
                     <>
                         <section className="templatecreator-page__rightsidebar-menu-section">
                             <h3>Layout</h3>
+                            <h2 style={{color: '#fff'}}>{fieldsChanged ? 'true' : 'false'}</h2>
                             <EditSection
                                 positionX={templateStyle.positionX}
                                 positionY={templateStyle.positionY}
