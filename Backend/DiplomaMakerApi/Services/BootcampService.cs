@@ -85,6 +85,9 @@ public class BootcampService
     {
 
             var bootcamp = await _context.Bootcamps
+                .Include(b => b.Students)
+                .Include(b => b.Track)
+                .Include(b => b.DiplomaTemplate)
                 .FirstOrDefaultAsync(b => b.GuidId == GuidID) ?? throw new NotFoundByGuidException("Template", GuidID);
 
             var track = await _context.Tracks

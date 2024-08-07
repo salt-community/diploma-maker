@@ -125,6 +125,7 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
 
   const handleUpdateBootcamp = async (data: FieldValues) => {
     closeConfirmationPopup();
+    
     customAlert('loading', "Updating Bootcamp...", ``);
     for (let i = 0; i < bootcamps!.length; i++) {
       const newBootcamp: BootcampRequest = {
@@ -133,6 +134,8 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
         graduationDate: new Date(data[`dategraduate${i}`]),
         trackId: parseInt(data[`track${i}`])
       };
+
+      console.log(newBootcamp);
 
       try {
         await updateBootcamp(newBootcamp);
@@ -235,7 +238,8 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
                                     label: track.name
                                   })) || [])
                                 ]}
-                                value={watch(`track${actualIndex}`, bootcamp.track.id.toString())}
+                                defaultValue={watch(`track${actualIndex}`, bootcamp.track.id.toString())}
+                                {...register(`track${actualIndex}`)}
                                 onChange={(e) => {
                                   setValue(`track${actualIndex}`, e.target.value);
                                   bootcamp.track.id = parseInt(e.target.value);
