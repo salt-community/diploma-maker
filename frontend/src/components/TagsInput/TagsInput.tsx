@@ -54,7 +54,6 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
       }, 2000);
     }
   };
-  
 
   return (
     <div className="tags-input">
@@ -80,10 +79,20 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
               className="left-click-boundingbox"
               onMouseEnter={() => handleMouseEnter('hover-left', index)}
               onMouseLeave={handleMouseLeave}
-              // onClick={() => setEditMode(editMode === index ? null : index)}
-              onClick={notImplemented}
+              onClick={() => setEditMode(editMode === index ? null : index)}
             ></span>
-            <span className="tag-title">{tag}</span>
+            {editMode === index ? (
+              <input
+                className='tag-title__input'
+                type="text"
+                defaultValue={tag}
+                onBlur={() => setEditMode(null)}
+                onMouseEnter={() => handleMouseEnter('hover-left', index)}
+                onMouseLeave={handleMouseLeave}
+              />
+            ) : (
+              <span className="tag-title">{tag}</span>
+            )}
             {editMode === index ? 
               <>
                 <ModifyIcon 

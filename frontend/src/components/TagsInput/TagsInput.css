@@ -107,6 +107,30 @@
 	font-size: .7rem;
 	line-height: 1rem;
   }
+  .tag-title__input{
+	background-color: #2e2e38;
+	z-index: 1000;
+	height: 100%;
+	font-size: .5rem;
+	border: none;
+	transition: all .2s ease;
+  }
+	.tag-title__input:hover {
+		color: #2edf31;
+		background-color: #06240d;
+	}
+	.tag-title__input::placeholder{
+		color: #fff;
+		font-size: .5rem;
+		line-height: 1rem;
+		display: flex;
+		align-items: center;
+		width: fit-content;
+	}
+	.tag-title__input:focus {
+		outline: none;
+		border: none;
+	}
   @media (max-width: 1920px) {
 	.tag{
 		font-size: .4rem;
@@ -177,6 +201,14 @@
   }
   .tag.hover-left .tag-open-icon path{
 	stroke: #54df77;;
+	transition: all .2s ease;
+  }
+  .tag.hover-left .tag-title__input{
+	background-color: #06240d;
+	transition: all .2s ease;
+  }
+  .tag.hover-right .tag-title__input{
+	background-color: #301313;
 	transition: all .2s ease;
   }
 
