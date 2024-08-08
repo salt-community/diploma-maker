@@ -7,9 +7,10 @@ import { ApplyIcon } from '../MenuItems/Icons/ApplyIcon';
 type Props = {
   tags: string[];
   selectedTags: (tags: string[]) => void;
+  setPage: (idx: number) => void;
 };
 
-export const TagsInput = ({ selectedTags, tags }: Props) => {
+export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
   const [currentTags, setCurrentTags] = useState<string[]>([]);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [hoverClass, setHoverClass] = useState<string>('');
@@ -33,8 +34,10 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
   const handleLeftClick = (index: number) => {
     if (editMode === index) {
       setEditMode(null);
+      setPage(index);
     } else {
       setEditMode(index);
+      setPage(index);
       adjustInputWidth();
     }
   };

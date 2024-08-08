@@ -30,12 +30,11 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
   const { loadingMessage } = useLoadingMessage();
   const isFailed = loadingMessage.includes('Failed');
   const [selectedStudentIndex, setSelectedStudentIndex] = useState<number |null>(null);
+  const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
 
   const handleIndexChange = (index: number) => {
     setSelectedStudentIndex(index);
   };
-
-
   /*   const TogglePreview = () => setIsFullScreen(prev => !prev) */
 
   return (
@@ -53,7 +52,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
                   Currently selected: {saltData.classname}
                 </h1>
                 {saltData.students.length > 0 ? (
-                  <PreviewDiploma setSelectedStudentIndex={handleIndexChange} saltData={saltData} />
+                  <PreviewDiploma setSelectedStudentIndex={handleIndexChange} saltData={saltData} currentPageIndex={currentPageIndex} setCurrentPageIndex={setCurrentPageIndex}/>
                 ) : (
                   <div className="popup404-wrapper">
                     <Popup404 text="No student names found." />
@@ -65,6 +64,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
           <section className="diplomadataform-container">
             <DiplomaDataForm
               selectedStudentIndex={selectedStudentIndex}
+              setSelectedStudentIndex={(idx: number) => {handleIndexChange(idx); setCurrentPageIndex(idx);}}
               setSaltData={setSaltData}
               tracks={tracks}
               UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}

@@ -10,13 +10,15 @@ import { PaginationMenu } from "../../MenuItems/PaginationMenu";
 type Props = {
   saltData: SaltData | null;
   setSelectedStudentIndex: (index: number) => void;
+  currentPageIndex: number;
+  setCurrentPageIndex: (idx: any) => void;
 };
 
-export default function PreviewDiploma({ setSelectedStudentIndex, saltData }: Props) {
+export default function PreviewDiploma({ setSelectedStudentIndex, saltData, currentPageIndex, setCurrentPageIndex }: Props) {
 
   const uiRef = useRef<HTMLDivElement | null>(null);
   const uiInstance = useRef<Form | Viewer | null>(null);
-  const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
+  
 
   // When Page Changes -> Loads into PDF preview
   useEffect(() => {
