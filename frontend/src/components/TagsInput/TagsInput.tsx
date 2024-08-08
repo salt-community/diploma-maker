@@ -1,22 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './TagsInput.css';
 import { ModifyIcon } from '../MenuItems/Icons/ModifyIcon';
 import { TrashCanDeleteIcon } from '../MenuItems/Icons/TrashCanDeleteIcon';
+import { ApplyIcon } from '../MenuItems/Icons/ApplyIcon';
 
 type Props = {
   tags: string[];
   selectedTags: (tags: string[]) => void;
+  setPage: (idx: number) => void;
 };
 
-export const TagsInput = ({ selectedTags, tags }: Props) => {
+export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
   const [currentTags, setCurrentTags] = useState<string[]>([]);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [hoverClass, setHoverClass] = useState<string>('');
-  const [editMode, setEditMode] = useState<number | null>(null);
+  const [editMode, setEditMode] = useState<number | null>();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setCurrentTags(tags);
-  }, [tags]);
+  }, [tags, inputRef]);
+
+  useEffect(() => {
+    if (editMode !== null && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
+      adjustInputWidth();
+    } else if (editMode === null && inputRef.current) {
+      inputRef.current.blur();
+    }
+  }, [editMode]);
+
+  const handleLeftClick = (index: number) => {
+    if (editMode === index) {
+      setEditMode(null);
+      setPage(index);
+    } else {
+      setEditMode(index);
+      setPage(index);
+      adjustInputWidth();
+    }
+  };
 
   const removeTags = (indexToRemove: number): void => {
     const newTags = currentTags.filter((_, index) => index !== indexToRemove);
@@ -45,20 +69,32 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
     setHoverClass('');
   };
 
-  const notImplemented = () => {
-    const notImplementedElement = document.querySelector('.not-implemented');
-    if (notImplementedElement) {
-      notImplementedElement.classList.add('visible');
-      setTimeout(() => {
-        notImplementedElement.classList.remove('visible');
-      }, 2000);
+  const applyChanges = (index: number) => {
+    if (inputRef.current) {
+      const newTags = [...currentTags];
+      newTags[index] = inputRef.current.value;
+      setCurrentTags(newTags);
+      selectedTags(newTags);
+      setEditMode(null);
     }
   };
-  
+
+  const handleEditKeyDown = (event: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (event.key === 'Enter') {
+      applyChanges(index);
+      event.preventDefault();
+    }
+  };
+
+  const adjustInputWidth = () => {
+    if (inputRef.current) {
+      inputRef.current.style.width = 'auto';
+      inputRef.current.style.width = `${inputRef.current.scrollWidth}px`;
+    }
+  };
 
   return (
     <div className="tags-input">
-      <h1 className='not-implemented'>(modify currently not implemented)</h1>
       <input
         className="taginputbox"
         type="text"
@@ -69,7 +105,7 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
         {currentTags.map((tag, index) => (
           <li
             key={index}
-            className={`tag ${hoverIndex === index ? hoverClass : ''}`}
+            className={`tag ${hoverIndex === index ? hoverClass : ''} ${editMode === index ? 'edit-mode' : ''}`}
           >
             <ModifyIcon 
               className="tag-open-icon"
@@ -80,22 +116,35 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
               className="left-click-boundingbox"
               onMouseEnter={() => handleMouseEnter('hover-left', index)}
               onMouseLeave={handleMouseLeave}
-              // onClick={() => setEditMode(editMode === index ? null : index)}
-              onClick={notImplemented}
+              onClick={() => handleLeftClick(index)}
             ></span>
-            <span className="tag-title">{tag}</span>
+            {editMode === index ? (
+              <input
+                ref={inputRef}
+                className='tag-title__input'
+                type="text"
+                defaultValue={tag}
+                onBlur={() => applyChanges(index)}
+                onKeyDown={(e) => handleEditKeyDown(e, index)}
+                onMouseEnter={() => handleMouseEnter('hover-edit', index)}
+                onMouseLeave={handleMouseLeave}
+                onInput={adjustInputWidth}
+              />
+            ) : (
+              <span className="tag-title">{tag}</span>
+            )}
             {editMode === index ? 
               <>
-                <ModifyIcon 
-                  className="tag-open-icon"
-                  onMouseEnter={() => handleMouseEnter('hover-right', index)}
+                <ApplyIcon 
+                  className="tag-apply-icon"
+                  onMouseEnter={() => handleMouseEnter('hover-edit', index)}
                   onMouseLeave={handleMouseLeave}
                 />
                 <span
-                  className="right-click-boundingbox"
-                  onMouseEnter={() => handleMouseEnter('hover-right', index)}
+                  className="left-click-boundingbox"
+                  onMouseEnter={() => handleMouseEnter('hover-edit', index)}
                   onMouseLeave={handleMouseLeave}
-                  onClick={() => setEditMode(null)}
+                  onClick={() => applyChanges(index)}
                 ></span>
               </>
               :

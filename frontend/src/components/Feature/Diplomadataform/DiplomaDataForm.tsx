@@ -32,9 +32,10 @@ type Props = {
   customAlert: (alertType: PopupType, title: string, content: string) => void;
   setLoadingMessage: (message: string) => void;
   selectedStudentIndex: number | null;
+  setSelectedStudentIndex: (idx: number) => void;
 };
 
-export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage, selectedStudentIndex }: Props) {
+export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex }: Props) {
 
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>();
@@ -282,6 +283,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
             <TagsInput
               selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
               tags={students.map(student => student.name)}
+              setPage={(idx: number) => setSelectedStudentIndex(idx)}
             />
           }
           <div className="diploma-making-form__upload--fileupload-wrapper">
