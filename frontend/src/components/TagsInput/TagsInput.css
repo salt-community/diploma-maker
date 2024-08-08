@@ -42,8 +42,6 @@
   }
   
   .tags-input:focus-within {
-	/* border-color: #fa633e;
-	background-color: #f6522b; */
 	color: #000;
 	outline: none;
   }
@@ -58,7 +56,6 @@
 	font-weight: 500;
 	border: 1px solid transparent;
 	border-radius: .6rem;
-	/* background-color: #171721; */
 	color: white;
 	transition: all 0.2s ease;
 	background-color: #20202a;
@@ -71,8 +68,6 @@
   }
   
   .taginputbox:focus {
-	/* border-color: #fa633e;
-	background-color: #f6522b; */
 	background-color: #2c2c36;
 	color: #fff;
 	outline: none;
@@ -97,19 +92,10 @@
 	font-weight: 500;
 	border: 1px solid transparent;
 	border-radius: 0.5rem;
-	/* background-color: #1a1a1a; */
 	background-color: #2e2e38;
 	color: white;
 	cursor: pointer;
 	transition: all 0.2s ease;
-  }
- 
-  
-  .tag:hover {
-	/* border-color: #fa633e;
-	background-color: #f6522b; */
-	/* background-color: #f62b2b; */
-	/* color: #f62b2b; */
   }
   
   .tag-title {
@@ -119,25 +105,19 @@
   }
   .tag-title__input{
 	background-color: #2e2e38;
+	background-color: transparent;
 	z-index: 1000;
 	height: 100%;
 	font-size: .5rem;
 	border: none;
 	transition: all .2s ease;
-	/* width: auto; */
+	transition: all .2s ease;
   }
 	.tag-title__input:hover {
 		color: var(--edit-color);
 		background-color: var(--edit-bgcolor);
+		transition: all .2s ease;
 	}
-	/* .tag-title__input::placeholder{
-		color: #fff;
-		font-size: .5rem;
-		line-height: 1rem;
-		display: flex;
-		align-items: center;
-		width: fit-content;
-	} */
 	.tag-title__input:focus {
 		outline: none;
 		border: none;
@@ -221,7 +201,6 @@
 	transition: all .2s ease;
   }
   .tag.hover-left .tag-close-icon{
-	/* opacity: .6; */
 	fill: #54df77;
 	transition: all .2s ease;
   }
@@ -230,7 +209,6 @@
 	transition: all .2s ease;
   }
   .tag.hover-edit .tag-close-icon{
-	/* opacity: .6; */
 	fill: var(--editing-color);
 	transition: all .2s ease;
   }
@@ -267,13 +245,16 @@
 		color: var(--editing-color);
 		transition: all .2s ease;
 	}
-	.tag.edit-mode .tag-title__input{
-		background-color: var(--editing-bgcolor);
-		color: var(--editing-color);
+	.tag-title__input{
+		transition: all .2s ease;
 	}
 	.tag.edit-mode .tag-close-icon {
 		fill: var(--editing-color);
 		transform: rotate(5deg) translateX(1px);
+		transition: all .2s ease;
+	}
+	.tag-open-icon path, 
+	.tag-open-icon{
 		transition: all .2s ease;
 	}
 	.tag.edit-mode .tag-open-icon path{
@@ -284,6 +265,7 @@
 		fill: var(--editing-color);
 		transition: all .2s ease;
 	}
+	
 
   .tag-open-icon {
 	display: block;
@@ -299,21 +281,4 @@
 	.tags-input {
 	  max-width: 600px;
 	}
-  }
-  
-
-  .not-implemented {
-	position: absolute;
-	left: 150px;
-	top: -30px;
-	color: #ababba;
-	visibility: hidden;
-	font-size: .8rem;
-	opacity: 0;
-	transition: visibility 2s, opacity 2s ease;
-  }
-  
-  .not-implemented.visible {
-	visibility: visible;
-	opacity: 1;
   }
