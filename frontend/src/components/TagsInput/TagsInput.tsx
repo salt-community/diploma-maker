@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './TagsInput.css';
 import { ModifyIcon } from '../MenuItems/Icons/ModifyIcon';
 import { TrashCanDeleteIcon } from '../MenuItems/Icons/TrashCanDeleteIcon';
@@ -13,10 +13,42 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [hoverClass, setHoverClass] = useState<string>('');
   const [editMode, setEditMode] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setCurrentTags(tags);
   }, [tags]);
+
+  useEffect(() => {
+    if (editMode !== null && inputRef.current) {
+      adjustWidth(inputRef.current);
+      inputRef.current.focus();
+      inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
+    } else if (editMode === null && inputRef.current) {
+      inputRef.current.blur();
+    }
+  }, [editMode]);
+  
+  const handleLeftClick = (index: number) => {
+    if (editMode === index) {
+      setEditMode(null);
+    } else {
+      setEditMode(index);
+    }
+  };
+  
+
+  const adjustWidth = (input: HTMLInputElement) => {
+    const text = input.placeholder || input.value;
+    const span = document.createElement('span');
+    span.style.visibility = 'hidden';
+    span.style.position = 'absolute';
+    span.style.whiteSpace = 'nowrap';
+    span.textContent = text;
+    document.body.appendChild(span);
+    input.style.width = `${span.offsetWidth - 40}px`;
+    document.body.removeChild(span);
+  };
 
   const removeTags = (indexToRemove: number): void => {
     const newTags = currentTags.filter((_, index) => index !== indexToRemove);
@@ -43,16 +75,6 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
   const handleMouseLeave = () => {
     setHoverIndex(null);
     setHoverClass('');
-  };
-
-  const notImplemented = () => {
-    const notImplementedElement = document.querySelector('.not-implemented');
-    if (notImplementedElement) {
-      notImplementedElement.classList.add('visible');
-      setTimeout(() => {
-        notImplementedElement.classList.remove('visible');
-      }, 2000);
-    }
   };
 
   return (
@@ -83,12 +105,14 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
             ></span>
             {editMode === index ? (
               <input
+                ref={inputRef}
                 className='tag-title__input'
                 type="text"
                 defaultValue={tag}
                 onBlur={() => setEditMode(null)}
                 onMouseEnter={() => handleMouseEnter('hover-left', index)}
                 onMouseLeave={handleMouseLeave}
+                onInput={(e) => adjustWidth(e.currentTarget)}
               />
             ) : (
               <span className="tag-title">{tag}</span>
@@ -97,14 +121,14 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
               <>
                 <ModifyIcon 
                   className="tag-open-icon"
-                  onMouseEnter={() => handleMouseEnter('hover-right', index)}
+                  onMouseEnter={() => handleMouseEnter('hover-left', index)}
                   onMouseLeave={handleMouseLeave}
                 />
                 <span
-                  className="right-click-boundingbox"
-                  onMouseEnter={() => handleMouseEnter('hover-right', index)}
+                  className="left-click-boundingbox"
+                  onMouseEnter={() => handleMouseEnter('hover-left', index)}
                   onMouseLeave={handleMouseLeave}
-                  onClick={() => setEditMode(null)}
+                  onClick={() => handleLeftClick(index)}
                 ></span>
               </>
               :
