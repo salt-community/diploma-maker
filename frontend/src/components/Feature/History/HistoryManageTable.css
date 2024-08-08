@@ -21,6 +21,14 @@
         .historypage__filtersection--input-wrapper{
             max-width: 275px;
         }
+        .filtersection__filterwrapper{
+            display: flex;
+            gap: 10%;
+            min-width: 50%;
+        }
+        .filtersection__filterwrapper .overview-page__select-container{
+            max-width: 250px;
+        }
             .historypage__filtersection--input-wrapper svg path{
                 stroke: #ababba;
                 transition: all 350ms ease;

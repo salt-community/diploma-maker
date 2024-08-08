@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { useEffect, useRef, useState } from "react";
 import { Viewer } from '@pdfme/ui';
 import React from 'react';
-import { HistorySnapshotBundledData, HistorySnapshotResponse, MakeActiveSnapshotRequestDto } from '../../../util/types';
+import { HistorySnapshotBundledData, HistorySnapshotResponse, MakeActiveSnapshotRequestDto, TrackResponse } from '../../../util/types';
 import { useCustomAlert } from '../../Hooks/useCustomAlert';
 import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistorySnapshot } from '../../../util/dataHelpers';
 import { delay, getFontsData, getPlugins, utcFormatter } from '../../../util/helper';
@@ -23,6 +23,7 @@ import { CloseWindowIcon } from '../../MenuItems/Icons/CloseWindowIcon';
 type Props = {
     getHistory: () => void;
     changeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => void;
+    tracks: TrackResponse[] | null;
 };
 
 type BundledDataWithGeneratedAt = HistorySnapshotBundledData & { generatedAt: string };
@@ -45,11 +46,12 @@ const sortOrderOptions = [
     { value: 'status-descending', label: 'Status Descending' },
 ];
 
-export default function HistoryManageTable({ getHistory, changeActiveHistorySnapShot }: Props) {
+export default function HistoryManageTable({ getHistory, changeActiveHistorySnapShot, tracks }: Props) {
     const [history, setHistory] = useState<BundledDataWithGeneratedAt[]>();
     const [expandedRows, setExpandedRows] = useState<{ [key: string]: boolean }>({});
     const [sortOrder, setSortOrder] = useState<SortOrder>('date-ascending');
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [filteredHistory, setFilteredHistory] = useState<BundledDataWithGeneratedAt[]>();
 
     const uiRef = useRef<HTMLDivElement | null>(null);
     const uiInstance = useRef<Viewer | null>(null);
@@ -115,6 +117,7 @@ export default function HistoryManageTable({ getHistory, changeActiveHistorySnap
             }, [] as BundledDataWithGeneratedAt[]);
 
             setHistory(bundledData);
+            setFilteredHistory(bundledData);
             setLoading(false);
         },
         retry: false
@@ -133,8 +136,8 @@ export default function HistoryManageTable({ getHistory, changeActiveHistorySnap
             }
         });
 
-        if (history) {
-            const sortedHistory = [...history].sort((a, b) => {
+        if (filteredHistory) {
+            const sortedHistory = [...filteredHistory].sort((a, b) => {
                 switch (sortType) {
                     case 'date-ascending':
                         return new Date(a.generatedAt).getTime() - new Date(b.generatedAt).getTime();
@@ -160,7 +163,7 @@ export default function HistoryManageTable({ getHistory, changeActiveHistorySnap
                         return 0;
                 }
             });
-            setHistory(sortedHistory);
+            setFilteredHistory(sortedHistory);
         }
     };
 
@@ -168,23 +171,18 @@ export default function HistoryManageTable({ getHistory, changeActiveHistorySnap
         setSearchQuery(event.target.value);
     };
 
-    const filteredHistory = history?.filter(bundle =>
-        bundle.HistorySnapShots.some(snapshot =>
-            snapshot.bootcampName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            snapshot.templateName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            snapshot.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            snapshot.verificationCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            snapshot.bootcampGuidId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            snapshot.studentGuidId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            snapshot.footer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            snapshot.intro.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            snapshot.main.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            snapshot.link.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            snapshot.basePdfName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            utcFormatter(snapshot.generatedAt).toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (snapshot.active ? 'active' : 'inactive').includes(searchQuery.toLowerCase())
-        )
-    );
+    const handleTrackChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedTrackId = e.target.value;
+        if (selectedTrackId === "") {
+            setFilteredHistory(history);
+        } else {
+            const trackBootcampGuids = tracks?.find(track => track.id.toString() === selectedTrackId)?.bootcamps.map(b => b.guidId) || [];
+            const filtered = history?.filter(bundle => 
+                bundle.HistorySnapShots.some(snapshot => trackBootcampGuids.includes(snapshot.bootcampGuidId))
+            );
+            setFilteredHistory(filtered);
+        }
+    };
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         handleSortChange(e.target.value as SortOrder);
@@ -255,12 +253,26 @@ export default function HistoryManageTable({ getHistory, changeActiveHistorySnap
             <div className='historypage__table-container'>
                 <h1 className='historypage__title'>Diploma Generation History</h1>
                 <section className='historypage__filtersection'>
-                    <SearchInput
-                        containerClassOverride='historypage__filtersection--input-wrapper'
-                        inputClassOverride='historypage__filtersection__search-input'
-                        searchQuery={searchQuery}
-                        handleSearchChange={handleSearchChange}
-                    />
+                    <div className='filtersection__filterwrapper'>                  
+                        <SelectOptions
+                            containerClassOverride='overview-page__select-container'
+                            selectClassOverride='overview-page__select-box'
+                            options={[
+                                { value: "", label: "All Tracks" },
+                                ...(tracks?.map(track => ({
+                                    value: track.id.toString(),
+                                    label: track.name
+                                })) || [])
+                            ]}
+                            onChange={handleTrackChange}
+                        />
+                        <SearchInput
+                            containerClassOverride='historypage__filtersection--input-wrapper'
+                            inputClassOverride='historypage__filtersection__search-input'
+                            searchQuery={searchQuery}
+                            handleSearchChange={handleSearchChange}
+                        />
+                    </div>
                     <div className='historypage__sortbysection'>
                         <SortByIcon />
                         <SelectOptions

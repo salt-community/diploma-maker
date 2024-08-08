@@ -1,16 +1,17 @@
 import './HistoryPage.css';
-import { MakeActiveSnapshotRequestDto } from '../../util/types';
+import { MakeActiveSnapshotRequestDto, TrackResponse } from '../../util/types';
 import HistoryManageTable from '../../components/Feature/History/HistoryManageTable';
 
 type Props = {
     getHistory: () => void;
     changeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => void;
+    tracks: TrackResponse[] | null;
 };
 
-export function HistoryPage({ getHistory, changeActiveHistorySnapShot }: Props) {
+export function HistoryPage({ getHistory, changeActiveHistorySnapShot, tracks }: Props) {
     return (
         <main className='historypage'>
-            <HistoryManageTable getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} />
+            <HistoryManageTable getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} tracks={tracks}/>
         </main>
     );
 }
