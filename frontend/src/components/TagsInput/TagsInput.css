@@ -79,7 +79,7 @@
 	position: relative;
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 	padding: 0.6em 1.2em;
 	margin: 0.5rem 0.2rem;
 	font-size: .5rem;
@@ -114,19 +114,20 @@
 	font-size: .5rem;
 	border: none;
 	transition: all .2s ease;
+	/* width: auto; */
   }
 	.tag-title__input:hover {
 		color: #2edf31;
 		background-color: #06240d;
 	}
-	.tag-title__input::placeholder{
+	/* .tag-title__input::placeholder{
 		color: #fff;
 		font-size: .5rem;
 		line-height: 1rem;
 		display: flex;
 		align-items: center;
 		width: fit-content;
-	}
+	} */
 	.tag-title__input:focus {
 		outline: none;
 		border: none;
@@ -170,9 +171,24 @@
 		color: #ff5c5c;
 		transition: all .2s ease;
 	}
+	.tag.hover-edit{
+		background-color: #131930;
+		color: #5c88ff;
+		transition: all .2s ease;
+	}
   
   
-  
+  .tag-apply-icon{
+	display: block;
+	width: 1rem;
+	height: 1rem;
+	fill: #c1c1cd;
+	cursor: pointer;
+	transition: all .2s ease;
+  }
+	.tag-apply-icon path{
+		transition: all .2s ease;
+	}
   .tag-close-icon {
 	display: block;
 	width: 1rem;
@@ -203,12 +219,34 @@
 	stroke: #54df77;;
 	transition: all .2s ease;
   }
+  .tag.hover-edit .tag-close-icon{
+	/* opacity: .6; */
+	fill: #5c88ff;
+	transition: all .2s ease;
+  }
+  .tag.hover-edit .tag-open-icon path{
+	stroke: #5c88ff;;
+	transition: all .2s ease;
+  }
+  .tag.hover-edit .tag-apply-icon path{
+	fill: #5c88ff;;
+	transition: all .2s ease;
+  }
+
+  .tag-title__input{
+	transition: all .2s ease;
+  }
   .tag.hover-left .tag-title__input{
 	background-color: #06240d;
 	transition: all .2s ease;
   }
   .tag.hover-right .tag-title__input{
 	background-color: #301313;
+	transition: all .2s ease;
+  }
+  .tag.hover-edit .tag-title__input{
+	background-color: #131930;
+	color: #5c88ff;
 	transition: all .2s ease;
   }
 

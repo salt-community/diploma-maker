@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import './TagsInput.css';
 import { ModifyIcon } from '../MenuItems/Icons/ModifyIcon';
 import { TrashCanDeleteIcon } from '../MenuItems/Icons/TrashCanDeleteIcon';
+import { ApplyIcon } from '../MenuItems/Icons/ApplyIcon';
 
 type Props = {
   tags: string[];
@@ -17,37 +18,25 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
 
   useEffect(() => {
     setCurrentTags(tags);
-  }, [tags]);
+  }, [tags, inputRef]);
 
   useEffect(() => {
     if (editMode !== null && inputRef.current) {
-      adjustWidth(inputRef.current);
       inputRef.current.focus();
       inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
+      adjustInputWidth();
     } else if (editMode === null && inputRef.current) {
       inputRef.current.blur();
     }
   }, [editMode]);
-  
+
   const handleLeftClick = (index: number) => {
     if (editMode === index) {
       setEditMode(null);
     } else {
       setEditMode(index);
+      adjustInputWidth();
     }
-  };
-  
-
-  const adjustWidth = (input: HTMLInputElement) => {
-    const text = input.placeholder || input.value;
-    const span = document.createElement('span');
-    span.style.visibility = 'hidden';
-    span.style.position = 'absolute';
-    span.style.whiteSpace = 'nowrap';
-    span.textContent = text;
-    document.body.appendChild(span);
-    input.style.width = `${span.offsetWidth - 40}px`;
-    document.body.removeChild(span);
   };
 
   const removeTags = (indexToRemove: number): void => {
@@ -77,6 +66,30 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
     setHoverClass('');
   };
 
+  const applyChanges = (index: number) => {
+    if (inputRef.current) {
+      const newTags = [...currentTags];
+      newTags[index] = inputRef.current.value;
+      setCurrentTags(newTags);
+      selectedTags(newTags);
+      setEditMode(null);
+    }
+  };
+
+  const handleEditKeyDown = (event: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (event.key === 'Enter') {
+      applyChanges(index);
+      event.preventDefault();
+    }
+  };
+
+  const adjustInputWidth = () => {
+    if (inputRef.current) {
+      inputRef.current.style.width = 'auto';
+      inputRef.current.style.width = `${inputRef.current.scrollWidth}px`;
+    }
+  };
+
   return (
     <div className="tags-input">
       <h1 className='not-implemented'>(modify currently not implemented)</h1>
@@ -101,7 +114,7 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
               className="left-click-boundingbox"
               onMouseEnter={() => handleMouseEnter('hover-left', index)}
               onMouseLeave={handleMouseLeave}
-              onClick={() => setEditMode(editMode === index ? null : index)}
+              onClick={() => handleLeftClick(index)}
             ></span>
             {editMode === index ? (
               <input
@@ -109,26 +122,27 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
                 className='tag-title__input'
                 type="text"
                 defaultValue={tag}
-                onBlur={() => setEditMode(null)}
-                onMouseEnter={() => handleMouseEnter('hover-left', index)}
+                onBlur={() => applyChanges(index)}
+                onKeyDown={(e) => handleEditKeyDown(e, index)}
+                onMouseEnter={() => handleMouseEnter('hover-edit', index)}
                 onMouseLeave={handleMouseLeave}
-                onInput={(e) => adjustWidth(e.currentTarget)}
+                onInput={adjustInputWidth}
               />
             ) : (
               <span className="tag-title">{tag}</span>
             )}
             {editMode === index ? 
               <>
-                <ModifyIcon 
-                  className="tag-open-icon"
-                  onMouseEnter={() => handleMouseEnter('hover-left', index)}
+                <ApplyIcon 
+                  className="tag-apply-icon"
+                  onMouseEnter={() => handleMouseEnter('hover-edit', index)}
                   onMouseLeave={handleMouseLeave}
                 />
                 <span
                   className="left-click-boundingbox"
-                  onMouseEnter={() => handleMouseEnter('hover-left', index)}
+                  onMouseEnter={() => handleMouseEnter('hover-edit', index)}
                   onMouseLeave={handleMouseLeave}
-                  onClick={() => handleLeftClick(index)}
+                  onClick={() => applyChanges(index)}
                 ></span>
               </>
               :
