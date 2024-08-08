@@ -1,15 +1,25 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import './FileUploader.css';
 import { AddIcon } from '../Icons/AddIcon';
 
 type Props = {
-  FileHandler: (file: File) => void
+  FileHandler: (file: File) => void;
+  attachedFile?: File | null;
 }
 
-export const FileUpload = ({ FileHandler }: Props) => {
+export const FileUpload = ({ FileHandler, attachedFile }: Props) => {
   const [isFileValid, setIsFileValid] = useState<boolean | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (attachedFile) {
+      setFileName(attachedFile.name);
+    } else {
+      setFileName(null);
+      setIsFileValid(null);
+    }
+  }, [attachedFile]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
