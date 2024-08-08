@@ -35,7 +35,7 @@
         box-shadow: 0 0 10px #1575fb6e, 0 0 45px #1575fb88; */
         background-color: #f6522b;
         border-radius: 100%;
-        box-shadow: 0 0 10px #f6522b6e, 0 0 45px #f6522b88;
+        box-shadow: 0 0 10px #f6542b60, 0 0 45px #f6542b6f;
 
         transition: all .2s ease-in-out;
     }
@@ -71,5 +71,29 @@
         border-radius: 100%;
         box-shadow: 0 0 10px #fb15156e, 0 0 45px #fb151588;
 
+        transition: all .2s ease-in-out;
+    }
+
+    
+.fileupload-wrapper.file-active .fileupload__icon-wrapper {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1e82d4;
+    border-radius: 100%;
+    box-shadow: 0 0 10px #1d93f462, 0 0 45px #1e82d472;
+
+    transition: all .2s ease-in-out;
+}
+    .fileupload-wrapper.file-active .fileupload__icon-wrapper svg {
+        transform: scale(1.15);
+        transition: all .2s ease-in-out;
+    }
+
+    .fileupload-wrapper .fileupload__icon-wrapper svg {
+        width: 50%;
+        height: 50%;
         transition: all .2s ease-in-out;
     }

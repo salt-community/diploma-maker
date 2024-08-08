@@ -85,3 +85,21 @@
 
         transition: all .2s ease-in-out;
     }
+
+    .fileupload__icon-wrapper.file-active {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #1e82d4;
+        border-radius: 100%;
+        box-shadow: 0 0 10px #1d93f462, 0 0 45px #1e82d472;
+      
+        transition: all .2s ease-in-out;
+      }
+      
+      .fileupload__icon-wrapper.file-active svg {
+        transform: scale(1.15);
+        transition: all .2s ease-in-out;
+      }

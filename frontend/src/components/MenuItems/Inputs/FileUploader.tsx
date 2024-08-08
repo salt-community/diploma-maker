@@ -1,17 +1,30 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import './FileUploader.css';
 import { AddIcon } from '../Icons/AddIcon';
 
 type Props = {
-  FileHandler: (file: File) => void
+  FileHandler: (file: File) => void;
+  attachedFile?: File | null;
 }
 
-export const FileUpload = ({ FileHandler }: Props) => {
+export const FileUpload = ({ FileHandler, attachedFile }: Props) => {
   const [isFileValid, setIsFileValid] = useState<boolean | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (attachedFile) {
+      setFileName(attachedFile.name);
+    } else {
+      setFileName(null);
+      setIsFileValid(null);
+    }
+  }, [attachedFile]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    FileHandler(acceptedFiles[0]);
+    const file = acceptedFiles[0];
+    FileHandler(file);
+    setFileName(file.name);
     setIsFileValid(null); 
   }, [FileHandler]);
 
@@ -44,17 +57,17 @@ export const FileUpload = ({ FileHandler }: Props) => {
   });
 
   return (
-    <div className="fileupload-wrapper" {...getRootProps()}>
+    <div className={`fileupload-wrapper ${fileName ? 'file-active' : ''}`} {...getRootProps()}>
       <input {...getInputProps()} />
       <>
         <div className={'fileupload__icon-wrapper ' + (isDragActive ? (isFileValid ? 'valid' : 'invalid') : 'normal')}>
           <AddIcon />
         </div>
         <h4 className='fileupload_title'>
-          {isDragActive ? (isFileValid ? 'Valid File' : 'Invalid File Format') : 'Add new File'}
+          {fileName ? `Change file` : isDragActive ? (isFileValid ? 'Valid File' : 'Invalid File Format') : 'Add new File'}
         </h4>
         <p className='fileupload_section'>
-          {isDragActive ? (isFileValid ? 'Drag & drop' : 'File should be .csv, .xlsx or .json') : 'Drag & drop .csv .xlsx or .json'}
+          {fileName ? `${fileName} loaded` : isDragActive ? (isFileValid ? 'Drag & drop' : 'File should be .csv, .xlsx or .json') : 'Drag & drop .csv .xlsx or .json'}
         </p>
       </>
     </div>

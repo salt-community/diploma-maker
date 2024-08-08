@@ -61,6 +61,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const { loadingMessage } = useLoadingMessage();
 
   const [firstRun, setFirstRun] = useState<boolean>(true)
+  const [resetFileUpload, setResetFileUpload] = useState<boolean>(false);
 
   const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
     positionX: null,
@@ -311,6 +312,7 @@ useEffect(() => {
       setFileAdded(false);
       setCurrentTemplate(templateData[index] || null);
       setTemplateIndex(index);
+      setResetFileUpload(true);
     }
   };
 
@@ -363,6 +365,7 @@ useEffect(() => {
           setCurrentTemplate(templateData[goToIndex] || null);
           setTemplateIndex(goToIndex);
           setFileAdded(false);
+          setResetFileUpload(true);
         }
       } catch (error) {
         customAlert('fail',"Template Update failure!",`${error} when trying to update template.`);
@@ -384,6 +387,7 @@ useEffect(() => {
         await addNewTemplate(createBlankTemplate(inputContent));
         customAlert('success',"Succesfully added new template!",`Successfully added new template to database.`);
         setTemplateAdded(true);
+        setResetFileUpload(true);
       } catch (error) {
         customAlert('fail',"Template add failure!",`${error} when trying to add new template to database.`);
       }
@@ -393,7 +397,6 @@ useEffect(() => {
   };
 
   const removeTemplate = async () => {
-    
     if (currentTemplate?.id) {
       closeConfirmationPopup();
       customAlert('loading',"Removing Template...",``);
@@ -407,6 +410,7 @@ useEffect(() => {
         setTemplateIndex(0);
         customAlert('message',"Template Successfully Deleted!", `Successfully deleted ${currentTemplate.templateName} from database`);
         setTemplateHasChanged(false);
+        setResetFileUpload(true);
       } catch (error) {
         customAlert('fail',"Template Update failure!",`${error} when trying to update template.`);
       }
@@ -649,7 +653,8 @@ useEffect(() => {
                             <h3>Add PDF Background</h3>
                             <PdfFileUpload
                                 fileResult={(file: File) => pdfFileUploadHandler(file)}
-                                fileAdded={fileAdded}
+                                reset={resetFileUpload}
+                                setReset={setResetFileUpload}
                                 setFileAdded={setFileAdded}
                             />
                         </section>

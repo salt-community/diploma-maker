@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
 import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
@@ -16,7 +16,6 @@ import { ExclusiveCheckBoxGroup } from "../../MenuItems/Inputs/ExclusiveCheckBox
 import { PublishButton } from "../../MenuItems/Buttons/PublishButton";
 import { TagsInput } from "../../TagsInput/TagsInput";
 
-// Export types
 type FormData = {
   optionA: boolean;
   optionB: boolean;
@@ -36,13 +35,13 @@ type Props = {
 };
 
 export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex }: Props) {
-
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>();
   const [TrackIndex, setTrackIndex] = useState<number>(0);
   const [BootcampIndex, setBootcampIndex] = useState<number>(0);
   const [students, setStudents] = useState<Student[]>();
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>();
+  const [attachedFiles, setAttachedFiles] = useState<{ [key: string]: File | null }>({});
 
   useEffect(() => {
     if(tracks && templates){
@@ -61,15 +60,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       setSaltData(saltData);
     }
   }, [students, selectedTemplate]);
-
-  // useEffect(() => {
-  //   if (AllTrackData && templates) {
-  //     const selectedBootcamp = AllTrackData[TrackIndex].bootcamps[BootcampIndex];
-  //     setStudents(selectedBootcamp.students);
-  //     const template = templates?.find(t => t.id === selectedBootcamp.templateId);
-  //     setSelectedTemplate(template);
-  //   }
-  // }, [TrackIndex, BootcampIndex, AllTrackData]);
 
   useEffect(() => {
     if (AllTrackData && templates) {
@@ -93,6 +83,9 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       verificationCode: generateVerificationCode()
     }));
     setStudents(updatedStudents);
+
+    const bootcampGuid = AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId;
+    setAttachedFiles({ ...attachedFiles, [bootcampGuid]: file });
   };
 
   const postSelectedBootcampData = async (both?: Boolean) => {
@@ -195,7 +188,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
   return (
     <form className="diploma-making-form" onSubmit={handleSubmit(onSubmit)}>
-      {/* Select Track */}
       <div className="diploma-making-form__select-track diploma-making-form__select-container">
         <label htmlFor="track" className="diploma-making-form__label">
           Track group
@@ -206,7 +198,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
             selectClassOverride='overview-page__select-box'
             options={[
               ...AllTrackData.filter(track => track.bootcamps.length > 0).map((track, idx) => ({
-                // value: track.id.toString(),
                 value: idx.toString(),
                 label: track.name
               }))
@@ -218,7 +209,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           />
         }
       </div>
-      {/* Select bootcamp Class */}
       <div className="diploma-making-form__select-bootcamp diploma-making-form__select-container">
         <label htmlFor="bootcamp" className="diploma-making-form__label">
           Bootcamp
@@ -243,7 +233,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         }
       </div>
 
-      {/* Select Template name */}
       <div className="diploma-making-form__select-template diploma-making-form__select-container">
         <label htmlFor="template" className="diploma-making-form__label">
           Applied Template
@@ -268,7 +257,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         }
       </div>
 
-      {/* Display student data */}
       <div className="diploma-making-form__student-data diploma-making-form__select-container">
         <div className="diploma-making-form__student-data__label-wrapper">
           <label htmlFor="students" className="diploma-making-form__label">
@@ -287,21 +275,13 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
             />
           }
           <div className="diploma-making-form__upload--fileupload-wrapper">
-            <FileUpload FileHandler={handleFileUpload} />
+            {AllTrackData && 
+              <FileUpload FileHandler={handleFileUpload} attachedFile={attachedFiles[AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId]} />
+            }
           </div>
         </div>
       </div>
 
-      {/* <div className="diploma-making-form__upload diploma-making-form__select-container">
-        <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
-          Upload Student Information
-        </label>
-        <div className="diploma-making-form__upload--fileupload-wrapper">
-          <FileUpload FileHandler={handleFileUpload} />
-        </div>
-      </div> */}
-
-      {/* Checkboxes */}
       <div className="pdf-generation-options">
         <div className="diploma-making-form__checkboxes">
           <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
@@ -326,7 +306,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
         </div>
 
-        {/* Radio Group for PDF Generation Scope */}
         <div className="diploma-making-form__radio-group">
           <div className="diploma-making-form__radio-options">
             <ExclusiveCheckBoxGroup
