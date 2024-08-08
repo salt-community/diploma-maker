@@ -13,7 +13,7 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
   const [currentTags, setCurrentTags] = useState<string[]>([]);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [hoverClass, setHoverClass] = useState<string>('');
-  const [editMode, setEditMode] = useState<number | null>(null);
+  const [editMode, setEditMode] = useState<number | null>();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -92,7 +92,6 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
 
   return (
     <div className="tags-input">
-      <h1 className='not-implemented'>(modify currently not implemented)</h1>
       <input
         className="taginputbox"
         type="text"
@@ -103,7 +102,7 @@ export const TagsInput = ({ selectedTags, tags }: Props) => {
         {currentTags.map((tag, index) => (
           <li
             key={index}
-            className={`tag ${hoverIndex === index ? hoverClass : ''}`}
+            className={`tag ${hoverIndex === index ? hoverClass : ''} ${editMode === index ? 'edit-mode' : ''}`}
           >
             <ModifyIcon 
               className="tag-open-icon"

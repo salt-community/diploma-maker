@@ -1,3 +1,13 @@
+:root{
+	--edit-color: #2edf31;
+	--edit-bgcolor: #06240d; 
+	--delete-color: #ff5c5c;
+	--delete-bgcolor: #301313; 
+	--editing-color: #5c88ff;
+	--editing-bgcolor: #131930; 
+}
+
+
 .tags-input {
 	position: relative;
 	display: flex;
@@ -117,8 +127,8 @@
 	/* width: auto; */
   }
 	.tag-title__input:hover {
-		color: #2edf31;
-		background-color: #06240d;
+		color: var(--edit-color);
+		background-color: var(--edit-bgcolor);
 	}
 	/* .tag-title__input::placeholder{
 		color: #fff;
@@ -159,21 +169,21 @@
 	transition: all .2s ease;
   }
 	.tag.hover-left {
-		background-color: #2edf31;
-		background-color: #06240d;
+		background-color: var(--edit-color);
+		background-color: var(--edit-bgcolor);
 		color: #54df77;
 		transition: all .2s ease;
 	}
 	
 	.tag.hover-right {
 		background-color: #ff0707;
-		background-color: #301313;
-		color: #ff5c5c;
+		background-color: var(--delete-bgcolor);
+		color: var(--delete-color);
 		transition: all .2s ease;
 	}
 	.tag.hover-edit{
-		background-color: #131930;
-		color: #5c88ff;
+		background-color: var(--editing-bgcolor);
+		color: var(--editing-color);
 		transition: all .2s ease;
 	}
   
@@ -202,12 +212,12 @@
   }
   
   .tag.hover-right .tag-close-icon {
-	fill: #ff5c5c;
+	fill: var(--delete-color);
 	transform: rotate(5deg) translateX(1px);
 	transition: all .2s ease;
   }
   .tag.hover-right .tag-open-icon path{
-	stroke: #ff5c5c;;
+	stroke: var(--delete-color);;
 	transition: all .2s ease;
   }
   .tag.hover-left .tag-close-icon{
@@ -221,15 +231,15 @@
   }
   .tag.hover-edit .tag-close-icon{
 	/* opacity: .6; */
-	fill: #5c88ff;
+	fill: var(--editing-color);
 	transition: all .2s ease;
   }
   .tag.hover-edit .tag-open-icon path{
-	stroke: #5c88ff;;
+	stroke: var(--editing-color);;
 	transition: all .2s ease;
   }
   .tag.hover-edit .tag-apply-icon path{
-	fill: #5c88ff;;
+	fill: var(--editing-color);;
 	transition: all .2s ease;
   }
 
@@ -237,18 +247,43 @@
 	transition: all .2s ease;
   }
   .tag.hover-left .tag-title__input{
-	background-color: #06240d;
+	background-color: var(--edit-bgcolor);
 	transition: all .2s ease;
   }
   .tag.hover-right .tag-title__input{
-	background-color: #301313;
+	background-color: var(--delete-bgcolor);
 	transition: all .2s ease;
   }
   .tag.hover-edit .tag-title__input{
-	background-color: #131930;
-	color: #5c88ff;
+	background-color: var(--editing-bgcolor);
+	color: var(--editing-color);
 	transition: all .2s ease;
   }
+
+
+
+	.tag.edit-mode{
+		background-color: var(--editing-bgcolor);
+		color: var(--editing-color);
+		transition: all .2s ease;
+	}
+	.tag.edit-mode .tag-title__input{
+		background-color: var(--editing-bgcolor);
+		color: var(--editing-color);
+	}
+	.tag.edit-mode .tag-close-icon {
+		fill: var(--editing-color);
+		transform: rotate(5deg) translateX(1px);
+		transition: all .2s ease;
+	}
+	.tag.edit-mode .tag-open-icon path{
+		stroke: var(--editing-color);
+		transition: all .2s ease;
+	}
+	.tag.edit-mode .tag-apply-icon path{
+		fill: var(--editing-color);
+		transition: all .2s ease;
+	}
 
   .tag-open-icon {
 	display: block;
