@@ -34,6 +34,7 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
   const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1920 ? 5 : 11);
   const [sortOrder, setSortOrder] = useState<SortOrder>('graduationdate-descending');
   const [sortingChanged, setSortingChanged] = useState(false);
+  const [filteredBootcamps, setFilteredBootcamps] = useState<BootcampResponse[] | null>(bootcamps);
 
   useEffect(() => {
     const handleResize = () => {
@@ -42,13 +43,16 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
 
     window.addEventListener('resize', handleResize);
 
-    // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
-  const totalPages = Math.ceil(bootcamps?.length / itemsPerPage);
+  useEffect(() => {
+    setFilteredBootcamps(bootcamps);
+  }, [bootcamps]);
+
+  const totalPages = Math.ceil((filteredBootcamps?.length || 0) / itemsPerPage);
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
@@ -60,7 +64,7 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
     setSortingChanged(prev => !prev);
   };
 
-  const sortedBootcamps = bootcamps?.sort((a, b) => {
+  const sortedBootcamps = filteredBootcamps?.sort((a, b) => {
     switch (sortOrder) {
       case 'bootcampname-ascending':
         return a.name.localeCompare(b.name);
@@ -79,6 +83,17 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
     }
   });
 
+  const handleTrackChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedTrackId = e.target.value;
+    setCurrentPage(1);
+    if (selectedTrackId === "") {
+      setFilteredBootcamps(bootcamps);
+    } else {
+      setFilteredBootcamps(bootcamps?.filter(b => b.track.id.toString() === selectedTrackId) || null);
+    }
+    setSortingChanged(prev => !prev);
+  };
+
   const paginatedBootcamps = sortedBootcamps?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
@@ -92,7 +107,7 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
       }, {});
       reset(formValues);
     }
-  }, [sortingChanged, bootcamps]);
+  }, [sortingChanged, filteredBootcamps]);
 
   const handleSortChange = (sortType: SortOrder) => {
     setSortOrder(prevOrder => {
@@ -168,13 +183,26 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
       <form onSubmit={handleSubmit(confirmChangeBootcampHandler)}>
         <div className="modal-container">
           <div className="modal-content">
-            {/*content*/}
             <div className="modal-body">
-              {/*header*/}
               <div className="modal-header">
                 <h3 className="modal-title">Bootcamp Management</h3>
+                <SelectOptions
+                    containerClassOverride='overview-page__select-container'
+                    selectClassOverride='overview-page__select-box'
+                    options={[
+                        { value: "", label: "All Tracks" },
+                        ...(bootcamps?.flatMap(bootcamp => bootcamp.track).filter((value, index, self) => 
+                            index === self.findIndex((t) => (
+                                t.id === value.id
+                            ))
+                        ).map(track => ({
+                            value: track.id.toString(),
+                            label: track.name
+                        })) || [])
+                    ]}
+                    onChange={handleTrackChange}
+                />
               </div>
-              {/*body*/}
               <div className="modal-main">
                 <table className="table-auto">
                   <thead>
@@ -205,7 +233,6 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
                       paginatedBootcamps.map((bootcamp, index) => {
                         const actualIndex = (currentPage - 1) * itemsPerPage + index;
                         return (
-                          // Display existing bootcamps
                           <tr className="table-row" key={`tablecell_${bootcamp.guidId}`}>
                             <td className="table-cell">
                               <input
@@ -270,7 +297,6 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
                   />
                 )}
               </div>
-              {/*footer*/}
               <div className="footer-container">
                 <button
                   className="submit-button"
