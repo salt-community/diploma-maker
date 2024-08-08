@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import './PdfFileUpload.css';
 import { RefreshIcon } from '../Icons/RefreshIcon';
@@ -6,14 +6,25 @@ import { AddIcon } from '../Icons/AddIcon';
 import { PDFDocument } from 'pdf-lib';
 
 type Props = {
-  fileResult: (file: File) => void
-  setFileAdded?: (added: boolean) => void
-  fileAdded?: boolean
+  fileResult: (file: File) => void;
+  setFileAdded?: (added: boolean) => void;
+  reset?: boolean;
+  setReset?: (value: boolean) => void;
 }
 
-export const PdfFileUpload = ({ fileResult, setFileAdded, fileAdded }: Props) => {
+export const PdfFileUpload = ({ fileResult, setFileAdded, reset, setReset }: Props) => {
   const [isFileValid, setIsFileValid] = useState<boolean | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (reset) {
+      setIsFileValid(null);
+      setFileName(null);
+      if (setReset) {
+        setReset(false);
+      }
+    }
+  }, [reset, setReset]);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -71,7 +82,7 @@ export const PdfFileUpload = ({ fileResult, setFileAdded, fileAdded }: Props) =>
     <div className={`fileupload-wrapper ${fileName ? 'file-active' : ''}`} {...getRootProps()}>
       <input {...getInputProps()} />
       <div className={'fileupload__icon-wrapper ' + (fileName ? 'file-active' : isDragActive ? (isFileValid ? 'valid' : 'invalid') : 'normal')}>
-        {fileAdded ? <RefreshIcon /> : <AddIcon />}
+        {!reset ? <RefreshIcon /> : <AddIcon />}
       </div>
       <h4 className='fileupload_title'>
         {fileName ? `${fileName}` : isDragActive ? (isFileValid ? 'Valid File' : 'Invalid File Format') : 'Add new PDF'}
