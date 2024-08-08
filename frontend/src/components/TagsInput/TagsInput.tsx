@@ -100,8 +100,6 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
 
   return (
     <div className="tags-input">
-      <h2>{editMode ? 'yes' : 'no'}</h2>
-      <h2>{lastClickedIndex}</h2>
       <input
         className="taginputbox"
         type="text"
