@@ -13,25 +13,28 @@ type Props = {
 
 export const PdfFileUpload = ({ fileResult, setFileAdded, fileAdded }: Props) => {
   const [isFileValid, setIsFileValid] = useState<boolean | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     const isValid = file.type === 'application/pdf';
-
+  
     setIsFileValid(isValid);
-
+  
     if (isValid) {
       const arrayBuffer = await file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(arrayBuffer);
-
+  
       const resizedPdfBytes = await pdfDoc.save();
       const resizedFile = new File([resizedPdfBytes], file.name, { type: file.type });
-
+  
       fileResult(resizedFile);
+      setFileName(file.name);
       if (setFileAdded) {
         setFileAdded(true);
       }
     } else {
+      setFileName(null);
       if (setFileAdded) {
         setFileAdded(false);
       }
@@ -65,20 +68,16 @@ export const PdfFileUpload = ({ fileResult, setFileAdded, fileAdded }: Props) =>
   });
 
   return (
-    <div className="fileupload-wrapper" {...getRootProps()}>
+    <div className={`fileupload-wrapper ${fileName ? 'file-active' : ''}`} {...getRootProps()}>
       <input {...getInputProps()} />
-      <div className={'fileupload__icon-wrapper ' + (fileAdded ? ' fileadded' : isDragActive ? (isFileValid ? 'valid ' : 'invalid ') : 'normal ')}>
-        {fileAdded ? 
-          <RefreshIcon />
-        : 
-          <AddIcon />
-        }
+      <div className={'fileupload__icon-wrapper ' + (fileName ? 'file-active' : isDragActive ? (isFileValid ? 'valid' : 'invalid') : 'normal')}>
+        {fileAdded ? <RefreshIcon /> : <AddIcon />}
       </div>
       <h4 className='fileupload_title'>
-        {isDragActive ? (isFileValid ? 'Valid File' : 'Invalid File Format') : (fileAdded ? 'Change existing PDF' : 'Add new PDF')}
+        {fileName ? `${fileName}` : isDragActive ? (isFileValid ? 'Valid File' : 'Invalid File Format') : 'Add new PDF'}
       </h4>
       <p className='fileupload_section'>
-        {isDragActive ? (isFileValid ? ('Drag & drop') : ('File should be .pdf')) : (fileAdded ? 'Drag & drop' : 'Drag & drop')}
+        {fileName ? 'Change file' : isDragActive ? (isFileValid ? 'Drag & drop' : 'File should be .pdf') : 'Drag & drop .pdf'}
       </p>
     </div>
   );
