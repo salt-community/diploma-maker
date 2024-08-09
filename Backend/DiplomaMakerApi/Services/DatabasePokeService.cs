@@ -15,7 +15,7 @@ public class DatabasePokeService : IHostedService, IDisposable
         _timer = new Timer(PokeDatabase, null, TimeSpan.Zero, TimeSpan.FromHours(1));
         return Task.CompletedTask;
     }
-    private void PokeDatabase(object? state)
+    private async void PokeDatabase(object? state)
     {
         using (var scope = _serviceProvider.CreateScope())
         {
@@ -31,8 +31,12 @@ public class DatabasePokeService : IHostedService, IDisposable
 
                 context.Database.SetConnectionString(_dbConnectionString);
 
-                var result = context.Database.CanConnect();
-                Console.WriteLine(result ? "Database Poke Complete." : "Failed to connect and poke database.");
+                var connectionOk = context.Database.CanConnect();
+                if (connectionOk)
+                {
+                    var records = await context.Tracks.ToListAsync();
+                    Console.WriteLine(records != null ? "Database Poke Complete." : "Failed to connect and poke database.");
+                }
             }
             catch (Exception ex)
             {
