@@ -5,7 +5,7 @@ namespace DiplomaMakerApi.Services
 {
     public class DatabasePokeService : IHostedService, IDisposable
     {
-        private Timer _timer;
+        private Timer _timer = null!;
         private readonly IServiceProvider _serviceProvider;
 
         public DatabasePokeService(IServiceProvider serviceProvider)
@@ -18,7 +18,7 @@ namespace DiplomaMakerApi.Services
             return Task.CompletedTask;
         }
 
-        private void PokeDatabase(object state)
+        private void PokeDatabase(object? state)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
