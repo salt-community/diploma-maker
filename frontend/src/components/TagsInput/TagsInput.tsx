@@ -23,26 +23,27 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
   }, [tags, inputRef]);
 
   useEffect(() => {
-    if(!editMode && lastClickedIndex){
+    if (editMode === null && lastClickedIndex !== null) {
+      console.log("arr length: " + (tags.length - 1));
+      console.log("idx: " + lastClickedIndex);
       setPage(lastClickedIndex);
     }
+
     if (editMode !== null && inputRef.current) {
       inputRef.current.focus();
       inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
       adjustInputWidth();
     } else if (editMode === null && inputRef.current) {
       inputRef.current.blur();
-      setPage(lastClickedIndex);
     }
   }, [editMode, lastClickedIndex]);
 
   const handleLeftClick = (index: number) => {
+    setLastClickedIndex(index);
     if (editMode === index) {
       setEditMode(null);
-      setLastClickedIndex(index);
     } else {
       setEditMode(index);
-      setLastClickedIndex(index);
       adjustInputWidth();
     }
   };
