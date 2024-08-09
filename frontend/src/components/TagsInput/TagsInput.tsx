@@ -23,7 +23,7 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
   }, [tags, inputRef]);
 
   useEffect(() => {
-    if(!editMode && lastClickedIndex){
+    if (lastClickedIndex !== null) {
       setPage(lastClickedIndex);
     }
     if (editMode !== null && inputRef.current) {
@@ -32,22 +32,21 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
       adjustInputWidth();
     } else if (editMode === null && inputRef.current) {
       inputRef.current.blur();
-      setPage(lastClickedIndex);
     }
   }, [editMode, lastClickedIndex]);
 
   const handleLeftClick = (index: number) => {
+    setLastClickedIndex(index);
     if (editMode === index) {
       setEditMode(null);
-      setLastClickedIndex(index);
     } else {
       setEditMode(index);
-      setLastClickedIndex(index);
       adjustInputWidth();
     }
   };
 
   const removeTags = (indexToRemove: number): void => {
+    setLastClickedIndex(indexToRemove-1);
     const newTags = currentTags.filter((_, index) => index !== indexToRemove);
     setCurrentTags(newTags);
     selectedTags(newTags);
@@ -61,6 +60,7 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
       selectedTags(newTags);
       target.value = '';
       event.preventDefault();
+      setLastClickedIndex(tags.length);
     }
   };
 
