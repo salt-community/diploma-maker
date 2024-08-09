@@ -43,6 +43,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>();
   const [attachedFiles, setAttachedFiles] = useState<{ [key: string]: File | null }>({});
 
+  const [disableNavbar, setDisableNavbar] = useState<boolean>(false);
+
   useEffect(() => {
     if(tracks && templates){
       const filteredTracks = tracks.filter(t => t.bootcamps.length > 0);
@@ -89,6 +91,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   };
 
   const postSelectedBootcampData = async (both?: Boolean) => {
+    setDisableNavbar(true);
     customAlert('loading', 'Adding Diplomas...', '');
     const updateFormDataRequest: FormDataUpdateRequest = {
       students: students.map((student: Student) => ({
@@ -105,8 +108,11 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       both
         ? ''
         : customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
+
+        setDisableNavbar(false);
     } catch (error) {
       customAlert('fail', "Failed to add diplomas:", `${error}`);
+      setDisableNavbar(false);
     }
   }
 
@@ -187,148 +193,151 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   };
 
   return (
-    <form className="diploma-making-form" onSubmit={handleSubmit(onSubmit)}>
-      <div className="diploma-making-form__select-track diploma-making-form__select-container">
-        <label htmlFor="track" className="diploma-making-form__label">
-          Track group
-        </label>
-        {AllTrackData && 
-          <SelectOptions
-            containerClassOverride='overview-page__select-container'
-            selectClassOverride='overview-page__select-box'
-            options={[
-              ...AllTrackData.filter(track => track.bootcamps.length > 0).map((track, idx) => ({
-                value: idx.toString(),
-                label: track.name
-              }))
-            ]}
-            onChange={(e) => {
-              setTrackIndex(Number(e.target.value));
-              setBootcampIndex(0);
-            }}
-          />
-        }
-      </div>
-      <div className="diploma-making-form__select-bootcamp diploma-making-form__select-container">
-        <label htmlFor="bootcamp" className="diploma-making-form__label">
-          Bootcamp
-        </label>
-        {AllTrackData &&
-          <SelectOptions
-            containerClassOverride='overview-page__select-container'
-            selectClassOverride='overview-page__select-box'
-            options={[
-              ...AllTrackData[TrackIndex].bootcamps.map((bootcamp) => ({
-                value: bootcamp.guidId,
-                label: bootcamp.name
-              }))
-            ]}
-            onChange={(e) => {
-              const selectedGuidId = e.target.value;
-              const selectedBootcampIndex = AllTrackData[TrackIndex].bootcamps.findIndex(bootcamp => bootcamp.guidId === selectedGuidId);
-              setBootcampIndex(selectedBootcampIndex);
-            }}
-            value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
-          />
-        }
-      </div>
-
-      <div className="diploma-making-form__select-template diploma-making-form__select-container">
-        <label htmlFor="template" className="diploma-making-form__label">
-          Applied Template
-        </label>
-        {selectedTemplate && 
-          <SelectOptions
-            containerClassOverride='overview-page__select-container'
-            selectClassOverride='overview-page__select-box'
-            options={[
-              ...templates.map((template) => ({
-                value: template.id.toString(),
-                label: template.name
-              }))
-            ]}
-            onChange={(e) => {
-              const selectedId = Number(e.target.value);
-              const selectedTemplateObject = templates.find(template => template.id === selectedId);
-              setSelectedTemplate(selectedTemplateObject);
-            }}
-            value={selectedTemplate.id.toString()}
-          />
-        }
-      </div>
-
-      <div className="diploma-making-form__student-data diploma-making-form__select-container">
-        <div className="diploma-making-form__student-data__label-wrapper">
-          <label htmlFor="students" className="diploma-making-form__label">
-            Student Names
+    <>
+      <form className="diploma-making-form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="diploma-making-form__select-track diploma-making-form__select-container">
+          <label htmlFor="track" className="diploma-making-form__label">
+            Track group
           </label>
-          <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
-            Upload Student Information
-          </label>
-        </div>
-        <div className="diploma-making-form__student-data__items-wrapper">
-          {students && 
-            <TagsInput
-              selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
-              tags={students.map(student => student.name)}
-              setPage={(idx: number) => setSelectedStudentIndex(idx)}
+          {AllTrackData && 
+            <SelectOptions
+              containerClassOverride='overview-page__select-container'
+              selectClassOverride='overview-page__select-box'
+              options={[
+                ...AllTrackData.filter(track => track.bootcamps.length > 0).map((track, idx) => ({
+                  value: idx.toString(),
+                  label: track.name
+                }))
+              ]}
+              onChange={(e) => {
+                setTrackIndex(Number(e.target.value));
+                setBootcampIndex(0);
+              }}
             />
           }
-          <div className="diploma-making-form__upload--fileupload-wrapper">
-            {AllTrackData && 
-              <FileUpload FileHandler={handleFileUpload} attachedFile={attachedFiles[AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId]} />
-            }
-          </div>
         </div>
-      </div>
-
-      <div className="pdf-generation-options">
-        <div className="diploma-making-form__checkboxes">
-          <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
-            PDF-Generation options
+        <div className="diploma-making-form__select-bootcamp diploma-making-form__select-container">
+          <label htmlFor="bootcamp" className="diploma-making-form__label">
+            Bootcamp
           </label>
-          <div className="diploma-making-form__checkbox-group">
-            <CheckboxGroup items={[
-              { 
-                icon: <UpdateIcon />, 
-                label: 'Update changes made to Bootcamp', 
-                validationOptions: { ...register("optionA") }
-              },
-              { 
-                icon: <OpenIcon />, 
-                label: 'Open PDFs after generating', 
-                validationOptions: { ...register("optionB") }
-              }
-            ]} 
-            defaultChecked={[0, 1]} 
+          {AllTrackData &&
+            <SelectOptions
+              containerClassOverride='overview-page__select-container'
+              selectClassOverride='overview-page__select-box'
+              options={[
+                ...AllTrackData[TrackIndex].bootcamps.map((bootcamp) => ({
+                  value: bootcamp.guidId,
+                  label: bootcamp.name
+                }))
+              ]}
+              onChange={(e) => {
+                const selectedGuidId = e.target.value;
+                const selectedBootcampIndex = AllTrackData[TrackIndex].bootcamps.findIndex(bootcamp => bootcamp.guidId === selectedGuidId);
+                setBootcampIndex(selectedBootcampIndex);
+              }}
+              value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
             />
-          </div>
-          {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
+          }
         </div>
 
-        <div className="diploma-making-form__radio-group">
-          <div className="diploma-making-form__radio-options">
-            <ExclusiveCheckBoxGroup
-              items={[
-                {
-                  label: 'Generate PDFs for selected bootcamp',
-                  validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'all' }
-                },
-                {
-                  label: 'Generate PDF for selected student',
-                  validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'selected' }
-                }
+        <div className="diploma-making-form__select-template diploma-making-form__select-container">
+          <label htmlFor="template" className="diploma-making-form__label">
+            Applied Template
+          </label>
+          {selectedTemplate && 
+            <SelectOptions
+              containerClassOverride='overview-page__select-container'
+              selectClassOverride='overview-page__select-box'
+              options={[
+                ...templates.map((template) => ({
+                  value: template.id.toString(),
+                  label: template.name
+                }))
               ]}
-              scope="pdfGenerationScope"
-              defaultChecked={0}
+              onChange={(e) => {
+                const selectedId = Number(e.target.value);
+                const selectedTemplateObject = templates.find(template => template.id === selectedId);
+                setSelectedTemplate(selectedTemplateObject);
+              }}
+              value={selectedTemplate.id.toString()}
             />
+          }
+        </div>
+
+        <div className="diploma-making-form__student-data diploma-making-form__select-container">
+          <div className="diploma-making-form__student-data__label-wrapper">
+            <label htmlFor="students" className="diploma-making-form__label">
+              Student Names
+            </label>
+            <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
+              Upload Student Information
+            </label>
+          </div>
+          <div className="diploma-making-form__student-data__items-wrapper">
+            {students && 
+              <TagsInput
+                selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
+                tags={students.map(student => student.name)}
+                setPage={(idx: number) => setSelectedStudentIndex(idx)}
+              />
+            }
+            <div className="diploma-making-form__upload--fileupload-wrapper">
+              {AllTrackData && 
+                <FileUpload FileHandler={handleFileUpload} attachedFile={attachedFiles[AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId]} />
+              }
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div className="diploma-making-form__submit-group">
-        <PublishButton classNameOverride="diploma-making-form__submit-button" text='Submit' onClick={() => {}} />
-      </div>
-    </form>
+
+        <div className="pdf-generation-options">
+          <div className="diploma-making-form__checkboxes">
+            <label htmlFor="upload" className="diploma-making-form__label diploma-making-form__label--mb">
+              PDF-Generation options
+            </label>
+            <div className="diploma-making-form__checkbox-group">
+              <CheckboxGroup items={[
+                { 
+                  icon: <UpdateIcon />, 
+                  label: 'Update changes made to Bootcamp', 
+                  validationOptions: { ...register("optionA") }
+                },
+                { 
+                  icon: <OpenIcon />, 
+                  label: 'Open PDFs after generating', 
+                  validationOptions: { ...register("optionB") }
+                }
+              ]} 
+              defaultChecked={[0, 1]} 
+              />
+            </div>
+            {errors.optionA && <p className="diploma-making-form__error">{errors.optionA.message}</p>}
+          </div>
+
+          <div className="diploma-making-form__radio-group">
+            <div className="diploma-making-form__radio-options">
+              <ExclusiveCheckBoxGroup
+                items={[
+                  {
+                    label: 'Generate PDFs for selected bootcamp',
+                    validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'all' }
+                  },
+                  {
+                    label: 'Generate PDF for selected student',
+                    validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'selected' }
+                  }
+                ]}
+                scope="pdfGenerationScope"
+                defaultChecked={0}
+              />
+            </div>
+          </div>
+        </div>
+        
+        <div className="diploma-making-form__submit-group">
+          <PublishButton classNameOverride="diploma-making-form__submit-button" text='Submit' onClick={() => {}} />
+        </div>
+      </form>
+      <div className={`diploma-making__block-navbar ${disableNavbar ? 'active' : ''}`}></div>
+    </>
   );
 }

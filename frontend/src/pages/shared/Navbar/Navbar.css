@@ -1,8 +1,7 @@
 .navbar{
     position: sticky;
     background-color: #181823;
-    min-height: 50px;
-    max-height: 80px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
