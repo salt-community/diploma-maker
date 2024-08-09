@@ -23,7 +23,7 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
   }, [tags, inputRef]);
 
   useEffect(() => {
-    if (editMode === null && lastClickedIndex !== null) {
+    if (editMode && lastClickedIndex !== null) {
       console.log("arr length: " + (tags.length - 1));
       console.log("idx: " + lastClickedIndex);
       setPage(lastClickedIndex);
