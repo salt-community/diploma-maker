@@ -22,17 +22,30 @@ namespace DiplomaMakerApi.Controllers
             _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
         }
 
-        [HttpGet("{fileName}")]
-        public async Task<IActionResult> GetFile(string fileName)
+        [HttpGet("{filename}")]
+        public async Task<IActionResult> GetFile(string filename)
         {
-            if (!fileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+            return await GetFileFromBlob(filename);
+        }
+
+        [HttpGet("DiplomaPdfs/{filename}")]
+        public async Task<IActionResult> GetDiplomaPdf(string filename)
+        {
+            return await GetFileFromBlob(filename);
+        }
+
+        private async Task<IActionResult> GetFileFromBlob(string filename)
+        {
+            filename = Path.GetFileName(filename);
+            
+            if (!filename.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest("Invalid file type.");
             }
-            
+
             if (!_useBlobStorage)
             {
-                var filePath = await _localFileStorageService.GetFilePath(fileName);
+                var filePath = await _localFileStorageService.GetFilePath(filename);
 
                 if (filePath == null)
                 {
@@ -40,20 +53,19 @@ namespace DiplomaMakerApi.Controllers
                 }
 
                 var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-                return File(fileBytes, "application/pdf", fileName);
+                return File(fileBytes, "application/pdf", filename);
             }
             else
             {
-                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(fileName);
+                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename);
 
                 if (fileBytes == null)
                 {
                     return NotFound("File not found.");
-                    Console.WriteLine("");
                 }
-                return File(fileBytes, contentType, fileName);
+                return File(fileBytes, contentType, filename);
             }
-        }
+        }   
 
         [HttpGet("download-all-templatebackgrounds")]
         public async Task<IActionResult> DownloadAllFiles()
@@ -66,6 +78,5 @@ namespace DiplomaMakerApi.Controllers
                 return await _googleCloudStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
             }
         }
-
     }
 }
