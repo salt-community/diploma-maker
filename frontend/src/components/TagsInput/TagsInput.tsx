@@ -14,7 +14,8 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
   const [currentTags, setCurrentTags] = useState<string[]>([]);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [hoverClass, setHoverClass] = useState<string>('');
-  const [editMode, setEditMode] = useState<number | null>();
+  const [editMode, setEditMode] = useState<number | null>(null);
+  const [lastClickedIndex, setLastClickedIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -22,22 +23,26 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
   }, [tags, inputRef]);
 
   useEffect(() => {
+    if(!editMode && lastClickedIndex){
+      setPage(lastClickedIndex);
+    }
     if (editMode !== null && inputRef.current) {
       inputRef.current.focus();
       inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
       adjustInputWidth();
     } else if (editMode === null && inputRef.current) {
       inputRef.current.blur();
+      setPage(lastClickedIndex);
     }
-  }, [editMode]);
+  }, [editMode, lastClickedIndex]);
 
   const handleLeftClick = (index: number) => {
     if (editMode === index) {
       setEditMode(null);
-      setPage(index);
+      setLastClickedIndex(index);
     } else {
       setEditMode(index);
-      setPage(index);
+      setLastClickedIndex(index);
       adjustInputWidth();
     }
   };
