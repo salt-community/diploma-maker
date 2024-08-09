@@ -61,6 +61,7 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
       selectedTags(newTags);
       target.value = '';
       event.preventDefault();
+      setLastClickedIndex(tags.length);
     }
   };
 
