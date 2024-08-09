@@ -230,7 +230,6 @@ useEffect(() => {
             await delay(10)
             // @ts-ignore
             const startpos = designer.current.template.schemas[0][selectedField]?.position;
-            console.log(designer.current.getTemplate());
             if((prevStartPost.x != startpos.x) || (prevStartPost.y != startpos.y)){
               setFieldsChanged(true);
             }
