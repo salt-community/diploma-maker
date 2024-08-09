@@ -152,3 +152,20 @@
             margin-left: .5rem;
         }
 }
+
+
+.diploma-making__block-navbar{
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 80px;
+    z-index: 500000;
+    transition: all .2s ease;
+}
+.diploma-making__block-navbar.active{
+    visibility: visible;
+    background-color: #17172145;
+    transition: all .2s ease;
+}
