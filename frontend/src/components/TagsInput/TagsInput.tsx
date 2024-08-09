@@ -23,12 +23,9 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
   }, [tags, inputRef]);
 
   useEffect(() => {
-    if (editMode && lastClickedIndex !== null) {
-      console.log("arr length: " + (tags.length - 1));
-      console.log("idx: " + lastClickedIndex);
+    if (lastClickedIndex !== null) {
       setPage(lastClickedIndex);
     }
-
     if (editMode !== null && inputRef.current) {
       inputRef.current.focus();
       inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
@@ -49,6 +46,7 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
   };
 
   const removeTags = (indexToRemove: number): void => {
+    setLastClickedIndex(indexToRemove-1);
     const newTags = currentTags.filter((_, index) => index !== indexToRemove);
     setCurrentTags(newTags);
     selectedTags(newTags);
