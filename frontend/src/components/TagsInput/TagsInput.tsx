@@ -46,11 +46,13 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
   };
 
   const removeTags = (indexToRemove: number): void => {
-    setLastClickedIndex(indexToRemove-1);
     const newTags = currentTags.filter((_, index) => index !== indexToRemove);
     setCurrentTags(newTags);
     selectedTags(newTags);
-  };
+
+    const newIndex = indexToRemove > 0 ? indexToRemove - 1 : 0;
+    setLastClickedIndex(newIndex < newTags.length ? newIndex : null);
+};
 
   const addTags = (event: React.KeyboardEvent<HTMLInputElement>): void => {
     const target = event.target as HTMLInputElement;
