@@ -47,6 +47,7 @@ builder.Services.AddScoped<HistorySnapshotService>();
 builder.Services.AddScoped<GoogleCloudStorageService>();
 builder.Services.AddTransient<FileUtilityService>();
 builder.Services.AddLogging();
+builder.Services.AddHostedService<DatabasePokeService>();
 
 var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>();
