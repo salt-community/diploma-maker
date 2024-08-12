@@ -205,7 +205,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     } else if (data.optionA) {
       postSelectedBootcampData();
     }
-    if (data.optionB) {
+    if (data.optionB && !printActive && !downloadActive) {
       generatePDFHandler(data.pdfGenerationScope);
     }
   };

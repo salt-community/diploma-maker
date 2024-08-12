@@ -232,7 +232,7 @@ export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inpu
   if (printWindow) {
     printWindow.document.write(`
       <html>
-        <head><title>Print PDF</title></head>
+        <head><title>Generated Bootcamp Pdfs</title></head>
         <body style="margin: 0;">
           <iframe src="${blobUrl}" style="border: none; width: 100%; height: 100%;" onload="this.contentWindow.print();"></iframe>
         </body>
