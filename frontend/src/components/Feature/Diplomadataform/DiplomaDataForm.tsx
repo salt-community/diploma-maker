@@ -160,7 +160,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     try {
       print 
       ? await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) 
-      : download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray,  AllTrackData[TrackIndex].name, setLoadingMessageAndAlert)
+      : download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, selectedBootcamp.name, setLoadingMessageAndAlert)
       : await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) 
       
       customAlert('loadingfadeout', '', '');
