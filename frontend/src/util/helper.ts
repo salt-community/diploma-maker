@@ -7,6 +7,8 @@ import { PDFDocument } from "pdf-lib";
 import { BootcampResponse, SaltData, Size, TemplateResponse } from "./types";
 import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
 import { fontObjList } from "../data/data";
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
 
@@ -248,6 +250,36 @@ export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inpu
   }
 };
 
+export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], bootcampName: string, setLoadingMessage: (message: string) => void) => {
+  setLoadingMessage("Generating combined pdf!");
+  const font = await getFontsData();
+  const zip = new JSZip();
+
+  for (let i = 0; i < templates.length; i++) {
+    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
+    const pdf = await generate({
+      template: templates[i],
+      inputs: [inputsArray[i]],
+      options: { font },
+      plugins: getPlugins(),
+    });
+    const loadedPdf = await PDFDocument.load(pdf);
+    const mergedPdf = await PDFDocument.create();
+    const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
+    copiedPages.forEach(page => mergedPdf.addPage(page));
+    
+    const pdfBytes = await mergedPdf.save();
+    zip.file(`Diploma ${inputsArray[i].main}.pdf`, pdfBytes);
+  }
+
+  setLoadingMessage("Zipping Pdfs");
+
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+
+  setLoadingMessage("Finished Processing Pdfs...");
+
+  saveAs(zipBlob, `${bootcampName}_diplomas.zip`);
+};
 
 
 export const isJsonString = (str: string) => {
