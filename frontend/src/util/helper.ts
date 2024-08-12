@@ -173,6 +173,12 @@ export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray:
 }
 
 
+export const convertPDFToWebp = async (pdfInput: any) => {
+  const buffer = Buffer.isBuffer(pdfInput) ? pdfInput : Buffer.from(pdfInput);
+
+}
+
+
 export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
   setLoadingMessage("Generating combined pdf!");
   const font = await getFontsData();
