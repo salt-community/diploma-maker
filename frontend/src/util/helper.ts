@@ -198,6 +198,58 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
   window.open(URL.createObjectURL(blob));
 }
 
+
+export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
+  setLoadingMessage("Generating combined pdf!");
+  const font = await getFontsData();
+  const mergedPdf = await PDFDocument.create();
+
+  for (let i = 0; i < templates.length; i++) {
+    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
+    const pdf = await generate({
+      template: templates[i],
+      inputs: [inputsArray[i]],
+      options: { font },
+      plugins: getPlugins(),
+    });
+    const loadedPdf = await PDFDocument.load(pdf);
+    const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
+    copiedPages.forEach(page => mergedPdf.addPage(page));
+  }
+
+  setLoadingMessage("Merging Pdfs");
+
+  const mergedPdfBytes = await mergedPdf.save();
+  setLoadingMessage("Creating Blobs");
+  const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+  setLoadingMessage("Finished Processing Pdfs...");
+
+  const blobUrl = URL.createObjectURL(blob);
+  const printWindow = window.open('', '_blank');
+
+  if (printWindow) {
+    printWindow.document.write(`
+      <html>
+        <head><title>Print PDF</title></head>
+        <body style="margin: 0;">
+          <iframe src="${blobUrl}" style="border: none; width: 100%; height: 100%;" onload="this.contentWindow.print();"></iframe>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+
+    printWindow.onafterprint = () => {
+      URL.revokeObjectURL(blobUrl);
+      printWindow.close();
+    };
+  } else {
+    console.error("Failed to open the print window");
+  }
+};
+
+
+
 export const isJsonString = (str: string) => {
   try {
     JSON.parse(str);
