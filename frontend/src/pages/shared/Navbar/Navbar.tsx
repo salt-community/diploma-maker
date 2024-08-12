@@ -22,7 +22,7 @@ export const NavBar = () => {
                             </Link>
                         </li>
                         <li className="navbar__item">
-                            <Link to="/" className={"navbar__link " + (location.pathname === '/' && "active")}>
+                            <Link to="/pdf-creator" className={"navbar__link " + (location.pathname === '/pdf-creator' && "active")}>
                                 <PdfCreatorIcon />
                                 PDFcreator
                             </Link>

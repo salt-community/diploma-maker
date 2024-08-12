@@ -1,27 +1,53 @@
-import { PublishButton } from "../../MenuItems/Buttons/PublishButton";
-import "./DescriptionCard.css"
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import './DescriptionCard.css';
 
-export function DescriptionCard({ title, icon: Icon }) {
+export function DescriptionCard({ shortDescription, LongDescription, title, icon: Icon }) {
+    const [isHovered, setIsHovered] = useState(false);
+
     return (
-        <div className="homepage__card">
+        <div
+            className="homepage__card"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
             <header className="homepage__card-header">
                 <Icon />
                 <h2>{title}</h2>
             </header>
             <div className="homepage__card-content">
-                <p className="homepage__card-short-description">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Non, dolorem.
-                </p>
-                <div className="homepage__card-full-description">
-                    <p className="homepage__card-full-description-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt laboriosam consequatur quae sed cumque soluta natus iure adipisci rerum neque maiores, expedita eveniet rem et possimus eum illo iusto tempora.</p>
-                    <div className="submit-button-container ">
-                    <button
-                        className="submit-button" onClick={() => console.log("yo")}>
-                        Visual instructions
-                    </button>
+
+                {isHovered ? (
+                    <div className="homepage__card-full-description">
+                        <p className="homepage__card-full-description-text">
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis numquam architecto aut laudantium modi nesciunt nobis exercitationem inventore et, praesentium illum asperiores impedit pariatur optio rem magni recusandae adipisci a, consectetur suscipit iusto ullam iure consequatur sunt? Magnam, magni corporis.
+                        </p>
+                        <div className="submit-button-container">
+                            <button
+                                className="submit-button"
+                            >
+                                Visual instructions
+                            </button>
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <div className="homepage__card-short-description">
+                        <ul className="short-description-list">
+                            {shortDescription.map((item, index) => (
+                                <li key={index}>{item}</li>
+                            ))}
+                        </ul>
+                        <span className="learn-more-text">Hover to learn more...</span>
+                    </div>
+                )}
             </div>
         </div>
     );
 }
+
+DescriptionCard.propTypes = {
+    shortDescription: PropTypes.arrayOf(PropTypes.string).isRequired,
+    LongDescription: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    icon: PropTypes.elementType.isRequired,
+};
