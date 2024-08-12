@@ -6,204 +6,9 @@ import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
 import { BootcampResponse, SaltData, Size, TemplateResponse } from "./types";
 import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
-
-const fontObjList = [
-  {
-    fallback: true,
-    label: "notoSerifJP-regular",
-    url: "/fonts/NotoSerifJP-Regular.otf",
-  },
-  {
-    fallback: false,
-    label: "notoSerifJP-regular-bold",
-    url: "https://fonts.cdnfonts.com/s/12165/Roboto-Bold.woff",
-  },
-  {
-    fallback: false,
-    label: "notoSerifJP-regular-italic",
-    url: "https://fonts.cdnfonts.com/s/12165/Roboto-Italic.woff",
-  },
-  {
-    fallback: false,
-    label: "basilia-bold",
-    url: "/fonts/Basilia-Bold.woff",
-  },
-  {
-    fallback: false,
-    label: "basilia-italic",
-    url: "/fonts/Basilia-Italic.woff",
-  },
-  {
-    fallback: false,
-    label: "basilia",
-    url: "/fonts/Basilia-Reg.woff",
-  },
-  {
-    fallback: false,
-    label: "futura-bold",
-    url: "/fonts/Futura-Dem-Bold.woff",
-  },
-  {
-    fallback: false,
-    label: "futura-italic",
-    url: "/fonts/Futura-Dem-Italic.woff",
-  },
-  {
-    fallback: false,
-    label: "futura",
-    url: "/fonts/Futura-Dem.woff",
-  },
-  {
-    fallback: false,
-    label: "montserrat",
-    url: "/fonts/Montserrat-Regular.ttf",
-  },
-  {
-    fallback: false,
-    label: "montserrat-bold",
-    url: "/fonts/Montserrat-Bold.ttf",
-  },
-  {
-    fallback: false,
-    label: "montserrat-italic",
-    url: "/fonts/Montserrat-Italic.ttf",
-  },
-  {
-    fallback: false,
-    label: "museosans",
-    url: "/fonts/MuseoSans_500.woff",
-  },
-  {
-    fallback: false,
-    label: "museosans-bold",
-    url: "/fonts/MuseoSans_500-Bold.woff",
-  },
-  {
-    fallback: false,
-    label: "museosans-italic",
-    url: "/fonts/MuseoSans_500-Italic.otf",
-  },
-  {
-    fallback: false,
-    label: "ttcorals",
-    url: "/fonts/TT-Corals-Regular.woff",
-  },
-  {
-    fallback: false,
-    label: "ttcorals-bold",
-    url: "/fonts/TT-Corals-Bold.woff",
-  },
-  {
-    fallback: false,
-    label: "ttcorals-italic",
-    url: "/fonts/TT-Corals-Italic.woff",
-  },
-  {
-    fallback: false,
-    label: "bison",
-    url: "/fonts/Basilia-Reg.woff",
-  },
-  {
-    fallback: false,
-    label: "bison-bold",
-    url: "/fonts/Bison-Bold.woff",
-  },
-  {
-    fallback: false,
-    label: "bison-italic",
-    url: "/fonts/Basilia-Italic.woff",
-  },
-  {
-    fallback: false,
-    label: "arial",
-    url: "https://fonts.cdnfonts.com/s/29105/ARIAL.woff",
-  },
-  {
-    fallback: false,
-    label: "arial-bold",
-    url: "https://fonts.cdnfonts.com/s/29105/ARIALBD.woff",
-  },
-  {
-    fallback: false,
-    label: "arial-italic",
-    url: "https://fonts.cdnfonts.com/s/29105/ARIALI.woff",
-  },
-  {
-    fallback: false,
-    label: "overpass",
-    url: "https://fonts.cdnfonts.com/s/12274/Overpass_Regular.woff",
-  },
-  {
-    fallback: false,
-    label: "overpass-bold",
-    url: "https://fonts.cdnfonts.com/s/12274/Overpass_Bold.woff",
-  },
-  {
-    fallback: false,
-    label: "overpass-italic",
-    url: "https://fonts.cdnfonts.com/s/12274/overpassitalic.woff",
-  },
-  {
-    fallback: false,
-    label: "roboto",
-    url: "https://fonts.cdnfonts.com/s/12165/Roboto-Regular.woff",
-  },
-  {
-    fallback: false,
-    label: "roboto-bold",
-    url: "https://fonts.cdnfonts.com/s/12165/Roboto-Bold.woff",
-  },
-  {
-    fallback: false,
-    label: "roboto-italic",
-    url: "https://fonts.cdnfonts.com/s/12165/Roboto-Italic.woff",
-  },
-  {
-    fallback: false,
-    label: "rubik",
-    url: "https://fonts.cdnfonts.com/s/15684/Rubik-Regular.woff",
-  },
-  {
-    fallback: false,
-    label: "rubik-bold",
-    url: "https://fonts.cdnfonts.com/s/15684/Rubik-Bold.woff",
-  },
-  {
-    fallback: false,
-    label: "rubik-italic",
-    url: "https://fonts.cdnfonts.com/s/15684/Rubik-Italic.woff",
-  },
-  {
-    fallback: false,
-    label: "brcobane",
-    url: "https://fonts.cdnfonts.com/s/107551/BRCobane-Regular-BF654d96a1718fa.woff",
-  },
-  {
-    fallback: false,
-    label: "brcobane-bold",
-    url: "https://fonts.cdnfonts.com/s/107551/BRCobane-Bold-BF654d96a1ac1b0.woff",
-  },
-  {
-    fallback: false,
-    label: "brcobane-italic",
-    url: "https://fonts.cdnfonts.com/s/107551/BRCobane-RegularItalic-BF654d96a1a8637.woff",
-  },
-  {
-    fallback: false,
-    label: "calibri",
-    url: "https://fonts.gstatic.com/l/font?kit=J7afnpV-BGlaFfdAhLEY6w&skey=a1029226f80653a8&v=v15",
-  },
-  {
-    fallback: false,
-    label: "calibri-bold",
-    url: "https://fonts.gstatic.com/l/font?kit=J7aanpV-BGlaFfdAjAo9_pxqHw&skey=cd2dd6afe6bf0eb2&v=v15",
-  },
-  {
-    fallback: false,
-    label: "calibri-italic",
-    url: "https://fonts.gstatic.com/l/font?kit=J7adnpV-BGlaFfdAhLQo6btP&skey=36a3d5758e0e2f58&v=v15",
-  },
-];
+import { fontObjList } from "../data/data";
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
 
@@ -394,6 +199,88 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
   setLoadingMessage("Finished Processing Pdfs...");
   window.open(URL.createObjectURL(blob));
 }
+
+
+export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
+  setLoadingMessage("Generating combined pdf!");
+  const font = await getFontsData();
+  const mergedPdf = await PDFDocument.create();
+
+  for (let i = 0; i < templates.length; i++) {
+    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
+    const pdf = await generate({
+      template: templates[i],
+      inputs: [inputsArray[i]],
+      options: { font },
+      plugins: getPlugins(),
+    });
+    const loadedPdf = await PDFDocument.load(pdf);
+    const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
+    copiedPages.forEach(page => mergedPdf.addPage(page));
+  }
+
+  setLoadingMessage("Merging Pdfs");
+
+  const mergedPdfBytes = await mergedPdf.save();
+  setLoadingMessage("Creating Blobs");
+  const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+  setLoadingMessage("Finished Processing Pdfs...");
+
+  const blobUrl = URL.createObjectURL(blob);
+  const printWindow = window.open('', '_blank');
+
+  if (printWindow) {
+    printWindow.document.write(`
+      <html>
+        <head><title>Generated Bootcamp Pdfs</title></head>
+        <body style="margin: 0;">
+          <iframe src="${blobUrl}" style="border: none; width: 100%; height: 100%;" onload="this.contentWindow.print();"></iframe>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+
+    printWindow.onafterprint = () => {
+      URL.revokeObjectURL(blobUrl);
+      printWindow.close();
+    };
+  } else {
+    console.error("Failed to open the print window");
+  }
+};
+
+export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], bootcampName: string, setLoadingMessage: (message: string) => void) => {
+  setLoadingMessage("Generating combined pdf!");
+  const font = await getFontsData();
+  const zip = new JSZip();
+
+  for (let i = 0; i < templates.length; i++) {
+    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
+    const pdf = await generate({
+      template: templates[i],
+      inputs: [inputsArray[i]],
+      options: { font },
+      plugins: getPlugins(),
+    });
+    const loadedPdf = await PDFDocument.load(pdf);
+    const mergedPdf = await PDFDocument.create();
+    const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
+    copiedPages.forEach(page => mergedPdf.addPage(page));
+    
+    const pdfBytes = await mergedPdf.save();
+    zip.file(`Diploma ${inputsArray[i].main}.pdf`, pdfBytes);
+  }
+
+  setLoadingMessage("Zipping Pdfs");
+
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+
+  setLoadingMessage("Finished Processing Pdfs...");
+
+  saveAs(zipBlob, `${bootcampName}_diplomas.zip`);
+};
+
 
 export const isJsonString = (str: string) => {
   try {
