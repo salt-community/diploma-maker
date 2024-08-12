@@ -10,14 +10,18 @@ type Props = {
   textfield: string;
   customIcon?: React.ReactNode;
   disabled?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 };
 
 export type SaveButtonType = 'grandTheftAuto' | 'normal' | 'remove' | 'warning';
 
-export const SaveButton = ({ classNameOverride, onClick, saveButtonType, textfield, customIcon, disabled }: Props) => (
+export const SaveButton = ({ classNameOverride, onClick, saveButtonType, textfield, customIcon, disabled, onMouseEnter, onMouseLeave }: Props) => (
   <button 
     className={"save-btn " + classNameOverride + (saveButtonType === 'grandTheftAuto' ? ' gta' : saveButtonType === 'remove' ? ' remove' : ' normal')} 
     onClick={() => {!disabled && onClick()}}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
   >
     {customIcon ? (
       <>
