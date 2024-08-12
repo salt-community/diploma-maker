@@ -25,9 +25,28 @@ export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdate
 
     const dataToStore = {
         pdfData,
-        dateAdded: new Date(lastUpdated).toISOString()  // Store the last updated date as ISO string
+        dateAdded: new Date(lastUpdated).toISOString()
     };
 
-    localStorage.setItem(localStorageKey, JSON.stringify(dataToStore));
+    
+    try {
+        localStorage.setItem(localStorageKey, JSON.stringify(dataToStore));
+    } catch (e) {
+        if (e instanceof DOMException && e.name === 'QuotaExceededError') {
+            const keys = Object.keys(localStorage);
+
+            for (let i = 0; i < keys.length; i++) {
+                const key = keys[i];
+                if (!key.startsWith('pdf_Blob/Default.v1.pdf') && !key.startsWith('pdf_Blob/Default.pdf')) {
+                    localStorage.removeItem(key);
+                    break;
+                }
+            }
+            localStorage.setItem(localStorageKey, JSON.stringify(dataToStore));
+        } else {
+            throw e;
+        }
+    }
+
     return pdfData;
 }
