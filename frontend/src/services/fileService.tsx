@@ -28,7 +28,6 @@ export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdate
         dateAdded: new Date(lastUpdated).toISOString()
     };
 
-    
     try {
         localStorage.setItem(localStorageKey, JSON.stringify(dataToStore));
     } catch (e) {
@@ -37,7 +36,7 @@ export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdate
 
             for (let i = 0; i < keys.length; i++) {
                 const key = keys[i];
-                if (!key.startsWith('pdf_Blob/Default.v1.pdf') && !key.startsWith('pdf_Blob/Default.pdf')) {
+                if (key.startsWith('pdf_')) {
                     localStorage.removeItem(key);
                     break;
                 }
