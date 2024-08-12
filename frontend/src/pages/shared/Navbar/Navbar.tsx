@@ -5,6 +5,9 @@ import { DashBoardIcon } from "../../../components/MenuItems/Icons/DashBoardIcon
 import { TemplateCreatorIcon } from "../../../components/MenuItems/Icons/TemplateCreatorIcon";
 import { CogWheelIcon } from "../../../components/MenuItems/Icons/CogWheelIcon";
 import { HistoryIcon } from "../../../components/MenuItems/Icons/HistoryIcon";
+import { MountainIcon } from "../../../components/MenuItems/Icons/MountainIcon";
+import { HelpIcon } from "../../../components/MenuItems/Icons/HelpIcon";
+import { HomeIcon } from "../../../components/MenuItems/Icons/HomeIcon";
 
 export const NavBar = () => {
     const location = useLocation();
@@ -15,6 +18,12 @@ export const NavBar = () => {
             <ul className="navbar__menu">
                 {!hideNavItems && (
                     <>
+                        <li className="navbar__item">
+                            <Link to="/home" className={"navbar__link " + ((location.pathname === '/home' || location.pathname === '/home') && "active")}>
+                                < HomeIcon/>
+                                Home
+                            </Link>
+                        </li>
                         <li className="navbar__item">
                             <Link to="/overview" className={"navbar__link " + ((location.pathname === '/overview' || location.pathname === '/Overview') && "active")}>
                                 <DashBoardIcon />
