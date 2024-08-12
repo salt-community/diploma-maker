@@ -1,0 +1,37 @@
+.homepage {
+  min-height: 100vh;
+  background-color: #2e2e38;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.homepage__header {
+  text-align: center;
+  color: #ffffff;
+}
+
+.homepage__header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.homepage__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.homepage__footer {
+  text-align: center;
+  color: #ffffff;
+  margin-top: 2rem;
+}
+
+.homepage__footer p {
+  font-size: 1rem;
+}

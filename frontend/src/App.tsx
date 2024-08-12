@@ -12,6 +12,7 @@ import { initApiEndpoints } from "./services/apiFactory";
 import { VerificationInputPage } from "./pages/Verifcation/VerificationInputPage";
 import { set } from "react-hook-form";
 import { HistoryPage } from "./pages/History/HistoryPage";
+import {HomePage} from "./pages/Homepage/HomePage"
 
 const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
@@ -146,6 +147,7 @@ export default function App() {
     <>
       <NavBar />
       <Routes>
+        <Route path={"/home"} element={<HomePage/>} />
         <Route path={"/"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} setLoadingMessage={setLoadingMessage}/>} />
         {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
         <Route path={`/verify`} element={<VerificationInputPage />} />
