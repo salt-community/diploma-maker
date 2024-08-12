@@ -1,18 +1,20 @@
 export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdated: Date, setLoadingMessage?: (message: string) => void): Promise<string> {
-    // const localStorageKey = `pdf_${url}`;
-    
-    // const cachedPdf = localStorage.getItem(localStorageKey);
+    const indexedDBKey = `pdf_${url}`;
 
-    // if (cachedPdf) {
-    //     const { pdfData, dateAdded } = JSON.parse(cachedPdf);
-    //     if (new Date(lastUpdated).toISOString() === dateAdded) {
-    //         return pdfData;
-    //     }
-    // }
+    const db = await openIndexedDB();
+
+    const cachedPdf = await getFromIndexedDB(db, indexedDBKey);
+
+    if (cachedPdf) {
+        const { pdfData, dateAdded } = cachedPdf;
+        if (new Date(lastUpdated).toISOString() === dateAdded) {
+            return pdfData;
+        }
+    }
 
     const pdfResponse = await fetch(`${apiUrl}/api/${url}`);
     if (!pdfResponse.ok) {
-        setLoadingMessage(`Failed to fetch PDF file from ${url}. The file does not seem to exist.`);
+        setLoadingMessage?.(`Failed to fetch PDF file from ${url}. The file does not seem to exist.`);
         throw new Error(`Failed to fetch PDF from ${url}`);
     }
 
@@ -25,28 +27,84 @@ export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdate
     });
 
     const dataToStore = {
+        id: indexedDBKey,
         pdfData,
-        dateAdded: new Date(lastUpdated).toISOString()
+        dateAdded: new Date(lastUpdated).toISOString(),
     };
 
-    // try {
-    //     localStorage.setItem(localStorageKey, JSON.stringify(dataToStore));
-    // } catch (e) {
-    //     if (e instanceof DOMException && e.name === 'QuotaExceededError') {
-    //         const keys = Object.keys(localStorage);
-
-    //         for (let i = 0; i < keys.length; i++) {
-    //             const key = keys[i];
-    //             if (key.startsWith('pdf_')) {
-    //                 localStorage.removeItem(key);
-    //                 break;
-    //             }
-    //         }
-    //         localStorage.setItem(localStorageKey, JSON.stringify(dataToStore));
-    //     } else {
-    //         throw e;
-    //     }
-    // }
+    await storeInIndexedDB(db, indexedDBKey, dataToStore);
 
     return pdfData;
+}
+
+async function openIndexedDB(): Promise<IDBDatabase> {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('pdfCache', 1);
+
+        request.onupgradeneeded = (event) => {
+            const db = (event.target as IDBOpenDBRequest).result;
+            if (!db.objectStoreNames.contains('pdfs')) {
+                db.createObjectStore('pdfs', { keyPath: 'id' });
+            }
+        };
+
+        request.onsuccess = () => {
+            resolve(request.result);
+        };
+
+        request.onerror = () => {
+            reject(request.error);
+        };
+    });
+}
+
+async function getFromIndexedDB(db: IDBDatabase, key: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction('pdfs', 'readonly');
+        const store = transaction.objectStore('pdfs');
+        const request = store.get(key);
+
+        request.onsuccess = () => {
+            resolve(request.result);
+        };
+
+        request.onerror = () => {
+            reject(request.error);
+        };
+    });
+}
+
+async function storeInIndexedDB(db: IDBDatabase, key: string, data: any): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+        const transaction = db.transaction('pdfs', 'readwrite');
+        const store = transaction.objectStore('pdfs');
+
+        const countRequest = store.count();
+        countRequest.onsuccess = async () => {
+            const count = countRequest.result;
+
+            if (count >= 25) {
+                const cursorRequest = store.openCursor();
+                cursorRequest.onsuccess = (event) => {
+                    const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+                    if (cursor) {
+                        store.delete(cursor.primaryKey);
+                        cursor.continue();
+                    }
+                };
+            }
+
+            const putRequest = store.put(data);
+            putRequest.onsuccess = () => {
+                resolve();
+            };
+            putRequest.onerror = () => {
+                reject(putRequest.error);
+            };
+        };
+
+        countRequest.onerror = () => {
+            reject(countRequest.error);
+        };
+    });
 }
