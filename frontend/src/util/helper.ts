@@ -10,7 +10,10 @@ import { fontObjList } from "../data/data";
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import * as pdfjsLib from 'pdfjs-dist';
+import { updateStudentPreviewImage } from "../services/bootcampService";
+import { initApiEndpoints } from "../services/apiFactory";
 
+const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
 
 export const getFontsData = async () => {
@@ -235,8 +238,18 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
       image: studentPreviewImage
     });
   }
-
-  console.log(studentImages);
+  
+  
+  for (let i = 0; i < templates.length; i++) {
+    await delay(200)
+    console.log(studentImages[i]);
+    setLoadingMessage(`Generating Thumbnails ${i + 1}/${studentImages.length}`)
+    try {
+      await api.updateStudentPreviewImage(studentImages[i]);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   setLoadingMessage("Merging Pdfs");
 

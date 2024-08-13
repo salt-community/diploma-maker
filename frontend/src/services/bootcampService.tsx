@@ -1,3 +1,4 @@
+import { delay } from "../util/helper";
 import { BootcampRequest, BootcampResponse, FormDataUpdateRequest, studentImagePreview, StudentResponse,  } from "../util/types";
 
 export async function postBootcamp(apiUrl: string, bootcampRequest: BootcampRequest): Promise<void> {
@@ -94,12 +95,12 @@ export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpda
 }
 
 
-export async function updateStudentPreviewImage(studentImagePreviewRequest: studentImagePreview, apiUrl: string): Promise<StudentResponse> {
+export async function updateStudentPreviewImage(apiUrl: string, studentImagePreviewRequest: studentImagePreview): Promise<StudentResponse> {
     const formData = new FormData();
     formData.append('StudentGuidId', studentImagePreviewRequest.studentGuidId);
     formData.append('Image', studentImagePreviewRequest.image, studentImagePreviewRequest.studentGuidId);
 
-    const response = await fetch(`${apiUrl}/UpdateStudentsPreviewImage`, {
+    const response = await fetch(`${apiUrl}/api/Blob/UpdateStudentsPreviewImage`, {
         method: 'PUT',
         body: formData,
     });

@@ -50,8 +50,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [downloadActive, setDownloadActive] = useState<boolean>(false);
   const [generateBtnActive, setGenerateBtnActive] = useState<boolean>(false);
 
-  const [responseBootcampFormData, setResponseBootcampFormData] = useState<BootcampResponse>();
-
   useEffect(() => {
     if(tracks && templates){
       const filteredTracks = tracks.filter(t => t.bootcamps.length > 0);
@@ -97,7 +95,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     setAttachedFiles({ ...attachedFiles, [bootcampGuid]: file });
   };
 
-  const postSelectedBootcampData = async (both?: Boolean) => {
+  const postSelectedBootcampData = async (both?: Boolean): Promise<BootcampResponse> => {
     setDisableNavbar(true);
     customAlert('loading', 'Adding Diplomas...', '');
     const updateFormDataRequest: FormDataUpdateRequest = {
@@ -112,19 +110,19 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
     try {
       const response: BootcampResponse = await UpdateBootcampWithNewFormdata(updateFormDataRequest, AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId);
-      setResponseBootcampFormData(response);
       both
         ? ''
         : customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
         setDisableNavbar(false);
+      return response;
     } catch (error) {
       customAlert('fail', "Failed to add diplomas:", `${error}`);
       setDisableNavbar(false);
     }
   }
 
-  const generatePDFHandler = async (pdfGenerationScope: 'all' | 'selected', print?: boolean, download?: boolean) => {
+  const generatePDFHandler = async (pdfGenerationScope: 'all' | 'selected', print?: boolean, download?: boolean, bootcampPutResponse?: BootcampResponse) => {
     if (!tracks || !templates) {
       customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
       return;
@@ -159,26 +157,28 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       customAlert('loading', message, '');
     };
 
+    const studentsInput = bootcampPutResponse.students.filter(s => students.some(st => st.name = s.name));
+
     try {
       print 
       ? await newGenerateAndPrintCombinedPDF(
           templatesArr, 
           inputsArray,
-          responseBootcampFormData.students.filter(s => students.some(st => st.name = s.name)), 
+          studentsInput, 
           setLoadingMessageAndAlert
         ) 
       : download 
       ? await newGenerateAndDownloadZippedPDFs(
         templatesArr, 
         inputsArray,
-        responseBootcampFormData.students.filter(s => students.some(st => st.name = s.name)),
+        studentsInput,
         selectedBootcamp.name, 
         setLoadingMessageAndAlert
       )
       : await newGenerateCombinedPDF(
         templatesArr, 
         inputsArray, 
-        responseBootcampFormData.students.filter(s => students.some(st => st.name = s.name)),
+        studentsInput,
         setLoadingMessageAndAlert
       ) 
       
@@ -220,13 +220,15 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       setDownloadActive(false);
       
     }
+    let bootcampPutResponse;
+
     if (data.optionA && data.optionB) {
-      postSelectedBootcampData(true);
+      bootcampPutResponse = await postSelectedBootcampData(true);
     } else if (data.optionA) {
-      postSelectedBootcampData();
+      bootcampPutResponse = await postSelectedBootcampData();
     }
     if (data.optionB && !printActive && !downloadActive) {
-      generatePDFHandler(data.pdfGenerationScope);
+      await generatePDFHandler(data.pdfGenerationScope, false, false, bootcampPutResponse);
     }
   };
 
