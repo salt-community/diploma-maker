@@ -83,5 +83,20 @@ namespace DiplomaMakerApi.Services
             return webpFormFile;
         }
 
+        public Task<string> GetRelativePathAsync(string fullFilePath, string directoryName)
+        {
+            var startIndex = fullFilePath.IndexOf(directoryName);
+
+            if (startIndex == -1)
+            {
+                throw new ArgumentException("Directory name not found in the path.");
+            }
+
+            var relativePath = fullFilePath.Substring(startIndex);
+            var normalizedPath = relativePath.Replace('\\', '/');
+
+            return Task.FromResult(normalizedPath);
+        }
+
     }
 }

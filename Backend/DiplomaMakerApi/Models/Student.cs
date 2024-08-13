@@ -8,6 +8,8 @@ public class Student
     public required string VerificationCode { get; set; }
     public required string Name { get; set; }
     public string? Email { get; set; }
+    public string? PreviewImageUrl { get; set; }
+    public string? PreviewImageLQIPUrl { get; set; }
     public DateTime? LastGenerated { get; set; }
     [JsonIgnore]
     public required Bootcamp Bootcamp { get; set; }

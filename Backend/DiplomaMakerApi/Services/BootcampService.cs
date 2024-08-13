@@ -111,7 +111,10 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
             throw new NotFoundByGuidException("Student", previewImageRequestDto.StudentGuidId);
         }
         var compressedFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
-        await _localFileStorageService.SaveFile(compressedFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
+        var fullFilePath = await _localFileStorageService.SaveFile(compressedFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
+        var relativePath = await _fileUtilityService.GetRelativePathAsync(fullFilePath, "ImagePreview");
+
+        student.PreviewImageUrl = relativePath;
     }
 
 }
