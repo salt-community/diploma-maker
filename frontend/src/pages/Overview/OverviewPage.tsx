@@ -47,6 +47,8 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
     const { loadingMessage } = useLoadingMessage();
 
+    const api = import.meta.env.VITE_API_URL + "/api/Blob/";
+
     useEffect(() => {
         if (bootcamps) {
             setLoading(false);
@@ -323,27 +325,33 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             }
             <section className='overview-page__list-module'>
                 <div className='overview-page__list-module-card-container'>
-                    {loading ? (
+                {loading ? (
                         <SpinnerDefault classOverride="spinner" />
                     ) : (
                         // @ts-ignore
-                        selectedItems.length > 0 ? selectedItems.map((student: Student, index) => (
-                            <button key={student.guidId} className='list-module__item'>
-                                <p className='list-module__item-title'>{student.name}</p>
-                                <img className='list-module__item-bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                                <section className='list-module__item-menu'>
-                                    <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
-                                    <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
-                                    <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
-                                </section>
-                                {student.lastGenerated && 
-                                    <div onClick={() => navigateToVerificationPage(student.verificationCode)} className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
-                                        <VerifyIcon />
-                                    </div>
-                                }
-                            </button>
-                        )) :
-                            <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />
+                        selectedItems.length > 0 ? selectedItems.map((student: Student, index) => {
+                            const imageUrl = student.previewImageUrl 
+                                ? `${api}${student.previewImageUrl}` 
+                                : 'https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg';
+                                
+                            return (
+                                <button key={student.guidId} className='list-module__item'>
+                                    {!student.previewImageUrl && <p className='list-module__item-title'>{student.name}</p>}
+                                    <img className='list-module__item-bg' src={imageUrl} alt="" />
+                                    <section className='list-module__item-menu'>
+                                        <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
+                                        <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
+                                        <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
+                                    </section>
+                                    {student.lastGenerated && 
+                                        <div onClick={() => navigateToVerificationPage(student.verificationCode)} className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
+                                            <VerifyIcon />
+                                        </div>
+                                    }
+                                </button>
+                            );
+                        }) :
+                        <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />
                     )}
                 </div>
                 {selectedItems.length > 0 &&

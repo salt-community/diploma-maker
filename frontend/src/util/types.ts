@@ -39,6 +39,8 @@ export type Student = {
     email: string;
     verificationCode?: string;
     lastGenerated?: Date;
+    previewImageUrl?: string | null,
+    previewImageLQIPUrl?: string | null
 }
 // bootcamps
 
