@@ -78,5 +78,11 @@ namespace DiplomaMakerApi.Controllers
                 return await _googleCloudStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
             }
         }
+
+        [HttpPut("UpdateStudentsPreviewImages")]
+        public async Task<IActionResult> UpdateStudentsPreviewImages()
+        {
+            return Ok();
+        }
     }
 }
