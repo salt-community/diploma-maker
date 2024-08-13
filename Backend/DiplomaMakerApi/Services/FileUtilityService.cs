@@ -1,4 +1,7 @@
 using System.IO.Compression;
+using Microsoft.AspNetCore.Mvc;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Webp;
 
 namespace DiplomaMakerApi.Services
 {
@@ -44,5 +47,39 @@ namespace DiplomaMakerApi.Services
                 return memoryStream.ToArray();
             }
         }
+
+        public async Task<IFormFile> ConvertPngToWebP(IFormFile formFile, string fileName)
+        {
+            if (formFile == null || !formFile.ContentType.Contains("image/png"))
+            {
+                throw new ArgumentException("Invalid file format. Must be .png");
+            }
+
+            using var inStream = new MemoryStream();
+            await formFile.CopyToAsync(inStream);
+            inStream.Position = 0;
+
+            using var myImage = await Image.LoadAsync(inStream);
+
+            using var outStream = new MemoryStream();
+
+            await myImage.SaveAsync(outStream, new WebpEncoder());
+
+            outStream.Position = 0;
+
+            var webpFileName = Path.ChangeExtension(fileName, ".webp");
+
+           
+            var webpStreamCopy = new MemoryStream(outStream.ToArray());  // To fix "Cannot access a closed Stream." error
+
+            var webpFormFile = new FormFile(webpStreamCopy, 0, webpStreamCopy.Length, "file", webpFileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image/webp"
+            };
+
+            return webpFormFile;
+        }
+
     }
 }

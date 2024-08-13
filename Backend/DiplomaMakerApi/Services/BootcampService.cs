@@ -6,10 +6,11 @@ using DiplomaMakerApi.Dtos.PreviewImage;
 
 namespace DiplomaMakerApi.Services;
 
-public class BootcampService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService)
+public class BootcampService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService, FileUtilityService fileUtilityService)
 {
     private readonly DiplomaMakingContext _context = context;
     private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
+    private readonly FileUtilityService _fileUtilityService = fileUtilityService;
 
     public async Task<Bootcamp> PostBootcamp( BootcampRequestDto requestDto )
     {
@@ -109,7 +110,9 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
         {
             throw new NotFoundByGuidException("Student", previewImageRequestDto.StudentGuidId);
         }
-        await _localFileStorageService.SaveFile(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
+        await _localFileStorageService.SaveFile(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString() + "-png", "ImagePreview");
+        var compressedFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
+        await _localFileStorageService.SaveFile(compressedFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
     }
 
 }

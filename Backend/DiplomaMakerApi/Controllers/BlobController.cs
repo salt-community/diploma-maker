@@ -61,9 +61,6 @@ namespace DiplomaMakerApi.Controllers
             return Ok();
         }
 
-
-
-
         private async Task<IActionResult> GetPdfBlob(string filename)
         {
             filename = Path.GetFileName(filename);
