@@ -236,10 +236,10 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
 
     const studentPreviewImage = await convertPDFToImage(pdf);
 
-    // studentImages.push({
-    //   studentGuidId: studentId,
-    //   image: studentPreviewImage
-    // });
+    studentImages.push({
+      studentGuidId: students[i].guidId,
+      image: studentPreviewImage
+    });
   }
 
   console.log(studentImages);
