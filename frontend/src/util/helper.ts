@@ -4,7 +4,7 @@ import { generate } from "@pdfme/generator";
 import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
-import { BootcampResponse, SaltData, Size, Student, TemplateResponse } from "./types";
+import { BootcampResponse, SaltData, Size, Student, studentImagePreview, TemplateResponse } from "./types";
 import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
 import { fontObjList } from "../data/data";
 import JSZip from 'jszip';
@@ -206,12 +206,6 @@ export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | n
     return null;
   }
 };
-
-
-export type studentImagePreview = {
-  studentGuidId: string,
-  image: Blob,
-}
 
 export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], students: Student[], setLoadingMessage: (message: string) => void) => {
   setLoadingMessage("Generating combined pdf!");

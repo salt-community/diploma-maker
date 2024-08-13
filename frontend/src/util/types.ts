@@ -201,3 +201,9 @@ export type EmailConfigRequestDto = {
     senderEmail: string;
     senderCode: string;
 }
+
+
+export type studentImagePreview = {
+    studentGuidId: string,
+    image: Blob,
+}
