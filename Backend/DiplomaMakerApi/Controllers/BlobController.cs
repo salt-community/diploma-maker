@@ -1,5 +1,7 @@
 using System.IO.Compression;
+using AutoMapper;
 using DiplomaMakerApi.Dtos.PreviewImage;
+using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,14 +16,23 @@ namespace DiplomaMakerApi.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly bool _useBlobStorage;
         private readonly BootcampService _bootcampService;
+        private readonly IMapper _mapper;
 
-        public BlobController(LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, IWebHostEnvironment env, IConfiguration configuration, BootcampService bootcampService)
+        public BlobController
+        (
+            LocalFileStorageService localFileStorageService, 
+            GoogleCloudStorageService googleCloudStorageService, 
+            IWebHostEnvironment env, IConfiguration configuration, 
+            BootcampService bootcampService,
+            IMapper mapper
+        )
         {
             _localFileStorageService = localFileStorageService;
             _googleCloudStorageService = googleCloudStorageService;
             _env = env;
             _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
             _bootcampService = bootcampService;
+            _mapper = mapper;
         }
 
         [HttpGet("{filename}")]
@@ -55,10 +66,10 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpPut("UpdateStudentsPreviewImage")]
-        public async Task<IActionResult> UpdateStudentsPreviewImages([FromForm] PreviewImageRequestDto previewImageRequestDto)
+        public async Task<ActionResult<StudentResponseDto>> UpdateStudentsPreviewImages([FromForm] PreviewImageRequestDto previewImageRequestDto)
         {
-            await _bootcampService.PutStudentPreviewImage(previewImageRequestDto);
-            return Ok();
+            var studentResponse = await _bootcampService.PutStudentPreviewImage(previewImageRequestDto);
+            return _mapper.Map<StudentResponseDto>(studentResponse) ;
         }
 
         private async Task<IActionResult> GetPdfBlob(string filename)

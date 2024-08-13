@@ -103,7 +103,7 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
             return bootcamp;
     }
 
-    public async Task PutStudentPreviewImage(PreviewImageRequestDto previewImageRequestDto)
+    public async Task<Student> PutStudentPreviewImage(PreviewImageRequestDto previewImageRequestDto)
     {
         var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == previewImageRequestDto.StudentGuidId);
         if(student == null)
@@ -115,6 +115,10 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
         var relativePath = await _fileUtilityService.GetRelativePathAsync(fullFilePath, "ImagePreview");
 
         student.PreviewImageUrl = relativePath;
+
+        await _context.SaveChangesAsync();
+
+        return student;
     }
 
 }

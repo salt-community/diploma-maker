@@ -12,7 +12,6 @@
 *.user
 *.userosscache
 *.sln.docstates
-/Blob/ImagePreview/*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -486,6 +485,7 @@ $RECYCLE.BIN/
 
 # Ignore all PDF files
 *.pdf
+*.webp
 
 # Except Default.pdf
 !Default.pdf
