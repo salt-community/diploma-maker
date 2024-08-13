@@ -55,7 +55,7 @@ export default function App() {
   }
 
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
-    const bootcampResponse = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
+    const bootcampResponse: BootcampResponse = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
     if (bootcampResponse) {
       setBootcamps(prevbootcamps =>
         prevbootcamps!.map((item) => 
@@ -64,8 +64,8 @@ export default function App() {
             : item
         )
       );
-
     }
+    return bootcampResponse;
   };
   
 

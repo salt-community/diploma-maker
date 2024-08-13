@@ -4,13 +4,12 @@ import { generate } from "@pdfme/generator";
 import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
-import { BootcampResponse, SaltData, Size, TemplateResponse } from "./types";
+import { BootcampResponse, SaltData, Size, Student, TemplateResponse } from "./types";
 import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
 import { fontObjList } from "../data/data";
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import * as pdfjsLib from 'pdfjs-dist';
-import webp from 'webp-converter';
 
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
 
@@ -174,29 +173,7 @@ export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray:
   window.open(URL.createObjectURL(blob));
 }
 
-export const convertPngToWebp = async (pngInput: Buffer): Promise<void> => {
-  try {
-    // Convert the PNG buffer to WebP format
-    const result = await webp.buffer2webpbuffer(pngInput, 'webp', '-q 80');
-
-    // Convert WebP buffer to base64 string
-    const webpBase64 = result.toString('base64');
-
-    // Create a data URL for the WebP image
-    const webpDataUrl = `data:image/webp;base64,${webpBase64}`;
-
-    // Open the WebP image in a new window
-    const newWindow = window.open("", "_blank");
-    if (newWindow) {
-      newWindow.document.write(`<img src="${webpDataUrl}" style="width: 100%; height: auto;"/>`);
-      newWindow.document.close();
-    }
-  } catch (e) {
-    console.error('Error converting PNG to WebP:', e);
-  }
-};
-
-export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Buffer | null> => {
+export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | null> => {
   try {
     const pdf = await pdfjsLib.getDocument({ data: pdfInput }).promise;
     
@@ -213,14 +190,17 @@ export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Buffer |
     
     await page.render(renderContext).promise;
     const dataURL = canvas.toDataURL("image/png");
-    console.log(dataURL);
-
+    
     const base64Data = dataURL.replace(/^data:image\/png;base64,/, '');
+    const binaryString = window.atob(base64Data);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
     
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
     
-    const buffer = Buffer.from(base64Data, 'base64');
-
-    return buffer;
+    return new Blob([bytes], { type: 'image/png' });
   } catch (e) {
     console.error('Error loading PDF:', e);
     return null;
@@ -228,10 +208,18 @@ export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Buffer |
 };
 
 
-export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
+export type studentImagePreview = {
+  studentGuidId: string,
+  image: Blob,
+}
+
+export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], students: Student[], setLoadingMessage: (message: string) => void) => {
   setLoadingMessage("Generating combined pdf!");
+  
   const font = await getFontsData();
   const mergedPdf = await PDFDocument.create();
+
+  const studentImages: studentImagePreview[] = []; 
 
   for (let i = 0; i < templates.length; i++) {
     setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
@@ -242,14 +230,19 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
       plugins: getPlugins(),
     });
 
-    const image = await convertPDFToImage(pdf);
-    console.log(image);
-    // await convertPngToWebp(image);
-
     const loadedPdf = await PDFDocument.load(pdf);
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
     copiedPages.forEach(page => mergedPdf.addPage(page));
+
+    const studentPreviewImage = await convertPDFToImage(pdf);
+
+    // studentImages.push({
+    //   studentGuidId: studentId,
+    //   image: studentPreviewImage
+    // });
   }
+
+  console.log(studentImages);
 
   setLoadingMessage("Merging Pdfs");
 
@@ -261,7 +254,7 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
 }
 
 
-export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
+export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], students: Student[], setLoadingMessage: (message: string) => void) => {
   setLoadingMessage("Generating combined pdf!");
   const font = await getFontsData();
   const mergedPdf = await PDFDocument.create();
@@ -310,7 +303,7 @@ export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inpu
   }
 };
 
-export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], bootcampName: string, setLoadingMessage: (message: string) => void) => {
+export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], students: Student[], bootcampName: string, setLoadingMessage: (message: string) => void) => {
   setLoadingMessage("Generating combined pdf!");
   const font = await getFontsData();
   const zip = new JSZip();

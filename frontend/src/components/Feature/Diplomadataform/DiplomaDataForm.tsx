@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse } from "../../../util/types";
+import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
 import { delay, generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF } from "../../../util/helper";
@@ -25,7 +25,7 @@ type FormData = {
 }
 
 type Props = {
-  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void;
+  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => BootcampResponse;
   setSaltData: (data: SaltData) => void;
   templates: TemplateResponse[] | null;
   tracks: TrackResponse[];
@@ -43,13 +43,14 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [students, setStudents] = useState<Student[]>();
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>();
   const [attachedFiles, setAttachedFiles] = useState<{ [key: string]: File | null }>({});
-
   const [disableNavbar, setDisableNavbar] = useState<boolean>(false);
 
   // Styling for generate popup btn
   const [printActive, setPrintActive] = useState<boolean>(false);
   const [downloadActive, setDownloadActive] = useState<boolean>(false);
   const [generateBtnActive, setGenerateBtnActive] = useState<boolean>(false);
+
+  const [responseBootcampFormData, setResponseBootcampFormData] = useState<BootcampResponse>();
 
   useEffect(() => {
     if(tracks && templates){
@@ -110,7 +111,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     };
 
     try {
-      await UpdateBootcampWithNewFormdata(updateFormDataRequest, AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId);
+      const response: BootcampResponse = await UpdateBootcampWithNewFormdata(updateFormDataRequest, AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId);
+      setResponseBootcampFormData(response);
       both
         ? ''
         : customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
@@ -159,9 +161,26 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
     try {
       print 
-      ? await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) 
-      : download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, selectedBootcamp.name, setLoadingMessageAndAlert)
-      : await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) 
+      ? await newGenerateAndPrintCombinedPDF(
+          templatesArr, 
+          inputsArray,
+          responseBootcampFormData.students.filter(s => students.some(st => st.name = s.name)), 
+          setLoadingMessageAndAlert
+        ) 
+      : download 
+      ? await newGenerateAndDownloadZippedPDFs(
+        templatesArr, 
+        inputsArray,
+        responseBootcampFormData.students.filter(s => students.some(st => st.name = s.name)),
+        selectedBootcamp.name, 
+        setLoadingMessageAndAlert
+      )
+      : await newGenerateCombinedPDF(
+        templatesArr, 
+        inputsArray, 
+        responseBootcampFormData.students.filter(s => students.some(st => st.name = s.name)),
+        setLoadingMessageAndAlert
+      ) 
       
       customAlert('loadingfadeout', '', '');
       await alertSuccess();
