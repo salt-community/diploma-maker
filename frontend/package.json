@@ -32,6 +32,7 @@
     "react-query": "^3.39.3",
     "react-router-dom": "^6.25.0",
     "signature_pad": "^5.0.1",
+    "webp-converter": "^2.3.3",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

@@ -10,6 +10,7 @@ import { fontObjList } from "../data/data";
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import * as pdfjsLib from 'pdfjs-dist';
+import webp from 'webp-converter';
 
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
 
@@ -173,45 +174,57 @@ export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray:
   window.open(URL.createObjectURL(blob));
 }
 
-export const convertPngToWebp = async () => {
-  
-}
+export const convertPngToWebp = async (pngInput: Buffer): Promise<void> => {
+  try {
+    // Convert the PNG buffer to WebP format
+    const result = await webp.buffer2webpbuffer(pngInput, 'webp', '-q 80');
 
-export const convertPDFToImage = async (pdfInput) => {
-  const imagesList = [];
-  console.log(pdfInput);
+    // Convert WebP buffer to base64 string
+    const webpBase64 = result.toString('base64');
+
+    // Create a data URL for the WebP image
+    const webpDataUrl = `data:image/webp;base64,${webpBase64}`;
+
+    // Open the WebP image in a new window
+    const newWindow = window.open("", "_blank");
+    if (newWindow) {
+      newWindow.document.write(`<img src="${webpDataUrl}" style="width: 100%; height: auto;"/>`);
+      newWindow.document.close();
+    }
+  } catch (e) {
+    console.error('Error converting PNG to WebP:', e);
+  }
+};
+
+export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Buffer | null> => {
   try {
     const pdf = await pdfjsLib.getDocument({ data: pdfInput }).promise;
     
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const viewport = page.getViewport({ scale: 1.5 });
-      const canvas = document.createElement("canvas");
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-      
-      const renderContext = {
-        canvasContext: canvas.getContext("2d"),
-        viewport: viewport,
-      };
-      
-      await page.render(renderContext).promise;
-      const img = canvas.toDataURL("image/png");
-      
-      // Open image in a new window
-      const newWindow = window.open("", "_blank");
-      if (newWindow) {
-        newWindow.document.write(`<img src="${img}" style="width: 100%; height: auto;"/>`);
-        newWindow.document.close();
-      }
-      
-      imagesList.push(img);
-    }
+    const page = await pdf.getPage(1);
+    const viewport = page.getViewport({ scale: 1.5 });
+    const canvas = document.createElement("canvas");
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    
+    const renderContext = {
+      canvasContext: canvas.getContext("2d"),
+      viewport: viewport,
+    };
+    
+    await page.render(renderContext).promise;
+    const dataURL = canvas.toDataURL("image/png");
+    console.log(dataURL);
+
+    const base64Data = dataURL.replace(/^data:image\/png;base64,/, '');
+    
+    
+    const buffer = Buffer.from(base64Data, 'base64');
+
+    return buffer;
   } catch (e) {
     console.error('Error loading PDF:', e);
+    return null;
   }
-  
-  return imagesList;
 };
 
 
@@ -228,7 +241,11 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
       options: { font },
       plugins: getPlugins(),
     });
-    await convertPDFToImage(pdf)
+
+    const image = await convertPDFToImage(pdf);
+    console.log(image);
+    // await convertPngToWebp(image);
+
     const loadedPdf = await PDFDocument.load(pdf);
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
     copiedPages.forEach(page => mergedPdf.addPage(page));
@@ -240,7 +257,7 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
   setLoadingMessage("Creating Blobs");
   const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
   setLoadingMessage("Finished Processing Pdfs...");
-  // window.open(URL.createObjectURL(blob));
+  window.open(URL.createObjectURL(blob));
 }
 
 
