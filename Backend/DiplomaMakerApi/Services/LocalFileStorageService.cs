@@ -15,7 +15,6 @@ namespace DiplomaMakerApi.Services
             _fileUtilityService = fileUtilityService;
         }
 
-        // Get file path from a subdirectory
         public async Task<string> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
         {
             var directoryPath = Path.Combine(_basePath, subDirectory ?? string.Empty);

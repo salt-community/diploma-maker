@@ -27,16 +27,44 @@ namespace DiplomaMakerApi.Controllers
         [HttpGet("{filename}")]
         public async Task<IActionResult> GetFile(string filename)
         {
-            return await GetFileFromBlob(filename);
+            return await GetPdfBlob(filename);
         }
 
         [HttpGet("DiplomaPdfs/{filename}")]
         public async Task<IActionResult> GetDiplomaPdf(string filename)
         {
-            return await GetFileFromBlob(filename);
+            return await GetPdfBlob(filename);
         }
 
-        private async Task<IActionResult> GetFileFromBlob(string filename)
+        [HttpGet("download-all-templatebackgrounds")]
+        public async Task<IActionResult> DownloadAllFiles()
+        {
+            if (!_useBlobStorage)
+            {
+                return await _localFileStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
+            }
+            else{
+                return await _googleCloudStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
+            }
+        }
+
+        [HttpGet("ImagePreview/{filename}")]
+        public async Task<IActionResult> GetPreviewImage(string filename)
+        {
+            return await GetImageBlob(filename);
+        }
+
+        [HttpPut("UpdateStudentsPreviewImage")]
+        public async Task<IActionResult> UpdateStudentsPreviewImages([FromForm] PreviewImageRequestDto previewImageRequestDto)
+        {
+            await _bootcampService.PutStudentPreviewImage(previewImageRequestDto);
+            return Ok();
+        }
+
+
+
+
+        private async Task<IActionResult> GetPdfBlob(string filename)
         {
             filename = Path.GetFileName(filename);
             
@@ -69,23 +97,25 @@ namespace DiplomaMakerApi.Controllers
             }
         }   
 
-        [HttpGet("download-all-templatebackgrounds")]
-        public async Task<IActionResult> DownloadAllFiles()
-        {
-            if (!_useBlobStorage)
-            {
-                return await _localFileStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
-            }
-            else{
-                return await _googleCloudStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
-            }
-        }
 
-        [HttpPut("UpdateStudentsPreviewImage")]
-        public async Task<IActionResult> UpdateStudentsPreviewImages([FromForm] PreviewImageRequestDto previewImageRequestDto)
+        private async Task<IActionResult> GetImageBlob(string filename)
         {
-            await _bootcampService.PutStudentPreviewImage(previewImageRequestDto);
-            return Ok();
-        }
+            filename = Path.GetFileName(filename);
+            
+            if (!filename.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Invalid file type.");
+            }
+
+            var filePath = await _localFileStorageService.GetFilePath(filename, "ImagePreview");
+
+            if (filePath == null)
+            {
+                return NotFound("File not found.");
+            }
+
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+            return File(fileBytes, "application/webp", filename);
+        }   
     }
 }
