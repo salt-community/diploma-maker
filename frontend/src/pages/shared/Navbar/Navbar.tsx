@@ -18,37 +18,37 @@ export const NavBar = () => {
             <ul className="navbar__menu">
                 {!hideNavItems && (
                     <>
-                        <li className="navbar__item">
+                        <li className="navbar__item home">
                             <Link to="/home" className={"navbar__link " + ((location.pathname === '/home' || location.pathname === '/home') && "active")}>
                                 < HomeIcon/>
                                 Home
                             </Link>
                         </li>
-                        <li className="navbar__item">
+                        <li className="navbar__item overview">
                             <Link to="/overview" className={"navbar__link " + ((location.pathname === '/overview' || location.pathname === '/Overview') && "active")}>
                                 <DashBoardIcon />
                                 Dashboard
                             </Link>
                         </li>
-                        <li className="navbar__item">
+                        <li className="navbar__item pdf-creator">
                             <Link to="/pdf-creator" className={"navbar__link " + (location.pathname === '/pdf-creator' && "active")}>
                                 <PdfCreatorIcon />
                                 PDFcreator
                             </Link>
                         </li>
-                        <li className="navbar__item">
+                        <li className="navbar__item template-creator">
                             <Link to="/template-creator" className={"navbar__link " + ((location.pathname === '/template-creator' || location.pathname === '/Template-creator') && "active")}>
                                 <TemplateCreatorIcon />
                                 TemplateCreator
                             </Link>
                         </li>
-                        <li className="navbar__item">
+                        <li className="navbar__item bootcamp-management">
                             <Link to="/bootcamp-management" className={"navbar__link " + ((location.pathname === '/bootcamp-management' || location.pathname === '/Bootcamp-management') && "active")}>
                                 <CogWheelIcon />
                                 BootcampOptions
                             </Link>
                         </li>
-                        <li className="navbar__item">
+                        <li className="navbar__item history">
                             <Link to="/history" className={"navbar__link " + ((location.pathname === '/history' || location.pathname === '/history') && "active")}>
                                 <HistoryIcon />
                                 History

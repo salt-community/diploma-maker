@@ -20,7 +20,6 @@
 }
 
 .homepage__grid {
-
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 2.5rem;
@@ -28,6 +27,25 @@
   max-width: 1200px;
 }
 
+.homepage__card:hover .homepage__card-header svg .fill,
+.homepage__card:hover .homepage__card-header svg .stroke,
+.homepage__card:hover .homepage__card-header svg .cls-1{
+  transition: all 350ms ease;
+}
+
+.homepage__card:hover .homepage__card-header svg .fill{
+  fill: #fff;
+  transition: all 350ms ease;
+}
+
+.homepage__card:hover .homepage__card-header svg .stroke{
+  stroke: #fff;
+  transition: all 350ms ease;
+}
+.homepage__card:hover .homepage__card-header svg .cls-1{
+  stroke: #fff;
+  transition: all 350ms ease;
+}
 
 
 

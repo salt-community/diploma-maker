@@ -2,14 +2,19 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './DescriptionCard.css';
 
-export function DescriptionCard({ shortDescription, LongDescription, title, icon: Icon }) {
+type Props = {
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
+}
+
+export function DescriptionCard({ shortDescription, LongDescription, title, icon: Icon, onMouseEnter, onMouseLeave }) {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
         <div
             className="homepage__card"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={() => {setIsHovered(true); onMouseEnter();}}
+            onMouseLeave={() => {setIsHovered(false); onMouseLeave();}}
         >
             <header className="homepage__card-header">
                 <Icon />
