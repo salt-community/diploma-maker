@@ -63,7 +63,9 @@ namespace DiplomaMakerApi.Services
 
             using var outStream = new MemoryStream();
 
-            await myImage.SaveAsync(outStream, new WebpEncoder());
+            await myImage.SaveAsync(outStream, new WebpEncoder(){
+                FileFormat = WebpFileFormatType.Lossy,
+            });
 
             outStream.Position = 0;
 

@@ -110,7 +110,6 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
         {
             throw new NotFoundByGuidException("Student", previewImageRequestDto.StudentGuidId);
         }
-        await _localFileStorageService.SaveFile(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString() + "-png", "ImagePreview");
         var compressedFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
         await _localFileStorageService.SaveFile(compressedFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
     }
