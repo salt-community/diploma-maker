@@ -3,16 +3,16 @@
     color: #ffffff;
     padding: 2rem;
     border-radius: 0.5rem;
-    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: background-color 0.375s ease, box-shadow 0.375s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    min-height: 300px;
+    height: 300px;
     position: relative;
+    cursor: default;
 }
 
 .homepage__card:hover {
     background-color: #5e5e6e;
-    transform: translateY(-3px); 
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
 }
 
 .homepage__card-header {
@@ -21,60 +21,69 @@
     align-items: center;
     gap: 10px;
     padding-bottom: 15px;
-    transition: color 0.3s ease; 
+    transition: color 0.375s ease;
 }
 
 .homepage__card-header svg {
     width: 40px;
     height: 40px;
-    transition: transform 0.3s ease; 
+    transition: transform 0.375s ease;
 }
 
 .homepage__card:hover .homepage__card-header svg {
-    transform: scale(1.1); 
+    transform: scale(1.1);
 }
 
 .homepage__card-content {
     position: relative;
-    transition: opacity 0.3s ease, max-height 0.3s ease; 
 }
 
 .homepage__card-short-description {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     padding-left: 3px;
     margin: 0;
-    transition: opacity 0.3s ease; 
+    opacity: 1;
+    transition: opacity 0.25s ease;
+}
+
+.homepage__card-short-description.hidden {
+    opacity: 0;
 }
 
 .short-description-list {
     list-style-type: disc;
     padding-left: 20px;
     margin: 0;
-    transition: margin 0.3s ease; 
+    transition: margin 0.375s ease;
 }
 
 .short-description-list li {
     margin-bottom: 0.7rem;
-    transition: margin-bottom 0.3s ease; 
+    transition: margin-bottom 0.375s ease;
 }
 
 .homepage__card-full-description {
-    display: flex;
-    flex-direction: column;
-    padding-left: 3px;
-    opacity: 0; 
-    max-height: 0; 
-    overflow: hidden;
-    transition: opacity 0.4s ease, max-height 0.4s ease; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    transition-delay: 0.15s;
 }
 
-.homepage__card:hover .homepage__card-full-description {
+.homepage__card-full-description.visible {
     opacity: 1;
-    max-height: 500px; 
 }
 
 .homepage__card-full-description-text {
     padding-bottom: 20px;
-    transition: padding-bottom 0.3s ease;
+    transition: padding-bottom 0.375s ease;
 }
 
 .submit-button-container {
@@ -88,7 +97,7 @@
     margin-top: 30px;
     display: block;
     text-align: center;
-    transition: color 0.3s ease; 
+    transition: color 0.375s ease;
 }
 
 .learn-more-text:hover {
