@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using DiplomaMakerApi.Dtos.PreviewImage;
 using DiplomaMakerApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,15 +12,16 @@ namespace DiplomaMakerApi.Controllers
         private readonly LocalFileStorageService _localFileStorageService;
         private readonly GoogleCloudStorageService _googleCloudStorageService;
         private readonly IWebHostEnvironment _env;
-
         private readonly bool _useBlobStorage;
+        private readonly BootcampService _bootcampService;
 
-        public BlobController(LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, IWebHostEnvironment env, IConfiguration configuration)
+        public BlobController(LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, IWebHostEnvironment env, IConfiguration configuration, BootcampService bootcampService)
         {
             _localFileStorageService = localFileStorageService;
             _googleCloudStorageService = googleCloudStorageService;
             _env = env;
             _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
+            _bootcampService = bootcampService;
         }
 
         [HttpGet("{filename}")]
@@ -79,9 +81,10 @@ namespace DiplomaMakerApi.Controllers
             }
         }
 
-        [HttpPut("UpdateStudentsPreviewImages")]
-        public async Task<IActionResult> UpdateStudentsPreviewImages()
+        [HttpPut("UpdateStudentsPreviewImage")]
+        public async Task<IActionResult> UpdateStudentsPreviewImages([FromForm] PreviewImageRequestDto previewImageRequestDto)
         {
+            await _bootcampService.PutStudentPreviewImage(previewImageRequestDto);
             return Ok();
         }
     }

@@ -2,17 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Exceptions;
+using DiplomaMakerApi.Dtos.PreviewImage;
 
 namespace DiplomaMakerApi.Services;
 
-public class BootcampService
+public class BootcampService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService)
 {
-    private readonly DiplomaMakingContext _context;
-
-    public BootcampService(DiplomaMakingContext context)
-    {
-        _context = context;
-    }
+    private readonly DiplomaMakingContext _context = context;
+    private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
 
     public async Task<Bootcamp> PostBootcamp( BootcampRequestDto requestDto )
     {
@@ -105,7 +102,14 @@ public class BootcampService
             return bootcamp;
     }
 
-
-
+    public async Task PutStudentPreviewImage(PreviewImageRequestDto previewImageRequestDto)
+    {
+        var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == previewImageRequestDto.StudentGuidId);
+        if(student == null)
+        {
+            throw new NotFoundByGuidException("Student", previewImageRequestDto.StudentGuidId);
+        }
+        await _localFileStorageService.SaveFile(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
+    }
 
 }
