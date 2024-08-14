@@ -210,6 +210,30 @@ export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | n
   }
 };
 
+export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setLoadingMessage: (message: string) => void) => {
+  const studentImages: studentImagePreview[] = []; 
+
+  for (let i = 0; i < pdfs.length; i++) {
+    setLoadingMessage(`Generating Thumbnails ${i + 1}/${pdfs.length}`)
+    studentImages.push({
+      studentGuidId: students[i].guidId,
+      image: await convertPDFToImage(pdfs[i])
+    });
+  }
+
+  for (let i = 0; i < pdfs.length; i++) {
+    await delay(200)
+    console.log(studentImages[i]);
+    setLoadingMessage(`Uploading & Compressing Thumbnails ${i + 1}/${studentImages.length}`)
+    try {
+      await api.updateStudentPreviewImage(studentImages[i]);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+}
+
 export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], students: Student[], setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
   setLoadingMessage("Generating combined pdf!");
   
@@ -235,25 +259,25 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
     copiedPages.forEach(page => mergedPdf.addPage(page));
 
-    const studentPreviewImage = await convertPDFToImage(pdf);
+    // const studentPreviewImage = await convertPDFToImage(pdf);
 
-    studentImages.push({
-      studentGuidId: students[i].guidId,
-      image: studentPreviewImage
-    });
+    // studentImages.push({
+    //   studentGuidId: students[i].guidId,
+    //   image: studentPreviewImage
+    // });
   }
   
   
-  for (let i = 0; i < templates.length; i++) {
-    await delay(200)
-    console.log(studentImages[i]);
-    setLoadingMessage(`Generating Thumbnails ${i + 1}/${studentImages.length}`)
-    try {
-      await api.updateStudentPreviewImage(studentImages[i]);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // for (let i = 0; i < templates.length; i++) {
+  //   await delay(200)
+  //   console.log(studentImages[i]);
+  //   setLoadingMessage(`Generating Thumbnails ${i + 1}/${studentImages.length}`)
+  //   try {
+  //     await api.updateStudentPreviewImage(studentImages[i]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   setLoadingMessage("Merging Pdfs");
 

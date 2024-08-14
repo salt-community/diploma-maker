@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
-import { delay, generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF } from "../../../util/helper";
+import { delay, generatePreviewImages, generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF } from "../../../util/helper";
 import './DiplomaDataForm.css';
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
@@ -159,21 +159,25 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
     const studentsInput = bootcampPutResponse.students.filter(s => students.some(st => st.name = s.name));
 
+    let pdfs: Uint8Array[]
     try {
       if(print){
-        const pdfs = await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray,studentsInput, setLoadingMessageAndAlert) 
+        pdfs = await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray,studentsInput, setLoadingMessageAndAlert);
+        await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
       }
       else if(download){
-        const pdfs = await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray,studentsInput,selectedBootcamp.name, setLoadingMessageAndAlert)
+        pdfs = await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray,studentsInput,selectedBootcamp.name, setLoadingMessageAndAlert);
+        await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
       }
       else{
-        const pdfs = await newGenerateCombinedPDF(templatesArr, inputsArray, studentsInput,setLoadingMessageAndAlert)
+        pdfs = await newGenerateCombinedPDF(templatesArr, inputsArray, studentsInput,setLoadingMessageAndAlert);
+        await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
       }
       
-      customAlert('loadingfadeout', '', '');
-      await alertSuccess();
+      // customAlert('loadingfadeout', '', '');
+      // await alertSuccess();
     } catch (error) {
-      customAlert('fail', "Failed to generate pdfs", `${error}`);
+      // customAlert('fail', "Failed to generate pdfs", `${error}`);
     }
     
   };
