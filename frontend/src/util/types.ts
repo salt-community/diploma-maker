@@ -31,6 +31,9 @@ export type StudentResponse = {
     name: string;
     email: string;
     verificationCode: string;
+    lastGenerated?: Date;
+    previewImageUrl?: string | null,
+    previewImageLQIPUrl?: string | null
 }
 
 export type Student = {

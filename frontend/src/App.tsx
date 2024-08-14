@@ -2,7 +2,7 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto, StudentResponse } from "./util/types";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
@@ -54,8 +54,20 @@ export default function App() {
     await refresh();
   }
 
-  const updateStudentThumbnails = async () => {
-
+  const updateStudentThumbnails = async (studentImagePreviewsResponse: StudentResponse[]) => {
+    setBootcamps(prevBootcamps =>
+      prevBootcamps!.map((bootcamp) => ({
+        ...bootcamp,
+        students: bootcamp.students.map(student => {
+          const matchingImage = studentImagePreviewsResponse.find(
+            preview => preview.guidId === student.guidId
+          );
+          return matchingImage 
+            ? { ...student, previewImageUrl: matchingImage.previewImageUrl } 
+            : student;
+        })
+      }))
+    );
   }
 
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
