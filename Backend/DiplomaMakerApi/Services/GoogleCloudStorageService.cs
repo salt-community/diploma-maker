@@ -51,7 +51,7 @@ namespace DiplomaMakerApi.Services
 
         public async Task<(byte[] FileBytes, string ContentType)> GetFileFromFilePath(string templateName, string subDirectory = "DiplomaPdfs")
         {
-            var filePath = await GetFilePath(templateName);
+            var filePath = await GetFilePath(templateName, subDirectory);
 
             if (filePath == null)
             {

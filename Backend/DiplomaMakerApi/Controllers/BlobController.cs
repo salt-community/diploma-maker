@@ -83,7 +83,7 @@ namespace DiplomaMakerApi.Controllers
 
             if (!_useBlobStorage)
             {
-                var filePath = await _localFileStorageService.GetFilePath(filename);
+                var filePath = await _localFileStorageService.GetFilePath(filename, "DiplomaPdfs");
 
                 if (filePath == null)
                 {
@@ -95,7 +95,7 @@ namespace DiplomaMakerApi.Controllers
             }
             else
             {
-                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename);
+                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename, "DiplomaPdfs");
 
                 if (fileBytes == null)
                 {
@@ -129,7 +129,7 @@ namespace DiplomaMakerApi.Controllers
             }
             else
             {
-                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename);
+                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename, "ImagePreview");
 
                 if (fileBytes == null)
                 {
