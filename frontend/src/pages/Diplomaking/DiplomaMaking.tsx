@@ -17,7 +17,7 @@ import PreviewDiploma from "../../components/Feature/PreviewDiploma/PreviewDiplo
 type Props = {
   tracks: TrackResponse[] | null;
   templates: TemplateResponse[] | null;
-  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void
+  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => Promise<BootcampResponse>
   setLoadingMessage: (message: string) => void;
   updateStudentThumbnails: (studentImagePreviewsResponse: StudentResponse[]) => void;
 };

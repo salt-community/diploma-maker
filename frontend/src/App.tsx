@@ -70,7 +70,7 @@ export default function App() {
     );
   }
 
-  const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
+  const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string): Promise<BootcampResponse> => {
     const bootcampResponse: BootcampResponse = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
     if (bootcampResponse) {
       setBootcamps(prevbootcamps =>

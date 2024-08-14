@@ -25,7 +25,7 @@ type FormData = {
 }
 
 type Props = {
-  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => BootcampResponse;
+  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => Promise<BootcampResponse>
   setSaltData: (data: SaltData) => void;
   templates: TemplateResponse[] | null;
   tracks: TrackResponse[];
@@ -166,7 +166,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       pdfs = 
         print ? await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) :
         download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, selectedBootcamp.name, setLoadingMessageAndAlert)
-        : await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, selectedBootcamp.name, setLoadingMessageAndAlert)
+        : await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert)
 
       studentImagePreviewsResponse = await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
       await updateStudentThumbnails(studentImagePreviewsResponse);
@@ -191,6 +191,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   };
 
   const onSubmit = async (data: FormData) => {
+    console.log(students);
     if (!validateOptions()) {
       customAlert('message', "", "At least one PDF generation option must be selected.");
       return;
@@ -199,6 +200,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       customAlert('message', "Failed!", "Your bootcamp needs students, Please add one or a few");
       return;
     }
+
     if (data.optionB && printActive) {
       generatePDFHandler(data.pdfGenerationScope, true, false);
       setPrintActive(false);
@@ -207,8 +209,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     if (data.optionB && downloadActive) {
       generatePDFHandler(data.pdfGenerationScope, false, true);
       setDownloadActive(false);
-      
     }
+
     let bootcampPutResponse;
 
     if (data.optionA && data.optionB) {
@@ -373,7 +375,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
             />
             <SaveButton 
               classNameOverride={`diploma-making-form__print-button ${generateBtnActive && 'active'}`}
-              onClick={() => setPrintActive(true)} saveButtonType='grandTheftAuto' 
+              onClick={() => setPrintActive(true)} 
+              saveButtonType='grandTheftAuto' 
               textfield="" 
               customIcon={
                 <svg fill="#ababba" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="#ababba" stroke-width="0.00032" transform="matrix(1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.064"></g><g id="SVGRepo_iconCarrier"> <title>print</title> <path d="M5.656 6.938l-0.344 2.688h11.781l-0.344-2.688c0-0.813-0.656-1.438-1.469-1.438h-8.188c-0.813 0-1.438 0.625-1.438 1.438zM1.438 11.094h19.531c0.813 0 1.438 0.625 1.438 1.438v8.563c0 0.813-0.625 1.438-1.438 1.438h-2.656v3.969h-14.219v-3.969h-2.656c-0.813 0-1.438-0.625-1.438-1.438v-8.563c0-0.813 0.625-1.438 1.438-1.438zM16.875 25.063v-9.281h-11.344v9.281h11.344zM15.188 18.469h-8.125c-0.188 0-0.344-0.188-0.344-0.375v-0.438c0-0.188 0.156-0.344 0.344-0.344h8.125c0.188 0 0.375 0.156 0.375 0.344v0.438c0 0.188-0.188 0.375-0.375 0.375zM15.188 21.063h-8.125c-0.188 0-0.344-0.188-0.344-0.375v-0.438c0-0.188 0.156-0.344 0.344-0.344h8.125c0.188 0 0.375 0.156 0.375 0.344v0.438c0 0.188-0.188 0.375-0.375 0.375zM15.188 23.656h-8.125c-0.188 0-0.344-0.188-0.344-0.375v-0.438c0-0.188 0.156-0.344 0.344-0.344h8.125c0.188 0 0.375 0.156 0.375 0.344v0.438c0 0.188-0.188 0.375-0.375 0.375z"></path> </g></svg>
