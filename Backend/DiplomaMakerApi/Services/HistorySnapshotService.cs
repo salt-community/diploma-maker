@@ -82,7 +82,7 @@ namespace DiplomaMakerApi.Services
                     {
                         opt.Items["bootcampUsed"] = bootcampUsed;
                         opt.Items["templateUsed"] = templateUsed;
-                        opt.Items["templateBackgroundLocation"] = "Blob/" + templateBackgroundLocation;
+                        opt.Items["templateBackgroundLocation"] = "Blob/" + templateBackgroundLocation.Replace('\\', '/');
                         opt.Items["lastSnapshot"] = lastSnapshot;
                         opt.Items["lastSnapshots"] = lastSnapshots;
                         opt.Items["timeUtcNow"] = timeUtcNow;
