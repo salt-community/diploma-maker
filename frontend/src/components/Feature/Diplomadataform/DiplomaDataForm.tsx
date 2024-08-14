@@ -157,7 +157,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       setLoadingMessage(message);
       customAlert('loading', message, '');
     };
-    
+
     const studentsInput = bootcampPutResponse.students.filter(s => students.some(st => st.name === s.name));
 
     let pdfs: Uint8Array[]
@@ -169,7 +169,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         : await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert)
 
       studentImagePreviewsResponse = await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
-      await updateStudentThumbnails(studentImagePreviewsResponse);
+      updateStudentThumbnails(studentImagePreviewsResponse);
       
       customAlert('loadingfadeout', '', '');
       await alertSuccess();
