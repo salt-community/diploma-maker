@@ -210,13 +210,15 @@ export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | n
   }
 };
 
-export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], students: Student[], setLoadingMessage: (message: string) => void) => {
+export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], students: Student[], setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
   setLoadingMessage("Generating combined pdf!");
   
   const font = await getFontsData();
   const mergedPdf = await PDFDocument.create();
 
   const studentImages: studentImagePreview[] = []; 
+
+  const pdfs = [];
 
   for (let i = 0; i < templates.length; i++) {
     setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
@@ -226,6 +228,8 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
       options: { font },
       plugins: getPlugins(),
     });
+
+    pdfs.push(pdf);
 
     const loadedPdf = await PDFDocument.load(pdf);
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
@@ -258,6 +262,8 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
   const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
   setLoadingMessage("Finished Processing Pdfs...");
   window.open(URL.createObjectURL(blob));
+
+  return pdfs;
 }
 
 

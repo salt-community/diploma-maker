@@ -160,27 +160,15 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     const studentsInput = bootcampPutResponse.students.filter(s => students.some(st => st.name = s.name));
 
     try {
-      print 
-      ? await newGenerateAndPrintCombinedPDF(
-          templatesArr, 
-          inputsArray,
-          studentsInput, 
-          setLoadingMessageAndAlert
-        ) 
-      : download 
-      ? await newGenerateAndDownloadZippedPDFs(
-        templatesArr, 
-        inputsArray,
-        studentsInput,
-        selectedBootcamp.name, 
-        setLoadingMessageAndAlert
-      )
-      : await newGenerateCombinedPDF(
-        templatesArr, 
-        inputsArray, 
-        studentsInput,
-        setLoadingMessageAndAlert
-      ) 
+      if(print){
+        await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray,studentsInput, setLoadingMessageAndAlert) 
+      }
+      else if(download){
+        await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray,studentsInput,selectedBootcamp.name, setLoadingMessageAndAlert)
+      }
+      else{
+        await newGenerateCombinedPDF(templatesArr, inputsArray, studentsInput,setLoadingMessageAndAlert)
+      }
       
       customAlert('loadingfadeout', '', '');
       await alertSuccess();
