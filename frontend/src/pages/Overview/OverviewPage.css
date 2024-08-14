@@ -43,6 +43,7 @@
         border-radius: 0.5rem;
         opacity: 0.9;
         aspect-ratio: 310 / 445;
+        background-color: #171721;
         transition: all 0.25s ease-in-out;
     }
 
