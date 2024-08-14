@@ -52,10 +52,10 @@ namespace DiplomaMakerApi.Controllers
         {
             if (!_useBlobStorage)
             {
-                return await _localFileStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
+                return await _localFileStorageService.GetFilesFromPath("TemplateBackgroundPdfs.zip", "DiplomaPdfs");
             }
             else{
-                return await _googleCloudStorageService.GetFilesFromPath("Blob/DiplomaPdfs", "TemplateBackgroundPdfs.zip");
+                return await _googleCloudStorageService.GetFilesFromPath("TemplateBackgroundPdfs.zip", "DiplomaPdfs");
             }
         }
 
@@ -115,15 +115,32 @@ namespace DiplomaMakerApi.Controllers
                 return BadRequest("Invalid file type.");
             }
 
-            var filePath = await _localFileStorageService.GetFilePath(filename, "ImagePreview");
-
-            if (filePath == null)
+            if (!_useBlobStorage)
             {
-                return NotFound("File not found.");
+                var filePath = await _localFileStorageService.GetFilePath(filename, "ImagePreview");
+
+                if (filePath == null)
+                {
+                    return NotFound("File not found.");
+                }
+
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                return File(fileBytes, "application/webp", filename);
+            }
+            else
+            {
+                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename);
+
+                if (fileBytes == null)
+                {
+                    return NotFound("File not found.");
+                }
+
+                return File(fileBytes, "application/webp", filename);
             }
 
-            var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-            return File(fileBytes, "application/webp", filename);
+
+            
         }   
     }
 }

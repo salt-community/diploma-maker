@@ -36,7 +36,7 @@ namespace DiplomaMakerApi.Services
             return null;
         }
 
-        public async Task<FileContentResult> GetFilesFromPath(string subDirectory, string zipFileName)
+        public async Task<FileContentResult> GetFilesFromPath(string zipFileName, string subDirectory)
         {
             var directoryPath = Path.Combine(_basePath, subDirectory);
             var files = Directory.GetFiles(directoryPath);

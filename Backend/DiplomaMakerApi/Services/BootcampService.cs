@@ -6,11 +6,13 @@ using DiplomaMakerApi.Dtos.PreviewImage;
 
 namespace DiplomaMakerApi.Services;
 
-public class BootcampService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService, FileUtilityService fileUtilityService)
+public class BootcampService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, FileUtilityService fileUtilityService, IConfiguration configuration)
 {
     private readonly DiplomaMakingContext _context = context;
     private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
+    private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
     private readonly FileUtilityService _fileUtilityService = fileUtilityService;
+    private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
 
     public async Task<Bootcamp> PostBootcamp( BootcampRequestDto requestDto )
     {
@@ -111,7 +113,10 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
             throw new NotFoundByGuidException("Student", previewImageRequestDto.StudentGuidId);
         }
         var compressedFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
-        var fullFilePath = await _localFileStorageService.SaveFile(compressedFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
+        var fullFilePath = !_useBlobStorage 
+            ? await _localFileStorageService.SaveFile(compressedFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview")
+            : await _googleCloudStorageService.SaveFile(compressedFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
+
         var relativePath = await _fileUtilityService.GetRelativePathAsync(fullFilePath, "ImagePreview");
 
         student.PreviewImageUrl = relativePath;
