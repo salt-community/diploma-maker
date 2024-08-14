@@ -12,7 +12,8 @@ namespace DiplomaMakerApi.Services
         GoogleCloudStorageService googleCloudStorageService, 
         IMapper mapper,
         IWebHostEnvironment env,
-        IConfiguration configuration
+        IConfiguration configuration,
+        FileUtilityService fileUtilityService
     )
     {
         private readonly DiplomaMakingContext _context = context;
@@ -21,6 +22,8 @@ namespace DiplomaMakerApi.Services
         private readonly IMapper _mapper = mapper;
         private readonly IWebHostEnvironment _env = env;
         private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
+
+        private readonly FileUtilityService _fileUtilityService = fileUtilityService;
 
         public async Task CreateHistorySnapshotFromBootcamp(BootcampRequestUpdateDto requestDto, Bootcamp bootcampUsed) 
         {
@@ -79,7 +82,7 @@ namespace DiplomaMakerApi.Services
                     {
                         opt.Items["bootcampUsed"] = bootcampUsed;
                         opt.Items["templateUsed"] = templateUsed;
-                        opt.Items["templateBackgroundLocation"] = templateBackgroundLocation;
+                        opt.Items["templateBackgroundLocation"] = "Blob/" + templateBackgroundLocation;
                         opt.Items["lastSnapshot"] = lastSnapshot;
                         opt.Items["lastSnapshots"] = lastSnapshots;
                         opt.Items["timeUtcNow"] = timeUtcNow;
@@ -98,7 +101,12 @@ namespace DiplomaMakerApi.Services
                 ? await _localFileStorageService.GetFilePath(Path.GetFileName(fileName))
                 : await _googleCloudStorageService.GetFilePath(Path.GetFileName(fileName));
             
-            return fileLocationResponse != null ? "Blob/" + Path.GetFileName(fileLocationResponse) : null; // Temp Fix: when generating a second time it gives the absolute path for some strange reason.
+            if(fileLocationResponse != null)
+            {
+                fileLocationResponse = await _fileUtilityService.GetRelativePathAsync(fileLocationResponse, "DiplomaPdfs");
+            }
+            
+            return fileLocationResponse != null ? fileLocationResponse : null; // Temp Fix: when generating a second time it gives the absolute path for some strange reason.
         }
 
         public async Task<List<DiplomaSnapshot>> GetHistorySnapshots()
