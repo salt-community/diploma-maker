@@ -54,6 +54,10 @@ export default function App() {
     await refresh();
   }
 
+  const updateStudentThumbnails = async () => {
+
+  }
+
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
     const bootcampResponse: BootcampResponse = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
     if (bootcampResponse) {
@@ -146,7 +150,7 @@ export default function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path={"/"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} setLoadingMessage={setLoadingMessage}/>} />
+        <Route path={"/"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage}/>} />
         {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
         <Route path={`/verify`} element={<VerificationInputPage />} />
         <Route path={`/verify/:verificationCode`} element = {<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode}/>} />

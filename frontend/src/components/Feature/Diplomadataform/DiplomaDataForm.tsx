@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse } from "../../../util/types";
+import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse, StudentResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
 import { delay, generatePreviewImages, generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF } from "../../../util/helper";
@@ -33,9 +33,10 @@ type Props = {
   setLoadingMessage: (message: string) => void;
   selectedStudentIndex: number | null;
   setSelectedStudentIndex: (idx: number) => void;
+  updateStudentThumbnails: (studentImagePreviewsResponse: StudentResponse[]) => void;
 };
 
-export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex }: Props) {
+export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex, updateStudentThumbnails }: Props) {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>();
   const [TrackIndex, setTrackIndex] = useState<number>(0);
@@ -160,19 +161,20 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     const studentsInput = bootcampPutResponse.students.filter(s => students.some(st => st.name = s.name));
 
     let pdfs: Uint8Array[]
+    let studentImagePreviewsResponse: StudentResponse[];
     try {
       if(print){
         pdfs = await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray,studentsInput, setLoadingMessageAndAlert);
-        await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
       }
       else if(download){
         pdfs = await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray,studentsInput,selectedBootcamp.name, setLoadingMessageAndAlert);
-        await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
       }
       else{
         pdfs = await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert);
-        await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
       }
+
+      studentImagePreviewsResponse = await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
+      await updateStudentThumbnails(studentImagePreviewsResponse);
       
       customAlert('loadingfadeout', '', '');
       await alertSuccess();

@@ -234,6 +234,8 @@ export const generatePreviewImages = async (pdfs: Uint8Array[], students: Studen
     }
   }
 
+  console.log(imagePreviews);
+
   return imagePreviews;
 }
 
