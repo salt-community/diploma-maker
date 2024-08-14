@@ -17,9 +17,12 @@
     "@react-pdf/renderer": "^3.4.4",
     "@types/react-dropzone": "^5.1.0",
     "file-saver": "^2.0.5",
+    "i": "^0.3.7",
     "jszip": "^3.10.1",
+    "npm": "^10.8.2",
     "papaparse": "^5.4.1",
     "pdf-lib": "^1.17.1",
+    "pdfjs": "^2.5.3",
     "react": "^18.2.0",
     "react-color": "^2.19.3",
     "react-dom": "^18.2.0",
@@ -29,6 +32,7 @@
     "react-query": "^3.39.3",
     "react-router-dom": "^6.25.0",
     "signature_pad": "^5.0.1",
+    "webp-converter": "^2.3.3",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

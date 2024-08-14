@@ -2,7 +2,7 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto, StudentResponse } from "./util/types";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
@@ -54,8 +54,24 @@ export default function App() {
     await refresh();
   }
 
-  const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => {
-    const bootcampResponse = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
+  const updateStudentThumbnails = async (studentImagePreviewsResponse: StudentResponse[]) => {
+    setBootcamps(prevBootcamps =>
+      prevBootcamps!.map((bootcamp) => ({
+        ...bootcamp,
+        students: bootcamp.students.map(student => {
+          const matchingImage = studentImagePreviewsResponse.find(
+            preview => preview.guidId === student.guidId
+          );
+          return matchingImage 
+            ? { ...student, previewImageUrl: matchingImage.previewImageUrl } 
+            : student;
+        })
+      }))
+    );
+  }
+
+  const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string): Promise<BootcampResponse> => {
+    const bootcampResponse: BootcampResponse = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
     if (bootcampResponse) {
       setBootcamps(prevbootcamps =>
         prevbootcamps!.map((item) => 
@@ -64,8 +80,8 @@ export default function App() {
             : item
         )
       );
-
     }
+    return bootcampResponse;
   };
   
 
@@ -146,7 +162,7 @@ export default function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path={"/"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} setLoadingMessage={setLoadingMessage}/>} />
+        <Route path={"/"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage}/>} />
         {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
         <Route path={`/verify`} element={<VerificationInputPage />} />
         <Route path={`/verify/:verificationCode`} element = {<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode}/>} />

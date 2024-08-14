@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BootcampResponse, SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse } from "../../util/types";
+import { BootcampResponse, SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse, StudentResponse } from "../../util/types";
 import {
   mapBootcampToSaltData,
 } from "../../util/helper";
@@ -17,12 +17,13 @@ import PreviewDiploma from "../../components/Feature/PreviewDiploma/PreviewDiplo
 type Props = {
   tracks: TrackResponse[] | null;
   templates: TemplateResponse[] | null;
-  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void
+  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => Promise<BootcampResponse>
   setLoadingMessage: (message: string) => void;
+  updateStudentThumbnails: (studentImagePreviewsResponse: StudentResponse[]) => void;
 };
 
 
-export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage }: Props) {
+export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails }: Props) {
 
   /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
   const [saltData, setSaltData] = useState<SaltData | null>();
@@ -69,6 +70,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
               tracks={tracks}
               UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
               templates={templates}
+              updateStudentThumbnails={updateStudentThumbnails}
               customAlert={customAlert}
               setLoadingMessage={setLoadingMessage}
             /*  fullscreen={IsFullScreen} */

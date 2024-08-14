@@ -1,4 +1,5 @@
-import { BootcampRequest, BootcampResponse, FormDataUpdateRequest,  } from "../util/types";
+import { delay } from "../util/helper";
+import { BootcampRequest, BootcampResponse, FormDataUpdateRequest, studentImagePreview, StudentResponse,  } from "../util/types";
 
 export async function postBootcamp(apiUrl: string, bootcampRequest: BootcampRequest): Promise<void> {
     const formattedRequest = {
@@ -91,4 +92,22 @@ export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpda
     }
     const result = await response.json()
     return result;
+}
+
+
+export async function updateStudentPreviewImage(apiUrl: string, studentImagePreviewRequest: studentImagePreview): Promise<StudentResponse> {
+    const formData = new FormData();
+    formData.append('StudentGuidId', studentImagePreviewRequest.studentGuidId);
+    formData.append('Image', studentImagePreviewRequest.image, studentImagePreviewRequest.studentGuidId);
+
+    const response = await fetch(`${apiUrl}/api/Blob/UpdateStudentsPreviewImage`, {
+        method: 'PUT',
+        body: formData,
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    
+    return await response.json();
 }

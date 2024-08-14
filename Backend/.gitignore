@@ -485,6 +485,7 @@ $RECYCLE.BIN/
 
 # Ignore all PDF files
 *.pdf
+*.webp
 
 # Except Default.pdf
 !Default.pdf

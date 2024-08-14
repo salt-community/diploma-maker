@@ -31,6 +31,9 @@ export type StudentResponse = {
     name: string;
     email: string;
     verificationCode: string;
+    lastGenerated?: Date;
+    previewImageUrl?: string | null,
+    previewImageLQIPUrl?: string | null
 }
 
 export type Student = {
@@ -39,6 +42,8 @@ export type Student = {
     email: string;
     verificationCode?: string;
     lastGenerated?: Date;
+    previewImageUrl?: string | null,
+    previewImageLQIPUrl?: string | null
 }
 // bootcamps
 
@@ -198,4 +203,10 @@ export type MakeActiveSnapshotRequestDto = {
 export type EmailConfigRequestDto = {
     senderEmail: string;
     senderCode: string;
+}
+
+
+export type studentImagePreview = {
+    studentGuidId: string,
+    image: Blob,
 }

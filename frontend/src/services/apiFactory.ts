@@ -1,5 +1,5 @@
-import { BootcampRequest, EmailSendRequest, FormDataUpdateRequest, MakeActiveSnapshotRequestDto, StudentUpdateRequestDto, TemplateRequest } from "../util/types";
-import { deleteBootcampById, getBootcampById, getBootcamps, postBootcamp, updateBootcamp, UpdateBootcampWithNewFormdata } from "./bootcampService";
+import { BootcampRequest, EmailSendRequest, FormDataUpdateRequest, MakeActiveSnapshotRequestDto, studentImagePreview, StudentUpdateRequestDto, TemplateRequest } from "../util/types";
+import { deleteBootcampById, getBootcampById, getBootcamps, postBootcamp, updateBootcamp, UpdateBootcampWithNewFormdata, updateStudentPreviewImage } from "./bootcampService";
 import { postEmail } from "./emailService";
 import { getTemplatePdfFile } from "./fileService";
 import { getHistoryByVerificationCode, getHistorySnapshots, makeActiveHistorySnapShot } from "./historySnapShotService";
@@ -23,6 +23,7 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
         updateBootcamp: (bootcampRequest: BootcampRequest) => updateBootcamp(apiBaseUrl, bootcampRequest),
         deleteBootcampById: (guidId: string) => deleteBootcampById(apiBaseUrl, guidId),
         UpdateBootcampWithNewFormdata: (formDataUpdateRequest: FormDataUpdateRequest, guidId: string) => UpdateBootcampWithNewFormdata(apiBaseUrl, formDataUpdateRequest, guidId),
+        updateStudentPreviewImage: (studentImagePreviewRequest: studentImagePreview) => updateStudentPreviewImage(apiBaseUrl, studentImagePreviewRequest),
 
         // Student Endpoint
         getStudentById: (guidId: string) => getStudentById(apiBaseUrl, guidId),

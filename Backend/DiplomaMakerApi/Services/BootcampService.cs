@@ -2,17 +2,17 @@ using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Exceptions;
+using DiplomaMakerApi.Dtos.PreviewImage;
 
 namespace DiplomaMakerApi.Services;
 
-public class BootcampService
+public class BootcampService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, FileUtilityService fileUtilityService, IConfiguration configuration)
 {
-    private readonly DiplomaMakingContext _context;
-
-    public BootcampService(DiplomaMakingContext context)
-    {
-        _context = context;
-    }
+    private readonly DiplomaMakingContext _context = context;
+    private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
+    private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
+    private readonly FileUtilityService _fileUtilityService = fileUtilityService;
+    private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
 
     public async Task<Bootcamp> PostBootcamp( BootcampRequestDto requestDto )
     {
@@ -105,7 +105,25 @@ public class BootcampService
             return bootcamp;
     }
 
+    public async Task<Student> PutStudentPreviewImage(PreviewImageRequestDto previewImageRequestDto)
+    {
+        var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == previewImageRequestDto.StudentGuidId);
+        if(student == null)
+        {
+            throw new NotFoundByGuidException("Student", previewImageRequestDto.StudentGuidId);
+        }
+        var compressedFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
+        var fullFilePath = !_useBlobStorage 
+            ? await _localFileStorageService.SaveFile(compressedFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview")
+            : await _googleCloudStorageService.SaveFile(compressedFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
 
+        var relativePath = await _fileUtilityService.GetRelativePathAsync(fullFilePath, "ImagePreview");
 
+        student.PreviewImageUrl = relativePath;
+
+        await _context.SaveChangesAsync();
+
+        return student;
+    }
 
 }

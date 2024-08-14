@@ -4,12 +4,16 @@ import { generate } from "@pdfme/generator";
 import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
-import { BootcampResponse, SaltData, Size, TemplateResponse } from "./types";
+import { BootcampResponse, SaltData, Size, Student, studentImagePreview, StudentResponse, TemplateResponse } from "./types";
 import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
 import { fontObjList } from "../data/data";
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import * as pdfjsLib from 'pdfjs-dist';
+import { updateStudentPreviewImage } from "../services/bootcampService";
+import { initApiEndpoints } from "../services/apiFactory";
 
+const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
 
 export const getFontsData = async () => {
@@ -172,11 +176,74 @@ export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray:
   window.open(URL.createObjectURL(blob));
 }
 
+export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | null> => {
+  try {
+    const pdf = await pdfjsLib.getDocument({ data: pdfInput }).promise;
+    
+    const page = await pdf.getPage(1);
+    const viewport = page.getViewport({ scale: 1.5 });
+    const canvas = document.createElement("canvas");
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    
+    const renderContext = {
+      canvasContext: canvas.getContext("2d"),
+      viewport: viewport,
+    };
+    
+    await page.render(renderContext).promise;
+    const dataURL = canvas.toDataURL("image/png");
+    
+    const base64Data = dataURL.replace(/^data:image\/png;base64,/, '');
+    const binaryString = window.atob(base64Data);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    
+    return new Blob([bytes], { type: 'image/png' });
+  } catch (e) {
+    console.error('Error loading PDF:', e);
+    return null;
+  }
+};
 
-export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
+export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setLoadingMessage: (message: string) => void): Promise<StudentResponse[]> => {
+  const studentImages: studentImagePreview[] = []; 
+
+  for (let i = 0; i < pdfs.length; i++) {
+    setLoadingMessage(`Generating Thumbnails ${i + 1}/${pdfs.length}`)
+    studentImages.push({
+      studentGuidId: students[i].guidId,
+      image: await convertPDFToImage(pdfs[i])
+    });
+  }
+
+  let imagePreviews: StudentResponse[] = [];
+
+  for (let i = 0; i < pdfs.length; i++) {
+    setLoadingMessage(`Uploading & Compressing Thumbnails ${i + 1}/${studentImages.length}`)
+    try {
+      imagePreviews.push(
+        await api.updateStudentPreviewImage(studentImages[i])
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return imagePreviews;
+}
+
+export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
   setLoadingMessage("Generating combined pdf!");
+  
   const font = await getFontsData();
-  const mergedPdf = await PDFDocument.create();
+  const mergedPdf = await PDFDocument.create();; 
+
+  const pdfs: Uint8Array[] = [];
 
   for (let i = 0; i < templates.length; i++) {
     setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
@@ -186,6 +253,9 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
       options: { font },
       plugins: getPlugins(),
     });
+
+    pdfs.push(pdf);
+
     const loadedPdf = await PDFDocument.load(pdf);
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
     copiedPages.forEach(page => mergedPdf.addPage(page));
@@ -198,13 +268,17 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
   const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
   setLoadingMessage("Finished Processing Pdfs...");
   window.open(URL.createObjectURL(blob));
+
+  return pdfs;
 }
 
 
-export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
+export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
   setLoadingMessage("Generating combined pdf!");
   const font = await getFontsData();
   const mergedPdf = await PDFDocument.create();
+
+  const pdfs: Uint8Array[] = [];
 
   for (let i = 0; i < templates.length; i++) {
     setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
@@ -214,6 +288,8 @@ export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inpu
       options: { font },
       plugins: getPlugins(),
     });
+    pdfs.push(pdf);
+
     const loadedPdf = await PDFDocument.load(pdf);
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
     copiedPages.forEach(page => mergedPdf.addPage(page));
@@ -245,15 +321,19 @@ export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inpu
       URL.revokeObjectURL(blobUrl);
       printWindow.close();
     };
+
+    return pdfs;
   } else {
     console.error("Failed to open the print window");
   }
 };
 
-export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], bootcampName: string, setLoadingMessage: (message: string) => void) => {
+export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], bootcampName: string, setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
   setLoadingMessage("Generating combined pdf!");
   const font = await getFontsData();
   const zip = new JSZip();
+
+  const pdfs: Uint8Array[] = [];
 
   for (let i = 0; i < templates.length; i++) {
     setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
@@ -263,6 +343,8 @@ export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], in
       options: { font },
       plugins: getPlugins(),
     });
+    pdfs.push(pdf);
+
     const loadedPdf = await PDFDocument.load(pdf);
     const mergedPdf = await PDFDocument.create();
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
@@ -279,6 +361,8 @@ export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], in
   setLoadingMessage("Finished Processing Pdfs...");
 
   saveAs(zipBlob, `${bootcampName}_diplomas.zip`);
+
+  return pdfs;
 };
 
 
@@ -446,3 +530,77 @@ export const getPdfDimensions = async (pdfString: string): Promise<Size> => {
   const { width, height } = firstPage.getSize();
   return { width, height };
 };
+
+
+
+export async function openIndexedTemplatesDB(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+      const request = indexedDB.open('pdfCache', 1);
+
+      request.onupgradeneeded = (event) => {
+          const db = (event.target as IDBOpenDBRequest).result;
+          if (!db.objectStoreNames.contains('pdfs')) {
+              db.createObjectStore('pdfs', { keyPath: 'id' });
+          }
+      };
+
+      request.onsuccess = () => {
+          resolve(request.result);
+      };
+
+      request.onerror = () => {
+          reject(request.error);
+      };
+  });
+}
+
+export async function getFromIndexedTemplatesDB(db: IDBDatabase, key: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+      const transaction = db.transaction('pdfs', 'readonly');
+      const store = transaction.objectStore('pdfs');
+      const request = store.get(key);
+
+      request.onsuccess = () => {
+          resolve(request.result);
+      };
+
+      request.onerror = () => {
+          reject(request.error);
+      };
+  });
+}
+
+export async function storeInIndexedTemplatesDB(db: IDBDatabase, key: string, data: any): Promise<void> {
+  return new Promise(async (resolve, reject) => {
+      const transaction = db.transaction('pdfs', 'readwrite');
+      const store = transaction.objectStore('pdfs');
+
+      const countRequest = store.count();
+      countRequest.onsuccess = async () => {
+          const count = countRequest.result;
+
+          if (count >= 25) {
+              const cursorRequest = store.openCursor();
+              cursorRequest.onsuccess = (event) => {
+                  const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+                  if (cursor) {
+                      store.delete(cursor.primaryKey);
+                      cursor.continue();
+                  }
+              };
+          }
+
+          const putRequest = store.put(data);
+          putRequest.onsuccess = () => {
+              resolve();
+          };
+          putRequest.onerror = () => {
+              reject(putRequest.error);
+          };
+      };
+
+      countRequest.onerror = () => {
+          reject(countRequest.error);
+      };
+  });
+}
