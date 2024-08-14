@@ -157,8 +157,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       setLoadingMessage(message);
       customAlert('loading', message, '');
     };
-
-    const studentsInput = bootcampPutResponse.students.filter(s => students.some(st => st.name = s.name));
+    
+    const studentsInput = bootcampPutResponse.students.filter(s => students.some(st => st.name === s.name));
 
     let pdfs: Uint8Array[]
     let studentImagePreviewsResponse: StudentResponse[];
@@ -191,7 +191,6 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   };
 
   const onSubmit = async (data: FormData) => {
-    console.log(students);
     if (!validateOptions()) {
       customAlert('message', "", "At least one PDF generation option must be selected.");
       return;
@@ -215,11 +214,12 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
     if (data.optionA && data.optionB) {
       bootcampPutResponse = await postSelectedBootcampData(true);
+      data.optionB && !printActive && !downloadActive && await generatePDFHandler(data.pdfGenerationScope, false, false, bootcampPutResponse)
+      data.optionB && printActive && !downloadActive && await generatePDFHandler(data.pdfGenerationScope, true, false, bootcampPutResponse)
+      data.optionB && ! printActive && downloadActive && await generatePDFHandler(data.pdfGenerationScope, false, true, bootcampPutResponse)
+
     } else if (data.optionA) {
       bootcampPutResponse = await postSelectedBootcampData();
-    }
-    if (data.optionB && !printActive && !downloadActive) {
-      await generatePDFHandler(data.pdfGenerationScope, false, false, bootcampPutResponse);
     }
   };
 
