@@ -62,7 +62,13 @@ namespace DiplomaMakerApi.Controllers
         [HttpGet("ImagePreview/{filename}")]
         public async Task<IActionResult> GetPreviewImage(string filename)
         {
-            return await GetImageBlob(filename);
+            return await GetImageBlob(filename, "ImagePreview");
+        }
+
+        [HttpGet("ImagePreviewLQIP/{filename}")]
+        public async Task<IActionResult> GetLQPreviewImage(string filename)
+        {
+            return await GetImageBlob(filename, "ImagePreviewLQIP");
         }
 
         [HttpPut("UpdateStudentsPreviewImage")]
@@ -106,7 +112,7 @@ namespace DiplomaMakerApi.Controllers
         }   
 
 
-        private async Task<IActionResult> GetImageBlob(string filename)
+        private async Task<IActionResult> GetImageBlob(string filename, string subDirectory)
         {
             filename = Path.GetFileName(filename);
             
@@ -117,7 +123,7 @@ namespace DiplomaMakerApi.Controllers
 
             if (!_useBlobStorage)
             {
-                var filePath = await _localFileStorageService.GetFilePath(filename, "ImagePreview");
+                var filePath = await _localFileStorageService.GetFilePath(filename, subDirectory);
 
                 if (filePath == null)
                 {
@@ -129,7 +135,7 @@ namespace DiplomaMakerApi.Controllers
             }
             else
             {
-                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename, "ImagePreview");
+                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename, subDirectory);
 
                 if (fileBytes == null)
                 {

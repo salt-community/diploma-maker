@@ -24,6 +24,7 @@ import { Template } from '@pdfme/common';
 import { InfoPopup } from '../../components/MenuItems/Popups/InfoPopup';
 import { VerifyIcon } from '../../components/MenuItems/Icons/VerifyIcon';
 import { useLoadingMessage } from '../../components/Contexts/LoadingMessageContext';
+import { LazyImageLoader } from '../../components/Content/LazyImageLoader';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -330,14 +331,14 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                     ) : (
                         // @ts-ignore
                         selectedItems.length > 0 ? selectedItems.map((student: Student, index) => {
-                            const imageUrl = student.previewImageUrl 
-                                ? `${api}${student.previewImageUrl}` 
-                                : 'https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg';
-                                
+                            const defaultImg = "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg";
                             return (
                                 <button key={student.guidId} className='list-module__item'>
                                     {!student.previewImageUrl && <p className='list-module__item-title'>{student.name}</p>}
-                                    <img className='list-module__item-bg' src={imageUrl} alt="" />
+                                    <LazyImageLoader 
+                                        previewImageLQIPUrl={student.previewImageLQIPUrl ? `${api}${student.previewImageLQIPUrl}` : defaultImg} 
+                                        previewImageUrl={student.previewImageUrl ? `${api}${student.previewImageUrl}` : defaultImg} 
+                                    />
                                     <section className='list-module__item-menu'>
                                         <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
                                         <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />

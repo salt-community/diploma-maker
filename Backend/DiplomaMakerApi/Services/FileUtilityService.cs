@@ -2,6 +2,7 @@ using System.IO.Compression;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.Processing;
 
 namespace DiplomaMakerApi.Services
 {
@@ -48,7 +49,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<IFormFile> ConvertPngToWebP(IFormFile formFile, string fileName)
+        public async Task<IFormFile> ConvertPngToWebP(IFormFile formFile, string fileName, bool lowQuality = false)
         {
             if (formFile == null || !formFile.ContentType.Contains("image/png"))
             {
@@ -63,9 +64,25 @@ namespace DiplomaMakerApi.Services
 
             using var outStream = new MemoryStream();
 
-            await myImage.SaveAsync(outStream, new WebpEncoder(){
-                FileFormat = WebpFileFormatType.Lossy,
-            });
+            if(lowQuality)
+            {
+                myImage.Mutate(x => x.Resize(new ResizeOptions
+                {
+                    Size = new Size(92, 129),
+                    Mode = ResizeMode.Max
+                }));
+
+                await myImage.SaveAsync(outStream, new WebpEncoder(){
+                    FileFormat = WebpFileFormatType.Lossy,
+                    Quality = 0,
+                });
+            }
+            else
+            {
+                await myImage.SaveAsync(outStream, new WebpEncoder(){
+                    FileFormat = WebpFileFormatType.Lossy,
+                });
+            }
 
             outStream.Position = 0;
 

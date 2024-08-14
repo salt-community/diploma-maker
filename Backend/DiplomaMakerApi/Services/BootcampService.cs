@@ -112,14 +112,21 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
         {
             throw new NotFoundByGuidException("Student", previewImageRequestDto.StudentGuidId);
         }
-        var compressedFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
-        var fullFilePath = !_useBlobStorage 
-            ? await _localFileStorageService.SaveFile(compressedFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview")
-            : await _googleCloudStorageService.SaveFile(compressedFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
+        var HQFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
+        var LQFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString(), true);
 
-        var relativePath = await _fileUtilityService.GetRelativePathAsync(fullFilePath, "ImagePreview");
+        var HQFilePath = !_useBlobStorage 
+            ? await _localFileStorageService.SaveFile(HQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview")
+            : await _googleCloudStorageService.SaveFile(HQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
+        var LQFilePath = !_useBlobStorage 
+            ? await _localFileStorageService.SaveFile(LQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreviewLQIP")
+            : await _googleCloudStorageService.SaveFile(LQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreviewLQIP");
+        
+        var HQRelativePath = await _fileUtilityService.GetRelativePathAsync(HQFilePath, "ImagePreview");
+        var LQRelativeFilePath = await _fileUtilityService.GetRelativePathAsync(LQFilePath, "ImagePreviewLQIP");
 
-        student.PreviewImageUrl = relativePath;
+        student.PreviewImageUrl = HQRelativePath;
+        student.PreviewImageLQIPUrl = LQRelativeFilePath;
 
         await _context.SaveChangesAsync();
 
