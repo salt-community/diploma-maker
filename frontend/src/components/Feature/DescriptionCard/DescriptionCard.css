@@ -2,10 +2,12 @@
     background-color: #4e4e5e;
     color: #ffffff;
     padding: 2rem;
+    padding-top: 1rem;
     border-radius: 0.5rem;
     transition: background-color 0.375s ease, box-shadow 0.375s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    height: 300px;
+    height: 330px;
+    width: 450px;
     position: relative;
     cursor: default;
 }
@@ -62,7 +64,7 @@
 }
 
 .short-description-list li {
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.3rem;
     transition: margin-bottom 0.375s ease;
 }
 
@@ -94,7 +96,6 @@
 .learn-more-text {
     color: #c0c0c0;
     font-style: italic;
-    margin-top: 30px;
     display: block;
     text-align: center;
     transition: color 0.375s ease;

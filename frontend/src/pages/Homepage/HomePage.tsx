@@ -5,23 +5,25 @@ import { TemplateCreatorIcon } from '../../components/MenuItems/Icons/TemplateCr
 import { CogWheelIcon } from '../../components/MenuItems/Icons/CogWheelIcon';
 import { HistoryIcon } from '../../components/MenuItems/Icons/HistoryIcon';
 import { DescriptionCard } from '../../components/Feature/DescriptionCard/DescriptionCard';
+import { DashBoardIcon } from '../../components/MenuItems/Icons/DashBoardIcon';
 
 const shortDescriptionArray = [
-  "This can be used for creating templates.",
-  "Easy to customize for different needs.",
-  "Supports various file formats.",
-  "User-friendly interface."
+  "Here you can make your own template to use for your diplomas.",
+  "User-friendly interface. Easy to customize for different needs.",
+  "Plently of different fonts, colors and styles to choose from.",
+  "Save and reuse your custom diploma templates anytime."
 ];
 
-type hoverObjectType = 'templateCreator' | 'pdfMaking' | 'BootcampOptions' | 'History'
+
+type hoverObjectType = 'templateCreator' | 'pdfMaking' | 'BootcampOptions' | 'History' |'Dashboard'
 
 export function HomePage() {
   const [hoverObject, setHoverObject] = useState<hoverObjectType | null>();
 
   useEffect(() => {
     const styleOverride = document.createElement('style');
-    styleOverride.innerHTML = hoverObject === 'templateCreator' ? 
-    `
+    styleOverride.innerHTML = hoverObject === 'templateCreator' ?
+      `
         .navbar__item.template-creator{
           color: #fff;
         }
@@ -31,9 +33,9 @@ export function HomePage() {
         .navbar__item.template-creator .navbar__link .cls-1{
             stroke: #fff;
         }
-    ` 
-    : hoverObject === 'pdfMaking' ?  
     `
+      : hoverObject === 'pdfMaking' ?
+        `
         .navbar__item.pdf-creator{
           color: #fff;
         }
@@ -44,8 +46,8 @@ export function HomePage() {
             fill: #fff;
         }
     `
-    : hoverObject === 'BootcampOptions' ?
-    `
+        : hoverObject === 'BootcampOptions' ?
+          `
         .navbar__item.bootcamp-management{
           color: #fff;
         }
@@ -56,8 +58,8 @@ export function HomePage() {
             fill: #fff;
         }
     `
-    : hoverObject === 'History' ?
-    `
+          : hoverObject === 'History' ?
+            `
         .navbar__item.history{
           color: #fff;
         }
@@ -68,12 +70,24 @@ export function HomePage() {
             fill: #fff;
         }
     `
-    : ``;
-      document.head.appendChild(styleOverride);
+          : hoverObject === 'Dashboard' ?
+            `
+      .navbar__item.overview{
+        color: #fff;
+      }
+      .navbar__item.overview svg .stroke{
+          stroke: #fff;
+      }
+      .navbar__item.overview svg .fill{
+          fill: #fff;
+      }
+      `
+                : ``;
+    document.head.appendChild(styleOverride);
 
-      return () => {
-        document.head.removeChild(styleOverride);
-      };
+    return () => {
+      document.head.removeChild(styleOverride);
+    };
 
   }, [hoverObject]);
 
@@ -81,12 +95,12 @@ export function HomePage() {
   return (
     <div className="homepage">
       <header className="homepage__header">
-        <h1>Welcome User!</h1>
+        <h1>Welcome Admin!</h1>
         <h4>It is <strong>Strongly recommended</strong> to read the instructions for each part of the application.</h4>
       </header>
       <div className="homepage__grid">
         <DescriptionCard
-          shortDescription= {shortDescriptionArray}
+          shortDescription={shortDescriptionArray}
           LongDescription=''
           title="TemplateCreator"
           icon={TemplateCreatorIcon}
@@ -94,15 +108,17 @@ export function HomePage() {
           onMouseLeave={() => setHoverObject(null)}
         />
         <DescriptionCard
-          shortDescription= {shortDescriptionArray}
+          shortDescription={shortDescriptionArray}
+
+
           LongDescription=''
-          title="PDFMaking"
+          title="PDFcreator"
           icon={PdfCreatorIcon}
           onMouseEnter={() => setHoverObject('pdfMaking')}
           onMouseLeave={() => setHoverObject(null)}
         />
         <DescriptionCard
-          shortDescription= {shortDescriptionArray}
+          shortDescription={shortDescriptionArray}
           LongDescription=''
           title="BootcampOptions"
           icon={CogWheelIcon}
@@ -110,11 +126,20 @@ export function HomePage() {
           onMouseLeave={() => setHoverObject(null)}
         />
         <DescriptionCard
-          shortDescription= {shortDescriptionArray}
+          shortDescription={shortDescriptionArray}
           LongDescription=''
           title="History"
           icon={HistoryIcon}
           onMouseEnter={() => setHoverObject('History')}
+          onMouseLeave={() => setHoverObject(null)}
+        />
+
+        <DescriptionCard
+          shortDescription={shortDescriptionArray}
+          LongDescription=''
+          title="Dashboard"
+          icon={DashBoardIcon}
+          onMouseEnter={() => setHoverObject('Dashboard')}
           onMouseLeave={() => setHoverObject(null)}
         />
       </div>
