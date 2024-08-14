@@ -99,21 +99,21 @@ export function HomePage() {
         <h4>It is <strong>Strongly recommended</strong> to read the instructions for each part of the application.</h4>
       </header>
       <div className="homepage__grid">
-        <DescriptionCard
+        <DescriptionCard 
           shortDescription={shortDescriptionArray}
           LongDescription=''
           title="TemplateCreator"
           icon={TemplateCreatorIcon}
+          className="gradient-templateCreator" 
           onMouseEnter={() => setHoverObject('templateCreator')}
           onMouseLeave={() => setHoverObject(null)}
         />
         <DescriptionCard
           shortDescription={shortDescriptionArray}
-
-
           LongDescription=''
           title="PDFcreator"
           icon={PdfCreatorIcon}
+          className="gradient-pdfMaking" 
           onMouseEnter={() => setHoverObject('pdfMaking')}
           onMouseLeave={() => setHoverObject(null)}
         />
@@ -122,6 +122,7 @@ export function HomePage() {
           LongDescription=''
           title="BootcampOptions"
           icon={CogWheelIcon}
+          className="gradient-BootcampOptions" 
           onMouseEnter={() => setHoverObject('BootcampOptions')}
           onMouseLeave={() => setHoverObject(null)}
         />
@@ -130,15 +131,16 @@ export function HomePage() {
           LongDescription=''
           title="History"
           icon={HistoryIcon}
+          className="gradient-History" 
           onMouseEnter={() => setHoverObject('History')}
           onMouseLeave={() => setHoverObject(null)}
         />
-
         <DescriptionCard
           shortDescription={shortDescriptionArray}
           LongDescription=''
           title="Dashboard"
           icon={DashBoardIcon}
+          className="gradient-Dashboard" 
           onMouseEnter={() => setHoverObject('Dashboard')}
           onMouseLeave={() => setHoverObject(null)}
         />

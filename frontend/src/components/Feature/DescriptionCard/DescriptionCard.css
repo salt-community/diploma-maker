@@ -1,6 +1,5 @@
 .homepage__card {
-    background-color: #4e4e5e;
-    color: #ffffff;
+    color: #d9c8c8;
     padding: 2rem;
     padding-top: 1rem;
     border-radius: 0.5rem;
@@ -102,5 +101,52 @@
 }
 
 .learn-more-text:hover {
-    color: #ffffff;
+    color: #e2d5d5;
 }
+
+
+.gradient-templateCreator {
+    background: linear-gradient(to top right, rgb(0, 48, 0), rgb(6, 6, 6), rgb(6, 6, 6), rgb(0, 48, 0));
+    transition: background 0.5s ease-in-out;
+  }
+  
+  .gradient-templateCreator:hover {
+    background: linear-gradient(to top right, rgb(34, 68, 34), rgb(6, 6, 6), rgb(6, 6, 6), rgb(34, 68, 34));
+  }
+  
+  .gradient-pdfMaking {
+    background: linear-gradient(to top right, rgb(2, 2, 48), rgb(6, 6, 6), rgb(6, 6, 6), rgb(2, 2, 48));
+    transition: background 0.5s ease-in-out;
+  }
+  
+  .gradient-pdfMaking:hover {
+    background: linear-gradient(to top right, rgb(34, 34, 68), rgb(6, 6, 6), rgb(6, 6, 6), rgb(34, 34, 68));
+  }
+  
+  .gradient-BootcampOptions {
+    background: linear-gradient(to top right, rgb(48, 2, 2), rgb(6, 6, 6), rgb(6, 6, 6), rgb(48, 2, 2));
+    transition: background 0.5s ease-in-out;
+  }
+  
+  .gradient-BootcampOptions:hover {
+    background: linear-gradient(to top right, rgb(68, 34, 34), rgb(6, 6, 6), rgb(6, 6, 6), rgb(68, 34, 34));
+  }
+  
+  .gradient-History {
+    background: linear-gradient(to top right, rgb(48, 48, 2), rgb(6, 6, 6), rgb(6, 6, 6), rgb(48, 48, 2));
+    transition: background 0.5s ease-in-out;
+  }
+  
+  .gradient-History:hover {
+    background: linear-gradient(to top right, rgb(68, 68, 34), rgb(6, 6, 6), rgb(6, 6, 6), rgb(68, 68, 34));
+  }
+
+  .gradient-Dashboard {
+    background: linear-gradient(to top right, rgb(48, 2, 48), black, black, rgb(48, 2, 48));
+    transition: background 0.5s ease-in-out;
+  }
+  
+  .gradient-Dashboard:hover {
+    background: linear-gradient(to top right, rgb(68, 34, 68), black, black, rgb(68, 34, 68));
+  }
+  

@@ -7,12 +7,12 @@ type Props = {
     onMouseLeave: () => void;
 }
 
-export function DescriptionCard({ shortDescription, LongDescription, title, icon: Icon, onMouseEnter, onMouseLeave }) {
+export function DescriptionCard({ shortDescription, LongDescription, title, icon: Icon, onMouseEnter, onMouseLeave, className }) {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
         <div
-            className={`homepage__card ${isHovered ? 'visible' : ''}`}
+            className={`homepage__card ${className} ${isHovered ? 'visible' : ''}`}
             onMouseEnter={() => { setIsHovered(true); onMouseEnter(); }}
             onMouseLeave={() => { setIsHovered(false); onMouseLeave(); }}
         >

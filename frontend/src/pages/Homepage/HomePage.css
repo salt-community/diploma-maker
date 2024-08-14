@@ -9,7 +9,7 @@
 
 .homepage__header {
   text-align: center;
-  color: #ffffff;
+  color: #eee5e5;
   padding-bottom: 25px;
 }
 
@@ -45,6 +45,4 @@
   stroke: #fff;
   transition: all 350ms ease;
 }
-
-
 
