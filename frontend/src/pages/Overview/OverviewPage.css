@@ -199,3 +199,13 @@
                 font-weight: 400;
                 cursor: default;
             }
+
+
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}

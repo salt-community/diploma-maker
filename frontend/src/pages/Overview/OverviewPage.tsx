@@ -326,14 +326,14 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             }
             <section className='overview-page__list-module'>
                 <div className='overview-page__list-module-card-container'>
-                {loading ? (
+                    {loading ? (
                         <SpinnerDefault classOverride="spinner" />
                     ) : (
-                        // @ts-ignore
-                        selectedItems.length > 0 ? selectedItems.map((student: Student, index) => {
+                        visibleItems.length > 0 ? visibleItems.map((student: Student, index) => {
+                            const isVisible = index >= startIndex && index < startIndex + itemsPerPage;
                             const defaultImg = "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg";
                             return (
-                                <button key={student.guidId} className='list-module__item'>
+                                <button key={student.guidId} className={`list-module__item ${isVisible ? 'visible' : 'hidden'}`}>
                                     {!student.previewImageUrl && <p className='list-module__item-title'>{student.name}</p>}
                                     <LazyImageLoader 
                                         previewImageLQIPUrl={student.previewImageLQIPUrl ? `${api}${student.previewImageLQIPUrl}` : defaultImg} 
