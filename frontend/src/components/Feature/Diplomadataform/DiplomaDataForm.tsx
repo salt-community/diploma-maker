@@ -163,15 +163,10 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     let pdfs: Uint8Array[]
     let studentImagePreviewsResponse: StudentResponse[];
     try {
-      if(print){
-        pdfs = await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray,studentsInput, setLoadingMessageAndAlert);
-      }
-      else if(download){
-        pdfs = await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray,studentsInput,selectedBootcamp.name, setLoadingMessageAndAlert);
-      }
-      else{
-        pdfs = await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert);
-      }
+      pdfs = 
+        print ? await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray,studentsInput, setLoadingMessageAndAlert) :
+        download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, studentsInput ,selectedBootcamp.name, setLoadingMessageAndAlert)
+        : await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray,studentsInput,selectedBootcamp.name, setLoadingMessageAndAlert)
 
       studentImagePreviewsResponse = await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
       await updateStudentThumbnails(studentImagePreviewsResponse);
