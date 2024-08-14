@@ -4,7 +4,7 @@ import { generate } from "@pdfme/generator";
 import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
-import { BootcampResponse, SaltData, Size, Student, studentImagePreview, TemplateResponse } from "./types";
+import { BootcampResponse, SaltData, Size, Student, studentImagePreview, StudentResponse, TemplateResponse } from "./types";
 import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
 import { fontObjList } from "../data/data";
 import JSZip from 'jszip';
@@ -210,7 +210,7 @@ export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | n
   }
 };
 
-export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setLoadingMessage: (message: string) => void) => {
+export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setLoadingMessage: (message: string) => void): Promise<StudentResponse[]> => {
   const studentImages: studentImagePreview[] = []; 
 
   for (let i = 0; i < pdfs.length; i++) {
@@ -221,14 +221,20 @@ export const generatePreviewImages = async (pdfs: Uint8Array[], students: Studen
     });
   }
 
+  let imagePreviews: StudentResponse[] = [];
+
   for (let i = 0; i < pdfs.length; i++) {
     setLoadingMessage(`Uploading & Compressing Thumbnails ${i + 1}/${studentImages.length}`)
     try {
-      await api.updateStudentPreviewImage(studentImages[i]);
+      imagePreviews.push(
+        await api.updateStudentPreviewImage(studentImages[i])
+      );
     } catch (error) {
       console.log(error);
     }
   }
+
+  return imagePreviews;
 }
 
 export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
