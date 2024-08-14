@@ -218,7 +218,7 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
 
   const studentImages: studentImagePreview[] = []; 
 
-  const pdfs = [];
+  const pdfs: Uint8Array[] = [];
 
   for (let i = 0; i < templates.length; i++) {
     setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
@@ -267,10 +267,12 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
 }
 
 
-export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], students: Student[], setLoadingMessage: (message: string) => void) => {
+export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], students: Student[], setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
   setLoadingMessage("Generating combined pdf!");
   const font = await getFontsData();
   const mergedPdf = await PDFDocument.create();
+
+  const pdfs: Uint8Array[] = [];
 
   for (let i = 0; i < templates.length; i++) {
     setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
@@ -280,6 +282,8 @@ export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inpu
       options: { font },
       plugins: getPlugins(),
     });
+    pdfs.push(pdf);
+
     const loadedPdf = await PDFDocument.load(pdf);
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
     copiedPages.forEach(page => mergedPdf.addPage(page));
@@ -311,15 +315,19 @@ export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inpu
       URL.revokeObjectURL(blobUrl);
       printWindow.close();
     };
+
+    return pdfs;
   } else {
     console.error("Failed to open the print window");
   }
 };
 
-export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], students: Student[], bootcampName: string, setLoadingMessage: (message: string) => void) => {
+export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], students: Student[], bootcampName: string, setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
   setLoadingMessage("Generating combined pdf!");
   const font = await getFontsData();
   const zip = new JSZip();
+
+  const pdfs: Uint8Array[] = [];
 
   for (let i = 0; i < templates.length; i++) {
     setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
@@ -329,6 +337,8 @@ export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], in
       options: { font },
       plugins: getPlugins(),
     });
+    pdfs.push(pdf);
+
     const loadedPdf = await PDFDocument.load(pdf);
     const mergedPdf = await PDFDocument.create();
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
@@ -345,6 +355,8 @@ export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], in
   setLoadingMessage("Finished Processing Pdfs...");
 
   saveAs(zipBlob, `${bootcampName}_diplomas.zip`);
+
+  return pdfs;
 };
 
 
