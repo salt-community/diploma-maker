@@ -140,10 +140,10 @@ namespace DiplomaMakerApi.Services
 
         public void ClearFolderExceptDefault(string subDirectory = "DiplomaPdfs")
         {
-            var directoryPath = Path.Combine(_basePath, subDirectory ?? string.Empty);
+            var clearDiplomasPath = Path.Combine(_basePath, subDirectory ?? string.Empty);
             var defaultFile = "Default.pdf";
 
-            foreach (var file in Directory.GetFiles(directoryPath))
+            foreach (var file in Directory.GetFiles(clearDiplomasPath))
             {
                 if (Path.GetFileName(file) != defaultFile)
                 {

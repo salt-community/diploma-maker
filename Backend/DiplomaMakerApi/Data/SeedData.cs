@@ -14,6 +14,7 @@ public static class SeedData
             var _fileUtilityService = serviceProvider.GetRequiredService<FileUtilityService>();
             var fileOperations = new LocalFileStorageService(_context, _fileUtilityService);
             fileOperations.ClearFolderExceptDefault();
+            fileOperations.ClearFolderExceptDefault("ImagePreview");
             
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
