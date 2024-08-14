@@ -170,14 +170,14 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
       }
       else{
-        pdfs = await newGenerateCombinedPDF(templatesArr, inputsArray, studentsInput,setLoadingMessageAndAlert);
+        pdfs = await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert);
         await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
       }
       
-      // customAlert('loadingfadeout', '', '');
-      // await alertSuccess();
+      customAlert('loadingfadeout', '', '');
+      await alertSuccess();
     } catch (error) {
-      // customAlert('fail', "Failed to generate pdfs", `${error}`);
+      customAlert('fail', "Failed to generate pdfs", `${error}`);
     }
     
   };

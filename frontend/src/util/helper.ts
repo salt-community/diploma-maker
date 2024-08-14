@@ -222,8 +222,6 @@ export const generatePreviewImages = async (pdfs: Uint8Array[], students: Studen
   }
 
   for (let i = 0; i < pdfs.length; i++) {
-    await delay(200)
-    console.log(studentImages[i]);
     setLoadingMessage(`Uploading & Compressing Thumbnails ${i + 1}/${studentImages.length}`)
     try {
       await api.updateStudentPreviewImage(studentImages[i]);
@@ -231,16 +229,13 @@ export const generatePreviewImages = async (pdfs: Uint8Array[], students: Studen
       console.log(error);
     }
   }
-
 }
 
-export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], students: Student[], setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
+export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
   setLoadingMessage("Generating combined pdf!");
   
   const font = await getFontsData();
-  const mergedPdf = await PDFDocument.create();
-
-  const studentImages: studentImagePreview[] = []; 
+  const mergedPdf = await PDFDocument.create();; 
 
   const pdfs: Uint8Array[] = [];
 
@@ -258,26 +253,7 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
     const loadedPdf = await PDFDocument.load(pdf);
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
     copiedPages.forEach(page => mergedPdf.addPage(page));
-
-    // const studentPreviewImage = await convertPDFToImage(pdf);
-
-    // studentImages.push({
-    //   studentGuidId: students[i].guidId,
-    //   image: studentPreviewImage
-    // });
   }
-  
-  
-  // for (let i = 0; i < templates.length; i++) {
-  //   await delay(200)
-  //   console.log(studentImages[i]);
-  //   setLoadingMessage(`Generating Thumbnails ${i + 1}/${studentImages.length}`)
-  //   try {
-  //     await api.updateStudentPreviewImage(studentImages[i]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
   setLoadingMessage("Merging Pdfs");
 
