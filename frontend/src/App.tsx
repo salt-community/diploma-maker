@@ -29,6 +29,7 @@ export default function App() {
 
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
   const { setBGLoadingMessage, loadingBGMessage } = useBGLoadingMessage();
+
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert()
 
@@ -185,7 +186,6 @@ export default function App() {
         <Route path={"/pdf-creator"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} showPopup={showPopup} customAlert={customAlert} closeAlert={closeAlert}/>} />
         <Route path={"/"} element={<HomePage/>} />
         <Route path={"/home"} element={<HomePage/>} />      
-        {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
         <Route path={`/verify`} element={<VerificationInputPage />} />
         <Route path={`/verify/:verificationCode`} element = {<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode}/>} />
         <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} showPopup={showPopup} customAlert={customAlert} closeAlert={closeAlert}/>} /> 
@@ -195,6 +195,9 @@ export default function App() {
         <Route path={"*"} element={<ErrorPage code={404} />} /> 
         </Routes>
       <Footer/> 
+
+
+      {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
     </>
   );
 }
