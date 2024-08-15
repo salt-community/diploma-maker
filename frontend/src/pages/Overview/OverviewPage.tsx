@@ -33,9 +33,12 @@ type Props = {
     sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
     templates: TemplateResponse[] | null;
     setLoadingMessage: (message: string) => void;
+    showPopup: Boolean;
+    customAlert: (alertType: PopupType, title: string, content: string) => void;
+    closeAlert: () => void;
 }
 
-export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail, setLoadingMessage }: Props) => {
+export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail, setLoadingMessage, showPopup, customAlert, closeAlert }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -44,7 +47,6 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
 
-    const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
     const { loadingMessage } = useLoadingMessage();
 
@@ -312,7 +314,6 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
 
     return (
         <main className="overview-page">
-            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} />
             <InfoPopup
                 title={infoPopupContent[0]}
                 text={infoPopupContent[1]}
