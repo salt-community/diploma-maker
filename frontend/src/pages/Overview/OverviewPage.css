@@ -86,6 +86,7 @@
             display: flex;
             align-items: flex-end;
             justify-content: center;
+            z-index: 100;
         }
 
             .list-module__item-menu {
