@@ -1,9 +1,7 @@
 using System.IO.Compression;
-using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
-using Aspose.Pdf;
-using Aspose.Pdf.Devices;
+using Syncfusion.PdfToImageConverter;
 
 namespace DiplomaMakerApi.Services
 {
@@ -69,7 +67,7 @@ namespace DiplomaMakerApi.Services
             {
                 myImage.Mutate(x => x.Resize(new ResizeOptions
                 {
-                    Size = new Size(92, 129),
+                    Size = new SixLabors.ImageSharp.Size(92, 129),
                     Mode = ResizeMode.Max
                 }));
 
@@ -88,7 +86,6 @@ namespace DiplomaMakerApi.Services
             outStream.Position = 0;
 
             var webpFileName = Path.ChangeExtension(fileName, ".webp");
-
            
             var webpStreamCopy = new MemoryStream(outStream.ToArray());  // To fix "Cannot access a closed Stream." error
 
@@ -117,52 +114,36 @@ namespace DiplomaMakerApi.Services
 
         public async Task<IFormFile> ConvertPdfToPng(string base64String, string fileName)
         {
-            if (string.IsNullOrWhiteSpace(base64String))
+            byte[] pdfBytes = Convert.FromBase64String(base64String);
+
+            using (MemoryStream pdfStream = new MemoryStream(pdfBytes))
             {
-                throw new ArgumentException("Invalid file. The file cannot be null or empty.");
-            }
+                PdfToImageConverter imageConverter = new PdfToImageConverter();
 
-            const string base64Prefix = "data:application/pdf;base64,";
-            if (base64String.StartsWith(base64Prefix))
-            {
-                base64String = base64String.Substring(base64Prefix.Length);
-            }
+                imageConverter.Load(pdfStream);
 
-            try
-            {
-                byte[] pdfBytes = Convert.FromBase64String(base64String);
-
-                var tempPdfPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.pdf");
-                await File.WriteAllBytesAsync(tempPdfPath, pdfBytes);
-
-                var document = new Aspose.Pdf.Document(tempPdfPath);
-
-                var pngFilePath = Path.Combine(Path.GetTempPath(), $"{fileName}.png");
-                using (FileStream imageStream = new FileStream(pngFilePath, FileMode.Create))
+                using (Stream imageStream = imageConverter.Convert(0, false, false))
                 {
-                    var resolution = new Resolution(300);
-                    var pngDevice = new PngDevice(resolution);
-                    pngDevice.Process(document.Pages[1], imageStream);
-                    imageStream.Close();
+                    imageStream.Position = 0;
+
+                    using (MemoryStream pngStream = new MemoryStream())
+                    {
+                        System.Drawing.Image image = System.Drawing.Image.FromStream(imageStream);
+                        image.Save(pngStream, System.Drawing.Imaging.ImageFormat.Png);
+                        pngStream.Position = 0;
+
+                        var pngFileStream = new MemoryStream(pngStream.ToArray());
+                        pngFileStream.Position = 0;
+
+                        IFormFile formFile = new FormFile(pngFileStream, 0, pngFileStream.Length, "image", fileName)
+                        {
+                            Headers = new HeaderDictionary(),
+                            ContentType = "image/png"
+                        };
+
+                        return formFile;
+                    }
                 }
-
-                var pngBytes = await File.ReadAllBytesAsync(pngFilePath);
-
-                File.Delete(tempPdfPath);
-                File.Delete(pngFilePath);
-
-                var pngStream = new MemoryStream(pngBytes);
-                var formFilePng = new FormFile(pngStream, 0, pngStream.Length, "file", $"{fileName}.png")
-                {
-                    Headers = new HeaderDictionary(),
-                    ContentType = "image/png"
-                };
-
-                return formFilePng;
-            }
-            catch (FormatException ex)
-            {
-                throw new ArgumentException("The input is not a valid Base64 string.", ex);
             }
         }
         public IFormFile ConvertByteArrayToIFormFile(byte[] fileBytes, string fileName, string contentType)

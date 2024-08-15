@@ -176,6 +176,7 @@ export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray:
   window.open(URL.createObjectURL(blob));
 }
 
+// No Longer Used In front-end cause it slows down application. But it is faster than doing it in the backend
 export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | null> => {
   try {
     const pdf = await pdfjsLib.getDocument({ data: pdfInput }).promise;
@@ -210,25 +211,12 @@ export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | n
   }
 };
 
-export function isBase64(str: string): boolean {
-  if (typeof str !== 'string') {
-    return false;
-  }
-
-  // Regular expression to check if the string is valid Base64
-  const base64Regex = /^(?:[A-Za-z0-9+\/]{4})*?(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/;
-
-  // Validate length is multiple of 4 and it matches the Base64 pattern
-  return str.length % 4 === 0 && base64Regex.test(str);
-}
-
-export function convertUint8ArrayToBase64(uint8Array: Uint8Array, mimeType: string): string {
+export function convertUint8ArrayToBase64(uint8Array: Uint8Array): string {
   let binaryString = '';
   for (let i = 0; i < uint8Array.length; i++) {
     binaryString += String.fromCharCode(uint8Array[i]);
   }
-  const base64String = btoa(binaryString);
-  return `data:${mimeType};base64,${base64String}`;
+  return btoa(binaryString);
 }
 
 export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setBGLoadingMessage: (message: string) => void): Promise<StudentResponse[]> => {
@@ -237,7 +225,7 @@ export const generatePreviewImages = async (pdfs: Uint8Array[], students: Studen
   for (let i = 0; i < pdfs.length; i++) {
     setBGLoadingMessage(`Converting pdfs to blob ${i + 1}/${pdfs.length}`);
 
-    const base64String = convertUint8ArrayToBase64(pdfs[i], 'application/pdf');
+    const base64String = convertUint8ArrayToBase64(pdfs[i]);
 
     await pdfConversionRequests.push({
       studentGuidId: students[i].guidId,
@@ -249,7 +237,7 @@ export const generatePreviewImages = async (pdfs: Uint8Array[], students: Studen
 
   try {
     for (let i = 0; i < pdfConversionRequests.length; i++) {
-      setBGLoadingMessage(`Uploading & Compressing Thumbnails ${i + 1}/${pdfConversionRequests.length}`)
+      setBGLoadingMessage(`Converting & Compressing Thumbnails ${i + 1}/${pdfConversionRequests.length}`)
       await api.updateStudentPreviewImage(pdfConversionRequests[i])
     }
     
