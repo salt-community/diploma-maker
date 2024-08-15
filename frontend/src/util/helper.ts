@@ -384,8 +384,6 @@ export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], in
 
   setLoadingMessage("Finished Processing Pdfs...");
 
-  saveAs(zipBlob, `${bootcampName}_diplomas.zip`);
-
   const response: pdfGenerationResponse = {
     pdfFiles: pdfs,
     bundledPdfsDisplayObject: zipBlob

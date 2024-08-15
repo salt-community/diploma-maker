@@ -1,4 +1,3 @@
-import { delay } from "../util/helper";
 import { BootcampRequest, BootcampResponse, FormDataUpdateRequest, studentImagePreview, StudentResponse,  } from "../util/types";
 
 export async function postBootcamp(apiUrl: string, bootcampRequest: BootcampRequest): Promise<void> {
@@ -97,14 +96,9 @@ export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpda
 
 export async function updateStudentPreviewImage(apiUrl: string, studentImagePreviewRequest: studentImagePreview): Promise<StudentResponse> {
     const formData = new FormData();
-    
-    // Append StudentGuidId as usual
     formData.append('StudentGuidId', studentImagePreviewRequest.studentGuidId);
-    
-    // Append the Base64 string as the image
-    formData.append('Image', studentImagePreviewRequest.image); // No need for filename here, it's already Base64
+    formData.append('Image', studentImagePreviewRequest.image);
 
-    // Optional: Log FormData entries for debugging
     for (let pair of formData.entries()) {
         console.log(pair[0], pair[1]);
     }
@@ -125,13 +119,9 @@ export async function updateStudentPreviewImage(apiUrl: string, studentImagePrev
 
 export async function updateBundledStudentsPreviewImages(apiUrl: string, studentImagePreviewRequests: studentImagePreview[]): Promise<StudentResponse[]> {
     const formData = new FormData();
-
     studentImagePreviewRequests.forEach((request, index) => {
-        // Append StudentGuidId as usual
         formData.append(`PreviewImageRequests[${index}].StudentGuidId`, request.studentGuidId);
-
-        // Append the Base64 string as the image
-        formData.append(`PreviewImageRequests[${index}].Image`, request.image); // No filename, since it's Base64
+        formData.append(`PreviewImageRequests[${index}].Image`, request.image);
     });
 
     const response = await fetch(`${apiUrl}/api/Blob/UpdateBundledStudentsPreviewImages`, {
