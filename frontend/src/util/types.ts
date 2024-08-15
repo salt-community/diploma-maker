@@ -208,7 +208,7 @@ export type EmailConfigRequestDto = {
 
 export type studentImagePreview = {
     studentGuidId: string,
-    image: Blob,
+    image: Uint8Array,
 }
 
 export type pdfGenerationResponse = {
