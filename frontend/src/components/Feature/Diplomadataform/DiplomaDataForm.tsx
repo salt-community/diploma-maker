@@ -159,27 +159,24 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     };
 
     const studentsInput = bootcampPutResponse.students.filter(s => students.some(st => st.name === s.name));
+    let pdfs: pdfGenerationResponse;
 
     try {
-      let pdfs: pdfGenerationResponse = 
+      pdfs = 
         print ? await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) 
         : download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, selectedBootcamp.name, setLoadingMessageAndAlert)
         : await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert)
-
-      updateStudentThumbnails(pdfs.pdfFiles, studentsInput, setLoadingMessageAndAlert); //Background task
-
-      customAlert('loadingfadeout', '', '');
-      await alertSuccess();
-
-      alert("opening!")
-      print ? await openPrintWindowfromBlob(pdfs.bundledPdfsDisplayObject)
-      : await openWindowfromBlob(pdfs.bundledPdfsDisplayObject) 
-      alert("opened!")
-
     } catch (error) {
       customAlert('fail', "Failed to generate pdfs", `${error}`);
     }
-    
+
+    updateStudentThumbnails(pdfs.pdfFiles, studentsInput, setLoadingMessageAndAlert); //Background task
+
+    customAlert('loadingfadeout', '', '');
+    await alertSuccess();
+
+    print ? await openPrintWindowfromBlob(pdfs.bundledPdfsDisplayObject)
+    : await openWindowfromBlob(pdfs.bundledPdfsDisplayObject) 
   };
 
   const alertSuccess = async () => {
