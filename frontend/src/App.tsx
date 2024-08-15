@@ -84,7 +84,7 @@ export default function App() {
 
   const updateStudentThumbnails = async (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void): Promise<void> => {
     BGcustomAlert("loading", `${loadingBGMessage}`, "");
-    await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert, setBootcampsFromPreviewImageResponseHandler);
+    await generatePreviewImages(pdfs, studentsInput, setBGLoadingMessage, setBootcampsFromPreviewImageResponseHandler);
     BGcustomAlert("loadingfadeout", `${loadingBGMessage}`, "");
   }
 
