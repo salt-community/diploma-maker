@@ -78,6 +78,14 @@ namespace DiplomaMakerApi.Controllers
             return _mapper.Map<StudentResponseDto>(studentResponse) ;
         }
 
+        [HttpPut("UpdateBundledStudentsPreviewImages")]
+        public async Task<ActionResult<List<StudentResponseDto>>> UpdateBundledStudentsPreviewImages([FromForm] PreviewImageRequestsDto previewImageRequestsDto)
+        {
+            // var studentResponse = await _bootcampService.PutStudentPreviewImage(previewImageRequestDto);
+            // _mapper.Map<StudentResponseDto>(studentResponse)
+            return Ok();
+        }
+
         private async Task<IActionResult> GetPdfBlob(string filename)
         {
             filename = Path.GetFileName(filename);
