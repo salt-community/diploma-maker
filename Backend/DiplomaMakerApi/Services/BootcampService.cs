@@ -105,6 +105,18 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
             return bootcamp;
     }
 
+    public async Task<List<Student>> PutStudentsPreviewImages(PreviewImageRequestsDto previewImageRequestsDto)
+    {
+        var studentsUpdated = new List<Student>();
+        foreach(var studentPreviewImageRequest in previewImageRequestsDto.PreviewImageRequests)
+        {
+            var studentResponse = await PutStudentPreviewImage(studentPreviewImageRequest);
+            studentsUpdated.Add(studentResponse);
+        }
+
+        return studentsUpdated;
+    }
+
     public async Task<Student> PutStudentPreviewImage(PreviewImageRequestDto previewImageRequestDto)
     {
         var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == previewImageRequestDto.StudentGuidId);
