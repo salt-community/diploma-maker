@@ -54,11 +54,13 @@
         .popup.alignleft .popup-content-text h1{
             position: absolute;
             top: 50%;
-            left: 15%;
+            left: 40%;
 
             transform: translateY(-50%) translateX(-50%);
             color: #c2c2cd;
             font-size: .8rem;
+
+            width: 500px;
         }
 
 .popup-content {
