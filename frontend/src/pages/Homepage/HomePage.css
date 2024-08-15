@@ -1,0 +1,48 @@
+.homepage {
+  min-height: 100vh;
+  background-color: #2e2e38;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.homepage__header {
+  text-align: center;
+  color: #eee5e5;
+  padding-bottom: 25px;
+}
+
+.homepage__header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.homepage__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 2.4rem;
+  width: 100%;
+  max-width: 1430px;
+}
+
+.homepage__card:hover .homepage__card-header svg .fill,
+.homepage__card:hover .homepage__card-header svg .stroke,
+.homepage__card:hover .homepage__card-header svg .cls-1{
+  transition: all 350ms ease;
+}
+
+.homepage__card:hover .homepage__card-header svg .fill{
+  fill: #fff;
+  transition: all 350ms ease;
+}
+
+.homepage__card:hover .homepage__card-header svg .stroke{
+  stroke: #fff;
+  transition: all 350ms ease;
+}
+.homepage__card:hover .homepage__card-header svg .cls-1{
+  stroke: #fff;
+  transition: all 350ms ease;
+}
+
