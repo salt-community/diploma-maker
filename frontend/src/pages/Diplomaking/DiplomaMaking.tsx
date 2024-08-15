@@ -19,15 +19,17 @@ type Props = {
   templates: TemplateResponse[] | null;
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => Promise<BootcampResponse>
   setLoadingMessage: (message: string) => void;
-  updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>
+  updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>;
+  showPopup: Boolean;
+  customAlert: (alertType: PopupType, title: string, content: string) => void;
+  closeAlert: () => void;
 };
 
 
-export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails }: Props) {
+export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails, showPopup, customAlert, closeAlert }: Props) {
 
   /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
   const [saltData, setSaltData] = useState<SaltData | null>();
-  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { loadingMessage } = useLoadingMessage();
   const isFailed = loadingMessage.includes('Failed');
   const [selectedStudentIndex, setSelectedStudentIndex] = useState<number |null>(null);
@@ -44,7 +46,6 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
         {/*        {  <button className="toggle-button" onClick={TogglePreview}>
           {IsFullScreen ? <NextIcon rotation={180} /> : <NextIcon />}
         </button> } */}
-        <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
         <>
           <section className="previewdiploma-container">
             {saltData && (

@@ -30,7 +30,7 @@ export default function App() {
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
   const { setBGLoadingMessage, loadingBGMessage } = useBGLoadingMessage();
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
-  const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert();
+  const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert()
 
   async function getBootcampsFromBackend() {
     const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);
@@ -178,10 +178,11 @@ export default function App() {
 
   return (
     <>
-      <AlertPopup title={loadingBGMessage} text={BGpopupContent[1]} popupType={BGpopupType} show={BGshowPopup} onClose={BGcloseAlert} leftAligned={true}/>
       <NavBar />
+        <AlertPopup title={loadingMessage} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500}/>
+        <AlertPopup title={loadingBGMessage} text={BGpopupContent[1]} popupType={BGpopupType} show={BGshowPopup} onClose={BGcloseAlert} leftAligned={true}/>
       <Routes>
-        <Route path={"/pdf-creator"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage}/>} />
+        <Route path={"/pdf-creator"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} showPopup={showPopup} customAlert={customAlert} closeAlert={closeAlert}/>} />
         <Route path={"/"} element={<HomePage/>} />
         <Route path={"/home"} element={<HomePage/>} />      
         {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
