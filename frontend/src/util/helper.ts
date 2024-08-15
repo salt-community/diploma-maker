@@ -214,27 +214,34 @@ export const generatePreviewImages = async (pdfs: Uint8Array[], students: Studen
   const studentImages: studentImagePreview[] = []; 
 
   for (let i = 0; i < pdfs.length; i++) {
-    setLoadingMessage(`Generating Thumbnails ${i + 1}/${pdfs.length}`)
+    setLoadingMessage(`Generating thumbnails ${i + 1}/${pdfs.length}`)
     studentImages.push({
       studentGuidId: students[i].guidId,
       image: await convertPDFToImage(pdfs[i])
     });
   }
-
-  let imagePreviews: StudentResponse[] = [];
-
-  for (let i = 0; i < pdfs.length; i++) {
-    setLoadingMessage(`Uploading & Compressing Thumbnails ${i + 1}/${studentImages.length}`)
-    try {
-      imagePreviews.push(
-        await api.updateStudentPreviewImage(studentImages[i])
-      );
-    } catch (error) {
-      console.log(error);
-    }
+  setLoadingMessage(`Uploading thumbnails to cloud...`)
+  try {
+    const imagePreviews = await api.updateBundledStudentsPreviewImages(studentImages)
+    return imagePreviews;
+  } catch (error) {
+    setLoadingMessage(`Failed to load bootcamps!. ${error.message || 'Unknown error'}`)
   }
 
-  return imagePreviews;
+  // Old way one by one
+
+  // let imagePreviews: StudentResponse[] = [];
+
+  // for (let i = 0; i < pdfs.length; i++) {
+  //   setLoadingMessage(`Uploading thumbnails to cloud...`)
+  //   try {
+  //     imagePreviews.push(
+  //       await api.updateStudentPreviewImage(studentImages[i])
+  //     );
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 }
 
 export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
