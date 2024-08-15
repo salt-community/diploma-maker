@@ -68,23 +68,23 @@ export default function App() {
     if (onStart) onStart();
     BGcustomAlert('loading', `${loadingBGMessage}`, '');
     const studentImageResponse: StudentResponse[] = await generatePreviewImages(pdfs, studentsInput, setBGLoadingMessage);
-    setBootcamps(prevBootcamps =>
-      prevBootcamps!.map(bootcamp => ({
-        ...bootcamp,
-        students: bootcamp.students.map(student => {
-          const matchingImage = studentImageResponse.find(
-            preview => preview.guidId === student.guidId
-          );
-          return matchingImage
-            ? {
-                ...student,
-                previewImageUrl: matchingImage.previewImageUrl,
-                previewImageLQIPUrl: matchingImage.previewImageLQIPUrl,
-              }
-            : student;
-        }),
-      }))
-    );
+    // setBootcamps(prevBootcamps =>
+    //   prevBootcamps!.map(bootcamp => ({
+    //     ...bootcamp,
+    //     students: bootcamp.students.map(student => {
+    //       const matchingImage = studentImageResponse.find(
+    //         preview => preview.guidId === student.guidId
+    //       );
+    //       return matchingImage
+    //         ? {
+    //             ...student,
+    //             previewImageUrl: matchingImage.previewImageUrl,
+    //             previewImageLQIPUrl: matchingImage.previewImageLQIPUrl,
+    //           }
+    //         : student;
+    //     }),
+    //   }))
+    // );
     BGcustomAlert('loadingfadeout', `${loadingBGMessage}`, '');
   }
 

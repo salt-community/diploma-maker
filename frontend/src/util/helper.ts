@@ -210,26 +210,36 @@ export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | n
   }
 };
 
+export const uint8ArrayToBlob = async (uint8Array: Uint8Array, mimeType: string): Promise<Blob> => {
+  return new Blob([uint8Array], { type: mimeType });
+}
+
 export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setBGLoadingMessage: (message: string) => void): Promise<StudentResponse[]> => {
   const studentImages: studentImagePreview[] = []; 
 
-  setBGLoadingMessage("generating pdf thumbnails")
-
   for (let i = 0; i < pdfs.length; i++) {
-    setBGLoadingMessage(`Generating thumbnails ${i + 1}/${pdfs.length}`)
+    setBGLoadingMessage(`Converting pdfs to blob ${i + 1}/${pdfs.length}`);
+   
     studentImages.push({
       studentGuidId: students[i].guidId,
-      image: await convertPDFToImage(pdfs[i])
+      image: await uint8ArrayToBlob(pdfs[i], 'application/pdf')
     });
   }
-  setBGLoadingMessage(`Uploading thumbnails to cloud...`)
-  
+
+  let imagePreviews: StudentResponse[];
+
   try {
-    const imagePreviews = await api.updateBundledStudentsPreviewImages(studentImages)
-    setBGLoadingMessage("Finished Cloud Generation!");
+    
+    for (let i = 0; i < pdfs.length; i++) {
+      setBGLoadingMessage(`Uploading & Compressing Thumbnails ${i + 1}/${studentImages.length}`)
+      const imagePreviewResponse = await api.updateStudentPreviewImage(studentImages[i])
+      imagePreviews.push(imagePreviewResponse)
+    }
+
+    setBGLoadingMessage("Finished Uploading to Cloud!");
     return imagePreviews;
   } catch (error) {
-    setBGLoadingMessage(`Failed to load bootcamps!. ${error.message || 'Unknown error'}`)
+    setBGLoadingMessage(`Failed to Update PreviewImages!. ${error.message || 'Unknown error'}`)
   }
 }
 
