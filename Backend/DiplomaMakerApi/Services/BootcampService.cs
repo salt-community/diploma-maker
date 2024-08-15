@@ -124,8 +124,9 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
         {
             throw new NotFoundByGuidException("Student", previewImageRequestDto.StudentGuidId);
         }
-        var HQFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
-        var LQFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString(), true);
+        var pngImage = await _fileUtilityService.ConvertPdfToPng(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
+        var HQFile = await _fileUtilityService.ConvertPngToWebP(pngImage, previewImageRequestDto.StudentGuidId.ToString());
+        var LQFile = await _fileUtilityService.ConvertPngToWebP(pngImage, previewImageRequestDto.StudentGuidId.ToString(), true);
 
         var HQFilePath = !_useBlobStorage 
             ? await _localFileStorageService.SaveFile(HQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview")
