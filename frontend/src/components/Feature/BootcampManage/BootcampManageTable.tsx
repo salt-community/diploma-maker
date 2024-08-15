@@ -4,7 +4,7 @@ import { useCustomAlert } from "../../Hooks/useCustomAlert";
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../../util/types";
 import { utcFormatterSlash } from "../../../util/helper";
 import { ConfirmationPopup } from "../../MenuItems/Popups/ConfirmationPopup";
-import { AlertPopup } from "../../MenuItems/Popups/AlertPopup";
+import { AlertPopup, PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { ArrowIcon } from "../../MenuItems/Icons/ArrowIcon";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
 import { DeleteButtonSimple } from "../../MenuItems/Buttons/DeleteButtonSimple";
@@ -19,6 +19,9 @@ type Props = {
   addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   updateBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   tracks: TrackResponse[];
+  showPopup: Boolean;
+  customAlert: (alertType: PopupType, title: string, content: string) => void;
+  closeAlert: () => void;
 }
 
 type SortOrder =
@@ -26,9 +29,8 @@ type SortOrder =
   'graduationdate-ascending' | 'graduationdate-descending' |
   'track-ascending' | 'track-descending';
 
-export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks }: Props) {
+export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks, showPopup, customAlert, closeAlert  }: Props) {
   const { register, handleSubmit, setValue, watch, reset } = useForm();
-  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1920 ? 5 : 11);
@@ -170,7 +172,6 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
 
   return (
     <>
-      <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} />
       <ConfirmationPopup
         title={confirmationPopupContent[0]}
         text={confirmationPopupContent[1]}
