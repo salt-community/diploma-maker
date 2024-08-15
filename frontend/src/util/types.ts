@@ -210,3 +210,8 @@ export type studentImagePreview = {
     studentGuidId: string,
     image: Blob,
 }
+
+export type pdfGenerationResponse = {
+    pdfFiles: Uint8Array[],
+    bundledPdfsDisplayObject: Blob,
+}

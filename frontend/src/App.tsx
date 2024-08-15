@@ -58,7 +58,8 @@ export default function App() {
     await refresh();
   }
 
-  const updateStudentThumbnails = async (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void): Promise<void> => {
+  const updateStudentThumbnails = async (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void, onStart?: () => void): Promise<void> => {
+    if (onStart) onStart();
     const studentImageResponse: StudentResponse[] = await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
     setBootcamps(prevBootcamps =>
       prevBootcamps!.map(bootcamp => ({
