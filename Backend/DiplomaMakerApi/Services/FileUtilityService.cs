@@ -49,7 +49,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<byte[]> ConvertPngToWebP(byte[] pngBytes, bool lowQuality = false)
+        public async Task<IFormFile> ConvertPngToWebP(byte[] pngBytes, string fileName, bool lowQuality = false)
         {
             if (pngBytes == null || pngBytes.Length == 0)
             {
@@ -84,9 +84,26 @@ namespace DiplomaMakerApi.Services
                         });
                     }
 
-                    return outStream.ToArray();
+                    var webpBytes = outStream.ToArray();
+                    var webpFileName = Path.ChangeExtension(fileName, ".webp");
+
+                    return ConvertByteArrayToIFormFile(webpBytes, webpFileName, "image/webp");
                 }
             }
+        }
+        public IFormFile ConvertByteArrayToIFormFile(byte[] fileBytes, string fileName, string contentType)
+        {
+            if (fileBytes == null || fileBytes.Length == 0)
+            {
+                throw new ArgumentException("File data cannot be null or empty.");
+            }
+
+            var stream = new MemoryStream(fileBytes);
+            return new FormFile(stream, 0, stream.Length, "file", fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = contentType
+            };
         }
 
         public Task<string> GetRelativePathAsync(string fullFilePath, string directoryName)
