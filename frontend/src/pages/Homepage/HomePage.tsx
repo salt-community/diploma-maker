@@ -8,10 +8,9 @@ import { DescriptionCard } from '../../components/Feature/DescriptionCard/Descri
 import { DashBoardIcon } from '../../components/MenuItems/Icons/DashBoardIcon';
 
 const shortDescriptionArray = [
-  "Here you can make your own template to use for your diplomas.",
+  "Make your own template to use for your diplomas.",
   "User-friendly interface. Easy to customize for different needs.",
-  "Plently of different fonts, colors and styles to choose from.",
-  "Save and reuse your custom diploma templates anytime."
+  "Plently of different fonts, colors and styles to choose from."
 ];
 
 

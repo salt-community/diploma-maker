@@ -1,5 +1,5 @@
 .homepage__card {
-    color: #d9c8c8;
+    color: #cacad8;
     padding: 2rem;
     padding-top: 1rem;
     border-radius: 0.5rem;
@@ -9,6 +9,8 @@
     width: 450px;
     position: relative;
     cursor: default;
+    
+    
 }
 
 .homepage__card:hover {
@@ -21,7 +23,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding-bottom: 15px;
+    padding-bottom: 20px;
     transition: color 0.375s ease;
 }
 
@@ -56,6 +58,8 @@
 }
 
 .short-description-list {
+    font-size: 1rem ;
+    font-weight: 600;
     list-style-type: disc;
     padding-left: 20px;
     margin: 0;
@@ -63,7 +67,7 @@
 }
 
 .short-description-list li {
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
     transition: margin-bottom 0.375s ease;
 }
 
@@ -94,6 +98,7 @@
 
 .learn-more-text {
     color: #c0c0c0;
+    padding-top: 25px;
     font-style: italic;
     display: block;
     text-align: center;
@@ -104,49 +109,48 @@
     color: #e2d5d5;
 }
 
-
-.gradient-templateCreator {
-    background: linear-gradient(to top right, rgb(0, 48, 0), rgb(6, 6, 6), rgb(6, 6, 6), rgb(0, 48, 0));
+ .gradient-templateCreator {
+    background: linear-gradient(to top right, #2d4c49,#192125, #141f1d, #192125, #2d4c49);
     transition: background 0.5s ease-in-out;
   }
   
   .gradient-templateCreator:hover {
-    background: linear-gradient(to top right, rgb(34, 68, 34), rgb(6, 6, 6), rgb(6, 6, 6), rgb(34, 68, 34));
+    background: linear-gradient(to top right, rgb(34, 68, 34), #192125, #141f1d, #192125, rgb(34, 68, 34));
+    transition: background 0.5s ease-in-out;
   }
   
   .gradient-pdfMaking {
-    background: linear-gradient(to top right, rgb(2, 2, 48), rgb(6, 6, 6), rgb(6, 6, 6), rgb(2, 2, 48));
+    background: linear-gradient(to top right, rgb(2, 2, 48),#191925, #14141f, #191925, rgb(2, 2, 48));
     transition: background 0.5s ease-in-out;
   }
   
   .gradient-pdfMaking:hover {
-    background: linear-gradient(to top right, rgb(34, 34, 68), rgb(6, 6, 6), rgb(6, 6, 6), rgb(34, 34, 68));
+    background: linear-gradient(to top right, rgb(34, 34, 68), #191925, #14141f, #191925, rgb(34, 34, 68));
   }
   
   .gradient-BootcampOptions {
-    background: linear-gradient(to top right, rgb(48, 2, 2), rgb(6, 6, 6), rgb(6, 6, 6), rgb(48, 2, 2));
+    background: linear-gradient(to top right, rgb(48, 2, 2), #192125, #141f1d, #192125, rgb(48, 2, 2));
     transition: background 0.5s ease-in-out;
   }
   
   .gradient-BootcampOptions:hover {
-    background: linear-gradient(to top right, rgb(68, 34, 34), rgb(6, 6, 6), rgb(6, 6, 6), rgb(68, 34, 34));
+    background: linear-gradient(to top right, rgb(68, 34, 34), #192125, #141f1d, #192125, rgb(68, 34, 34));
   }
   
   .gradient-History {
-    background: linear-gradient(to top right, rgb(48, 48, 2), rgb(6, 6, 6), rgb(6, 6, 6), rgb(48, 48, 2));
+    background: linear-gradient(to top right, rgb(48, 48, 2), #192125, #141f1d, #192125, rgb(48, 48, 2));
     transition: background 0.5s ease-in-out;
   }
   
   .gradient-History:hover {
-    background: linear-gradient(to top right, rgb(68, 68, 34), rgb(6, 6, 6), rgb(6, 6, 6), rgb(68, 68, 34));
+    background: linear-gradient(to top right, rgb(68, 68, 34), #192125, #141f1d, #192125, rgb(68, 68, 34));
   }
 
   .gradient-Dashboard {
-    background: linear-gradient(to top right, rgb(48, 2, 48), black, black, rgb(48, 2, 48));
+    background: linear-gradient(to top right, rgb(48, 2, 48), #192125, #141f1d, #192125, rgb(48, 2, 48));
     transition: background 0.5s ease-in-out;
   }
   
   .gradient-Dashboard:hover {
-    background: linear-gradient(to top right, rgb(68, 34, 68), black, black, rgb(68, 34, 68));
+    background: linear-gradient(to top right, rgb(68, 34, 68), #192125, #141f1d, #192125, rgb(68, 34, 68));
   }
-  
