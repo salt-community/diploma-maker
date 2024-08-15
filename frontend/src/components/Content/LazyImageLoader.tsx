@@ -4,9 +4,10 @@ import './LazyImageLoader.css'
 type LazyImageLoaderProps = {
     previewImageLQIPUrl?: string;
     previewImageUrl?: string;
+    loadTrigger?: () => void;
 };
 
-export const LazyImageLoader = ({ previewImageLQIPUrl, previewImageUrl }: LazyImageLoaderProps) => {
+export const LazyImageLoader = ({ previewImageLQIPUrl, previewImageUrl, loadTrigger }: LazyImageLoaderProps) => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     return (
@@ -20,7 +21,7 @@ export const LazyImageLoader = ({ previewImageLQIPUrl, previewImageUrl }: LazyIm
                 src={previewImageUrl || 'fallback_high_url'}
                 alt="High Quality"
                 className={`high-quality ${isLoaded ? 'loaded' : 'hidden'}`}
-                onLoad={() => setIsLoaded(true)}
+                onLoad={() => {setIsLoaded(true); loadTrigger()}}
             />
         </div>
     );

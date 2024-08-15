@@ -78,6 +78,17 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         (!selectedTrack || bootcamps?.some(bootcamp => bootcamp.track.id.toString() === selectedTrack && bootcamp.students.includes(item)))
     );
 
+    const [imageLoadedStates, setImageLoadedStates] = useState<boolean[]>(new Array(visibleItems.length).fill(false));
+    
+    const handleImageLoad = (index: number) => {
+        setImageLoadedStates(prevStates => {
+          const newStates = [...prevStates];
+          newStates[index] = true;
+          return newStates;
+        });
+      };
+
+    
     const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
     const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
 
@@ -338,13 +349,14 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                                     <LazyImageLoader 
                                         previewImageLQIPUrl={student.previewImageLQIPUrl ? `${api}${student.previewImageLQIPUrl}` : defaultImg} 
                                         previewImageUrl={student.previewImageUrl ? `${api}${student.previewImageUrl}` : defaultImg} 
+                                        loadTrigger={() => handleImageLoad(index)}
                                     />
                                     <section className='list-module__item-menu'>
                                         <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
                                         <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
                                         <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
                                     </section>
-                                    {student.lastGenerated && 
+                                    {student.lastGenerated && imageLoadedStates[index] && 
                                         <div onClick={() => navigateToVerificationPage(student.verificationCode)} className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
                                             <VerifyIcon />
                                         </div>
