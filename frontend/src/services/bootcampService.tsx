@@ -111,3 +111,25 @@ export async function updateStudentPreviewImage(apiUrl: string, studentImagePrev
     
     return await response.json();
 }
+
+
+
+export async function updateBundledStudentsPreviewImages(apiUrl: string, studentImagePreviewRequests: studentImagePreview[]): Promise<StudentResponse[]> {
+    const formData = new FormData();
+
+    studentImagePreviewRequests.forEach((request, index) => {
+        formData.append(`PreviewImageRequests[${index}].StudentGuidId`, request.studentGuidId);
+        formData.append(`PreviewImageRequests[${index}].Image`, request.image, request.studentGuidId);
+    });
+
+    const response = await fetch(`${apiUrl}/api/Blob/UpdateBundledStudentsPreviewImages`, {
+        method: 'PUT',
+        body: formData,
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    return await response.json();
+}
