@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BootcampResponse, SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse, StudentResponse } from "../../util/types";
+import { BootcampResponse, SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse, StudentResponse, Student } from "../../util/types";
 import {
   mapBootcampToSaltData,
 } from "../../util/helper";
@@ -19,7 +19,7 @@ type Props = {
   templates: TemplateResponse[] | null;
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => Promise<BootcampResponse>
   setLoadingMessage: (message: string) => void;
-  updateStudentThumbnails: (studentImagePreviewsResponse: StudentResponse[]) => void;
+  updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>
 };
 
 

@@ -33,7 +33,7 @@ type Props = {
   setLoadingMessage: (message: string) => void;
   selectedStudentIndex: number | null;
   setSelectedStudentIndex: (idx: number) => void;
-  updateStudentThumbnails: (studentImagePreviewsResponse: StudentResponse[]) => void;
+  updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>
 };
 
 export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex, updateStudentThumbnails }: Props) {
@@ -161,18 +161,17 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     const studentsInput = bootcampPutResponse.students.filter(s => students.some(st => st.name === s.name));
 
     let pdfs: Uint8Array[]
-    let studentImagePreviewsResponse: StudentResponse[];
     try {
       pdfs = 
         print ? await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) :
         download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, selectedBootcamp.name, setLoadingMessageAndAlert)
         : await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert)
-
-      studentImagePreviewsResponse = await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
-      updateStudentThumbnails(studentImagePreviewsResponse);
       
       customAlert('loadingfadeout', '', '');
       await alertSuccess();
+
+      updateStudentThumbnails(pdfs, studentsInput, setLoadingMessageAndAlert) //Background task
+
     } catch (error) {
       customAlert('fail', "Failed to generate pdfs", `${error}`);
     }

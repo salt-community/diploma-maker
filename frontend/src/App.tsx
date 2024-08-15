@@ -2,7 +2,7 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto, StudentResponse } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto, StudentResponse, Student } from "./util/types";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
@@ -15,6 +15,7 @@ import { HistoryPage } from "./pages/History/HistoryPage";
 import {HomePage} from "./pages/Homepage/HomePage"
 import { Footer } from "./components/Footer/Footer";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
+import { generatePreviewImages } from "./util/helper";
 
 const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
@@ -57,18 +58,23 @@ export default function App() {
     await refresh();
   }
 
-  const updateStudentThumbnails = async (studentImagePreviewsResponse: StudentResponse[]) => {
+  const updateStudentThumbnails = async (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void): Promise<void> => {
+    const studentImageResponse: StudentResponse[] = await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
     setBootcamps(prevBootcamps =>
-      prevBootcamps!.map((bootcamp) => ({
+      prevBootcamps!.map(bootcamp => ({
         ...bootcamp,
         students: bootcamp.students.map(student => {
-          const matchingImage = studentImagePreviewsResponse.find(
+          const matchingImage = studentImageResponse.find(
             preview => preview.guidId === student.guidId
           );
-          return matchingImage 
-            ? { ...student, previewImageUrl: matchingImage.previewImageUrl } 
+          return matchingImage
+            ? {
+                ...student,
+                previewImageUrl: matchingImage.previewImageUrl,
+                previewImageLQIPUrl: matchingImage.previewImageLQIPUrl,
+              }
             : student;
-        })
+        }),
       }))
     );
   }
