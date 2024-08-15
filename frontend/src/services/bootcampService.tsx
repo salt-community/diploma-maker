@@ -97,8 +97,17 @@ export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpda
 
 export async function updateStudentPreviewImage(apiUrl: string, studentImagePreviewRequest: studentImagePreview): Promise<StudentResponse> {
     const formData = new FormData();
+    
+    // Append StudentGuidId as usual
     formData.append('StudentGuidId', studentImagePreviewRequest.studentGuidId);
-    formData.append('Image', studentImagePreviewRequest.image, studentImagePreviewRequest.studentGuidId);
+    
+    // Append the Base64 string as the image
+    formData.append('Image', studentImagePreviewRequest.image); // No need for filename here, it's already Base64
+
+    // Optional: Log FormData entries for debugging
+    for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+    }
 
     const response = await fetch(`${apiUrl}/api/Blob/UpdateStudentsPreviewImage`, {
         method: 'PUT',
@@ -118,8 +127,11 @@ export async function updateBundledStudentsPreviewImages(apiUrl: string, student
     const formData = new FormData();
 
     studentImagePreviewRequests.forEach((request, index) => {
+        // Append StudentGuidId as usual
         formData.append(`PreviewImageRequests[${index}].StudentGuidId`, request.studentGuidId);
-        formData.append(`PreviewImageRequests[${index}].Image`, request.image, request.studentGuidId);
+
+        // Append the Base64 string as the image
+        formData.append(`PreviewImageRequests[${index}].Image`, request.image); // No filename, since it's Base64
     });
 
     const response = await fetch(`${apiUrl}/api/Blob/UpdateBundledStudentsPreviewImages`, {

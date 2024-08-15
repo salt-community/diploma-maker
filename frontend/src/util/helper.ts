@@ -210,24 +210,47 @@ export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | n
   }
 };
 
+export function isBase64(str: string): boolean {
+  if (typeof str !== 'string') {
+    return false;
+  }
+
+  // Regular expression to check if the string is valid Base64
+  const base64Regex = /^(?:[A-Za-z0-9+\/]{4})*?(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/;
+
+  // Validate length is multiple of 4 and it matches the Base64 pattern
+  return str.length % 4 === 0 && base64Regex.test(str);
+}
+
+export function convertUint8ArrayToBase64(uint8Array: Uint8Array, mimeType: string): string {
+  let binaryString = '';
+  for (let i = 0; i < uint8Array.length; i++) {
+    binaryString += String.fromCharCode(uint8Array[i]);
+  }
+  const base64String = btoa(binaryString);
+  return `data:${mimeType};base64,${base64String}`;
+}
+
 export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setBGLoadingMessage: (message: string) => void): Promise<StudentResponse[]> => {
-  const studentImages: studentImagePreview[] = []; 
+  const pdfConversionRequests: studentImagePreview[] = []; 
 
   for (let i = 0; i < pdfs.length; i++) {
     setBGLoadingMessage(`Converting pdfs to blob ${i + 1}/${pdfs.length}`);
-    studentImages.push({
+
+    const base64String = convertUint8ArrayToBase64(pdfs[i], 'application/pdf');
+
+    await pdfConversionRequests.push({
       studentGuidId: students[i].guidId,
-      image: pdfs[i]
+      image: base64String
     });
   }
 
   let imagePreviewResponse: StudentResponse[];
 
   try {
-    for (let i = 0; i < pdfs.length; i++) {
-      setBGLoadingMessage(`Uploading & Compressing Thumbnails ${i + 1}/${studentImages.length}`)
-      const imgResponse: StudentResponse = await api.updateStudentPreviewImage(studentImages[i])
-      imagePreviewResponse.push(imgResponse)
+    for (let i = 0; i < pdfConversionRequests.length; i++) {
+      setBGLoadingMessage(`Uploading & Compressing Thumbnails ${i + 1}/${pdfConversionRequests.length}`)
+      await api.updateStudentPreviewImage(pdfConversionRequests[i])
     }
     
     setBGLoadingMessage("Finished Uploading to Cloud!");
