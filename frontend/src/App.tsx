@@ -64,28 +64,28 @@ export default function App() {
     await refresh();
   }
 
-  const updateStudentThumbnails = async (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void, onStart?: () => void): Promise<void> => {
-    if (onStart) onStart();
-    BGcustomAlert('loading', `${loadingBGMessage}`, '');
-    const studentImageResponse: StudentResponse[] = await generatePreviewImages(pdfs, studentsInput, setBGLoadingMessage);
-    // setBootcamps(prevBootcamps =>
-    //   prevBootcamps!.map(bootcamp => ({
-    //     ...bootcamp,
-    //     students: bootcamp.students.map(student => {
-    //       const matchingImage = studentImageResponse.find(
-    //         preview => preview.guidId === student.guidId
-    //       );
-    //       return matchingImage
-    //         ? {
-    //             ...student,
-    //             previewImageUrl: matchingImage.previewImageUrl,
-    //             previewImageLQIPUrl: matchingImage.previewImageLQIPUrl,
-    //           }
-    //         : student;
-    //     }),
-    //   }))
-    // );
-    BGcustomAlert('loadingfadeout', `${loadingBGMessage}`, '');
+
+  const setBootcampsFromPreviewImageResponseHandler = (response: StudentResponse) => {
+    setBootcamps(prevBootcamps =>
+      prevBootcamps!.map(bootcamp => ({
+        ...bootcamp,
+        students: bootcamp.students.map(student => 
+          student.guidId === response.guidId
+            ? {
+                ...student,
+                previewImageUrl: response.previewImageUrl,
+                previewImageLQIPUrl: response.previewImageLQIPUrl,
+              }
+            : student
+        ),
+      }))
+    );
+  };
+
+  const updateStudentThumbnails = async (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void): Promise<void> => {
+    BGcustomAlert("loading", `${loadingBGMessage}`, "");
+    await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert, setBootcampsFromPreviewImageResponseHandler);
+    BGcustomAlert("loadingfadeout", `${loadingBGMessage}`, "");
   }
 
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string): Promise<BootcampResponse> => {

@@ -219,7 +219,7 @@ export function convertUint8ArrayToBase64(uint8Array: Uint8Array): string {
   return btoa(binaryString);
 }
 
-export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setBGLoadingMessage: (message: string) => void): Promise<StudentResponse[]> => {
+export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setBGLoadingMessage: (message: string) => void, setBootcamps: (response: StudentResponse) => void): Promise<void> => {
   const pdfConversionRequests: studentImagePreview[] = []; 
 
   for (let i = 0; i < pdfs.length; i++) {
@@ -233,16 +233,15 @@ export const generatePreviewImages = async (pdfs: Uint8Array[], students: Studen
     });
   }
 
-  let imagePreviewResponse: StudentResponse[];
-
   try {
     for (let i = 0; i < pdfConversionRequests.length; i++) {
       setBGLoadingMessage(`Converting & Compressing Thumbnails ${i + 1}/${pdfConversionRequests.length}`)
-      await api.updateStudentPreviewImage(pdfConversionRequests[i])
+      const response: StudentResponse = await api.updateStudentPreviewImage(pdfConversionRequests[i])
+      setBootcamps(response);
     }
+
+    setBGLoadingMessage("Finished!");
     
-    setBGLoadingMessage("Finished Uploading to Cloud!");
-    return imagePreviewResponse;
   } catch (error) {
     setBGLoadingMessage(`Failed to Update PreviewImages!. ${error.message || 'Unknown error'}`)
   }
