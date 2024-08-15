@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse, pdfGenerationResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
-import { generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF, openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/helper";
+import { delay, generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF, openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/helper";
 import './DiplomaDataForm.css';
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
@@ -174,7 +174,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
     customAlert('loadingfadeout', '', '');
     await alertSuccess();
-
+    
     print ? await openPrintWindowfromBlob(pdfs.bundledPdfsDisplayObject)
     : await openWindowfromBlob(pdfs.bundledPdfsDisplayObject) 
   };

@@ -210,22 +210,26 @@ export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | n
   }
 };
 
-export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setLoadingMessage: (message: string) => void): Promise<StudentResponse[]> => {
+export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setBGLoadingMessage: (message: string) => void): Promise<StudentResponse[]> => {
   const studentImages: studentImagePreview[] = []; 
 
+  setBGLoadingMessage("generating pdf thumbnails")
+
   for (let i = 0; i < pdfs.length; i++) {
-    // setLoadingMessage(`Generating thumbnails ${i + 1}/${pdfs.length}`)
+    setBGLoadingMessage(`Generating thumbnails ${i + 1}/${pdfs.length}`)
     studentImages.push({
       studentGuidId: students[i].guidId,
       image: await convertPDFToImage(pdfs[i])
     });
   }
-  // setLoadingMessage(`Uploading thumbnails to cloud...`)
+  setBGLoadingMessage(`Uploading thumbnails to cloud...`)
+  
   try {
     const imagePreviews = await api.updateBundledStudentsPreviewImages(studentImages)
+    setBGLoadingMessage("Finished Cloud Generation!");
     return imagePreviews;
   } catch (error) {
-    setLoadingMessage(`Failed to load bootcamps!. ${error.message || 'Unknown error'}`)
+    setBGLoadingMessage(`Failed to load bootcamps!. ${error.message || 'Unknown error'}`)
   }
 }
 

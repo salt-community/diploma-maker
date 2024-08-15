@@ -4,6 +4,7 @@ import App from './App.tsx'
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from "react-query";
 import { LoadingMessageProvider } from './components/Contexts/LoadingMessageContext.tsx';
+import { LoadingBGMessageProvider } from './components/Contexts/LoadingBGMessageContext.tsx';
 
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -11,7 +12,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <LoadingMessageProvider>
-          <App />
+          <LoadingBGMessageProvider>
+            <App />
+          </LoadingBGMessageProvider>
         </LoadingMessageProvider>
       </QueryClientProvider>
     </BrowserRouter>

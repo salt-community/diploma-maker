@@ -16,6 +16,9 @@ import {HomePage} from "./pages/Homepage/HomePage"
 import { Footer } from "./components/Footer/Footer";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import { generatePreviewImages } from "./util/helper";
+import { useBGLoadingMessage } from "./components/Contexts/LoadingBGMessageContext";
+import { AlertPopup } from "./components/MenuItems/Popups/AlertPopup";
+import { useCustomAlert } from "./components/Hooks/useCustomAlert";
 
 const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
@@ -25,6 +28,9 @@ export default function App() {
   const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
 
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
+  const { setBGLoadingMessage, loadingBGMessage } = useBGLoadingMessage();
+  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+  const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert();
 
   async function getBootcampsFromBackend() {
     const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);
@@ -60,7 +66,8 @@ export default function App() {
 
   const updateStudentThumbnails = async (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void, onStart?: () => void): Promise<void> => {
     if (onStart) onStart();
-    const studentImageResponse: StudentResponse[] = await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
+    BGcustomAlert('loading', `${loadingBGMessage}`, '');
+    const studentImageResponse: StudentResponse[] = await generatePreviewImages(pdfs, studentsInput, setBGLoadingMessage);
     setBootcamps(prevBootcamps =>
       prevBootcamps!.map(bootcamp => ({
         ...bootcamp,
@@ -78,6 +85,7 @@ export default function App() {
         }),
       }))
     );
+    BGcustomAlert('loadingfadeout', `${loadingBGMessage}`, '');
   }
 
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string): Promise<BootcampResponse> => {
@@ -170,6 +178,7 @@ export default function App() {
 
   return (
     <>
+      <AlertPopup title={loadingBGMessage} text={BGpopupContent[1]} popupType={BGpopupType} show={BGshowPopup} onClose={BGcloseAlert} leftAligned={true}/>
       <NavBar />
       <Routes>
         <Route path={"/pdf-creator"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage}/>} />

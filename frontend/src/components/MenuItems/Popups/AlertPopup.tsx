@@ -12,8 +12,9 @@ type Props = {
   onClose: () => void;
   popupType: PopupType;
   durationOverride?: number;
+  leftAligned?: boolean;
 }
-export const AlertPopup = ({ show, onClose, popupType, title, text, durationOverride }: Props) => {
+export const AlertPopup = ({ show, onClose, popupType, title, text, durationOverride, leftAligned }: Props) => {
   const [visible, setVisible] = useState(show);
   useEffect(() => {
     let timer: any;
@@ -38,7 +39,14 @@ export const AlertPopup = ({ show, onClose, popupType, title, text, durationOver
     }
   }, [visible, show, onClose]);
   return (
-    <div onClick={() => {}} className={`popup ${popupType === 'fail' ? 'fail' : popupType === 'success' ? 'success' : popupType === 'message' ? 'message' : 'loading'}  ${visible ? 'fade-in' : 'fade-out'}`}>
+    <div onClick={() => {}} className={`popup '
+      ${popupType === 'fail' ? 'fail' 
+        : popupType === 'success' ? 'success' 
+        : popupType === 'message' ? 'message' : 'loading'}  
+      ${visible ? 'fade-in' : 'fade-out'}
+      ${leftAligned && ' alignleft'}
+      `}>
+          
       <div className="popup-content">
         {popupType === 'fail' ?
             <PopupAlertIcon />
