@@ -49,55 +49,44 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<IFormFile> ConvertPngToWebP(IFormFile formFile, string fileName, bool lowQuality = false)
+        public async Task<byte[]> ConvertPngToWebP(byte[] pngBytes, bool lowQuality = false)
         {
-            if (formFile == null || !formFile.ContentType.Contains("image/png"))
+            if (pngBytes == null || pngBytes.Length == 0)
             {
-                throw new ArgumentException("Invalid file format. Must be .png");
+                throw new ArgumentException("Invalid image data. Must be a non-empty PNG byte array.");
             }
 
-            using var inStream = new MemoryStream();
-            await formFile.CopyToAsync(inStream);
-            inStream.Position = 0;
-
-            using var myImage = await Image.LoadAsync(inStream);
-
-            using var outStream = new MemoryStream();
-
-            if(lowQuality)
+            using (var inStream = new MemoryStream(pngBytes))
             {
-                myImage.Mutate(x => x.Resize(new ResizeOptions
+                var myImage = await Image.LoadAsync(inStream);
+
+                using (var outStream = new MemoryStream())
                 {
-                    Size = new Size(92, 129),
-                    Mode = ResizeMode.Max
-                }));
+                    if (lowQuality)
+                    {
+                        myImage.Mutate(x => x.Resize(new ResizeOptions
+                        {
+                            Size = new Size(92, 129),
+                            Mode = ResizeMode.Max
+                        }));
 
-                await myImage.SaveAsync(outStream, new WebpEncoder(){
-                    FileFormat = WebpFileFormatType.Lossy,
-                    Quality = 0,
-                });
+                        await myImage.SaveAsync(outStream, new WebpEncoder()
+                        {
+                            FileFormat = WebpFileFormatType.Lossy,
+                            Quality = 0,
+                        });
+                    }
+                    else
+                    {
+                        await myImage.SaveAsync(outStream, new WebpEncoder()
+                        {
+                            FileFormat = WebpFileFormatType.Lossy,
+                        });
+                    }
+
+                    return outStream.ToArray();
+                }
             }
-            else
-            {
-                await myImage.SaveAsync(outStream, new WebpEncoder(){
-                    FileFormat = WebpFileFormatType.Lossy,
-                });
-            }
-
-            outStream.Position = 0;
-
-            var webpFileName = Path.ChangeExtension(fileName, ".webp");
-
-           
-            var webpStreamCopy = new MemoryStream(outStream.ToArray());  // To fix "Cannot access a closed Stream." error
-
-            var webpFormFile = new FormFile(webpStreamCopy, 0, webpStreamCopy.Length, "file", webpFileName)
-            {
-                Headers = new HeaderDictionary(),
-                ContentType = "image/webp"
-            };
-
-            return webpFormFile;
         }
 
         public Task<string> GetRelativePathAsync(string fullFilePath, string directoryName)
