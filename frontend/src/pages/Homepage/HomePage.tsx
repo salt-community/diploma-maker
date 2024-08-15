@@ -100,7 +100,6 @@ export function HomePage() {
       <div className="homepage__grid">
         <DescriptionCard 
           shortDescription={shortDescriptionArray}
-          LongDescription=''
           title="TemplateCreator"
           icon={TemplateCreatorIcon}
           className="gradient-templateCreator" 
@@ -109,7 +108,6 @@ export function HomePage() {
         />
         <DescriptionCard
           shortDescription={shortDescriptionArray}
-          LongDescription=''
           title="PDFcreator"
           icon={PdfCreatorIcon}
           className="gradient-pdfMaking" 
@@ -118,7 +116,6 @@ export function HomePage() {
         />
         <DescriptionCard
           shortDescription={shortDescriptionArray}
-          LongDescription=''
           title="BootcampOptions"
           icon={CogWheelIcon}
           className="gradient-BootcampOptions" 
@@ -127,7 +124,6 @@ export function HomePage() {
         />
         <DescriptionCard
           shortDescription={shortDescriptionArray}
-          LongDescription=''
           title="History"
           icon={HistoryIcon}
           className="gradient-History" 
@@ -136,7 +132,6 @@ export function HomePage() {
         />
         <DescriptionCard
           shortDescription={shortDescriptionArray}
-          LongDescription=''
           title="Dashboard"
           icon={DashBoardIcon}
           className="gradient-Dashboard" 

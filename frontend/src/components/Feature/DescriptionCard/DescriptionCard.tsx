@@ -21,7 +21,7 @@ export function DescriptionCard({ shortDescription, LongDescription, title, icon
                 <h2>{title}</h2>
             </header>
             <div className="homepage__card-content">
-                <div className={`homepage__card-full-description ${isHovered ? 'visible' : ''}`}>
+                <div className={`homepage__card-full-description `}>
                     <p className="homepage__card-full-description-text">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis numquam architecto aut laudantium modi nesciunt nobis exercitationem inventore et, praesentium illum asperiores impedit pariatur optio rem magni recusandae adipisci a, consectetur suscipit iusto ullam iure consequatur sunt? Magnam, magni corporis.
                     </p>
@@ -30,14 +30,6 @@ export function DescriptionCard({ shortDescription, LongDescription, title, icon
                             Visual instructions
                         </button>
                     </div>
-                </div>
-                <div className={`homepage__card-short-description ${isHovered ? 'hidden' : ''}`}>
-                    <ul className="short-description-list">
-                        {shortDescription.map((item, index) => (
-                            <li key={index}>{item}</li>
-                        ))}
-                    </ul>
-                    <span className="learn-more-text">Hover to learn more...</span>
                 </div>
             </div>
         </div>

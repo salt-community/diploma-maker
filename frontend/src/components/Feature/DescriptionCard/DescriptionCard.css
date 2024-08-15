@@ -8,13 +8,12 @@
     height: 330px;
     width: 450px;
     position: relative;
-    cursor: default;
-    
-    
+    cursor: default; 
+    background-color: #3c3c41;
 }
 
 .homepage__card:hover {
-    background-color: #5e5e6e;
+    background-color: #4f4f5c;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
 }
 
@@ -41,7 +40,7 @@
     position: relative;
 }
 
-.homepage__card-short-description {
+.homepage__card-description {
     position: absolute;
     top: 0;
     left: 0;
@@ -53,104 +52,8 @@
     transition: opacity 0.25s ease;
 }
 
-.homepage__card-short-description.hidden {
-    opacity: 0;
-}
-
-.short-description-list {
-    font-size: 1rem ;
-    font-weight: 600;
-    list-style-type: disc;
-    padding-left: 20px;
-    margin: 0;
-    transition: margin 0.375s ease;
-}
-
-.short-description-list li {
-    margin-bottom: 0.5rem;
-    transition: margin-bottom 0.375s ease;
-}
-
-.homepage__card-full-description {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    transition-delay: 0.15s;
-}
-
-.homepage__card-full-description.visible {
-    opacity: 1;
-}
-
-.homepage__card-full-description-text {
-    padding-bottom: 20px;
-    transition: padding-bottom 0.375s ease;
-}
-
 .submit-button-container {
     display: flex;
     justify-content: flex-end;
 }
 
-.learn-more-text {
-    color: #c0c0c0;
-    padding-top: 25px;
-    font-style: italic;
-    display: block;
-    text-align: center;
-    transition: color 0.375s ease;
-}
-
-.learn-more-text:hover {
-    color: #e2d5d5;
-}
-
- .gradient-templateCreator {
-    background: linear-gradient(to top right, #2d4c49,#192125, #141f1d, #192125, #2d4c49);
-    transition: background 0.5s ease-in-out;
-  }
-  
-  .gradient-templateCreator:hover {
-    background: linear-gradient(to top right, rgb(34, 68, 34), #192125, #141f1d, #192125, rgb(34, 68, 34));
-    transition: background 0.5s ease-in-out;
-  }
-  
-  .gradient-pdfMaking {
-    background: linear-gradient(to top right, rgb(2, 2, 48),#191925, #14141f, #191925, rgb(2, 2, 48));
-    transition: background 0.5s ease-in-out;
-  }
-  
-  .gradient-pdfMaking:hover {
-    background: linear-gradient(to top right, rgb(34, 34, 68), #191925, #14141f, #191925, rgb(34, 34, 68));
-  }
-  
-  .gradient-BootcampOptions {
-    background: linear-gradient(to top right, rgb(48, 2, 2), #192125, #141f1d, #192125, rgb(48, 2, 2));
-    transition: background 0.5s ease-in-out;
-  }
-  
-  .gradient-BootcampOptions:hover {
-    background: linear-gradient(to top right, rgb(68, 34, 34), #192125, #141f1d, #192125, rgb(68, 34, 34));
-  }
-  
-  .gradient-History {
-    background: linear-gradient(to top right, rgb(48, 48, 2), #192125, #141f1d, #192125, rgb(48, 48, 2));
-    transition: background 0.5s ease-in-out;
-  }
-  
-  .gradient-History:hover {
-    background: linear-gradient(to top right, rgb(68, 68, 34), #192125, #141f1d, #192125, rgb(68, 68, 34));
-  }
-
-  .gradient-Dashboard {
-    background: linear-gradient(to top right, rgb(48, 2, 48), #192125, #141f1d, #192125, rgb(48, 2, 48));
-    transition: background 0.5s ease-in-out;
-  }
-  
-  .gradient-Dashboard:hover {
-    background: linear-gradient(to top right, rgb(68, 34, 68), #192125, #141f1d, #192125, rgb(68, 34, 68));
-  }
