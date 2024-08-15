@@ -115,5 +115,25 @@ namespace DiplomaMakerApi.Services
             return Task.FromResult(normalizedPath);
         }
 
+        public async Task<IFormFile> ConvertPdfToPng(IFormFile formFile, string fileName)
+        {
+            using (var stream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(stream);
+                var pdfBytes = stream.ToArray();
+
+                var tempPdfPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.pdf");
+                await File.WriteAllBytesAsync(tempPdfPath, pdfBytes);
+
+                var pngFilePath = Path.Combine(Path.GetTempPath(), $"{fileName}.png");
+                PDFtoImage.Conversion.SavePng(pngFilePath, tempPdfPath);
+
+                var pngFileStream = new MemoryStream(await File.ReadAllBytesAsync(pngFilePath));
+                var formFilePng = new FormFile(pngFileStream, 0, pngFileStream.Length, fileName, $"{fileName}.png");
+
+                return formFilePng;
+            }
+        }
+
     }
 }
