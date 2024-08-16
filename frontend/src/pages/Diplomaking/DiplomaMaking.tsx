@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { BootcampResponse, SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse, StudentResponse } from "../../util/types";
+import { BootcampResponse, SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse, StudentResponse, Student } from "../../util/types";
 import {
   mapBootcampToSaltData,
 } from "../../util/helper";
 import DiplomaDataForm from "../../components/Feature/Diplomadataform/DiplomaDataForm";
 import './DiplomaMaking.css';
-import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
+import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
@@ -19,15 +19,15 @@ type Props = {
   templates: TemplateResponse[] | null;
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => Promise<BootcampResponse>
   setLoadingMessage: (message: string) => void;
-  updateStudentThumbnails: (studentImagePreviewsResponse: StudentResponse[]) => void;
+  updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>;
+  customAlertProps: CustomAlertPopupProps;
 };
 
 
-export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails }: Props) {
+export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails, customAlertProps }: Props) {
 
   /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
   const [saltData, setSaltData] = useState<SaltData | null>();
-  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { loadingMessage } = useLoadingMessage();
   const isFailed = loadingMessage.includes('Failed');
   const [selectedStudentIndex, setSelectedStudentIndex] = useState<number |null>(null);
@@ -44,7 +44,6 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
         {/*        {  <button className="toggle-button" onClick={TogglePreview}>
           {IsFullScreen ? <NextIcon rotation={180} /> : <NextIcon />}
         </button> } */}
-        <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
         <>
           <section className="previewdiploma-container">
             {saltData && (
@@ -71,7 +70,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
               UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
               templates={templates}
               updateStudentThumbnails={updateStudentThumbnails}
-              customAlert={customAlert}
+              customAlertProps={customAlertProps}
               setLoadingMessage={setLoadingMessage}
             /*  fullscreen={IsFullScreen} */
             />

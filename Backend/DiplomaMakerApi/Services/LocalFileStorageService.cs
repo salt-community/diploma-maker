@@ -98,7 +98,7 @@ namespace DiplomaMakerApi.Services
 
         public async Task InitFileFromNewTemplate(string templateName, string subDirectory = "DiplomaPdfs")
         {
-            var sourceFilePath = Path.Combine(_basePath, "Default.pdf");
+            var sourceFilePath = Path.Combine($"{_basePath}{subDirectory}", "Default.pdf");
             var destinationDirectoryPath = Path.Combine(_basePath, subDirectory ?? string.Empty);
             var destinationFilePath = Path.Combine(destinationDirectoryPath, templateName + ".pdf");
 

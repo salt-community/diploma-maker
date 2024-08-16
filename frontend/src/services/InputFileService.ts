@@ -1,6 +1,7 @@
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse';
 import { Student } from '../util/types';
+import { PopupType } from '../components/MenuItems/Popups/AlertPopup';
 
 type TabularData = {
   [key: string]: string;
@@ -53,7 +54,7 @@ export const parseJSON = (fileData: string): TabularData[] => {
   return JSON.parse(fileData) as TabularData[];
 };
 
-export const ParseFileData = async (file: File, headers?: string[]): Promise<Student[]> => {
+export const ParseFileData = async (file: File, headers?: string[], customAlert?: (alertType, title, content) => void): Promise<Student[]> => {
   if (!file) return [];
 
   return new Promise<Student[]>((resolve) => {
@@ -99,13 +100,13 @@ export const ParseFileData = async (file: File, headers?: string[]): Promise<Stu
 
         resolve(data ?? []);
       } catch (error) {
-        console.log("Failed to parse file", error);
+        customAlert('fail', "Failed to parse file", `${error}`);
         resolve([]);
       }
     };
 
     reader.onerror = () => {
-      console.log("File reading error");
+      customAlert('File reading error', "failed to read files.", `${XLSX.read}`);
       resolve([]);
     };
 

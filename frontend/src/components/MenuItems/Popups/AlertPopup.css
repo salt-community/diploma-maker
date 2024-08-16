@@ -39,6 +39,29 @@
             margin-top: 2%;
             margin-left: 2%;
         }
+    .popup.alignleft{
+        left: 0%;
+        width: 20%;
+        padding: 0rem 0rem;
+        bottom: 5%;
+        
+    }
+        .popup.alignleft .popup-content-text{
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .popup.alignleft .popup-content-text h1{
+            position: absolute;
+            top: 50%;
+            left: 40%;
+
+            transform: translateY(-50%) translateX(-50%);
+            color: #c2c2cd;
+            font-size: .8rem;
+
+            width: 500px;
+        }
 
 .popup-content {
     position: relative;
@@ -80,6 +103,10 @@
     transform: translateY(-50%);
     width: 100%;
     height: 100%;
+}
+.popup.alignleft .spinner-wrapper{
+    left: 9%;
+    filter: saturate(20%);
 }
 .spinnerrotate {
     width: 50px;

@@ -2,7 +2,7 @@ import {Routes, Route, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto, StudentResponse } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto, StudentResponse, Student } from "./util/types";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
@@ -15,6 +15,10 @@ import { HistoryPage } from "./pages/History/HistoryPage";
 import {HomePage} from "./pages/Homepage/HomePage"
 import { Footer } from "./components/Footer/Footer";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
+import { generatePreviewImages } from "./util/helper";
+import { useBGLoadingMessage } from "./components/Contexts/LoadingBGMessageContext";
+import { AlertPopup } from "./components/MenuItems/Popups/AlertPopup";
+import { useCustomAlert } from "./components/Hooks/useCustomAlert";
 
 const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
@@ -24,6 +28,10 @@ export default function App() {
   const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
 
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
+  const { setBGLoadingMessage, loadingBGMessage } = useBGLoadingMessage();
+
+  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+  const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert()
 
   async function getBootcampsFromBackend() {
     const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);
@@ -39,6 +47,42 @@ export default function App() {
       getTracks();
     }
   }, [bootcamps]);
+
+  const refresh = async () => {
+    const newBootcamps = await api.getBootcamps(setLoadingMessage);
+    const newTemplates = await api.getAllTemplates(setLoadingMessage);
+    setBootcamps(newBootcamps);
+    setTemplates(newTemplates);
+    getTracks();
+  }
+
+  // State Update Functions
+  const bootcampStateUpdateFromImagePreview = (response: StudentResponse) => {
+    setBootcamps(prevBootcamps =>
+      prevBootcamps!.map(bootcamp => ({
+        ...bootcamp,
+        students: bootcamp.students.map(student => 
+          student.guidId === response.guidId
+            ? {
+                ...student,
+                previewImageUrl: response.previewImageUrl,
+                previewImageLQIPUrl: response.previewImageLQIPUrl,
+              }
+            : student
+        ),
+      }))
+    );
+  };
+
+  const bootcampStateUpdateFromNewFormData = (bootcampResponse: BootcampResponse) => {
+    setBootcamps(prevBootcamps =>
+      prevBootcamps!.map(item =>
+        item.guidId === bootcampResponse.guidId
+          ? { ...item, students: bootcampResponse.students, templateId: bootcampResponse.templateId } as BootcampResponse
+          : item
+      )
+    );
+  };
 
   // Bootcamp Endpoint
   const deleteBootcamp = async (i: number) =>{
@@ -57,36 +101,17 @@ export default function App() {
     await refresh();
   }
 
-  const updateStudentThumbnails = async (studentImagePreviewsResponse: StudentResponse[]) => {
-    setBootcamps(prevBootcamps =>
-      prevBootcamps!.map((bootcamp) => ({
-        ...bootcamp,
-        students: bootcamp.students.map(student => {
-          const matchingImage = studentImagePreviewsResponse.find(
-            preview => preview.guidId === student.guidId
-          );
-          return matchingImage 
-            ? { ...student, previewImageUrl: matchingImage.previewImageUrl } 
-            : student;
-        })
-      }))
-    );
+  const updateStudentThumbnails = async (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void): Promise<void> => {
+    BGcustomAlert("loading", `${loadingBGMessage}`, "");
+    await generatePreviewImages(pdfs, studentsInput, setBGLoadingMessage, bootcampStateUpdateFromImagePreview);
+    BGcustomAlert("loadingfadeout", `${loadingBGMessage}`, "");
   }
 
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string): Promise<BootcampResponse> => {
     const bootcampResponse: BootcampResponse = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
-    if (bootcampResponse) {
-      setBootcamps(prevbootcamps =>
-        prevbootcamps!.map((item) => 
-          item.guidId === guidid
-            ? { ...item, students: bootcampResponse.students, templateId: bootcampResponse.templateId } as BootcampResponse
-            : item
-        )
-      );
-    }
+    bootcampStateUpdateFromNewFormData(bootcampResponse)
     return bootcampResponse;
   };
-  
 
   // Students Endpoint
   const deleteStudent = async (id: string) => {
@@ -98,11 +123,6 @@ export default function App() {
     var StudentResponse = await api.updateSingleStudent(StudentRequest);
     await refresh();
     return StudentResponse
-  }
-
-  const getStudentByVerificationCode = async (verificationCode: string) => {
-    const studentResponse = api.getStudentByVerificationCode(verificationCode);
-    return studentResponse;
   }
    
   // Templates Endpoint
@@ -153,31 +173,26 @@ export default function App() {
     setTracks(tracks);
   }
 
-  const refresh = async () => {
-    const newBootcamps = await api.getBootcamps(setLoadingMessage);
-    const newTemplates = await api.getAllTemplates(setLoadingMessage);
-    setBootcamps(newBootcamps);
-    setTemplates(newTemplates);
-    getTracks();
-  }
-
   return (
     <>
       <NavBar />
+        <AlertPopup title={loadingMessage} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500}/>
+        <AlertPopup title={loadingBGMessage} text={BGpopupContent[1]} popupType={BGpopupType} show={BGshowPopup} onClose={BGcloseAlert} leftAligned={true}/>
       <Routes>
-        <Route path={"/pdf-creator"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage}/>} />
+        <Route path={"/pdf-creator"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }}/>} />
         <Route path={"/"} element={<HomePage/>} />
         <Route path={"/home"} element={<HomePage/>} />      
-        {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
         <Route path={`/verify`} element={<VerificationInputPage />} />
         <Route path={`/verify/:verificationCode`} element = {<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode}/>} />
-        <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks}/>} /> 
-        <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage}/>} />
-        <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate}/>} />
-        <Route path={"/history"} element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} tracks={tracks}/>} />
+        <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }}/>} /> 
+        <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }}/>} />
+        <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate} customAlertProps={{ showPopup, customAlert, closeAlert }}/>} />
+        <Route path={"/history"} element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }}/>} />
         <Route path={"*"} element={<ErrorPage code={404} />} /> 
         </Routes>
       <Footer/> 
+
+      {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
     </>
   );
 }

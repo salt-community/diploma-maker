@@ -75,7 +75,14 @@ namespace DiplomaMakerApi.Controllers
         public async Task<ActionResult<StudentResponseDto>> UpdateStudentsPreviewImages([FromForm] PreviewImageRequestDto previewImageRequestDto)
         {
             var studentResponse = await _bootcampService.PutStudentPreviewImage(previewImageRequestDto);
-            return _mapper.Map<StudentResponseDto>(studentResponse) ;
+            return _mapper.Map<StudentResponseDto>(studentResponse);
+        }
+
+        [HttpPut("UpdateBundledStudentsPreviewImages")]
+        public async Task<ActionResult<List<StudentResponseDto>>> UpdateBundledStudentsPreviewImages([FromForm] PreviewImageRequestsDto previewImageRequestsDto)
+        {
+            var studentsResponses = await _bootcampService.PutStudentsPreviewImages(previewImageRequestsDto);
+            return _mapper.Map<List<StudentResponseDto>>(studentsResponses);
         }
 
         private async Task<IActionResult> GetPdfBlob(string filename)

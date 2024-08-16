@@ -1,8 +1,7 @@
 using System.IO.Compression;
-using Microsoft.AspNetCore.Mvc;
-using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
+using Syncfusion.PdfToImageConverter;
 
 namespace DiplomaMakerApi.Services
 {
@@ -60,7 +59,7 @@ namespace DiplomaMakerApi.Services
             await formFile.CopyToAsync(inStream);
             inStream.Position = 0;
 
-            using var myImage = await Image.LoadAsync(inStream);
+            using var myImage = await SixLabors.ImageSharp.Image.LoadAsync(inStream);
 
             using var outStream = new MemoryStream();
 
@@ -68,7 +67,7 @@ namespace DiplomaMakerApi.Services
             {
                 myImage.Mutate(x => x.Resize(new ResizeOptions
                 {
-                    Size = new Size(92, 129),
+                    Size = new SixLabors.ImageSharp.Size(92, 129),
                     Mode = ResizeMode.Max
                 }));
 
@@ -87,7 +86,6 @@ namespace DiplomaMakerApi.Services
             outStream.Position = 0;
 
             var webpFileName = Path.ChangeExtension(fileName, ".webp");
-
            
             var webpStreamCopy = new MemoryStream(outStream.ToArray());  // To fix "Cannot access a closed Stream." error
 
@@ -99,7 +97,6 @@ namespace DiplomaMakerApi.Services
 
             return webpFormFile;
         }
-
         public Task<string> GetRelativePathAsync(string fullFilePath, string directoryName)
         {
             var startIndex = fullFilePath.IndexOf(directoryName);
@@ -113,6 +110,55 @@ namespace DiplomaMakerApi.Services
             var normalizedPath = relativePath.Replace('\\', '/');
 
             return Task.FromResult(normalizedPath);
+        }
+
+        public async Task<IFormFile> ConvertPdfToPng(string base64String, string fileName)
+        {
+            byte[] pdfBytes = Convert.FromBase64String(base64String);
+
+            using (MemoryStream pdfStream = new MemoryStream(pdfBytes))
+            {
+                PdfToImageConverter imageConverter = new PdfToImageConverter();
+
+                imageConverter.Load(pdfStream);
+
+                using (Stream imageStream = imageConverter.Convert(0, false, false))
+                {
+                    imageStream.Position = 0;
+
+                    using (MemoryStream pngStream = new MemoryStream())
+                    {
+                        System.Drawing.Image image = System.Drawing.Image.FromStream(imageStream);
+                        image.Save(pngStream, System.Drawing.Imaging.ImageFormat.Png);
+                        pngStream.Position = 0;
+
+                        var pngFileStream = new MemoryStream(pngStream.ToArray());
+                        pngFileStream.Position = 0;
+
+                        IFormFile formFile = new FormFile(pngFileStream, 0, pngFileStream.Length, "image", fileName)
+                        {
+                            Headers = new HeaderDictionary(),
+                            ContentType = "image/png"
+                        };
+
+                        return formFile;
+                    }
+                }
+            }
+        }
+        public IFormFile ConvertByteArrayToIFormFile(byte[] fileBytes, string fileName, string contentType)
+        {
+            if (fileBytes == null || fileBytes.Length == 0)
+            {
+                throw new ArgumentException("File data cannot be null or empty.");
+            }
+
+            var stream = new MemoryStream(fileBytes);
+            return new FormFile(stream, 0, stream.Length, "file", fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = contentType
+            };
         }
 
     }

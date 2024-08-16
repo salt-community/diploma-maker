@@ -1,4 +1,3 @@
-import { delay } from "../util/helper";
 import { BootcampRequest, BootcampResponse, FormDataUpdateRequest, studentImagePreview, StudentResponse,  } from "../util/types";
 
 export async function postBootcamp(apiUrl: string, bootcampRequest: BootcampRequest): Promise<void> {
@@ -98,7 +97,7 @@ export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpda
 export async function updateStudentPreviewImage(apiUrl: string, studentImagePreviewRequest: studentImagePreview): Promise<StudentResponse> {
     const formData = new FormData();
     formData.append('StudentGuidId', studentImagePreviewRequest.studentGuidId);
-    formData.append('Image', studentImagePreviewRequest.image, studentImagePreviewRequest.studentGuidId);
+    formData.append('Image', studentImagePreviewRequest.image);
 
     const response = await fetch(`${apiUrl}/api/Blob/UpdateStudentsPreviewImage`, {
         method: 'PUT',
@@ -109,5 +108,26 @@ export async function updateStudentPreviewImage(apiUrl: string, studentImagePrev
         throw new Error(`HTTP error! Status: ${response.status}`);
     }
     
+    return await response.json();
+}
+
+
+
+export async function updateBundledStudentsPreviewImages(apiUrl: string, studentImagePreviewRequests: studentImagePreview[]): Promise<StudentResponse[]> {
+    const formData = new FormData();
+    studentImagePreviewRequests.forEach((request, index) => {
+        formData.append(`PreviewImageRequests[${index}].StudentGuidId`, request.studentGuidId);
+        formData.append(`PreviewImageRequests[${index}].Image`, request.image);
+    });
+
+    const response = await fetch(`${apiUrl}/api/Blob/UpdateBundledStudentsPreviewImages`, {
+        method: 'PUT',
+        body: formData,
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
     return await response.json();
 }

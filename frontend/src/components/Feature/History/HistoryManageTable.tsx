@@ -9,7 +9,7 @@ import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistor
 import { delay, getFontsData, getPlugins, utcFormatter } from '../../../util/helper';
 import { SpinnerDefault } from '../../MenuItems/Loaders/SpinnerDefault';
 import { ConfirmationPopup } from '../../MenuItems/Popups/ConfirmationPopup';
-import { AlertPopup } from '../../MenuItems/Popups/AlertPopup';
+import { AlertPopup, CustomAlertPopupProps, PopupType } from '../../MenuItems/Popups/AlertPopup';
 import { SearchInput } from '../../MenuItems/Inputs/SearchInput';
 import { SortByIcon } from '../../MenuItems/Icons/SortbyIcon';
 import { SelectOptions } from '../../MenuItems/Inputs/SelectOptions';
@@ -24,6 +24,7 @@ type Props = {
     getHistory: () => void;
     changeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => void;
     tracks: TrackResponse[] | null;
+    customAlertProps: CustomAlertPopupProps;
 };
 
 type BundledDataWithGeneratedAt = HistorySnapshotBundledData & { generatedAt: string };
@@ -46,7 +47,7 @@ const sortOrderOptions = [
     { value: 'status-descending', label: 'Status Descending' },
 ];
 
-export default function HistoryManageTable({ getHistory, changeActiveHistorySnapShot, tracks }: Props) {
+export default function HistoryManageTable({ getHistory, changeActiveHistorySnapShot, tracks, customAlertProps }: Props) {
     const [history, setHistory] = useState<BundledDataWithGeneratedAt[]>();
     const [expandedRows, setExpandedRows] = useState<{ [key: string]: boolean }>({});
     const [sortOrder, setSortOrder] = useState<SortOrder>('date-ascending');
@@ -58,7 +59,7 @@ export default function HistoryManageTable({ getHistory, changeActiveHistorySnap
     const [showDiploma, setShowDiploma] = useState<boolean>(false);
     const [activeTemplate, setActiveTemplate] = useState<number>(2);
 
-    const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+    const { showPopup, customAlert, closeAlert } = customAlertProps;
     const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -242,13 +243,6 @@ export default function HistoryManageTable({ getHistory, changeActiveHistorySnap
                 abortClick={() => globalAbortHandler()}
                 // @ts-ignore
                 confirmClick={(inputContent?: string) => { confirmationPopupHandler(inputContent) }}
-            />
-            <AlertPopup
-                title={popupContent[0]}
-                text={popupContent[1]}
-                popupType={popupType}
-                show={showPopup}
-                onClose={closeAlert}
             />
             <div className='historypage__table-container'>
                 <h1 className='historypage__title'>Diploma Generation History</h1>

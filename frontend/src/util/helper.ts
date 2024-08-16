@@ -4,7 +4,7 @@ import { generate } from "@pdfme/generator";
 import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
-import { BootcampResponse, SaltData, Size, Student, studentImagePreview, StudentResponse, TemplateResponse } from "./types";
+import { BootcampResponse, pdfGenerationResponse, SaltData, Size, Student, studentImagePreview, StudentResponse, TemplateResponse } from "./types";
 import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
 import { fontObjList } from "../data/data";
 import JSZip from 'jszip';
@@ -176,6 +176,7 @@ export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray:
   window.open(URL.createObjectURL(blob));
 }
 
+// No Longer Used In front-end cause it slows down application. But it is faster than doing it in the backend
 export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | null> => {
   try {
     const pdf = await pdfjsLib.getDocument({ data: pdfInput }).promise;
@@ -210,34 +211,71 @@ export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | n
   }
 };
 
-export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setLoadingMessage: (message: string) => void): Promise<StudentResponse[]> => {
-  const studentImages: studentImagePreview[] = []; 
+export function convertUint8ArrayToBase64(uint8Array: Uint8Array): string {
+  let binaryString = '';
+  for (let i = 0; i < uint8Array.length; i++) {
+    binaryString += String.fromCharCode(uint8Array[i]);
+  }
+  return btoa(binaryString);
+}
+
+export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setBGLoadingMessage: (message: string) => void, setBootcamps: (response: StudentResponse) => void): Promise<void> => {
+  const pdfConversionRequests: studentImagePreview[] = []; 
 
   for (let i = 0; i < pdfs.length; i++) {
-    setLoadingMessage(`Generating Thumbnails ${i + 1}/${pdfs.length}`)
-    studentImages.push({
+    setBGLoadingMessage(`Converting pdfs to blob ${i + 1}/${pdfs.length}`);
+
+    const base64String = convertUint8ArrayToBase64(pdfs[i]);
+
+    await pdfConversionRequests.push({
       studentGuidId: students[i].guidId,
-      image: await convertPDFToImage(pdfs[i])
+      image: base64String
     });
   }
 
-  let imagePreviews: StudentResponse[] = [];
-
-  for (let i = 0; i < pdfs.length; i++) {
-    setLoadingMessage(`Uploading & Compressing Thumbnails ${i + 1}/${studentImages.length}`)
-    try {
-      imagePreviews.push(
-        await api.updateStudentPreviewImage(studentImages[i])
-      );
-    } catch (error) {
-      console.log(error);
+  try {
+    for (let i = 0; i < pdfConversionRequests.length; i++) {
+      setBGLoadingMessage(`Converting & Compressing Thumbnails ${i + 1}/${pdfConversionRequests.length}`)
+      const response: StudentResponse = await api.updateStudentPreviewImage(pdfConversionRequests[i])
+      setBootcamps(response);
     }
-  }
 
-  return imagePreviews;
+    setBGLoadingMessage("Finished!");
+    
+  } catch (error) {
+    setBGLoadingMessage(`Failed to Update PreviewImages!. ${error.message || 'Unknown error'}`)
+  }
 }
 
-export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
+
+export const openWindowfromBlob = async (input: Blob) => {
+  window.open(URL.createObjectURL(input))
+}
+
+export const openPrintWindowfromBlob = async (input: Blob) => {
+  const blobUrl = URL.createObjectURL(input);
+  const printWindow = window.open('', '_blank');
+
+  if (printWindow) {
+    printWindow.document.write(`
+      <html>
+        <head><title>Generated Bootcamp Pdfs</title></head>
+        <body style="margin: 0;">
+          <iframe src="${blobUrl}" style="border: none; width: 100%; height: 100%;" onload="this.contentWindow.print();"></iframe>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+
+    printWindow.onafterprint = () => {
+      URL.revokeObjectURL(blobUrl);
+      printWindow.close();
+    };
+  }
+}
+
+export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<pdfGenerationResponse> => {
   setLoadingMessage("Generating combined pdf!");
   
   const font = await getFontsData();
@@ -265,15 +303,19 @@ export const newGenerateCombinedPDF = async (templates: Template[], inputsArray:
 
   const mergedPdfBytes = await mergedPdf.save();
   setLoadingMessage("Creating Blobs");
-  const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+  const blob: Blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
   setLoadingMessage("Finished Processing Pdfs...");
-  window.open(URL.createObjectURL(blob));
 
-  return pdfs;
+  const response: pdfGenerationResponse = {
+    pdfFiles: pdfs,
+    bundledPdfsDisplayObject: blob
+  }
+
+  return response;
 }
 
 
-export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
+export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<pdfGenerationResponse> => {
   setLoadingMessage("Generating combined pdf!");
   const font = await getFontsData();
   const mergedPdf = await PDFDocument.create();
@@ -302,33 +344,15 @@ export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inpu
   const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
   setLoadingMessage("Finished Processing Pdfs...");
 
-  const blobUrl = URL.createObjectURL(blob);
-  const printWindow = window.open('', '_blank');
-
-  if (printWindow) {
-    printWindow.document.write(`
-      <html>
-        <head><title>Generated Bootcamp Pdfs</title></head>
-        <body style="margin: 0;">
-          <iframe src="${blobUrl}" style="border: none; width: 100%; height: 100%;" onload="this.contentWindow.print();"></iframe>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-
-    printWindow.onafterprint = () => {
-      URL.revokeObjectURL(blobUrl);
-      printWindow.close();
-    };
-
-    return pdfs;
-  } else {
-    console.error("Failed to open the print window");
+  const response: pdfGenerationResponse = {
+    pdfFiles: pdfs,
+    bundledPdfsDisplayObject: blob
   }
+
+  return response;
 };
 
-export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], bootcampName: string, setLoadingMessage: (message: string) => void): Promise<Uint8Array[]> => {
+export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], bootcampName: string, setLoadingMessage: (message: string) => void): Promise<pdfGenerationResponse> => {
   setLoadingMessage("Generating combined pdf!");
   const font = await getFontsData();
   const zip = new JSZip();
@@ -360,9 +384,12 @@ export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], in
 
   setLoadingMessage("Finished Processing Pdfs...");
 
-  saveAs(zipBlob, `${bootcampName}_diplomas.zip`);
+  const response: pdfGenerationResponse = {
+    pdfFiles: pdfs,
+    bundledPdfsDisplayObject: zipBlob
+  }
 
-  return pdfs;
+  return response;
 };
 
 

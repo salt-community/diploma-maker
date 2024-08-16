@@ -15,6 +15,7 @@ public static class SeedData
             var fileOperations = new LocalFileStorageService(_context, _fileUtilityService);
             fileOperations.ClearFolderExceptDefault();
             fileOperations.ClearFolderExceptDefault("ImagePreview");
+            fileOperations.ClearFolderExceptDefault("ImagePreviewLQIP");
             
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();

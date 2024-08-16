@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse, StudentResponse } from "../../../util/types";
+import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse, pdfGenerationResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
-import { delay, generatePreviewImages, generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF } from "../../../util/helper";
+import { delay, generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF, openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/helper";
 import './DiplomaDataForm.css';
-import { PopupType } from "../../MenuItems/Popups/AlertPopup";
+import { CustomAlertPopupProps, PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
@@ -29,14 +29,14 @@ type Props = {
   setSaltData: (data: SaltData) => void;
   templates: TemplateResponse[] | null;
   tracks: TrackResponse[];
-  customAlert: (alertType: PopupType, title: string, content: string) => void;
   setLoadingMessage: (message: string) => void;
   selectedStudentIndex: number | null;
   setSelectedStudentIndex: (idx: number) => void;
-  updateStudentThumbnails: (studentImagePreviewsResponse: StudentResponse[]) => void;
+  updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>
+  customAlertProps: CustomAlertPopupProps;
 };
 
-export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex, updateStudentThumbnails }: Props) {
+export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlertProps, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex, updateStudentThumbnails }: Props) {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>();
   const [TrackIndex, setTrackIndex] = useState<number>(0);
@@ -45,6 +45,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>();
   const [attachedFiles, setAttachedFiles] = useState<{ [key: string]: File | null }>({});
   const [disableNavbar, setDisableNavbar] = useState<boolean>(false);
+
+  const { showPopup, customAlert, closeAlert } = customAlertProps;
 
   // Styling for generate popup btn
   const [printActive, setPrintActive] = useState<boolean>(false);
@@ -85,7 +87,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   }, [TrackIndex, BootcampIndex, AllTrackData]);
 
   const handleFileUpload = async (file: File) => {
-    const dataFromFile = await ParseFileData(file);
+    const dataFromFile = await ParseFileData(file, null, customAlert);
     const updatedStudents = dataFromFile.map(student => ({
       ...student,
       verificationCode: generateVerificationCode()
@@ -159,24 +161,24 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     };
 
     const studentsInput = bootcampPutResponse.students.filter(s => students.some(st => st.name === s.name));
+    let pdfs: pdfGenerationResponse;
 
-    let pdfs: Uint8Array[]
-    let studentImagePreviewsResponse: StudentResponse[];
     try {
       pdfs = 
-        print ? await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) :
-        download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, selectedBootcamp.name, setLoadingMessageAndAlert)
+        print ? await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) 
+        : download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, selectedBootcamp.name, setLoadingMessageAndAlert)
         : await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert)
-
-      studentImagePreviewsResponse = await generatePreviewImages(pdfs, studentsInput, setLoadingMessageAndAlert);
-      updateStudentThumbnails(studentImagePreviewsResponse);
-      
-      customAlert('loadingfadeout', '', '');
-      await alertSuccess();
     } catch (error) {
       customAlert('fail', "Failed to generate pdfs", `${error}`);
     }
+
+    updateStudentThumbnails(pdfs.pdfFiles, studentsInput, setLoadingMessageAndAlert); //Background task
+
+    customAlert('loadingfadeout', '', '');
+    await alertSuccess();
     
+    print ? await openPrintWindowfromBlob(pdfs.bundledPdfsDisplayObject)
+    : await openWindowfromBlob(pdfs.bundledPdfsDisplayObject) 
   };
 
   const alertSuccess = async () => {

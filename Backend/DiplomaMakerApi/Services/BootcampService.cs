@@ -105,6 +105,18 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
             return bootcamp;
     }
 
+    public async Task<List<Student>> PutStudentsPreviewImages(PreviewImageRequestsDto previewImageRequestsDto)
+    {
+        var studentsUpdated = new List<Student>();
+        foreach(var studentPreviewImageRequest in previewImageRequestsDto.PreviewImageRequests)
+        {
+            var studentResponse = await PutStudentPreviewImage(studentPreviewImageRequest);
+            studentsUpdated.Add(studentResponse);
+        }
+
+        return studentsUpdated;
+    }
+
     public async Task<Student> PutStudentPreviewImage(PreviewImageRequestDto previewImageRequestDto)
     {
         var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == previewImageRequestDto.StudentGuidId);
@@ -112,25 +124,27 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
         {
             throw new NotFoundByGuidException("Student", previewImageRequestDto.StudentGuidId);
         }
-        var HQFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
-        var LQFile = await _fileUtilityService.ConvertPngToWebP(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString(), true);
-
-        var HQFilePath = !_useBlobStorage 
-            ? await _localFileStorageService.SaveFile(HQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview")
-            : await _googleCloudStorageService.SaveFile(HQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
-        var LQFilePath = !_useBlobStorage 
-            ? await _localFileStorageService.SaveFile(LQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreviewLQIP")
-            : await _googleCloudStorageService.SaveFile(LQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreviewLQIP");
+        var pdfImage = await _fileUtilityService.ConvertPdfToPng(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
         
-        var HQRelativePath = await _fileUtilityService.GetRelativePathAsync(HQFilePath, "ImagePreview");
-        var LQRelativeFilePath = await _fileUtilityService.GetRelativePathAsync(LQFilePath, "ImagePreviewLQIP");
+        var HQFile = await _fileUtilityService.ConvertPngToWebP(pdfImage, previewImageRequestDto.StudentGuidId.ToString());
+        var LQFile = await _fileUtilityService.ConvertPngToWebP(pdfImage, previewImageRequestDto.StudentGuidId.ToString(), true);
 
-        student.PreviewImageUrl = HQRelativePath;
-        student.PreviewImageLQIPUrl = LQRelativeFilePath;
+        var HQFilePath = await SaveFileAsync(HQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
+        var LQFilePath = await SaveFileAsync(LQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreviewLQIP");
+
+        student.PreviewImageUrl = await _fileUtilityService.GetRelativePathAsync(HQFilePath, "ImagePreview");
+        student.PreviewImageLQIPUrl = await _fileUtilityService.GetRelativePathAsync(LQFilePath, "ImagePreviewLQIP");
 
         await _context.SaveChangesAsync();
 
         return student;
+    }
+
+    private async Task<string> SaveFileAsync(IFormFile file, string studentGuidId, string folderName)
+    {
+        return !_useBlobStorage 
+            ? await _localFileStorageService.SaveFile(file, studentGuidId, folderName) 
+            : await _googleCloudStorageService.SaveFile(file, studentGuidId, folderName);
     }
 
 }
