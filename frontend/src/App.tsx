@@ -48,6 +48,42 @@ export default function App() {
     }
   }, [bootcamps]);
 
+  const refresh = async () => {
+    const newBootcamps = await api.getBootcamps(setLoadingMessage);
+    const newTemplates = await api.getAllTemplates(setLoadingMessage);
+    setBootcamps(newBootcamps);
+    setTemplates(newTemplates);
+    getTracks();
+  }
+
+  // State Update Functions
+  const bootcampStateUpdateFromImagePreview = (response: StudentResponse) => {
+    setBootcamps(prevBootcamps =>
+      prevBootcamps!.map(bootcamp => ({
+        ...bootcamp,
+        students: bootcamp.students.map(student => 
+          student.guidId === response.guidId
+            ? {
+                ...student,
+                previewImageUrl: response.previewImageUrl,
+                previewImageLQIPUrl: response.previewImageLQIPUrl,
+              }
+            : student
+        ),
+      }))
+    );
+  };
+
+  const bootcampStateUpdateFromNewFormData = (bootcampResponse: BootcampResponse) => {
+    setBootcamps(prevBootcamps =>
+      prevBootcamps!.map(item =>
+        item.guidId === bootcampResponse.guidId
+          ? { ...item, students: bootcampResponse.students, templateId: bootcampResponse.templateId } as BootcampResponse
+          : item
+      )
+    );
+  };
+
   // Bootcamp Endpoint
   const deleteBootcamp = async (i: number) =>{
     const guid = bootcamps![i].guidId;
@@ -65,44 +101,17 @@ export default function App() {
     await refresh();
   }
 
-
-  const setBootcampsFromPreviewImageResponseHandler = (response: StudentResponse) => {
-    setBootcamps(prevBootcamps =>
-      prevBootcamps!.map(bootcamp => ({
-        ...bootcamp,
-        students: bootcamp.students.map(student => 
-          student.guidId === response.guidId
-            ? {
-                ...student,
-                previewImageUrl: response.previewImageUrl,
-                previewImageLQIPUrl: response.previewImageLQIPUrl,
-              }
-            : student
-        ),
-      }))
-    );
-  };
-
   const updateStudentThumbnails = async (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void): Promise<void> => {
     BGcustomAlert("loading", `${loadingBGMessage}`, "");
-    await generatePreviewImages(pdfs, studentsInput, setBGLoadingMessage, setBootcampsFromPreviewImageResponseHandler);
+    await generatePreviewImages(pdfs, studentsInput, setBGLoadingMessage, bootcampStateUpdateFromImagePreview);
     BGcustomAlert("loadingfadeout", `${loadingBGMessage}`, "");
   }
 
   const UpdateBootcampWithNewFormdata = async (updateFormDataRequest: FormDataUpdateRequest, guidid: string): Promise<BootcampResponse> => {
     const bootcampResponse: BootcampResponse = await api.UpdateBootcampWithNewFormdata(updateFormDataRequest, guidid);
-    if (bootcampResponse) {
-      setBootcamps(prevbootcamps =>
-        prevbootcamps!.map((item) => 
-          item.guidId === guidid
-            ? { ...item, students: bootcampResponse.students, templateId: bootcampResponse.templateId } as BootcampResponse
-            : item
-        )
-      );
-    }
+    bootcampStateUpdateFromNewFormData(bootcampResponse)
     return bootcampResponse;
   };
-  
 
   // Students Endpoint
   const deleteStudent = async (id: string) => {
@@ -114,11 +123,6 @@ export default function App() {
     var StudentResponse = await api.updateSingleStudent(StudentRequest);
     await refresh();
     return StudentResponse
-  }
-
-  const getStudentByVerificationCode = async (verificationCode: string) => {
-    const studentResponse = api.getStudentByVerificationCode(verificationCode);
-    return studentResponse;
   }
    
   // Templates Endpoint
@@ -169,14 +173,6 @@ export default function App() {
     setTracks(tracks);
   }
 
-  const refresh = async () => {
-    const newBootcamps = await api.getBootcamps(setLoadingMessage);
-    const newTemplates = await api.getAllTemplates(setLoadingMessage);
-    setBootcamps(newBootcamps);
-    setTemplates(newTemplates);
-    getTracks();
-  }
-
   return (
     <>
       <NavBar />
@@ -195,7 +191,6 @@ export default function App() {
         <Route path={"*"} element={<ErrorPage code={404} />} /> 
         </Routes>
       <Footer/> 
-
 
       {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
     </>
