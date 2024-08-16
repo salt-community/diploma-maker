@@ -99,10 +99,6 @@ export async function updateStudentPreviewImage(apiUrl: string, studentImagePrev
     formData.append('StudentGuidId', studentImagePreviewRequest.studentGuidId);
     formData.append('Image', studentImagePreviewRequest.image);
 
-    for (let pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
-    }
-
     const response = await fetch(`${apiUrl}/api/Blob/UpdateStudentsPreviewImage`, {
         method: 'PUT',
         body: formData,
