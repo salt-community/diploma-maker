@@ -5,7 +5,7 @@ import {
 } from "../../util/helper";
 import DiplomaDataForm from "../../components/Feature/Diplomadataform/DiplomaDataForm";
 import './DiplomaMaking.css';
-import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
+import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
@@ -20,13 +20,11 @@ type Props = {
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => Promise<BootcampResponse>
   setLoadingMessage: (message: string) => void;
   updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>;
-  showPopup: Boolean;
-  customAlert: (alertType: PopupType, title: string, content: string) => void;
-  closeAlert: () => void;
+  customAlertProps: CustomAlertPopupProps;
 };
 
 
-export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails, showPopup, customAlert, closeAlert }: Props) {
+export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails, customAlertProps }: Props) {
 
   /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
   const [saltData, setSaltData] = useState<SaltData | null>();
@@ -72,7 +70,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
               UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
               templates={templates}
               updateStudentThumbnails={updateStudentThumbnails}
-              customAlert={customAlert}
+              customAlertProps={customAlertProps}
               setLoadingMessage={setLoadingMessage}
             /*  fullscreen={IsFullScreen} */
             />

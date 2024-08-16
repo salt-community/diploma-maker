@@ -14,6 +14,13 @@ type Props = {
   durationOverride?: number;
   leftAligned?: boolean;
 }
+
+export type CustomAlertPopupProps = {
+  showPopup: Boolean;
+  customAlert: (alertType: PopupType, title: string, content: string) => void;
+  closeAlert: () => void;
+};
+
 export const AlertPopup = ({ show, onClose, popupType, title, text, durationOverride, leftAligned }: Props) => {
   const [visible, setVisible] = useState(show);
   useEffect(() => {

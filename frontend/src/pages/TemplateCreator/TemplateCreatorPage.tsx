@@ -11,7 +11,7 @@ import { PDFDocument } from "pdf-lib";
 import { SaveButton, SaveButtonType,} from "../../components/MenuItems/Buttons/SaveButton";
 import { AddButton } from "../../components/MenuItems/Buttons/AddButton";
 import { ConfirmationPopup, ConfirmationPopupType } from "../../components/MenuItems/Popups/ConfirmationPopup";
-import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
+import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
 import { TextInputIcon } from "../../components/MenuItems/Icons/TextInputIcon";
 import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData} from "../../util/dataHelpers";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
@@ -30,12 +30,10 @@ type Props = {
   addNewTemplate: (templateRequest: TemplateRequest) => Promise<void>;
   updateTemplate: (id: number, templateRequest: TemplateRequest) => Promise<TemplateResponse>;
   deleteTemplate: (templateRequest: number) => Promise<void>;
-  showPopup: Boolean;
-  customAlert: (alertType: PopupType, title: string, content: string) => void;
-  closeAlert: () => void;
+  customAlertProps: CustomAlertPopupProps;
 };
 
-export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate, showPopup, customAlert, closeAlert }: Props) => {
+export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate, customAlertProps }: Props) => {
   const [templateData, setTemplateData] = useState<any[]>([]);
   const [currentTemplate, setCurrentTemplate] = useState<any | null>(null);
 
@@ -44,6 +42,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   const [rightSideBarPage, setRightSideBarPage] = useState<number>(0);
 
+  const { showPopup, customAlert, closeAlert } = customAlertProps;
   const {showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup} = useCustomConfirmationPopup();
 
   const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);

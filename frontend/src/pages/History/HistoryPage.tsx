@@ -1,21 +1,24 @@
 import './HistoryPage.css';
 import { MakeActiveSnapshotRequestDto, TrackResponse } from '../../util/types';
 import HistoryManageTable from '../../components/Feature/History/HistoryManageTable';
-import { PopupType } from '../../components/MenuItems/Popups/AlertPopup';
+import { CustomAlertPopupProps, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
 
 type Props = {
     getHistory: () => void;
     changeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => void;
     tracks: TrackResponse[] | null;
-    showPopup: Boolean;
-    customAlert: (alertType: PopupType, title: string, content: string) => void;
-    closeAlert: () => void;
+    customAlertProps: CustomAlertPopupProps;
 };
 
-export function HistoryPage({ getHistory, changeActiveHistorySnapShot, tracks, showPopup, customAlert, closeAlert }: Props) {
+export function HistoryPage({ getHistory, changeActiveHistorySnapShot, tracks, customAlertProps }: Props) {
     return (
         <main className='historypage'>
-            <HistoryManageTable getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} tracks={tracks} showPopup={showPopup} customAlert={customAlert} closeAlert={closeAlert}/>
+            <HistoryManageTable 
+                getHistory={getHistory} 
+                changeActiveHistorySnapShot={changeActiveHistorySnapShot} 
+                tracks={tracks} 
+                customAlertProps={customAlertProps}
+            />
         </main>
     );
 }

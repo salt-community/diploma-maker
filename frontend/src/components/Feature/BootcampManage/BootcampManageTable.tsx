@@ -4,7 +4,7 @@ import { useCustomAlert } from "../../Hooks/useCustomAlert";
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../../util/types";
 import { utcFormatterSlash } from "../../../util/helper";
 import { ConfirmationPopup } from "../../MenuItems/Popups/ConfirmationPopup";
-import { AlertPopup, PopupType } from "../../MenuItems/Popups/AlertPopup";
+import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { ArrowIcon } from "../../MenuItems/Icons/ArrowIcon";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
 import { DeleteButtonSimple } from "../../MenuItems/Buttons/DeleteButtonSimple";
@@ -19,9 +19,7 @@ type Props = {
   addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   updateBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   tracks: TrackResponse[];
-  showPopup: Boolean;
-  customAlert: (alertType: PopupType, title: string, content: string) => void;
-  closeAlert: () => void;
+  customAlertProps: CustomAlertPopupProps;
 }
 
 type SortOrder =
@@ -29,7 +27,7 @@ type SortOrder =
   'graduationdate-ascending' | 'graduationdate-descending' |
   'track-ascending' | 'track-descending';
 
-export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks, showPopup, customAlert, closeAlert  }: Props) {
+export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks, customAlertProps  }: Props) {
   const { register, handleSubmit, setValue, watch, reset } = useForm();
   const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,6 +35,8 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
   const [sortOrder, setSortOrder] = useState<SortOrder>('graduationdate-descending');
   const [sortingChanged, setSortingChanged] = useState(false);
   const [filteredBootcamps, setFilteredBootcamps] = useState<BootcampResponse[] | null>(bootcamps);
+
+  const { showPopup, customAlert, closeAlert } = customAlertProps;
 
   useEffect(() => {
     const handleResize = () => {

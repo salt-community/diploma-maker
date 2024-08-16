@@ -12,7 +12,7 @@ import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefaul
 import { useNavigate } from 'react-router-dom';
 import { delay, generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF, populateField, populateIdField, utcFormatter } from '../../util/helper';
 import { getTemplate, makeTemplateInput } from '../../templates/baseTemplate';
-import { AlertPopup, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
+import { AlertPopup, CustomAlertPopupProps, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../../components/MenuItems/Buttons/SelectButton';
 import { EmailClient } from '../../components/EmailClient/EmailClient';
@@ -33,12 +33,10 @@ type Props = {
     sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
     templates: TemplateResponse[] | null;
     setLoadingMessage: (message: string) => void;
-    showPopup: Boolean;
-    customAlert: (alertType: PopupType, title: string, content: string) => void;
-    closeAlert: () => void;
+    customAlertProps: CustomAlertPopupProps;
 }
 
-export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail, setLoadingMessage, showPopup, customAlert, closeAlert }: Props) => {
+export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail, setLoadingMessage, customAlertProps  }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -47,6 +45,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
 
+    const { showPopup, customAlert, closeAlert } = customAlertProps;
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
     const { loadingMessage } = useLoadingMessage();
 
