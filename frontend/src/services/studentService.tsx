@@ -1,7 +1,9 @@
 import { apiEndpointParameters, StudentRequestNew, StudentResponse, StudentUpdateRequestDto,  } from "../util/types";
 
 export async function getStudentsByKeyword(apiParameters: apiEndpointParameters, keyword: string): Promise<StudentResponse[]> {
-    const response = await fetch(`${apiParameters.endpointUrl}/api/students/?keyword=${keyword}`);
+    const response = await fetch(`${apiParameters.endpointUrl}/api/students/?keyword=${keyword}`, {
+        headers: {Authorization: `Bearer ${apiParameters.token}`}
+    });
     if (!response.ok) {
         throw new Error('Failed to fetch students!');
     }
@@ -10,7 +12,9 @@ export async function getStudentsByKeyword(apiParameters: apiEndpointParameters,
 }
 
 export async function getStudentById(apiParameters: apiEndpointParameters, guidId: string): Promise<StudentResponse> {
-    const response = await fetch(`${apiParameters.endpointUrl}/api/students/${guidId}`);
+    const response = await fetch(`${apiParameters.endpointUrl}/api/students/${guidId}`, {
+        headers: {Authorization: `Bearer ${apiParameters.token}`}
+    });
     if (!response.ok) {
         throw new Error('Failed to fetch student!');
     }
@@ -19,7 +23,9 @@ export async function getStudentById(apiParameters: apiEndpointParameters, guidI
 }
 
 export async function getStudentByVerificationCode(apiParameters: apiEndpointParameters, verificationCode: string): Promise<StudentResponse> {
-    const response = await fetch(`${apiParameters.endpointUrl}/api/students/verificationCode/${verificationCode}`);
+    const response = await fetch(`${apiParameters.endpointUrl}/api/students/verificationCode/${verificationCode}`,{
+        headers: {Authorization: `Bearer ${apiParameters.token}`}
+    });
     if (!response.ok) {
         throw new Error('Failed to fetch student!');
     }
@@ -30,7 +36,10 @@ export async function getStudentByVerificationCode(apiParameters: apiEndpointPar
 export async function deleteStudentById(apiParameters: apiEndpointParameters, guidId: string): Promise<void> {
     const response = await fetch(`${apiParameters.endpointUrl}/api/students/${guidId}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+            'Content-Type': 'application/json', 
+            Authorization: `Bearer ${apiParameters.token}`
+        }
     });
 
     if (response.status === 404) 
@@ -47,7 +56,10 @@ export async function updateSingleStudent(apiParameters: apiEndpointParameters, 
 
     const response = await fetch(`${apiParameters.endpointUrl}/api/students/${studentRequest.guidId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json', 
+            Authorization: `Bearer ${apiParameters.token}`
+        },
         body: JSON.stringify(studentReq)
     });
 

@@ -8,7 +8,10 @@ export async function postBootcamp(apiParameters: apiEndpointParameters, bootcam
     
     const response = await fetch (`${apiParameters.endpointUrl}/api/bootcamps`,{
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json', 
+            Authorization: `Bearer ${apiParameters.token}` 
+        },
         body: JSON.stringify(formattedRequest)
     });
     if(response.status == 409){
@@ -21,7 +24,9 @@ export async function postBootcamp(apiParameters: apiEndpointParameters, bootcam
 
 export async function getBootcamps(apiParameters: apiEndpointParameters, setLoadingMessage: (message: string) => void): Promise<BootcampResponse[]> {
     setLoadingMessage('Fetching bootcamps...');
-    const response = await fetch(`${apiParameters.endpointUrl}/api/Bootcamps`);
+    const response = await fetch(`${apiParameters.endpointUrl}/api/Bootcamps`,{
+        headers: {Authorization: `Bearer ${apiParameters.token}`}
+    });
     if (!response.ok){
         const errorData = await response.json();
         setLoadingMessage(`Failed to load bootcamps!. ${errorData.message || 'Unknown error'}`)
@@ -34,7 +39,9 @@ export async function getBootcamps(apiParameters: apiEndpointParameters, setLoad
 }
 
 export async function getBootcampById(apiParameters: apiEndpointParameters, guidId: string): Promise<BootcampResponse>{
-    const response = await fetch(`${apiParameters.endpointUrl}/api/Bootcamps/${guidId}`);
+    const response = await fetch(`${apiParameters.endpointUrl}/api/Bootcamps/${guidId}`, {
+        headers: {Authorization: `Bearer ${apiParameters.token}`}
+    });
     if (!response.ok){
         throw new Error("Failed to get bootcamp!")
     }
@@ -53,7 +60,10 @@ export async function updateBootcamp(apiParameters: apiEndpointParameters, bootc
 
     const response = await fetch(`${apiParameters.endpointUrl}/api/bootcamps/${bootcampRequest.guidId!}`,{
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiParameters.token}`
+        },
         body: JSON.stringify(formattedRequest)
     })
 
@@ -67,7 +77,10 @@ export async function updateBootcamp(apiParameters: apiEndpointParameters, bootc
 export async function deleteBootcampById(apiParameters: apiEndpointParameters, guidId: string): Promise<void> {
     const response = await fetch(`${apiParameters.endpointUrl}/api/bootcamps/${guidId}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiParameters.token}`
+        }
     });
 
     if (!response.ok) {
@@ -81,7 +94,10 @@ export async function deleteBootcampById(apiParameters: apiEndpointParameters, g
 export async function UpdateBootcampWithNewFormdata(apiParameters: apiEndpointParameters, FormDataUpdateRequest: FormDataUpdateRequest, guidId: string): Promise<BootcampResponse> {
     const response = await fetch(`${apiParameters.endpointUrl}/api/Bootcamps/dynamicfields/${guidId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiParameters.token}`
+        },
         body: JSON.stringify(FormDataUpdateRequest)
     });
 
@@ -100,6 +116,7 @@ export async function updateStudentPreviewImage(apiParameters: apiEndpointParame
     formData.append('Image', studentImagePreviewRequest.image);
 
     const response = await fetch(`${apiParameters.endpointUrl}/api/Blob/UpdateStudentsPreviewImage`, {
+        headers: {Authorization: `Bearer ${apiParameters.token}`},
         method: 'PUT',
         body: formData,
     });
@@ -121,6 +138,7 @@ export async function updateBundledStudentsPreviewImages(apiParameters: apiEndpo
     });
 
     const response = await fetch(`${apiParameters.endpointUrl}/api/Blob/UpdateBundledStudentsPreviewImages`, {
+        headers: {Authorization: `Bearer ${apiParameters.token}`},
         method: 'PUT',
         body: formData,
     });

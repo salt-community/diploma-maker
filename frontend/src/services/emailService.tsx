@@ -9,6 +9,7 @@ export async function postEmail(apiParameters: apiEndpointParameters, emailReque
     formData.append('description', emailRequest.description);
 
     const response = await fetch(`${apiParameters.endpointUrl}/api/Email/email-student/${emailRequest.guidId}`, {
+        headers: {Authorization: `Bearer ${apiParameters.token}`},
         method: 'POST',
         body: formData,
     });
