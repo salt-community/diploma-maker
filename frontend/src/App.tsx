@@ -2,7 +2,7 @@ import { Routes, Route, Outlet, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto, StudentResponse, Student } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto, StudentResponse, Student, apiEndpointParameters } from "./util/types";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
@@ -20,12 +20,8 @@ import { useBGLoadingMessage } from "./components/Contexts/LoadingBGMessageConte
 import { AlertPopup } from "./components/MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "./components/Hooks/useCustomAlert";
 import { ClerkAuthGuard } from "./components/Feature/Auth/ClerkAuthGaurd";
-import { ClerkProvider, SignIn } from "@clerk/clerk-react";
+import { ClerkProvider, SignIn, useAuth } from "@clerk/clerk-react";
 import SignInPage from "./pages/LoginPortal/sign-in";
-const api = initApiEndpoints({
-  endpointUrl: import.meta.env.VITE_API_URL,
-  token: ''
-});
 
 export default function App() {
   const [tracks, setTracks] = useState<TrackResponse[] | null>(null);
@@ -38,6 +34,18 @@ export default function App() {
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert()
 
+  const getToken = (): string => {
+    const jwtToken = document.cookie
+      .split('; ')
+      .find(c => c.includes('__session'))
+      ?.split('=')[1] || '';
+
+    return jwtToken
+  }
+  const api = initApiEndpoints({
+    endpointUrl: import.meta.env.VITE_API_URL,
+    token: getToken()
+  });
 
   async function getBootcampsFromBackend() {
     const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);

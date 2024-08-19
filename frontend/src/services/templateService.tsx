@@ -3,9 +3,6 @@ import { getTemplatePdfFile } from "./fileService";
 
 export async function getAllTemplates(apiParameters: apiEndpointParameters, setLoadingMessage: (message: string) => void): Promise<TemplateResponse[]> {
     setLoadingMessage('Fetching Templates...');
-
-    console.log("apiParameters.token");
-    console.log(apiParameters.token);
     
     const response = await fetch(`${apiParameters.endpointUrl}/api/templates`, {
         headers: {Authorization: `Bearer ${apiParameters.token}`}
