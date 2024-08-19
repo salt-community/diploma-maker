@@ -4,6 +4,10 @@ using DiplomaMakerApi.Middleware;
 using DiplomaMakerApi.Configuration;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore.Storage;
+using Clerk.Net.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +37,35 @@ builder.Services.AddDbContext<DiplomaMakingContext>(options =>
 builder.Services.AddControllers().AddJsonOptions(opt => {
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
+
+builder.Services.AddClerkApiClient(config =>
+{
+    config.SecretKey = builder.Configuration["Clerk:SecretKey"]!;
+});
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(x =>
+    {
+        x.Authority = builder.Configuration["Clerk:Authority"];
+        x.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateAudience = false,
+            NameClaimType = ClaimTypes.NameIdentifier 
+        };
+        x.Events = new JwtBearerEvents()
+        {
+            OnTokenValidated = context =>
+            {
+                var azp = context.Principal?.FindFirstValue("azp");
+                if (string.IsNullOrEmpty(azp) || !azp.Equals(builder.Configuration["Clerk:AuthorizedParty"]))
+                    context.Fail("AZP Claim is invalid or missing");
+
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+    
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

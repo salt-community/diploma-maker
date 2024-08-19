@@ -5,6 +5,7 @@ using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using AutoMapper;
 using DiplomaMakerApi.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
