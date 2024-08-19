@@ -9,14 +9,14 @@ import { LoadingBGMessageProvider } from './components/Contexts/LoadingBGMessage
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <LoadingMessageProvider>
-          <LoadingBGMessageProvider>
-            <App />
-          </LoadingBGMessageProvider>
-        </LoadingMessageProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <LoadingMessageProvider>
+            <LoadingBGMessageProvider>
+              <App />
+            </LoadingBGMessageProvider>
+          </LoadingMessageProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
   </React.StrictMode>,
 )

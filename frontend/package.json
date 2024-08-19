@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.4.1",
     "@pdfme/common": "^3.4.3-dev.2",
     "@pdfme/generator": "^3.4.3-dev.2",
     "@pdfme/schemas": "^3.4.3-dev.2",

@@ -1,4 +1,4 @@
-import {Routes, Route, } from "react-router-dom";
+import { Routes, Route, Outlet, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
@@ -12,14 +12,16 @@ import { initApiEndpoints } from "./services/apiFactory";
 import { VerificationInputPage } from "./pages/Verifcation/VerificationInputPage";
 import { set } from "react-hook-form";
 import { HistoryPage } from "./pages/History/HistoryPage";
-import {HomePage} from "./pages/Homepage/HomePage"
+import { HomePage } from "./pages/Homepage/HomePage"
 import { Footer } from "./components/Footer/Footer";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import { generatePreviewImages } from "./util/helper";
 import { useBGLoadingMessage } from "./components/Contexts/LoadingBGMessageContext";
 import { AlertPopup } from "./components/MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "./components/Hooks/useCustomAlert";
-
+import { ClerkAuthGuard } from "./components/Feature/Auth/ClerkAuthGaurd";
+import { ClerkProvider, SignIn } from "@clerk/clerk-react";
+import SignInPage from "./pages/LoginPortal/sign-in";
 const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 
 export default function App() {
@@ -41,7 +43,7 @@ export default function App() {
   }
 
   useEffect(() => {
-    if(!bootcamps){
+    if (!bootcamps) {
       getBootcampsFromBackend();
       getTemplates();
       getTracks();
@@ -61,13 +63,13 @@ export default function App() {
     setBootcamps(prevBootcamps =>
       prevBootcamps!.map(bootcamp => ({
         ...bootcamp,
-        students: bootcamp.students.map(student => 
+        students: bootcamp.students.map(student =>
           student.guidId === response.guidId
             ? {
-                ...student,
-                previewImageUrl: response.previewImageUrl,
-                previewImageLQIPUrl: response.previewImageLQIPUrl,
-              }
+              ...student,
+              previewImageUrl: response.previewImageUrl,
+              previewImageLQIPUrl: response.previewImageLQIPUrl,
+            }
             : student
         ),
       }))
@@ -85,18 +87,18 @@ export default function App() {
   };
 
   // Bootcamp Endpoint
-  const deleteBootcamp = async (i: number) =>{
+  const deleteBootcamp = async (i: number) => {
     const guid = bootcamps![i].guidId;
     await api.deleteBootcampById(guid);
     await refresh();
   }
-  
+
   const addNewBootcamp = async (bootcamp: BootcampRequest) => {
     await api.postBootcamp(bootcamp);
     await refresh();
   }
-  
-  const updateBootcamp = async (bootcamp: BootcampRequest) =>{
+
+  const updateBootcamp = async (bootcamp: BootcampRequest) => {
     await api.updateBootcamp(bootcamp);
     await refresh();
   }
@@ -118,16 +120,16 @@ export default function App() {
     await api.deleteStudentById(id);
     await refresh();
   }
-  
+
   const updateStudentInformation = async (StudentRequest: StudentUpdateRequestDto) => {
     var StudentResponse = await api.updateSingleStudent(StudentRequest);
     await refresh();
     return StudentResponse
   }
-   
+
   // Templates Endpoint
   const getTemplates = async () => {
-    const templates: TemplateResponse[] = await api.getAllTemplates(setLoadingMessage); 
+    const templates: TemplateResponse[] = await api.getAllTemplates(setLoadingMessage);
     setTemplates(templates);
   }
 
@@ -157,7 +159,7 @@ export default function App() {
     const historySnapshots = await api.getHistorySnapshots(setLoadingMessage);
     return historySnapshots;
   }
-  
+
   const getHistoryByVerificationCode = async (verificationCode: string) => {
     const historySnapshots = await api.getHistoryByVerificationCode(verificationCode);
     return historySnapshots;
@@ -173,26 +175,48 @@ export default function App() {
     setTracks(tracks);
   }
 
-  return (
-    <>
-      <NavBar />
-        <AlertPopup title={loadingMessage} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500}/>
-        <AlertPopup title={loadingBGMessage} text={BGpopupContent[1]} popupType={BGpopupType} show={BGshowPopup} onClose={BGcloseAlert} leftAligned={true}/>
-      <Routes>
-        <Route path={"/pdf-creator"} element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }}/>} />
-        <Route path={"/"} element={<HomePage/>} />
-        <Route path={"/home"} element={<HomePage/>} />      
-        <Route path={`/verify`} element={<VerificationInputPage />} />
-        <Route path={`/verify/:verificationCode`} element = {<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode}/>} />
-        <Route path={"/bootcamp-management"} element= {<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }}/>} /> 
-        <Route path={"/overview"} element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }}/>} />
-        <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate} customAlertProps={{ showPopup, customAlert, closeAlert }}/>} />
-        <Route path={"/history"} element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }}/>} />
-        <Route path={"*"} element={<ErrorPage code={404} />} /> 
-        </Routes>
-      <Footer/> 
+  const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
-      {/*    <Route path={"/:selectedBootcamp"} element={<DiplomaMaking bootcamps={bootcamps!} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} />} /> */}
-    </>
+  return (
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+
+      
+      <Routes>
+        {/* PUBLIC ROUTES */}
+        <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/verify" element={<VerificationInputPage />} />
+        <Route path="/verify/:verificationCode" element={<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode} />} />
+
+         {/* PRIVATE ROUTES */}
+        <Route
+          path="/"
+          element={
+            <ClerkAuthGuard>
+              <NavBar />
+              <AlertPopup title={loadingMessage} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
+              <AlertPopup title={loadingBGMessage} text={BGpopupContent[1]} popupType={BGpopupType} show={BGshowPopup} onClose={BGcloseAlert} leftAligned={true} />
+              <Outlet />
+            </ClerkAuthGuard>
+          }
+        >
+          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
+          <Route path="bootcamp-management" element={<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
+          <Route path="overview" element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
+          <Route path="template-creator" element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
+          <Route path="history" element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
+        </Route>
+
+        <Route path="*" element={<ErrorPage code={404} />} />
+      </Routes>
+
+
+      <Footer />
+    </ClerkProvider>
   );
 }
+
+
+
+
