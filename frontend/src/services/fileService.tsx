@@ -1,6 +1,7 @@
 import { getFromIndexedTemplatesDB, openIndexedTemplatesDB, storeInIndexedTemplatesDB } from "../util/helper";
+import { apiEndpointParameters } from "../util/types";
 
-export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdated: Date, setLoadingMessage?: (message: string) => void): Promise<string> {
+export async function getTemplatePdfFile(apiParameters: apiEndpointParameters, url: string, lastUpdated: Date, setLoadingMessage?: (message: string) => void): Promise<string> {
     const indexedDBKey = `pdf_${url}`;
 
     const db = await openIndexedTemplatesDB();
@@ -14,7 +15,9 @@ export async function getTemplatePdfFile(apiUrl: string, url: string, lastUpdate
         }
     }
 
-    const pdfResponse = await fetch(`${apiUrl}/api/${url}`);
+    const pdfResponse = await fetch(`${apiParameters.endpointUrl}/api/${url}`, {
+        headers: {Authorization: `Bearer ${apiParameters.token}`}
+    });
     if (!pdfResponse.ok) {
         setLoadingMessage?.(`Failed to fetch PDF file from ${url}. The file does not seem to exist.`);
         throw new Error(`Failed to fetch PDF from ${url}`);

@@ -215,3 +215,8 @@ export type pdfGenerationResponse = {
     pdfFiles: Uint8Array[],
     bundledPdfsDisplayObject: Blob,
 }
+
+export type apiEndpointParameters = {
+    endpointUrl: string,
+    token?: string,
+}

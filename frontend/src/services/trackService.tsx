@@ -1,8 +1,8 @@
-import { TrackResponse } from "../util/types";
+import { apiEndpointParameters, TrackResponse } from "../util/types";
 
-export async function getAllTracks(apiUrl: string, setLoadingMessage: (message: string) => void): Promise<TrackResponse[]> {
+export async function getAllTracks(apiParameters: apiEndpointParameters, setLoadingMessage: (message: string) => void): Promise<TrackResponse[]> {
     setLoadingMessage('Fetching Bootcamp Tracks...');
-    const response = await fetch(`${apiUrl}/api/Tracks`);
+    const response = await fetch(`${apiParameters.endpointUrl}/api/Tracks`);
     if (!response.ok){
         const errorData = await response.json();
         setLoadingMessage(`Failed to load Tracks!. ${errorData.message || 'Unknown error'}`)

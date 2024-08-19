@@ -22,7 +22,10 @@ import { useCustomAlert } from "./components/Hooks/useCustomAlert";
 import { ClerkAuthGuard } from "./components/Feature/Auth/ClerkAuthGaurd";
 import { ClerkProvider, SignIn } from "@clerk/clerk-react";
 import SignInPage from "./pages/LoginPortal/sign-in";
-const api = initApiEndpoints(import.meta.env.VITE_API_URL);
+const api = initApiEndpoints({
+  endpointUrl: import.meta.env.VITE_API_URL,
+  token: ''
+});
 
 export default function App() {
   const [tracks, setTracks] = useState<TrackResponse[] | null>(null);
@@ -34,6 +37,7 @@ export default function App() {
 
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert()
+
 
   async function getBootcampsFromBackend() {
     const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);

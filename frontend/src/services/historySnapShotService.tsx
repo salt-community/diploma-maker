@@ -1,9 +1,9 @@
-import { HistorySnapshotResponse, MakeActiveSnapshotRequestDto } from "../util/types";
+import { apiEndpointParameters, HistorySnapshotResponse, MakeActiveSnapshotRequestDto } from "../util/types";
 import { getTemplatePdfFile } from "./fileService";
 
-export async function getHistorySnapshots(apiUrl: string, setLoadingMessage?: (message: string) => void): Promise<HistorySnapshotResponse[]> {
+export async function getHistorySnapshots(apiParameters: apiEndpointParameters, setLoadingMessage?: (message: string) => void): Promise<HistorySnapshotResponse[]> {
     setLoadingMessage("Fetching History Snapshots...")
-    const response = await fetch(`${apiUrl}/api/HistorySnapshots`);
+    const response = await fetch(`${apiParameters.endpointUrl}/api/HistorySnapshots`);
     if (!response.ok){
         const errorData = await response.json();
         throw new Error(`Failed to get HistorySnapshots! ${errorData}`)
@@ -14,14 +14,14 @@ export async function getHistorySnapshots(apiUrl: string, setLoadingMessage?: (m
     
     for (const result of results) {
         result.basePdfName = result.basePdf;
-        result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.templateLastUpdated);
+        result.basePdf = await getTemplatePdfFile(apiParameters, result.basePdf, result.templateLastUpdated);
     }
 
     return results;
 }
 
-export async function getHistoryByVerificationCode(apiUrl: string, verificationCode: string): Promise<HistorySnapshotResponse[]> {
-    const response = await fetch(`${apiUrl}/api/HistorySnapshots/${verificationCode}`);
+export async function getHistoryByVerificationCode(apiParameters: apiEndpointParameters, verificationCode: string): Promise<HistorySnapshotResponse[]> {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/HistorySnapshots/${verificationCode}`);
     if (!response.ok){
         const errorData = await response.json();
         throw new Error(`Failed to get HistorySnapshots! ${errorData}`)
@@ -30,14 +30,14 @@ export async function getHistoryByVerificationCode(apiUrl: string, verificationC
     const results = await response.json() as HistorySnapshotResponse[]
 
     for (const result of results) {
-        result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.templateLastUpdated);
+        result.basePdf = await getTemplatePdfFile(apiParameters, result.basePdf, result.templateLastUpdated);
     }
 
     return results;
 }
 
-export async function makeActiveHistorySnapShot(apiUrl: string, request: MakeActiveSnapshotRequestDto): Promise<HistorySnapshotResponse[]> {
-    const response = await fetch(`${apiUrl}/api/make-active-historysnapshot`, {
+export async function makeActiveHistorySnapShot(apiParameters: apiEndpointParameters, request: MakeActiveSnapshotRequestDto): Promise<HistorySnapshotResponse[]> {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/make-active-historysnapshot`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ export async function makeActiveHistorySnapShot(apiUrl: string, request: MakeAct
     const results = await response.json() as HistorySnapshotResponse[];
 
     for (const result of results) {
-        result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.templateLastUpdated);
+        result.basePdf = await getTemplatePdfFile(apiParameters, result.basePdf, result.templateLastUpdated);
     }
 
     return results;

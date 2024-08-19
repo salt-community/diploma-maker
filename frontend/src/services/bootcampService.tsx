@@ -1,12 +1,12 @@
-import { BootcampRequest, BootcampResponse, FormDataUpdateRequest, studentImagePreview, StudentResponse,  } from "../util/types";
+import { apiEndpointParameters, BootcampRequest, BootcampResponse, FormDataUpdateRequest, studentImagePreview, StudentResponse,  } from "../util/types";
 
-export async function postBootcamp(apiUrl: string, bootcampRequest: BootcampRequest): Promise<void> {
+export async function postBootcamp(apiParameters: apiEndpointParameters, bootcampRequest: BootcampRequest): Promise<void> {
     const formattedRequest = {
         ...bootcampRequest,
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
     
-    const response = await fetch (`${apiUrl}/api/bootcamps`,{
+    const response = await fetch (`${apiParameters.endpointUrl}/api/bootcamps`,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedRequest)
@@ -19,9 +19,9 @@ export async function postBootcamp(apiUrl: string, bootcampRequest: BootcampRequ
     }
 }
 
-export async function getBootcamps(apiUrl: string, setLoadingMessage: (message: string) => void): Promise<BootcampResponse[]> {
+export async function getBootcamps(apiParameters: apiEndpointParameters, setLoadingMessage: (message: string) => void): Promise<BootcampResponse[]> {
     setLoadingMessage('Fetching bootcamps...');
-    const response = await fetch(`${apiUrl}/api/Bootcamps`);
+    const response = await fetch(`${apiParameters.endpointUrl}/api/Bootcamps`);
     if (!response.ok){
         const errorData = await response.json();
         setLoadingMessage(`Failed to load bootcamps!. ${errorData.message || 'Unknown error'}`)
@@ -33,8 +33,8 @@ export async function getBootcamps(apiUrl: string, setLoadingMessage: (message: 
     return results;
 }
 
-export async function getBootcampById(apiUrl: string, guidId: string): Promise<BootcampResponse>{
-    const response = await fetch(`${apiUrl}/api/Bootcamps/${guidId}`);
+export async function getBootcampById(apiParameters: apiEndpointParameters, guidId: string): Promise<BootcampResponse>{
+    const response = await fetch(`${apiParameters.endpointUrl}/api/Bootcamps/${guidId}`);
     if (!response.ok){
         throw new Error("Failed to get bootcamp!")
     }
@@ -45,13 +45,13 @@ export async function getBootcampById(apiUrl: string, guidId: string): Promise<B
 }
 
 
-export async function updateBootcamp(apiUrl: string, bootcampRequest: BootcampRequest): Promise<BootcampResponse>{
+export async function updateBootcamp(apiParameters: apiEndpointParameters, bootcampRequest: BootcampRequest): Promise<BootcampResponse>{
     const formattedRequest = {
         ...bootcampRequest,
         graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
     };
 
-    const response = await fetch(`${apiUrl}/api/bootcamps/${bootcampRequest.guidId!}`,{
+    const response = await fetch(`${apiParameters.endpointUrl}/api/bootcamps/${bootcampRequest.guidId!}`,{
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formattedRequest)
@@ -64,8 +64,8 @@ export async function updateBootcamp(apiUrl: string, bootcampRequest: BootcampRe
     return response.json()
 }
 
-export async function deleteBootcampById(apiUrl: string, guidId: string): Promise<void> {
-    const response = await fetch(`${apiUrl}/api/bootcamps/${guidId}`, {
+export async function deleteBootcampById(apiParameters: apiEndpointParameters, guidId: string): Promise<void> {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/bootcamps/${guidId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
     });
@@ -78,8 +78,8 @@ export async function deleteBootcampById(apiUrl: string, guidId: string): Promis
     }
 }
 
-export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpdateRequest: FormDataUpdateRequest, guidId: string): Promise<BootcampResponse> {
-    const response = await fetch(`${apiUrl}/api/Bootcamps/dynamicfields/${guidId}`, {
+export async function UpdateBootcampWithNewFormdata(apiParameters: apiEndpointParameters, FormDataUpdateRequest: FormDataUpdateRequest, guidId: string): Promise<BootcampResponse> {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/Bootcamps/dynamicfields/${guidId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(FormDataUpdateRequest)
@@ -94,12 +94,12 @@ export async function UpdateBootcampWithNewFormdata(apiUrl: string, FormDataUpda
 }
 
 
-export async function updateStudentPreviewImage(apiUrl: string, studentImagePreviewRequest: studentImagePreview): Promise<StudentResponse> {
+export async function updateStudentPreviewImage(apiParameters: apiEndpointParameters, studentImagePreviewRequest: studentImagePreview): Promise<StudentResponse> {
     const formData = new FormData();
     formData.append('StudentGuidId', studentImagePreviewRequest.studentGuidId);
     formData.append('Image', studentImagePreviewRequest.image);
 
-    const response = await fetch(`${apiUrl}/api/Blob/UpdateStudentsPreviewImage`, {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/Blob/UpdateStudentsPreviewImage`, {
         method: 'PUT',
         body: formData,
     });
@@ -113,14 +113,14 @@ export async function updateStudentPreviewImage(apiUrl: string, studentImagePrev
 
 
 
-export async function updateBundledStudentsPreviewImages(apiUrl: string, studentImagePreviewRequests: studentImagePreview[]): Promise<StudentResponse[]> {
+export async function updateBundledStudentsPreviewImages(apiParameters: apiEndpointParameters, studentImagePreviewRequests: studentImagePreview[]): Promise<StudentResponse[]> {
     const formData = new FormData();
     studentImagePreviewRequests.forEach((request, index) => {
         formData.append(`PreviewImageRequests[${index}].StudentGuidId`, request.studentGuidId);
         formData.append(`PreviewImageRequests[${index}].Image`, request.image);
     });
 
-    const response = await fetch(`${apiUrl}/api/Blob/UpdateBundledStudentsPreviewImages`, {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/Blob/UpdateBundledStudentsPreviewImages`, {
         method: 'PUT',
         body: formData,
     });
