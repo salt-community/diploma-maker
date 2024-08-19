@@ -2,9 +2,11 @@ namespace DiplomaMakerApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Services;
 using DiplomaMakerApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class EmailController : ControllerBase
 {
     private readonly EmailService _emailService;

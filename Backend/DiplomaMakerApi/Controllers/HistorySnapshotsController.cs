@@ -1,6 +1,7 @@
 using AutoMapper;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -19,6 +20,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> GetHistory()
         {    
             var snapshots = await _historySnapShotService.GetHistorySnapshots();
@@ -26,6 +28,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpGet("{verificationCode}")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> GetHistoryByVerificationCode(string verificationCode)
         {
             var snapshots = await _historySnapShotService.GetHistorySnapshotsByVerificationCode(verificationCode);
@@ -33,6 +36,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpPut("/api/make-active-historysnapshot")]
+        [Authorize]
         public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> MakeActiveHistorySnapshot([FromBody] MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
         {
             var changedHistorySnapshot = await _historySnapShotService.MakeActiveHistorySnapshot(makeActiveSnapshotRequestDto);

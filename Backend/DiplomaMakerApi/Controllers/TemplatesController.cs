@@ -3,10 +3,12 @@ using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using AutoMapper;
 using DiplomaMakerApi.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 namespace DiplomaMakerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class TemplatesController : ControllerBase
 {
     private readonly IMapper _mapper;

@@ -1,12 +1,14 @@
 using AutoMapper;
 using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomaMakerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class TracksController : Controller
 {
     private readonly TrackService _trackservice;

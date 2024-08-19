@@ -1,12 +1,13 @@
 namespace StudentMakerApi.Controllers;
-
 using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Models;
 using AutoMapper;
 using DiplomaMakerApi.Services;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class StudentsController(StudentService service, IMapper mapper) : ControllerBase
 {
     private readonly StudentService _service = service;

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class BootcampsController : ControllerBase
 {
     private readonly IMapper _mapper;

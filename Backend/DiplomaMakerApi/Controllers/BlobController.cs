@@ -3,12 +3,14 @@ using AutoMapper;
 using DiplomaMakerApi.Dtos.PreviewImage;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomaMakerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BlobController : Controller
     {
         private readonly LocalFileStorageService _localFileStorageService;
