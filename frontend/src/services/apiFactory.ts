@@ -6,6 +6,7 @@ import { getHistoryByVerificationCode, getHistorySnapshots, makeActiveHistorySna
 import { deleteStudentById, getStudentById, getStudentByVerificationCode, getStudentsByKeyword, updateSingleStudent } from "./studentService";
 import { deleteTemplateById, getAllTemplates, getTemplateById, postTemplate, putTemplate } from "./templateService";
 import { getAllTracks } from "./trackService";
+import { getUserFonts } from "./userFontService";
 
 export const initApiEndpoints = (apiBaseUrl: string) => {
     return {
@@ -46,5 +47,8 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
         getHistorySnapshots: (setLoadingMessage: (message: string) => void) => getHistorySnapshots(apiBaseUrl, setLoadingMessage),
         getHistoryByVerificationCode: (verificationCode: string) => getHistoryByVerificationCode(apiBaseUrl, verificationCode),
         makeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => makeActiveHistorySnapShot(apiBaseUrl, snapshotUpdateRequest),
+
+        // User Font Endpoint
+        getUserFonts: () => getUserFonts(apiBaseUrl),
     };
 };
