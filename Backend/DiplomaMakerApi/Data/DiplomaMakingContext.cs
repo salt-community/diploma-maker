@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos.UserFont;
 
 public class DiplomaMakingContext : DbContext
 {
@@ -15,6 +16,7 @@ public class DiplomaMakingContext : DbContext
     public DbSet<TemplateStyle> TemplateStyles { get; set; } = default!;
     public DbSet<DiplomaSnapshot> DiplomaSnapshots { get; set; } = default!;
     public DbSet<Track> Tracks { get; set; } = default!;
+    public DbSet<UserFont> UserFonts { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Track>()
