@@ -15,14 +15,23 @@ namespace DiplomaMakerApi.Services
 
         public async Task<List<UserFont>> PostUserFonts(UserFontRequestsDto userFontRequestsDto)
         {   
+            var firstFontRequest = userFontRequestsDto.UserFontRequests[0];
             var newFonts = new List<UserFont>();
+
+            if(firstFontRequest.File is null){
+                throw new ArgumentException("Normal Font Missing.");
+            }
+
             foreach (var userFont in userFontRequestsDto.UserFontRequests)
             {
-                await _localFileStorageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}");
-                newFonts.Add(new UserFont(){
-                    Name = userFont.Name,
-                    FontType = userFont.FontType,
-                });
+                if(userFont.File != null)
+                {
+                    await _localFileStorageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}");
+                    newFonts.Add(new UserFont(){
+                        Name = userFont.Name,
+                        FontType = userFont.FontType,
+                    });
+                }
             }
 
             await _context.UserFonts.AddRangeAsync(newFonts);
