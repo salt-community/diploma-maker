@@ -3,7 +3,6 @@ using DiplomaMakerApi.Services;
 using DiplomaMakerApi.Middleware;
 using DiplomaMakerApi.Configuration;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore.Storage;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +46,7 @@ builder.Services.AddTransient<LocalFileStorageService>();
 builder.Services.AddScoped<HistorySnapshotService>();
 builder.Services.AddScoped<GoogleCloudStorageService>();
 builder.Services.AddTransient<FileUtilityService>();
+builder.Services.AddScoped<UserFontService>();
 builder.Services.AddLogging();
 builder.Services.AddHostedService(service => new DatabasePokeService(service, connectionstr));
 
