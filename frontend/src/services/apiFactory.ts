@@ -1,4 +1,4 @@
-import { BootcampRequest, EmailSendRequest, FormDataUpdateRequest, MakeActiveSnapshotRequestDto, studentImagePreview, StudentUpdateRequestDto, TemplateRequest } from "../util/types";
+import { BootcampRequest, EmailSendRequest, FormDataUpdateRequest, MakeActiveSnapshotRequestDto, studentImagePreview, StudentUpdateRequestDto, TemplateRequest, UserFontRequestDto } from "../util/types";
 import { deleteBootcampById, getBootcampById, getBootcamps, postBootcamp, updateBootcamp, UpdateBootcampWithNewFormdata, updateBundledStudentsPreviewImages, updateStudentPreviewImage } from "./bootcampService";
 import { postEmail } from "./emailService";
 import { getTemplatePdfFile } from "./fileService";
@@ -6,7 +6,7 @@ import { getHistoryByVerificationCode, getHistorySnapshots, makeActiveHistorySna
 import { deleteStudentById, getStudentById, getStudentByVerificationCode, getStudentsByKeyword, updateSingleStudent } from "./studentService";
 import { deleteTemplateById, getAllTemplates, getTemplateById, postTemplate, putTemplate } from "./templateService";
 import { getAllTracks } from "./trackService";
-import { getUserFonts } from "./UserFontService";
+import { getUserFonts, postUserFonts } from "./UserFontService";
 
 export const initApiEndpoints = (apiBaseUrl: string) => {
     return {
@@ -50,5 +50,6 @@ export const initApiEndpoints = (apiBaseUrl: string) => {
 
         // User Font Endpoint
         getUserFonts: () => getUserFonts(apiBaseUrl),
+        postUserFonts: (userFonts: UserFontRequestDto[]) => postUserFonts(apiBaseUrl, userFonts),
     };
 };
