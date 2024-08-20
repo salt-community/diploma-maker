@@ -175,8 +175,7 @@ export default function App() {
 
   // User Fonts Endpoint
   const postUserFonts = async (userFontsRequestsDto: UserFontRequestDto[]) => {
-    const fontResponse = await api.postUserFonts(userFontsRequestsDto);
-    console.log(fontResponse);
+    await api.postUserFonts(userFontsRequestsDto);
   }
 
   return (
