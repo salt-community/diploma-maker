@@ -49,3 +49,4 @@ export const getFontPreviewImage = async (apiUrl: string, fontName: string, font
         throw error;
     }
 }
+
