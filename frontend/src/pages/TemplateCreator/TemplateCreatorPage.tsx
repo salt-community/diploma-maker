@@ -25,6 +25,7 @@ import { EmailConfigInstructionSlides, templateCreatorInstructionSlides } from "
 import { Size } from "@pdfme/common";
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 import { UserFontsClient } from "../../components/Feature/TemplateCreator/UserFontsClient";
+import { FontsIcon } from "../../components/MenuItems/Icons/FontsIcon";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -60,6 +61,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [pdfSize, setPdfSize] = useState<Size>();
 
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
+  const [showUserFontsClient, setShowUserFontsClient] = useState<boolean>(true);
   const { loadingMessage } = useLoadingMessage();
 
   const [firstRun, setFirstRun] = useState<boolean>(true)
@@ -596,12 +598,21 @@ useEffect(() => {
             confirmClick={(inputContent?: string) => { confirmationPopupHandler(inputContent) }}
         />
         <InstructionSlideshow show={showInstructionSlideshow}  slides={templateCreatorInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
-        <UserFontsClient type={'addNewFont'}/>
+        <UserFontsClient 
+          type={'addNewFont'}
+          show={showUserFontsClient}
+          setShowUserFontsClient={setShowUserFontsClient}
+        />
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
                 <section className="templatecreator-page__leftsidebar-menu-section">
                     <button onClick={() => setShowInstructionSlideshow(true)} className="help-btn">
                         <HelpIcon />
+                        <p>Help Me!</p>
+                    </button>
+                    <button onClick={() => setShowUserFontsClient(true)} className="fonts-btn">
+                        <FontsIcon />
+                        <p>Add Font</p>
                     </button>
                 </section>
             </div>

@@ -10,6 +10,17 @@
 
   background-color: #171721;
   z-index: 100000000;
+
+  visibility: hidden;
+  opacity: 0;
+
+  transition: all 550ms ease;
+}
+.userfont.visible{
+  visibility: visible;
+  opacity: 1;
+
+  transition: all 550ms ease;
 }
   .userfont__form{
     width: 100%;
@@ -83,7 +94,23 @@
     }
 
 
+.userfont__close-btn{
+  position: absolute;
+  top: 0;
+  right: 0;
 
+  margin: .5rem 1rem;
+  
+  width: 25px;
+  height: 25px;
+}
+  .userfont__close-btn svg path{
+    transition: all 250ms ease;
+  }
+  .userfont__close-btn:hover svg path{
+    fill: #fff;
+    transition: all 250ms ease;
+  }
 
 
 
@@ -96,4 +123,16 @@
   z-index: 50;
   
   backdrop-filter: blur(4px);
+
+  visibility: hidden;
+  opacity: 0;
+
+  transition: all 550ms ease;
+}
+
+.userfont-backgroundblur.visible{
+  visibility: visible;
+  opacity: 1;
+
+  transition: all 550ms ease;
 }

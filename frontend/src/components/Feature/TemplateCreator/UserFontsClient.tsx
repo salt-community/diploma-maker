@@ -1,6 +1,8 @@
 import { AddButton } from '../../MenuItems/Buttons/AddButton';
 import { PublishButton } from '../../MenuItems/Buttons/PublishButton';
 import { SaveButton } from '../../MenuItems/Buttons/SaveButton';
+import { CloseIcon } from '../../MenuItems/Icons/CloseIcon';
+import { CloseWindowIcon } from '../../MenuItems/Icons/CloseWindowIcon';
 import { CloudUploadIcon } from '../../MenuItems/Icons/CloudUploadIcon';
 import { FontUpload } from '../../MenuItems/Inputs/FontUpload';
 import './UserFontsClient.css'
@@ -9,12 +11,14 @@ export type UserFontsClientType = 'addNewFont' | 'manageFonts'
 
 type Props = {
     type: UserFontsClientType;
+    show: boolean;
+    setShowUserFontsClient: (show: boolean) => void;
 }
 
-export const UserFontsClient = ( { type }: Props) => {
+export const UserFontsClient = ( { type, show, setShowUserFontsClient }: Props) => {
   return (
     <>
-        <div className="userfont">
+        <div className={`userfont ${show && ' visible'}`}>
             <form className="userfont__form">
                 <div className="userfont__name-wrapper">
                     <h1 className="userfont__title">Font Name - The Soul of a Font</h1>
@@ -48,8 +52,11 @@ export const UserFontsClient = ( { type }: Props) => {
                     />
                 </div>
             </form>
+            <button onClick={() => {setShowUserFontsClient(false)}} className='userfont__close-btn'>
+                <CloseWindowIcon />
+            </button>
         </div>
-        <div className='userfont-backgroundblur'></div>
+        <div className={`userfont-backgroundblur ${show && ' visible'}`}></div>
     </>
   );
 };
