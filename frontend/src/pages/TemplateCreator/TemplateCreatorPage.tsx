@@ -24,6 +24,7 @@ import { InstructionSlideshow } from "../../components/Content/InstructionSlides
 import { EmailConfigInstructionSlides, templateCreatorInstructionSlides } from "../../data/data";
 import { Size } from "@pdfme/common";
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
+import { UserFontsClient } from "../../components/Feature/TemplateCreator/UserFontsClient";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -595,6 +596,7 @@ useEffect(() => {
             confirmClick={(inputContent?: string) => { confirmationPopupHandler(inputContent) }}
         />
         <InstructionSlideshow show={showInstructionSlideshow}  slides={templateCreatorInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
+        <UserFontsClient type={'addNewFont'}/>
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
                 <section className="templatecreator-page__leftsidebar-menu-section">
