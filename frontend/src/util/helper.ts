@@ -15,7 +15,13 @@ import { initApiEndpoints } from "../services/apiFactory";
 const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
 
-const userFonts: UserFontResponseDto[] = await api.getUserFonts();
+let userFonts: UserFontResponseDto[]
+
+const fetchUserFonts = async () => {
+  userFonts = await api.getUserFonts();
+}
+
+fetchUserFonts();
 
 const userfontObjList = []
 
