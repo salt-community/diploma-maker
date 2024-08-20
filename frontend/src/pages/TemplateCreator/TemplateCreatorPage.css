@@ -89,8 +89,12 @@
 
         .templatecreator-page__leftsidebar-menu-section {
             padding: 3% 7%;
+            padding-top: 15%;
             min-height: fit-content;
             /* border-bottom: 1px solid #ababba5b; */
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
             .templatecreator-page__leftsidebar-menu-section h3 {
@@ -102,15 +106,24 @@
 
             .help-btn {
                 width: 100%;
+
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                transition: all 350ms ease;
-            }
+                flex-direction: column;
 
+                gap: 0rem;
+
+                transition: all 350ms ease;
+            }   
+                .help-btn p{
+                    color: #ababba;
+                    font-size: .8rem;
+                    transition: all 350ms ease;
+                }
                 .help-btn svg {
-                    width: 40px;
-                    height: 40px;
+                    width: 50px;
+                    height: 50px;
                 }
 
                 .help-btn svg path {
@@ -123,6 +136,10 @@
                         fill: #fff !important;
                         transition: fill 350ms ease;
                     }
+                    .help-btn:hover p{
+                        color: #fff;
+                        transition: all 350ms ease;
+                    }
                 
                 @keyframes shiftColors {
                     0% {
@@ -134,6 +151,42 @@
                     100% {
                         fill: #ababba;
                     }
+                }
+        .fonts-btn {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+
+            gap: .5rem;
+
+            transition: all 350ms ease;
+        }
+            .fonts-btn p{
+                color: #ababba;
+                font-size: .8rem;
+                transition: all 350ms ease;
+            }
+            .fonts-btn svg {
+                width: 29px;
+                height: 29px;
+            }
+
+            .fonts-btn svg path {
+                fill: #ababba;
+                animation: shiftColors 1.5s forwards 1s;
+                transition: fill 350ms ease;
+            }
+                .fonts-btn:hover svg path{
+                    animation: none;
+                    fill: #fff !important;
+                    transition: fill 350ms ease;
+                }
+                .fonts-btn:hover p{
+                    color: #fff;
+                    transition: all 350ms ease;
                 }
 
 .templatecreator-page__rightsidebar {

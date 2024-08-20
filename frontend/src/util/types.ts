@@ -205,7 +205,7 @@ export type EmailConfigRequestDto = {
     senderCode: string;
 }
 
-
+// Preview Images
 export type studentImagePreview = {
     studentGuidId: string,
     image: string,
@@ -215,3 +215,20 @@ export type pdfGenerationResponse = {
     pdfFiles: Uint8Array[],
     bundledPdfsDisplayObject: Blob,
 }
+
+//User Fonts
+export type UserFontResponseDto = {
+    name: string;
+    fontType: FontType;
+    fileName: string;
+    file?: Blob;
+    fileUrl?: string;
+}
+
+export type UserFontRequestDto = {
+    Name: string;
+    FontType: FontType;
+    File: Blob | null;
+}
+
+export type FontType = 'Regular' | 'Bold' | 'Italic';
