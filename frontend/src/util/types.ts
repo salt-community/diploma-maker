@@ -215,3 +215,13 @@ export type pdfGenerationResponse = {
     pdfFiles: Uint8Array[],
     bundledPdfsDisplayObject: Blob,
 }
+
+export type UserFontResponseDto = {
+    name: string;
+    fontType: FontType;
+    fileName: string;
+    file?: Blob;
+    fileUrl?: string;
+}
+
+export type FontType = 'Regular' | 'Bold' | 'Italic';
