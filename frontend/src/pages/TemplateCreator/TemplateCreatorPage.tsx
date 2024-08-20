@@ -5,7 +5,7 @@ import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse, UserFontRequestDto, XYPosition} from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { cloneDeep, delay, getFontsData, getPdfDimensions, getPlugins } from "../../util/helper";
+import { cloneDeep, delay, getFontsData, getPdfDimensions, getPlugins, refreshUserFonts } from "../../util/helper";
 import { makeTemplateInput } from "../../templates/baseTemplate";
 import { PDFDocument } from "pdf-lib";
 import { SaveButton, SaveButtonType,} from "../../components/MenuItems/Buttons/SaveButton";
@@ -590,7 +590,9 @@ useEffect(() => {
     setShowUserFontsClient(false);
     customAlert('loading', 'Adding New Font...', '')
     try {
-      postUserFonts(userFonts)
+      await postUserFonts(userFonts)
+      customAlert('loading', 'Reloading Fonts...', '')
+      await refreshUserFonts();
       customAlert('success', `Successfully added font ${userFonts[0].Name} to cloud`, '')
     } catch (error) {
       customAlert('fail', 'Failed adding new font.', `${error}`)

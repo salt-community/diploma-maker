@@ -224,9 +224,6 @@ for (let i = 0; i < userFonts.length; i++) {
   })
 }
 
-console.log(fontObjList);
-
-
 export const getFontsData = async () => {
   const fontDataList = await Promise.all(
     fontObjList.map(async (font) => {
@@ -246,6 +243,25 @@ export const getFontsData = async () => {
     (acc, font) => ({ ...acc, [font.label]: font }),
     {} as Font
   );
+};
+
+
+export const refreshUserFonts = async () => {
+    const refreshedUserFonts: UserFontResponseDto[] = await api.getUserFonts();
+
+    refreshedUserFonts.forEach((newFont) => {
+      const fontExists = fontObjList.some(font => font.label === newFont.fileName);
+      
+      if (!fontExists) {
+        fontObjList.push({
+          fallback: false,
+          label: newFont.fileName,
+          url: newFont.fileUrl,
+        });
+      }
+    });
+
+    await getFontsData();
 };
 
 export const readFile = (
