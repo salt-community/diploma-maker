@@ -62,7 +62,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [pdfSize, setPdfSize] = useState<Size>();
 
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
-  const [showUserFontsClient, setShowUserFontsClient] = useState<boolean>(true);
+  const [showUserFontsClient, setShowUserFontsClient] = useState<boolean>(false);
   const { loadingMessage } = useLoadingMessage();
 
   const [firstRun, setFirstRun] = useState<boolean>(true)
@@ -586,6 +586,17 @@ useEffect(() => {
     return canvasSize
   }
 
+  const postUserFontsHandler = async (userFonts: UserFontRequestDto[]) => {
+    setShowUserFontsClient(false);
+    customAlert('loading', 'Adding New Font...', '')
+    try {
+      postUserFonts(userFonts)
+      customAlert('success', `Successfully added font ${userFonts[0].Name} to cloud`, '')
+    } catch (error) {
+      customAlert('fail', 'Failed adding new font.', `${error}`)
+    }
+  }
+
   return (
     <main className="templatecreator-page">
         <div className="bg-boundingbox" onClick={() => {setRightSideBarPage(0); saveFieldsHandler();}}></div>
@@ -604,7 +615,7 @@ useEffect(() => {
           show={showUserFontsClient}
           setShowUserFontsClient={setShowUserFontsClient}
           customAlert={customAlert}
-          postUserFonts={postUserFonts}
+          postUserFonts={postUserFontsHandler}
         />
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
