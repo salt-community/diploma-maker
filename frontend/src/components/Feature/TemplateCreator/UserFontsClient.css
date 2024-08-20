@@ -1,0 +1,91 @@
+.userfont{
+  position: fixed;
+  width: 80%;
+  height: 80%;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translateX(-50%) translateY(-50%);
+
+  background-color: #171721;
+  z-index: 100000000;
+}
+  .userfont__form{
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 2%;
+  }
+    .userfont__name-wrapper{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      gap: 1rem;
+    }
+      .userfont__name-wrapper h1{
+        color: #fff;
+        font-size: 1.5rem;
+      }
+      .userfont__name-wrapper input{
+          padding: .3rem 1.5rem;
+          border-radius: 1rem;
+          background-color: #e9e9f9e9;
+          color: #464652;
+          font-weight: 600;
+          text-align: center;
+          transition: all .1s ease;
+      }
+      .userfont__name-wrapper input:focus {
+          outline: 2px solid #0084ff3b;
+          background-color: #e9e9f9;
+          transition: all .1s ease;
+      }
+    .userfont__file-section{
+      width: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+
+      background-color: rgba(255, 0, 0, 0.269);
+    }
+      .userfont__file-wrapper{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+        .userfont__file-section h3{
+          color: #fff;
+        }
+        .userfont__file-section p{
+          color: #ababba;
+        }
+    .userfont__submit-wrapper{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+
+
+
+
+
+.userfont-backgroundblur{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+
+  z-index: 50;
+  
+  backdrop-filter: blur(4px);
+}
