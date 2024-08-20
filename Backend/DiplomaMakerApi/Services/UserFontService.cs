@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services
 {
-    public class UserFontService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService)
+    public class UserFontService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService, IConfiguration configuration, GoogleCloudStorageService googleCloudStorageService)
     {
         private readonly DiplomaMakingContext _context = context;
         private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
+        private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
+        private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
         public async Task<List<UserFont>> GetUserFonts(){
             return await _context.UserFonts
                 .ToListAsync();
@@ -26,7 +28,10 @@ namespace DiplomaMakerApi.Services
             {
                 if(userFont.File != null)
                 {
-                    await _localFileStorageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}");
+                    await ((!_useBlobStorage)
+                        ? _localFileStorageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}")
+                        : _googleCloudStorageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}"));
+                        
                     newFonts.Add(new UserFont(){
                         Name = userFont.Name,
                         FontType = userFont.FontType,
