@@ -24,5 +24,11 @@ namespace DiplomaMakerApi.Controllers
             var userFonts = await _userFontService.GetUserFonts();
             return _mapper.Map<List<UserFontResponseDto>>(userFonts);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<UserFontsResponseDto>> PostUserFonts(UserFontRequestsDto userFonts)
+        {
+            return Ok();
+        }
     }
 }
