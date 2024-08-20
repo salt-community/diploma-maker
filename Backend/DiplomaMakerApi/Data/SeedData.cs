@@ -88,36 +88,6 @@ public static class SeedData
             var students = new List<Student>{student1, student2, student3, student4, student5};
             _context.AddRange(students);
             _context.SaveChanges();
-
-            var userFonts = new List<UserFont>(){
-                new UserFont(){
-                    Name = "Arimo",
-                    FontType = FontType.regular,
-                },
-                new UserFont(){
-                    Name = "Arimo",
-                    FontType = FontType.bold,
-                },
-                new UserFont(){
-                    Name = "Arimo",
-                    FontType = FontType.italic,
-                },
-                new UserFont(){
-                    Name = "Muriza",
-                    FontType = FontType.regular,
-                },
-                new UserFont(){
-                    Name = "Muriza",
-                    FontType = FontType.bold,
-                },
-                new UserFont(){
-                    Name = "Muriza",
-                    FontType = FontType.italic,
-                }
-            };
-
-            _context.AddRange(userFonts);
-            _context.SaveChanges();
         }
     }
 }
