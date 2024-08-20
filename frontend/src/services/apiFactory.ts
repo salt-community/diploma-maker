@@ -6,7 +6,7 @@ import { getHistoryByVerificationCode, getHistorySnapshots, makeActiveHistorySna
 import { deleteStudentById, getStudentById, getStudentByVerificationCode, getStudentsByKeyword, updateSingleStudent } from "./studentService";
 import { deleteTemplateById, getAllTemplates, getTemplateById, postTemplate, putTemplate } from "./templateService";
 import { getAllTracks } from "./trackService";
-import { getUserFonts } from "./userFontService";
+import { getUserFonts } from "./UserFontService";
 
 export const initApiEndpoints = (apiBaseUrl: string) => {
     return {
