@@ -2,7 +2,7 @@ import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import "./TemplateCreatorPage.css";
 import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 //@ts-ignore
-import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse, XYPosition} from "../../util/types";
+import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse, UserFontRequestDto, XYPosition} from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
 import { cloneDeep, delay, getFontsData, getPdfDimensions, getPlugins } from "../../util/helper";
@@ -33,9 +33,10 @@ type Props = {
   updateTemplate: (id: number, templateRequest: TemplateRequest) => Promise<TemplateResponse>;
   deleteTemplate: (templateRequest: number) => Promise<void>;
   customAlertProps: CustomAlertPopupProps;
+  postUserFonts: (userFontsRequestsDto: UserFontRequestDto[]) => void;
 };
 
-export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate, customAlertProps }: Props) => {
+export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate, customAlertProps, postUserFonts }: Props) => {
   const [templateData, setTemplateData] = useState<any[]>([]);
   const [currentTemplate, setCurrentTemplate] = useState<any | null>(null);
 
@@ -603,6 +604,7 @@ useEffect(() => {
           show={showUserFontsClient}
           setShowUserFontsClient={setShowUserFontsClient}
           customAlert={customAlert}
+          postUserFonts={postUserFonts}
         />
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">

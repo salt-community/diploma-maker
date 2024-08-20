@@ -14,10 +14,10 @@ type Props = {
     show: boolean;
     setShowUserFontsClient: (show: boolean) => void;
     customAlert: (alertType: PopupType, title: string, content: string) => void;
+    postUserFonts: (userFontsRequestsDto: UserFontRequestDto[]) => void;
 }
 
-export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAlert }: Props) => {
-    const [fontName, setFontName] = useState<string>("");
+export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAlert, postUserFonts }: Props) => {
     const [fonts, setFonts] = useState<UserFontRequestDto[]>([
         {
             Name: '',
@@ -35,18 +35,15 @@ export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAler
             File: null
         },
     ]);
-    
-    const submitHandler = (event: React.FormEvent) => {
-        event.preventDefault();
-        if(!fonts[0].File){
-            customAlert('message',"Normal Font Required!",`Normal Font Field is required.`);
-            return
-        }
-        setFonts(prevFonts => {
-            return prevFonts.map(f => ({...f, Name: fontName}))
-        });
 
-        console.log(fonts);
+    const submitHandler = async (event: React.FormEvent) => {
+        event.preventDefault();
+        if (!fonts[0].File) {
+            customAlert('message', "Normal Font Required!", `Normal Font Field is required.`);
+            return;
+        }
+
+        postUserFonts(fonts);
     }
 
     const setFileAtIndex = (file: File, index: number) => {
@@ -75,8 +72,13 @@ export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAler
                             required
                             className="userfont__input"
                             type="text"
-                            value={fontName}
-                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFontName(event.target.value)}
+                            value={fonts[0].Name}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                const newName = event.target.value;
+                                setFonts(prevFonts => {
+                                    return prevFonts.map(f => ({ ...f, Name: newName }));
+                                });
+                            }}
                         />
                     </div>
                     <div className="userfont__file-section">
