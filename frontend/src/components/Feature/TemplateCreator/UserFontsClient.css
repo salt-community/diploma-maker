@@ -9,7 +9,7 @@
   transform: translateX(-50%) translateY(-50%);
 
   background-color: #171721;
-  z-index: 100000000;
+  z-index: 500;
 
   visibility: hidden;
   opacity: 0;

@@ -228,7 +228,7 @@ export type UserFontResponseDto = {
 export type UserFontRequestDto = {
     Name: string;
     FontType: FontType;
-    File: Blob;
+    File: Blob | null;
 }
 
 export type FontType = 'Regular' | 'Bold' | 'Italic';

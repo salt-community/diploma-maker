@@ -9,9 +9,11 @@ type Props = {
   setFileAdded?: (added: boolean) => void;
   reset?: boolean;
   setReset?: (value: boolean) => void;
+  removeThisFile?: () => void;
+  required?: boolean;
 }
 
-export const FontUpload = ({ fileResult, setFileAdded, reset, setReset }: Props) => {
+export const FontUpload = ({ fileResult, setFileAdded, reset, setReset, removeThisFile, required }: Props) => {
   const [isFileValid, setIsFileValid] = useState<boolean | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
 
@@ -52,7 +54,8 @@ export const FontUpload = ({ fileResult, setFileAdded, reset, setReset }: Props)
   }, [fileResult, setFileAdded]);
 
   const removeFile = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();  // Prevent triggering the file selection popup
+    e.stopPropagation();
+    removeThisFile();
     setFileName(null);
     setIsFileValid(null);
     if (setFileAdded) {

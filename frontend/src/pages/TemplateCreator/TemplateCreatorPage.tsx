@@ -602,6 +602,7 @@ useEffect(() => {
           type={'addNewFont'}
           show={showUserFontsClient}
           setShowUserFontsClient={setShowUserFontsClient}
+          customAlert={customAlert}
         />
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
