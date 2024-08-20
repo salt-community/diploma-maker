@@ -14,7 +14,7 @@ namespace DiplomaMakerApi.Dtos.UserFont
                     return Name;
                 }
                 else{
-                    return $"{Name}-{FontType}";
+                    return $"{Name}-{FontType}.woff";
                 }
             }
         }
