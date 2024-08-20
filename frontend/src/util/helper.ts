@@ -17,6 +17,17 @@ const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffe
 
 const userFonts: UserFontResponseDto[] = await api.getUserFonts();
 
+const userfontObjList = []
+
+for (let i = 0; i < userFonts.length; i++) {
+  const newFont = userFonts[i];
+  userfontObjList.push({
+    fallback: false,
+    label: newFont.fileName,
+    url: newFont.fileUrl,
+  })
+}
+
 const fontObjList = [
   {
     fallback: true,
@@ -215,18 +226,26 @@ const fontObjList = [
   },
 ];
 
-for (let i = 0; i < userFonts.length; i++) {
-  const newFont = userFonts[i];
-  fontObjList.push({
-    fallback: false,
-    label: newFont.fileName,
-    url: newFont.fileUrl,
-  })
-}
+const allFontsList = [...fontObjList, ...userfontObjList];
+
+export const logFontMimeTypes = async () => {
+  await Promise.all(
+    allFontsList.map(async (font) => {
+      try {
+        const response = await fetch(font.url, { method: 'HEAD' });
+        const contentType = response.headers.get('Content-Type');
+
+        console.log(`Font: ${font.label}, MIME type: ${contentType}`);
+      } catch (error) {
+        console.error(`Failed to fetch MIME type for ${font.label}:`, error);
+      }
+    })
+  );
+};
 
 export const getFontsData = async () => {
   const fontDataList = await Promise.all(
-    fontObjList.map(async (font) => {
+    allFontsList.map(async (font) => {
       if (!fontCache.has(font.label)) {
         let data = await getFontFromIndexedDB(font.label);
         if (!data) {

@@ -18,6 +18,7 @@ export const getUserFonts = async (apiUrl: string): Promise<UserFontResponseDto[
         for (let i = 0; i < data.length; i++) {
             // data[i].file = await getFontPreviewImage(apiUrl, data[i].name, data[i].fontType)
             data[i].fileUrl = `${apiUrl}/api/Blob/UserFonts/${data[i].name}?fontType=${data[i].fontType}`;
+            // data[i].fileUrl = `${apiUrl}/api/Blob/UserFonts/fonts/${data[i].name}.woff`;
         }
 
         return data;

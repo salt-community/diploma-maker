@@ -154,27 +154,21 @@ namespace DiplomaMakerApi.Controllers
             }   
         }  
 
-        [HttpGet("UserFonts/{fontName}")]
-        public async Task<IActionResult> GetPreviewImage(string fontName, FontType fontType)
+        [HttpGet("UserFonts/{fontName}"), HttpHead("UserFonts/{fontName}")]
+        public async Task<IActionResult> GetFonts(string fontName, FontType fontType)
         {
-            var fontNameUsed = string.Empty;
-            if(fontType == FontType.regular){
-                fontNameUsed = $"{fontName}";
-            }
-            else{
-                fontNameUsed = $"{fontName}-{fontType}";
-            }
+            var fontFileName = $"{fontName}-{fontType}";
+            var fontNameUsed = fontType == FontType.regular ? $"{fontName}" : $"{fontName}-{fontType}";
             var fonts = await GetFontBlob($"{fontNameUsed}.woff", $"UserFonts/{fontName}");
             return fonts;
         }
-
         private async Task<IActionResult> GetFontBlob(string filename, string subDirectory)
         {
             filename = Path.GetFileName(filename);
 
             if (!filename.EndsWith(".woff", StringComparison.OrdinalIgnoreCase))
             {
-                return BadRequest("Invalid file type.");
+                return BadRequest("Invalid file type. Only .woff files are supported.");
             }
 
             if (!_useBlobStorage)
