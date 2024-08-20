@@ -1,5 +1,7 @@
 import { AddButton } from '../../MenuItems/Buttons/AddButton';
 import { PublishButton } from '../../MenuItems/Buttons/PublishButton';
+import { SaveButton } from '../../MenuItems/Buttons/SaveButton';
+import { CloudUploadIcon } from '../../MenuItems/Icons/CloudUploadIcon';
 import { FontUpload } from '../../MenuItems/Inputs/FontUpload';
 import './UserFontsClient.css'
 
@@ -37,8 +39,13 @@ export const UserFontsClient = ( { type }: Props) => {
                     </div>
                 </div>
                 <div className="userfont__submit-wrapper">
-                    <button className="userfont__submit-button">Submit Your New Font!</button>
-                    <AddButton text='Submit Your New Font!' onClick={() => {}}/>
+                    <SaveButton 
+                        classNameOverride="userfont__submit-button" 
+                        saveButtonType={'normal'} 
+                        textfield={'Submit Your New Font!'}
+                        onClick={() => {}}
+                        customIcon={<CloudUploadIcon />} 
+                    />
                 </div>
             </form>
         </div>

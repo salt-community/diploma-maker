@@ -28,7 +28,7 @@
       align-items: center;
       justify-content: center;
 
-      gap: 1rem;
+      gap: 2.5rem;
     }
       .userfont__name-wrapper h1{
         color: #fff;
@@ -49,26 +49,34 @@
           transition: all .1s ease;
       }
     .userfont__file-section{
-      width: 50%;
+      width: 75%;
 
       display: flex;
       align-items: center;
       justify-content: space-evenly;
-
-      background-color: rgba(255, 0, 0, 0.269);
     }
       .userfont__file-wrapper{
+        min-width: 250px;
+        width: 15vw;
+        height: 25vh;
+
         display: flex;
         flex-direction: column;
         align-items: center;
+        
       }
         .userfont__file-section h3{
-          color: #fff;
+          margin-bottom: 4%;
+          color: #d7d7e2;
+          font-size: 1.3rem;
         }
         .userfont__file-section p{
+          margin-top: .5rem;
           color: #ababba;
         }
     .userfont__submit-wrapper{
+      height: 25%;
+
       display: flex;
       align-items: center;
       justify-content: center;

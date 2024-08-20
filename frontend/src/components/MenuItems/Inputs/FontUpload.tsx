@@ -79,15 +79,15 @@ export const FontUpload = ({ fileResult, setFileAdded, reset, setReset }: Props)
   });
 
   return (
-    <div className={`fileupload-wrapper ${fileName ? 'file-active' : ''}`} {...getRootProps()}>
+    <div className={`fontupload-wrapper ${fileName ? 'file-active' : ''}`} {...getRootProps()}>
       <input {...getInputProps()} />
-      <div className={'fileupload__icon-wrapper ' + (fileName ? 'file-active' : isDragActive ? (isFileValid ? 'valid' : 'invalid') : 'normal')}>
+      <div className={'fontupload__icon-wrapper ' + (fileName ? 'file-active' : isDragActive ? (isFileValid ? 'valid' : 'invalid') : 'normal')}>
         {!reset ? <RefreshIcon /> : <AddIcon />}
       </div>
-      <h4 className='fileupload_title'>
+      <h4 className='fontupload_title'>
         {fileName ? `${fileName}` : isDragActive ? (isFileValid ? 'Valid File' : 'Invalid File Format') : 'Add new PDF'}
       </h4>
-      <p className='fileupload_section'>
+      <p className='fontupload_section'>
         {fileName ? 'Change file' : isDragActive ? (isFileValid ? 'Drag & drop' : 'File should be .pdf') : 'Drag & drop .pdf'}
       </p>
     </div>
