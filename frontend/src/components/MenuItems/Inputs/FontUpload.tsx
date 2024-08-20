@@ -3,7 +3,6 @@ import { useDropzone } from 'react-dropzone';
 import './FontUpload.css';
 import { RefreshIcon } from '../Icons/RefreshIcon';
 import { AddIcon } from '../Icons/AddIcon';
-import { PDFDocument } from 'pdf-lib';
 
 type Props = {
   fileResult: (file: File) => void;
@@ -26,20 +25,20 @@ export const FontUpload = ({ fileResult, setFileAdded, reset, setReset }: Props)
     }
   }, [reset, setReset]);
 
+  const validateFile = (file: File) => {
+    const validExtensions = ['.woff'];
+    const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+    return validExtensions.includes(fileExtension);
+  };
+
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
-    const isValid = file.type === 'application/pdf';
-  
+    const isValid = validateFile(file);
+
     setIsFileValid(isValid);
-  
+
     if (isValid) {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
-  
-      const resizedPdfBytes = await pdfDoc.save();
-      const resizedFile = new File([resizedPdfBytes], file.name, { type: file.type });
-  
-      fileResult(resizedFile);
+      fileResult(file);
       setFileName(file.name);
       if (setFileAdded) {
         setFileAdded(true);
@@ -52,17 +51,25 @@ export const FontUpload = ({ fileResult, setFileAdded, reset, setReset }: Props)
     }
   }, [fileResult, setFileAdded]);
 
+  const removeFile = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();  // Prevent triggering the file selection popup
+    setFileName(null);
+    setIsFileValid(null);
+    if (setFileAdded) {
+      setFileAdded(false);
+    }
+  };
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: {
-      'application/pdf': ['.pdf']
-    },
     multiple: false,
     onDragEnter: (event) => {
       const files = event.dataTransfer.items;
       if (files.length > 0) {
-        const fileType = files[0].type;
-        setIsFileValid(fileType === 'application/pdf');
+        const file = files[0].getAsFile();
+        if (file) {
+          setIsFileValid(validateFile(file));
+        }
       }
     },
     onDragLeave: () => {
@@ -72,8 +79,10 @@ export const FontUpload = ({ fileResult, setFileAdded, reset, setReset }: Props)
       event.preventDefault();
       const files = event.dataTransfer.items;
       if (files.length > 0) {
-        const fileType = files[0].type;
-        setIsFileValid(fileType === 'application/pdf');
+        const file = files[0].getAsFile();
+        if (file) {
+          setIsFileValid(validateFile(file));
+        }
       }
     }
   });
@@ -85,11 +94,14 @@ export const FontUpload = ({ fileResult, setFileAdded, reset, setReset }: Props)
         {!reset ? <RefreshIcon /> : <AddIcon />}
       </div>
       <h4 className='fontupload_title'>
-        {fileName ? `${fileName}` : isDragActive ? (isFileValid ? 'Valid File' : 'Invalid File Format') : 'Add new PDF'}
+        {fileName ? `${fileName}` : isDragActive ? (isFileValid ? 'Valid File' : 'Invalid File Format') : 'Add new File'}
       </h4>
       <p className='fontupload_section'>
-        {fileName ? 'Change file' : isDragActive ? (isFileValid ? 'Drag & drop' : 'File should be .pdf') : 'Drag & drop .pdf'}
+        {fileName ? 'Change file' : isDragActive ? (isFileValid ? 'Drag & drop' : 'File should be .woff') : 'Drag & drop .woff'}
       </p>
+      {fileName && (
+        <button className="delete-btn" onClick={removeFile}>Undo</button>
+      )}
     </div>
   );
 };
