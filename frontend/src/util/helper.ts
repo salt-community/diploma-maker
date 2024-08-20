@@ -16,23 +16,21 @@ const api = initApiEndpoints(import.meta.env.VITE_API_URL);
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
 
 let userFonts: UserFontResponseDto[]
+let userfontObjList = []
 
 const fetchUserFonts = async () => {
   userFonts = await api.getUserFonts();
+  for (let i = 0; i < userFonts.length; i++) {
+    const newFont = userFonts[i];
+    userfontObjList.push({
+      fallback: false,
+      label: newFont.fileName,
+      url: newFont.fileUrl,
+    })
+  }
 }
 
 fetchUserFonts();
-
-const userfontObjList = []
-
-for (let i = 0; i < userFonts.length; i++) {
-  const newFont = userFonts[i];
-  userfontObjList.push({
-    fallback: false,
-    label: newFont.fileName,
-    url: newFont.fileUrl,
-  })
-}
 
 const fontObjList = [
   {
