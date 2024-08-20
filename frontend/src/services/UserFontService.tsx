@@ -1,4 +1,4 @@
-import { FontType, UserFontResponseDto } from "../util/types";
+import { FontType, UserFontRequestDto, UserFontResponseDto } from "../util/types";
 
 export const getUserFonts = async (apiUrl: string): Promise<UserFontResponseDto[]> => {
     try {
@@ -50,3 +50,28 @@ export const getFontPreviewImage = async (apiUrl: string, fontName: string, font
     }
 }
 
+export const postUserFonts = async (apiUrl: string, userFonts: UserFontRequestDto[]): Promise<UserFontResponseDto[]> => {
+    try {
+      const formData = new FormData();
+      userFonts.forEach((font, index) => {
+        formData.append(`UserFontRequests[${index}].Name`, font.Name);
+        formData.append(`UserFontRequests[${index}].FontType`, font.FontType);
+        formData.append(`UserFontRequests[${index}].File`, font.File);
+      });
+  
+      const response = await fetch(`${apiUrl}/api/UserFonts`, {
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data: UserFontResponseDto[] = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error posting user fonts:', error);
+      throw error;
+    }
+  };
