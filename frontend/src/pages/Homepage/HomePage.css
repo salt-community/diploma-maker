@@ -10,7 +10,7 @@
 .homepage__header {
   text-align: center;
   color: #eee5e5;
-  padding-bottom: 25px;
+  padding-bottom: .5rem;
 }
 
 .homepage__header h1 {
@@ -18,12 +18,30 @@
   margin-bottom: 1rem;
 }
 
-.homepage__grid {
+/* .homepage__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 2.4rem;
   width: 100%;
   max-width: 1430px;
+} */
+.homepage__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  grid-gap: 2.4rem;
+  width: 100%;
+  max-width: 1430px;
+}
+@media screen and (max-width: 1920px){
+  .homepage__grid{
+    width: 70%;
+  }
+}
+
+.homepage__grid > * {
+  aspect-ratio: 15 / 11;
+  width: 100%;
 }
 
 .homepage__card:hover .homepage__card-header svg .fill,
