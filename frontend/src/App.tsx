@@ -20,7 +20,7 @@ import { useBGLoadingMessage } from "./components/Contexts/LoadingBGMessageConte
 import { AlertPopup } from "./components/MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "./components/Hooks/useCustomAlert";
 import { ClerkAuthGuard } from "./components/Feature/Auth/ClerkAuthGaurd";
-import { ClerkProvider, SignIn, useAuth } from "@clerk/clerk-react";
+import { ClerkProvider, SignIn, useAuth, useUser } from "@clerk/clerk-react";
 import SignInPage from "./pages/LoginPortal/sign-in";
 
 export default function App() {
@@ -42,6 +42,9 @@ export default function App() {
 
     return jwtToken
   }
+
+  const { user } = useUser();
+
   const api = initApiEndpoints({
     endpointUrl: import.meta.env.VITE_API_URL,
     token: getToken()
@@ -187,12 +190,10 @@ export default function App() {
     setTracks(tracks);
   }
 
-  const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+  
 
   return (
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-
-      
+    <>
       <Routes>
         {/* PUBLIC ROUTES */}
         <Route path="/sign-in" element={<SignInPage />} />
@@ -211,8 +212,8 @@ export default function App() {
             </ClerkAuthGuard>
           }
         >
-          <Route path="/" element={<HomePage />} />
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<HomePage userName={user?.fullName}/>} />
+          <Route path="/home" element={<HomePage userName={user?.fullName}/>} />
           <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
           <Route path="bootcamp-management" element={<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
           <Route path="overview" element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
@@ -225,7 +226,7 @@ export default function App() {
 
 
       <Footer />
-    </ClerkProvider>
+    </>
   );
 }
 

@@ -6,22 +6,68 @@ import { CogWheelIcon } from '../../components/MenuItems/Icons/CogWheelIcon';
 import { HistoryIcon } from '../../components/MenuItems/Icons/HistoryIcon';
 import { DescriptionCard } from '../../components/Feature/DescriptionCard/DescriptionCard';
 import { DashBoardIcon } from '../../components/MenuItems/Icons/DashBoardIcon';
+import { ReadmeIcon } from '../../components/MenuItems/Icons/ReadmeIcon';
+import { InstructionSlideshow } from '../../components/Content/InstructionSlideshow';
+import { EmailConfigInstructionSlides } from '../../data/data';
 
-const shortDescriptionArray = [
-  "Make your own template to use for your diplomas.",
-  "User-friendly interface. Easy to customize for different needs.",
-  "Plently of different fonts, colors and styles to choose from."
-];
+// const shortDescriptionArray = [
+//   "Make your own template to use for your diplomas.",
+//   "User-friendly interface. Easy to customize for different needs.",
+//   "Plently of different fonts, colors and styles to choose from."
+// ];
 
+type Props = {
+  userName: string | null;
+}
 
-type hoverObjectType = 'templateCreator' | 'pdfMaking' | 'BootcampOptions' | 'History' |'Dashboard'
+type hoverObjectType = 'TemplateCreator' | 'PDFcreator' | 'BootcampOptions' | 'History' |'Dashboard'
 
-export function HomePage() {
+export function HomePage( { userName }: Props ) {
   const [hoverObject, setHoverObject] = useState<hoverObjectType | null>();
+  const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
+
+  const HomePageContent = [
+    {
+      title: 'TemplateCreator',
+      description: 'Make your own template to use for your diploma generation.',
+      icon: TemplateCreatorIcon,
+      link: '/template-creator',
+    },
+    {
+      title: 'PDFcreator',
+      description: 'Generate your diplomas. This is where all the magic happens.',
+      icon: PdfCreatorIcon,
+      link: '/pdf-creator',
+    },
+    {
+      title: 'BootcampOptions',
+      description: 'Add your bootcamp to generate diplomas from.',
+      icon: CogWheelIcon,
+      link: '/bootcamp-management',
+    },
+    {
+      title: 'History',
+      description: 'History of past diploma generations & applied templates.',
+      icon: HistoryIcon,
+      link: '/history',
+    },
+    {
+      title: 'Dashboard',
+      description: 'Send Emails to students & Overview of all generated diplomas.',
+      icon: DashBoardIcon,
+      link: '/overview',
+    },
+    {
+      title: 'Readme',
+      description: 'If you need guidance.',
+      icon: ReadmeIcon,
+      onClick: () => setShowInstructionSlideshow(true),
+    },
+  ]
 
   useEffect(() => {
     const styleOverride = document.createElement('style');
-    styleOverride.innerHTML = hoverObject === 'templateCreator' ?
+    styleOverride.innerHTML = hoverObject === 'TemplateCreator' ?
       `
         .navbar__item.template-creator{
           color: #fff;
@@ -33,7 +79,7 @@ export function HomePage() {
             stroke: #fff;
         }
     `
-      : hoverObject === 'pdfMaking' ?
+      : hoverObject === 'PDFcreator' ?
         `
         .navbar__item.pdf-creator{
           color: #fff;
@@ -92,50 +138,28 @@ export function HomePage() {
 
 
   return (
-    <div className="homepage">
-      <header className="homepage__header">
-        <h1>Welcome Admin!</h1>
-        <h4>It is <strong>Strongly recommended</strong> to read the instructions for each part of the application.</h4>
-      </header>
-      <div className="homepage__grid">
-        <DescriptionCard 
-          description={shortDescriptionArray}
-          title="TemplateCreator"
-          icon={TemplateCreatorIcon}
-          onMouseEnter={() => setHoverObject('templateCreator')}
-          onMouseLeave={() => setHoverObject(null)}
-        />
-        <DescriptionCard
-          description={shortDescriptionArray}
-          title="PDFcreator"
-          icon={PdfCreatorIcon}
-
-          onMouseEnter={() => setHoverObject('pdfMaking')}
-          onMouseLeave={() => setHoverObject(null)}
-        />
-        <DescriptionCard
-          description={shortDescriptionArray}
-          title="BootcampOptions"
-          icon={CogWheelIcon}
-         
-          onMouseEnter={() => setHoverObject('BootcampOptions')}
-          onMouseLeave={() => setHoverObject(null)}
-        />
-        <DescriptionCard
-          description={shortDescriptionArray}
-          title="History"
-          icon={HistoryIcon}
-          onMouseEnter={() => setHoverObject('History')}
-          onMouseLeave={() => setHoverObject(null)}
-        />
-        <DescriptionCard
-          description={shortDescriptionArray}
-          title="Dashboard"
-          icon={DashBoardIcon}
-          onMouseEnter={() => setHoverObject('Dashboard')}
-          onMouseLeave={() => setHoverObject(null)}
-        />
+    <>
+      <div className="homepage">
+        <header className="homepage__header">
+          <h1>Welcome <span>{userName ?? ''}!</span></h1>
+          {/* <h4>It is <strong>Strongly recommended</strong> to read the instructions for each part of the application.</h4> */}
+        </header>
+        <div className="homepage__grid">
+          {HomePageContent.map(content => (
+            <DescriptionCard 
+              key={`card__${content.title}`}
+              description={content.description}
+              title={content.title}
+              link={content.link}
+              icon={content.icon}
+              onMouseEnter={() => setHoverObject(content.title as hoverObjectType)}
+              onMouseLeave={() => setHoverObject(null)}
+              onClick={content.onClick ? content.onClick : undefined}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+      <InstructionSlideshow show={showInstructionSlideshow}  slides={EmailConfigInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
+    </>
   );
 }
