@@ -6,7 +6,7 @@ import { FontUpload } from '../../MenuItems/Inputs/FontUpload';
 import './UserFontsClient.css';
 import { UserFontRequestDto } from '../../../util/types';
 import { CustomAlertPopupProps, PopupType } from '../../MenuItems/Popups/AlertPopup';
-import { refreshUserFonts } from '../../../util/helper';
+import { getFontsData, refreshUserFonts } from '../../../util/helper';
 
 export type UserFontsClientType = 'addNewFont' | 'manageFonts';
 
@@ -43,6 +43,12 @@ export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAler
         event.preventDefault();
         if (!fonts[0].File) {
             customAlert('message', "Normal Font Required!", `Normal Font Field is required.`);
+            return;
+        }
+
+        const existingFonts = await getFontsData();
+        if (existingFonts[fonts[0].Name]) {
+            customAlert('message', "Font name already exists!", `Pick a different font name.`);
             return;
         }
 
