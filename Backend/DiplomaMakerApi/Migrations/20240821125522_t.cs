@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiplomaMakerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class @new : Migration
+    public partial class t : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -44,6 +44,20 @@ namespace DiplomaMakerApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tracks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserFonts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    FontType = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserFonts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -265,6 +279,9 @@ namespace DiplomaMakerApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Students");
+
+            migrationBuilder.DropTable(
+                name: "UserFonts");
 
             migrationBuilder.DropTable(
                 name: "Bootcamps");

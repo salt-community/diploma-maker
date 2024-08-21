@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using AutoMapper;
 using DiplomaMakerApi.Dtos.PreviewImage;
+using DiplomaMakerApi.Dtos.UserFont;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -152,10 +153,49 @@ namespace DiplomaMakerApi.Controllers
                 }
 
                 return File(fileBytes, "application/webp", filename);
+            }   
+        }  
+
+        [HttpGet("UserFonts/{fontName}"), HttpHead("UserFonts/{fontName}")]
+        public async Task<IActionResult> GetFonts(string fontName, FontType fontType)
+        {
+            var fontFileName = $"{fontName}-{fontType}";
+            var fontNameUsed = fontType == FontType.regular ? $"{fontName}" : $"{fontName}-{fontType}";
+            var fonts = await GetFontBlob($"{fontNameUsed}.woff", $"UserFonts/{fontName}");
+            return fonts;
+        }
+        private async Task<IActionResult> GetFontBlob(string filename, string subDirectory)
+        {
+            filename = Path.GetFileName(filename);
+
+            if (!filename.EndsWith(".woff", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Invalid file type. Only .woff files are supported.");
             }
 
+            if (!_useBlobStorage)
+            {
+                var filePath = await _localFileStorageService.GetFilePath(filename, subDirectory);
 
-            
-        }   
+                if (filePath == null)
+                {
+                    return NotFound("File not found.");
+                }
+
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                return File(fileBytes, "font/woff", filename);
+            }
+            else
+            {
+                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename, subDirectory);
+
+                if (fileBytes == null)
+                {
+                    return NotFound("File not found.");
+                }
+
+                return File(fileBytes, "font/woff", filename);
+            }   
+        }
     }
 }

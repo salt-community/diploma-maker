@@ -2,7 +2,7 @@ import { Routes, Route, Outlet, } from "react-router-dom";
 import DiplomaMaking from './pages/Diplomaking/DiplomaMaking';
 import { VertificationPage } from "./pages/Verifcation/VerificationPage";
 import { useEffect, useState } from "react";
-import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto, StudentResponse, Student, apiEndpointParameters } from "./util/types";
+import { BootcampRequest, BootcampResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateRequest, TemplateResponse, FormDataUpdateRequest, TrackResponse, MakeActiveSnapshotRequestDto, StudentResponse, Student, UserFontRequestDto, apiEndpointParameters } from "./util/types";
 import { OverviewPage } from "./pages/Overview/OverviewPage";
 import { NavBar } from "./pages/shared/Navbar/Navbar";
 import BootcampManagement from "./pages/BootcampManagement/BootcampManagement";
@@ -197,6 +197,11 @@ export default function App() {
     setTracks(tracks);
   }
 
+  // User Fonts Endpoint
+  const postUserFonts = async (userFontsRequestsDto: UserFontRequestDto[]) => {
+    await api.postUserFonts(userFontsRequestsDto);
+  }
+
   return (
 
     <>
@@ -227,7 +232,7 @@ export default function App() {
           <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
           <Route path="bootcamp-management" element={<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
           <Route path="overview" element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
-          <Route path="template-creator" element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
+          <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate} customAlertProps={{ showPopup, customAlert, closeAlert }} postUserFonts={postUserFonts}/>} />
           <Route path="history" element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
           <Route path="*" element={<ErrorPage code={404} />} />
         </Route>

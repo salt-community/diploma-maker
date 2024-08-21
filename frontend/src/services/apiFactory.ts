@@ -1,4 +1,4 @@
-import { apiEndpointParameters, BootcampRequest, EmailSendRequest, FormDataUpdateRequest, MakeActiveSnapshotRequestDto, studentImagePreview, StudentUpdateRequestDto, TemplateRequest } from "../util/types";
+import {apiEndpointParameters, BootcampRequest, EmailSendRequest, FormDataUpdateRequest, MakeActiveSnapshotRequestDto, studentImagePreview, StudentUpdateRequestDto, TemplateRequest, UserFontRequestDto } from "../util/types";
 import { deleteBootcampById, getBootcampById, getBootcamps, postBootcamp, updateBootcamp, UpdateBootcampWithNewFormdata, updateBundledStudentsPreviewImages, updateStudentPreviewImage } from "./bootcampService";
 import { postEmail } from "./emailService";
 import { getTemplatePdfFile } from "./fileService";
@@ -6,6 +6,7 @@ import { getHistoryByVerificationCode, getHistorySnapshots, makeActiveHistorySna
 import { deleteStudentById, getStudentById, getStudentByVerificationCode, getStudentsByKeyword, updateSingleStudent } from "./studentService";
 import { deleteTemplateById, getAllTemplates, getTemplateById, postTemplate, putTemplate } from "./templateService";
 import { getAllTracks } from "./trackService";
+import { getUserFonts, postUserFonts } from "./UserFontService";
 
 export const initApiEndpoints = (apiParameters: apiEndpointParameters) => {
     return {
@@ -46,5 +47,10 @@ export const initApiEndpoints = (apiParameters: apiEndpointParameters) => {
         getHistorySnapshots: (setLoadingMessage: (message: string) => void) => getHistorySnapshots(apiParameters, setLoadingMessage),
         getHistoryByVerificationCode: (verificationCode: string) => getHistoryByVerificationCode(apiParameters, verificationCode),
         makeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => makeActiveHistorySnapShot(apiParameters, snapshotUpdateRequest),
+
+        // User Font Endpoint
+        getUserFonts: () => getUserFonts(apiParameters.endpointUrl),
+        postUserFonts: (userFonts: UserFontRequestDto[]) => postUserFonts(apiParameters.endpointUrl, userFonts),
+
     };
 };
