@@ -68,6 +68,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [firstRun, setFirstRun] = useState<boolean>(true)
   const [resetFileUpload, setResetFileUpload] = useState<boolean>(false);
 
+  const [refreshFonts, setRefreshFonts] = useState<boolean>(false);
+
   const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
     positionX: null,
     positionY: null,
@@ -618,6 +620,8 @@ useEffect(() => {
           setShowUserFontsClient={setShowUserFontsClient}
           customAlert={customAlert}
           postUserFonts={postUserFontsHandler}
+          setRefreshFonts={setRefreshFonts}
+          refreshFonts={refreshFonts}
         />
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
@@ -718,6 +722,7 @@ useEffect(() => {
                                 setFont={(value: string) => setFontHandler(value)}
                                 fontColor={templateStyle.fontColor}
                                 setFontColor={(value: string) => setFontColorHandler(value)}
+                                refreshFonts={refreshFonts}
                             />
                         </section>
                         <section className="templatecreator-page__rightsidebar-menu-section">

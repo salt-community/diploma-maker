@@ -49,8 +49,8 @@ export const initApiEndpoints = (apiParameters: apiEndpointParameters) => {
         makeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => makeActiveHistorySnapShot(apiParameters, snapshotUpdateRequest),
 
         // User Font Endpoint
-        getUserFonts: () => getUserFonts(apiParameters.endpointUrl),
-        postUserFonts: (userFonts: UserFontRequestDto[]) => postUserFonts(apiParameters.endpointUrl, userFonts),
+        getUserFonts: () => getUserFonts(apiParameters),
+        postUserFonts: (userFonts: UserFontRequestDto[]) => postUserFonts(apiParameters, userFonts),
 
     };
 };

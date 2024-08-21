@@ -1,8 +1,8 @@
-import { FontType, UserFontRequestDto, UserFontResponseDto } from "../util/types";
+import { apiEndpointParameters, FontType, UserFontRequestDto, UserFontResponseDto } from "../util/types";
 
-export const getUserFonts = async (apiUrl: string): Promise<UserFontResponseDto[]> => {
+export const getUserFonts = async (apiParameters: apiEndpointParameters): Promise<UserFontResponseDto[]> => {
     try {
-        const response = await fetch(`${apiUrl}/api/UserFonts`, {
+        const response = await fetch(`${apiParameters.endpointUrl}/api/UserFonts`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ export const getUserFonts = async (apiUrl: string): Promise<UserFontResponseDto[
 
         for (let i = 0; i < data.length; i++) {
             // data[i].file = await getFontPreviewImage(apiUrl, data[i].name, data[i].fontType)
-            data[i].fileUrl = `${apiUrl}/api/Blob/UserFonts/${data[i].name}?fontType=${data[i].fontType}`;
+            data[i].fileUrl = `${apiParameters.endpointUrl}/api/Blob/UserFonts/${data[i].name}?fontType=${data[i].fontType}`;
             // data[i].fileUrl = `${apiUrl}/api/Blob/UserFonts/fonts/${data[i].name}.woff`;
         }
 
@@ -29,9 +29,9 @@ export const getUserFonts = async (apiUrl: string): Promise<UserFontResponseDto[
 }
 
 
-export const getFontPreviewImage = async (apiUrl: string, fontName: string, fontType: FontType): Promise<Blob> => {
+export const getFontPreviewImage = async (apiParameters: apiEndpointParameters, fontName: string, fontType: FontType): Promise<Blob> => {
     try {
-        const response = await fetch(`${apiUrl}/api/Blob/UserFonts/${fontName}?fontType=${fontType}`, {
+        const response = await fetch(`${apiParameters.endpointUrl}/api/Blob/UserFonts/${fontName}?fontType=${fontType}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export const getFontPreviewImage = async (apiUrl: string, fontName: string, font
     }
 }
 
-export const postUserFonts = async (apiUrl: string, userFonts: UserFontRequestDto[]): Promise<UserFontResponseDto[]> => {
+export const postUserFonts = async (apiParameters: apiEndpointParameters, userFonts: UserFontRequestDto[]): Promise<UserFontResponseDto[]> => {
     try {
       const formData = new FormData();
       userFonts.forEach((font, index) => {
@@ -60,7 +60,7 @@ export const postUserFonts = async (apiUrl: string, userFonts: UserFontRequestDt
         formData.append(`UserFontRequests[${index}].File`, font.File);
       });
   
-      const response = await fetch(`${apiUrl}/api/UserFonts`, {
+      const response = await fetch(`${apiParameters.endpointUrl}/api/UserFonts`, {
         method: 'POST',
         body: formData,
       });

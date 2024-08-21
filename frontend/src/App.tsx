@@ -15,7 +15,7 @@ import { HistoryPage } from "./pages/History/HistoryPage";
 import { HomePage } from "./pages/Homepage/HomePage"
 import { Footer } from "./components/Footer/Footer";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
-import { generatePreviewImages } from "./util/helper";
+import { generatePreviewImages, getToken } from "./util/helper";
 import { useBGLoadingMessage } from "./components/Contexts/LoadingBGMessageContext";
 import { AlertPopup } from "./components/MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "./components/Hooks/useCustomAlert";
@@ -33,19 +33,7 @@ export default function App() {
 
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert()
-
-  const getToken = (): string => {
-    const jwtToken = document.cookie
-      .split('; ')
-      .find(c => c.includes('__session'))
-      ?.split('=')[1] || '';
-    console.log(jwtToken)
-    return jwtToken
-  }
-
   const { user, isSignedIn } = useUser();
-
-
 
   async function getBootcampsFromBackend() {
     const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);
@@ -54,10 +42,12 @@ export default function App() {
     setTracks(Tracks)
   }
   
-  let api;
+  let api = initApiEndpoints({
+    endpointUrl: import.meta.env.VITE_API_URL,
+    token: getToken()
+  });
 
   useEffect(() => {
-
    if(isSignedIn){
       api = initApiEndpoints({
       endpointUrl: import.meta.env.VITE_API_URL,

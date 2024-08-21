@@ -6,6 +6,7 @@ import { FontUpload } from '../../MenuItems/Inputs/FontUpload';
 import './UserFontsClient.css';
 import { UserFontRequestDto } from '../../../util/types';
 import { CustomAlertPopupProps, PopupType } from '../../MenuItems/Popups/AlertPopup';
+import { refreshUserFonts } from '../../../util/helper';
 
 export type UserFontsClientType = 'addNewFont' | 'manageFonts';
 
@@ -15,9 +16,11 @@ type Props = {
     setShowUserFontsClient: (show: boolean) => void;
     customAlert: (alertType: PopupType, title: string, content: string) => void;
     postUserFonts: (userFontsRequestsDto: UserFontRequestDto[]) => void;
+    setRefreshFonts: (refresh: boolean) => void;
+    refreshFonts: boolean;
 }
 
-export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAlert, postUserFonts }: Props) => {
+export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAlert, postUserFonts, setRefreshFonts, refreshFonts }: Props) => {
     const [fonts, setFonts] = useState<UserFontRequestDto[]>([
         {
             Name: '',
@@ -43,7 +46,9 @@ export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAler
             return;
         }
 
-        postUserFonts(fonts);
+        await postUserFonts(fonts);
+        await refreshUserFonts();
+        setRefreshFonts(!refreshFonts)
     }
 
     const setFileAtIndex = (file: File, index: number) => {

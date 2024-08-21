@@ -1,12 +1,14 @@
 using AutoMapper;
 using DiplomaMakerApi.Dtos.UserFont;
 using DiplomaMakerApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomaMakerApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UserFontsController : ControllerBase
     {
         private readonly UserFontService _userFontService;
