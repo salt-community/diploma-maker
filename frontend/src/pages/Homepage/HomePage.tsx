@@ -17,6 +17,7 @@ export function HomePage( { userName, signedIn = false }: Props ) {
   const [hoverObject, setHoverObject] = useState<hoverObjectType | null>();
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
 
+  homePageLoggedInData[homePageLoggedInData.length - 1].onClick = () => setShowInstructionSlideshow(true);
   const HomePageContent = signedIn ? homePageLoggedInData : homePageLoggedOutData;
 
   useEffect(() => {

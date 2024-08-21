@@ -21,36 +21,41 @@ export const homePageLoggedInData = [
       description: 'Make your own template to use for your diploma generation.',
       icon: TemplateCreatorIcon,
       link: '/template-creator',
+      onClick: null,
     },
     {
       title: 'PDFcreator',
       description: 'Generate your diplomas. This is where all the magic happens.',
       icon: PdfCreatorIcon,
       link: '/pdf-creator',
+      onClick: null,
     },
     {
       title: 'BootcampOptions',
       description: 'Add your bootcamp to generate diplomas from.',
       icon: CogWheelIcon,
       link: '/bootcamp-management',
+      onClick: null,
     },
     {
       title: 'History',
       description: 'History of past diploma generations & applied templates.',
       icon: HistoryIcon,
       link: '/history',
+      onClick: null,
     },
     {
       title: 'Dashboard',
       description: 'Send Emails to students & Overview of all generated diplomas.',
       icon: DashBoardIcon,
       link: '/overview',
+      onClick: null,
     },
     {
       title: 'Readme',
       description: 'If you need guidance.',
       icon: ReadmeIcon,
-      onClick: () => setShowInstructionSlideshow(true),
+      onClick: null,
     },
   ]
 
