@@ -39,7 +39,7 @@ export default function App() {
       .split('; ')
       .find(c => c.includes('__session'))
       ?.split('=')[1] || '';
-
+    console.log(jwtToken)
     return jwtToken
   }
   const api = initApiEndpoints({
@@ -192,8 +192,11 @@ export default function App() {
   return (
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
 
-      
+      <div className="app-wrapper" style={{
+        minHeight: "100vh",
+      }}>
       <Routes>
+     
         {/* PUBLIC ROUTES */}
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/verify" element={<VerificationInputPage />} />
@@ -211,18 +214,17 @@ export default function App() {
             </ClerkAuthGuard>
           }
         >
-          <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
           <Route path="bootcamp-management" element={<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
           <Route path="overview" element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
           <Route path="template-creator" element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
           <Route path="history" element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
+          <Route path="*" element={<ErrorPage code={404} />} />
         </Route>
 
-        <Route path="*" element={<ErrorPage code={404} />} />
       </Routes>
-
+      </div>
 
       <Footer />
     </ClerkProvider>
