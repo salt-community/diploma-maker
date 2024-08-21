@@ -67,7 +67,7 @@ export function HomePage({ userName, signedIn = false }: Props) {
         </div>
         {!signedIn &&
           <div className='homepage_sign-in-section'>
-            <p className="homepage_login-text">Not just <strong>ANY</strong> user? </p>
+            <p className="homepage_login-text">Looking to do more with diplomas?</p>
             <div className="homepage_login-button_container">
               <AddButtonSimple onClick={() => { nav('/sign-in') }} text={"Login"} classNameOverride='add-button-HomePage' />
             </div>
