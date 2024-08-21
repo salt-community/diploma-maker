@@ -4,7 +4,7 @@ import { generate } from "@pdfme/generator";
 import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
-import { BootcampResponse, pdfGenerationResponse, SaltData, Size, Student, studentImagePreview, StudentResponse, TemplateResponse, UserFontResponseDto } from "./types";
+import { BootcampResponse, pdfGenerationResponse, SaltData, Size, Student, studentImagePreview, StudentResponse, TemplateResponse, TrackResponse, UserFontResponseDto } from "./types";
 import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
@@ -788,20 +788,36 @@ const getFontFromIndexedDB = async (label: string): Promise<ArrayBuffer | null> 
 };
 
 
-export const generateVerificationCode = (length = 5) => {
-  const guid = URL.createObjectURL(new Blob()).slice(-36).replace(/-/g, '');
+export const generateVerificationCode = (tracks: TrackResponse[]): string => {
 
+  const guid = URL.createObjectURL(new Blob()).slice(-36).replace(/-/g, '')
   const chars = guid.split('');
-
   const random = () => Math.floor(Math.random() * chars.length);
 
-  let code = '';
-  for (let i = 0; i < length; i++) {
+  while (true) {
+    let code = '';
+    for (let i = 0; i < 5; i++) {
       code += chars[random()];
-  }
+    }
 
-  return code;
-}
+    let codeExists = false;
+
+    tracks.forEach(track => {
+      track.bootcamps.forEach(bootcamp => {
+        bootcamp.students.forEach(student => {
+          if (student.verificationCode === code) {
+            codeExists = true; 
+          }
+        });
+      });
+    });
+
+    if (!codeExists) {
+      return code;
+    }
+  }
+};
+
 
 
 const dateoptions: Intl.DateTimeFormatOptions = {

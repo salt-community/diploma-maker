@@ -90,7 +90,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     const dataFromFile = await ParseFileData(file, null, customAlert);
     const updatedStudents = dataFromFile.map(student => ({
       ...student,
-      verificationCode: generateVerificationCode()
+      verificationCode: generateVerificationCode(tracks)
     }));
     setStudents(updatedStudents);
 
@@ -309,7 +309,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           <div className="diploma-making-form__student-data__items-wrapper">
             {students && 
               <TagsInput
-                selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
+                selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode(tracks) })))}
                 tags={students.map(student => student.name)}
                 setPage={(idx: number) => setSelectedStudentIndex(idx)}
               />
