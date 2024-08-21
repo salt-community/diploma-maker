@@ -40,13 +40,18 @@ builder.Services.AddControllers().AddJsonOptions(opt => {
 
 builder.Services.AddClerkApiClient(config =>
 {
-    config.SecretKey = builder.Configuration["Clerk:SecretKey"]!;
+    config.SecretKey = builder.Environment.IsDevelopment() 
+        ? builder.Configuration["Clerk:SecretKey"]! 
+        : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(x =>
     {
-        x.Authority = builder.Configuration["Clerk:Authority"];
+        x.Authority = builder.Environment.IsDevelopment() 
+            ? builder.Configuration["Clerk:Authority"] 
+            : Environment.GetEnvironmentVariable("Clerk:Authority")!;
+            
         x.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateAudience = false,
@@ -57,7 +62,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             OnTokenValidated = context =>
             {
                 var azp = context.Principal?.FindFirstValue("azp");
-                if (string.IsNullOrEmpty(azp) || !azp.Equals(builder.Configuration["Clerk:AuthorizedParty"]))
+                if (string.IsNullOrEmpty(azp) || !azp.Equals(builder.Environment.IsDevelopment() 
+                        ? builder.Configuration["Clerk:AuthorizedParty"] 
+                        : Environment.GetEnvironmentVariable("Clerk:AuthorizedParty")!))
                     context.Fail("AZP Claim is invalid or missing");
 
                 return Task.CompletedTask;
