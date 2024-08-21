@@ -9,7 +9,7 @@ export function ClerkAuthGuard({ children }) {
         {children}
       </SignedIn>
       <SignedOut>
-        <Navigate to="/sign-in" replace />
+        <Navigate to="/Home" replace />
       </SignedOut>
     </>
 

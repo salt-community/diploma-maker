@@ -43,7 +43,7 @@ export default function App() {
     return jwtToken
   }
 
-  const { user } = useUser();
+  const { user, isSignedIn } = useUser();
 
   const api = initApiEndpoints({
     endpointUrl: import.meta.env.VITE_API_URL,
@@ -190,35 +190,33 @@ export default function App() {
     setTracks(tracks);
   }
 
-  
-
   return (
 
     <>
       <div className="app-wrapper" style={{
         minHeight: "100vh",
       }}>
+      {isSignedIn && <NavBar />}
       <Routes>
-     
+
         {/* PUBLIC ROUTES */}
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/verify" element={<VerificationInputPage />} />
         <Route path="/verify/:verificationCode" element={<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode} />} />
+        <Route path="/" element={<HomePage userName={user?.fullName} signedIn={isSignedIn}/>} />
+        <Route path="/home" element={<HomePage userName={user?.fullName} signedIn={isSignedIn}/>} />
 
          {/* PRIVATE ROUTES */}
         <Route
           path="/"
           element={
             <ClerkAuthGuard>
-              <NavBar />
               <AlertPopup title={loadingMessage} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
               <AlertPopup title={loadingBGMessage} text={BGpopupContent[1]} popupType={BGpopupType} show={BGshowPopup} onClose={BGcloseAlert} leftAligned={true} />
               <Outlet />
             </ClerkAuthGuard>
           }
         >
-          <Route path="/" element={<HomePage userName={user?.fullName}/>} />
-          <Route path="/home" element={<HomePage userName={user?.fullName}/>} />
           <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
           <Route path="bootcamp-management" element={<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
           <Route path="overview" element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />

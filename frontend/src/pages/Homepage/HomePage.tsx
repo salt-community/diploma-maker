@@ -9,6 +9,8 @@ import { DashBoardIcon } from '../../components/MenuItems/Icons/DashBoardIcon';
 import { ReadmeIcon } from '../../components/MenuItems/Icons/ReadmeIcon';
 import { InstructionSlideshow } from '../../components/Content/InstructionSlideshow';
 import { EmailConfigInstructionSlides } from '../../data/data';
+import { VerifyIcon } from '../../components/MenuItems/Icons/VerifyIcon';
+import { Link } from 'react-router-dom';
 
 // const shortDescriptionArray = [
 //   "Make your own template to use for your diplomas.",
@@ -18,15 +20,26 @@ import { EmailConfigInstructionSlides } from '../../data/data';
 
 type Props = {
   userName: string | null;
+  signedIn: boolean;
 }
 
 type hoverObjectType = 'TemplateCreator' | 'PDFcreator' | 'BootcampOptions' | 'History' |'Dashboard'
 
-export function HomePage( { userName }: Props ) {
+export function HomePage( { userName, signedIn = false }: Props ) {
   const [hoverObject, setHoverObject] = useState<hoverObjectType | null>();
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
 
-  const HomePageContent = [
+  const HomePageContent = !signedIn ? 
+  [
+    {
+      title: 'Verify Your Diploma',
+      description: 'Verify the Authenticity of your diploma!',
+      icon: VerifyIcon,
+      link: '/verify',
+    },
+  ]
+  :
+  [
     {
       title: 'TemplateCreator',
       description: 'Make your own template to use for your diploma generation.',
@@ -67,8 +80,18 @@ export function HomePage( { userName }: Props ) {
 
   useEffect(() => {
     const styleOverride = document.createElement('style');
+    const gridOverride = document.createElement('style');
+    gridOverride.innerHTML = signedIn 
+    ? `` : `
+        .homepage__grid > * {
+          aspect-ratio: 15 / 11;
+          width: 100%;
+          grid-column: span 1 / 3;
+        }
+    `
     styleOverride.innerHTML = hoverObject === 'TemplateCreator' ?
       `
+        
         .navbar__item.template-creator{
           color: #fff;
         }
@@ -127,14 +150,16 @@ export function HomePage( { userName }: Props ) {
           fill: #fff;
       }
       `
-                : ``;
+      : ``;
     document.head.appendChild(styleOverride);
+    document.head.appendChild(gridOverride);
 
     return () => {
       document.head.removeChild(styleOverride);
+      document.head.removeChild(gridOverride);
     };
 
-  }, [hoverObject]);
+  }, [hoverObject, signedIn]);
 
 
   return (
@@ -158,6 +183,7 @@ export function HomePage( { userName }: Props ) {
             />
           ))}
         </div>
+        {!signedIn && <Link to={'/sign-in'}>Sign In</Link>}
       </div>
       <InstructionSlideshow show={showInstructionSlideshow}  slides={EmailConfigInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
     </>
