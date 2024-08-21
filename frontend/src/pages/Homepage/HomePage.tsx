@@ -10,7 +10,8 @@ import { ReadmeIcon } from '../../components/MenuItems/Icons/ReadmeIcon';
 import { InstructionSlideshow } from '../../components/Content/InstructionSlideshow';
 import { EmailConfigInstructionSlides } from '../../data/data';
 import { VerifyIcon } from '../../components/MenuItems/Icons/VerifyIcon';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AddButtonSimple } from '../../components/MenuItems/Buttons/AddButtonSimple';
 
 // const shortDescriptionArray = [
 //   "Make your own template to use for your diplomas.",
@@ -23,66 +24,67 @@ type Props = {
   signedIn: boolean;
 }
 
-type hoverObjectType = 'TemplateCreator' | 'PDFcreator' | 'BootcampOptions' | 'History' |'Dashboard'
+type hoverObjectType = 'TemplateCreator' | 'PDFcreator' | 'BootcampOptions' | 'History' | 'Dashboard'
 
-export function HomePage( { userName, signedIn = false }: Props ) {
+export function HomePage({ userName, signedIn = false }: Props) {
   const [hoverObject, setHoverObject] = useState<hoverObjectType | null>();
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
+  const nav = useNavigate();
 
-  const HomePageContent = !signedIn ? 
-  [
-    {
-      title: 'Verify Your Diploma',
-      description: 'Verify the Authenticity of your diploma!',
-      icon: VerifyIcon,
-      link: '/verify',
-    },
-  ]
-  :
-  [
-    {
-      title: 'TemplateCreator',
-      description: 'Make your own template to use for your diploma generation.',
-      icon: TemplateCreatorIcon,
-      link: '/template-creator',
-    },
-    {
-      title: 'PDFcreator',
-      description: 'Generate your diplomas. This is where all the magic happens.',
-      icon: PdfCreatorIcon,
-      link: '/pdf-creator',
-    },
-    {
-      title: 'BootcampOptions',
-      description: 'Add your bootcamp to generate diplomas from.',
-      icon: CogWheelIcon,
-      link: '/bootcamp-management',
-    },
-    {
-      title: 'History',
-      description: 'History of past diploma generations & applied templates.',
-      icon: HistoryIcon,
-      link: '/history',
-    },
-    {
-      title: 'Dashboard',
-      description: 'Send Emails to students & Overview of all generated diplomas.',
-      icon: DashBoardIcon,
-      link: '/overview',
-    },
-    {
-      title: 'Readme',
-      description: 'If you need guidance.',
-      icon: ReadmeIcon,
-      onClick: () => setShowInstructionSlideshow(true),
-    },
-  ]
+  const HomePageContent = !signedIn ?
+    [
+      {
+        title: 'Verify Your Diploma',
+        description: 'Verify the Authenticity of your diploma!',
+        icon: VerifyIcon,
+        link: '/verify',
+      },
+    ]
+    :
+    [
+      {
+        title: 'TemplateCreator',
+        description: 'Make your own template to use for your diploma generation.',
+        icon: TemplateCreatorIcon,
+        link: '/template-creator',
+      },
+      {
+        title: 'PDFcreator',
+        description: 'Generate your diplomas. This is where all the magic happens.',
+        icon: PdfCreatorIcon,
+        link: '/pdf-creator',
+      },
+      {
+        title: 'BootcampOptions',
+        description: 'Add your bootcamp to generate diplomas from.',
+        icon: CogWheelIcon,
+        link: '/bootcamp-management',
+      },
+      {
+        title: 'History',
+        description: 'History of past diploma generations & applied templates.',
+        icon: HistoryIcon,
+        link: '/history',
+      },
+      {
+        title: 'Dashboard',
+        description: 'Send Emails to students & Overview of all generated diplomas.',
+        icon: DashBoardIcon,
+        link: '/overview',
+      },
+      {
+        title: 'Readme',
+        description: 'If you need guidance.',
+        icon: ReadmeIcon,
+        onClick: () => setShowInstructionSlideshow(true),
+      },
+    ]
 
   useEffect(() => {
     const styleOverride = document.createElement('style');
     const gridOverride = document.createElement('style');
-    gridOverride.innerHTML = signedIn 
-    ? `` : `
+    gridOverride.innerHTML = signedIn
+      ? `` : `
         .homepage__grid > * {
           aspect-ratio: 15 / 11;
           width: 100%;
@@ -138,8 +140,8 @@ export function HomePage( { userName, signedIn = false }: Props ) {
             fill: #fff;
         }
     `
-          : hoverObject === 'Dashboard' ?
-            `
+            : hoverObject === 'Dashboard' ?
+              `
       .navbar__item.overview{
         color: #fff;
       }
@@ -150,7 +152,7 @@ export function HomePage( { userName, signedIn = false }: Props ) {
           fill: #fff;
       }
       `
-      : ``;
+              : ``;
     document.head.appendChild(styleOverride);
     document.head.appendChild(gridOverride);
 
@@ -166,12 +168,12 @@ export function HomePage( { userName, signedIn = false }: Props ) {
     <>
       <div className="homepage">
         <header className="homepage__header">
-          <h1>Welcome <span>{userName ?? ''}!</span></h1>
+          <h1>Welcome <span>{userName ?? "Guest"}!</span></h1>
           {/* <h4>It is <strong>Strongly recommended</strong> to read the instructions for each part of the application.</h4> */}
         </header>
         <div className="homepage__grid">
           {HomePageContent.map(content => (
-            <DescriptionCard 
+            <DescriptionCard
               key={`card__${content.title}`}
               description={content.description}
               title={content.title}
@@ -182,10 +184,17 @@ export function HomePage( { userName, signedIn = false }: Props ) {
               onClick={content.onClick ? content.onClick : undefined}
             />
           ))}
+
         </div>
-        {!signedIn && <Link to={'/sign-in'}>Sign In</Link>}
+        {!signedIn &&
+          <div className='homepage_sign-in-section'>
+            <p className="homepage_login-text">Not just <strong>ANY</strong> user? </p>
+             <div className="homepage_login-button_container">
+             <AddButtonSimple onClick={() => {nav('/sign-in') }} text={"Log in"} classNameOverride='add-button-HomePage' />
+              </div>
+          </div>}
       </div>
-      <InstructionSlideshow show={showInstructionSlideshow}  slides={EmailConfigInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
+      <InstructionSlideshow show={showInstructionSlideshow} slides={EmailConfigInstructionSlides} onClose={() => setShowInstructionSlideshow(false)} />
     </>
   );
 }
