@@ -45,10 +45,7 @@ export default function App() {
 
   const { user, isSignedIn } = useUser();
 
-  const api = initApiEndpoints({
-    endpointUrl: import.meta.env.VITE_API_URL,
-    token: getToken()
-  });
+
 
   async function getBootcampsFromBackend() {
     const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);
@@ -56,14 +53,24 @@ export default function App() {
     const Tracks = await api.getAllTracks(setLoadingMessage)
     setTracks(Tracks)
   }
+  
+  let api;
 
   useEffect(() => {
-    if (!bootcamps) {
-      getBootcampsFromBackend();
-      getTemplates();
-      getTracks();
-    }
-  }, [bootcamps]);
+
+   if(isSignedIn){
+      api = initApiEndpoints({
+      endpointUrl: import.meta.env.VITE_API_URL,
+      token: getToken()
+    });
+         if ( !bootcamps) {
+           getBootcampsFromBackend();
+           getTemplates();
+           getTracks();
+         }
+   }
+
+  }, [bootcamps, isSignedIn]);
 
   const refresh = async () => {
     const newBootcamps = await api.getBootcamps(setLoadingMessage);

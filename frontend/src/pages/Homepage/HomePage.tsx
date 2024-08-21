@@ -48,7 +48,6 @@ export function HomePage({ userName, signedIn = false }: Props) {
       <div className="homepage">
         <header className="homepage__header">
           <h1>Welcome <span>{userName ?? "Guest"}!</span></h1>
-          {/* <h4>It is <strong>Strongly recommended</strong> to read the instructions for each part of the application.</h4> */}
         </header>
         <div className="homepage__grid">
           {HomePageContent.map(content => (
