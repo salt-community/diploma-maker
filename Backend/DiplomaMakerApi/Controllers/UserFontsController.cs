@@ -8,7 +8,7 @@ namespace DiplomaMakerApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    /* [Authorize] */
     public class UserFontsController : ControllerBase
     {
         private readonly UserFontService _userFontService;
