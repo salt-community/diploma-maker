@@ -18,8 +18,12 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 # Set the working directory
 WORKDIR /app
 
-# Copy the published output from the build stage
+# Install libdl and create the symbolic link
+RUN apt-get update && apt-get install -y libdl2 \
+    && ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so \
+    && rm -rf /var/lib/apt/lists/*
 
+# Copy the published output from the build stage
 COPY --from=build /app/out .
 
 RUN mkdir -p /app/Blob/DiplomaPdfs
