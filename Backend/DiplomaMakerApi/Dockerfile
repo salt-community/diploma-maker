@@ -15,6 +15,12 @@ RUN dotnet publish -c Release -o out
 # Runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
+# Install libgdiplus
+RUN apt-get update && \
+    apt-get install -y libgdiplus && \
+    apt-get clean && \
+    ln -s /usr/lib/libgdiplus.so /usr/lib/libgdiplus.so
+
 # Set the working directory
 WORKDIR /app
 

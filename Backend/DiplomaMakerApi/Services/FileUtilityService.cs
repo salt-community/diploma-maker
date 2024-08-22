@@ -4,6 +4,7 @@ using SixLabors.ImageSharp.Processing;
 using Syncfusion.PdfToImageConverter;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
+using System.Drawing;
 
 namespace DiplomaMakerApi.Services
 {
@@ -122,59 +123,51 @@ namespace DiplomaMakerApi.Services
             return Task.FromResult(normalizedPath);
         }
 
-        public async Task<IFormFile> ConvertPdfToPng(string base64String, string fileName)
+        public async Task<IFormFile> ConvertPdfToPng(string base64String, string fileName, ILogger logger)
         {
-            if (string.IsNullOrEmpty(base64String))
-            {
-                _logger.LogError("Base64 string is null or empty.");
-                throw new ArgumentException("Base64 string cannot be null or empty.");
-            }
-            try
-            {
-                byte[] pdfBytes = Convert.FromBase64String(base64String);
+            logger.LogInformation("Starting PDF to PNG conversion process.");
 
-                _logger.LogInformation("PDF bytes successfully converted from base64. Length: {Length}", pdfBytes.Length);
+            byte[] pdfBytes = Convert.FromBase64String(base64String);
+            logger.LogInformation("Converted base64 string to byte array. Length: {Length}", pdfBytes.Length);
 
-                using (MemoryStream pdfStream = new MemoryStream(pdfBytes))
+            using (MemoryStream pdfStream = new MemoryStream(pdfBytes))
+            {
+                logger.LogInformation("Created MemoryStream for PDF. Stream length: {Length}", pdfStream.Length);
+
+                PdfToImageConverter imageConverter = new PdfToImageConverter();
+
+                imageConverter.Load(pdfStream);
+                logger.LogInformation("Loaded PDF into PdfToImageConverter.");
+
+                using (Stream imageStream = imageConverter.Convert(0, false, false))
                 {
-                    PdfToImageConverter imageConverter = new PdfToImageConverter();
-                    _logger.LogInformation("Loaded PDF stream. Starting conversion...");
+                    logger.LogInformation("Converted PDF to image stream. Stream length: {Length}", imageStream.Length);
+                    imageStream.Position = 0;
 
-                    imageConverter.Load(pdfStream);
-
-                    using (Stream imageStream = imageConverter.Convert(0, false, false))
+                    using (MemoryStream pngStream = new MemoryStream())
                     {
-                        _logger.LogInformation("PDF conversion successful. Processing image...");
+                        System.Drawing.Image image = System.Drawing.Image.FromStream(imageStream);
+                        logger.LogInformation("Created image from stream.");
 
-                        imageStream.Position = 0;
+                        image.Save(pngStream, System.Drawing.Imaging.ImageFormat.Png);
+                        logger.LogInformation("Saved image as PNG to memory stream. Stream length: {Length}", pngStream.Length);
+                        pngStream.Position = 0;
 
-                        using (var image = SixLabors.ImageSharp.Image.Load(imageStream))
-                        using (MemoryStream pngStream = new MemoryStream())
+                        var pngFileStream = new MemoryStream(pngStream.ToArray());
+                        logger.LogInformation("Copied PNG stream to new memory stream.");
+                        pngFileStream.Position = 0;
+
+                        IFormFile formFile = new FormFile(pngFileStream, 0, pngFileStream.Length, "image", fileName)
                         {
-                            await image.SaveAsPngAsync(pngStream);
-                            pngStream.Position = 0;
+                            Headers = new HeaderDictionary(),
+                            ContentType = "image/png"
+                        };
 
-                            _logger.LogInformation("PNG image saved successfully. Creating FormFile...");
+                        logger.LogInformation("Created IFormFile object with name {FileName}.", fileName);
 
-                            var pngFileStream = new MemoryStream(pngStream.ToArray());
-                            pngFileStream.Position = 0;
-
-                            IFormFile formFile = new FormFile(pngFileStream, 0, pngFileStream.Length, "image", fileName)
-                            {
-                                Headers = new HeaderDictionary(),
-                                ContentType = "image/png"
-                            };
-
-                            _logger.LogInformation("FormFile created successfully.");
-                            return formFile;
-                        }
+                        return formFile;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while converting PDF to PNG. Exception: {ExceptionMessage}", ex.Message);
-                throw;
             }
         }
 
