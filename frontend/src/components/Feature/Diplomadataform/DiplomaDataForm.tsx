@@ -5,7 +5,7 @@ import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
 import { delay, generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF, openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/helper";
 import './DiplomaDataForm.css';
-import { CustomAlertPopupProps, PopupType } from "../../MenuItems/Popups/AlertPopup";
+import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
@@ -16,6 +16,7 @@ import { ExclusiveCheckBoxGroup } from "../../MenuItems/Inputs/ExclusiveCheckBox
 import { PublishButton } from "../../MenuItems/Buttons/PublishButton";
 import { TagsInput } from "../../TagsInput/TagsInput";
 import { SaveButton } from "../../MenuItems/Buttons/SaveButton";
+import { useCustomAlert } from "../../Hooks/useCustomAlert";
 
 type FormData = {
   optionA: boolean;
@@ -33,10 +34,9 @@ type Props = {
   selectedStudentIndex: number | null;
   setSelectedStudentIndex: (idx: number) => void;
   updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>
-  customAlertProps: CustomAlertPopupProps;
 };
 
-export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlertProps, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex, updateStudentThumbnails }: Props) {
+export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex, updateStudentThumbnails }: Props) {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>();
   const [TrackIndex, setTrackIndex] = useState<number>(0);
@@ -46,7 +46,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [attachedFiles, setAttachedFiles] = useState<{ [key: string]: File | null }>({});
   const [disableNavbar, setDisableNavbar] = useState<boolean>(false);
 
-  const { showPopup, customAlert, closeAlert } = customAlertProps;
+  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
   // Styling for generate popup btn
   const [printActive, setPrintActive] = useState<boolean>(false);
@@ -227,6 +227,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
   return (
     <>
+      <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
       <form className="diploma-making-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="diploma-making-form__select-track diploma-making-form__select-container">
           <label htmlFor="track" className="diploma-making-form__label">

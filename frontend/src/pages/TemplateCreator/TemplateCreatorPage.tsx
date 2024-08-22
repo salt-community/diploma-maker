@@ -32,11 +32,10 @@ type Props = {
   addNewTemplate: (templateRequest: TemplateRequest) => Promise<void>;
   updateTemplate: (id: number, templateRequest: TemplateRequest) => Promise<TemplateResponse>;
   deleteTemplate: (templateRequest: number) => Promise<void>;
-  customAlertProps: CustomAlertPopupProps;
   postUserFonts: (userFontsRequestsDto: UserFontRequestDto[]) => void;
 };
 
-export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate, customAlertProps, postUserFonts }: Props) => {
+export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate, postUserFonts }: Props) => {
   const [templateData, setTemplateData] = useState<any[]>([]);
   const [currentTemplate, setCurrentTemplate] = useState<any | null>(null);
 
@@ -45,7 +44,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   const [rightSideBarPage, setRightSideBarPage] = useState<number>(0);
 
-  const { showPopup, customAlert, closeAlert } = customAlertProps;
+  const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const {showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup} = useCustomConfirmationPopup();
 
   const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
@@ -612,6 +611,13 @@ useEffect(() => {
             abortClick={() => globalAbortHandler()}
             // @ts-ignore
             confirmClick={(inputContent?: string) => { confirmationPopupHandler(inputContent) }}
+        />
+        <AlertPopup
+            title={popupContent[0]}
+            text={popupContent[1]}
+            popupType={popupType}
+            show={showPopup}
+            onClose={closeAlert}
         />
         <InstructionSlideshow show={showInstructionSlideshow}  slides={templateCreatorInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
         <UserFontsClient 

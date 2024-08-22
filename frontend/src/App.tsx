@@ -31,7 +31,7 @@ export default function App() {
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
   const { setBGLoadingMessage, loadingBGMessage } = useBGLoadingMessage();
 
-  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+  // const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert()
   const { user, isSignedIn } = useUser();
 
@@ -222,17 +222,17 @@ export default function App() {
           path="/"
           element={
             <ClerkAuthGuard>
-              <AlertPopup title={loadingMessage} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
+              {/* <AlertPopup title={loadingMessage} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} /> */}
               <AlertPopup title={loadingBGMessage} text={BGpopupContent[1]} popupType={BGpopupType} show={BGshowPopup} onClose={BGcloseAlert} leftAligned={true} />
               <Outlet />
             </ClerkAuthGuard>
           }
         >
-          <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
-          <Route path="bootcamp-management" element={<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
-          <Route path="overview" element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
-          <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate} customAlertProps={{ showPopup, customAlert, closeAlert }} postUserFonts={postUserFonts}/>} />
-          <Route path="history" element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} tracks={tracks} customAlertProps={{ showPopup, customAlert, closeAlert }} />} />
+          <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} />} />
+          <Route path="bootcamp-management" element={<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} />} />
+          <Route path="overview" element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} />} />
+          <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate} postUserFonts={postUserFonts}/>} />
+          <Route path="history" element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} tracks={tracks} />} />
           <Route path="*" element={<ErrorPage code={404} />} />
         </Route>
 

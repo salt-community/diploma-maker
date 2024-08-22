@@ -7,17 +7,15 @@ type Props = {
     getHistory: () => void;
     changeActiveHistorySnapShot: (snapshotUpdateRequest: MakeActiveSnapshotRequestDto) => void;
     tracks: TrackResponse[] | null;
-    customAlertProps: CustomAlertPopupProps;
 };
 
-export function HistoryPage({ getHistory, changeActiveHistorySnapShot, tracks, customAlertProps }: Props) {
+export function HistoryPage({ getHistory, changeActiveHistorySnapShot, tracks }: Props) {
     return (
         <main className='historypage'>
             <HistoryManageTable 
                 getHistory={getHistory} 
                 changeActiveHistorySnapShot={changeActiveHistorySnapShot} 
                 tracks={tracks} 
-                customAlertProps={customAlertProps}
             />
         </main>
     );

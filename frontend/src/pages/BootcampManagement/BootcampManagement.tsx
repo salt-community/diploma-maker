@@ -8,10 +8,9 @@ type Props = {
   addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   updateBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   tracks: TrackResponse[];
-  customAlertProps: CustomAlertPopupProps;
 }
 
-export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks, customAlertProps }: Props) {
+export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks }: Props) {
   return (
     <BootcampManageTable 
       bootcamps={bootcamps} 
@@ -19,7 +18,6 @@ export default function BootcampManagement({ bootcamps, deleteBootcamp, addNewBo
       addNewBootcamp={addNewBootcamp} 
       updateBootcamp={updateBootcamp} 
       tracks={tracks} 
-      customAlertProps={customAlertProps}
     />
   );
 }

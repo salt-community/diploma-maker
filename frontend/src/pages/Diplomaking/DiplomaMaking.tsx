@@ -20,11 +20,10 @@ type Props = {
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => Promise<BootcampResponse>
   setLoadingMessage: (message: string) => void;
   updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>;
-  customAlertProps: CustomAlertPopupProps;
 };
 
 
-export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails, customAlertProps }: Props) {
+export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails }: Props) {
 
   /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
   const [saltData, setSaltData] = useState<SaltData | null>();
@@ -70,7 +69,6 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
               UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata}
               templates={templates}
               updateStudentThumbnails={updateStudentThumbnails}
-              customAlertProps={customAlertProps}
               setLoadingMessage={setLoadingMessage}
             /*  fullscreen={IsFullScreen} */
             />

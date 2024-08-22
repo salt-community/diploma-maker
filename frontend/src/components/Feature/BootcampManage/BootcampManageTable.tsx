@@ -19,7 +19,6 @@ type Props = {
   addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   updateBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   tracks: TrackResponse[];
-  customAlertProps: CustomAlertPopupProps;
 }
 
 type SortOrder =
@@ -27,16 +26,15 @@ type SortOrder =
   'graduationdate-ascending' | 'graduationdate-descending' |
   'track-ascending' | 'track-descending';
 
-export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks, customAlertProps  }: Props) {
+export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks  }: Props) {
   const { register, handleSubmit, setValue, watch, reset } = useForm();
   const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
+  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1920 ? 5 : 11);
   const [sortOrder, setSortOrder] = useState<SortOrder>('graduationdate-descending');
   const [sortingChanged, setSortingChanged] = useState(false);
   const [filteredBootcamps, setFilteredBootcamps] = useState<BootcampResponse[] | null>(bootcamps);
-
-  const { showPopup, customAlert, closeAlert } = customAlertProps;
 
   useEffect(() => {
     const handleResize = () => {
@@ -172,6 +170,7 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
 
   return (
     <>
+      <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} />
       <ConfirmationPopup
         title={confirmationPopupContent[0]}
         text={confirmationPopupContent[1]}
