@@ -15,11 +15,18 @@ RUN dotnet publish -c Release -o out
 # Runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
+# Install required native libraries
+RUN apt-get update && apt-get install -y \
+    libgdiplus \
+    libc6-dev \
+    libx11-dev \
+    libdl2 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set the working directory
 WORKDIR /app
 
 # Copy the published output from the build stage
-
 COPY --from=build /app/out .
 
 RUN mkdir -p /app/Blob/DiplomaPdfs
