@@ -52,7 +52,7 @@ export default function App() {
       if (!localStorage.getItem('isFirstLogin')) {
         setTimeout(() => {
           localStorage.setItem('isFirstLogin', 'false');
-        }, 3000);
+        }, 2000);
       }
     } else {
       localStorage.removeItem('isFirstLogin');
