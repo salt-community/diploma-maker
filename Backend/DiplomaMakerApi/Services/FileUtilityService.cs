@@ -128,14 +128,19 @@ namespace DiplomaMakerApi.Services
             {
                 byte[] pdfBytes = Convert.FromBase64String(base64String);
 
+                _logger.LogInformation("PDF bytes successfully converted from base64. Length: {Length}", pdfBytes.Length);
+
                 using (MemoryStream pdfStream = new MemoryStream(pdfBytes))
                 {
                     PdfToImageConverter imageConverter = new PdfToImageConverter();
+                    _logger.LogInformation("Loaded PDF stream. Starting conversion...");
 
                     imageConverter.Load(pdfStream);
 
                     using (Stream imageStream = imageConverter.Convert(0, false, false))
                     {
+                        _logger.LogInformation("PDF conversion successful. Processing image...");
+
                         imageStream.Position = 0;
 
                         using (var image = SixLabors.ImageSharp.Image.Load(imageStream))
@@ -143,6 +148,8 @@ namespace DiplomaMakerApi.Services
                         {
                             await image.SaveAsPngAsync(pngStream);
                             pngStream.Position = 0;
+
+                            _logger.LogInformation("PNG image saved successfully. Creating FormFile...");
 
                             var pngFileStream = new MemoryStream(pngStream.ToArray());
                             pngFileStream.Position = 0;
@@ -153,6 +160,7 @@ namespace DiplomaMakerApi.Services
                                 ContentType = "image/png"
                             };
 
+                            _logger.LogInformation("FormFile created successfully.");
                             return formFile;
                         }
                     }
