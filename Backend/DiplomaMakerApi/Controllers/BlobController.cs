@@ -79,7 +79,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpPut("UpdateStudentsPreviewImage")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<ActionResult<StudentResponseDto>> UpdateStudentsPreviewImages([FromForm] PreviewImageRequestDto previewImageRequestDto)
         {
             var studentResponse = await _bootcampService.PutStudentPreviewImage(previewImageRequestDto);
@@ -87,7 +87,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpPut("UpdateBundledStudentsPreviewImages")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<ActionResult<List<StudentResponseDto>>> UpdateBundledStudentsPreviewImages([FromForm] PreviewImageRequestsDto previewImageRequestsDto)
         {
             var studentsResponses = await _bootcampService.PutStudentsPreviewImages(previewImageRequestsDto);
