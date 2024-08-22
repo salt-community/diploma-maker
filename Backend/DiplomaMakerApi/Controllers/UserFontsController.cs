@@ -8,7 +8,6 @@ namespace DiplomaMakerApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    /* [Authorize] */
     public class UserFontsController : ControllerBase
     {
         private readonly UserFontService _userFontService;
@@ -21,6 +20,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<UserFontResponseDto>>> GetUserFonts()
         {
             var userFonts = await _userFontService.GetUserFonts();
@@ -28,6 +28,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult<List<UserFontResponseDto>>> PostUserFonts([FromForm] UserFontRequestsDto userFonts)
         {
             var newFonts = await _userFontService.PostUserFonts(userFonts);

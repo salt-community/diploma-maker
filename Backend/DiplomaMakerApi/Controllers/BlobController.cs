@@ -11,7 +11,6 @@ namespace DiplomaMakerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   /*  [Authorize] */
     public class BlobController : Controller
     {
         private readonly LocalFileStorageService _localFileStorageService;
@@ -39,18 +38,21 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpGet("{filename}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetFile(string filename)
         {
             return await GetPdfBlob(filename);
         }
 
         [HttpGet("DiplomaPdfs/{filename}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetDiplomaPdf(string filename)
         {
             return await GetPdfBlob(filename);
         }
 
         [HttpGet("download-all-templatebackgrounds")]
+        [Authorize]
         public async Task<IActionResult> DownloadAllFiles()
         {
             if (!_useBlobStorage)
@@ -63,18 +65,21 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpGet("ImagePreview/{filename}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetPreviewImage(string filename)
         {
             return await GetImageBlob(filename, "ImagePreview");
         }
 
         [HttpGet("ImagePreviewLQIP/{filename}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetLQPreviewImage(string filename)
         {
             return await GetImageBlob(filename, "ImagePreviewLQIP");
         }
 
         [HttpPut("UpdateStudentsPreviewImage")]
+        [Authorize]
         public async Task<ActionResult<StudentResponseDto>> UpdateStudentsPreviewImages([FromForm] PreviewImageRequestDto previewImageRequestDto)
         {
             var studentResponse = await _bootcampService.PutStudentPreviewImage(previewImageRequestDto);
@@ -82,6 +87,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpPut("UpdateBundledStudentsPreviewImages")]
+        [Authorize]
         public async Task<ActionResult<List<StudentResponseDto>>> UpdateBundledStudentsPreviewImages([FromForm] PreviewImageRequestsDto previewImageRequestsDto)
         {
             var studentsResponses = await _bootcampService.PutStudentsPreviewImages(previewImageRequestsDto);
@@ -157,6 +163,7 @@ namespace DiplomaMakerApi.Controllers
         }  
 
         [HttpGet("UserFonts/{fontName}"), HttpHead("UserFonts/{fontName}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetFonts(string fontName, FontType fontType)
         {
             var fontFileName = $"{fontName}-{fontType}";
