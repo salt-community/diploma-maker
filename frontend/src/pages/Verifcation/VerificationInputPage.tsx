@@ -32,7 +32,7 @@ export function VerificationInputPage() {
             <div className='verificationinput-container'>
                 <div className='verificationinput__title-wrapper'>
                     <div className='verificationinput__logo-wrapper'>
-                        <img src="https://talent.salt.dev/logoBlack.png" alt="" />
+                        <img src="/icons/logoBlack.png" alt="" />
                     </div>
                     <p>Please put in your diploma verification code.</p>
                     <input type="text" onChange={(e) => setInputContent(e.target.value)} value={inputContent}/>
