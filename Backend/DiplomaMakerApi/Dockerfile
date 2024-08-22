@@ -13,15 +13,25 @@ COPY . ./
 RUN dotnet publish -c Release -o out
 
 # Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+
+# Install necessary dependencies
+RUN apt update -y && apt full-upgrade -y && apt autoremove -y
+RUN apt install -y --no-install-recommends \
+    nginx nginx-extras apache2-utils \
+    ca-certificates \
+    libc6 \
+    libgcc-s1 \
+    libstdc++6 \
+    tzdata \
+    zlib1g \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create symbolic link for libdl.so
+RUN ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
 
 # Set the working directory
 WORKDIR /app
-
-# Install libdl and create the symbolic link
-RUN apt-get update && apt-get install -y libdl2 \
-    && ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so \
-    && rm -rf /var/lib/apt/lists/*
 
 # Copy the published output from the build stage
 COPY --from=build /app/out .
