@@ -61,12 +61,20 @@ export default function HistoryManageTable({ getHistory, changeActiveHistorySnap
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
     const [loading, setLoading] = useState<boolean>(true);
-
+    let displayName;
+    
     useEffect(() => {
         const loadDiploma = async () => {
             if (history && activeTemplate && showDiploma) {
+                const selectedHistory = history[activeTemplate-1].HistorySnapShots[0];
+                displayName = 
+                    selectedHistory.bootcampName.includes("dnfs") ? 'Fullstack C# Dotnet'
+                    : selectedHistory.bootcampName.includes("jfs") ? 'Fullstack Java'
+                    : selectedHistory.bootcampName.includes("jsfs") ? 'Fullstack Javascript'
+                    : 'ERR READING BOOTCAMP NAME';
+
                 await delay(400);
-                const inputs = templateInputsFromHistorySnapshot(history[activeTemplate-1].HistorySnapShots[0]);
+                const inputs = templateInputsFromHistorySnapshot(history[activeTemplate-1].HistorySnapShots[0], displayName);
                 const template = mapTemplateInputsToTemplateViewerFromSnapshot(history[activeTemplate-1].HistorySnapShots[0], inputs[0]);
 
                 const font = await getFontsData();
