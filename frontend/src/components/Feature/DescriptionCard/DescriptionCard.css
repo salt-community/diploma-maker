@@ -53,8 +53,8 @@
             transition: transform 0.375s ease;
         }
         .homepage__card-header .verifyIcon {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             transition: transform 0.375s ease;
         }
         .homepage__card:hover .homepage__card-header svg {

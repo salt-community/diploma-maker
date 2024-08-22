@@ -124,12 +124,3 @@ export const highlightDashboardNav =
         fill: #fff;
     }
 `
-
-export const singleGridCardCSSOverride =
-`
-    .homepage__grid > * {
-        aspect-ratio: 15 / 11;
-        width: 100%;
-        grid-column: span 1 / 3;
-    }
-`

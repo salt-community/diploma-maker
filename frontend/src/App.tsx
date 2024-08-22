@@ -48,19 +48,26 @@ export default function App() {
   });
 
   useEffect(() => {
-   if(isSignedIn){
-      api = initApiEndpoints({
-      endpointUrl: import.meta.env.VITE_API_URL,
-      token: getToken()
-    });
-         if ( !bootcamps) {
-           getBootcampsFromBackend();
-           getTemplates();
-           getTracks();
-         }
-   }
+    if (isSignedIn) {
+      if (!localStorage.getItem('isFirstLogin')) {
+        setTimeout(() => {
+          localStorage.setItem('isFirstLogin', 'false');
+        }, 3000);
+      }
+    } else {
+      localStorage.removeItem('isFirstLogin');
+    }
 
-  }, [bootcamps, isSignedIn]);
+    if (isSignedIn && !bootcamps) {
+      api = initApiEndpoints({
+        endpointUrl: import.meta.env.VITE_API_URL,
+        token: getToken()
+      });
+      getBootcampsFromBackend();
+      getTemplates();
+      getTracks();
+    }
+  }, [isSignedIn, bootcamps]);
 
   const refresh = async () => {
     const newBootcamps = await api.getBootcamps(setLoadingMessage);
@@ -200,15 +207,17 @@ export default function App() {
       }}>
       {isSignedIn && <NavBar />}
       <Routes>
-
-        {/* PUBLIC ROUTES */}
-        <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/verify" element={<VerificationInputPage />} />
-        <Route path="/verify/:verificationCode" element={<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode} />} />
-        <Route path="/" element={<HomePage userName={user?.fullName} signedIn={isSignedIn}/>} />
-        <Route path="/home" element={<HomePage userName={user?.fullName} signedIn={isSignedIn}/>} />
-
-         {/* PRIVATE ROUTES */}
+        {isSignedIn != undefined &&
+          <>
+            {/* PUBLIC ROUTES */}
+            <Route path="/sign-in" element={<SignInPage />} />
+            <Route path="/verify" element={<VerificationInputPage />} />
+            <Route path="/verify/:verificationCode" element={<VertificationPage getHistoryByVerificationCode={getHistoryByVerificationCode} />} />
+            <Route path="/" element={<HomePage userName={user?.fullName} signedIn={isSignedIn}/>} />
+            <Route path="/home" element={<HomePage userName={user?.fullName} signedIn={isSignedIn}/>} />
+          </>
+        }
+        {/* PRIVATE ROUTES */}
         <Route
           path="/"
           element={

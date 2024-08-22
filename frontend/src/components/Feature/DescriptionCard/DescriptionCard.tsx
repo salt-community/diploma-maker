@@ -4,19 +4,23 @@ import './DescriptionCard.css';
 import { Link } from 'react-router-dom';
 
 type Props = {
+    description: string;
+    title: string;
+    icon: React.ReactNode;
     onMouseEnter: () => void;
     onMouseLeave: () => void;
     link: string;
-    onClick?: () => void,
+    onClick?: () => void;
+    classOverride?: string;
 }
 
-export function DescriptionCard({ description, title, icon: Icon, onMouseEnter, onMouseLeave, link, onClick }) {
+export function DescriptionCard({ description, title, icon: Icon, onMouseEnter, onMouseLeave, link, onClick, classOverride }) {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
         <Link
             to={link}
-            className={`homepage__card`}
+            className={`homepage__card ${classOverride}`}
             onMouseEnter={() => { setIsHovered(true); onMouseEnter(); }}
             onMouseLeave={() => { setIsHovered(false); onMouseLeave(); }}
             onClick={onClick ? onClick : undefined}
@@ -35,9 +39,3 @@ export function DescriptionCard({ description, title, icon: Icon, onMouseEnter, 
         </Link>
     );
 }
-
-DescriptionCard.propTypes = {
-    description: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    icon: PropTypes.elementType.isRequired,
-};
