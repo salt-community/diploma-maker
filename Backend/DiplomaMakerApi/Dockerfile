@@ -27,7 +27,7 @@ RUN apt install -y --no-install-recommends \
     zlib1g \
     libfontconfig1 \
     libfreetype6 \
-    libjpeg-turbo8 \
+    libjpeg62-turbo \
     libpng16-16 \
     libx11-6 \
     libxext6 \
