@@ -157,7 +157,9 @@ namespace DiplomaMakerApi.Services
                         _logger.LogInformation("Saved image as PNG to memory stream. Stream length: {Length}", pngStream.Length);
                         pngStream.Position = 0;
 
-                        IFormFile formFile = new FormFile(pngStream, 0, pngStream.Length, "image", fileName)
+                        var pngStreamCopy = new MemoryStream(pngStream.ToArray());
+
+                        IFormFile formFile = new FormFile(pngStreamCopy, 0, pngStreamCopy.Length, "image", fileName)
                         {
                             Headers = new HeaderDictionary(),
                             ContentType = "image/png"
