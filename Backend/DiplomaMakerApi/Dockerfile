@@ -25,6 +25,15 @@ RUN apt install -y --no-install-recommends \
     libstdc++6 \
     tzdata \
     zlib1g \
+    libfontconfig1 \
+    libfreetype6 \
+    libjpeg-turbo8 \
+    libpng16-16 \
+    libx11-6 \
+    libxext6 \
+    libxrender1 \
+    libxcb1 \
+    libxi6 \
     && rm -rf /var/lib/apt/lists/*
 
 # Create symbolic link for libdl.so
