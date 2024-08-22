@@ -85,23 +85,23 @@ export const templateInputsSingleBootcampandTemplate = (bootcampData: BootcampRe
   )]
 }
 
-export const templateInputsFromHistorySnapshot = (historySnapshot: HistorySnapshotResponse) => {
+export const templateInputsFromHistorySnapshot = (historySnapshot: HistorySnapshotResponse, displayName: string) => {
   return [makeTemplateInput(
     populateField(
       historySnapshot.intro,
-      historySnapshot.bootcampName, 
+      displayName, 
       historySnapshot.bootcampGraduationDate.toString().slice(0, 10),
       historySnapshot.studentName
     ),
     populateField(
       historySnapshot.main,
-      historySnapshot.bootcampName,
+      displayName,
       historySnapshot.bootcampGraduationDate.toString().slice(0, 10),
       historySnapshot.studentName
     ),
     populateField(
       historySnapshot.footer,
-      historySnapshot.bootcampName,
+      displayName,
       historySnapshot.bootcampGraduationDate.toString().slice(0, 10),
       historySnapshot.studentName
     ),
