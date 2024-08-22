@@ -1,0 +1,138 @@
+.userfont{
+  position: fixed;
+  width: 80%;
+  height: 80%;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translateX(-50%) translateY(-50%);
+
+  background-color: #171721;
+  z-index: 500;
+
+  visibility: hidden;
+  opacity: 0;
+
+  transition: all 550ms ease;
+}
+.userfont.visible{
+  visibility: visible;
+  opacity: 1;
+
+  transition: all 550ms ease;
+}
+  .userfont__form{
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 2%;
+  }
+    .userfont__name-wrapper{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      gap: 2.5rem;
+    }
+      .userfont__name-wrapper h1{
+        color: #fff;
+        font-size: 1.5rem;
+      }
+      .userfont__name-wrapper input{
+          padding: .3rem 1.5rem;
+          border-radius: 1rem;
+          background-color: #e9e9f9e9;
+          color: #464652;
+          font-weight: 600;
+          text-align: center;
+          transition: all .1s ease;
+      }
+      .userfont__name-wrapper input:focus {
+          outline: 2px solid #0084ff3b;
+          background-color: #e9e9f9;
+          transition: all .1s ease;
+      }
+    .userfont__file-section{
+      width: 75%;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+    }
+      .userfont__file-wrapper{
+        min-width: 250px;
+        width: 15vw;
+        height: 25vh;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+      }
+        .userfont__file-section h3{
+          margin-bottom: 4%;
+          color: #d7d7e2;
+          font-size: 1.3rem;
+        }
+        .userfont__file-section p{
+          margin-top: .5rem;
+          color: #ababba;
+        }
+    .userfont__submit-wrapper{
+      height: 25%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+.userfont__close-btn{
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  margin: .5rem 1rem;
+  
+  width: 25px;
+  height: 25px;
+}
+  .userfont__close-btn svg path{
+    transition: all 250ms ease;
+  }
+  .userfont__close-btn:hover svg path{
+    fill: #fff;
+    transition: all 250ms ease;
+  }
+
+
+
+
+.userfont-backgroundblur{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+
+  z-index: 50;
+  
+  backdrop-filter: blur(4px);
+
+  visibility: hidden;
+  opacity: 0;
+
+  transition: all 550ms ease;
+}
+
+.userfont-backgroundblur.visible{
+  visibility: visible;
+  opacity: 1;
+
+  transition: all 550ms ease;
+}

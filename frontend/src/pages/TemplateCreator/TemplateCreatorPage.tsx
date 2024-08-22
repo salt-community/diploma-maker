@@ -2,16 +2,16 @@ import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import "./TemplateCreatorPage.css";
 import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 //@ts-ignore
-import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse, XYPosition} from "../../util/types";
+import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse, UserFontRequestDto, XYPosition} from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { cloneDeep, delay, getFontsData, getPdfDimensions, getPlugins } from "../../util/helper";
+import { cloneDeep, delay, getFontsData, getPdfDimensions, getPlugins, refreshUserFonts } from "../../util/helper";
 import { makeTemplateInput } from "../../templates/baseTemplate";
 import { PDFDocument } from "pdf-lib";
 import { SaveButton, SaveButtonType,} from "../../components/MenuItems/Buttons/SaveButton";
 import { AddButton } from "../../components/MenuItems/Buttons/AddButton";
 import { ConfirmationPopup, ConfirmationPopupType } from "../../components/MenuItems/Popups/ConfirmationPopup";
-import { AlertPopup, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
+import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
 import { TextInputIcon } from "../../components/MenuItems/Icons/TextInputIcon";
 import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData} from "../../util/dataHelpers";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
@@ -24,15 +24,18 @@ import { InstructionSlideshow } from "../../components/Content/InstructionSlides
 import { EmailConfigInstructionSlides, templateCreatorInstructionSlides } from "../../data/data";
 import { Size } from "@pdfme/common";
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
+import { UserFontsClient } from "../../components/Feature/TemplateCreator/UserFontsClient";
+import { FontsIcon } from "../../components/MenuItems/Icons/FontsIcon";
 
 type Props = {
   templates: TemplateResponse[] | null;
   addNewTemplate: (templateRequest: TemplateRequest) => Promise<void>;
   updateTemplate: (id: number, templateRequest: TemplateRequest) => Promise<TemplateResponse>;
   deleteTemplate: (templateRequest: number) => Promise<void>;
+  postUserFonts: (userFontsRequestsDto: UserFontRequestDto[]) => void;
 };
 
-export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate }: Props) => {
+export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate, deleteTemplate, postUserFonts }: Props) => {
   const [templateData, setTemplateData] = useState<any[]>([]);
   const [currentTemplate, setCurrentTemplate] = useState<any | null>(null);
 
@@ -42,7 +45,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [rightSideBarPage, setRightSideBarPage] = useState<number>(0);
 
   const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
-  const {showConfirmationPopup,confirmationPopupContent,confirmationPopupType,confirmationPopupHandler,customPopup,closeConfirmationPopup} = useCustomConfirmationPopup();
+  const {showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup} = useCustomConfirmationPopup();
 
   const [templateHasChanged, setTemplateHasChanged] = useState<boolean>(false);
   const [templateBasePdfHasChanged, settemplateBasePdfHasChanged] = useState<boolean>(false);
@@ -58,10 +61,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const [pdfSize, setPdfSize] = useState<Size>();
 
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
+  const [showUserFontsClient, setShowUserFontsClient] = useState<boolean>(false);
   const { loadingMessage } = useLoadingMessage();
 
   const [firstRun, setFirstRun] = useState<boolean>(true)
   const [resetFileUpload, setResetFileUpload] = useState<boolean>(false);
+
+  const [refreshFonts, setRefreshFonts] = useState<boolean>(false);
 
   const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
     positionX: null,
@@ -581,6 +587,19 @@ useEffect(() => {
     return canvasSize
   }
 
+  const postUserFontsHandler = async (userFonts: UserFontRequestDto[]) => {
+    setShowUserFontsClient(false);
+    customAlert('loading', 'Adding New Font...', '')
+    try {
+      await postUserFonts(userFonts)
+      customAlert('loading', 'Reloading Fonts...', '')
+      await refreshUserFonts();
+      customAlert('success', `Successfully added font ${userFonts[0].Name} to cloud`, '')
+    } catch (error) {
+      customAlert('fail', 'Failed adding new font.', `${error}`)
+    }
+  }
+
   return (
     <main className="templatecreator-page">
         <div className="bg-boundingbox" onClick={() => {setRightSideBarPage(0); saveFieldsHandler();}}></div>
@@ -601,18 +620,31 @@ useEffect(() => {
             onClose={closeAlert}
         />
         <InstructionSlideshow show={showInstructionSlideshow}  slides={templateCreatorInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
+        <UserFontsClient 
+          type={'addNewFont'}
+          show={showUserFontsClient}
+          setShowUserFontsClient={setShowUserFontsClient}
+          customAlert={customAlert}
+          postUserFonts={postUserFontsHandler}
+          setRefreshFonts={setRefreshFonts}
+          refreshFonts={refreshFonts}
+        />
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
                 <section className="templatecreator-page__leftsidebar-menu-section">
                     <button onClick={() => setShowInstructionSlideshow(true)} className="help-btn">
                         <HelpIcon />
+                        <p>Help Me!</p>
+                    </button>
+                    <button onClick={() => setShowUserFontsClient(true)} className="fonts-btn">
+                        <FontsIcon />
+                        <p>Add Font</p>
                     </button>
                 </section>
             </div>
         </section>
         <section className="templatecreator-page__preview-container">
             <div className="templatecreator-page__preview" style={{ width: "100%", overflow: "hidden", height: `calc(50vh - 68px)` }}>
-                <h2>{currentTemplate?.templateName}</h2>
                 <div className="pdfpreview" ref={designerRef} style={{ height: `80%` }} onClick={() => setRightSideBarPage(1)} />
                 {!templates && <SpinnerDefault classOverride="spinner" />}
             </div>
@@ -696,6 +728,7 @@ useEffect(() => {
                                 setFont={(value: string) => setFontHandler(value)}
                                 fontColor={templateStyle.fontColor}
                                 setFontColor={(value: string) => setFontColorHandler(value)}
+                                refreshFonts={refreshFonts}
                             />
                         </section>
                         <section className="templatecreator-page__rightsidebar-menu-section">

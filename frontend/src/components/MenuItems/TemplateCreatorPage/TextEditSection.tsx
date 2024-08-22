@@ -20,9 +20,10 @@ type Props = {
   setFont: (value: string) => void,
   fontColor: string | null,
   setFontColor: (value: string) => void,
+  refreshFonts: boolean
 }
 
-export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, setFont, fontColor, setFontColor}: Props) => {
+export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, setFont, fontColor, setFontColor, refreshFonts}: Props) => {
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [colorPickerColor, setColorPickerColor] = useState<string>("#fff");
   const [fonts, setFonts] = useState<Fonts | null>();
@@ -54,7 +55,7 @@ export const TextEditSection = ({align, setAlign, fontSize, setFontSize, font, s
       //@ts-ignore
       setFonts(font);
     })
-  }, [])
+  }, [refreshFonts])
 
   useEffect(() => {
     if(font){

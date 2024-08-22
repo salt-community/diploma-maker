@@ -15,3 +15,18 @@
     background-color: #12341a;
     transition: all 150ms ease;
 }
+
+.add-button-HomePage { 
+    color: #eee5e5;
+    background-color: #29283a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid #313c5a46;
+    padding: 12px 20px;
+}
+
+.add-button-HomePage:hover {
+    color: #eee5e5;
+    background-color: #2b2a3d;
+    transition: all 150ms ease;
+  
+}

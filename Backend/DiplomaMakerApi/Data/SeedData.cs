@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
+using DiplomaMakerApi.Dtos.UserFont;
 
 public static class SeedData 
 {
@@ -14,6 +15,8 @@ public static class SeedData
             var _fileUtilityService = serviceProvider.GetRequiredService<FileUtilityService>();
             var fileOperations = new LocalFileStorageService(_context, _fileUtilityService);
             fileOperations.ClearFolderExceptDefault();
+            fileOperations.ClearFolderExceptDefault("ImagePreview");
+            fileOperations.ClearFolderExceptDefault("ImagePreviewLQIP");
             
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
@@ -49,41 +52,41 @@ public static class SeedData
             _context.SaveChanges();
 
             // Diplomas
-            // var student1 = new Student 
-            // { 
-            //     Name = "Xinnan Luo", 
-            //     Email = "william.f.lindberg@hotmail.com",
-            //     Bootcamp = dotnetBootcamp1,
-            //     VerificationCode = "1a9f3"
-            // };
-            // var student2 = new Student 
-            // { 
-            //     Name = "Zerophymyr Falk", 
-            //     Email = "Zzer0ph@gmail.com",
-            //     Bootcamp = dotnetBootcamp1,
-            //     VerificationCode = "b4c2e"
-            // };
-            // var student3 = new Student 
-            // { 
-            //     Name = "William F Lindberg", 
-            //     Email = "lindberg.f.william@gmail.com",
-            //     Bootcamp = dotnetBootcamp1,
-            //     VerificationCode = "5d7f8"
-            // };
-            // var student4 = new Student 
-            // { 
-            //     Name = "Silvia Dominguez", 
-            //     Bootcamp = dotnetBootcamp2,
-            //     VerificationCode = "yx2g6"
-            // };
-            // var student5 = new Student 
-            // { 
-            //     Name = "Max Andersson", 
-            //     Bootcamp = dotnetBootcamp2,
-            //     VerificationCode = "yx2g6"
-            // };
-            // var students = new List<Student>{student1, student2, student3, student4, student5};
-            // _context.AddRange(students);
+            var student1 = new Student 
+            { 
+                Name = "Xinnan Luo", 
+                Email = "william.f.lindberg@hotmail.com",
+                Bootcamp = dotnetBootcamp1,
+                VerificationCode = "1a9f3"
+            };
+            var student2 = new Student 
+            { 
+                Name = "Zerophymyr Falk", 
+                Email = "Zzer0ph@gmail.com",
+                Bootcamp = dotnetBootcamp1,
+                VerificationCode = "b4c2e"
+            };
+            var student3 = new Student 
+            { 
+                Name = "William F Lindberg", 
+                Email = "lindberg.f.william@gmail.com",
+                Bootcamp = dotnetBootcamp1,
+                VerificationCode = "5d7f8"
+            };
+            var student4 = new Student 
+            { 
+                Name = "Silvia Dominguez", 
+                Bootcamp = dotnetBootcamp2,
+                VerificationCode = "yx2g6"
+            };
+            var student5 = new Student 
+            { 
+                Name = "Max Andersson", 
+                Bootcamp = dotnetBootcamp2,
+                VerificationCode = "yx2g6"
+            };
+            var students = new List<Student>{student1, student2, student3, student4, student5};
+            _context.AddRange(students);
             _context.SaveChanges();
         }
     }

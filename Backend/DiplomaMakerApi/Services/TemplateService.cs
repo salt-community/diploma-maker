@@ -42,8 +42,8 @@ public class TemplateService
         };
 
         await ((!_useBlobStorage)
-            ? _localFileStorageService.InitFileFromNewTemplate(templateRequest.templateName)
-            : _googleCloudStorageService.InitFileFromNewTemplate(templateRequest.templateName));
+            ? _localFileStorageService.InitFileFromNewTemplate(templateRequest.templateName, "DiplomaPdfs")
+            : _googleCloudStorageService.InitFileFromNewTemplate(templateRequest.templateName, "DiplomaPdfs"));
 
         await _context.DiplomaTemplates.AddAsync(newTemplate);
         await _context.SaveChangesAsync();

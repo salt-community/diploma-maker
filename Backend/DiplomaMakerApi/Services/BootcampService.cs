@@ -2,17 +2,17 @@ using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Exceptions;
+using DiplomaMakerApi.Dtos.PreviewImage;
 
 namespace DiplomaMakerApi.Services;
 
-public class BootcampService
+public class BootcampService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, FileUtilityService fileUtilityService, IConfiguration configuration)
 {
-    private readonly DiplomaMakingContext _context;
-
-    public BootcampService(DiplomaMakingContext context)
-    {
-        _context = context;
-    }
+    private readonly DiplomaMakingContext _context = context;
+    private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
+    private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
+    private readonly FileUtilityService _fileUtilityService = fileUtilityService;
+    private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
 
     public async Task<Bootcamp> PostBootcamp( BootcampRequestDto requestDto )
     {
@@ -105,7 +105,46 @@ public class BootcampService
             return bootcamp;
     }
 
+    public async Task<List<Student>> PutStudentsPreviewImages(PreviewImageRequestsDto previewImageRequestsDto)
+    {
+        var studentsUpdated = new List<Student>();
+        foreach(var studentPreviewImageRequest in previewImageRequestsDto.PreviewImageRequests)
+        {
+            var studentResponse = await PutStudentPreviewImage(studentPreviewImageRequest);
+            studentsUpdated.Add(studentResponse);
+        }
 
+        return studentsUpdated;
+    }
 
+    public async Task<Student> PutStudentPreviewImage(PreviewImageRequestDto previewImageRequestDto)
+    {
+        var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == previewImageRequestDto.StudentGuidId);
+        if(student == null)
+        {
+            throw new NotFoundByGuidException("Student", previewImageRequestDto.StudentGuidId);
+        }
+        var pdfImage = await _fileUtilityService.ConvertPdfToPng(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
+        
+        var HQFile = await _fileUtilityService.ConvertPngToWebP(pdfImage, previewImageRequestDto.StudentGuidId.ToString());
+        var LQFile = await _fileUtilityService.ConvertPngToWebP(pdfImage, previewImageRequestDto.StudentGuidId.ToString(), true);
+
+        var HQFilePath = await SaveFileAsync(HQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
+        var LQFilePath = await SaveFileAsync(LQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreviewLQIP");
+
+        student.PreviewImageUrl = await _fileUtilityService.GetRelativePathAsync(HQFilePath, "ImagePreview");
+        student.PreviewImageLQIPUrl = await _fileUtilityService.GetRelativePathAsync(LQFilePath, "ImagePreviewLQIP");
+
+        await _context.SaveChangesAsync();
+
+        return student;
+    }
+
+    private async Task<string> SaveFileAsync(IFormFile file, string studentGuidId, string folderName)
+    {
+        return !_useBlobStorage 
+            ? await _localFileStorageService.SaveFile(file, studentGuidId, folderName) 
+            : await _googleCloudStorageService.SaveFile(file, studentGuidId, folderName);
+    }
 
 }

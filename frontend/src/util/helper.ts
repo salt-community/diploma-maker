@@ -4,17 +4,279 @@ import { generate } from "@pdfme/generator";
 import { text, barcodes, image } from "@pdfme/schemas"
 import plugins from "../plugins"
 import { PDFDocument } from "pdf-lib";
-import { BootcampResponse, SaltData, Size, TemplateResponse } from "./types";
+import { BootcampResponse, pdfGenerationResponse, SaltData, Size, Student, studentImagePreview, StudentResponse, TemplateResponse, TrackResponse, UserFontResponseDto } from "./types";
 import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext";
-import { fontObjList } from "../data/data";
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import * as pdfjsLib from 'pdfjs-dist';
+import { updateStudentPreviewImage } from "../services/bootcampService";
+import { initApiEndpoints } from "../services/apiFactory";
+
+export const getToken = (): string => {
+  const jwtToken = document.cookie
+    .split('; ')
+    .find(c => c.includes('__session'))
+    ?.split('=')[1] || '';
+  // console.log(jwtToken)
+  return jwtToken
+}
+
+let api = initApiEndpoints({
+  endpointUrl: import.meta.env.VITE_API_URL,
+  token: getToken()
+});
+
 
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
+let userFonts: UserFontResponseDto[]
+let userfontObjList = []
+
+const fetchUserFonts = async () => {
+  userFonts = await api.getUserFonts();
+  for (let i = 0; i < userFonts.length; i++) {
+    const newFont = userFonts[i];
+    userfontObjList.push({
+      fallback: false,
+      label: newFont.fileName,
+      url: newFont.fileUrl,
+    })
+  }
+}
+
+// await fetchUserFonts();
+
+let defaultFontObjList;
+let allFontsList;
+
+(async () => {
+  await fetchUserFonts();
+
+  defaultFontObjList = [
+    {
+      fallback: true,
+      label: "notoSerifJP-regular",
+      url: "/fonts/NotoSerifJP-Regular.otf",
+    },
+    {
+      fallback: false,
+      label: "notoSerifJP-regular-bold",
+      url: "https://fonts.cdnfonts.com/s/12165/Roboto-Bold.woff",
+    },
+    {
+      fallback: false,
+      label: "notoSerifJP-regular-italic",
+      url: "https://fonts.cdnfonts.com/s/12165/Roboto-Italic.woff",
+    },
+    {
+      fallback: false,
+      label: "basilia-bold",
+      url: "/fonts/Basilia-Bold.woff",
+    },
+    {
+      fallback: false,
+      label: "basilia-italic",
+      url: "/fonts/Basilia-Italic.woff",
+    },
+    {
+      fallback: false,
+      label: "basilia",
+      url: "/fonts/Basilia-Reg.woff",
+    },
+    {
+      fallback: false,
+      label: "futura-bold",
+      url: "/fonts/Futura-Dem-Bold.woff",
+    },
+    {
+      fallback: false,
+      label: "futura-italic",
+      url: "/fonts/Futura-Dem-Italic.woff",
+    },
+    {
+      fallback: false,
+      label: "futura",
+      url: "/fonts/Futura-Dem.woff",
+    },
+    {
+      fallback: false,
+      label: "montserrat",
+      url: "/fonts/Montserrat-Regular.ttf",
+    },
+    {
+      fallback: false,
+      label: "montserrat-bold",
+      url: "/fonts/Montserrat-Bold.ttf",
+    },
+    {
+      fallback: false,
+      label: "montserrat-italic",
+      url: "/fonts/Montserrat-Italic.ttf",
+    },
+    {
+      fallback: false,
+      label: "museosans",
+      url: "/fonts/MuseoSans_500.woff",
+    },
+    {
+      fallback: false,
+      label: "museosans-bold",
+      url: "/fonts/MuseoSans_500-Bold.woff",
+    },
+    {
+      fallback: false,
+      label: "museosans-italic",
+      url: "/fonts/MuseoSans_500-Italic.otf",
+    },
+    {
+      fallback: false,
+      label: "ttcorals",
+      url: "/fonts/TT-Corals-Regular.woff",
+    },
+    {
+      fallback: false,
+      label: "ttcorals-bold",
+      url: "/fonts/TT-Corals-Bold.woff",
+    },
+    {
+      fallback: false,
+      label: "ttcorals-italic",
+      url: "/fonts/TT-Corals-Italic.woff",
+    },
+    {
+      fallback: false,
+      label: "bison",
+      url: "/fonts/Basilia-Reg.woff",
+    },
+    {
+      fallback: false,
+      label: "bison-bold",
+      url: "/fonts/Bison-Bold.woff",
+    },
+    {
+      fallback: false,
+      label: "bison-italic",
+      url: "/fonts/Basilia-Italic.woff",
+    },
+    {
+      fallback: false,
+      label: "arial",
+      url: "https://fonts.cdnfonts.com/s/29105/ARIAL.woff",
+    },
+    {
+      fallback: false,
+      label: "arial-bold",
+      url: "https://fonts.cdnfonts.com/s/29105/ARIALBD.woff",
+    },
+    {
+      fallback: false,
+      label: "arial-italic",
+      url: "https://fonts.cdnfonts.com/s/29105/ARIALI.woff",
+    },
+    {
+      fallback: false,
+      label: "overpass",
+      url: "https://fonts.cdnfonts.com/s/12274/Overpass_Regular.woff",
+    },
+    {
+      fallback: false,
+      label: "overpass-bold",
+      url: "https://fonts.cdnfonts.com/s/12274/Overpass_Bold.woff",
+    },
+    {
+      fallback: false,
+      label: "overpass-italic",
+      url: "https://fonts.cdnfonts.com/s/12274/overpassitalic.woff",
+    },
+    {
+      fallback: false,
+      label: "roboto",
+      url: "https://fonts.cdnfonts.com/s/12165/Roboto-Regular.woff",
+    },
+    {
+      fallback: false,
+      label: "roboto-bold",
+      url: "https://fonts.cdnfonts.com/s/12165/Roboto-Bold.woff",
+    },
+    {
+      fallback: false,
+      label: "roboto-italic",
+      url: "https://fonts.cdnfonts.com/s/12165/Roboto-Italic.woff",
+    },
+    {
+      fallback: false,
+      label: "rubik",
+      url: "https://fonts.cdnfonts.com/s/15684/Rubik-Regular.woff",
+    },
+    {
+      fallback: false,
+      label: "rubik-bold",
+      url: "https://fonts.cdnfonts.com/s/15684/Rubik-Bold.woff",
+    },
+    {
+      fallback: false,
+      label: "rubik-italic",
+      url: "https://fonts.cdnfonts.com/s/15684/Rubik-Italic.woff",
+    },
+    {
+      fallback: false,
+      label: "brcobane",
+      url: "https://fonts.cdnfonts.com/s/107551/BRCobane-Regular-BF654d96a1718fa.woff",
+    },
+    {
+      fallback: false,
+      label: "brcobane-bold",
+      url: "https://fonts.cdnfonts.com/s/107551/BRCobane-Bold-BF654d96a1ac1b0.woff",
+    },
+    {
+      fallback: false,
+      label: "brcobane-italic",
+      url: "https://fonts.cdnfonts.com/s/107551/BRCobane-RegularItalic-BF654d96a1a8637.woff",
+    },
+    {
+      fallback: false,
+      label: "calibri",
+      url: "https://fonts.gstatic.com/l/font?kit=J7afnpV-BGlaFfdAhLEY6w&skey=a1029226f80653a8&v=v15",
+    },
+    {
+      fallback: false,
+      label: "calibri-bold",
+      url: "https://fonts.gstatic.com/l/font?kit=J7aanpV-BGlaFfdAjAo9_pxqHw&skey=cd2dd6afe6bf0eb2&v=v15",
+    },
+    {
+      fallback: false,
+      label: "calibri-italic",
+      url: "https://fonts.gstatic.com/l/font?kit=J7adnpV-BGlaFfdAhLQo6btP&skey=36a3d5758e0e2f58&v=v15",
+    },
+  ];
+
+  allFontsList = [...defaultFontObjList, ...userfontObjList];
+
+  await (logFontMimeTypes);
+
+  await getFontsData();
+})();
+
+
+
+export const logFontMimeTypes = async () => {
+  await Promise.all(
+    allFontsList.map(async (font) => {
+      try {
+        const response = await fetch(font.url, { method: 'HEAD' });
+        const contentType = response.headers.get('Content-Type');
+
+        console.log(`Font: ${font.label}, MIME type: ${contentType}`);
+      } catch (error) {
+        console.error(`Failed to fetch MIME type for ${font.label}:`, error);
+      }
+    })
+  );
+};
+
 
 export const getFontsData = async () => {
   const fontDataList = await Promise.all(
-    fontObjList.map(async (font) => {
+    allFontsList.map(async (font) => {
       if (!fontCache.has(font.label)) {
         let data = await getFontFromIndexedDB(font.label);
         if (!data) {
@@ -31,6 +293,28 @@ export const getFontsData = async () => {
     (acc, font) => ({ ...acc, [font.label]: font }),
     {} as Font
   );
+};
+
+export const refreshUserFonts = async () => {
+  userfontObjList = [];
+
+  const refreshedUserFonts: UserFontResponseDto[] = await api.getUserFonts();
+
+  refreshedUserFonts.forEach((newFont) => {
+      userfontObjList.push({
+          fallback: false,
+          label: newFont.fileName,
+          url: newFont.fileUrl,
+      });
+  });
+
+  allFontsList = [...defaultFontObjList, ...userfontObjList];
+
+  console.log(allFontsList);
+
+  fontCache.clear();
+
+  await getFontsData();
 };
 
 export const readFile = (
@@ -172,61 +456,84 @@ export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray:
   window.open(URL.createObjectURL(blob));
 }
 
+// No Longer Used In front-end cause it slows down application. But it is faster than doing it in the backend
+export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | null> => {
+  try {
+    const pdf = await pdfjsLib.getDocument({ data: pdfInput }).promise;
+    
+    const page = await pdf.getPage(1);
+    const viewport = page.getViewport({ scale: 1.5 });
+    const canvas = document.createElement("canvas");
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+    
+    const renderContext = {
+      canvasContext: canvas.getContext("2d"),
+      viewport: viewport,
+    };
+    
+    await page.render(renderContext).promise;
+    const dataURL = canvas.toDataURL("image/png");
+    
+    const base64Data = dataURL.replace(/^data:image\/png;base64,/, '');
+    const binaryString = window.atob(base64Data);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    
+    return new Blob([bytes], { type: 'image/png' });
+  } catch (e) {
+    console.error('Error loading PDF:', e);
+    return null;
+  }
+};
 
-export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
-  setLoadingMessage("Generating combined pdf!");
-  const font = await getFontsData();
-  const mergedPdf = await PDFDocument.create();
+export function convertUint8ArrayToBase64(uint8Array: Uint8Array): string {
+  let binaryString = '';
+  for (let i = 0; i < uint8Array.length; i++) {
+    binaryString += String.fromCharCode(uint8Array[i]);
+  }
+  return btoa(binaryString);
+}
 
-  for (let i = 0; i < templates.length; i++) {
-    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
-    const pdf = await generate({
-      template: templates[i],
-      inputs: [inputsArray[i]],
-      options: { font },
-      plugins: getPlugins(),
+export const generatePreviewImages = async (pdfs: Uint8Array[], students: Student[], setBGLoadingMessage: (message: string) => void, setBootcamps: (response: StudentResponse) => void): Promise<void> => {
+  const pdfConversionRequests: studentImagePreview[] = []; 
+
+  for (let i = 0; i < pdfs.length; i++) {
+    setBGLoadingMessage(`Converting pdfs to blob ${i + 1}/${pdfs.length}`);
+
+    const base64String = convertUint8ArrayToBase64(pdfs[i]);
+
+    await pdfConversionRequests.push({
+      studentGuidId: students[i].guidId,
+      image: base64String
     });
-    const loadedPdf = await PDFDocument.load(pdf);
-    const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
-    copiedPages.forEach(page => mergedPdf.addPage(page));
   }
 
-  setLoadingMessage("Merging Pdfs");
+  try {
+    for (let i = 0; i < pdfConversionRequests.length; i++) {
+      setBGLoadingMessage(`Converting & Compressing Thumbnails ${i + 1}/${pdfConversionRequests.length}`)
+      const response: StudentResponse = await api.updateStudentPreviewImage(pdfConversionRequests[i])
+      setBootcamps(response);
+    }
 
-  const mergedPdfBytes = await mergedPdf.save();
-  setLoadingMessage("Creating Blobs");
-  const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
-  setLoadingMessage("Finished Processing Pdfs...");
-  window.open(URL.createObjectURL(blob));
+    setBGLoadingMessage("Finished!");
+    
+  } catch (error) {
+    setBGLoadingMessage(`Failed to Update PreviewImages!. ${error.message || 'Unknown error'}`)
+  }
 }
 
 
-export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void) => {
-  setLoadingMessage("Generating combined pdf!");
-  const font = await getFontsData();
-  const mergedPdf = await PDFDocument.create();
+export const openWindowfromBlob = async (input: Blob) => {
+  window.open(URL.createObjectURL(input))
+}
 
-  for (let i = 0; i < templates.length; i++) {
-    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
-    const pdf = await generate({
-      template: templates[i],
-      inputs: [inputsArray[i]],
-      options: { font },
-      plugins: getPlugins(),
-    });
-    const loadedPdf = await PDFDocument.load(pdf);
-    const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
-    copiedPages.forEach(page => mergedPdf.addPage(page));
-  }
-
-  setLoadingMessage("Merging Pdfs");
-
-  const mergedPdfBytes = await mergedPdf.save();
-  setLoadingMessage("Creating Blobs");
-  const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
-  setLoadingMessage("Finished Processing Pdfs...");
-
-  const blobUrl = URL.createObjectURL(blob);
+export const openPrintWindowfromBlob = async (input: Blob) => {
+  const blobUrl = URL.createObjectURL(input);
   const printWindow = window.open('', '_blank');
 
   if (printWindow) {
@@ -245,15 +552,16 @@ export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inpu
       URL.revokeObjectURL(blobUrl);
       printWindow.close();
     };
-  } else {
-    console.error("Failed to open the print window");
   }
-};
+}
 
-export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], bootcampName: string, setLoadingMessage: (message: string) => void) => {
+export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<pdfGenerationResponse> => {
   setLoadingMessage("Generating combined pdf!");
+  
   const font = await getFontsData();
-  const zip = new JSZip();
+  const mergedPdf = await PDFDocument.create();; 
+
+  const pdfs: Uint8Array[] = [];
 
   for (let i = 0; i < templates.length; i++) {
     setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
@@ -263,6 +571,84 @@ export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], in
       options: { font },
       plugins: getPlugins(),
     });
+
+    pdfs.push(pdf);
+
+    const loadedPdf = await PDFDocument.load(pdf);
+    const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
+    copiedPages.forEach(page => mergedPdf.addPage(page));
+  }
+
+  setLoadingMessage("Merging Pdfs");
+
+  const mergedPdfBytes = await mergedPdf.save();
+  setLoadingMessage("Creating Blobs");
+  const blob: Blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+  setLoadingMessage("Finished Processing Pdfs...");
+
+  const response: pdfGenerationResponse = {
+    pdfFiles: pdfs,
+    bundledPdfsDisplayObject: blob
+  }
+
+  return response;
+}
+
+
+export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<pdfGenerationResponse> => {
+  setLoadingMessage("Generating combined pdf!");
+  const font = await getFontsData();
+  const mergedPdf = await PDFDocument.create();
+
+  const pdfs: Uint8Array[] = [];
+
+  for (let i = 0; i < templates.length; i++) {
+    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
+    const pdf = await generate({
+      template: templates[i],
+      inputs: [inputsArray[i]],
+      options: { font },
+      plugins: getPlugins(),
+    });
+    pdfs.push(pdf);
+
+    const loadedPdf = await PDFDocument.load(pdf);
+    const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
+    copiedPages.forEach(page => mergedPdf.addPage(page));
+  }
+
+  setLoadingMessage("Merging Pdfs");
+
+  const mergedPdfBytes = await mergedPdf.save();
+  setLoadingMessage("Creating Blobs");
+  const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+  setLoadingMessage("Finished Processing Pdfs...");
+
+  const response: pdfGenerationResponse = {
+    pdfFiles: pdfs,
+    bundledPdfsDisplayObject: blob
+  }
+
+  return response;
+};
+
+export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], bootcampName: string, setLoadingMessage: (message: string) => void): Promise<pdfGenerationResponse> => {
+  setLoadingMessage("Generating combined pdf!");
+  const font = await getFontsData();
+  const zip = new JSZip();
+
+  const pdfs: Uint8Array[] = [];
+
+  for (let i = 0; i < templates.length; i++) {
+    setLoadingMessage(`Generating pdf for file: ${i + 1}/${templates.length}`);
+    const pdf = await generate({
+      template: templates[i],
+      inputs: [inputsArray[i]],
+      options: { font },
+      plugins: getPlugins(),
+    });
+    pdfs.push(pdf);
+
     const loadedPdf = await PDFDocument.load(pdf);
     const mergedPdf = await PDFDocument.create();
     const copiedPages = await mergedPdf.copyPages(loadedPdf, loadedPdf.getPageIndices());
@@ -278,7 +664,12 @@ export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], in
 
   setLoadingMessage("Finished Processing Pdfs...");
 
-  saveAs(zipBlob, `${bootcampName}_diplomas.zip`);
+  const response: pdfGenerationResponse = {
+    pdfFiles: pdfs,
+    bundledPdfsDisplayObject: zipBlob
+  }
+
+  return response;
 };
 
 
@@ -397,20 +788,36 @@ const getFontFromIndexedDB = async (label: string): Promise<ArrayBuffer | null> 
 };
 
 
-export const generateVerificationCode = (length = 5) => {
-  const guid = URL.createObjectURL(new Blob()).slice(-36).replace(/-/g, '');
+export const generateVerificationCode = (tracks: TrackResponse[]): string => {
 
+  const guid = URL.createObjectURL(new Blob()).slice(-36).replace(/-/g, '')
   const chars = guid.split('');
-
   const random = () => Math.floor(Math.random() * chars.length);
 
-  let code = '';
-  for (let i = 0; i < length; i++) {
+  while (true) {
+    let code = '';
+    for (let i = 0; i < 5; i++) {
       code += chars[random()];
-  }
+    }
 
-  return code;
-}
+    let codeExists = false;
+
+    tracks.forEach(track => {
+      track.bootcamps.forEach(bootcamp => {
+        bootcamp.students.forEach(student => {
+          if (student.verificationCode === code) {
+            codeExists = true; 
+          }
+        });
+      });
+    });
+
+    if (!codeExists) {
+      return code;
+    }
+  }
+};
+
 
 
 const dateoptions: Intl.DateTimeFormatOptions = {
@@ -446,3 +853,77 @@ export const getPdfDimensions = async (pdfString: string): Promise<Size> => {
   const { width, height } = firstPage.getSize();
   return { width, height };
 };
+
+
+
+export async function openIndexedTemplatesDB(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+      const request = indexedDB.open('pdfCache', 1);
+
+      request.onupgradeneeded = (event) => {
+          const db = (event.target as IDBOpenDBRequest).result;
+          if (!db.objectStoreNames.contains('pdfs')) {
+              db.createObjectStore('pdfs', { keyPath: 'id' });
+          }
+      };
+
+      request.onsuccess = () => {
+          resolve(request.result);
+      };
+
+      request.onerror = () => {
+          reject(request.error);
+      };
+  });
+}
+
+export async function getFromIndexedTemplatesDB(db: IDBDatabase, key: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+      const transaction = db.transaction('pdfs', 'readonly');
+      const store = transaction.objectStore('pdfs');
+      const request = store.get(key);
+
+      request.onsuccess = () => {
+          resolve(request.result);
+      };
+
+      request.onerror = () => {
+          reject(request.error);
+      };
+  });
+}
+
+export async function storeInIndexedTemplatesDB(db: IDBDatabase, key: string, data: any): Promise<void> {
+  return new Promise(async (resolve, reject) => {
+      const transaction = db.transaction('pdfs', 'readwrite');
+      const store = transaction.objectStore('pdfs');
+
+      const countRequest = store.count();
+      countRequest.onsuccess = async () => {
+          const count = countRequest.result;
+
+          if (count >= 25) {
+              const cursorRequest = store.openCursor();
+              cursorRequest.onsuccess = (event) => {
+                  const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+                  if (cursor) {
+                      store.delete(cursor.primaryKey);
+                      cursor.continue();
+                  }
+              };
+          }
+
+          const putRequest = store.put(data);
+          putRequest.onsuccess = () => {
+              resolve();
+          };
+          putRequest.onerror = () => {
+              reject(putRequest.error);
+          };
+      };
+
+      countRequest.onerror = () => {
+          reject(countRequest.error);
+      };
+  });
+}

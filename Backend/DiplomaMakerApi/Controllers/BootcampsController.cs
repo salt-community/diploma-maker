@@ -5,9 +5,11 @@ using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using AutoMapper;
 using DiplomaMakerApi.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class BootcampsController : ControllerBase
 {
     private readonly IMapper _mapper;

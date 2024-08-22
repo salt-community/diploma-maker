@@ -10,8 +10,8 @@ namespace DiplomaMakerApi.Services
         private readonly DiplomaMakingContext _context;
         private readonly StorageClient _storageClient;
         private readonly FileUtilityService _fileUtilityService;
-
         private readonly IWebHostEnvironment _env;
+        private readonly string _basePath = "Blob";
 
         public GoogleCloudStorageService(DiplomaMakingContext context, IConfiguration configuration, FileUtilityService fileUtilityService, IWebHostEnvironment env)
         {
@@ -24,11 +24,11 @@ namespace DiplomaMakerApi.Services
                 : Environment.GetEnvironmentVariable("BucketName");
         }
 
-        public async Task<string> GetFilePath(string templateName)
+        public async Task<string> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
         {
             var objectName = templateName.Equals("Default.pdf", StringComparison.OrdinalIgnoreCase)
-                ? $"Blob/DiplomaPdfs/{templateName}"
-                : $"Blob/DiplomaPdfs/{templateName}";
+                ? $"{_basePath}/{subDirectory}/{templateName}"
+                : $"{_basePath}/{subDirectory}/{templateName}";
 
             try
             {
@@ -43,15 +43,15 @@ namespace DiplomaMakerApi.Services
                 if (templateExists != null)
                 {
                     await InitFileFromNewTemplate(templateNameNoExtension);
-                    return $"Blob/DiplomaPdfs/{templateName}";
+                    return $"{_basePath}/{subDirectory}/{templateName}";
                 }
                 return null;
             }
         }
 
-        public async Task<(byte[] FileBytes, string ContentType)> GetFileFromFilePath(string templateName)
+        public async Task<(byte[] FileBytes, string ContentType)> GetFileFromFilePath(string templateName, string subDirectory = "DiplomaPdfs")
         {
-            var filePath = await GetFilePath(templateName);
+            var filePath = await GetFilePath(templateName, subDirectory);
 
             if (filePath == null)
             {
@@ -65,7 +65,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<string> SaveFile(IFormFile file, string templateName)
+        public async Task<string> SaveFile(IFormFile file, string templateName, string subDirectory = "DiplomaPdfs")
         {
             var fileExtension = Path.GetExtension(file.FileName);
             if (!templateName.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase))
@@ -73,7 +73,7 @@ namespace DiplomaMakerApi.Services
                 templateName += fileExtension;
             }
 
-            var objectName = $"Blob/DiplomaPdfs/{templateName}";
+            var objectName = $"{_basePath}/{subDirectory}/{templateName}";
             using (var stream = file.OpenReadStream())
             {
                 await _storageClient.UploadObjectAsync(_bucketName, objectName, file.ContentType, stream);
@@ -81,14 +81,14 @@ namespace DiplomaMakerApi.Services
             return objectName;
         }
 
-        public async Task<bool> DeleteFile(string templateName)
+        public async Task<bool> DeleteFile(string templateName, string subDirectory = "DiplomaPdfs")
         {
             if (templateName.Equals("Default.pdf", StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidOperationException("The default template cannot be deleted.");
             }
 
-            var objectName = $"Blob/DiplomaPdfs/{templateName}.pdf";
+            var objectName = $"{_basePath}/{subDirectory}/{templateName}.pdf";
 
             try
             {
@@ -101,10 +101,10 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task InitFileFromNewTemplate(string templateName)
+        public async Task InitFileFromNewTemplate(string templateName, string subDirectory = "DiplomaPdfs")
         {
-            var sourceFileName = "Blob/DiplomaPdfs/Default.pdf";
-            var destinationFileName = $"Blob/DiplomaPdfs/{templateName}.pdf";
+            var sourceFileName = $"{_basePath}/{subDirectory}/Default.pdf";
+            var destinationFileName = $"{_basePath}/{subDirectory}/{templateName}.pdf";
 
             try
             {
@@ -122,9 +122,9 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<string> CreateBackup(string fileName)
+        public async Task<string> CreateBackup(string fileName, string subDirectory = "DiplomaPdfs")
         {
-            var sourceFileName = $"Blob/DiplomaPdfs/{fileName}.pdf";
+            var sourceFileName = $"{_basePath}/{subDirectory}/{fileName}.pdf";
             var version = 1;
             string newFileName;
 
@@ -144,7 +144,7 @@ namespace DiplomaMakerApi.Services
 
                 do
                 {
-                    newFileName = $"Blob/DiplomaPdfs/{fileName}.v{version}.pdf";
+                    newFileName = $"{_basePath}/{subDirectory}/{fileName}.v{version}.pdf";
                     version++;
                 } while (await FileExistsInStorageAsync(newFileName));
 
@@ -172,9 +172,9 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<FileContentResult> GetFilesFromPath(string folderPath, string zipFileName)
+        public async Task<FileContentResult> GetFilesFromPath(string folderPath, string zipFileName, string subDirectory = "DiplomaPdfs")
         {
-            var storageObjects = _storageClient.ListObjects(_bucketName, folderPath);
+            var storageObjects = _storageClient.ListObjects(_bucketName, $"{_basePath}/{subDirectory}");
             var files = new List<(Stream Stream, string FileName)>();
 
             foreach (var storageObject in storageObjects)

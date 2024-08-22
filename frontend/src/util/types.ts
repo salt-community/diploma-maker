@@ -31,6 +31,9 @@ export type StudentResponse = {
     name: string;
     email: string;
     verificationCode: string;
+    lastGenerated?: Date;
+    previewImageUrl?: string | null,
+    previewImageLQIPUrl?: string | null
 }
 
 export type Student = {
@@ -39,6 +42,8 @@ export type Student = {
     email: string;
     verificationCode?: string;
     lastGenerated?: Date;
+    previewImageUrl?: string | null,
+    previewImageLQIPUrl?: string | null
 }
 // bootcamps
 
@@ -199,3 +204,36 @@ export type EmailConfigRequestDto = {
     senderEmail: string;
     senderCode: string;
 }
+
+// Preview Images
+export type studentImagePreview = {
+    studentGuidId: string,
+    image: string,
+}
+
+export type pdfGenerationResponse = {
+    pdfFiles: Uint8Array[],
+    bundledPdfsDisplayObject: Blob,
+}
+
+export type apiEndpointParameters = {
+    endpointUrl: string,
+    token?: string,
+}
+
+//User Fonts
+export type UserFontResponseDto = {
+    name: string;
+    fontType: FontType;
+    fileName: string;
+    file?: Blob;
+    fileUrl?: string;
+}
+
+export type UserFontRequestDto = {
+    Name: string;
+    FontType: FontType;
+    File: Blob | null;
+}
+
+export type FontType = 'Regular' | 'Bold' | 'Italic';

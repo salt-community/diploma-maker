@@ -4,6 +4,7 @@ namespace DiplomaMakerApi.Configuration;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Dtos;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using DiplomaMakerApi.Dtos.UserFont;
 
 public class AutomapperConfig : Profile
 {
@@ -39,6 +40,6 @@ public class AutomapperConfig : Profile
             .ForMember(d => d.TemplateLastUpdated, opt => opt.MapFrom((src, d, _, context) => ((DiplomaTemplate)context.Items["templateUsed"])?.LastUpdated ?? default(DateTime)))
             .ForMember(d => d.BasePdfBackgroundLastUpdated, opt => opt.MapFrom((src, d, _, context) => ((DiplomaTemplate)context.Items["templateUsed"])?.PdfBackgroundLastUpdated ?? default(DateTime)))
             .ForMember(d => d.Active, opt => opt.MapFrom((src, d, _, context) => context.Items["lastSnapshot"] == null || !((List<DiplomaSnapshot>)context.Items["lastSnapshots"]).Any(s => s.StudentGuidId == src.GuidId)));
-
+        CreateMap<UserFont, UserFontResponseDto>();
     }
 }

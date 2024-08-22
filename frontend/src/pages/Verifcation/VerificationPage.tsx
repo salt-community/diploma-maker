@@ -23,10 +23,17 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
 
     const [studentData, setStudentData] = useState<HistorySnapshotResponse>(null);
     const [showDiploma, setShowDiploma] = useState<boolean>(false);
+    let displayName;
 
     useEffect(() => {
         if(studentData){
-            const inputs = templateInputsFromHistorySnapshot(studentData);
+            displayName = 
+                studentData.bootcampName.includes("dnfs") ? 'Fullstack C# Dotnet'
+                : studentData.bootcampName.includes("jfs") ? 'Fullstack Java'
+                : studentData.bootcampName.includes("jsfs") ? 'Fullstack Javascript'
+                : 'ERR READING BOOTCAMP NAME';
+
+            const inputs = templateInputsFromHistorySnapshot(studentData, displayName);
             const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
 
             getFontsData().then((font) => {

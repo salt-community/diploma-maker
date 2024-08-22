@@ -1,10 +1,12 @@
-import { TemplateRequest, TemplateResponse } from "../util/types";
+import { apiEndpointParameters, TemplateRequest, TemplateResponse } from "../util/types";
 import { getTemplatePdfFile } from "./fileService";
 
-export async function getAllTemplates(apiUrl: string, setLoadingMessage: (message: string) => void): Promise<TemplateResponse[]> {
+export async function getAllTemplates(apiParameters: apiEndpointParameters, setLoadingMessage: (message: string) => void): Promise<TemplateResponse[]> {
     setLoadingMessage('Fetching Templates...');
     
-    const response = await fetch(`${apiUrl}/api/templates`);
+    const response = await fetch(`${apiParameters.endpointUrl}/api/templates`, {
+        headers: {'Authorization': `Bearer ${apiParameters.token}` }
+    });
     if (!response.ok) {
         const errorData = await response.json();
         setLoadingMessage(`Failed to load initial templates!. ${errorData.message || 'Unknown error'}`)
@@ -16,32 +18,37 @@ export async function getAllTemplates(apiUrl: string, setLoadingMessage: (messag
 
     for (const result of results) {
         setLoadingMessage(`Downloading template ${templateCount} of ${results.length}`);
-        result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.lastUpdated, setLoadingMessage);
+        result.basePdf = await getTemplatePdfFile(apiParameters, result.basePdf, result.lastUpdated, setLoadingMessage);
         templateCount++;
     }
 
     return results;
 }
 
-export async function getTemplateById(apiUrl: string, id: string, setLoadingMessage: (message: string) => void): Promise<TemplateResponse> {
-    const response = await fetch(`${apiUrl}/api/templates/${id}`);
+export async function getTemplateById(apiParameters: apiEndpointParameters, id: string, setLoadingMessage: (message: string) => void): Promise<TemplateResponse> {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/templates/${id}`, {
+        headers: {'Authorization': `Bearer ${apiParameters.token}` }
+    });
     if (!response.ok) {
         throw new Error('Failed to get Template!');
     }
     const result = await response.json() as TemplateResponse;
-    result.basePdf = await getTemplatePdfFile(apiUrl, result.basePdf, result.lastUpdated, setLoadingMessage);
+    result.basePdf = await getTemplatePdfFile(apiParameters, result.basePdf, result.lastUpdated, setLoadingMessage);
 
     return result;
 }
 
-export async function postTemplate(apiUrl: string, templateRequest: TemplateRequest): Promise<void> {
+export async function postTemplate(apiParameters: apiEndpointParameters, templateRequest: TemplateRequest): Promise<void> {
     const formattedRequest = {
         ...templateRequest,
     };
 
-    const response = await fetch(`${apiUrl}/api/templates`, {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/templates`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${apiParameters.token}` 
+        },
         body: JSON.stringify(formattedRequest)
     });
 
@@ -58,10 +65,13 @@ export async function postTemplate(apiUrl: string, templateRequest: TemplateRequ
     }
 }
 
-export async function deleteTemplateById(apiUrl: string, id: number): Promise<void> {
-    const response = await fetch(`${apiUrl}/api/templates/${id}`, {
+export async function deleteTemplateById(apiParameters: apiEndpointParameters, id: number): Promise<void> {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/templates/${id}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiParameters.token}` 
+        }
     });
 
     if (response.status === 404) 
@@ -70,16 +80,19 @@ export async function deleteTemplateById(apiUrl: string, id: number): Promise<vo
         throw new Error('Failed to delete template!');
 }
 
-export async function putTemplate(apiUrl: string, id: number, templateRequest: TemplateRequest): Promise<TemplateResponse> {
+export async function putTemplate(apiParameters: apiEndpointParameters, id: number, templateRequest: TemplateRequest): Promise<TemplateResponse> {
     localStorage.removeItem(`pdf_${templateRequest.templateName}.pdf`);
 
     const formattedRequest = {
         ...templateRequest,
     };
 
-    const response = await fetch(`${apiUrl}/api/templates/${id}`, {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/templates/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiParameters.token}`
+        },
         body: JSON.stringify(formattedRequest)
     });
 

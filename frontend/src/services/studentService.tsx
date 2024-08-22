@@ -1,7 +1,9 @@
-import { StudentRequestNew, StudentResponse, StudentUpdateRequestDto,  } from "../util/types";
+import { apiEndpointParameters, StudentRequestNew, StudentResponse, StudentUpdateRequestDto,  } from "../util/types";
 
-export async function getStudentsByKeyword(apiUrl: string, keyword: string): Promise<StudentResponse[]> {
-    const response = await fetch(`${apiUrl}/api/students/?keyword=${keyword}`);
+export async function getStudentsByKeyword(apiParameters: apiEndpointParameters, keyword: string): Promise<StudentResponse[]> {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/students/?keyword=${keyword}`, {
+        headers: {'Authorization': `Bearer ${apiParameters.token}` }
+    });
     if (!response.ok) {
         throw new Error('Failed to fetch students!');
     }
@@ -9,8 +11,10 @@ export async function getStudentsByKeyword(apiUrl: string, keyword: string): Pro
     return result;
 }
 
-export async function getStudentById(apiUrl: string, guidId: string): Promise<StudentResponse> {
-    const response = await fetch(`${apiUrl}/api/students/${guidId}`);
+export async function getStudentById(apiParameters: apiEndpointParameters, guidId: string): Promise<StudentResponse> {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/students/${guidId}`, {
+        headers: {'Authorization': `Bearer ${apiParameters.token}` }
+    });
     if (!response.ok) {
         throw new Error('Failed to fetch student!');
     }
@@ -18,8 +22,10 @@ export async function getStudentById(apiUrl: string, guidId: string): Promise<St
     return result;
 }
 
-export async function getStudentByVerificationCode(apiUrl: string, verificationCode: string): Promise<StudentResponse> {
-    const response = await fetch(`${apiUrl}/api/students/verificationCode/${verificationCode}`);
+export async function getStudentByVerificationCode(apiParameters: apiEndpointParameters, verificationCode: string): Promise<StudentResponse> {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/students/verificationCode/${verificationCode}`,{
+        headers: {'Authorization': `Bearer ${apiParameters.token}` }
+    });
     if (!response.ok) {
         throw new Error('Failed to fetch student!');
     }
@@ -27,10 +33,13 @@ export async function getStudentByVerificationCode(apiUrl: string, verificationC
     return result;
 }
 
-export async function deleteStudentById(apiUrl: string, guidId: string): Promise<void> {
-    const response = await fetch(`${apiUrl}/api/students/${guidId}`, {
+export async function deleteStudentById(apiParameters: apiEndpointParameters, guidId: string): Promise<void> {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/students/${guidId}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${apiParameters.token}` 
+        }
     });
 
     if (response.status === 404) 
@@ -39,15 +48,18 @@ export async function deleteStudentById(apiUrl: string, guidId: string): Promise
         throw new Error('Failed to delete diploma!');
 }
 
-export async function updateSingleStudent(apiUrl: string, studentRequest: StudentUpdateRequestDto): Promise<StudentResponse> {
+export async function updateSingleStudent(apiParameters: apiEndpointParameters, studentRequest: StudentUpdateRequestDto): Promise<StudentResponse> {
     const studentReq: StudentRequestNew = {
         name: studentRequest.studentName,
         email: studentRequest.emailAddress
     };
 
-    const response = await fetch(`${apiUrl}/api/students/${studentRequest.guidId}`, {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/students/${studentRequest.guidId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${apiParameters.token}` 
+        },
         body: JSON.stringify(studentReq)
     });
 

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse } from "../../../util/types";
+import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse, pdfGenerationResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
-import { delay, generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF } from "../../../util/helper";
+import { delay, generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF, openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/helper";
 import './DiplomaDataForm.css';
-import { PopupType } from "../../MenuItems/Popups/AlertPopup";
+import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
 import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
@@ -16,6 +16,7 @@ import { ExclusiveCheckBoxGroup } from "../../MenuItems/Inputs/ExclusiveCheckBox
 import { PublishButton } from "../../MenuItems/Buttons/PublishButton";
 import { TagsInput } from "../../TagsInput/TagsInput";
 import { SaveButton } from "../../MenuItems/Buttons/SaveButton";
+import { useCustomAlert } from "../../Hooks/useCustomAlert";
 
 type FormData = {
   optionA: boolean;
@@ -25,17 +26,17 @@ type FormData = {
 }
 
 type Props = {
-  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => void;
+  UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => Promise<BootcampResponse>
   setSaltData: (data: SaltData) => void;
   templates: TemplateResponse[] | null;
   tracks: TrackResponse[];
-  customAlert: (alertType: PopupType, title: string, content: string) => void;
   setLoadingMessage: (message: string) => void;
   selectedStudentIndex: number | null;
   setSelectedStudentIndex: (idx: number) => void;
+  updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>
 };
 
-export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, customAlert, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex }: Props) {
+export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex, updateStudentThumbnails }: Props) {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>();
   const [TrackIndex, setTrackIndex] = useState<number>(0);
@@ -43,8 +44,9 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [students, setStudents] = useState<Student[]>();
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>();
   const [attachedFiles, setAttachedFiles] = useState<{ [key: string]: File | null }>({});
-
   const [disableNavbar, setDisableNavbar] = useState<boolean>(false);
+
+  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
   // Styling for generate popup btn
   const [printActive, setPrintActive] = useState<boolean>(false);
@@ -85,10 +87,10 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   }, [TrackIndex, BootcampIndex, AllTrackData]);
 
   const handleFileUpload = async (file: File) => {
-    const dataFromFile = await ParseFileData(file);
+    const dataFromFile = await ParseFileData(file, null, customAlert);
     const updatedStudents = dataFromFile.map(student => ({
       ...student,
-      verificationCode: generateVerificationCode()
+      verificationCode: generateVerificationCode(tracks)
     }));
     setStudents(updatedStudents);
 
@@ -96,7 +98,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     setAttachedFiles({ ...attachedFiles, [bootcampGuid]: file });
   };
 
-  const postSelectedBootcampData = async (both?: Boolean) => {
+  const postSelectedBootcampData = async (both?: Boolean): Promise<BootcampResponse> => {
     setDisableNavbar(true);
     customAlert('loading', 'Adding Diplomas...', '');
     const updateFormDataRequest: FormDataUpdateRequest = {
@@ -110,19 +112,20 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     };
 
     try {
-      await UpdateBootcampWithNewFormdata(updateFormDataRequest, AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId);
+      const response: BootcampResponse = await UpdateBootcampWithNewFormdata(updateFormDataRequest, AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId);
       both
         ? ''
         : customAlert('success', "Diplomas added successfully.", "Successfully added diplomas to the database.");
 
         setDisableNavbar(false);
+      return response;
     } catch (error) {
       customAlert('fail', "Failed to add diplomas:", `${error}`);
       setDisableNavbar(false);
     }
   }
 
-  const generatePDFHandler = async (pdfGenerationScope: 'all' | 'selected', print?: boolean, download?: boolean) => {
+  const generatePDFHandler = async (pdfGenerationScope: 'all' | 'selected', print?: boolean, download?: boolean, bootcampPutResponse?: BootcampResponse) => {
     if (!tracks || !templates) {
       customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
       return;
@@ -157,18 +160,25 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       customAlert('loading', message, '');
     };
 
+    const studentsInput = bootcampPutResponse.students.filter(s => students.some(st => st.name === s.name));
+    let pdfs: pdfGenerationResponse;
+
     try {
-      print 
-      ? await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) 
-      : download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, selectedBootcamp.name, setLoadingMessageAndAlert)
-      : await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) 
-      
-      customAlert('loadingfadeout', '', '');
-      await alertSuccess();
+      pdfs = 
+        print ? await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) 
+        : download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, selectedBootcamp.name, setLoadingMessageAndAlert)
+        : await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert)
     } catch (error) {
       customAlert('fail', "Failed to generate pdfs", `${error}`);
     }
+
+    updateStudentThumbnails(pdfs.pdfFiles, studentsInput, setLoadingMessageAndAlert); //Background task
+
+    customAlert('loadingfadeout', '', '');
+    await alertSuccess();
     
+    print ? await openPrintWindowfromBlob(pdfs.bundledPdfsDisplayObject)
+    : await openWindowfromBlob(pdfs.bundledPdfsDisplayObject) 
   };
 
   const alertSuccess = async () => {
@@ -191,6 +201,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       customAlert('message', "Failed!", "Your bootcamp needs students, Please add one or a few");
       return;
     }
+
     if (data.optionB && printActive) {
       generatePDFHandler(data.pdfGenerationScope, true, false);
       setPrintActive(false);
@@ -199,20 +210,24 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     if (data.optionB && downloadActive) {
       generatePDFHandler(data.pdfGenerationScope, false, true);
       setDownloadActive(false);
-      
     }
+
+    let bootcampPutResponse;
+
     if (data.optionA && data.optionB) {
-      postSelectedBootcampData(true);
+      bootcampPutResponse = await postSelectedBootcampData(true);
+      data.optionB && !printActive && !downloadActive && await generatePDFHandler(data.pdfGenerationScope, false, false, bootcampPutResponse)
+      data.optionB && printActive && !downloadActive && await generatePDFHandler(data.pdfGenerationScope, true, false, bootcampPutResponse)
+      data.optionB && ! printActive && downloadActive && await generatePDFHandler(data.pdfGenerationScope, false, true, bootcampPutResponse)
+
     } else if (data.optionA) {
-      postSelectedBootcampData();
-    }
-    if (data.optionB && !printActive && !downloadActive) {
-      generatePDFHandler(data.pdfGenerationScope);
+      bootcampPutResponse = await postSelectedBootcampData();
     }
   };
 
   return (
     <>
+      <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
       <form className="diploma-making-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="diploma-making-form__select-track diploma-making-form__select-container">
           <label htmlFor="track" className="diploma-making-form__label">
@@ -295,7 +310,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
           <div className="diploma-making-form__student-data__items-wrapper">
             {students && 
               <TagsInput
-                selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode() })))}
+                selectedTags={(names) => setStudents(names.map(name => ({ name, email: '', verificationCode: generateVerificationCode(tracks) })))}
                 tags={students.map(student => student.name)}
                 setPage={(idx: number) => setSelectedStudentIndex(idx)}
               />
@@ -363,10 +378,11 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
             />
             <SaveButton 
               classNameOverride={`diploma-making-form__print-button ${generateBtnActive && 'active'}`}
-              onClick={() => setPrintActive(true)} saveButtonType='grandTheftAuto' 
+              onClick={() => setPrintActive(true)} 
+              saveButtonType='grandTheftAuto' 
               textfield="" 
               customIcon={
-                <svg fill="#ababba" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="#ababba" stroke-width="0.00032" transform="matrix(1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.064"></g><g id="SVGRepo_iconCarrier"> <title>print</title> <path d="M5.656 6.938l-0.344 2.688h11.781l-0.344-2.688c0-0.813-0.656-1.438-1.469-1.438h-8.188c-0.813 0-1.438 0.625-1.438 1.438zM1.438 11.094h19.531c0.813 0 1.438 0.625 1.438 1.438v8.563c0 0.813-0.625 1.438-1.438 1.438h-2.656v3.969h-14.219v-3.969h-2.656c-0.813 0-1.438-0.625-1.438-1.438v-8.563c0-0.813 0.625-1.438 1.438-1.438zM16.875 25.063v-9.281h-11.344v9.281h11.344zM15.188 18.469h-8.125c-0.188 0-0.344-0.188-0.344-0.375v-0.438c0-0.188 0.156-0.344 0.344-0.344h8.125c0.188 0 0.375 0.156 0.375 0.344v0.438c0 0.188-0.188 0.375-0.375 0.375zM15.188 21.063h-8.125c-0.188 0-0.344-0.188-0.344-0.375v-0.438c0-0.188 0.156-0.344 0.344-0.344h8.125c0.188 0 0.375 0.156 0.375 0.344v0.438c0 0.188-0.188 0.375-0.375 0.375zM15.188 23.656h-8.125c-0.188 0-0.344-0.188-0.344-0.375v-0.438c0-0.188 0.156-0.344 0.344-0.344h8.125c0.188 0 0.375 0.156 0.375 0.344v0.438c0 0.188-0.188 0.375-0.375 0.375z"></path> </g></svg>
+                <svg fill="#ababba" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="#ababba" strokeWidth="0.00032" transform="matrix(1, 0, 0, 1, 0, 0)"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" stroke="#CCCCCC" strokeWidth="0.064"></g><g id="SVGRepo_iconCarrier"> <title>print</title> <path d="M5.656 6.938l-0.344 2.688h11.781l-0.344-2.688c0-0.813-0.656-1.438-1.469-1.438h-8.188c-0.813 0-1.438 0.625-1.438 1.438zM1.438 11.094h19.531c0.813 0 1.438 0.625 1.438 1.438v8.563c0 0.813-0.625 1.438-1.438 1.438h-2.656v3.969h-14.219v-3.969h-2.656c-0.813 0-1.438-0.625-1.438-1.438v-8.563c0-0.813 0.625-1.438 1.438-1.438zM16.875 25.063v-9.281h-11.344v9.281h11.344zM15.188 18.469h-8.125c-0.188 0-0.344-0.188-0.344-0.375v-0.438c0-0.188 0.156-0.344 0.344-0.344h8.125c0.188 0 0.375 0.156 0.375 0.344v0.438c0 0.188-0.188 0.375-0.375 0.375zM15.188 21.063h-8.125c-0.188 0-0.344-0.188-0.344-0.375v-0.438c0-0.188 0.156-0.344 0.344-0.344h8.125c0.188 0 0.375 0.156 0.375 0.344v0.438c0 0.188-0.188 0.375-0.375 0.375zM15.188 23.656h-8.125c-0.188 0-0.344-0.188-0.344-0.375v-0.438c0-0.188 0.156-0.344 0.344-0.344h8.125c0.188 0 0.375 0.156 0.375 0.344v0.438c0 0.188-0.188 0.375-0.375 0.375z"></path> </g></svg>
               }
               onMouseEnter={() => {setGenerateBtnActive(true); setPrintActive(true)}}
               onMouseLeave={() => {setGenerateBtnActive(true); setPrintActive(false); setGenerateBtnActive(false)}}
@@ -378,8 +394,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
               textfield=""
               customIcon={
                 <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#000000">
-                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                  <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                  <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                  <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
                   <g id="SVGRepo_iconCarrier">
                     <g>
                       <path fill="#ababba" d="M378.409,0H208.294h-13.176l-9.314,9.314L57.016,138.102l-9.314,9.314v13.176v265.514 c0,47.36,38.528,85.895,85.895,85.895h244.811c47.36,0,85.889-38.535,85.889-85.895V85.896C464.298,38.528,425.769,0,378.409,0z M432.493,426.105c0,29.877-24.214,54.091-54.084,54.091H133.598c-29.877,0-54.091-24.214-54.091-54.091V160.591h83.717 c24.885,0,45.07-20.178,45.07-45.07V31.804h170.115c29.87,0,54.084,24.214,54.084,54.092V426.105z"></path>

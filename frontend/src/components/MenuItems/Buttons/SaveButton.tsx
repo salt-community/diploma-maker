@@ -12,16 +12,18 @@ type Props = {
   disabled?: boolean;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  type?: 'button' | 'submit' | 'reset';
 };
 
 export type SaveButtonType = 'grandTheftAuto' | 'normal' | 'remove' | 'warning';
 
-export const SaveButton = ({ classNameOverride, onClick, saveButtonType, textfield, customIcon, disabled, onMouseEnter, onMouseLeave }: Props) => (
+export const SaveButton = ({ classNameOverride, onClick, saveButtonType, textfield, customIcon, disabled, onMouseEnter, onMouseLeave, type }: Props) => (
   <button 
     className={"save-btn " + classNameOverride + (saveButtonType === 'grandTheftAuto' ? ' gta' : saveButtonType === 'remove' ? ' remove' : ' normal')} 
     onClick={() => {!disabled && onClick()}}
     onMouseEnter={onMouseEnter}
     onMouseLeave={onMouseLeave}
+    type={type}
   >
     {customIcon ? (
       <>

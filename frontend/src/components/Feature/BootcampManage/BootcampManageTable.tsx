@@ -4,7 +4,7 @@ import { useCustomAlert } from "../../Hooks/useCustomAlert";
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../../util/types";
 import { utcFormatterSlash } from "../../../util/helper";
 import { ConfirmationPopup } from "../../MenuItems/Popups/ConfirmationPopup";
-import { AlertPopup } from "../../MenuItems/Popups/AlertPopup";
+import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { ArrowIcon } from "../../MenuItems/Icons/ArrowIcon";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
 import { DeleteButtonSimple } from "../../MenuItems/Buttons/DeleteButtonSimple";
@@ -26,10 +26,10 @@ type SortOrder =
   'graduationdate-ascending' | 'graduationdate-descending' |
   'track-ascending' | 'track-descending';
 
-export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks }: Props) {
+export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks  }: Props) {
   const { register, handleSubmit, setValue, watch, reset } = useForm();
-  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
+  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1920 ? 5 : 11);
   const [sortOrder, setSortOrder] = useState<SortOrder>('graduationdate-descending');

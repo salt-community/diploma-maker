@@ -1,78 +1,99 @@
-.navbar{
+.navbar {
     position: sticky;
     background-color: #181823;
     height: 80px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between; 
     top: 0;
-    padding: 1% 5%;
+    padding: 1% 2% 1% 4%;
     z-index: 5000;
 }
-.navbar__menu{
+
+.navbar__menu {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    gap: 2.5rem;
+    width: 100%; 
 }
-    .navbar__item{
-        color: #ababba;
-        font-weight: 600;
-        border-radius: .2rem;
-        padding: 2px 2px;
-        transition: all 150ms ease-in;
-    }
-    .navbar__item:hover{
-        color: #fff;
-        transition: all 150ms ease-in;
-    }
-    .navbar__item:hover svg .stroke{
-        stroke: #fff;
-        transition: all 150ms ease-in;
-    }
-    .navbar__item:hover svg .fill{
-        fill: #fff;
-        transition: all 150ms ease-in;
-    }
-    .navbar__item svg path{
-        transition: all 150ms ease-in;
-    }
-    .navbar__link{
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        gap: .3rem;
-    }
-        .navbar__link svg{
-            width: 20px;
-        }
-    
-    .active{
-        color: #fffffff1;
-    }
-    .active svg .stroke{
-        stroke: #fffffff1;
-    }
-    .active svg .fill{
-        fill: #fffffff1;
-    }
-        
 
+.navbar__items {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2.5rem;
+    flex-grow: 1; 
+}
+
+.navbar__item {
+    color: #ababba;
+    font-weight: 600;
+    border-radius: .2rem;
+    padding: 2px 2px;
+    transition: all 150ms ease-in;
+}
+
+.navbar__item:hover {
+    color: #fff;
+    transition: all 150ms ease-in;
+}
+
+.navbar__item:hover svg .stroke {
+    stroke: #fff;
+    transition: all 150ms ease-in;
+}
+
+.navbar__item:hover svg .fill {
+    fill: #fff;
+    transition: all 150ms ease-in;
+}
+
+.navbar__item svg path {
+    transition: all 150ms ease-in;
+}
+
+.navbar__link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: .3rem;
+}
+
+.navbar__link svg {
+    width: 20px;
+}
+
+.active {
+    color: #fffffff1;
+}
+
+.active svg .stroke {
+    stroke: #fffffff1;
+}
+
+.active svg .fill {
+    fill: #fffffff1;
+}
 
 /* Template Creator icon */
 .cls-1 {
-    fill: none;
-    stroke: #ababba;
+    /* fill: none;
+    stroke: #ababba; */
     strokeLinecap: round;
     strokeLinejoin: round;
     strokeWidth: 1.5px;
     transition: all 150ms ease-in;
 }
-    .navbar__item:hover .cls-1{
-        stroke: #fff;
-        transition: all 150ms ease-in;
-    }
-    .active svg .cls-1{
-        stroke: #fffffff1;
-        transition: all 150ms ease-in;
-    }
+
+.navbar__item:hover .cls-1 {
+    stroke: #fff;
+    transition: all 150ms ease-in;
+}
+
+.active svg .cls-1 {
+    stroke: #fffffff1;
+    transition: all 150ms ease-in;
+}
+
+.navbar__item.user-profile {
+    margin-left: auto; 
+}

@@ -12,7 +12,7 @@ import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefaul
 import { useNavigate } from 'react-router-dom';
 import { delay, generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF, populateField, populateIdField, utcFormatter } from '../../util/helper';
 import { getTemplate, makeTemplateInput } from '../../templates/baseTemplate';
-import { AlertPopup, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
+import { AlertPopup, CustomAlertPopupProps, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../../components/MenuItems/Buttons/SelectButton';
 import { EmailClient } from '../../components/EmailClient/EmailClient';
@@ -24,6 +24,7 @@ import { Template } from '@pdfme/common';
 import { InfoPopup } from '../../components/MenuItems/Popups/InfoPopup';
 import { VerifyIcon } from '../../components/MenuItems/Icons/VerifyIcon';
 import { useLoadingMessage } from '../../components/Contexts/LoadingMessageContext';
+import { LazyImageLoader } from '../../components/Content/LazyImageLoader';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,
@@ -34,7 +35,7 @@ type Props = {
     setLoadingMessage: (message: string) => void;
 }
 
-export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail, setLoadingMessage }: Props) => {
+export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail, setLoadingMessage  }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -43,9 +44,11 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
 
-    const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+    const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
     const { loadingMessage } = useLoadingMessage();
+
+    const api = import.meta.env.VITE_API_URL + "/api/Blob/";
 
     useEffect(() => {
         if (bootcamps) {
@@ -75,6 +78,17 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         (!selectedTrack || bootcamps?.some(bootcamp => bootcamp.track.id.toString() === selectedTrack && bootcamp.students.includes(item)))
     );
 
+    const [imageLoadedStates, setImageLoadedStates] = useState<boolean[]>(new Array(visibleItems.length).fill(false));
+    
+    const handleImageLoad = (index: number) => {
+        setImageLoadedStates(prevStates => {
+          const newStates = [...prevStates];
+          newStates[index] = true;
+          return newStates;
+        });
+      };
+
+    
     const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
     const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
 
@@ -326,24 +340,31 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                     {loading ? (
                         <SpinnerDefault classOverride="spinner" />
                     ) : (
-                        // @ts-ignore
-                        selectedItems.length > 0 ? selectedItems.map((student: Student, index) => (
-                            <button key={student.guidId} className='list-module__item'>
-                                <p className='list-module__item-title'>{student.name}</p>
-                                <img className='list-module__item-bg' src="https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg" alt="" />
-                                <section className='list-module__item-menu'>
-                                    <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
-                                    <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
-                                    <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
-                                </section>
-                                {student.lastGenerated && 
-                                    <div onClick={() => navigateToVerificationPage(student.verificationCode)} className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
-                                        <VerifyIcon />
-                                    </div>
-                                }
-                            </button>
-                        )) :
-                            <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />
+                        visibleItems.length > 0 ? visibleItems.map((student: Student, index) => {
+                            const isVisible = index >= startIndex && index < startIndex + itemsPerPage;
+                            const defaultImg = "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg";
+                            return (
+                                <button key={student.guidId} className={`list-module__item ${isVisible ? 'visible' : 'hidden'}`}>
+                                    {!student.previewImageUrl && <p className='list-module__item-title'>{student.name}</p>}
+                                    <LazyImageLoader 
+                                        previewImageLQIPUrl={student.previewImageLQIPUrl ? `${api}${student.previewImageLQIPUrl}` : defaultImg} 
+                                        previewImageUrl={student.previewImageUrl ? `${api}${student.previewImageUrl}` : defaultImg} 
+                                        loadTrigger={() => handleImageLoad(index)}
+                                    />
+                                    <section className='list-module__item-menu'>
+                                        <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
+                                        <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
+                                        <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
+                                    </section>
+                                    {student.lastGenerated && imageLoadedStates[index] && 
+                                        <div onClick={() => navigateToVerificationPage(student.verificationCode)} className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
+                                            <VerifyIcon />
+                                        </div>
+                                    }
+                                </button>
+                            );
+                        }) :
+                        <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />
                     )}
                 </div>
                 {selectedItems.length > 0 &&

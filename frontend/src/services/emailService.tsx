@@ -1,6 +1,6 @@
-import { EmailSendRequest } from "../util/types";
+import { apiEndpointParameters, EmailSendRequest } from "../util/types";
 
-export async function postEmail(apiUrl: string, emailRequest: EmailSendRequest): Promise<void> {
+export async function postEmail(apiParameters: apiEndpointParameters, emailRequest: EmailSendRequest): Promise<void> {
     const formData = new FormData();
     formData.append('file', emailRequest.file);
     formData.append('email', emailRequest.email);
@@ -8,7 +8,8 @@ export async function postEmail(apiUrl: string, emailRequest: EmailSendRequest):
     formData.append('title', emailRequest.title);
     formData.append('description', emailRequest.description);
 
-    const response = await fetch(`${apiUrl}/api/Email/email-student/${emailRequest.guidId}`, {
+    const response = await fetch(`${apiParameters.endpointUrl}/api/Email/email-student/${emailRequest.guidId}`, {
+        headers: {Authorization: `Bearer ${apiParameters.token}`},
         method: 'POST',
         body: formData,
     });
