@@ -123,38 +123,38 @@ namespace DiplomaMakerApi.Services
             return Task.FromResult(normalizedPath);
         }
 
-        public async Task<IFormFile> ConvertPdfToPng(string base64String, string fileName, ILogger logger)
+        public async Task<IFormFile> ConvertPdfToPng(string base64String, string fileName)
         {
-            logger.LogInformation("Starting PDF to PNG conversion process.");
+            _logger.LogInformation("Starting PDF to PNG conversion process.");
 
             byte[] pdfBytes = Convert.FromBase64String(base64String);
-            logger.LogInformation("Converted base64 string to byte array. Length: {Length}", pdfBytes.Length);
+            _logger.LogInformation("Converted base64 string to byte array. Length: {Length}", pdfBytes.Length);
 
             using (MemoryStream pdfStream = new MemoryStream(pdfBytes))
             {
-                logger.LogInformation("Created MemoryStream for PDF. Stream length: {Length}", pdfStream.Length);
+                _logger.LogInformation("Created MemoryStream for PDF. Stream length: {Length}", pdfStream.Length);
 
                 PdfToImageConverter imageConverter = new PdfToImageConverter();
 
                 imageConverter.Load(pdfStream);
-                logger.LogInformation("Loaded PDF into PdfToImageConverter.");
+                _logger.LogInformation("Loaded PDF into PdfToImageConverter.");
 
                 using (Stream imageStream = imageConverter.Convert(0, false, false))
                 {
-                    logger.LogInformation("Converted PDF to image stream. Stream length: {Length}", imageStream.Length);
+                    _logger.LogInformation("Converted PDF to image stream. Stream length: {Length}", imageStream.Length);
                     imageStream.Position = 0;
 
                     using (MemoryStream pngStream = new MemoryStream())
                     {
                         System.Drawing.Image image = System.Drawing.Image.FromStream(imageStream);
-                        logger.LogInformation("Created image from stream.");
+                        _logger.LogInformation("Created image from stream.");
 
                         image.Save(pngStream, System.Drawing.Imaging.ImageFormat.Png);
-                        logger.LogInformation("Saved image as PNG to memory stream. Stream length: {Length}", pngStream.Length);
+                        _logger.LogInformation("Saved image as PNG to memory stream. Stream length: {Length}", pngStream.Length);
                         pngStream.Position = 0;
 
                         var pngFileStream = new MemoryStream(pngStream.ToArray());
-                        logger.LogInformation("Copied PNG stream to new memory stream.");
+                        _logger.LogInformation("Copied PNG stream to new memory stream.");
                         pngFileStream.Position = 0;
 
                         IFormFile formFile = new FormFile(pngFileStream, 0, pngFileStream.Length, "image", fileName)
@@ -163,7 +163,7 @@ namespace DiplomaMakerApi.Services
                             ContentType = "image/png"
                         };
 
-                        logger.LogInformation("Created IFormFile object with name {FileName}.", fileName);
+                        _logger.LogInformation("Created IFormFile object with name {FileName}.", fileName);
 
                         return formFile;
                     }
