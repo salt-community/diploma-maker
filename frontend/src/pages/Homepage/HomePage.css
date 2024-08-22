@@ -52,18 +52,16 @@
 }
 
 .homepage__card:hover .homepage__card-header svg .fill{
-  fill: #fff;
+  
   transition: all 350ms ease;
 }
 
 .homepage__card:hover .homepage__card-header svg .stroke{
-  stroke: #fff;
+
   transition: all 350ms ease;
 }
-.homepage__card:hover .homepage__card-header svg .cls-1{
-  stroke: #fff;
-  transition: all 350ms ease;
-}
+
+
 .homepage_sign-in-section {
   display: flex;
   flex-direction: column;
@@ -75,6 +73,58 @@
 
 .homepage_login-text {
   font-size: 11px;
-  color: #dbd5d5;
+  color: #ababba;
 }
 
+.homepage__card{
+  transition: all 550ms ease;
+}
+.homepage__card:hover{
+  filter: brightness(100%) saturate(125%);
+  transition: all 550ms ease;
+}
+
+
+/* APPLIES GRADIENTS TO SVGS (OTHERWISE ONE GRADIENT OVERRIDES THE OTHER IF THEY ARE NAMED THE SAME CLASS) */
+.homepage__card:nth-of-type(1) .homepage__card-header svg .fill{
+  fill: url("#gradient1");
+}
+.homepage__card:nth-of-type(1) .homepage__card-header svg .stroke{
+  stroke: url("#gradient1");
+}
+.homepage__card:nth-of-type(2) .homepage__card-header svg .fill{
+  fill: url("#gradient2");
+}
+.homepage__card:nth-of-type(2) .homepage__card-header svg .stroke{
+  stroke: url("#gradient2");
+}
+.homepage__card:nth-of-type(3) .homepage__card-header svg .fill{
+  fill: url("#gradient3");
+}
+.homepage__card:nth-of-type(3) .homepage__card-header svg .stroke{
+  stroke: url("#gradient3");
+}
+.homepage__card:nth-of-type(4) .homepage__card-header svg .fill{
+  fill: url("#gradient4");
+}
+.homepage__card:nth-of-type(4) .homepage__card-header svg .stroke{
+  stroke: url("#gradient4");
+}
+.homepage__card:nth-of-type(5) .homepage__card-header svg .fill{
+  fill: url("#gradient5");
+}
+.homepage__card:nth-of-type(5) .homepage__card-header svg .stroke{
+  stroke: url("#gradient5");
+}
+.homepage__card:nth-of-type(6) .homepage__card-header svg .fill{
+  fill: url("#gradient6");
+}
+.homepage__card:nth-of-type(6) .homepage__card-header svg .stroke{
+  stroke: url("#gradient6");
+}
+.homepage__card:nth-of-type(7) .homepage__card-header svg .fill{
+  fill: url("#gradient7");
+}
+.homepage__card:nth-of-type(7) .homepage__card-header svg .stroke{
+  stroke: url("#gradient7");
+}

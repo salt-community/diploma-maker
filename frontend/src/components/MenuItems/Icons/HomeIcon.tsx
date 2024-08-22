@@ -7,8 +7,8 @@ export const HomeIcon = () => {
             <defs>
 
             </defs>
-            <g stroke="none" strokeWidth="1" fill="#ababba" fillRule="evenodd">
-                <g transform="translate(1.000000, 1.000000)" fill="#ababba">
+            <g stroke="none" stroke-width="1" className="fill" fill="#ababba" fill-rule="evenodd">
+                <g transform="translate(1.000000, 1.000000)" className="fill" fill="#ababba">
                     <path d="M15.794,7.77 L11.984,3.864 L11.9839997,1.01706251 L11.0159997,1.03906251 L11.016,2.767 L8.502,0.245 C8.224,-0.031 7.776,-0.031 7.499,0.245 L0.206,7.771 C-0.069,8.048 -0.068,8.498 0.206,8.773 C0.482,9.049 0.933,9.049 1.209,8.772 L8,1.982 L14.793,8.772 C14.931,8.91 15.111,8.98 15.293,8.98 C15.474,8.98 15.654,8.912 15.794,8.773 C16.068,8.496 16.068,8.045 15.794,7.77 L15.794,7.77 Z" className="si-glyph-fill">
 
                     </path>

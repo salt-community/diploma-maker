@@ -1,7 +1,12 @@
 export const CogWheelIcon = () => {
     return (
       <svg className="btn-close-icon rotatesvg" version="1.1" id="Uploaded to svgrepo.com" height="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-          <path d="M27.5,14h-2.731c-0.228-1.003-0.624-1.94-1.156-2.785l1.933-1.933c0.195-0.195,0.195-0.512,0-0.707
+          <linearGradient id="gradient3" x1="0%" y1="100%" x2="100%" y2="0%" gradientUnits="userSpaceOnUse">
+              <stop offset="20%" stop-color="#59387E" />
+              <stop offset="70%" stop-color="#D52795" />
+              <stop offset="100%" stop-color="#BD4775" />
+          </linearGradient>
+          <path fill="#ababba" className="fill" d="M27.5,14h-2.731c-0.228-1.003-0.624-1.94-1.156-2.785l1.933-1.933c0.195-0.195,0.195-0.512,0-0.707
               l-2.121-2.121c-0.195-0.195-0.512-0.195-0.707,0l-1.933,1.933C19.94,7.855,19.003,7.459,18,7.231V4.5C18,4.224,17.776,4,17.5,4h-3
               C14.224,4,14,4.224,14,4.5v2.731c-1.003,0.228-1.94,0.624-2.785,1.156L9.282,6.454c-0.195-0.195-0.512-0.195-0.707,0L6.454,8.575
               c-0.195,0.195-0.195,0.512,0,0.707l1.933,1.933C7.855,12.06,7.459,12.997,7.231,14H4.5C4.224,14,4,14.224,4,14.5v3

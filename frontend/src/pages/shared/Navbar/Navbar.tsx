@@ -21,7 +21,7 @@ export const NavBar = () => {
                     <>
                         <div className="navbar__items">
                             <li className="navbar__item home">
-                                <Link to="/home" className={"navbar__link " + ((location.pathname === '/home' || location.pathname === '/home') && "active")}>
+                                <Link to="/home" className={"navbar__link " + ((location.pathname === '/home' || location.pathname === '/Home' || location.pathname === '/') && "active")}>
                                     <HomeIcon />
                                     Home
                                 </Link>
