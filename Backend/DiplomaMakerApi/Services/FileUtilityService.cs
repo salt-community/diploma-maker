@@ -124,6 +124,11 @@ namespace DiplomaMakerApi.Services
 
         public async Task<IFormFile> ConvertPdfToPng(string base64String, string fileName)
         {
+            if (string.IsNullOrEmpty(base64String))
+            {
+                _logger.LogError("Base64 string is null or empty.");
+                throw new ArgumentException("Base64 string cannot be null or empty.");
+            }
             try
             {
                 byte[] pdfBytes = Convert.FromBase64String(base64String);
