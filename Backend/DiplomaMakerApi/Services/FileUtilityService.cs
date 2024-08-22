@@ -5,6 +5,8 @@ using Syncfusion.PdfToImageConverter;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using System.Drawing;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace DiplomaMakerApi.Services
 {
@@ -146,18 +148,16 @@ namespace DiplomaMakerApi.Services
 
                     using (MemoryStream pngStream = new MemoryStream())
                     {
-                        System.Drawing.Image image = System.Drawing.Image.FromStream(imageStream);
-                        _logger.LogInformation("Created image from stream.");
+                        using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load<Rgba32>(imageStream))
+                        {
+                            _logger.LogInformation("Loaded image from stream.");
+                            image.Save(pngStream, new PngEncoder());
+                        }
 
-                        image.Save(pngStream, System.Drawing.Imaging.ImageFormat.Png);
                         _logger.LogInformation("Saved image as PNG to memory stream. Stream length: {Length}", pngStream.Length);
                         pngStream.Position = 0;
 
-                        var pngFileStream = new MemoryStream(pngStream.ToArray());
-                        _logger.LogInformation("Copied PNG stream to new memory stream.");
-                        pngFileStream.Position = 0;
-
-                        IFormFile formFile = new FormFile(pngFileStream, 0, pngFileStream.Length, "image", fileName)
+                        IFormFile formFile = new FormFile(pngStream, 0, pngStream.Length, "image", fileName)
                         {
                             Headers = new HeaderDictionary(),
                             ContentType = "image/png"
