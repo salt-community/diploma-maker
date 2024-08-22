@@ -20,7 +20,6 @@ RUN apt-get update && apt-get install -y \
     libgdiplus \
     libc6-dev \
     libx11-dev \
-    libdl2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
