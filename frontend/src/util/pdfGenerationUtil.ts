@@ -6,6 +6,26 @@ import { generate } from "@pdfme/generator";
 import { getPlugins } from "./helper";
 import JSZip from "jszip";
 
+export const generatePDF = async (template: Template, inputs: any, returnFile?: boolean): Promise<Blob | void> => {
+    if(!template) return;
+    const font = await getFontsData();
+
+    const pdf = await generate({
+        template,
+        inputs,
+        options: { font },
+        plugins: getPlugins(),
+    });
+
+    const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+    if(returnFile){
+        return blob;
+    }
+    else{
+        window.open(URL.createObjectURL(blob));
+    }
+};
+
 export const newGenerateCombinedPDF = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<pdfGenerationResponse> => {
     setLoadingMessage("Generating combined pdf!");
 
@@ -121,4 +141,26 @@ export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], in
     }
 
     return response;
+};
+
+
+export const generatePDFDownload = async (template: Template, inputs: any, fileName: string): Promise<void> => {
+    if (!template) return;
+
+    const font = await getFontsData();
+  
+    const pdf = await generate({
+      template,
+      inputs,
+      options: { font },
+      plugins: getPlugins(),
+    });
+  
+    const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${fileName}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 };

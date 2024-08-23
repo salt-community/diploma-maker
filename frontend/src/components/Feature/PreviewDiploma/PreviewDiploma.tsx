@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import {  SaltData } from "../../../util/types"
-import { getPlugins, newGenerateCombinedPDF } from "../../../util/helper";
+import { getPlugins } from "../../../util/helper";
 import { Form, Viewer } from "@pdfme/ui";
 import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../../../util/dataHelpers";
 import './PreviewDiploma.css'

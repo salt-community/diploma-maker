@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse, pdfGenerationResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
-import { generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF, openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/helper";
+import { generateVerificationCode, mapBootcampToSaltData2 } from "../../../util/helper";
 import './DiplomaDataForm.css';
 import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
@@ -17,6 +17,8 @@ import { PublishButton } from "../../MenuItems/Buttons/PublishButton";
 import { TagsInput } from "../../TagsInput/TagsInput";
 import { SaveButton } from "../../MenuItems/Buttons/SaveButton";
 import { useCustomAlert } from "../../Hooks/useCustomAlert";
+import { newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF } from "../../../util/pdfGenerationUtil";
+import { openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/fileActionUtil";
 
 type FormData = {
   optionA: boolean;

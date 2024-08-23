@@ -5,7 +5,7 @@ import { BootcampResponse, StudentResponse, TemplateResponse } from "../../util/
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { generatePDF, getPlugins } from "../../util/helper";
+import { getPlugins } from "../../util/helper";
 import { makeTemplateInput } from "../../templates/baseTemplate";
 import { mapTemplateInputsToTemplateViewerSingle, templateInputsSingleBootcampandTemplate } from "../../util/dataHelpers";
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
@@ -13,6 +13,7 @@ import { SuccessIcon } from '../../components/MenuItems/Icons/SuccessIcon';
 import { NextIcon } from '../../components/MenuItems/Icons/NextIcon';
 import logoBlack from '/icons/logoBlack.png'
 import { getFontsData } from '../../util/fontsUtil';
+import { generatePDF } from '../../util/pdfGenerationUtil';
 
 type Props = {
     getStudentByVerificationCode: (verificationCode: string) => void;

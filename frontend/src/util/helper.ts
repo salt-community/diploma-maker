@@ -90,67 +90,6 @@ export const getPlugins = () => {
   }
 }
 
-export const generatePDF = async (template: Template, inputs: any, returnFile?: boolean): Promise<Blob | void> => {
-  if(!template) return;
-  const font = await getFontsData();
- 
-  const pdf = await generate({
-    template,
-    inputs,
-    options: { font },
-    plugins: getPlugins(),
-  });
-
-  const blob = new Blob([pdf.buffer], { type: "application/pdf" });
-  if(returnFile){
-    return blob;
-  }
-  else{
-    window.open(URL.createObjectURL(blob));
-  }
-};
-
-export const generatePDFDownload = async (template: Template, inputs: any, fileName: string): Promise<void> => {
-  if (!template) return;
-  const font = await getFontsData();
-
-  const pdf = await generate({
-    template,
-    inputs,
-    options: { font },
-    plugins: getPlugins(),
-  });
-
-  const blob = new Blob([pdf.buffer], { type: "application/pdf" });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = `${fileName}.pdf`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
-
-export const oldGenerateCombinedPDF = async (templates: Template[], inputsArray: any[]) => {
-  const font = await getFontsData();
-
-  const combinedTemplate: Template = {
-    ...templates[0],
-    schemas: templates.flatMap(template => template.schemas),
-    sampledata: inputsArray.flat(),
-  };
-
-  const pdf = await generate({
-    template: combinedTemplate,
-    // @ts-ignore
-    inputs: combinedTemplate.sampledata,
-    options: { font },
-    plugins: getPlugins(),
-  });
-
-  const blob = new Blob([pdf.buffer], { type: "application/pdf" });
-  window.open(URL.createObjectURL(blob));
-}
-
 // No Longer Used In front-end cause it slows down application. But it is faster than doing it in the backend
 export const convertPDFToImage = async (pdfInput: ArrayBuffer): Promise<Blob | null> => {
   try {
@@ -219,34 +158,6 @@ export const generatePreviewImages = async (pdfs: Uint8Array[], students: Studen
     
   } catch (error) {
     setBGLoadingMessage(`Failed to Update PreviewImages!. ${error.message || 'Unknown error'}`)
-  }
-}
-
-
-export const openWindowfromBlob = async (input: Blob) => {
-  window.open(URL.createObjectURL(input))
-}
-
-export const openPrintWindowfromBlob = async (input: Blob) => {
-  const blobUrl = URL.createObjectURL(input);
-  const printWindow = window.open('', '_blank');
-
-  if (printWindow) {
-    printWindow.document.write(`
-      <html>
-        <head><title>Generated Bootcamp Pdfs</title></head>
-        <body style="margin: 0;">
-          <iframe src="${blobUrl}" style="border: none; width: 100%; height: 100%;" onload="this.contentWindow.print();"></iframe>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-
-    printWindow.onafterprint = () => {
-      URL.revokeObjectURL(blobUrl);
-      printWindow.close();
-    };
   }
 }
 
