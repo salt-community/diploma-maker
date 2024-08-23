@@ -119,12 +119,7 @@ export function mapBootcampToSaltData2(TrackName: string, bootcamp: BootcampResp
   };
 }
 
-export const getPdfDimensions = async (pdfString: string): Promise<Size> => {
-  const pdfDoc = await PDFDocument.load(pdfString);
-  const firstPage = pdfDoc.getPage(0);
-  const { width, height } = firstPage.getSize();
-  return { width, height };
-};
+
 
 export async function openIndexedTemplatesDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
