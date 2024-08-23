@@ -2,6 +2,7 @@ import { Font } from "@pdfme/common";
 import { UserFontResponseDto } from "./types";
 import { defaultFontsData } from "../data/fontData";
 import { api } from "./apiUtil";
+import { getFontFromIndexedDB, storeFontInIndexedDB } from "./browserStorageUtil";
 
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
 let userFontsImport: UserFontResponseDto[]
@@ -84,57 +85,4 @@ export const refreshUserFonts = async () => {
   fontCache.clear();
 
   await getFontsData();
-};
-
-const openFontsIndexedDB = () => {
-    return new Promise<IDBDatabase>((resolve, reject) => {
-        const request = indexedDB.open('fontDatabase', 1);
-
-        request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-        db.createObjectStore('fonts');
-        };
-
-        request.onsuccess = (event: Event) => {
-        resolve((event.target as IDBOpenDBRequest).result);
-        };
-
-        request.onerror = (event: Event) => {
-        reject((event.target as IDBOpenDBRequest).error);
-        };
-    });
-};
-  
-const storeFontInIndexedDB = async (label: string, fontData: ArrayBuffer) => {
-    const db = await openFontsIndexedDB();
-    return new Promise<void>((resolve, reject) => {
-        const transaction = db.transaction(['fonts'], 'readwrite');
-        const store = transaction.objectStore('fonts');
-        const request = store.put(fontData, label);
-
-        request.onsuccess = () => {
-        resolve();
-        };
-
-        request.onerror = (event: Event) => {
-        reject((event.target as IDBRequest).error);
-        };
-    });
-};
-  
-const getFontFromIndexedDB = async (label: string): Promise<ArrayBuffer | null> => {
-    const db = await openFontsIndexedDB();
-    return new Promise<ArrayBuffer | null>((resolve, reject) => {
-        const transaction = db.transaction(['fonts'], 'readonly');
-        const store = transaction.objectStore('fonts');
-        const request = store.get(label);
-
-        request.onsuccess = (event: Event) => {
-        resolve((event.target as IDBRequest).result as ArrayBuffer | null);
-        };
-
-        request.onerror = (event: Event) => {
-        reject((event.target as IDBRequest).error);
-        };
-    });
 };
