@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
 import { BootcampResponse, SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse, StudentResponse, Student } from "../../util/types";
-import {
-  mapBootcampToSaltData,
-} from "../../util/helper";
 import DiplomaDataForm from "../../components/Feature/Diplomadataform/DiplomaDataForm";
 import './DiplomaMaking.css';
 import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
