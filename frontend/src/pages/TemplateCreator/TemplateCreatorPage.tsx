@@ -5,7 +5,7 @@ import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse, UserFontRequestDto, XYPosition} from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { cloneDeep, delay, getFontsData, getPdfDimensions, getPlugins, refreshUserFonts } from "../../util/helper";
+import { cloneDeep, delay, getPdfDimensions, getPlugins } from "../../util/helper";
 import { makeTemplateInput } from "../../templates/baseTemplate";
 import { PDFDocument } from "pdf-lib";
 import { SaveButton, SaveButtonType,} from "../../components/MenuItems/Buttons/SaveButton";
@@ -26,6 +26,7 @@ import { Size } from "@pdfme/common";
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 import { UserFontsClient } from "../../components/Feature/TemplateCreator/UserFontsClient";
 import { FontsIcon } from "../../components/MenuItems/Icons/FontsIcon";
+import { getFontsData, refreshUserFonts } from "../../util/fontsUtility";
 
 type Props = {
   templates: TemplateResponse[] | null;

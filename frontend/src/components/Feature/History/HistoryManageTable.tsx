@@ -6,7 +6,7 @@ import React from 'react';
 import { HistorySnapshotBundledData, HistorySnapshotResponse, MakeActiveSnapshotRequestDto, TrackResponse } from '../../../util/types';
 import { useCustomAlert } from '../../Hooks/useCustomAlert';
 import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistorySnapshot } from '../../../util/dataHelpers';
-import { delay, getFontsData, getPlugins, utcFormatter } from '../../../util/helper';
+import { delay, getPlugins, utcFormatter } from '../../../util/helper';
 import { SpinnerDefault } from '../../MenuItems/Loaders/SpinnerDefault';
 import { ConfirmationPopup } from '../../MenuItems/Popups/ConfirmationPopup';
 import { AlertPopup, CustomAlertPopupProps, PopupType } from '../../MenuItems/Popups/AlertPopup';
@@ -19,6 +19,7 @@ import { SaveButton } from '../../MenuItems/Buttons/SaveButton';
 import { VerifyIcon } from '../../MenuItems/Icons/VerifyIcon';
 import { useCustomConfirmationPopup } from '../../Hooks/useCustomConfirmationPopup';
 import { CloseWindowIcon } from '../../MenuItems/Icons/CloseWindowIcon';
+import { getFontsData } from '../../../util/fontsUtility';
 
 type Props = {
     getHistory: () => void;
