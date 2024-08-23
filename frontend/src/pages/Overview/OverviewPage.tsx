@@ -10,7 +10,7 @@ import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, Em
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { delay, generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF} from '../../util/helper';
+import { generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF} from '../../util/helper';
 import { getTemplate, makeTemplateInput } from '../../templates/baseTemplate';
 import { AlertPopup, CustomAlertPopupProps, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../../components/MenuItems/Buttons/SaveButton';
@@ -27,6 +27,7 @@ import { useLoadingMessage } from '../../components/Contexts/LoadingMessageConte
 import { LazyImageLoader } from '../../components/Content/LazyImageLoader';
 import { utcFormatter } from '../../util/datesUtil';
 import { populateField, populateIdField } from '../../util/fieldReplacersUtil';
+import { delay } from '../../util/timeUtil';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,

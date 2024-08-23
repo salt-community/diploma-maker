@@ -377,8 +377,6 @@ export const isJsonString = (str: string) => {
   return true;
 };
 
-export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
 export function mapBootcampToSaltData(bootcamp: BootcampResponse, template: TemplateResponse ): SaltData {
   return {
       guidId: bootcamp.guidId,

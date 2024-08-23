@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import './InfoPopup.css';
 import { SuccessIcon } from '../Icons/SuccessIcon';
 import { CloseWindowIcon } from '../Icons/CloseWindowIcon';
-import { delay } from '../../../util/helper';
 import { ErrorIcon } from '../Icons/ErrorIcon';
 import { StudentHatIcon } from '../Icons/StudentHatIcon';
 import { CloudUploadThickIcon } from '../Icons/CloudUploadThickIcon';
+import { delay } from '../../../util/timeUtil';
 
 export type InfoPopupType = 'form' | 'progress' | 'fail';
 
