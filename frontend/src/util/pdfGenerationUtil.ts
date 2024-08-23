@@ -3,8 +3,8 @@ import { pdfGenerationResponse } from "./types";
 import { getFontsData } from "./fontsUtil";
 import { PDFDocument } from "pdf-lib";
 import { generate } from "@pdfme/generator";
-import { getPlugins } from "./helper";
 import JSZip from "jszip";
+import { getPlugins } from "./pdfmeUtil";
 
 export const generatePDF = async (template: Template, inputs: any, returnFile?: boolean): Promise<Blob | void> => {
     if(!template) return;

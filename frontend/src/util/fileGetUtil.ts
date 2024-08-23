@@ -7,3 +7,12 @@ export const getPdfDimensions = async (pdfString: string): Promise<Size> => {
     const { width, height } = firstPage.getSize();
     return { width, height };
 };
+
+export const isJsonString = (str: string) => {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+};

@@ -24,3 +24,19 @@ export const openPrintWindowfromBlob = async (input: Blob) => {
         };
     }
 }
+
+export const downloadJsonFile = (json: any, title: string) => {
+    if (typeof window !== "undefined") {
+        const blob = new Blob([JSON.stringify(json)], {
+        type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${title}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+};
+
+export const cloneDeep = (obj: any) => JSON.parse(JSON.stringify(obj));
