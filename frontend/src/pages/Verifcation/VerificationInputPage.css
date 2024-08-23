@@ -135,15 +135,9 @@
         .verificationinput__title-wrapper{
             width: 85%;
         }
-            .verificationinput__logo-wrapper{
-
-            }
         .verificationinput__title-wrapper input{
             min-width: 0;
             width: 95%;
-        }
-        .verificationinput__footer-wrapper{
-
         }
         .verificationinput__title-wrapper p{
             font-size: .9rem;
