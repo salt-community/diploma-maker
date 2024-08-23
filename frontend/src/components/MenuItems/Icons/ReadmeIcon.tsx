@@ -2,9 +2,9 @@ export const ReadmeIcon = () => {
   return (
     <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#000000">
         <linearGradient id="gradient6" x1="0%" y1="0%" x2="100%" y2="0%" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#7d67b8" />
-            <stop offset="50%" stop-color="#967ccb" />
-            <stop offset="100%" stop-color="#5a3ea0" />
+            <stop offset="0%" stopColor="#7d67b8" />
+            <stop offset="50%" stopColor="#967ccb" />
+            <stop offset="100%" stopColor="#5a3ea0" />
         </linearGradient>
         <g>
         <path className="fill" fill="#ababba" d="M489.86,269.259L291.814,5.181c-3.828-5.078-10.766-6.656-16.391-3.688L45.798,122.431l213.813,285.063 l225.921-119.016c3.359-1.766,5.781-4.906,6.594-8.609C492.97,276.166,492.142,272.291,489.86,269.259z"></path>

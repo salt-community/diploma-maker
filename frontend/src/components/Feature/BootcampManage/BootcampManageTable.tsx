@@ -2,7 +2,6 @@ import { FieldValues, useForm, useWatch } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useCustomAlert } from "../../Hooks/useCustomAlert";
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../../util/types";
-import { utcFormatterSlash } from "../../../util/helper";
 import { ConfirmationPopup } from "../../MenuItems/Popups/ConfirmationPopup";
 import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { ArrowIcon } from "../../MenuItems/Icons/ArrowIcon";
@@ -12,6 +11,7 @@ import { PaginationMenu } from "../../MenuItems/PaginationMenu";
 import { useCustomConfirmationPopup } from "../../Hooks/useCustomConfirmationPopup";
 import AddNewBootcampForm from '../../Forms/AddNewBootcampForm';
 import "./BootcampManageTable.css"
+import { utcFormatterSlash } from "../../../util/datesUtil";
 
 type Props = {
   bootcamps: BootcampResponse[] | null;

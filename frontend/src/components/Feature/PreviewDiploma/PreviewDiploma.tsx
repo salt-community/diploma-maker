@@ -1,11 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import {  SaltData } from "../../../util/types"
-import {  getFontsData, getPlugins, newGenerateCombinedPDF } from "../../../util/helper";
 import { Form, Viewer } from "@pdfme/ui";
 import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../../../util/dataHelpers";
 import './PreviewDiploma.css'
 
 import { PaginationMenu } from "../../MenuItems/PaginationMenu";
+import { getFontsData } from "../../../util/fontsUtil";
+import { getPlugins } from "../../../util/pdfmeUtil";
 
 type Props = {
   saltData: SaltData | null;

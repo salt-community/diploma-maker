@@ -3,11 +3,10 @@ import { useForm } from "react-hook-form";
 import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse, pdfGenerationResponse } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
-import { delay, generateVerificationCode, mapBootcampToSaltData2, newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF, openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/helper";
 import './DiplomaDataForm.css';
 import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
-import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
+import { mapBootcampToSaltData2, mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
 import { CheckboxGroup } from "../../MenuItems/Inputs/CheckBoxGroup";
 import { UpdateIcon } from "../../MenuItems/Icons/UpdateIcon";
@@ -17,6 +16,9 @@ import { PublishButton } from "../../MenuItems/Buttons/PublishButton";
 import { TagsInput } from "../../TagsInput/TagsInput";
 import { SaveButton } from "../../MenuItems/Buttons/SaveButton";
 import { useCustomAlert } from "../../Hooks/useCustomAlert";
+import { newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF } from "../../../util/pdfGenerationUtil";
+import { openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/fileActionUtil";
+import { generateVerificationCode } from "../../../util/generateUtil";
 
 type FormData = {
   optionA: boolean;

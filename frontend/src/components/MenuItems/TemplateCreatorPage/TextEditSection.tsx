@@ -2,13 +2,13 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import './TextEditSection.css'
 import { SelectOptions } from "../Inputs/SelectOptions";
 import { PhotoshopPicker } from "react-color";
-import { getFontsData } from "../../../util/helper";
 import { Fonts } from "../../../util/types";
 import { SelectableInput } from "../Inputs/SelectableInput";
 import { TextAlignLeftIcon } from "../Icons/TextAlignLeftIcon";
 import { TextAlignCenterIcon } from "../Icons/TextAlignCenterIcon";
 import { TextAlignRightIcon } from "../Icons/TextAlignRightIcon";
 import { TextAlignNormalIcon } from "../Icons/TextAlignNormalIcon";
+import { getFontsData } from "../../../util/fontsUtil";
 
 
 type Props = {

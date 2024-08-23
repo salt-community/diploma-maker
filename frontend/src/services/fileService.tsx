@@ -1,4 +1,4 @@
-import { getFromIndexedTemplatesDB, openIndexedTemplatesDB, storeInIndexedTemplatesDB } from "../util/helper";
+import { getFromIndexedTemplatesDB, openIndexedTemplatesDB, storeInIndexedTemplatesDB } from "../util/browserStorageUtil";
 import { apiEndpointParameters } from "../util/types";
 
 export async function getTemplatePdfFile(apiParameters: apiEndpointParameters, url: string, lastUpdated: Date, setLoadingMessage?: (message: string) => void): Promise<string> {
