@@ -126,3 +126,30 @@
         font-size: .9rem;
         text-align: center;
     }
+
+
+@media screen and (max-width: 850px) {
+    .verificationinput-container{
+        width: 90%;
+    }
+        .verificationinput__title-wrapper{
+            width: 85%;
+        }
+        .verificationinput__title-wrapper input{
+            min-width: 0;
+            width: 95%;
+        }
+        .verificationinput__title-wrapper p{
+            font-size: .9rem;
+        }
+        .verificationinput__footer-wrapper{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 5%;
+        }
+        .verificationinput__footer-wrapper p{
+            font-size: .6rem;
+            color: #ababba94;
+        }
+}
