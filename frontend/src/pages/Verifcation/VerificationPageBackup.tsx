@@ -12,7 +12,7 @@ import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton'
 import { SuccessIcon } from '../../components/MenuItems/Icons/SuccessIcon';
 import { NextIcon } from '../../components/MenuItems/Icons/NextIcon';
 import logoBlack from '/icons/logoBlack.png'
-import { getFontsData } from '../../util/fontsUtility';
+import { getFontsData } from '../../util/fontsUtil';
 
 type Props = {
     getStudentByVerificationCode: (verificationCode: string) => void;

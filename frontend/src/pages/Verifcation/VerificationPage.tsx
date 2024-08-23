@@ -10,7 +10,7 @@ import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistor
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
 import { NextIcon } from '../../components/MenuItems/Icons/NextIcon';
 import logoBlack from '/icons/logoBlack.png'
-import { getFontsData } from '../../util/fontsUtility';
+import { getFontsData } from '../../util/fontsUtil';
 
 type Props = {
     getHistoryByVerificationCode: (verificationCode: string) => void;

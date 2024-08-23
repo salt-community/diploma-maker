@@ -6,7 +6,7 @@ import { FontUpload } from '../../MenuItems/Inputs/FontUpload';
 import './UserFontsClient.css';
 import { UserFontRequestDto } from '../../../util/types';
 import { CustomAlertPopupProps, PopupType } from '../../MenuItems/Popups/AlertPopup';
-import { getFontsData, refreshUserFonts } from '../../../util/fontsUtility';
+import { getFontsData, refreshUserFonts } from '../../../util/fontsUtil';
 
 export type UserFontsClientType = 'addNewFont' | 'manageFonts';
 

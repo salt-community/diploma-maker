@@ -22,7 +22,7 @@ import { useCustomAlert } from "./components/Hooks/useCustomAlert";
 import { ClerkAuthGuard } from "./components/Feature/Auth/ClerkAuthGaurd";
 import { ClerkProvider, SignIn, useAuth, useUser } from "@clerk/clerk-react";
 import SignInPage from "./pages/LoginPortal/sign-in";
-import { getToken } from "./util/apiUtility";
+import { getToken } from "./util/apiUtil";
 
 export default function App() {
   const [tracks, setTracks] = useState<TrackResponse[] | null>(null);

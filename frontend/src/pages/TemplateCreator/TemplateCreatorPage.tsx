@@ -26,7 +26,7 @@ import { Size } from "@pdfme/common";
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 import { UserFontsClient } from "../../components/Feature/TemplateCreator/UserFontsClient";
 import { FontsIcon } from "../../components/MenuItems/Icons/FontsIcon";
-import { getFontsData, refreshUserFonts } from "../../util/fontsUtility";
+import { getFontsData, refreshUserFonts } from "../../util/fontsUtil";
 
 type Props = {
   templates: TemplateResponse[] | null;

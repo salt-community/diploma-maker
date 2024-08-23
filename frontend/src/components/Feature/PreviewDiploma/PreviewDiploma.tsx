@@ -6,7 +6,7 @@ import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, temp
 import './PreviewDiploma.css'
 
 import { PaginationMenu } from "../../MenuItems/PaginationMenu";
-import { getFontsData } from "../../../util/fontsUtility";
+import { getFontsData } from "../../../util/fontsUtil";
 
 type Props = {
   saltData: SaltData | null;

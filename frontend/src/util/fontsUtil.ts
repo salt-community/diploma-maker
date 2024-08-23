@@ -1,7 +1,7 @@
 import { Font } from "@pdfme/common";
 import { UserFontResponseDto } from "./types";
 import { defaultFontsData } from "../data/fontData";
-import { api } from "./apiUtility";
+import { api } from "./apiUtil";
 
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
 let userFontsImport: UserFontResponseDto[]

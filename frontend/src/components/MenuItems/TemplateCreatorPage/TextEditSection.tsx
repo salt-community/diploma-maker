@@ -8,7 +8,7 @@ import { TextAlignLeftIcon } from "../Icons/TextAlignLeftIcon";
 import { TextAlignCenterIcon } from "../Icons/TextAlignCenterIcon";
 import { TextAlignRightIcon } from "../Icons/TextAlignRightIcon";
 import { TextAlignNormalIcon } from "../Icons/TextAlignNormalIcon";
-import { getFontsData } from "../../../util/fontsUtility";
+import { getFontsData } from "../../../util/fontsUtil";
 
 
 type Props = {
