@@ -15,13 +15,14 @@ import { HistoryPage } from "./pages/History/HistoryPage";
 import { HomePage } from "./pages/Homepage/HomePage"
 import { Footer } from "./components/Footer/Footer";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
-import { generatePreviewImages, getToken } from "./util/helper";
+import { generatePreviewImages } from "./util/helper";
 import { useBGLoadingMessage } from "./components/Contexts/LoadingBGMessageContext";
 import { AlertPopup } from "./components/MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "./components/Hooks/useCustomAlert";
 import { ClerkAuthGuard } from "./components/Feature/Auth/ClerkAuthGaurd";
 import { ClerkProvider, SignIn, useAuth, useUser } from "@clerk/clerk-react";
 import SignInPage from "./pages/LoginPortal/sign-in";
+import { getToken } from "./util/apiUtility";
 
 export default function App() {
   const [tracks, setTracks] = useState<TrackResponse[] | null>(null);

@@ -1,20 +1,7 @@
 import { Font } from "@pdfme/common";
 import { UserFontResponseDto } from "./types";
 import { defaultFontsData } from "../data/fontData";
-import { initApiEndpoints } from "../services/apiFactory";
-
-const getToken = (): string => {
-  const jwtToken = document.cookie
-      .split('; ')
-      .find(c => c.includes('__session'))
-      ?.split('=')[1] || '';
-  return jwtToken
-}
-
-let api = initApiEndpoints({
-  endpointUrl: import.meta.env.VITE_API_URL,
-  token: getToken()
-});
+import { api } from "./apiUtility";
 
 const fontCache = new Map<string, { label: string; url: string; data: ArrayBuffer }>();
 let userFontsImport: UserFontResponseDto[]

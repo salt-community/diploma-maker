@@ -9,22 +9,8 @@ import { useLoadingMessage } from "../components/Contexts/LoadingMessageContext"
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import * as pdfjsLib from 'pdfjs-dist';
-import { initApiEndpoints } from "../services/apiFactory";
 import { getFontsData } from "./fontsUtility";
-
-
-export const getToken = (): string => {
-  const jwtToken = document.cookie
-      .split('; ')
-      .find(c => c.includes('__session'))
-      ?.split('=')[1] || '';
-  return jwtToken
-}
-
-let api = initApiEndpoints({
-  endpointUrl: import.meta.env.VITE_API_URL,
-  token: getToken()
-});
+import { api } from "./apiUtility";
 
 export const readFile = (
   file: File | null,
