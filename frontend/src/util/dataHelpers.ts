@@ -1,7 +1,7 @@
 import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
-import { populateField, populateIdField } from "./helper";
 import { BootcampRequest, BootcampResponse, HistorySnapshotResponse, SaltData, TemplateRequest, TemplateResponse } from "./types";
+import { populateField, populateIdField } from "./fieldReplacersUtil";
 
 export const templateInputsFromSaltData = (saltData: SaltData, currentPageIndex: number) => {
     const inputs = 
