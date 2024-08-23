@@ -3,9 +3,9 @@ export const HistoryIcon = () => {
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> 
             <defs>
             <linearGradient id="gradient4" x1="0%" y1="0%" x2="100%" y2="0%" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#67D6B8" />
-                <stop offset="50%" stop-color="#5AB2A2" />
-                <stop offset="100%" stop-color="#3ca48f" />
+                <stop offset="0%" stopColor="#67D6B8" />
+                <stop offset="50%" stopColor="#5AB2A2" />
+                <stop offset="100%" stopColor="#3ca48f" />
             </linearGradient>
             </defs>
             <path className="stroke" stroke="#ababba" d="M12 8V12L14.5 14.5"  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> 
