@@ -159,36 +159,26 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   };
 
-  const pdfFileUploadHandler = async (file: File) => {
-    if (file) {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
-      const finalFile = await PDFDocument.create();
-      const [firstPage] = await finalFile.copyPages(pdfDoc, [0]);
-
-      finalFile.addPage(firstPage);
-      const basePdf = await finalFile.saveAsBase64({ dataUri: true });
-
-      if (designer.current) {
-        designer.current.updateTemplate(
-          Object.assign(cloneDeep(designer.current.getTemplate()), {
-            basePdf,
-          })
-        );
-      }
-      if (currentTemplate) {
-        const updatedTemplate = { ...currentTemplate, basePdf };
-        setCurrentTemplate(updatedTemplate);
-
-        const updatedTemplateData = templateData.map((template) =>
-          template.id === currentTemplate.id ? updatedTemplate : template
-        );
-        setTemplateData(updatedTemplateData);
-      }
-      setTemplateHasChanged(true);
-      settemplateBasePdfHasChanged(true);
-      setFileAdded(true);
+  const pdfFileUploadHandler = (base64Pdf: string) => {
+    if (designer.current) {
+      designer.current.updateTemplate(
+        Object.assign(cloneDeep(designer.current.getTemplate()), {
+          basePdf: base64Pdf,
+        })
+      );
     }
+    if (currentTemplate) {
+      const updatedTemplate = { ...currentTemplate, basePdf: base64Pdf };
+      setCurrentTemplate(updatedTemplate);
+  
+      const updatedTemplateData = templateData.map((template) =>
+        template.id === currentTemplate.id ? updatedTemplate : template
+      );
+      setTemplateData(updatedTemplateData);
+    }
+    setTemplateHasChanged(true);
+    settemplateBasePdfHasChanged(true);
+    setFileAdded(true);
   };
 
   const saveTemplate = async (goToIndex?: number) => {
@@ -373,10 +363,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                         <section className="templatecreator-page__rightsidebar-menu-section">
                             <h3>Add PDF Background</h3>
                             <PdfFileUpload
-                                fileResult={(file: File) => pdfFileUploadHandler(file)}
-                                reset={resetFileUpload}
-                                setReset={setResetFileUpload}
-                                setFileAdded={setFileAdded}
+                              returnPdf={(base64Pdf: string) => pdfFileUploadHandler(base64Pdf)}
+                              reset={resetFileUpload}
+                              setReset={setResetFileUpload}
+                              setFileAdded={setFileAdded}
                             />
                         </section>
                         <section className="templatecreator-page__rightsidebar-menu-section">
