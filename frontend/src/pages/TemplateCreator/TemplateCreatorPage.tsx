@@ -30,7 +30,7 @@ import { delay } from "../../util/timeUtil";
 import { getPdfDimensions } from "../../util/fileGetUtil";
 import { getPlugins } from "../../util/pdfmeUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
-import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler, setSizeHeightHandler, setSizeWidthHandler, textAlignHandler } from "./templateCreatorMutators";
+import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler, setPositionXHandler, setSizeHeightHandler, setSizeWidthHandler, textAlignHandler } from "./templateCreatorMutators";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -464,16 +464,16 @@ useEffect(() => {
   };
 
   // SideMenu Field Editing Functions
-  const setPositionXHandler = async (value: number) => {
-    setTemplateStyle(prevState => ({ ...prevState, positionX: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].position.x = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-    }
-    setFieldsChanged(true)
-  };
+  // const setPositionXHandler = async (value: number) => {
+  //   setTemplateStyle(prevState => ({ ...prevState, positionX: value }));
+  //   if (designer.current && selectedField) {
+  //     // @ts-ignore
+  //     designer.current.template.schemas[0][selectedField].position.x = value;
+  //     // @ts-ignore
+  //     designer.current.updateTemplate(designer.current.template);
+  //   }
+  //   setFieldsChanged(true)
+  // };
   
   const setPositionYHandler = async (value: number) => {
     setTemplateStyle(prevState => ({ ...prevState, positionY: value }));
@@ -712,7 +712,7 @@ useEffect(() => {
                                 positionY={templateStyle.positionY}
                                 sizeWidth={templateStyle.sizeWidth}
                                 sizeHeight={templateStyle.sizeHeight}
-                                setPositionX={setPositionXHandler}
+                                setPositionX={(value: number) => setPositionXHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                                 setPositionY={setPositionYHandler}
                                 setSizeWidth={(value: number) => setSizeWidthHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                                 setSizeHeight={(value: number) => setSizeHeightHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
