@@ -5,7 +5,7 @@ import { CloudUploadIcon } from '../../MenuItems/Icons/CloudUploadIcon';
 import { FontUpload } from '../../MenuItems/Inputs/FontUpload';
 import './UserFontsClient.css';
 import { UserFontRequestDto } from '../../../util/types';
-import { CustomAlertPopupProps, PopupType } from '../../MenuItems/Popups/AlertPopup';
+import { PopupType } from '../../MenuItems/Popups/AlertPopup';
 import { getFontsData, refreshUserFonts } from '../../../util/fontsUtil';
 
 export type UserFontsClientType = 'addNewFont' | 'manageFonts';
@@ -15,50 +15,66 @@ type Props = {
     show: boolean;
     setShowUserFontsClient: (show: boolean) => void;
     customAlert: (alertType: PopupType, title: string, content: string) => void;
-    postUserFonts: (userFontsRequestsDto: UserFontRequestDto[]) => void;
     setRefreshFonts: (refresh: boolean) => void;
     refreshFonts: boolean;
-}
+    postUserFonts: (userFontsRequestsDto: UserFontRequestDto[]) => void;
+};
 
-export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAlert, postUserFonts, setRefreshFonts, refreshFonts }: Props) => {
+export const UserFontsClient = ({
+    type,
+    show,
+    setShowUserFontsClient,
+    customAlert,
+    setRefreshFonts,
+    refreshFonts,
+    postUserFonts,
+}: Props) => {
     const [fonts, setFonts] = useState<UserFontRequestDto[]>([
         {
             Name: '',
             FontType: 'Regular',
-            File: null
+            File: null,
         },
         {
             Name: '',
             FontType: 'Bold',
-            File: null
+            File: null,
         },
         {
             Name: '',
             FontType: 'Italic',
-            File: null
+            File: null,
         },
     ]);
 
     const submitHandler = async (event: React.FormEvent) => {
         event.preventDefault();
         if (!fonts[0].File) {
-            customAlert('message', "Normal Font Required!", `Normal Font Field is required.`);
+            customAlert('message', 'Normal Font Required!', `Normal Font Field is required.`);
             return;
         }
 
         const existingFonts = await getFontsData();
         if (existingFonts[fonts[0].Name]) {
-            customAlert('message', "Font name already exists!", `Pick a different font name.`);
+            customAlert('message', 'Font name already exists!', `Pick a different font name.`);
             return;
         }
 
-        await postUserFonts(fonts);
-        await refreshUserFonts();
-        setRefreshFonts(!refreshFonts)
-    }
+        try {
+            customAlert('loading', 'Adding New Font...', '');
+            await postUserFonts(fonts);
+            customAlert('loading', 'Reloading Fonts...', '');
+            await refreshUserFonts();
+            customAlert('success', `Successfully added font ${fonts[0].Name} to cloud`, '');
+            setShowUserFontsClient(false);
+            setRefreshFonts(!refreshFonts);
+        } catch (error) {
+            customAlert('fail', 'Failed adding new font.', `${error}`);
+        }
+    };
 
     const setFileAtIndex = (file: File, index: number) => {
-        setFonts(prevFonts => {
+        setFonts((prevFonts) => {
             const updatedFonts = [...prevFonts];
             updatedFonts[index] = { ...updatedFonts[index], File: file };
             return updatedFonts;
@@ -66,7 +82,7 @@ export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAler
     };
 
     const removeFileAtIndex = (index: number) => {
-        setFonts(prevFonts => {
+        setFonts((prevFonts) => {
             const updatedFonts = [...prevFonts];
             updatedFonts[index] = { ...updatedFonts[index], File: null };
             return updatedFonts;
@@ -86,8 +102,8 @@ export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAler
                             value={fonts[0].Name}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 const newName = event.target.value;
-                                setFonts(prevFonts => {
-                                    return prevFonts.map(f => ({ ...f, Name: newName }));
+                                setFonts((prevFonts) => {
+                                    return prevFonts.map((f) => ({ ...f, Name: newName }));
                                 });
                             }}
                         />
@@ -116,11 +132,11 @@ export const UserFontsClient = ({ type, show, setShowUserFontsClient, customAler
                             textfield={'Submit Your New Font!'}
                             onClick={() => {}}
                             customIcon={<CloudUploadIcon />}
-                            type='submit'
+                            type="submit"
                         />
                     </div>
                 </form>
-                <button onClick={() => setShowUserFontsClient(false)} className='userfont__close-btn'>
+                <button onClick={() => setShowUserFontsClient(false)} className="userfont__close-btn">
                     <CloseWindowIcon />
                 </button>
             </div>

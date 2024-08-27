@@ -282,18 +282,18 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   const confirmRemoveTemplateHandler = async () => customPopup('warning', `Are you sure you want to remove ${currentTemplate?.templateName}?`, "This will unlink the template for all bootcamps that use it.", () => () => removeTemplate());
   const globalAbortHandler = () => closeConfirmationPopup();
 
-  const postUserFontsHandler = async (userFonts: UserFontRequestDto[]) => {
-    setShowUserFontsClient(false);
-    customAlert('loading', 'Adding New Font...', '')
-    try {
-      await postUserFonts(userFonts)
-      customAlert('loading', 'Reloading Fonts...', '')
-      await refreshUserFonts();
-      customAlert('success', `Successfully added font ${userFonts[0].Name} to cloud`, '')
-    } catch (error) {
-      customAlert('fail', 'Failed adding new font.', `${error}`)
-    }
-  }
+  // const postUserFontsHandler = async (userFonts: UserFontRequestDto[]) => {
+  //   setShowUserFontsClient(false);
+  //   customAlert('loading', 'Adding New Font...', '')
+  //   try {
+  //     await postUserFonts(userFonts)
+  //     customAlert('loading', 'Reloading Fonts...', '')
+  //     await refreshUserFonts();
+  //     customAlert('success', `Successfully added font ${userFonts[0].Name} to cloud`, '')
+  //   } catch (error) {
+  //     customAlert('fail', 'Failed adding new font.', `${error}`)
+  //   }
+  // }
 
   return (
     <main className="templatecreator-page">
@@ -316,13 +316,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
         />
         <InstructionSlideshow show={showInstructionSlideshow}  slides={templateCreatorInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
         <UserFontsClient 
-          type={'addNewFont'}
+          type="addNewFont"
           show={showUserFontsClient}
           setShowUserFontsClient={setShowUserFontsClient}
           customAlert={customAlert}
-          postUserFonts={postUserFontsHandler}
           setRefreshFonts={setRefreshFonts}
           refreshFonts={refreshFonts}
+          postUserFonts={(userFontsRequestsDto: UserFontRequestDto[]) => postUserFonts(userFontsRequestsDto)}
         />
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
