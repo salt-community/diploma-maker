@@ -1,11 +1,11 @@
 import { RefObject, useEffect } from "react";
-import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
-import { PopupType } from "../../components/MenuItems/Popups/AlertPopup";
-import { makeTemplateInput } from "../../templates/baseTemplate";
-import { mapTemplateInputsToTemplateDesigner } from "../../util/dataHelpers";
-import { getFontsData } from "../../util/fontsUtil";
+import { SpinnerDefault } from "../../MenuItems/Loaders/SpinnerDefault";
+import { PopupType } from "../../MenuItems/Popups/AlertPopup";
+import { makeTemplateInput } from "../../../templates/baseTemplate";
+import { mapTemplateInputsToTemplateDesigner } from "../../../util/dataHelpers";
+import { getFontsData } from "../../../util/fontsUtil";
 import { Designer } from "@pdfme/ui";
-import { getPlugins } from "../../util/pdfmeUtil";
+import { getPlugins } from "../../../util/pdfmeUtil";
 
 type Props = {
     designer: React.MutableRefObject<Designer>;

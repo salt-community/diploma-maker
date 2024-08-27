@@ -24,7 +24,7 @@ import { delay } from "../../util/timeUtil";
 import { getPdfDimensions } from "../../util/fileGetUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
 import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFieldEditorDisplayWidthHeight, setFontColorHandler, setFontHandler, setPositionXHandler, setPositionYHandler, setSizeHeightHandler, setSizeWidthHandler, textAlignHandler } from "./templateCreatorMutators";
-import { TemplateRenderer } from "./TemplateRenderer";
+import { TemplateRenderer } from "../../components/Feature/TemplateCreator/TemplateRenderer";
 import { setFieldEventListeners } from "./templateCreatorFieldEventListeners";
 import { handleFieldMouseEvents } from "./templateCreatorFieldMouseEvents";
 import { nullTemplateInstance, templateCreatorInstructionSlides } from "../../data/data";
