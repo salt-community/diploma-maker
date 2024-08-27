@@ -30,6 +30,7 @@ import { handleFieldMouseEvents } from "./templateCreatorFieldMouseEvents";
 import { nullTemplateInstance, templateCreatorInstructionSlides } from "../../data/data";
 import { EditorLeftSideBar } from "../../components/Feature/TemplateCreator/EditorLeftSideBar";
 import { EditorRightSideBarSection } from "../../components/Feature/TemplateCreator/EditorRightSideBar/EditorRightSideBarSection";
+import { EditorRightSidebar } from "../../components/Feature/TemplateCreator/EditorRightSideBar/EditorRightSidebar";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -331,7 +332,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             fieldsChanged={fieldsChanged}
           />
         </section>
-        <section className="templatecreator-page__rightsidebar">
+        {/* <section className="templatecreator-page__rightsidebar">
             <div className="templatecreator-page__rightsidebar-menu">
                 <header className="templatecreator-page__rightsidebar-menu-header">
                     <button onClick={() => {setRightSideBarPage(0); saveFieldsHandler();}} className={rightSideBarPage === 0 ? "active" : ""}>
@@ -450,7 +451,143 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                     </>
                 )}
             </div>
-        </section>
+        </section> */}
+        <EditorRightSidebar 
+          activePage={rightSideBarPage}
+          setActivePage={setRightSideBarPage}
+          pages={[
+            {
+              pageTitle: 'Browse',
+              handler: () => {
+                saveFieldsHandler();
+              },
+              sections: [
+                {
+                  sectionTitle: 'Templates',
+                  component: (
+                    <SelectOptions
+                      containerClassOverride="overview-page__select-container"
+                      selectClassOverride="overview-page__select-box"
+                      options={templateData.map((template, index) => ({
+                        value: index.toString(),
+                        label: template.templateName,
+                      }))}
+                      value={getTemplateIndex(currentTemplate).toString()}
+                      onChange={(event) => templateChangeHandler(Number(event.target.value))}
+                    />
+                  ),
+                },
+                {
+                  sectionTitle: 'Add Template',
+                  component: <AddButton onClick={confirmAddNewTemplateHandler} />,
+                },
+                {
+                  sectionTitle: 'Add PDF Background',
+                  component: (
+                    <PdfFileUpload
+                      returnPdf={(base64Pdf: string) => pdfFileUploadHandler(base64Pdf)}
+                      reset={resetFileUpload}
+                      setReset={setResetFileUpload}
+                      setFileAdded={setFileAdded}
+                    />
+                  ),
+                },
+                {
+                  sectionTitle: 'Layout',
+                  component: (
+                    <SaveButton
+                      textfield="Save Template"
+                      saveButtonType={'normal'}
+                      onClick={confirmChangeTemplateHandler}
+                    />
+                  ),
+                },
+              ],
+            },
+            {
+              pageTitle: 'Edit',
+              handler: () => {},
+              sections: [
+                {
+                  sectionTitle: 'Layout',
+                  component: (
+                    <EditSection
+                      positionX={templateStyle.positionX}
+                      positionY={templateStyle.positionY}
+                      sizeWidth={templateStyle.sizeWidth}
+                      sizeHeight={templateStyle.sizeHeight}
+                      setPositionX={(value: number) =>
+                        setPositionXHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
+                      }
+                      setPositionY={(value: number) =>
+                        setPositionYHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
+                      }
+                      setSizeWidth={(value: number) =>
+                        setSizeWidthHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
+                      }
+                      setSizeHeight={(value: number) =>
+                        setSizeHeightHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
+                      }
+                      setAlignHorizontalCenter={() =>
+                        setAlignHorizontalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)
+                      }
+                      setAlignVerticalCenter={() =>
+                        setAlignVerticalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)
+                      }
+                      fieldWidth={fieldWidth}
+                      fieldHeight={fieldHeight}
+                    />
+                  ),
+                },
+                {
+                  sectionTitle: 'Text',
+                  component: (
+                    <TextEditSection
+                      align={templateStyle.align}
+                      setAlign={(value: string) =>
+                        textAlignHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
+                      }
+                      fontSize={templateStyle.fontSize}
+                      setFontSize={(value: number) =>
+                        fontSizeHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
+                      }
+                      font={templateStyle.font}
+                      setFont={(value: string) =>
+                        setFontHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
+                      }
+                      fontColor={templateStyle.fontColor}
+                      setFontColor={(value: string) =>
+                        setFontColorHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
+                      }
+                      refreshFonts={refreshFonts}
+                    />
+                  ),
+                },
+                {
+                  sectionTitle: 'Edit Field',
+                  component: (
+                    <SaveButton
+                      textfield="Save Inputs"
+                      saveButtonType={'normal'}
+                      onClick={saveFieldsHandler}
+                      customIcon={<TextInputIcon />}
+                    />
+                  ),
+                },
+                {
+                  sectionTitle: '',
+                  component: (
+                    <SaveButton
+                      textfield="Remove Template"
+                      saveButtonType={'remove'}
+                      onClick={confirmRemoveTemplateHandler}
+                    />
+                  ),
+                },
+              ],
+            },
+          ]}
+        />
     </main>
   );
 };
