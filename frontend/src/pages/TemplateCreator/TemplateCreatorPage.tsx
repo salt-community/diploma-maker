@@ -29,7 +29,6 @@ import { setFieldEventListeners } from "./templateCreatorFieldEventListeners";
 import { handleFieldMouseEvents } from "./templateCreatorFieldMouseEvents";
 import { nullTemplateInstance, templateCreatorInstructionSlides } from "../../data/data";
 import { EditorLeftSideBar } from "../../components/Feature/TemplateCreator/EditorLeftSideBar";
-import { EditorRightSideBarSection } from "../../components/Feature/TemplateCreator/EditorRightSideBar/EditorRightSideBarSection";
 import { EditorRightSidebar } from "../../components/Feature/TemplateCreator/EditorRightSideBar/EditorRightSidebar";
 
 type Props = {
@@ -332,126 +331,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             fieldsChanged={fieldsChanged}
           />
         </section>
-        {/* <section className="templatecreator-page__rightsidebar">
-            <div className="templatecreator-page__rightsidebar-menu">
-                <header className="templatecreator-page__rightsidebar-menu-header">
-                    <button onClick={() => {setRightSideBarPage(0); saveFieldsHandler();}} className={rightSideBarPage === 0 ? "active" : ""}>
-                        Browse
-                    </button>
-                    <button onClick={() => setRightSideBarPage(1)} className={rightSideBarPage === 1 ? "active" : ""}>
-                        Edit
-                    </button>
-                </header>
-                {rightSideBarPage === 0 && (
-                    <>
-                        <EditorRightSideBarSection 
-                          title="Templates"
-                          component={
-                            <SelectOptions
-                                containerClassOverride="overview-page__select-container"
-                                selectClassOverride="overview-page__select-box"
-                                options={templateData.map((template, index) => ({
-                                    value: index.toString(),
-                                    label: template.templateName,
-                                }))}
-                                value={getTemplateIndex(currentTemplate).toString()}
-                                onChange={(event) =>
-                                    templateChangeHandler(Number(event.target.value))
-                                }
-                            />
-                          }
-                        />
-                        <EditorRightSideBarSection 
-                          title="Add Template"
-                          component={
-                            <AddButton onClick={confirmAddNewTemplateHandler} />
-                          }
-                        />
-                        <EditorRightSideBarSection 
-                          title="Add PDF Background"
-                          component={
-                            <PdfFileUpload
-                              returnPdf={(base64Pdf: string) => pdfFileUploadHandler(base64Pdf)}
-                              reset={resetFileUpload}
-                              setReset={setResetFileUpload}
-                              setFileAdded={setFileAdded}
-                            />
-                          }
-                        />
-                        <EditorRightSideBarSection 
-                          title="Layout"
-                          component={
-                            <SaveButton
-                                textfield="Save Template"
-                                saveButtonType={'normal'}
-                                onClick={confirmChangeTemplateHandler}
-                            />
-                          }
-                        />
-                    </>
-                )}
-                {rightSideBarPage === 1 && (
-                    <>
-                        <EditorRightSideBarSection 
-                          title="Layout"
-                          component={
-                            <EditSection
-                                positionX={templateStyle.positionX}
-                                positionY={templateStyle.positionY}
-                                sizeWidth={templateStyle.sizeWidth}
-                                sizeHeight={templateStyle.sizeHeight}
-                                setPositionX={(value: number) => setPositionXHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
-                                setPositionY={(value: number) => setPositionYHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
-                                setSizeWidth={(value: number) => setSizeWidthHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
-                                setSizeHeight={(value: number) => setSizeHeightHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
-                                setAlignHorizontalCenter={() => setAlignHorizontalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)}
-                                setAlignVerticalCenter={() => setAlignVerticalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)}
-                                fieldWidth={fieldWidth}
-                                fieldHeight={fieldHeight}
-                            />
-                          }
-                        />
-                        <EditorRightSideBarSection 
-                          title="Text"
-                          component={
-                            <TextEditSection
-                                align={templateStyle.align}
-                                setAlign={(value: string) => textAlignHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
-                                fontSize={templateStyle.fontSize}
-                                setFontSize={(value: number) => fontSizeHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
-                                font={templateStyle.font}
-                                setFont={(value: string) => setFontHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
-                                fontColor={templateStyle.fontColor}
-                                setFontColor={(value: string) => setFontColorHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
-                                refreshFonts={refreshFonts}
-                            />
-                          }
-                        />
-                        <EditorRightSideBarSection 
-                          title="Edit Field"
-                          component={
-                            <SaveButton
-                                textfield="Save Inputs"
-                                saveButtonType={'normal'}
-                                onClick={saveFieldsHandler}
-                                customIcon={<TextInputIcon />}
-                            />
-                          }
-                        />
-                        <EditorRightSideBarSection 
-                          title="Edit Field"
-                          component={
-                            <SaveButton
-                                textfield="Remove Template"
-                                saveButtonType={'remove'}
-                                onClick={confirmRemoveTemplateHandler}
-                            />
-                          }
-                        />
-                    </>
-                )}
-            </div>
-        </section> */}
         <EditorRightSidebar 
           activePage={rightSideBarPage}
           setActivePage={setRightSideBarPage}
@@ -516,24 +395,12 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                       positionY={templateStyle.positionY}
                       sizeWidth={templateStyle.sizeWidth}
                       sizeHeight={templateStyle.sizeHeight}
-                      setPositionX={(value: number) =>
-                        setPositionXHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
-                      }
-                      setPositionY={(value: number) =>
-                        setPositionYHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
-                      }
-                      setSizeWidth={(value: number) =>
-                        setSizeWidthHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
-                      }
-                      setSizeHeight={(value: number) =>
-                        setSizeHeightHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
-                      }
-                      setAlignHorizontalCenter={() =>
-                        setAlignHorizontalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)
-                      }
-                      setAlignVerticalCenter={() =>
-                        setAlignVerticalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)
-                      }
+                      setPositionX={(value: number) => setPositionXHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      setPositionY={(value: number) => setPositionYHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      setSizeWidth={(value: number) => setSizeWidthHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      setSizeHeight={(value: number) => setSizeHeightHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      setAlignHorizontalCenter={() => setAlignHorizontalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)}
+                      setAlignVerticalCenter={() => setAlignVerticalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)}
                       fieldWidth={fieldWidth}
                       fieldHeight={fieldHeight}
                     />
@@ -544,21 +411,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                   component: (
                     <TextEditSection
                       align={templateStyle.align}
-                      setAlign={(value: string) =>
-                        textAlignHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
-                      }
+                      setAlign={(value: string) => textAlignHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                       fontSize={templateStyle.fontSize}
-                      setFontSize={(value: number) =>
-                        fontSizeHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
-                      }
+                      setFontSize={(value: number) => fontSizeHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                       font={templateStyle.font}
-                      setFont={(value: string) =>
-                        setFontHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
-                      }
+                      setFont={(value: string) => setFontHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                       fontColor={templateStyle.fontColor}
-                      setFontColor={(value: string) =>
-                        setFontColorHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)
-                      }
+                      setFontColor={(value: string) => setFontColorHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                       refreshFonts={refreshFonts}
                     />
                   ),
