@@ -91,11 +91,9 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   }, [templates]);
 
-  const SetPdfSizeHandler = async () => {
-    setPdfSize(await getPdfDimensions(currentTemplate.basePdf))
-  }
+  const SetPdfSizeHandler = async () => setPdfSize(await getPdfDimensions(currentTemplate.basePdf));
 
-  // - Right Now I Literally cannot get the name of which field the user has clicked on unless i set event listeners for those specific divs... 
+  // - i set event listeners for those specific divs... Right Now I Literally cannot get the name of which field the user has clicked on unless i do this  
   // - Temporary Solution! - Please feel free to find a better way!
   useEffect(() => {
     const cleanup = setFieldEventListeners(
@@ -273,30 +271,16 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   };
 
-  const shouldWeSaveHandler = async (index: number) => {
-    customPopup('question', "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index));
-  };
+  const getTemplateIndex = (template: CustomTemplate | null) => template ? templateData.findIndex((t) => t.id === template.id) : 0;
 
   const confirmChangeTemplateHandler = async () => {
     const currentTemplateIndex = getTemplateIndex(currentTemplate);
     customPopup('question', "Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(currentTemplateIndex));
   };
-
-  const confirmAddNewTemplateHandler = async () => {
-    customPopup('form', "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent));
-  };
-
-  const confirmRemoveTemplateHandler = async () => {
-    customPopup('warning', `Are you sure you want to remove ${currentTemplate?.templateName}?`, "This will unlink the template for all bootcamps that use it.", () => () => removeTemplate());
-  };
-
-  const globalAbortHandler = () => {
-    closeConfirmationPopup();
-  };
-
-  const getTemplateIndex = (template: CustomTemplate | null) => {
-    return template ? templateData.findIndex((t) => t.id === template.id) : 0;
-  };
+  const shouldWeSaveHandler = async (index: number) => customPopup('question', "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index));
+  const confirmAddNewTemplateHandler = async () => customPopup('form', "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent));
+  const confirmRemoveTemplateHandler = async () => customPopup('warning', `Are you sure you want to remove ${currentTemplate?.templateName}?`, "This will unlink the template for all bootcamps that use it.", () => () => removeTemplate());
+  const globalAbortHandler = () => closeConfirmationPopup();
 
   const postUserFontsHandler = async (userFonts: UserFontRequestDto[]) => {
     setShowUserFontsClient(false);
