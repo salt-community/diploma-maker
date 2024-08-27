@@ -31,7 +31,7 @@ import { getPdfDimensions } from "../../util/fileGetUtil";
 import { getPlugins } from "../../util/pdfmeUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
 import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler, setPositionXHandler, setPositionYHandler, setSizeHeightHandler, setSizeWidthHandler, textAlignHandler } from "./templateCreatorMutators";
-import { TemplatePreview } from "./TemplatePreview";
+import { TemplateRenderer } from "./TemplateRenderer";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -107,54 +107,54 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     setPdfSize(await getPdfDimensions(currentTemplate.basePdf))
   }
 
-  useEffect(() => {
-    if (currentTemplate) {
-      firstRun && customAlert('loading', `Loading Template Into Renderer...`, '')
-      SetPdfSizeHandler();
-      const inputs = [
-        makeTemplateInput(
-          currentTemplate.intro,
-          currentTemplate.main,
-          currentTemplate.footer,
-          currentTemplate.basePdf,
-          currentTemplate.link
-        ),
-      ];
-      const template = mapTemplateInputsToTemplateDesigner(
-        currentTemplate,
-        inputs[0]
-      );
+  // useEffect(() => {
+  //   if (currentTemplate) {
+  //     firstRun && customAlert('loading', `Loading Template Into Renderer...`, '')
+  //     SetPdfSizeHandler();
+  //     const inputs = [
+  //       makeTemplateInput(
+  //         currentTemplate.intro,
+  //         currentTemplate.main,
+  //         currentTemplate.footer,
+  //         currentTemplate.basePdf,
+  //         currentTemplate.link
+  //       ),
+  //     ];
+  //     const template = mapTemplateInputsToTemplateDesigner(
+  //       currentTemplate,
+  //       inputs[0]
+  //     );
 
-      getFontsData().then((font) => {
-        if (designerRef.current) {
-          if (designer.current) {
-            designer.current.destroy();
-          }
-          designer.current = new Designer({
-            domContainer: designerRef.current,
-            template,
-            options: { font },
-            plugins: getPlugins(),
-          });
+  //     getFontsData().then((font) => {
+  //       if (designerRef.current) {
+  //         if (designer.current) {
+  //           designer.current.destroy();
+  //         }
+  //         designer.current = new Designer({
+  //           domContainer: designerRef.current,
+  //           template,
+  //           options: { font },
+  //           plugins: getPlugins(),
+  //         });
 
-          fieldsChanged 
-            ? customAlert('loadingfadeout', `Saving Fields...`, '') 
-            : customAlert('loadingfadeout', `Loaded: Waiting For Renderer...`, '')
+  //         fieldsChanged 
+  //           ? customAlert('loadingfadeout', `Saving Fields...`, '') 
+  //           : customAlert('loadingfadeout', `Loaded: Waiting For Renderer...`, '')
 
-          setFirstRun(false);
-        }
-      });
+  //         setFirstRun(false);
+  //       }
+  //     });
 
       
 
-      return () => {
-        if (designer.current) {
-          designer.current.destroy();
-          designer.current = null;
-        }
-      };
-    }
-  }, [currentTemplate]);
+  //     return () => {
+  //       if (designer.current) {
+  //         designer.current.destroy();
+  //         designer.current = null;
+  //       }
+  //     };
+  //   }
+  // }, [currentTemplate]);
 
   // Right Now I Literally cannot get the name of which field the user has clicked on in any other way... Temporary Solution!
   useEffect(() => {
@@ -521,10 +521,17 @@ useEffect(() => {
             </div>
         </section>
         <section className="templatecreator-page__preview-container">
-          <TemplatePreview
+          <TemplateRenderer
+            designer={designer}
             designerRef={designerRef}
             templates={templates}
             setRightSideBarPage={setRightSideBarPage}
+            currentTemplate={currentTemplate}
+            SetPdfSizeHandler={SetPdfSizeHandler}
+            firstRun={firstRun}
+            setFirstRun={setFirstRun}
+            customAlert={customAlert}
+            fieldsChanged={fieldsChanged}
           />
         </section>
         <section className="templatecreator-page__rightsidebar">
