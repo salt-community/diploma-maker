@@ -31,6 +31,7 @@ import { getPdfDimensions } from "../../util/fileGetUtil";
 import { getPlugins } from "../../util/pdfmeUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
 import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler, setPositionXHandler, setPositionYHandler, setSizeHeightHandler, setSizeWidthHandler, textAlignHandler } from "./templateCreatorMutators";
+import { TemplatePreview } from "./TemplatePreview";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -520,10 +521,11 @@ useEffect(() => {
             </div>
         </section>
         <section className="templatecreator-page__preview-container">
-            <div className="templatecreator-page__preview" style={{ width: "100%", overflow: "hidden", height: `calc(50vh - 68px)` }}>
-                <div className="pdfpreview" ref={designerRef} style={{ height: `80%` }} onClick={() => setRightSideBarPage(1)} />
-                {!templates && <SpinnerDefault classOverride="spinner" />}
-            </div>
+          <TemplatePreview
+            designerRef={designerRef}
+            templates={templates}
+            setRightSideBarPage={setRightSideBarPage}
+          />
         </section>
         <section className="templatecreator-page__rightsidebar">
             <div className="templatecreator-page__rightsidebar-menu">
