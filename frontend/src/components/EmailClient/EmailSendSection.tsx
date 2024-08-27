@@ -30,9 +30,10 @@ export const EmailSendSection = ({ clients, checkedUsers, emailChanges, checkbox
                                 <input 
                                     className="emailclient__list--input" 
                                     type="text" 
-                                    value={emailChanges[student.guidId] || student.email || 'No Email'} 
+                                    value={emailChanges[student.guidId!] !== undefined ? emailChanges[student.guidId!] : student.email || ''} 
                                     onChange={(event) => inputChangeHandler(event, student)} 
                                     onBlur={() => inputBlurHandler(student)} 
+                                    placeholder={emailChanges[student.email!] === '' ? 'No Email' : 'No Email'}
                                 />
                                 <CogWheelIcon />
                             </div>
