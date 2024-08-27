@@ -237,3 +237,9 @@ export type UserFontRequestDto = {
 }
 
 export type FontType = 'Regular' | 'Bold' | 'Italic';
+
+
+export type pdfSize = {
+    width: number;
+    height: number;
+}
