@@ -2,6 +2,8 @@ import Designer from "@pdfme/ui/dist/types/Designer";
 import { pdfSize, TemplateInstanceStyle } from "../../util/types";
 import { calculateCanvasSizeFromPdfSize } from "../../util/templateCreatorUtil";
 
+
+// ALIGNMENT-------------------------------------------------------------
 export const setAlignVerticalCenter = (
   designer: React.MutableRefObject<Designer>, 
   selectedField: string, 
@@ -22,7 +24,6 @@ export const setAlignVerticalCenter = (
     setFieldsChanged(true)
   }
 };
-
 
 export const setAlignHorizontalCenter = (
   designer: React.MutableRefObject<Designer>, 
@@ -46,6 +47,8 @@ export const setAlignHorizontalCenter = (
   }
 };
 
+
+// FONT & TEXT-------------------------------------------------------------
 export const setFontColorHandler = async (
   value: string,
   designer: React.MutableRefObject<Designer>, 
@@ -74,6 +77,24 @@ export const setFontHandler = async (
   if (designer.current && selectedField) {
     // @ts-ignore
     designer.current.template.schemas[0][selectedField].fontName = value;
+    // @ts-ignore
+    designer.current.updateTemplate(designer.current.template);
+    setFieldsChanged(true)
+  }
+};
+
+
+export const fontSizeHandler = async (
+  value: number,
+  designer: React.MutableRefObject<Designer>, 
+  selectedField: string,
+  setTemplateStyle: (value: React.SetStateAction<TemplateInstanceStyle>) => void,
+  setFieldsChanged: (value: React.SetStateAction<boolean>) => void
+) => {
+  setTemplateStyle(prevState => ({ ...prevState, fontSize: value }));
+  if (designer.current && selectedField) {
+    // @ts-ignore
+    designer.current.template.schemas[0][selectedField].fontSize = value;
     // @ts-ignore
     designer.current.updateTemplate(designer.current.template);
     setFieldsChanged(true)
