@@ -30,7 +30,7 @@ import { delay } from "../../util/timeUtil";
 import { getPdfDimensions } from "../../util/fileGetUtil";
 import { getPlugins } from "../../util/pdfmeUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
-import { setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler } from "./templateCreatorMutators";
+import { setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler } from "./templateCreatorMutators";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -530,16 +530,16 @@ useEffect(() => {
     }
   };
   
-  const setFontHandler = async (value: string) => {
-    setTemplateStyle(prevState => ({ ...prevState, font: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].fontName = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-      setFieldsChanged(true)
-    }
-  };
+  // const setFontHandler = async (value: string) => {
+  //   setTemplateStyle(prevState => ({ ...prevState, font: value }));
+  //   if (designer.current && selectedField) {
+  //     // @ts-ignore
+  //     designer.current.template.schemas[0][selectedField].fontName = value;
+  //     // @ts-ignore
+  //     designer.current.updateTemplate(designer.current.template);
+  //     setFieldsChanged(true)
+  //   }
+  // };
   
   // const setFontColorHandler = async (value: string) => {
   //   setTemplateStyle(prevState => ({ ...prevState, fontColor: value }));
@@ -585,12 +585,12 @@ useEffect(() => {
   //   }
   // };
 
-  const calculateCanvasSizeFromPdfSize = (size: number) => {
-    const averageMultiplier = 0.353;
-    const canvasSize = size * averageMultiplier;
+  // const calculateCanvasSizeFromPdfSize = (size: number) => {
+  //   const averageMultiplier = 0.353;
+  //   const canvasSize = size * averageMultiplier;
 
-    return canvasSize
-  }
+  //   return canvasSize
+  // }
 
   const postUserFontsHandler = async (userFonts: UserFontRequestDto[]) => {
     setShowUserFontsClient(false);
@@ -730,7 +730,7 @@ useEffect(() => {
                                 fontSize={templateStyle.fontSize}
                                 setFontSize={(value: number) => fontSizeHandler(value)}
                                 font={templateStyle.font}
-                                setFont={(value: string) => setFontHandler(value)}
+                                setFont={(value: string) => setFontHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                                 fontColor={templateStyle.fontColor}
                                 setFontColor={(value: string) => setFontColorHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                                 refreshFonts={refreshFonts}

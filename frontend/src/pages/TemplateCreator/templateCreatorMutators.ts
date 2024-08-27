@@ -62,3 +62,20 @@ export const setFontColorHandler = async (
     setFieldsChanged(true)
   }
 };
+
+export const setFontHandler = async (
+  value: string,
+  designer: React.MutableRefObject<Designer>, 
+  selectedField: string,
+  setTemplateStyle: (value: React.SetStateAction<TemplateInstanceStyle>) => void,
+  setFieldsChanged: (value: React.SetStateAction<boolean>) => void
+) => {
+  setTemplateStyle(prevState => ({ ...prevState, font: value }));
+  if (designer.current && selectedField) {
+    // @ts-ignore
+    designer.current.template.schemas[0][selectedField].fontName = value;
+    // @ts-ignore
+    designer.current.updateTemplate(designer.current.template);
+    setFieldsChanged(true)
+  }
+};
