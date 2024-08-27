@@ -1,4 +1,5 @@
 import { EditorRightSideBarSection } from "./EditorRightSideBarSection";
+import './EditorRightSidebar.css'
 
 type Page = {
     pageTitle: string;
