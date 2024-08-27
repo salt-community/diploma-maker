@@ -107,55 +107,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     setPdfSize(await getPdfDimensions(currentTemplate.basePdf))
   }
 
-  // useEffect(() => {
-  //   if (currentTemplate) {
-  //     firstRun && customAlert('loading', `Loading Template Into Renderer...`, '')
-  //     SetPdfSizeHandler();
-  //     const inputs = [
-  //       makeTemplateInput(
-  //         currentTemplate.intro,
-  //         currentTemplate.main,
-  //         currentTemplate.footer,
-  //         currentTemplate.basePdf,
-  //         currentTemplate.link
-  //       ),
-  //     ];
-  //     const template = mapTemplateInputsToTemplateDesigner(
-  //       currentTemplate,
-  //       inputs[0]
-  //     );
-
-  //     getFontsData().then((font) => {
-  //       if (designerRef.current) {
-  //         if (designer.current) {
-  //           designer.current.destroy();
-  //         }
-  //         designer.current = new Designer({
-  //           domContainer: designerRef.current,
-  //           template,
-  //           options: { font },
-  //           plugins: getPlugins(),
-  //         });
-
-  //         fieldsChanged 
-  //           ? customAlert('loadingfadeout', `Saving Fields...`, '') 
-  //           : customAlert('loadingfadeout', `Loaded: Waiting For Renderer...`, '')
-
-  //         setFirstRun(false);
-  //       }
-  //     });
-
-      
-
-  //     return () => {
-  //       if (designer.current) {
-  //         designer.current.destroy();
-  //         designer.current = null;
-  //       }
-  //     };
-  //   }
-  // }, [currentTemplate]);
-
   // Right Now I Literally cannot get the name of which field the user has clicked on in any other way... Temporary Solution!
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
