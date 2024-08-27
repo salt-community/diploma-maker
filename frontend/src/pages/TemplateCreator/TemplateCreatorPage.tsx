@@ -33,6 +33,7 @@ import { cloneDeep } from "../../util/fileActionUtil";
 import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler, setPositionXHandler, setPositionYHandler, setSizeHeightHandler, setSizeWidthHandler, textAlignHandler } from "./templateCreatorMutators";
 import { TemplateRenderer } from "./TemplateRenderer";
 import { setFieldEventListeners } from "./templateCreatorFieldEventListeners";
+import { handleFieldMouseEvents } from "./templateCreatorFieldMouseEvents";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -111,64 +112,12 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   // Right Now I Literally cannot get the name of which field the user has clicked on unless i set event listeners for those specific divs... 
   // Temporary Solution! - Please feel free to find a better way!
   useEffect(() => {
-    const cleanup = setFieldEventListeners(handleFieldClick, handleFieldClickOutside);
+    const cleanup = setFieldEventListeners(
+      handleFieldClick, 
+      handleFieldClickOutside
+    );
     return cleanup;
   }, []);
-
-
-  useEffect(() => {
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      const width: number = designer.current.template.schemas[0][selectedField]?.width ?? null;
-      // @ts-ignore
-      const height: number = designer.current.template.schemas[0][selectedField]?.height ?? null;
-  
-      setFieldWidth(width);
-      setFieldHeight(height);
-    }
-  }, [designer.current, selectedField]);
-
-useEffect(() => {
-    if (designer.current && selectedField) {
-        const handleMouseUp = async () => {
-            // @ts-ignore
-            const prevStartPost = designer.current.template.schemas[0][selectedField]?.position;
-            await delay(10)
-            // @ts-ignore
-            const startpos = designer.current.template.schemas[0][selectedField]?.position;
-            if((prevStartPost.x != startpos.x) || (prevStartPost.y != startpos.y)){
-              setFieldsChanged(true);
-            }
-            // @ts-ignore
-            setCurrentFieldPosition(startpos);
-            setTemplateStyle(prevState => ({
-                ...prevState,
-                positionX: startpos?.x,
-                positionY: startpos?.y
-            }));
-        };
-
-        const handleMouseDown = () => {
-          // @ts-ignore
-          const startpos = designer.current.template.schemas[0][selectedField]?.position;
-          // @ts-ignore
-          setCurrentFieldPosition(startpos);
-          setTemplateStyle(prevState => ({
-              ...prevState,
-              positionX: startpos?.x,
-              positionY: startpos?.y
-          }));
-      };
-
-        window.addEventListener('mouseup', handleMouseUp);
-        window.addEventListener('mousedown', handleMouseDown);
-
-        return () => {
-            window.removeEventListener('mouseup', handleMouseUp);
-            window.removeEventListener('mousedown', handleMouseDown);
-        };
-    }
-}, [designer.current, selectedField]);
 
   const handleFieldClickOutside = (event: any) => {
     if (!event.target.closest('.templatecreator-page__rightsidebar-menu')) {
@@ -184,7 +133,6 @@ useEffect(() => {
       });
     }
   }
-
 
   const handleFieldClick = (event: any) => {
     const clickedField = event.currentTarget.getAttribute("title");
@@ -209,6 +157,31 @@ useEffect(() => {
       });
     }
   };
+
+  useEffect(() => {
+    if (designer.current && selectedField) {
+      // @ts-ignore
+      const width: number = designer.current.template.schemas[0][selectedField]?.width ?? null;
+      // @ts-ignore
+      const height: number = designer.current.template.schemas[0][selectedField]?.height ?? null;
+  
+      setFieldWidth(width);
+      setFieldHeight(height);
+    }
+  }, [designer.current, selectedField]);
+
+  useEffect(() => {
+    const cleanup = handleFieldMouseEvents(
+      designer,
+      selectedField,
+      setFieldsChanged,
+      setCurrentFieldPosition,
+      setTemplateStyle,
+      delay
+    );
+  
+    return cleanup;
+  }, [designer.current, selectedField]);
 
   const templateChangeHandler = async (index: number) => {
     if (templateHasChanged) {
