@@ -171,3 +171,20 @@ export const setPositionXHandler = async (
   }
   setFieldsChanged(true)
 };
+
+export const setPositionYHandler = async (
+  value: number,
+  designer: React.MutableRefObject<Designer>, 
+  selectedField: string,
+  setTemplateStyle: (value: React.SetStateAction<TemplateInstanceStyle>) => void,
+  setFieldsChanged: (value: React.SetStateAction<boolean>) => void
+) => {
+  setTemplateStyle(prevState => ({ ...prevState, positionY: value }));
+  if (designer.current && selectedField) {
+    // @ts-ignore
+    designer.current.template.schemas[0][selectedField].position.y = value;
+    // @ts-ignore
+    designer.current.updateTemplate(designer.current.template);
+  }
+  setFieldsChanged(true)
+};
