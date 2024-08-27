@@ -5,13 +5,12 @@ import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { PDFDocument } from "pdf-lib";
 import { SaveButton} from "../../components/MenuItems/Buttons/SaveButton";
 import { AddButton } from "../../components/MenuItems/Buttons/AddButton";
 import { ConfirmationPopup } from "../../components/MenuItems/Popups/ConfirmationPopup";
 import { AlertPopup } from "../../components/MenuItems/Popups/AlertPopup";
 import { TextInputIcon } from "../../components/MenuItems/Icons/TextInputIcon";
-import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData} from "../../util/dataHelpers";
+import { createBlankTemplate, createUpdatedTemplate, mapTemplatesToTemplateData} from "../../util/dataHelpers";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
 import { EditSection } from "../../components/MenuItems/TemplateCreatorPage/EditSection";
@@ -28,9 +27,9 @@ import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setF
 import { TemplateRenderer } from "./TemplateRenderer";
 import { setFieldEventListeners } from "./templateCreatorFieldEventListeners";
 import { handleFieldMouseEvents } from "./templateCreatorFieldMouseEvents";
-import { refreshUserFonts } from "../../util/fontsUtil";
 import { nullTemplateInstance, templateCreatorInstructionSlides } from "../../data/data";
 import { EditorLeftSideBar } from "../../components/Feature/TemplateCreator/EditorLeftSideBar";
+import { EditorRightSideBarSection } from "../../components/Feature/TemplateCreator/EditorRightSideBar/EditorRightSideBarSection";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -344,8 +343,9 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                 </header>
                 {rightSideBarPage === 0 && (
                     <>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Templates</h3>
+                        <EditorRightSideBarSection 
+                          title="Templates"
+                          component={
                             <SelectOptions
                                 containerClassOverride="overview-page__select-container"
                                 selectClassOverride="overview-page__select-box"
@@ -358,33 +358,42 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                                     templateChangeHandler(Number(event.target.value))
                                 }
                             />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Add Template</h3>
+                          }
+                        />
+                        <EditorRightSideBarSection 
+                          title="Add Template"
+                          component={
                             <AddButton onClick={confirmAddNewTemplateHandler} />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Add PDF Background</h3>
+                          }
+                        />
+                        <EditorRightSideBarSection 
+                          title="Add PDF Background"
+                          component={
                             <PdfFileUpload
                               returnPdf={(base64Pdf: string) => pdfFileUploadHandler(base64Pdf)}
                               reset={resetFileUpload}
                               setReset={setResetFileUpload}
                               setFileAdded={setFileAdded}
                             />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
+                          }
+                        />
+                        <EditorRightSideBarSection 
+                          title="Layout"
+                          component={
                             <SaveButton
                                 textfield="Save Template"
                                 saveButtonType={'normal'}
                                 onClick={confirmChangeTemplateHandler}
                             />
-                        </section>
+                          }
+                        />
                     </>
                 )}
                 {rightSideBarPage === 1 && (
                     <>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Layout</h3>
+                        <EditorRightSideBarSection 
+                          title="Layout"
+                          component={
                             <EditSection
                                 positionX={templateStyle.positionX}
                                 positionY={templateStyle.positionY}
@@ -399,9 +408,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                                 fieldWidth={fieldWidth}
                                 fieldHeight={fieldHeight}
                             />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Text</h3>
+                          }
+                        />
+                        <EditorRightSideBarSection 
+                          title="Text"
+                          component={
                             <TextEditSection
                                 align={templateStyle.align}
                                 setAlign={(value: string) => textAlignHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
@@ -413,23 +424,29 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
                                 setFontColor={(value: string) => setFontColorHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                                 refreshFonts={refreshFonts}
                             />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Edit Field {selectedField && selectedField}</h3>
+                          }
+                        />
+                        <EditorRightSideBarSection 
+                          title="Edit Field"
+                          component={
                             <SaveButton
                                 textfield="Save Inputs"
                                 saveButtonType={'normal'}
                                 onClick={saveFieldsHandler}
                                 customIcon={<TextInputIcon />}
                             />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
+                          }
+                        />
+                        <EditorRightSideBarSection 
+                          title="Edit Field"
+                          component={
                             <SaveButton
                                 textfield="Remove Template"
                                 saveButtonType={'remove'}
                                 onClick={confirmRemoveTemplateHandler}
                             />
-                        </section>
+                          }
+                        />
                     </>
                 )}
             </div>
