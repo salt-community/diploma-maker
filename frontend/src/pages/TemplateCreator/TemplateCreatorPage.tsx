@@ -30,7 +30,7 @@ import { delay } from "../../util/timeUtil";
 import { getPdfDimensions } from "../../util/fileGetUtil";
 import { getPlugins } from "../../util/pdfmeUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
-import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler } from "./templateCreatorMutators";
+import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler, textAlignHandler } from "./templateCreatorMutators";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -508,16 +508,16 @@ useEffect(() => {
     setFieldsChanged(true)
   };
   
-  const textAlignHandler = async (value: string) => {
-    setTemplateStyle(prevState => ({ ...prevState, align: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].alignment = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-      setFieldsChanged(true)
-    }
-  };
+  // const textAlignHandler = async (value: string) => {
+  //   setTemplateStyle(prevState => ({ ...prevState, align: value }));
+  //   if (designer.current && selectedField) {
+  //     // @ts-ignore
+  //     designer.current.template.schemas[0][selectedField].alignment = value;
+  //     // @ts-ignore
+  //     designer.current.updateTemplate(designer.current.template);
+  //     setFieldsChanged(true)
+  //   }
+  // };
   
   // const fontSizeHandler = async (value: number) => {
   //   setTemplateStyle(prevState => ({ ...prevState, fontSize: value }));
@@ -726,7 +726,7 @@ useEffect(() => {
                             <h3>Text</h3>
                             <TextEditSection
                                 align={templateStyle.align}
-                                setAlign={(value: string) => textAlignHandler(value)}
+                                setAlign={(value: string) => textAlignHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                                 fontSize={templateStyle.fontSize}
                                 setFontSize={(value: number) => fontSizeHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                                 font={templateStyle.font}

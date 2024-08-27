@@ -83,7 +83,6 @@ export const setFontHandler = async (
   }
 };
 
-
 export const fontSizeHandler = async (
   value: number,
   designer: React.MutableRefObject<Designer>, 
@@ -95,6 +94,23 @@ export const fontSizeHandler = async (
   if (designer.current && selectedField) {
     // @ts-ignore
     designer.current.template.schemas[0][selectedField].fontSize = value;
+    // @ts-ignore
+    designer.current.updateTemplate(designer.current.template);
+    setFieldsChanged(true)
+  }
+};
+
+export const textAlignHandler = async (
+  value: string,
+  designer: React.MutableRefObject<Designer>, 
+  selectedField: string,
+  setTemplateStyle: (value: React.SetStateAction<TemplateInstanceStyle>) => void,
+  setFieldsChanged: (value: React.SetStateAction<boolean>) => void
+) => {
+  setTemplateStyle(prevState => ({ ...prevState, align: value }));
+  if (designer.current && selectedField) {
+    // @ts-ignore
+    designer.current.template.schemas[0][selectedField].alignment = value;
     // @ts-ignore
     designer.current.updateTemplate(designer.current.template);
     setFieldsChanged(true)
