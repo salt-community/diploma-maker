@@ -116,3 +116,24 @@ export const textAlignHandler = async (
     setFieldsChanged(true)
   }
 };
+
+
+// FIELD SIZE-------------------------------------------------------------
+export const setSizeHeightHandler = async (
+  value: number,
+  designer: React.MutableRefObject<Designer>, 
+  selectedField: string,
+  setTemplateStyle: (value: React.SetStateAction<TemplateInstanceStyle>) => void,
+  setFieldsChanged: (value: React.SetStateAction<boolean>) => void
+) => {
+  setTemplateStyle(prevState => ({ ...prevState, sizeHeight: value }));
+  if (designer.current && selectedField) {
+    // @ts-ignore
+    designer.current.template.schemas[0][selectedField].height = value;
+    // @ts-ignore
+    designer.current.updateTemplate(designer.current.template);
+  }
+  setFieldsChanged(true)
+};
+
+// FIELD POSITION-------------------------------------------------------------
