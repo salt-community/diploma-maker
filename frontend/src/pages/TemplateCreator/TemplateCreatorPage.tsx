@@ -30,7 +30,7 @@ import { delay } from "../../util/timeUtil";
 import { getPdfDimensions } from "../../util/fileGetUtil";
 import { getPlugins } from "../../util/pdfmeUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
-import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler, setSizeHeightHandler, textAlignHandler } from "./templateCreatorMutators";
+import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler, setSizeHeightHandler, setSizeWidthHandler, textAlignHandler } from "./templateCreatorMutators";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -486,16 +486,16 @@ useEffect(() => {
     setFieldsChanged(true)
   };
   
-  const setSizeWidthHandler = async (value: number) => {
-    setTemplateStyle(prevState => ({ ...prevState, sizeWidth: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].width = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-    }
-    setFieldsChanged(true)
-  };
+  // const setSizeWidthHandler = async (value: number) => {
+  //   setTemplateStyle(prevState => ({ ...prevState, sizeWidth: value }));
+  //   if (designer.current && selectedField) {
+  //     // @ts-ignore
+  //     designer.current.template.schemas[0][selectedField].width = value;
+  //     // @ts-ignore
+  //     designer.current.updateTemplate(designer.current.template);
+  //   }
+  //   setFieldsChanged(true)
+  // };
   
   // const setSizeHeightHandler = async (value: number) => {
   //   setTemplateStyle(prevState => ({ ...prevState, sizeHeight: value }));
@@ -714,7 +714,7 @@ useEffect(() => {
                                 sizeHeight={templateStyle.sizeHeight}
                                 setPositionX={setPositionXHandler}
                                 setPositionY={setPositionYHandler}
-                                setSizeWidth={setSizeWidthHandler}
+                                setSizeWidth={(value: number) => setSizeWidthHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                                 setSizeHeight={(value: number) => setSizeHeightHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                                 setAlignHorizontalCenter={() => setAlignHorizontalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)}
                                 setAlignVerticalCenter={() => setAlignVerticalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)}

@@ -136,4 +136,21 @@ export const setSizeHeightHandler = async (
   setFieldsChanged(true)
 };
 
+export const setSizeWidthHandler = async (
+  value: number,
+  designer: React.MutableRefObject<Designer>, 
+  selectedField: string,
+  setTemplateStyle: (value: React.SetStateAction<TemplateInstanceStyle>) => void,
+  setFieldsChanged: (value: React.SetStateAction<boolean>) => void
+) => {
+  setTemplateStyle(prevState => ({ ...prevState, sizeWidth: value }));
+  if (designer.current && selectedField) {
+    // @ts-ignore
+    designer.current.template.schemas[0][selectedField].width = value;
+    // @ts-ignore
+    designer.current.updateTemplate(designer.current.template);
+  }
+  setFieldsChanged(true)
+};
+
 // FIELD POSITION-------------------------------------------------------------
