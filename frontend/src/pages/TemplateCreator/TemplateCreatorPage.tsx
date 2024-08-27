@@ -317,20 +317,18 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
             }
           ]}
         />
-        <section className="templatecreator-page__preview-container">
-          <TemplateRenderer
-            designer={designer}
-            designerRef={designerRef}
-            templates={templates}
-            setRightSideBarPage={setRightSideBarPage}
-            currentTemplate={currentTemplate}
-            SetPdfSizeHandler={SetPdfSizeHandler}
-            firstRun={firstRun}
-            setFirstRun={setFirstRun}
-            customAlert={customAlert}
-            fieldsChanged={fieldsChanged}
-          />
-        </section>
+        <TemplateRenderer
+          designer={designer}
+          designerRef={designerRef}
+          templates={templates}
+          setRightSideBarPage={setRightSideBarPage}
+          currentTemplate={currentTemplate}
+          SetPdfSizeHandler={SetPdfSizeHandler}
+          firstRun={firstRun}
+          setFirstRun={setFirstRun}
+          customAlert={customAlert}
+          fieldsChanged={fieldsChanged}
+        />
         <EditorRightSidebar 
           activePage={rightSideBarPage}
           setActivePage={setRightSideBarPage}
