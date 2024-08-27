@@ -30,6 +30,7 @@ import { setFieldEventListeners } from "./templateCreatorFieldEventListeners";
 import { handleFieldMouseEvents } from "./templateCreatorFieldMouseEvents";
 import { refreshUserFonts } from "../../util/fontsUtil";
 import { nullTemplateInstance, templateCreatorInstructionSlides } from "../../data/data";
+import { EditorLeftSideBar } from "../../components/Feature/TemplateCreator/EditorLeftSideBar";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -301,20 +302,22 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
           refreshFonts={refreshFonts}
           postUserFonts={(userFontsRequestsDto: UserFontRequestDto[]) => postUserFonts(userFontsRequestsDto)}
         />
-        <section className="templatecreator-page__leftsidebar">
-            <div className="templatecreator-page__leftsidebar-menu">
-                <section className="templatecreator-page__leftsidebar-menu-section">
-                    <button onClick={() => setShowInstructionSlideshow(true)} className="help-btn">
-                        <HelpIcon />
-                        <p>Help Me!</p>
-                    </button>
-                    <button onClick={() => setShowUserFontsClient(true)} className="fonts-btn">
-                        <FontsIcon />
-                        <p>Add Font</p>
-                    </button>
-                </section>
-            </div>
-        </section>
+        <EditorLeftSideBar 
+          optionsItems={[
+            {
+              icon: <HelpIcon />,
+              text: 'Help Me!',
+              onClick: () => setShowInstructionSlideshow(true),
+              className: 'help-btn'
+            },
+            {
+              icon: <FontsIcon />,
+              text: 'Add Font',
+              onClick: () => setShowUserFontsClient(true),
+              className: 'fonts-btn'
+            }
+          ]}
+        />
         <section className="templatecreator-page__preview-container">
           <TemplateRenderer
             designer={designer}
