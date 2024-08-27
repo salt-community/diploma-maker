@@ -29,7 +29,7 @@ import { TemplateRenderer } from "./TemplateRenderer";
 import { setFieldEventListeners } from "./templateCreatorFieldEventListeners";
 import { handleFieldMouseEvents } from "./templateCreatorFieldMouseEvents";
 import { refreshUserFonts } from "../../util/fontsUtil";
-import { templateCreatorInstructionSlides } from "../../data/data";
+import { nullTemplateInstance, templateCreatorInstructionSlides } from "../../data/data";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -72,7 +72,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   const [refreshFonts, setRefreshFonts] = useState<boolean>(false);
 
-  const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({positionX: null, positionY: null, sizeWidth: null, sizeHeight: null, align: null, fontSize: null, font: null, fontColor: null});
+  const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>(nullTemplateInstance);
 
   const [templateIndex, setTemplateIndex] = useState<number>(0);
 
@@ -105,20 +105,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     return cleanup;
   }, []);
 
-  const handleFieldClickOutside = (event: any) => {
-    if (!event.target.closest('.templatecreator-page__rightsidebar-menu')) {
-      setTemplateStyle({
-        positionX: null,
-        positionY: null,
-        sizeWidth: null,
-        sizeHeight: null,
-        align: null,
-        fontSize: null,
-        font: null,
-        fontColor: null,
-      });
-    }
-  }
+  const handleFieldClickOutside = (event: any) => !event.target.closest('.templatecreator-page__rightsidebar-menu') && setTemplateStyle(nullTemplateInstance);
 
   const handleFieldClick = (event: any) => {
     const clickedField = event.currentTarget.getAttribute("title");
@@ -144,10 +131,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   };
 
-  useEffect(() => {
-    (designer.current && selectedField) && setFieldEditorDisplayWidthHeight(designer, selectedField, setFieldWidth, setFieldHeight)
-  }, [designer.current, selectedField]);
-
   // When you drag field and release Mouse it updates field values
   useEffect(() => {
     const cleanup = handleFieldMouseEvents(
@@ -161,6 +144,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   
     return cleanup;
   }, [designer.current, selectedField]);
+
+  useEffect(() => {
+    (designer.current && selectedField) && setFieldEditorDisplayWidthHeight(designer, selectedField, setFieldWidth, setFieldHeight)
+  }, [designer.current, selectedField]);
+
 
   const templateChangeHandler = async (index: number) => {
     if (templateHasChanged) {

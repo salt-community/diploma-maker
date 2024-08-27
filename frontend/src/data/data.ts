@@ -62,3 +62,15 @@ export const templateCreatorInstructionSlides =
     alt: 'Template creator instruction',
   },
 ]
+
+
+export const nullTemplateInstance = {
+    positionX: null,
+    positionY: null,
+    sizeWidth: null,
+    sizeHeight: null,
+    align: null,
+    fontSize: null,
+    font: null,
+    fontColor: null,
+}
