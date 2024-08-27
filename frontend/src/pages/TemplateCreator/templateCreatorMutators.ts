@@ -2,7 +2,6 @@ import Designer from "@pdfme/ui/dist/types/Designer";
 import { pdfSize, TemplateInstanceStyle } from "../../util/types";
 import { calculateCanvasSizeFromPdfSize } from "../../util/templateCreatorUtil";
 
-
 // ALIGNMENT-------------------------------------------------------------
 export const setAlignVerticalCenter = (
   designer: React.MutableRefObject<Designer>, 
@@ -154,7 +153,6 @@ export const setSizeHeightHandler = async (
 };
 
 // FIELD POSITION-------------------------------------------------------------
-
 export const setPositionXHandler = async (
   value: number,
   designer: React.MutableRefObject<Designer>, 

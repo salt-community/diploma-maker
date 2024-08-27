@@ -32,6 +32,7 @@ import { getPlugins } from "../../util/pdfmeUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
 import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler, setPositionXHandler, setPositionYHandler, setSizeHeightHandler, setSizeWidthHandler, textAlignHandler } from "./templateCreatorMutators";
 import { TemplateRenderer } from "./TemplateRenderer";
+import { setFieldEventListeners } from "./templateCreatorFieldEventListeners";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -107,69 +108,11 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     setPdfSize(await getPdfDimensions(currentTemplate.basePdf))
   }
 
-  // Right Now I Literally cannot get the name of which field the user has clicked on in any other way... Temporary Solution!
+  // Right Now I Literally cannot get the name of which field the user has clicked on unless i set event listeners for those specific divs... 
+  // Temporary Solution! - Please feel free to find a better way!
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-        const selectors = [
-            '.pdfpreview div div div div div[title="header"]',
-            '.pdfpreview div div div div div[title="main"]',
-            '.pdfpreview div div div div div[title="footer"]',
-            '.pdfpreview div div div div div[title="link"]',
-        ];
-
-        const isClickInside = selectors.some(selector => {
-            const elements = document.querySelectorAll(selector);
-            return Array.from(elements).some(element => element.contains(event.target as Node));
-        });
-
-        if (!isClickInside) {
-            handleFieldClickOutside(event);
-        }
-    };
-
-    const attachListeners = () => {
-        const selectors = [
-            '.pdfpreview div div div div div[title="header"]',
-            '.pdfpreview div div div div div[title="main"]',
-            '.pdfpreview div div div div div[title="footer"]',
-            '.pdfpreview div div div div div[title="link"]',
-        ];
-
-        selectors.forEach((selector) => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach((element) => {
-                element.removeEventListener("click", handleFieldClick);
-                element.addEventListener("click", handleFieldClick);
-            });
-        });
-    };
-
-    const observer = new MutationObserver(() => {
-        attachListeners();
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-    attachListeners();
-
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-        observer.disconnect();
-        document.removeEventListener('click', handleClickOutside);
-        const selectors = [
-            '.pdfpreview div div div div div[title="header"]',
-            '.pdfpreview div div div div div[title="main"]',
-            '.pdfpreview div div div div div[title="footer"]',
-            '.pdfpreview div div div div div[title="link"]',
-        ];
-
-        selectors.forEach((selector) => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach((element) => {
-                element.removeEventListener("click", handleFieldClick);
-            });
-        });
-    };
+    const cleanup = setFieldEventListeners(handleFieldClick, handleFieldClickOutside);
+    return cleanup;
   }, []);
 
 
