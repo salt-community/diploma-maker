@@ -10,14 +10,13 @@ import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, Em
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
-import { delay, generatePDF, mapBootcampToSaltData, newGenerateCombinedPDF, oldGenerateCombinedPDF, populateField, populateIdField, utcFormatter } from '../../util/helper';
 import { getTemplate, makeTemplateInput } from '../../templates/baseTemplate';
 import { AlertPopup, CustomAlertPopupProps, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
 import { SaveButton, SaveButtonType } from '../../components/MenuItems/Buttons/SaveButton';
 import { SelectButton, SelectButtonType } from '../../components/MenuItems/Buttons/SelectButton';
 import { EmailClient } from '../../components/EmailClient/EmailClient';
 import { EmailIcon } from '../../components/MenuItems/Icons/EmailIcon';
-import { mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from '../../util/dataHelpers';
+import { mapBootcampToSaltData, mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from '../../util/dataHelpers';
 import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
 import { useCustomInfoPopup } from '../../components/Hooks/useCustomInfoPopup';
 import { Template } from '@pdfme/common';
@@ -25,6 +24,10 @@ import { InfoPopup } from '../../components/MenuItems/Popups/InfoPopup';
 import { VerifyIcon } from '../../components/MenuItems/Icons/VerifyIcon';
 import { useLoadingMessage } from '../../components/Contexts/LoadingMessageContext';
 import { LazyImageLoader } from '../../components/Content/LazyImageLoader';
+import { utcFormatter } from '../../util/datesUtil';
+import { populateField, populateIdField } from '../../util/fieldReplacersUtil';
+import { delay } from '../../util/timeUtil';
+import { generatePDF, newGenerateCombinedPDF } from '../../util/pdfGenerationUtil';
 
 type Props = {
     bootcamps: BootcampResponse[] | null,

@@ -807,6 +807,7 @@ export const generateVerificationCode = (tracks: TrackResponse[]): string => {
         bootcamp.students.forEach(student => {
           if (student.verificationCode === code) {
             codeExists = true; 
+            
           }
         });
       });

@@ -5,11 +5,13 @@ import { HistorySnapshotResponse } from "../../util/types";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { generatePDFDownload, getFontsData, getPlugins } from "../../util/helper";
 import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistorySnapshot } from "../../util/dataHelpers";
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
 import { NextIcon } from '../../components/MenuItems/Icons/NextIcon';
 import logoBlack from '/icons/logoBlack.png'
+import { getFontsData } from '../../util/fontsUtil';
+import { generatePDFDownload } from '../../util/pdfGenerationUtil';
+import { getPlugins } from '../../util/pdfmeUtil';
 
 type Props = {
     getHistoryByVerificationCode: (verificationCode: string) => void;
@@ -23,15 +25,17 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
 
     const [studentData, setStudentData] = useState<HistorySnapshotResponse>(null);
     const [showDiploma, setShowDiploma] = useState<boolean>(false);
-    let displayName;
+    const [displayName, setDisplayName] = useState('');
 
     useEffect(() => {
         if(studentData){
-            displayName = 
+            const displayname = 
                 studentData.bootcampName.includes("dnfs") ? 'Fullstack C# Dotnet'
                 : studentData.bootcampName.includes("jfs") ? 'Fullstack Java'
                 : studentData.bootcampName.includes("jsfs") ? 'Fullstack Javascript'
                 : 'ERR READING BOOTCAMP NAME';
+
+        setDisplayName(displayname);
 
             const inputs = templateInputsFromHistorySnapshot(studentData, displayName);
             const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
@@ -123,7 +127,7 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
                     <div className='verificationinfo__title-wrapper'>
                         <h1>{studentData.studentName}</h1>
                         <p>Has successfully graduated from School Of Applied Technology</p>
-                        <h2>{studentData.bootcampName}</h2>
+                        <h2>{displayName}</h2>
                     </div>
                     <div className='verificationinfo__footer-wrapper'>
                         <p>Graduation Date: <span>{studentData.bootcampGraduationDate.toString().slice(0, 10)}</span></p>

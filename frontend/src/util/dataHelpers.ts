@@ -1,7 +1,7 @@
 import { Template } from "@pdfme/common";
 import { getTemplate, makeTemplateInput } from "../templates/baseTemplate";
-import { populateField, populateIdField } from "./helper";
 import { BootcampRequest, BootcampResponse, HistorySnapshotResponse, SaltData, TemplateRequest, TemplateResponse } from "./types";
+import { populateField, populateIdField } from "./fieldReplacersUtil";
 
 export const templateInputsFromSaltData = (saltData: SaltData, currentPageIndex: number) => {
     const inputs = 
@@ -506,4 +506,26 @@ export const createBlankTemplate = (templateName: string) => {
         footer: "",
       }
     return blankTemplate;
+}
+
+
+export function mapBootcampToSaltData(bootcamp: BootcampResponse, template: TemplateResponse ): SaltData {
+  return {
+      guidId: bootcamp.guidId,
+      classname: bootcamp.name ,
+      dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
+      students: bootcamp.students,
+      template: template
+  };
+}
+
+export function mapBootcampToSaltData2(TrackName: string, bootcamp: BootcampResponse, template: TemplateResponse ): SaltData {
+  return {
+      guidId: bootcamp.guidId,
+      classname: bootcamp.name ,
+      dategraduate: bootcamp.graduationDate.toString().slice(0, 10),
+      students: bootcamp.students,
+      template: template,
+      displayName: "Fullstack " + TrackName 
+  };
 }

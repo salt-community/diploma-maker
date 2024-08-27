@@ -2,9 +2,9 @@ export const VerifyIcon = () => {
     return (
       <svg className="verifyIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <linearGradient id="gradient1" x1="10%" y1="0%" x2="100%" y2="0%" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#FF75DC" />
-              <stop offset="50%" stop-color="#9B4FB9" />
-              <stop offset="100%" stop-color="#432F76" />
+              <stop offset="0%" stopColor="#FF75DC" />
+              <stop offset="50%" stopColor="#9B4FB9" />
+              <stop offset="100%" stopColor="#432F76" />
         </linearGradient>
         <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
         <g

@@ -265,3 +265,72 @@
 .pdfpreview-smallcontainer div{
     background-color: #171722;
 }
+
+
+
+@media screen and (max-width: 850px) {
+    .verificationinfo-container{
+        position: relative;
+        margin: 75px auto 0 auto;
+        width: 90%;
+        height: 80vh;
+    
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    
+        background-color: #171722;
+        border-radius: 1rem;
+    }
+    .verificationinfo__footer-wrapper{
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        padding: 5%;
+        padding-bottom: 27%;
+        transform: translateX(-50%);
+    
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .verificationinfo__footer-wrapper::after{
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        border-top: #374c67 solid 1px;
+    }
+    .verificationinfo__footer-wrapper p{
+        order: 2;
+    }
+    .verificationinfo__footer-wrapper .verificationinfo__footer-wrapper--icon-container{
+        order: 1;
+        margin-bottom: 2rem;
+    }
+    .diploma-container{
+        width: 90vw !important;
+    }
+    .diploma-container.visible{
+        width: 90vw !important;
+    }
+    .diploma-container-content{
+        margin: 0rem auto 0 auto;
+        width: 100%;
+    }
+
+
+    .verificationinfo-container.invalid{
+        width: 90%;
+        height: 50vh;
+    }
+    .verificationinfo__title-wrapper.invalid p{
+        margin-top: 2rem;
+        font-size: 1rem;
+        padding: 0% 2rem;
+    }
+}

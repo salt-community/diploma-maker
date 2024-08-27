@@ -16,7 +16,7 @@
     .checkbox-wrapper-31 .stroke {
         fill: none;
         stroke: #fff;
-        stroke-miterlimit: 10;
+        strokeMiterlimit: 10;
         strokeWidth: 2px;
         stroke-dashoffset: 100;
         stroke-dasharray: 100;
