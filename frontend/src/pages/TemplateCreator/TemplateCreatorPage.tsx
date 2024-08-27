@@ -1,16 +1,15 @@
-import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import "./TemplateCreatorPage.css";
-import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 //@ts-ignore
 import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse, UserFontRequestDto, XYPosition} from "../../util/types";
+import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
+import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { makeTemplateInput } from "../../templates/baseTemplate";
 import { PDFDocument } from "pdf-lib";
-import { SaveButton, SaveButtonType,} from "../../components/MenuItems/Buttons/SaveButton";
+import { SaveButton} from "../../components/MenuItems/Buttons/SaveButton";
 import { AddButton } from "../../components/MenuItems/Buttons/AddButton";
-import { ConfirmationPopup, ConfirmationPopupType } from "../../components/MenuItems/Popups/ConfirmationPopup";
-import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
+import { ConfirmationPopup } from "../../components/MenuItems/Popups/ConfirmationPopup";
+import { AlertPopup } from "../../components/MenuItems/Popups/AlertPopup";
 import { TextInputIcon } from "../../components/MenuItems/Icons/TextInputIcon";
 import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData} from "../../util/dataHelpers";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
@@ -18,22 +17,19 @@ import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConf
 import { EditSection } from "../../components/MenuItems/TemplateCreatorPage/EditSection";
 import { TextEditSection } from "../../components/MenuItems/TemplateCreatorPage/TextEditSection";
 import { HelpIcon } from "../../components/MenuItems/Icons/HelpIcon";
-import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { InstructionSlideshow } from "../../components/Content/InstructionSlideshow";
-import { EmailConfigInstructionSlides, templateCreatorInstructionSlides } from "../../data/data";
 import { Size } from "@pdfme/common";
-import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 import { UserFontsClient } from "../../components/Feature/TemplateCreator/UserFontsClient";
 import { FontsIcon } from "../../components/MenuItems/Icons/FontsIcon";
-import { getFontsData, refreshUserFonts } from "../../util/fontsUtil";
 import { delay } from "../../util/timeUtil";
 import { getPdfDimensions } from "../../util/fileGetUtil";
-import { getPlugins } from "../../util/pdfmeUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
-import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler, setFontHandler, setPositionXHandler, setPositionYHandler, setSizeHeightHandler, setSizeWidthHandler, textAlignHandler } from "./templateCreatorMutators";
+import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFieldEditorDisplayWidthHeight, setFontColorHandler, setFontHandler, setPositionXHandler, setPositionYHandler, setSizeHeightHandler, setSizeWidthHandler, textAlignHandler } from "./templateCreatorMutators";
 import { TemplateRenderer } from "./TemplateRenderer";
 import { setFieldEventListeners } from "./templateCreatorFieldEventListeners";
 import { handleFieldMouseEvents } from "./templateCreatorFieldMouseEvents";
+import { refreshUserFonts } from "../../util/fontsUtil";
+import { templateCreatorInstructionSlides } from "../../data/data";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -70,23 +66,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
   const [showUserFontsClient, setShowUserFontsClient] = useState<boolean>(false);
-  const { loadingMessage } = useLoadingMessage();
 
   const [firstRun, setFirstRun] = useState<boolean>(true)
   const [resetFileUpload, setResetFileUpload] = useState<boolean>(false);
 
   const [refreshFonts, setRefreshFonts] = useState<boolean>(false);
 
-  const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
-    positionX: null,
-    positionY: null,
-    sizeWidth: null,
-    sizeHeight: null,
-    align: null,
-    fontSize: null,
-    font: null,
-    fontColor: null,
-  });
+  const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({positionX: null, positionY: null, sizeWidth: null, sizeHeight: null, align: null, fontSize: null, font: null, fontColor: null});
 
   const [templateIndex, setTemplateIndex] = useState<number>(0);
 
@@ -109,8 +95,8 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     setPdfSize(await getPdfDimensions(currentTemplate.basePdf))
   }
 
-  // Right Now I Literally cannot get the name of which field the user has clicked on unless i set event listeners for those specific divs... 
-  // Temporary Solution! - Please feel free to find a better way!
+  // - Right Now I Literally cannot get the name of which field the user has clicked on unless i set event listeners for those specific divs... 
+  // - Temporary Solution! - Please feel free to find a better way!
   useEffect(() => {
     const cleanup = setFieldEventListeners(
       handleFieldClick, 
@@ -159,17 +145,10 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   };
 
   useEffect(() => {
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      const width: number = designer.current.template.schemas[0][selectedField]?.width ?? null;
-      // @ts-ignore
-      const height: number = designer.current.template.schemas[0][selectedField]?.height ?? null;
-  
-      setFieldWidth(width);
-      setFieldHeight(height);
-    }
+    (designer.current && selectedField) && setFieldEditorDisplayWidthHeight(designer, selectedField, setFieldWidth, setFieldHeight)
   }, [designer.current, selectedField]);
 
+  // When you drag field and release Mouse it updates field values
   useEffect(() => {
     const cleanup = handleFieldMouseEvents(
       designer,

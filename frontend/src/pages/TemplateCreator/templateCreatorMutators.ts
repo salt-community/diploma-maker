@@ -186,3 +186,20 @@ export const setPositionYHandler = async (
   }
   setFieldsChanged(true)
 };
+
+
+// SET FIELD EDITOR WIDTH
+export const setFieldEditorDisplayWidthHeight = (
+  designer: React.MutableRefObject<Designer>, 
+  selectedField: string,
+  setFieldWidth: (value: React.SetStateAction<number>) => void,
+  setFieldHeight: (value: React.SetStateAction<number>) => void
+) => {
+    // @ts-ignore
+    const width: number = designer.current.template.schemas[0][selectedField]?.width ?? null;
+    // @ts-ignore
+    const height: number = designer.current.template.schemas[0][selectedField]?.height ?? null;
+
+    setFieldWidth(width);
+    setFieldHeight(height);
+}
