@@ -6,22 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 public class EmailService
 {
-    private readonly string _email;
-    private readonly string _appPassword;
+    // private readonly string _email;
+    // private readonly string _appPassword;
     private readonly DiplomaMakingContext _context;
 
     public EmailService(IConfiguration configuration, IWebHostEnvironment env, ILogger<EmailService> logger, DiplomaMakingContext context)
     {
-        if (env.IsDevelopment())
-        {
-            _email = configuration["EmailSettings:Email"] ?? throw new ArgumentNullException(nameof(_email));
-            _appPassword = configuration["EmailSettings:AppPassword"] ?? throw new ArgumentNullException(nameof(_appPassword));
-        }
-        else
-        {
-            _email = Environment.GetEnvironmentVariable("Email") ?? throw new ArgumentNullException(nameof(_email));
-            _appPassword = Environment.GetEnvironmentVariable("AppPassword") ?? throw new ArgumentNullException(nameof(_appPassword));
-        }
+        // if (env.IsDevelopment())
+        // {
+        //     _email = configuration["EmailSettings:Email"] ?? throw new ArgumentNullException(nameof(_email));
+        //     _appPassword = configuration["EmailSettings:AppPassword"] ?? throw new ArgumentNullException(nameof(_appPassword));
+        // }
+        // else
+        // {
+        //     _email = Environment.GetEnvironmentVariable("Email") ?? throw new ArgumentNullException(nameof(_email));
+        //     _appPassword = Environment.GetEnvironmentVariable("AppPassword") ?? throw new ArgumentNullException(nameof(_appPassword));
+        // }
 
   
         _context = context;
