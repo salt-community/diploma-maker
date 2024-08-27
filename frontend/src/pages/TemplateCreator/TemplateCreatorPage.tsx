@@ -30,6 +30,7 @@ import { delay } from "../../util/timeUtil";
 import { getPdfDimensions } from "../../util/fileGetUtil";
 import { getPlugins } from "../../util/pdfmeUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
+import { setAlignVerticalCenter } from "./templateCreatorMutators";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -569,20 +570,20 @@ useEffect(() => {
   };
   
   // Hardcoded width value of 305 for a4
-  const setAlignVerticalCenter = () => {
-    if (designer.current && selectedField && pdfSize) {
-      // @ts-ignore
-      const selectedFieldHeight = designer.current.template.schemas[0][selectedField].height;
-      const centerPosition = ((calculateCanvasSizeFromPdfSize(pdfSize.height)) - selectedFieldHeight) / 2;
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].position.y = centerPosition;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
+  // const setAlignVerticalCenter = () => {
+  //   if (designer.current && selectedField && pdfSize) {
+  //     // @ts-ignore
+  //     const selectedFieldHeight = designer.current.template.schemas[0][selectedField].height;
+  //     const centerPosition = ((calculateCanvasSizeFromPdfSize(pdfSize.height)) - selectedFieldHeight) / 2;
+  //     // @ts-ignore
+  //     designer.current.template.schemas[0][selectedField].position.y = centerPosition;
+  //     // @ts-ignore
+  //     designer.current.updateTemplate(designer.current.template);
   
-      setTemplateStyle(prevState => ({ ...prevState, positionY: centerPosition }));
-      setFieldsChanged(true)
-    }
-  };
+  //     setTemplateStyle(prevState => ({ ...prevState, positionY: centerPosition }));
+  //     setFieldsChanged(true)
+  //   }
+  // };
 
   const calculateCanvasSizeFromPdfSize = (size: number) => {
     const averageMultiplier = 0.353;
@@ -716,7 +717,7 @@ useEffect(() => {
                                 setSizeWidth={setSizeWidthHandler}
                                 setSizeHeight={setSizeHeightHandler}
                                 setAlignHorizontalCenter={setAlignHorizontalCenter}
-                                setAlignVerticalCenter={setAlignVerticalCenter}
+                                setAlignVerticalCenter={() => setAlignVerticalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)}
                                 fieldWidth={fieldWidth}
                                 fieldHeight={fieldHeight}
                             />
