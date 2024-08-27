@@ -86,10 +86,12 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
     }, [show]);
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>, student: Student) => {
-        setEmailChanges({
-            ...emailChanges,
-            [student.guidId]: event.target.value,
-        });
+        const value = event.target.value;
+        
+        setEmailChanges((prevState) => ({
+            ...prevState,
+            [student.guidId!]: value,
+        }));
     };
 
     const inputBlurHandler = (student: Student) => {
