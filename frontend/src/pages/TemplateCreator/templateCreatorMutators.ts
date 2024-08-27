@@ -45,3 +45,20 @@ export const setAlignHorizontalCenter = (
     setFieldsChanged(true)
   }
 };
+
+export const setFontColorHandler = async (
+  value: string,
+  designer: React.MutableRefObject<Designer>, 
+  selectedField: string,
+  setTemplateStyle: (value: React.SetStateAction<TemplateInstanceStyle>) => void,
+  setFieldsChanged: (value: React.SetStateAction<boolean>) => void
+) => {
+  setTemplateStyle(prevState => ({ ...prevState, fontColor: value }));
+  if (designer.current && selectedField) {
+    // @ts-ignore
+    designer.current.template.schemas[0][selectedField].fontColor = value;
+    // @ts-ignore
+    designer.current.updateTemplate(designer.current.template);
+    setFieldsChanged(true)
+  }
+};

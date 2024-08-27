@@ -30,7 +30,7 @@ import { delay } from "../../util/timeUtil";
 import { getPdfDimensions } from "../../util/fileGetUtil";
 import { getPlugins } from "../../util/pdfmeUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
-import { setAlignHorizontalCenter, setAlignVerticalCenter } from "./templateCreatorMutators";
+import { setAlignHorizontalCenter, setAlignVerticalCenter, setFontColorHandler } from "./templateCreatorMutators";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -541,16 +541,16 @@ useEffect(() => {
     }
   };
   
-  const setFontColorHandler = async (value: string) => {
-    setTemplateStyle(prevState => ({ ...prevState, fontColor: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].fontColor = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-      setFieldsChanged(true)
-    }
-  };
+  // const setFontColorHandler = async (value: string) => {
+  //   setTemplateStyle(prevState => ({ ...prevState, fontColor: value }));
+  //   if (designer.current && selectedField) {
+  //     // @ts-ignore
+  //     designer.current.template.schemas[0][selectedField].fontColor = value;
+  //     // @ts-ignore
+  //     designer.current.updateTemplate(designer.current.template);
+  //     setFieldsChanged(true)
+  //   }
+  // };
 
   // Hardcoded width value of 215 for a4
   // const setAlignHorizontalCenter = () => {
@@ -732,7 +732,7 @@ useEffect(() => {
                                 font={templateStyle.font}
                                 setFont={(value: string) => setFontHandler(value)}
                                 fontColor={templateStyle.fontColor}
-                                setFontColor={(value: string) => setFontColorHandler(value)}
+                                setFontColor={(value: string) => setFontColorHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
                                 refreshFonts={refreshFonts}
                             />
                         </section>
