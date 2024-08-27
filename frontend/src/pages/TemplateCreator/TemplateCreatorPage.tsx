@@ -92,6 +92,7 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
   }, [templates]);
 
   const SetPdfSizeHandler = async () => setPdfSize(await getPdfDimensions(currentTemplate.basePdf));
+  const getTemplateIndex = (template: CustomTemplate | null) => template ? templateData.findIndex((t) => t.id === template.id) : 0;
 
   // - i set event listeners for those specific divs... Right Now I Literally cannot get the name of which field the user has clicked on unless i do this  
   // - Temporary Solution! - Please feel free to find a better way!
@@ -157,28 +158,6 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
       setTemplateIndex(index);
       setResetFileUpload(true);
     }
-  };
-
-  const pdfFileUploadHandler = (base64Pdf: string) => {
-    if (designer.current) {
-      designer.current.updateTemplate(
-        Object.assign(cloneDeep(designer.current.getTemplate()), {
-          basePdf: base64Pdf,
-        })
-      );
-    }
-    if (currentTemplate) {
-      const updatedTemplate = { ...currentTemplate, basePdf: base64Pdf };
-      setCurrentTemplate(updatedTemplate);
-  
-      const updatedTemplateData = templateData.map((template) =>
-        template.id === currentTemplate.id ? updatedTemplate : template
-      );
-      setTemplateData(updatedTemplateData);
-    }
-    setTemplateHasChanged(true);
-    settemplateBasePdfHasChanged(true);
-    setFileAdded(true);
   };
 
   const saveTemplate = async (goToIndex?: number) => {
@@ -261,7 +240,27 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   };
 
-  const getTemplateIndex = (template: CustomTemplate | null) => template ? templateData.findIndex((t) => t.id === template.id) : 0;
+  const pdfFileUploadHandler = (base64Pdf: string) => {
+    if (designer.current) {
+      designer.current.updateTemplate(
+        Object.assign(cloneDeep(designer.current.getTemplate()), {
+          basePdf: base64Pdf,
+        })
+      );
+    }
+    if (currentTemplate) {
+      const updatedTemplate = { ...currentTemplate, basePdf: base64Pdf };
+      setCurrentTemplate(updatedTemplate);
+  
+      const updatedTemplateData = templateData.map((template) =>
+        template.id === currentTemplate.id ? updatedTemplate : template
+      );
+      setTemplateData(updatedTemplateData);
+    }
+    setTemplateHasChanged(true);
+    settemplateBasePdfHasChanged(true);
+    setFileAdded(true);
+  };
 
   const confirmChangeTemplateHandler = async () => {
     const currentTemplateIndex = getTemplateIndex(currentTemplate);
