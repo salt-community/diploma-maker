@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Clerk.Net.Client;
 using System.Security.Claims;
 using System.Net.Http.Headers;
+using System.Text.Json;
+using DiplomaMakerApi.Models.Clerk;
 
 namespace DiplomaMakerApi.Controllers
 {
@@ -36,7 +38,6 @@ namespace DiplomaMakerApi.Controllers
 
                 var url = $"https://api.clerk.com/v1/users/{userId}/oauth_access_tokens/oauth_google";
                 
-                // _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "sk_test_RnPycpXxQ91IdqPmx8BQwmVG1haGoUGpdXxa1f3xUt");
 
                 var response = await _httpClient.GetAsync(url);
@@ -46,9 +47,8 @@ namespace DiplomaMakerApi.Controllers
                     return StatusCode((int)response.StatusCode, "Failed to retrieve Google OAuth token from Clerk.");
                 }
                 var responseData = await response.Content.ReadAsStringAsync();
-                var googleToken = responseData;
-
-                return Ok(new {GoogleToken = googleToken });
+                var serializedData = JsonSerializer.Deserialize<List<ClerkOauthGoogleResponse>>(responseData);
+                return Ok(new {GoogleToken = serializedData[0]!.Token});
             }
             catch (Exception ex)
             {
