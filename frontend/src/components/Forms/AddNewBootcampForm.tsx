@@ -46,14 +46,14 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks }
             <br />
             <table className="auto-table">
                 <div className="newbootcamp-title-container">
-                    <h1 className="newbootcamp-title">Add New Bootcamp</h1>
+                    <h1 className="newbootcamp-title">Add Bootcamp</h1>
                 </div>
                 <tbody>
                     <tr>
-                        <th>Graduation Date</th>
-                        <th>Track</th>
-                        <th></th>
-                        <th></th>
+                        <th className="date-header">Graduation Date</th>
+                        <th className="date-header">Track</th>
+                        <th className="date-header"></th>
+                        <th className="date-header"></th>
                     </tr>
                     <tr>
                         <td className="date-cell">
