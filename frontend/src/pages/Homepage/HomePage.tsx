@@ -50,7 +50,7 @@ export function HomePage({ userName, signedIn = false }: Props) {
     }
   }, [signedIn]);
 
-  homePageLoggedInData[homePageLoggedInData.length - 1].onClick = () => setShowInstructionSlideshow(true);
+  homePageLoggedInData[0].onClick = () => setShowInstructionSlideshow(true);
   const HomePageContent = signedIn ? homePageLoggedInData : homePageLoggedOutData;
 
   useEffect(() => {
