@@ -86,9 +86,20 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       if (tracks && templates) {
           const filteredTracks = tracks.filter(t => t.bootcamps.length > 0);
           setAllTrackData(filteredTracks);
-          setTrackIndex(0);
-          setBootcampIndex(0);
+          if (TrackIndex >= filteredTracks.length) {
+            setTrackIndex(0);
+          }
+          if (filteredTracks[TrackIndex]?.bootcamps?.length > 0 && BootcampIndex >= filteredTracks[TrackIndex].bootcamps.length) {
+            setBootcampIndex(0);
+          }
+          if(addedBootcamp && tracks){
+            // const addedBootcampIndex = AllTrackData[TrackIndex].bootcamps.findIndex(b => b.guidId === addedBootcamp.guidId);
+            // addedBootcampIndex && setBootcampIndex(addedBootcampIndex);
+            setTrackIndex(addedBootcamp.trackId - 1);
+            
+          }
       }
+      
   }, [tracks, templates]);
 
   useEffect(() => {
@@ -104,7 +115,9 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
         setSelectedTemplate(null);
       }
     }
+    
   }, [TrackIndex, BootcampIndex, AllTrackData]);
+
 
   const handleFileUpload = async (file: File) => {
     const dataFromFile = await ParseFileData(file, null, customAlert);
@@ -271,6 +284,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
             <SelectOptions
               containerClassOverride='overview-page__select-container'
               selectClassOverride='overview-page__select-box'
+              value={TrackIndex.toString()}
               options={[
                 ...AllTrackData.filter(track => track.bootcamps.length > 0).map((track, idx) => ({
                   value: idx.toString(),
@@ -303,7 +317,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
                 const selectedBootcampIndex = AllTrackData[TrackIndex].bootcamps.findIndex(bootcamp => bootcamp.guidId === selectedGuidId);
                 setBootcampIndex(selectedBootcampIndex);
               }}
-              value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
+              value={AllTrackData[TrackIndex]?.bootcamps[BootcampIndex]?.guidId || ''}
             />
           }
           <SaveButton 
