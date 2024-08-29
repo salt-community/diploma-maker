@@ -6,6 +6,7 @@ import './AddNewBootcampForm.css'
 import { SelectOptions } from "../MenuItems/Inputs/SelectOptions";
 import { AddButtonSimple } from "../MenuItems/Buttons/AddButtonSimple";
 import { CloseWindowIcon } from "../MenuItems/Icons/CloseWindowIcon";
+import { delay } from "../../util/timeUtil";
 
 type Props = {
     addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
@@ -38,9 +39,14 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks, 
             return;
         }
         const newBootcamp: BootcampRequest = {graduationDate: gradDate, trackId: track.id};
-        await addNewBootcamp(newBootcamp);
-
-        customAlert('success', "Successfully added!", "Successfully added new bootcamp to database");
+        try {
+            await addNewBootcamp(newBootcamp);
+            customAlert('success', "Successfully added!", "Successfully added new bootcamp to database");
+            enableClose && onClick();
+            
+        } catch (err) {
+            customAlert('fail', "Something Went Wrong!", `${err}`);
+        } 
     }
 
     return (
