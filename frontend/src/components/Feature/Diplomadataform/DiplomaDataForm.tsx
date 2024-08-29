@@ -55,6 +55,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [attachedFiles, setAttachedFiles] = useState<{ [key: string]: File | null }>({});
   const [disableNavbar, setDisableNavbar] = useState<boolean>(false);
   const [showAddBootcampForm, setShowAddBootcampForm] = useState<boolean>(false);
+  const [addedBootcamp, setAddedBootcamp] = useState<BootcampRequest>()
 
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
@@ -80,6 +81,15 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
       setSaltData(saltData);
     }
   }, [students, selectedTemplate]);
+
+  useEffect(() => {
+      if (tracks && templates) {
+          const filteredTracks = tracks.filter(t => t.bootcamps.length > 0);
+          setAllTrackData(filteredTracks);
+          setTrackIndex(0);
+          setBootcampIndex(0);
+      }
+  }, [tracks, templates]);
 
   useEffect(() => {
     if (AllTrackData && templates) {
@@ -238,7 +248,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const addNewBootcampHandler = async (bootcamp: BootcampRequest) => {
     customAlert('loading', "Adding New Bootcamp...", ``);
     try {
-      await addNewBootcamp(bootcamp)
+      setAddedBootcamp(bootcamp);
+      await addNewBootcamp(bootcamp);
       customAlert('success', "Added Bootcamp Successfully.", `Successfully added bootcamp to the database.`);
     } catch (error) {
       customAlert('fail', "Error Adding Bootcamp", `${error}`);
