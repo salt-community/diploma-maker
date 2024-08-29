@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './HomePage.css';
 import { DescriptionCard } from '../../components/Feature/DescriptionCard/DescriptionCard';
 import { InstructionSlideshow } from '../../components/Content/InstructionSlideshow';
-import { EmailConfigInstructionSlides } from '../../data/data';
 import { useNavigate } from 'react-router-dom';
 import { highlightBootcampOptionsNav, highlightDashboardNav, highlightHistoryNav, highlightPDFcreatorNav, highlightTemplateCreatorNav, homePageLoggedInData, homePageLoggedOutData } from './HomepageData';
 import { AddButtonSimple } from '../../components/MenuItems/Buttons/AddButtonSimple';
 import { useAuth } from '@clerk/clerk-react';
+import { EmailConfigInstructionSlides, ReadmeInstructionSlides } from '../../data/slidesData';
 
 type Props = {
   userName: string | null;
@@ -102,7 +102,7 @@ export function HomePage({ userName, signedIn = false }: Props) {
       ) : (
         <div>Loading...</div>
       )}
-      <InstructionSlideshow show={showInstructionSlideshow} slides={EmailConfigInstructionSlides} onClose={() => setShowInstructionSlideshow(false)} />
+      <InstructionSlideshow show={showInstructionSlideshow} slides={ReadmeInstructionSlides} onClose={() => setShowInstructionSlideshow(false)} />
     </>
   );
 }

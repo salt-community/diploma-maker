@@ -20,7 +20,6 @@ import { EyeIcon } from "../MenuItems/Icons/EyeIcon";
 import { MountainIcon } from "../MenuItems/Icons/MountainIcon";
 import { HelpIcon } from "../MenuItems/Icons/HelpIcon";
 import { InstructionSlideshow } from "../Content/InstructionSlideshow";
-import { EmailConfigInstructionSlides } from "../../data/data";
 import { DescriptionIcon } from "../MenuItems/Icons/DescriptionIcon";
 import { TitleIcon } from "../MenuItems/Icons/TitleIcon";
 import { CloudUploadIcon } from "../MenuItems/Icons/CloudUploadIcon";
@@ -29,6 +28,7 @@ import { NextIcon } from "../MenuItems/Icons/NextIcon";
 import { EmailContentConfigSection } from "./EmailContentConfigSection";
 import { EmailHostConfigSection } from "./EmailHostConfigSection";
 import { EmailSendSection } from "./EmailSendSection";
+import { EmailConfigInstructionSlides } from "../../data/slidesData";
 
 type Props = {
     clients: Student[],
