@@ -27,9 +27,10 @@ import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setF
 import { TemplateRenderer } from "../../components/Feature/TemplateCreator/TemplateRenderer";
 import { setFieldEventListeners } from "./templateCreatorFieldEventListeners";
 import { handleFieldMouseEvents } from "./templateCreatorFieldMouseEvents";
-import { nullTemplateInstance, templateCreatorInstructionSlides } from "../../data/data";
 import { EditorLeftSideBar } from "../../components/Feature/TemplateCreator/EditorLeftSideBar";
 import { EditorRightSidebar } from "../../components/Feature/TemplateCreator/EditorRightSideBar/EditorRightSidebar";
+import { templateCreatorInstructionSlides } from "../../data/slidesData";
+import { nullTemplateInstance } from "../../data/data";
 
 type Props = {
   templates: TemplateResponse[] | null;

@@ -160,13 +160,8 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
     }
   }
 
-  const confirmChangeBootcampHandler = async (data: FieldValues) => {
-    customPopup('question2', "Are you sure you want to change existing bootcamps?", "This can be destructive if you've already generated diplomas with that bootcamp.", () => () => handleUpdateBootcamp(data));
-  };
-
-  const confirmDeleteBootcampHandler = async (index: number) => {
-    customPopup('warning2', "Warning", <>By deleting this, you will lose <b style={{ color: '#EF4444' }}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(index));
-  };
+  const confirmChangeBootcampHandler = async (data: FieldValues) => customPopup('question2', "Are you sure you want to change existing bootcamps?", "This can be destructive if you've already generated diplomas with that bootcamp.", () => () => handleUpdateBootcamp(data));
+  const confirmDeleteBootcampHandler = async (index: number) => customPopup('warning2', "Warning", <>By deleting this, you will lose <b style={{ color: '#EF4444' }}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(index));
 
   return (
     <>

@@ -39,6 +39,7 @@
     .save-btn.normal:hover{
         filter: saturate(125%);
         background-color: #2bf62e;
+        background-color: #4bd850;
         color: #000;
         cursor: pointer;
 
