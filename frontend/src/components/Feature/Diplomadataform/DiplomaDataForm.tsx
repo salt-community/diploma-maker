@@ -247,7 +247,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
   return (
     <>
-      <div className={`diploma-making__add-bootcamp-form ${showAddBootcampForm && ' visible'}`}>
+      <div className={`diploma-making__add-bootcamp-form ${showAddBootcampForm ? ' visible' : ''}`}>
         <AddNewBootcampForm addNewBootcamp={addNewBootcampHandler} bootcamps={tracks.flatMap(t => t.bootcamps)} tracks={tracks} enableClose={true} onClick={() => setShowAddBootcampForm(false)}/>
       </div>
       <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
@@ -303,7 +303,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
               <AddIcon />
             } 
             type='button'
-            onClick={() => {}}
+            onClick={() => setShowAddBootcampForm(true)}
           />
         </div>
 
