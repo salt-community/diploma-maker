@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BootcampResponse, SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse, StudentResponse, Student } from "../../util/types";
+import { BootcampResponse, SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse, StudentResponse, Student, BootcampRequest } from "../../util/types";
 import DiplomaDataForm from "../../components/Feature/Diplomadataform/DiplomaDataForm";
 import './DiplomaMaking.css';
 import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
@@ -17,10 +17,11 @@ type Props = {
   UpdateBootcampWithNewFormdata: (updateFormDataRequest: FormDataUpdateRequest, guidid: string) => Promise<BootcampResponse>
   setLoadingMessage: (message: string) => void;
   updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>;
+  addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 };
 
 
-export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails }: Props) {
+export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails, addNewBootcamp }: Props) {
 
   /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
   const [saltData, setSaltData] = useState<SaltData | null>();
@@ -67,6 +68,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
               templates={templates}
               updateStudentThumbnails={updateStudentThumbnails}
               setLoadingMessage={setLoadingMessage}
+              addNewBootcamp={addNewBootcamp}
             /*  fullscreen={IsFullScreen} */
             />
           </section>

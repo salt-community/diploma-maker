@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse, pdfGenerationResponse } from "../../../util/types";
+import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackResponse, BootcampResponse, pdfGenerationResponse, BootcampRequest } from "../../../util/types";
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
 import './DiplomaDataForm.css';
@@ -19,6 +19,12 @@ import { useCustomAlert } from "../../Hooks/useCustomAlert";
 import { newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF } from "../../../util/pdfGenerationUtil";
 import { openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/fileActionUtil";
 import { generateVerificationCode } from "../../../util/generateUtil";
+import AddNewBootcampForm from "../../Forms/AddNewBootcampForm";
+import { CloseIcon } from "../../MenuItems/Icons/CloseIcon";
+import { CloseWindowIcon } from "../../MenuItems/Icons/CloseWindowIcon";
+import { AddButton } from "../../MenuItems/Buttons/AddButton";
+import { ModifyButton } from "../../MenuItems/Buttons/ModifyButton";
+import { AddIcon } from "../../MenuItems/Icons/AddIcon";
 
 type FormData = {
   optionA: boolean;
@@ -35,10 +41,11 @@ type Props = {
   setLoadingMessage: (message: string) => void;
   selectedStudentIndex: number | null;
   setSelectedStudentIndex: (idx: number) => void;
-  updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>
+  updateStudentThumbnails: (pdfs: Uint8Array[], studentsInput: Student[], setLoadingMessageAndAlert: (message: string) => void) => Promise<void>;
+  addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 };
 
-export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex, updateStudentThumbnails }: Props) {
+export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex, updateStudentThumbnails, addNewBootcamp }: Props) {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>();
   const [TrackIndex, setTrackIndex] = useState<number>(0);
@@ -47,6 +54,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateResponse>();
   const [attachedFiles, setAttachedFiles] = useState<{ [key: string]: File | null }>({});
   const [disableNavbar, setDisableNavbar] = useState<boolean>(false);
+  const [showAddBootcampForm, setShowAddBootcampForm] = useState<boolean>(false);
 
   const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
@@ -227,13 +235,26 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     }
   };
 
+  const addNewBootcampHandler = async (bootcamp: BootcampRequest) => {
+    customAlert('loading', "Adding New Bootcamp...", ``);
+    try {
+      await addNewBootcamp(bootcamp)
+      customAlert('success', "Added Bootcamp Successfully.", `Successfully added bootcamp to the database.`);
+    } catch (error) {
+      customAlert('fail', "Error Adding Bootcamp", `${error}`);
+    }
+  }
+
   return (
     <>
+      <div className={`diploma-making__add-bootcamp-form ${showAddBootcampForm && ' visible'}`}>
+        <AddNewBootcampForm addNewBootcamp={addNewBootcampHandler} bootcamps={tracks.flatMap(t => t.bootcamps)} tracks={tracks} enableClose={true} onClick={() => setShowAddBootcampForm(false)}/>
+      </div>
       <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} durationOverride={3500} />
       <form className="diploma-making-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="diploma-making-form__select-track diploma-making-form__select-container">
           <label htmlFor="track" className="diploma-making-form__label">
-            Track group
+            Track
           </label>
           {AllTrackData && 
             <SelectOptions
@@ -274,6 +295,16 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
               value={AllTrackData[TrackIndex].bootcamps[BootcampIndex].guidId}
             />
           }
+          <SaveButton 
+            classNameOverride='diploma-making-form__addbootcamp-btn'
+            saveButtonType='normal' 
+            textfield="Add New" 
+            customIcon={
+              <AddIcon />
+            } 
+            type='button'
+            onClick={() => {}}
+          />
         </div>
 
         <div className="diploma-making-form__select-template diploma-making-form__select-container">

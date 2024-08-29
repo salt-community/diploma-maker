@@ -5,14 +5,17 @@ import { useCustomAlert } from "../Hooks/useCustomAlert";
 import './AddNewBootcampForm.css'
 import { SelectOptions } from "../MenuItems/Inputs/SelectOptions";
 import { AddButtonSimple } from "../MenuItems/Buttons/AddButtonSimple";
+import { CloseWindowIcon } from "../MenuItems/Icons/CloseWindowIcon";
 
 type Props = {
     addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
     bootcamps: BootcampResponse[] | null;
-    tracks: TrackResponse[]
+    tracks: TrackResponse[];
+    enableClose?: boolean;
+    onClick?: () => void;
 }
 
-export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks }: Props) {
+export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks, enableClose = false, onClick}: Props) {
     const [name, setName] = useState<string>("");
     const [track, setTrack] = useState<TrackResponse | null>();
     const [gradDate, setGradDate] = useState<Date | null>(null);
@@ -42,6 +45,11 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks }
 
     return (
         <div className="content-container">
+            {enableClose &&
+                <button onClick={onClick} className="newbootcamp-close-btn">
+                    <CloseWindowIcon />
+                </button>
+            }
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
             <br />
             <table className="auto-table">
