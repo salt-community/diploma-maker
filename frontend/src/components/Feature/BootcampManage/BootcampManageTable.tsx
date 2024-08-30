@@ -180,7 +180,7 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
           <div className="modal-content">
             <div className="modal-body">
               <div className="modal-header">
-                <h3 className="modal-title">Bootcamp Management</h3>
+                <h3 className="modal-title">Bootcamps</h3>
                 <SelectOptions
                     containerClassOverride='overview-page__select-container'
                     selectClassOverride='overview-page__select-box'
