@@ -410,11 +410,11 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
               <ExclusiveCheckBoxGroup
                 items={[
                   {
-                    label: 'Generate PDFs for selected bootcamp',
+                    label: 'Generate for selected bootcamp',
                     validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'all' }
                   },
                   {
-                    label: 'Generate PDF for selected student',
+                    label: 'Generate for selected student',
                     validationOptions: { ...register("pdfGenerationScope", { required: true }), value: 'selected' }
                   }
                 ]}
