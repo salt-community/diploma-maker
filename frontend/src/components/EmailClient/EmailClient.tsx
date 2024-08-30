@@ -174,15 +174,23 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                     <>
                         <ul className="emailclient__list">
                             {(emailConfigActive && !emailContentConfig) ? 
-                                <EmailHostConfigSection
-                                    senderEmail={senderEmail}
-                                    senderCode={senderCode}
-                                    senderEmailInput={senderEmailInput}
-                                    senderCodeInput={senderCodeInput}
-                                    handleSenderEmailChange={handleSenderEmailChange}
-                                    handleSenderCodeChange={handleSenderCodeChange}
-                                    showPassword={showPassword}
-                                    setShowPassword={setShowPassword}
+                                // <EmailHostConfigSection
+                                //     senderEmail={senderEmail}
+                                //     senderCode={senderCode}
+                                //     senderEmailInput={senderEmailInput}
+                                //     senderCodeInput={senderCodeInput}
+                                //     handleSenderEmailChange={handleSenderEmailChange}
+                                //     handleSenderCodeChange={handleSenderCodeChange}
+                                //     showPassword={showPassword}
+                                //     setShowPassword={setShowPassword}
+                                // />
+                                <EmailContentConfigSection
+                                    emailTitle={emailTitle}
+                                    emailDescription={emailDescription}
+                                    emailTitleInput={emailTitleInput}
+                                    emailDescriptionInput={emailDescriptionInput}
+                                    handleEmailTitleChange={handleEmailTitleChange}
+                                    handleEmailDescriptionChange={handleEmailDescriptionChange}
                                 />
                                 :
                                 <EmailContentConfigSection
@@ -196,15 +204,15 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                             }  
                         </ul>
                         <section className="emailconfig-footer">
-                            {emailConfigActive && !emailContentConfig && 
+                            {/* {emailConfigActive && !emailContentConfig && 
                                 <AddButton icon={<HelpIcon />} text='Instructions' onClick={() => {setShowInstructionSlideshow(true)}} />
-                            }
+                            } */}
                             <SaveButton 
                                 classNameOverride="emailconfig__savebtn" 
                                 saveButtonType='normal' 
-                                textfield={emailConfigActive && !emailContentConfig ? "Save Sender" : "Save Content"} 
+                                textfield={emailConfigActive && !emailContentConfig ? "Save Content" : "Save Content"} 
                                 customIcon={<SuccessIcon />} 
-                                onClick={() => (emailConfigActive && !emailContentConfig) ? emailConfigSaveHandler() : emailContentSaveHandler()}
+                                onClick={() => (emailConfigActive && !emailContentConfig) ? emailContentSaveHandler() : emailContentSaveHandler()}
                             />
                         </section>
                     </>
@@ -222,27 +230,29 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                     <CloseWindowIcon />
                 </button>
                 <div className="emailclient__footer">
+                    {!emailConfigActive &&
+                        <SaveButton 
+                            classNameOverride="send-emails-btn" 
+                            saveButtonType={(emailConfigActive && emailContentConfig) ? 'normal' : 'normal'} 
+                            textfield={`${(emailContentConfig && emailConfigActive) ? 'Go back' : emailConfigActive ? 'Edit Email Content'   : 'Send Emails to Selected Clients'}`}
+                            onClick={
+                                () => 
+                                    (emailConfigActive && emailContentConfig) ? sendEmailsHandler() 
+                                    : emailConfigActive ? sendEmailsHandler() 
+                                    : sendEmailsHandler()
+                                }
+                            customIcon={
+                                    (emailConfigActive && emailContentConfig) ? <NextIcon /> 
+                                    : emailConfigActive ? <TitleIcon />
+                                    : <CloudUploadIcon />
+                                } 
+                        />
+                    }
                     <SaveButton 
                         classNameOverride="send-emails-btn" 
-                        saveButtonType={(emailConfigActive && emailContentConfig) ? 'normal' : 'normal'} 
-                        textfield={`${(emailContentConfig && emailConfigActive) ? 'Go back' : emailConfigActive ? 'Edit Email Content'   : 'Send Emails to Selected Clients'}`}
-                        onClick={
-                            () => 
-                                (emailConfigActive && emailContentConfig) ? setEmailContentConfig(false) 
-                                : emailConfigActive ? setEmailContentConfig(true) 
-                                : sendEmailsHandler()
-                            }
-                        customIcon={
-                                (emailConfigActive && emailContentConfig) ? <NextIcon /> 
-                                : emailConfigActive ? <TitleIcon />
-                                : <CloudUploadIcon />
-                            } 
-                    />
-                    <SaveButton 
-                        classNameOverride="send-emails-btn" 
-                        saveButtonType={emailConfigActive ? 'remove' : 'normal'} 
-                        customIcon={emailConfigActive ? <CloseIcon /> : <ConfigureIcon />} 
-                        textfield={`${emailConfigActive ? 'Close Email Host' : 'Email Host Configuration'}`}
+                        saveButtonType={emailConfigActive ? 'normal' : 'normal'} 
+                        customIcon={emailConfigActive ? <NextIcon /> : <TitleIcon />} 
+                        textfield={`${emailConfigActive ? 'Back To Students' : 'Edit Email Content'}`}
                         onClick={() => {
                             if (emailConfigActive) {
                                 setEmailConfigActive(false);
@@ -253,7 +263,6 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                         }}
                     />
                 </div>
-                
             </section>
             
             <AlertPopup
@@ -263,7 +272,7 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
                 show={showPopup}
                 onClose={closeAlert}
             />
-            <InstructionSlideshow show={showInstructionSlideshow}  slides={EmailConfigInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
+            {/* <InstructionSlideshow show={showInstructionSlideshow}  slides={EmailConfigInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/> */}
             <div className={`preventClickBG ${show ? 'fade-in' : 'fade-out'}`}></div>
         </>
     );

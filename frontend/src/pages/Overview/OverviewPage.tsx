@@ -251,8 +251,8 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                     guidId: userIds[i],
                     //@ts-ignore
                     file: file,
-                    email: emailConfigRequest.senderEmail,
-                    senderCode: emailConfigRequest.senderCode,
+                    // email: emailConfigRequest.senderEmail,
+                    // senderCode: emailConfigRequest.senderCode,
                     title: title,
                     description: description,
                 }
