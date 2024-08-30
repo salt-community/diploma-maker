@@ -37,7 +37,7 @@ export const logFontMimeTypes = async () => {
         const response = await fetch(font.url, { method: 'HEAD' });
         const contentType = response.headers.get('Content-Type');
 
-        console.log(`Font: ${font.label}, MIME type: ${contentType}`);
+        // console.log(`Font: ${font.label}, MIME type: ${contentType}`);
       } catch (error) {
         console.error(`Failed to fetch MIME type for ${font.label}:`, error);
       }
