@@ -37,6 +37,7 @@
 
 .text-input,
 .date-input {
+    position: relative;
     margin-top: 0.25rem;
     display: block;
     width: 100%;
@@ -56,6 +57,11 @@
     outline: none;
     border-color: #6366f1;
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+}
+
+.date-input:focus {
+    border-color: #007BFF;
+    outline: none;
 }
 
 

@@ -1,5 +1,5 @@
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../util/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AlertPopup, PopupType } from "../MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "../Hooks/useCustomAlert";
 import './AddNewBootcampForm.css'
@@ -20,6 +20,7 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks, 
     const [name, setName] = useState<string>("");
     const [track, setTrack] = useState<TrackResponse | null>();
     const [gradDate, setGradDate] = useState<Date | null>(null);
+    const dateInput  = useRef(null);
 
     const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
@@ -49,6 +50,8 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks, 
         } 
     }
 
+    const calendarClickHandler = () => dateInput.current.showPicker();
+
     return (
         <div className="content-container">
             {enableClose &&
@@ -73,8 +76,10 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks, 
                         <td className="date-cell">
                             <input 
                                 type="date" 
+                                onClick={calendarClickHandler}
                                 onChange={event => setGradDate(new Date(event.target.value))} 
                                 className="date-input"
+                                ref={dateInput}
                             />
                         </td>
                         <td className="date-cell">
