@@ -192,12 +192,13 @@
   }
   
   .tag.hover-right .tag-close-icon {
-	fill: var(--delete-color);
+	/* fill: var(--delete-color); */
+	fill: #fe1a1a;
 	transform: rotate(5deg) translateX(1px);
 	transition: all .2s ease;
   }
   .tag.hover-right .tag-open-icon path{
-	stroke: var(--delete-color);;
+	stroke: var(--delete-color);
 	transition: all .2s ease;
   }
   .tag.hover-left .tag-close-icon{
