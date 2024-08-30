@@ -4,7 +4,7 @@ import { TemplateResponse, SaltData, Student, FormDataUpdateRequest, TrackRespon
 import { FileUpload } from "../../MenuItems/Inputs/FileUploader";
 import { ParseFileData } from '../../../services/InputFileService';
 import './DiplomaDataForm.css';
-import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../MenuItems/Popups/AlertPopup";
+import { AlertPopup } from "../../MenuItems/Popups/AlertPopup";
 import { Template } from "@pdfme/common";
 import { mapBootcampToSaltData2, mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from "../../../util/dataHelpers";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
@@ -20,10 +20,6 @@ import { newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGe
 import { downloadZipFile, openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/fileActionUtil";
 import { generateVerificationCode } from "../../../util/generateUtil";
 import AddNewBootcampForm from "../../Forms/AddNewBootcampForm";
-import { CloseIcon } from "../../MenuItems/Icons/CloseIcon";
-import { CloseWindowIcon } from "../../MenuItems/Icons/CloseWindowIcon";
-import { AddButton } from "../../MenuItems/Buttons/AddButton";
-import { ModifyButton } from "../../MenuItems/Buttons/ModifyButton";
 import { AddIcon } from "../../MenuItems/Icons/AddIcon";
 
 type FormData = {
@@ -199,7 +195,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     try {
       pdfs = 
         print ? await newGenerateAndPrintCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert) 
-        : download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, selectedBootcamp.name, setLoadingMessageAndAlert)
+        : download ? await newGenerateAndDownloadZippedPDFs(templatesArr, inputsArray, setLoadingMessageAndAlert)
         : await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert)
     } catch (error) {
       customAlert('fail', "Failed to generate pdfs", `${error}`);
