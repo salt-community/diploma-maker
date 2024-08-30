@@ -65,40 +65,40 @@ export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, co
             <div className={'popup_confirmation-content-btn-container ' + (confirmationPopupType === 'form' && 'confirmation')}>
               {confirmationPopupType === 'question' || confirmationPopupType === 'question2' ?
               <>
-                <button onClick={() => confirmClickHandler()} className='popup_confirmation-content-btn'>
+                <button onClick={() => confirmClickHandler()} className='popup_confirmation-content-btn' type='button'>
                   <SuccessIcon />
                   Yes
                 </button>
-                <button onClick={abortClick} className='popup_confirmation-content-btn'>
+                <button onClick={abortClick} className='popup_confirmation-content-btn' type='button'>
                   <ErrorIcon />
                   Abort
                 </button>
               </>
               : confirmationPopupType === 'warning2' ?
               <>
-                <button onClick={abortClick} className='popup_confirmation-content-btn'>Cancel</button>
-                <button onClick={() => confirmClickHandler(inputContent)} className='popup_confirmation-content-btn'>Delete Permanently</button>
+                <button onClick={abortClick} className='popup_confirmation-content-btn' type='button'>Cancel</button>
+                <button onClick={() => confirmClickHandler(inputContent)} className='popup_confirmation-content-btn' type='button'>Delete Permanently</button>
                 {/* <AddButtonSimple onClick={abortClick}  text='Cancel'/>
                 <DeleteButtonSimple onClick={() => confirmClickHandler(inputContent)} text='Delete Permanently'/> */}
               </>
               : confirmationPopupType === 'form' ?
               <>
                 <input className='popup_confirmation-content-input' value={inputContent} onChange={handleInputChange} required type="text" />
-                <button onClick={() => confirmClickHandler(inputContent)} className='popup_confirmation-content-btn'>
+                <button onClick={() => confirmClickHandler(inputContent)} className='popup_confirmation-content-btn' type='button'>
                   <SuccessIcon />
                   Confirm
                 </button>
-                <button onClick={abortClick} className='popup_confirmation-close-btn'>
+                <button onClick={abortClick} className='popup_confirmation-close-btn' type='button'>
                   <CloseWindowIcon />
                 </button>
               </>
               :
               <>
-                <button onClick={() => confirmClickHandler()} className='popup_confirmation-content-btn'>
+                <button onClick={() => confirmClickHandler()} className='popup_confirmation-content-btn' type='button'>
                   <ErrorIcon />
                   Remove
                 </button>
-                <button onClick={abortClick} className='popup_confirmation-content-btn'>
+                <button onClick={abortClick} className='popup_confirmation-content-btn' type='button'>
                   <SuccessIcon />
                   Abort
                 </button>
