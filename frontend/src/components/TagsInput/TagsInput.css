@@ -58,6 +58,9 @@
 		transform: translateY(-50%);
 
 		font-size: .6rem;
+		
+		cursor: text;
+		pointer-events: none;
 
 		color: #197dffe5;
 		background-color: #1a2135bc;
