@@ -109,7 +109,9 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     };
 
     const handleBootcampChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedBootcamp(e.target.value);
+        e.target.selectedIndex === 0 ?
+            setSelectedBootcamp(null) : 
+            setSelectedBootcamp(e.target.value);
         setCurrentPage(1);
     };
 
@@ -313,6 +315,13 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         window.open(url, '_blank');
     };
 
+    const showEmailClientHandler = () => {
+        console.log(selectedBootcamp);
+        selectedBootcamp === null
+            ? customAlert('message', 'Please select a bootcamp', 'Select a bootcamp from the dropdown menu') 
+            : setShowEmailClient(true)
+    }
+
     return (
         <main className="overview-page">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} />
@@ -438,7 +447,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                         <PublishButton text='Generate PDFs' onClick={generatePDFsHandler} />
                     </section>
                     <section className="sidebar-menu__section">
-                        <SaveButton textfield="Email Management" saveButtonType={'normal'} onClick={() => setShowEmailClient(true)} customIcon={<EmailIcon />} />
+                        <SaveButton textfield="Email Management" saveButtonType={'normal'} onClick={() => showEmailClientHandler()} customIcon={<EmailIcon />} />
                     </section>
                 </div>
             </section>
