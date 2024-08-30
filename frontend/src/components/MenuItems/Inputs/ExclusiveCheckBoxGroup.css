@@ -1,6 +1,7 @@
 :root {
-  --exclusive-color: #ff4a19;
-  --exclusive-hoverbordercolor: #ff4a19;
+  /* #ff4a19 */
+  --exclusive-color: #ff6a2a;
+  --exclusive-hoverbordercolor: #ff6a2a;
 }
 
 .exclusivecheckbox-group {

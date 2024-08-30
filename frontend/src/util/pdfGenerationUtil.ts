@@ -103,7 +103,7 @@ export const newGenerateAndPrintCombinedPDF = async (templates: Template[], inpu
     return response;
 };
   
-export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], bootcampName: string, setLoadingMessage: (message: string) => void): Promise<pdfGenerationResponse> => {
+export const newGenerateAndDownloadZippedPDFs = async (templates: Template[], inputsArray: any[], setLoadingMessage: (message: string) => void): Promise<pdfGenerationResponse> => {
     setLoadingMessage("Generating combined pdf!");
     const font = await getFontsData();
     const zip = new JSZip();

@@ -47,7 +47,7 @@ export const NavBar = () => {
                             <li className="navbar__item bootcamp-management">
                                 <Link to="/bootcamp-management" className={"navbar__link " + ((location.pathname === '/bootcamp-management' || location.pathname === '/Bootcamp-management') && "active")}>
                                     <CogWheelIcon />
-                                    Bootcamp Management
+                                    Bootcamps
                                 </Link>
                             </li>
                             <li className="navbar__item history">
