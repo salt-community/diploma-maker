@@ -106,7 +106,7 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
         className="taginputbox"
         type="text"
         onKeyDown={addTags}
-        placeholder="Press enter to add name"
+        placeholder="Add student names here"
       />
       <ul id="tags">
         {currentTags.map((tag, index) => (
