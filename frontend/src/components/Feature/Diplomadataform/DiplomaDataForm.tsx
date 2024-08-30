@@ -17,7 +17,7 @@ import { TagsInput } from "../../TagsInput/TagsInput";
 import { SaveButton } from "../../MenuItems/Buttons/SaveButton";
 import { useCustomAlert } from "../../Hooks/useCustomAlert";
 import { newGenerateAndDownloadZippedPDFs, newGenerateAndPrintCombinedPDF, newGenerateCombinedPDF } from "../../../util/pdfGenerationUtil";
-import { openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/fileActionUtil";
+import { downloadZipFile, openPrintWindowfromBlob, openWindowfromBlob } from "../../../util/fileActionUtil";
 import { generateVerificationCode } from "../../../util/generateUtil";
 import AddNewBootcampForm from "../../Forms/AddNewBootcampForm";
 import { CloseIcon } from "../../MenuItems/Icons/CloseIcon";
@@ -210,7 +210,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
     customAlert('loadingfadeout', '', '');
     await alertSuccess();
     
-    print ? await openPrintWindowfromBlob(pdfs.bundledPdfsDisplayObject)
+    print ? await openPrintWindowfromBlob(pdfs.bundledPdfsDisplayObject) :
+    download ? await downloadZipFile(pdfs.bundledPdfsDisplayObject, selectedBootcamp.name)
     : await openWindowfromBlob(pdfs.bundledPdfsDisplayObject) 
   };
 
