@@ -6,7 +6,7 @@ import { SelectOptions } from '../../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse, EmailConfigRequestDto } from '../../util/types';
+import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse } from '../../util/types';
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
@@ -197,13 +197,6 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         for (let i = 0; i < userIds.length; i++) {
             try {
                 var file = await generatePDFFile(userIds[i], true);
-                const emailConfigRequest: EmailConfigRequestDto = JSON.parse(localStorage.getItem('emailConfigRequest'));
-
-                if (!emailConfigRequest.senderEmail || !emailConfigRequest.senderCode) {
-                    //@ts-ignore
-                    customInfoPopup('fail', `Opps, Something went wrong`, `Email configuration fields cannot be empty`, () => {});
-                }
-
                 var emailSendRequest: EmailSendRequest = {
                     guidId: userIds[i],
                     //@ts-ignore
@@ -212,7 +205,6 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                     description: description,
                 }
 
-                
                 await sendEmail(emailSendRequest)
             } catch (error) {
                 //@ts-ignore

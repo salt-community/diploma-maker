@@ -1,34 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { EmailConfigRequestDto, Student } from "../../util/types";
+import { Student } from "../../util/types";
 import './EmailClient.css';
 import { CloseWindowIcon } from "../MenuItems/Icons/CloseWindowIcon";
-import { CogWheelIcon } from "../MenuItems/Icons/CogWheelIcon";
-import { SaveButton, SaveButtonType } from "../MenuItems/Buttons/SaveButton";
+import { SaveButton } from "../MenuItems/Buttons/SaveButton";
 import { AlertPopup, PopupType } from "../MenuItems/Popups/AlertPopup";
-import CustomCheckBoxRound from "../MenuItems/Inputs/CustomCheckBoxRound";
-import { ModifyButton } from "../MenuItems/Buttons/ModifyButton";
-import { ConfigureIcon } from "../MenuItems/Icons/ConfigureIcon";
-import { CloseIcon } from "../MenuItems/Icons/CloseIcon";
-import { EmailIcon } from "../MenuItems/Icons/EmailIcon";
-import { VerifyIcon } from "../MenuItems/Icons/VerifyIcon";
-import { AddButton } from "../MenuItems/Buttons/AddButton";
-import { AddIcon } from "../MenuItems/Icons/AddIcon";
 import { SuccessIcon } from "../MenuItems/Icons/SuccessIcon";
-import { PasswordIcon } from "../MenuItems/Icons/PasswordIcon";
 import { useCustomAlert } from "../Hooks/useCustomAlert";
-import { EyeIcon } from "../MenuItems/Icons/EyeIcon";
-import { MountainIcon } from "../MenuItems/Icons/MountainIcon";
-import { HelpIcon } from "../MenuItems/Icons/HelpIcon";
-import { InstructionSlideshow } from "../Content/InstructionSlideshow";
-import { DescriptionIcon } from "../MenuItems/Icons/DescriptionIcon";
 import { TitleIcon } from "../MenuItems/Icons/TitleIcon";
 import { CloudUploadIcon } from "../MenuItems/Icons/CloudUploadIcon";
-import { ArrowIcon } from "../MenuItems/Icons/ArrowIcon";
 import { NextIcon } from "../MenuItems/Icons/NextIcon";
 import { EmailContentConfigSection } from "./EmailContentConfigSection";
-import { EmailHostConfigSection } from "./EmailHostConfigSection";
 import { EmailSendSection } from "./EmailSendSection";
-import { EmailConfigInstructionSlides } from "../../data/slidesData";
 
 type Props = {
     clients: Student[],

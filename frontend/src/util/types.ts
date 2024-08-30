@@ -200,10 +200,10 @@ export type MakeActiveSnapshotRequestDto = {
 }
 
 // Email
-export type EmailConfigRequestDto = {
-    senderEmail: string;
-    senderCode: string;
-}
+// export type EmailConfigRequestDto = {
+//     senderEmail: string;
+//     senderCode: string;
+// }
 
 // Preview Images
 export type studentImagePreview = {
