@@ -18,9 +18,11 @@ type Props = {
   confirmationPopupType: ConfirmationPopupType;
   confirmClick: (inputContent?: string) => void;
   abortClick: () => void;
+  okBtnPlaceholder?: string;
+  abortBtnPlaceholder?: string;
 }
 
-export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, confirmClick, abortClick }: Props) => {
+export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, confirmClick, abortClick, okBtnPlaceholder, abortBtnPlaceholder}: Props) => {
   const [inputContent, setInputContent] = useState<string>('');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,8 +78,8 @@ export const ConfirmationPopup = ({ show, confirmationPopupType, title, text, co
               </>
               : confirmationPopupType === 'warning2' ?
               <>
-                <button onClick={abortClick} className='popup_confirmation-content-btn' type='button'>Cancel</button>
-                <button onClick={() => confirmClickHandler(inputContent)} className='popup_confirmation-content-btn' type='button'>Delete Permanently</button>
+                <button onClick={abortClick} className='popup_confirmation-content-btn' type='button'>{abortBtnPlaceholder ?? 'Cancel'}</button>
+                <button onClick={() => confirmClickHandler(inputContent)} className='popup_confirmation-content-btn' type='button'>{okBtnPlaceholder ?? 'Delete Permanently'}</button>
                 {/* <AddButtonSimple onClick={abortClick}  text='Cancel'/>
                 <DeleteButtonSimple onClick={() => confirmClickHandler(inputContent)} text='Delete Permanently'/> */}
               </>
