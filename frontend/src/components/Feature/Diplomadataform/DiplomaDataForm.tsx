@@ -432,6 +432,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
               onClick={() => {}} 
               onMouseEnter={() => {setGenerateBtnActive(true)}}
               onMouseLeave={() => {setGenerateBtnActive(false)}}
+              specialCreateDiplomasBtn={true}
             />
             <SaveButton 
               classNameOverride={`diploma-making-form__print-button ${generateBtnActive && 'active'}`}
