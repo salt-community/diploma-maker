@@ -13,6 +13,7 @@ export const PublishButton = ( { text, onClick, classNameOverride, onMouseEnter,
     return(
         <button type={type} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick} className={'btn--orange ' + classNameOverride}>
             {text}
+            
         </button>
     )
 }
