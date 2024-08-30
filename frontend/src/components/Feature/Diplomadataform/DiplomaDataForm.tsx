@@ -390,7 +390,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
               <CheckboxGroup items={[
                 { 
                   icon: <UpdateIcon />, 
-                  label: 'Update changes made to Bootcamp', 
+                  label: 'Update changes to cloud', 
                   validationOptions: { ...register("optionA") }
                 },
                 { 
