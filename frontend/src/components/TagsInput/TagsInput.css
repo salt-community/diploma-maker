@@ -206,7 +206,8 @@
 	transition: all .2s ease;
   }
   .tag.hover-left .tag-open-icon path{
-	stroke: #54df77;;
+	/* stroke: #54df77;; */
+	stroke: #1fd94d;;
 	transition: all .2s ease;
   }
   .tag.hover-edit .tag-close-icon{
