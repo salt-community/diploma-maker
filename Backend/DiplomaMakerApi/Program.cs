@@ -3,7 +3,6 @@ using DiplomaMakerApi.Services;
 using DiplomaMakerApi.Middleware;
 using DiplomaMakerApi.Configuration;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore.Storage;
 using Clerk.Net.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
@@ -73,7 +72,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
     
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -114,6 +112,9 @@ builder.Services.AddScoped<HistorySnapshotService>();
 builder.Services.AddScoped<GoogleCloudStorageService>();
 builder.Services.AddTransient<FileUtilityService>();
 builder.Services.AddScoped<UserFontService>();
+builder.Services.AddScoped<ClerkService>();
+
+
 builder.Services.AddLogging();
 builder.Services.AddHostedService(service => new DatabasePokeService(service, connectionstr));
 

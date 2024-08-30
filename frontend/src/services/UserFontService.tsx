@@ -44,7 +44,7 @@ export const getFontPreviewImage = async (apiParameters: apiEndpointParameters, 
         }
 
         const fontBlob = await response.blob();
-        console.log("Font preview image fetched successfully");
+        // console.log("Font preview image fetched successfully");
         return fontBlob;
     } catch (error) {
         console.error('Error fetching font preview image:', error);
