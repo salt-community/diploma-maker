@@ -15,12 +15,14 @@ namespace DiplomaMakerApi.Controllers
         private readonly EmailService _emailService;
         private readonly ClerkService _clerkService;
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _env;
 
-        public EmailController(EmailService emailService, ClerkService clerkService, IConfiguration configuration)
+        public EmailController(EmailService emailService, ClerkService clerkService, IConfiguration configuration, IWebHostEnvironment env)
         {
             _emailService = emailService;
             _clerkService = clerkService;
             _configuration = configuration; 
+            _env = env;
         }
 
         [HttpPost("email-student/{guidID}")]
@@ -33,8 +35,8 @@ namespace DiplomaMakerApi.Controllers
                 {
                     throw new Exception("The user does not exist");
                 }
-
-                var googleToken = await _clerkService.GetGoogleOAuthTokenAsync(userId, _configuration["Clerk:SecretKey"]!);
+                var secretKey = _env.IsDevelopment() ? _configuration["Clerk:SecretKey"]! : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
+                var googleToken = await _clerkService.GetGoogleOAuthTokenAsync(userId, secretKey);
 
                 await _emailService.SendEmailWithAttachmentAsync(guidID, req.File, googleToken, req.Title, req.Description);
             }
