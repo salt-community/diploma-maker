@@ -102,12 +102,15 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
 
   return (
     <div className="tags-input">
-      <input
-        className="taginputbox"
-        type="text"
-        onKeyDown={addTags}
-        placeholder="Add student names here"
-      />
+      <div className='taginputbox__wrapper'>
+        <label className='tags-input__total-label'>{tags.length} students</label>
+        <input
+          className="taginputbox"
+          type="text"
+          onKeyDown={addTags}
+          placeholder="Add student names here"
+        />
+      </div>
       <ul id="tags">
         {currentTags.map((tag, index) => (
           <li
