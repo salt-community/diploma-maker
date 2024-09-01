@@ -10,7 +10,7 @@ export async function postBootcamp(apiParameters: apiEndpointParameters, bootcam
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json', 
-            'Authorization': `Bearer ${apiParameters.token}` 
+            'Authorization': `Bearer ${apiParameters.token()}` 
         },
         body: JSON.stringify(formattedRequest)
     });
@@ -25,7 +25,7 @@ export async function postBootcamp(apiParameters: apiEndpointParameters, bootcam
 export async function getBootcamps(apiParameters: apiEndpointParameters, setLoadingMessage: (message: string) => void): Promise<BootcampResponse[]> {
     setLoadingMessage('Fetching bootcamps...');
     const response = await fetch(`${apiParameters.endpointUrl}/api/Bootcamps`,{
-        headers: {'Authorization': `Bearer ${apiParameters.token}` }
+        headers: {'Authorization': `Bearer ${apiParameters.token()}` }
     });
     if (!response.ok){
         const errorData = await response.json();
@@ -40,7 +40,7 @@ export async function getBootcamps(apiParameters: apiEndpointParameters, setLoad
 
 export async function getBootcampById(apiParameters: apiEndpointParameters, guidId: string): Promise<BootcampResponse>{
     const response = await fetch(`${apiParameters.endpointUrl}/api/Bootcamps/${guidId}`, {
-        headers: {'Authorization': `Bearer ${apiParameters.token}` }
+        headers: {'Authorization': `Bearer ${apiParameters.token()}` }
     });
     if (!response.ok){
         throw new Error("Failed to get bootcamp!")
@@ -62,7 +62,7 @@ export async function updateBootcamp(apiParameters: apiEndpointParameters, bootc
         method: 'PUT',
         headers: { 
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiParameters.token}` 
+            'Authorization': `Bearer ${apiParameters.token()}` 
         },
         body: JSON.stringify(formattedRequest)
     })
@@ -79,7 +79,7 @@ export async function deleteBootcampById(apiParameters: apiEndpointParameters, g
         method: 'DELETE',
         headers: { 
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiParameters.token}` 
+            'Authorization': `Bearer ${apiParameters.token()}` 
         }
     });
 
@@ -96,7 +96,7 @@ export async function UpdateBootcampWithNewFormdata(apiParameters: apiEndpointPa
         method: 'PUT',
         headers: { 
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiParameters.token}` 
+            'Authorization': `Bearer ${apiParameters.token()}` 
         },
         body: JSON.stringify(FormDataUpdateRequest)
     });
@@ -116,7 +116,7 @@ export async function updateStudentPreviewImage(apiParameters: apiEndpointParame
     formData.append('Image', studentImagePreviewRequest.image);
 
     const response = await fetch(`${apiParameters.endpointUrl}/api/Blob/UpdateStudentsPreviewImage`, {
-        headers: {'Authorization': `Bearer ${apiParameters.token}` },
+        headers: {'Authorization': `Bearer ${apiParameters.token()}` },
         method: 'PUT',
         body: formData,
     });
@@ -138,7 +138,7 @@ export async function updateBundledStudentsPreviewImages(apiParameters: apiEndpo
     });
 
     const response = await fetch(`${apiParameters.endpointUrl}/api/Blob/UpdateBundledStudentsPreviewImages`, {
-        headers: {'Authorization': `Bearer ${apiParameters.token}` },
+        headers: {'Authorization': `Bearer ${apiParameters.token()}` },
         method: 'PUT',
         body: formData,
     });

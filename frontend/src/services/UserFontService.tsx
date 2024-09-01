@@ -35,7 +35,7 @@ export const getFontPreviewImage = async (apiParameters: apiEndpointParameters, 
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiParameters.token}` 
+                'Authorization': `Bearer ${apiParameters.token()}` 
             },
         });
 
@@ -62,7 +62,7 @@ export const postUserFonts = async (apiParameters: apiEndpointParameters, userFo
       });
   
       const response = await fetch(`${apiParameters.endpointUrl}/api/UserFonts`, {
-        headers: {'Authorization': `Bearer ${apiParameters.token}`},
+        headers: {'Authorization': `Bearer ${apiParameters.token()}`},
         method: 'POST',
         body: formData,
       });

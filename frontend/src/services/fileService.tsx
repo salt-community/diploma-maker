@@ -16,7 +16,7 @@ export async function getTemplatePdfFile(apiParameters: apiEndpointParameters, u
     }
 
     const pdfResponse = await fetch(`${apiParameters.endpointUrl}/api/${url}`, {
-        headers: {'Authorization': `Bearer ${apiParameters.token}` }
+        headers: {'Authorization': `Bearer ${apiParameters.token()}` }
     });
     if (!pdfResponse.ok) {
         setLoadingMessage?.(`Failed to fetch PDF file from ${url}. The file does not seem to exist.`);

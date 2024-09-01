@@ -45,7 +45,7 @@ export default function App() {
   
   let api = initApiEndpoints({
     endpointUrl: import.meta.env.VITE_API_URL,
-    token: getToken()
+    token: getToken 
   });
 
   useEffect(() => {
@@ -60,10 +60,6 @@ export default function App() {
     }
 
     if (isSignedIn && !bootcamps) {
-      api = initApiEndpoints({
-        endpointUrl: import.meta.env.VITE_API_URL,
-        token: getToken()
-      });
       getBootcampsFromBackend();
       getTemplates();
       getTracks();
