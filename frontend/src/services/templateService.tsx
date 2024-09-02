@@ -5,7 +5,7 @@ export async function getAllTemplates(apiParameters: apiEndpointParameters, setL
     setLoadingMessage('Fetching Templates...');
     
     const response = await fetch(`${apiParameters.endpointUrl}/api/templates`, {
-        headers: {'Authorization': `Bearer ${apiParameters.token}` }
+        headers: {'Authorization': `Bearer ${apiParameters.token()}` }
     });
     if (!response.ok) {
         const errorData = await response.json();
@@ -27,7 +27,7 @@ export async function getAllTemplates(apiParameters: apiEndpointParameters, setL
 
 export async function getTemplateById(apiParameters: apiEndpointParameters, id: string, setLoadingMessage: (message: string) => void): Promise<TemplateResponse> {
     const response = await fetch(`${apiParameters.endpointUrl}/api/templates/${id}`, {
-        headers: {'Authorization': `Bearer ${apiParameters.token}` }
+        headers: {'Authorization': `Bearer ${apiParameters.token()}` }
     });
     if (!response.ok) {
         throw new Error('Failed to get Template!');
@@ -47,7 +47,7 @@ export async function postTemplate(apiParameters: apiEndpointParameters, templat
         method: 'POST',
         headers: {
             'Content-Type': 'application/json', 
-            'Authorization': `Bearer ${apiParameters.token}` 
+            'Authorization': `Bearer ${apiParameters.token()}` 
         },
         body: JSON.stringify(formattedRequest)
     });
@@ -70,7 +70,7 @@ export async function deleteTemplateById(apiParameters: apiEndpointParameters, i
         method: 'DELETE',
         headers: { 
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiParameters.token}` 
+            'Authorization': `Bearer ${apiParameters.token()}` 
         }
     });
 
@@ -91,7 +91,7 @@ export async function putTemplate(apiParameters: apiEndpointParameters, id: numb
         method: 'PUT',
         headers: { 
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiParameters.token}`
+            'Authorization': `Bearer ${apiParameters.token()}`
         },
         body: JSON.stringify(formattedRequest)
     });

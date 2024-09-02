@@ -218,7 +218,7 @@ export type pdfGenerationResponse = {
 
 export type apiEndpointParameters = {
     endpointUrl: string,
-    token?: string,
+    token: () => string,
 }
 
 //User Fonts
