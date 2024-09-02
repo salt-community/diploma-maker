@@ -1,11 +1,18 @@
-// @ts-ignore
-export const saltDefaultData: SaltData = {
-  classname: ".Net Fullstack",
-  dategraduate: '12/04/2024',
-  students: [{
-    name: "John Smith",
-  } ]
+import { SaltData, Student } from "../util/types";
+
+export function SaltDataDefaultStudent(saltData: SaltData): SaltData {
+  const defuatlStudent: Student = {
+    name: "Example Student",
+    email: "test@gmail.com",
+    verificationCode: "00000"
+   
 };
+
+  return {
+      ...saltData,
+      students: [defuatlStudent]
+  };
+}
 
 export const nullTemplateInstance = {
   positionX: null,
