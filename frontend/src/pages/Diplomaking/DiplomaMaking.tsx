@@ -9,6 +9,7 @@ import { useLoadingMessage } from "../../components/Contexts/LoadingMessageConte
 import { Popup404 } from "../../components/MenuItems/Popups/Popup404";
 import { ErrorIcon } from "../../components/MenuItems/Icons/ErrorIcon";
 import PreviewDiploma from "../../components/Feature/PreviewDiploma/PreviewDiploma";
+import { SaltDataDefaultStudent } from "../../data/data";
 /* import { NextIcon } from "../../components/MenuItems/Icons/NextIcon"; */
 
 type Props = {
@@ -51,9 +52,7 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
                 {saltData.students.length > 0 ? (
                   <PreviewDiploma setSelectedStudentIndex={handleIndexChange} saltData={saltData} currentPageIndex={currentPageIndex} setCurrentPageIndex={setCurrentPageIndex}/>
                 ) : (
-                  <div className="popup404-wrapper">
-                    <Popup404 text="No student names found." />
-                  </div>
+                  <PreviewDiploma setSelectedStudentIndex={handleIndexChange} saltData={SaltDataDefaultStudent(saltData)} currentPageIndex={currentPageIndex} setCurrentPageIndex={setCurrentPageIndex}/>
                 )}
               </>
             )}
