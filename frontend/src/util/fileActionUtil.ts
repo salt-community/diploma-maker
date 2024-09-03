@@ -1,6 +1,16 @@
 export const openWindowfromBlob = async (input: Blob) => {
     window.open(URL.createObjectURL(input))
 }
+
+export const downloadZipFile = async (input: Blob, bootcampName: string) => {
+    const url = URL.createObjectURL(input);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${bootcampName}.zip`;
+    link.click();
+    URL.revokeObjectURL(url);
+}
+
   
 export const openPrintWindowfromBlob = async (input: Blob) => {
     const blobUrl = URL.createObjectURL(input);

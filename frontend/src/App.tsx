@@ -45,7 +45,7 @@ export default function App() {
   
   let api = initApiEndpoints({
     endpointUrl: import.meta.env.VITE_API_URL,
-    token: getToken()
+    token: getToken 
   });
 
   useEffect(() => {
@@ -60,10 +60,6 @@ export default function App() {
     }
 
     if (isSignedIn && !bootcamps) {
-      api = initApiEndpoints({
-        endpointUrl: import.meta.env.VITE_API_URL,
-        token: getToken()
-      });
       getBootcampsFromBackend();
       getTemplates();
       getTracks();
@@ -229,7 +225,7 @@ export default function App() {
             </ClerkAuthGuard>
           }
         >
-          <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} />} />
+          <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} addNewBootcamp={addNewBootcamp}/>} />
           <Route path="bootcamp-management" element={<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} />} />
           <Route path="overview" element={<OverviewPage bootcamps={bootcamps} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} />} />
           <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate} postUserFonts={postUserFonts}/>} />

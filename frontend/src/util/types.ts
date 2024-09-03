@@ -109,8 +109,8 @@ export type TemplateRequest = {
 export type EmailSendRequest = {
     guidId: string;
     file: Blob;
-    email: string;
-    senderCode: string;
+    // email: string;
+    // senderCode: string;
     title: string;
     description: string;
 }
@@ -200,10 +200,10 @@ export type MakeActiveSnapshotRequestDto = {
 }
 
 // Email
-export type EmailConfigRequestDto = {
-    senderEmail: string;
-    senderCode: string;
-}
+// export type EmailConfigRequestDto = {
+//     senderEmail: string;
+//     senderCode: string;
+// }
 
 // Preview Images
 export type studentImagePreview = {
@@ -218,7 +218,7 @@ export type pdfGenerationResponse = {
 
 export type apiEndpointParameters = {
     endpointUrl: string,
-    token?: string,
+    token: () => string,
 }
 
 //User Fonts
@@ -237,3 +237,9 @@ export type UserFontRequestDto = {
 }
 
 export type FontType = 'Regular' | 'Bold' | 'Italic';
+
+
+export type pdfSize = {
+    width: number;
+    height: number;
+}

@@ -1,35 +1,36 @@
-import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import "./TemplateCreatorPage.css";
-import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 //@ts-ignore
 import { CustomTemplate, TemplateInstanceStyle, TemplateRequest, TemplateResponse, UserFontRequestDto, XYPosition} from "../../util/types";
+import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
+import { PdfFileUpload } from "../../components/MenuItems/Inputs/PdfFileUpload";
 import { useEffect, useRef, useState } from "react";
 import { Designer } from "@pdfme/ui";
-import { makeTemplateInput } from "../../templates/baseTemplate";
-import { PDFDocument } from "pdf-lib";
-import { SaveButton, SaveButtonType,} from "../../components/MenuItems/Buttons/SaveButton";
+import { SaveButton} from "../../components/MenuItems/Buttons/SaveButton";
 import { AddButton } from "../../components/MenuItems/Buttons/AddButton";
-import { ConfirmationPopup, ConfirmationPopupType } from "../../components/MenuItems/Popups/ConfirmationPopup";
-import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
+import { ConfirmationPopup } from "../../components/MenuItems/Popups/ConfirmationPopup";
+import { AlertPopup } from "../../components/MenuItems/Popups/AlertPopup";
 import { TextInputIcon } from "../../components/MenuItems/Icons/TextInputIcon";
-import { createBlankTemplate, createUpdatedTemplate, mapTemplateInputsToTemplateDesigner, mapTemplatesToTemplateData} from "../../util/dataHelpers";
+import { createBlankTemplate, createUpdatedTemplate, mapTemplatesToTemplateData} from "../../util/dataHelpers";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
 import { EditSection } from "../../components/MenuItems/TemplateCreatorPage/EditSection";
 import { TextEditSection } from "../../components/MenuItems/TemplateCreatorPage/TextEditSection";
 import { HelpIcon } from "../../components/MenuItems/Icons/HelpIcon";
-import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { InstructionSlideshow } from "../../components/Content/InstructionSlideshow";
-import { EmailConfigInstructionSlides, templateCreatorInstructionSlides } from "../../data/data";
 import { Size } from "@pdfme/common";
-import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
 import { UserFontsClient } from "../../components/Feature/TemplateCreator/UserFontsClient";
 import { FontsIcon } from "../../components/MenuItems/Icons/FontsIcon";
-import { getFontsData, refreshUserFonts } from "../../util/fontsUtil";
 import { delay } from "../../util/timeUtil";
 import { getPdfDimensions } from "../../util/fileGetUtil";
-import { getPlugins } from "../../util/pdfmeUtil";
 import { cloneDeep } from "../../util/fileActionUtil";
+import { fontSizeHandler, setAlignHorizontalCenter, setAlignVerticalCenter, setFieldEditorDisplayWidthHeight, setFontColorHandler, setFontHandler, setPositionXHandler, setPositionYHandler, setSizeHeightHandler, setSizeWidthHandler, textAlignHandler } from "./templateCreatorMutators";
+import { TemplateRenderer } from "../../components/Feature/TemplateCreator/TemplateRenderer";
+import { setFieldEventListeners } from "./templateCreatorFieldEventListeners";
+import { handleFieldMouseEvents } from "./templateCreatorFieldMouseEvents";
+import { EditorLeftSideBar } from "../../components/Feature/TemplateCreator/EditorLeftSideBar";
+import { EditorRightSidebar } from "../../components/Feature/TemplateCreator/EditorRightSideBar/EditorRightSidebar";
+import { templateCreatorInstructionSlides } from "../../data/slidesData";
+import { nullTemplateInstance } from "../../data/data";
 
 type Props = {
   templates: TemplateResponse[] | null;
@@ -66,23 +67,13 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
 
   const [showInstructionSlideshow, setShowInstructionSlideshow] = useState<boolean>(false);
   const [showUserFontsClient, setShowUserFontsClient] = useState<boolean>(false);
-  const { loadingMessage } = useLoadingMessage();
 
   const [firstRun, setFirstRun] = useState<boolean>(true)
   const [resetFileUpload, setResetFileUpload] = useState<boolean>(false);
 
   const [refreshFonts, setRefreshFonts] = useState<boolean>(false);
 
-  const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>({
-    positionX: null,
-    positionY: null,
-    sizeWidth: null,
-    sizeHeight: null,
-    align: null,
-    fontSize: null,
-    font: null,
-    fontColor: null,
-  });
+  const [templateStyle, setTemplateStyle] = useState<TemplateInstanceStyle>(nullTemplateInstance);
 
   const [templateIndex, setTemplateIndex] = useState<number>(0);
 
@@ -101,194 +92,20 @@ export const TemplateCreatorPage = ({ templates, addNewTemplate, updateTemplate,
     }
   }, [templates]);
 
-  const SetPdfSizeHandler = async () => {
-    setPdfSize(await getPdfDimensions(currentTemplate.basePdf))
-  }
+  const SetPdfSizeHandler = async () => setPdfSize(await getPdfDimensions(currentTemplate.basePdf));
+  const getTemplateIndex = (template: CustomTemplate | null) => template ? templateData.findIndex((t) => t.id === template.id) : 0;
 
+  // - i set event listeners for those specific divs... Right Now I Literally cannot get the name of which field the user has clicked on unless i do this  
+  // - Temporary Solution! - Please feel free to find a better way!
   useEffect(() => {
-    if (currentTemplate) {
-      firstRun && customAlert('loading', `Loading Template Into Renderer...`, '')
-      SetPdfSizeHandler();
-      const inputs = [
-        makeTemplateInput(
-          currentTemplate.intro,
-          currentTemplate.main,
-          currentTemplate.footer,
-          currentTemplate.basePdf,
-          currentTemplate.link
-        ),
-      ];
-      const template = mapTemplateInputsToTemplateDesigner(
-        currentTemplate,
-        inputs[0]
-      );
-
-      getFontsData().then((font) => {
-        if (designerRef.current) {
-          if (designer.current) {
-            designer.current.destroy();
-          }
-          designer.current = new Designer({
-            domContainer: designerRef.current,
-            template,
-            options: { font },
-            plugins: getPlugins(),
-          });
-
-          fieldsChanged 
-            ? customAlert('loadingfadeout', `Saving Fields...`, '') 
-            : customAlert('loadingfadeout', `Loaded: Waiting For Renderer...`, '')
-
-          setFirstRun(false);
-        }
-      });
-
-      
-
-      return () => {
-        if (designer.current) {
-          designer.current.destroy();
-          designer.current = null;
-        }
-      };
-    }
-  }, [currentTemplate]);
-
-  // Right Now I Literally cannot get the name of which field the user has clicked on in any other way... Temporary Solution!
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-        const selectors = [
-            '.pdfpreview div div div div div[title="header"]',
-            '.pdfpreview div div div div div[title="main"]',
-            '.pdfpreview div div div div div[title="footer"]',
-            '.pdfpreview div div div div div[title="link"]',
-        ];
-
-        const isClickInside = selectors.some(selector => {
-            const elements = document.querySelectorAll(selector);
-            return Array.from(elements).some(element => element.contains(event.target as Node));
-        });
-
-        if (!isClickInside) {
-            handleFieldClickOutside(event);
-        }
-    };
-
-    const attachListeners = () => {
-        const selectors = [
-            '.pdfpreview div div div div div[title="header"]',
-            '.pdfpreview div div div div div[title="main"]',
-            '.pdfpreview div div div div div[title="footer"]',
-            '.pdfpreview div div div div div[title="link"]',
-        ];
-
-        selectors.forEach((selector) => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach((element) => {
-                element.removeEventListener("click", handleFieldClick);
-                element.addEventListener("click", handleFieldClick);
-            });
-        });
-    };
-
-    const observer = new MutationObserver(() => {
-        attachListeners();
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-    attachListeners();
-
-    document.addEventListener('click', handleClickOutside);
-
-    return () => {
-        observer.disconnect();
-        document.removeEventListener('click', handleClickOutside);
-        const selectors = [
-            '.pdfpreview div div div div div[title="header"]',
-            '.pdfpreview div div div div div[title="main"]',
-            '.pdfpreview div div div div div[title="footer"]',
-            '.pdfpreview div div div div div[title="link"]',
-        ];
-
-        selectors.forEach((selector) => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach((element) => {
-                element.removeEventListener("click", handleFieldClick);
-            });
-        });
-    };
+    const cleanup = setFieldEventListeners(
+      handleFieldClick, 
+      handleFieldClickOutside
+    );
+    return cleanup;
   }, []);
 
-
-  useEffect(() => {
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      const width: number = designer.current.template.schemas[0][selectedField]?.width ?? null;
-      // @ts-ignore
-      const height: number = designer.current.template.schemas[0][selectedField]?.height ?? null;
-  
-      setFieldWidth(width);
-      setFieldHeight(height);
-    }
-  }, [designer.current, selectedField]);
-
-useEffect(() => {
-    if (designer.current && selectedField) {
-        const handleMouseUp = async () => {
-            // @ts-ignore
-            const prevStartPost = designer.current.template.schemas[0][selectedField]?.position;
-            await delay(10)
-            // @ts-ignore
-            const startpos = designer.current.template.schemas[0][selectedField]?.position;
-            if((prevStartPost.x != startpos.x) || (prevStartPost.y != startpos.y)){
-              setFieldsChanged(true);
-            }
-            // @ts-ignore
-            setCurrentFieldPosition(startpos);
-            setTemplateStyle(prevState => ({
-                ...prevState,
-                positionX: startpos?.x,
-                positionY: startpos?.y
-            }));
-        };
-
-        const handleMouseDown = () => {
-          // @ts-ignore
-          const startpos = designer.current.template.schemas[0][selectedField]?.position;
-          // @ts-ignore
-          setCurrentFieldPosition(startpos);
-          setTemplateStyle(prevState => ({
-              ...prevState,
-              positionX: startpos?.x,
-              positionY: startpos?.y
-          }));
-      };
-
-        window.addEventListener('mouseup', handleMouseUp);
-        window.addEventListener('mousedown', handleMouseDown);
-
-        return () => {
-            window.removeEventListener('mouseup', handleMouseUp);
-            window.removeEventListener('mousedown', handleMouseDown);
-        };
-    }
-}, [designer.current, selectedField]);
-
-  const handleFieldClickOutside = (event: any) => {
-    if (!event.target.closest('.templatecreator-page__rightsidebar-menu')) {
-      setTemplateStyle({
-        positionX: null,
-        positionY: null,
-        sizeWidth: null,
-        sizeHeight: null,
-        align: null,
-        fontSize: null,
-        font: null,
-        fontColor: null,
-      });
-    }
-  }
-
+  const handleFieldClickOutside = (event: any) => !event.target.closest('.templatecreator-page__rightsidebar-menu') && setTemplateStyle(nullTemplateInstance);
 
   const handleFieldClick = (event: any) => {
     const clickedField = event.currentTarget.getAttribute("title");
@@ -314,6 +131,25 @@ useEffect(() => {
     }
   };
 
+  // When you drag field and release Mouse it updates field values
+  useEffect(() => {
+    const cleanup = handleFieldMouseEvents(
+      designer,
+      selectedField,
+      setFieldsChanged,
+      setCurrentFieldPosition,
+      setTemplateStyle,
+      delay
+    );
+  
+    return cleanup;
+  }, [designer.current, selectedField]);
+
+  useEffect(() => {
+    (designer.current && selectedField) && setFieldEditorDisplayWidthHeight(designer, selectedField, setFieldWidth, setFieldHeight)
+  }, [designer.current, selectedField]);
+
+
   const templateChangeHandler = async (index: number) => {
     if (templateHasChanged) {
       shouldWeSaveHandler(index);
@@ -322,38 +158,6 @@ useEffect(() => {
       setCurrentTemplate(templateData[index] || null);
       setTemplateIndex(index);
       setResetFileUpload(true);
-    }
-  };
-
-  const pdfFileUploadHandler = async (file: File) => {
-    if (file) {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
-      const finalFile = await PDFDocument.create();
-      const [firstPage] = await finalFile.copyPages(pdfDoc, [0]);
-
-      finalFile.addPage(firstPage);
-      const basePdf = await finalFile.saveAsBase64({ dataUri: true });
-
-      if (designer.current) {
-        designer.current.updateTemplate(
-          Object.assign(cloneDeep(designer.current.getTemplate()), {
-            basePdf,
-          })
-        );
-      }
-      if (currentTemplate) {
-        const updatedTemplate = { ...currentTemplate, basePdf };
-        setCurrentTemplate(updatedTemplate);
-
-        const updatedTemplateData = templateData.map((template) =>
-          template.id === currentTemplate.id ? updatedTemplate : template
-        );
-        setTemplateData(updatedTemplateData);
-      }
-      setTemplateHasChanged(true);
-      settemplateBasePdfHasChanged(true);
-      setFileAdded(true);
     }
   };
 
@@ -437,172 +241,36 @@ useEffect(() => {
     }
   };
 
-  const shouldWeSaveHandler = async (index: number) => {
-    customPopup('question', "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index));
+  const pdfFileUploadHandler = (base64Pdf: string) => {
+    if (designer.current) {
+      designer.current.updateTemplate(
+        Object.assign(cloneDeep(designer.current.getTemplate()), {
+          basePdf: base64Pdf,
+        })
+      );
+    }
+    if (currentTemplate) {
+      const updatedTemplate = { ...currentTemplate, basePdf: base64Pdf };
+      setCurrentTemplate(updatedTemplate);
+  
+      const updatedTemplateData = templateData.map((template) =>
+        template.id === currentTemplate.id ? updatedTemplate : template
+      );
+      setTemplateData(updatedTemplateData);
+    }
+    setTemplateHasChanged(true);
+    settemplateBasePdfHasChanged(true);
+    setFileAdded(true);
   };
 
   const confirmChangeTemplateHandler = async () => {
     const currentTemplateIndex = getTemplateIndex(currentTemplate);
     customPopup('question', "Are you sure you want to save changes to this template?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(currentTemplateIndex));
   };
-
-  const confirmAddNewTemplateHandler = async () => {
-    customPopup('form', "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent));
-  };
-
-  const confirmRemoveTemplateHandler = async () => {
-    customPopup('warning', `Are you sure you want to remove ${currentTemplate?.templateName}?`, "This will unlink the template for all bootcamps that use it.", () => () => removeTemplate());
-  };
-
-  const globalAbortHandler = () => {
-    closeConfirmationPopup();
-  };
-
-  const getTemplateIndex = (template: CustomTemplate | null) => {
-    return template ? templateData.findIndex((t) => t.id === template.id) : 0;
-  };
-
-  // SideMenu Field Editing Functions
-  const setPositionXHandler = async (value: number) => {
-    setTemplateStyle(prevState => ({ ...prevState, positionX: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].position.x = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-    }
-    setFieldsChanged(true)
-  };
-  
-  const setPositionYHandler = async (value: number) => {
-    setTemplateStyle(prevState => ({ ...prevState, positionY: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].position.y = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-    }
-    setFieldsChanged(true)
-  };
-  
-  const setSizeWidthHandler = async (value: number) => {
-    setTemplateStyle(prevState => ({ ...prevState, sizeWidth: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].width = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-    }
-    setFieldsChanged(true)
-  };
-  
-  const setSizeHeightHandler = async (value: number) => {
-    setTemplateStyle(prevState => ({ ...prevState, sizeHeight: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].height = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-    }
-    setFieldsChanged(true)
-  };
-  
-  const textAlignHandler = async (value: string) => {
-    setTemplateStyle(prevState => ({ ...prevState, align: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].alignment = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-      setFieldsChanged(true)
-    }
-  };
-  
-  const fontSizeHandler = async (value: number) => {
-    setTemplateStyle(prevState => ({ ...prevState, fontSize: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].fontSize = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-      setFieldsChanged(true)
-    }
-  };
-  
-  const setFontHandler = async (value: string) => {
-    setTemplateStyle(prevState => ({ ...prevState, font: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].fontName = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-      setFieldsChanged(true)
-    }
-  };
-  
-  const setFontColorHandler = async (value: string) => {
-    setTemplateStyle(prevState => ({ ...prevState, fontColor: value }));
-    if (designer.current && selectedField) {
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].fontColor = value;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-      setFieldsChanged(true)
-    }
-  };
-
-  // Hardcoded width value of 215 for a4
-  const setAlignHorizontalCenter = () => {
-    if (designer.current && selectedField && pdfSize) {
-      // @ts-ignore
-      const selectedFieldWidth = designer.current.template.schemas[0][selectedField].width;
-
-      const centerPosition = ((calculateCanvasSizeFromPdfSize(pdfSize.width)) - selectedFieldWidth) / 2;
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].position.x = centerPosition;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-  
-      setTemplateStyle(prevState => ({ ...prevState, positionX: centerPosition }));
-      setFieldsChanged(true)
-    }
-  };
-  
-  // Hardcoded width value of 305 for a4
-  const setAlignVerticalCenter = () => {
-    if (designer.current && selectedField && pdfSize) {
-      // @ts-ignore
-      const selectedFieldHeight = designer.current.template.schemas[0][selectedField].height;
-      const centerPosition = ((calculateCanvasSizeFromPdfSize(pdfSize.height)) - selectedFieldHeight) / 2;
-      // @ts-ignore
-      designer.current.template.schemas[0][selectedField].position.y = centerPosition;
-      // @ts-ignore
-      designer.current.updateTemplate(designer.current.template);
-  
-      setTemplateStyle(prevState => ({ ...prevState, positionY: centerPosition }));
-      setFieldsChanged(true)
-    }
-  };
-
-  const calculateCanvasSizeFromPdfSize = (size: number) => {
-    const averageMultiplier = 0.353;
-    const canvasSize = size * averageMultiplier;
-
-    return canvasSize
-  }
-
-  const postUserFontsHandler = async (userFonts: UserFontRequestDto[]) => {
-    setShowUserFontsClient(false);
-    customAlert('loading', 'Adding New Font...', '')
-    try {
-      await postUserFonts(userFonts)
-      customAlert('loading', 'Reloading Fonts...', '')
-      await refreshUserFonts();
-      customAlert('success', `Successfully added font ${userFonts[0].Name} to cloud`, '')
-    } catch (error) {
-      customAlert('fail', 'Failed adding new font.', `${error}`)
-    }
-  }
+  const shouldWeSaveHandler = async (index: number) => customPopup('question', "Do you want to save your changes?", "This will change template for all bootcamps that use this template", () => () => saveTemplate(index));
+  const confirmAddNewTemplateHandler = async () => customPopup('form', "What should we name your template?", "Names are echoes of identity, whispers of our soul's melody.", () => (inputContent?: string) => addTemplate(inputContent));
+  const confirmRemoveTemplateHandler = async () => customPopup('warning', `Are you sure you want to remove ${currentTemplate?.templateName}?`, "This will unlink the template for all bootcamps that use it.", () => () => removeTemplate());
+  const globalAbortHandler = () => closeConfirmationPopup();
 
   return (
     <main className="templatecreator-page">
@@ -625,136 +293,158 @@ useEffect(() => {
         />
         <InstructionSlideshow show={showInstructionSlideshow}  slides={templateCreatorInstructionSlides} onClose={() => setShowInstructionSlideshow(false)}/>
         <UserFontsClient 
-          type={'addNewFont'}
+          type="addNewFont"
           show={showUserFontsClient}
           setShowUserFontsClient={setShowUserFontsClient}
           customAlert={customAlert}
-          postUserFonts={postUserFontsHandler}
           setRefreshFonts={setRefreshFonts}
           refreshFonts={refreshFonts}
+          postUserFonts={(userFontsRequestsDto: UserFontRequestDto[]) => postUserFonts(userFontsRequestsDto)}
         />
-        <section className="templatecreator-page__leftsidebar">
-            <div className="templatecreator-page__leftsidebar-menu">
-                <section className="templatecreator-page__leftsidebar-menu-section">
-                    <button onClick={() => setShowInstructionSlideshow(true)} className="help-btn">
-                        <HelpIcon />
-                        <p>Help Me!</p>
-                    </button>
-                    <button onClick={() => setShowUserFontsClient(true)} className="fonts-btn">
-                        <FontsIcon />
-                        <p>Add Font</p>
-                    </button>
-                </section>
-            </div>
-        </section>
-        <section className="templatecreator-page__preview-container">
-            <div className="templatecreator-page__preview" style={{ width: "100%", overflow: "hidden", height: `calc(50vh - 68px)` }}>
-                <div className="pdfpreview" ref={designerRef} style={{ height: `80%` }} onClick={() => setRightSideBarPage(1)} />
-                {!templates && <SpinnerDefault classOverride="spinner" />}
-            </div>
-        </section>
-        <section className="templatecreator-page__rightsidebar">
-            <div className="templatecreator-page__rightsidebar-menu">
-                <header className="templatecreator-page__rightsidebar-menu-header">
-                    <button onClick={() => {setRightSideBarPage(0); saveFieldsHandler();}} className={rightSideBarPage === 0 ? "active" : ""}>
-                        Browse
-                    </button>
-                    <button onClick={() => setRightSideBarPage(1)} className={rightSideBarPage === 1 ? "active" : ""}>
-                        Edit
-                    </button>
-                </header>
-                {rightSideBarPage === 0 && (
-                    <>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Templates</h3>
-                            <SelectOptions
-                                containerClassOverride="overview-page__select-container"
-                                selectClassOverride="overview-page__select-box"
-                                options={templateData.map((template, index) => ({
-                                    value: index.toString(),
-                                    label: template.templateName,
-                                }))}
-                                value={getTemplateIndex(currentTemplate).toString()}
-                                onChange={(event) =>
-                                    templateChangeHandler(Number(event.target.value))
-                                }
-                            />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Add Template</h3>
-                            <AddButton onClick={confirmAddNewTemplateHandler} />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Add PDF Background</h3>
-                            <PdfFileUpload
-                                fileResult={(file: File) => pdfFileUploadHandler(file)}
-                                reset={resetFileUpload}
-                                setReset={setResetFileUpload}
-                                setFileAdded={setFileAdded}
-                            />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <SaveButton
-                                textfield="Save Template"
-                                saveButtonType={'normal'}
-                                onClick={confirmChangeTemplateHandler}
-                            />
-                        </section>
-                    </>
-                )}
-                {rightSideBarPage === 1 && (
-                    <>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Layout</h3>
-                            <EditSection
-                                positionX={templateStyle.positionX}
-                                positionY={templateStyle.positionY}
-                                sizeWidth={templateStyle.sizeWidth}
-                                sizeHeight={templateStyle.sizeHeight}
-                                setPositionX={setPositionXHandler}
-                                setPositionY={setPositionYHandler}
-                                setSizeWidth={setSizeWidthHandler}
-                                setSizeHeight={setSizeHeightHandler}
-                                setAlignHorizontalCenter={setAlignHorizontalCenter}
-                                setAlignVerticalCenter={setAlignVerticalCenter}
-                                fieldWidth={fieldWidth}
-                                fieldHeight={fieldHeight}
-                            />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Text</h3>
-                            <TextEditSection
-                                align={templateStyle.align}
-                                setAlign={(value: string) => textAlignHandler(value)}
-                                fontSize={templateStyle.fontSize}
-                                setFontSize={(value: number) => fontSizeHandler(value)}
-                                font={templateStyle.font}
-                                setFont={(value: string) => setFontHandler(value)}
-                                fontColor={templateStyle.fontColor}
-                                setFontColor={(value: string) => setFontColorHandler(value)}
-                                refreshFonts={refreshFonts}
-                            />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <h3>Edit Field {selectedField && selectedField}</h3>
-                            <SaveButton
-                                textfield="Save Inputs"
-                                saveButtonType={'normal'}
-                                onClick={saveFieldsHandler}
-                                customIcon={<TextInputIcon />}
-                            />
-                        </section>
-                        <section className="templatecreator-page__rightsidebar-menu-section">
-                            <SaveButton
-                                textfield="Remove Template"
-                                saveButtonType={'remove'}
-                                onClick={confirmRemoveTemplateHandler}
-                            />
-                        </section>
-                    </>
-                )}
-            </div>
-        </section>
+        <EditorLeftSideBar 
+          optionsItems={[
+            {
+              icon: <HelpIcon />,
+              text: 'Help Me!',
+              onClick: () => setShowInstructionSlideshow(true),
+              className: 'help-btn'
+            },
+            {
+              icon: <FontsIcon />,
+              text: 'Add Font',
+              onClick: () => setShowUserFontsClient(true),
+              className: 'fonts-btn'
+            }
+          ]}
+        />
+        <TemplateRenderer
+          designer={designer}
+          designerRef={designerRef}
+          templates={templates}
+          setRightSideBarPage={setRightSideBarPage}
+          currentTemplate={currentTemplate}
+          SetPdfSizeHandler={SetPdfSizeHandler}
+          firstRun={firstRun}
+          setFirstRun={setFirstRun}
+          customAlert={customAlert}
+          fieldsChanged={fieldsChanged}
+        />
+        <EditorRightSidebar 
+          activePage={rightSideBarPage}
+          setActivePage={setRightSideBarPage}
+          pages={[
+            {
+              pageTitle: 'Browse',
+              handler: () => {
+                saveFieldsHandler();
+              },
+              sections: [
+                {
+                  sectionTitle: 'Templates',
+                  component: (
+                    <SelectOptions
+                      containerClassOverride="overview-page__select-container"
+                      selectClassOverride="overview-page__select-box"
+                      options={templateData.map((template, index) => ({
+                        value: index.toString(),
+                        label: template.templateName,
+                      }))}
+                      value={getTemplateIndex(currentTemplate).toString()}
+                      onChange={(event) => templateChangeHandler(Number(event.target.value))}
+                    />
+                  ),
+                },
+                {
+                  sectionTitle: 'Add Template',
+                  component: <AddButton onClick={confirmAddNewTemplateHandler} />,
+                },
+                {
+                  sectionTitle: 'Add PDF Background',
+                  component: (
+                    <PdfFileUpload
+                      returnPdf={(base64Pdf: string) => pdfFileUploadHandler(base64Pdf)}
+                      reset={resetFileUpload}
+                      setReset={setResetFileUpload}
+                      setFileAdded={setFileAdded}
+                    />
+                  ),
+                },
+                {
+                  sectionTitle: 'Layout',
+                  component: (
+                    <SaveButton
+                      textfield="Save Template"
+                      saveButtonType={'normal'}
+                      onClick={confirmChangeTemplateHandler}
+                    />
+                  ),
+                },
+              ],
+            },
+            {
+              pageTitle: 'Edit',
+              handler: () => {},
+              sections: [
+                {
+                  sectionTitle: 'Layout',
+                  component: (
+                    <EditSection
+                      positionX={templateStyle.positionX}
+                      positionY={templateStyle.positionY}
+                      sizeWidth={templateStyle.sizeWidth}
+                      sizeHeight={templateStyle.sizeHeight}
+                      setPositionX={(value: number) => setPositionXHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      setPositionY={(value: number) => setPositionYHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      setSizeWidth={(value: number) => setSizeWidthHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      setSizeHeight={(value: number) => setSizeHeightHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      setAlignHorizontalCenter={() => setAlignHorizontalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)}
+                      setAlignVerticalCenter={() => setAlignVerticalCenter(designer, selectedField, pdfSize, setTemplateStyle, setFieldsChanged)}
+                      fieldWidth={fieldWidth}
+                      fieldHeight={fieldHeight}
+                    />
+                  ),
+                },
+                {
+                  sectionTitle: 'Text',
+                  component: (
+                    <TextEditSection
+                      align={templateStyle.align}
+                      setAlign={(value: string) => textAlignHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      fontSize={templateStyle.fontSize}
+                      setFontSize={(value: number) => fontSizeHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      font={templateStyle.font}
+                      setFont={(value: string) => setFontHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      fontColor={templateStyle.fontColor}
+                      setFontColor={(value: string) => setFontColorHandler(value, designer, selectedField, setTemplateStyle, setFieldsChanged)}
+                      refreshFonts={refreshFonts}
+                    />
+                  ),
+                },
+                {
+                  sectionTitle: 'Edit Field',
+                  component: (
+                    <SaveButton
+                      textfield="Save Inputs"
+                      saveButtonType={'normal'}
+                      onClick={saveFieldsHandler}
+                      customIcon={<TextInputIcon />}
+                    />
+                  ),
+                },
+                {
+                  sectionTitle: '',
+                  component: (
+                    <SaveButton
+                      textfield="Remove Template"
+                      saveButtonType={'remove'}
+                      onClick={confirmRemoveTemplateHandler}
+                    />
+                  ),
+                },
+              ],
+            },
+          ]}
+        />
     </main>
   );
 };

@@ -1,35 +1,51 @@
-namespace DiplomaMakerApi.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using DiplomaMakerApi.Services;
-using DiplomaMakerApi.Models;
-using Microsoft.AspNetCore.Authorization;
-
-[Route("api/[controller]")]
-[ApiController]
-[Authorize]
-public class EmailController : ControllerBase
+namespace DiplomaMakerApi.Controllers
 {
-    private readonly EmailService _emailService;
+    using Microsoft.AspNetCore.Mvc;
+    using DiplomaMakerApi.Services;
+    using DiplomaMakerApi.Models;
+    using Microsoft.AspNetCore.Authorization;
+    using System.Security.Claims;
+    using Microsoft.Extensions.Configuration; // Ensure this namespace is included
 
-    public EmailController(EmailService emailService)
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize]
+    public class EmailController : ControllerBase
     {
-        _emailService = emailService;
-    }
+        private readonly EmailService _emailService;
+        private readonly ClerkService _clerkService;
+        private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _env;
 
-    [HttpPost("email-student/{guidID}")]
-    public async Task<IActionResult> SendEmailToStudent( Guid guidID, SendEmailRequest req)
-    {
-        try
+        public EmailController(EmailService emailService, ClerkService clerkService, IConfiguration configuration, IWebHostEnvironment env)
         {
-            await _emailService.SendEmailWithAttachmentAsync(guidID, req.File, req.Email, req.Password, req.Title, req.Description);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
+            _emailService = emailService;
+            _clerkService = clerkService;
+            _configuration = configuration; 
+            _env = env;
         }
 
-        return Ok("The Diploma has been successfully sent to your email");
+        [HttpPost("email-student/{guidID}")]
+        public async Task<IActionResult> SendEmailToStudent(Guid guidID, SendEmailRequest req)
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userId == null)
+                {
+                    throw new Exception("The user does not exist");
+                }
+                var secretKey = _env.IsDevelopment() ? _configuration["Clerk:SecretKey"]! : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
+                var googleToken = await _clerkService.GetGoogleOAuthTokenAsync(userId, secretKey);
+
+                await _emailService.SendEmailWithAttachmentAsync(guidID, req.File, googleToken, req.Title, req.Description);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok("The Diploma has been successfully sent to your email");
+        }
     }
-    
 }
-

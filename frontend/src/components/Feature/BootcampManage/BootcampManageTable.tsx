@@ -1,5 +1,5 @@
 import { FieldValues, useForm, useWatch } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { useCustomAlert } from "../../Hooks/useCustomAlert";
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../../util/types";
 import { ConfirmationPopup } from "../../MenuItems/Popups/ConfirmationPopup";
@@ -35,6 +35,7 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
   const [sortOrder, setSortOrder] = useState<SortOrder>('graduationdate-descending');
   const [sortingChanged, setSortingChanged] = useState(false);
   const [filteredBootcamps, setFilteredBootcamps] = useState<BootcampResponse[] | null>(bootcamps);
+  const calendarPickers = useRef([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -159,14 +160,10 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
       }
     }
   }
+  const handleCalendarClick = (index) => calendarPickers.current[index].showPicker();
 
-  const confirmChangeBootcampHandler = async (data: FieldValues) => {
-    customPopup('question2', "Are you sure you want to change existing bootcamps?", "This can be destructive if you've already generated diplomas with that bootcamp.", () => () => handleUpdateBootcamp(data));
-  };
-
-  const confirmDeleteBootcampHandler = async (index: number) => {
-    customPopup('warning2', "Warning", <>By deleting this, you will lose <b style={{ color: '#EF4444' }}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(index));
-  };
+  const confirmChangeBootcampHandler = async (data: FieldValues) => customPopup('question2', "Are you sure you want to change existing bootcamps?", "This can be destructive if you've already generated diplomas with that bootcamp.", () => () => handleUpdateBootcamp(data));
+  const confirmDeleteBootcampHandler = async (index: number) => customPopup('warning2', "Warning", <>By deleting this, you will lose <b style={{ color: '#EF4444' }}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(index));
 
   return (
     <>
@@ -185,7 +182,7 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
           <div className="modal-content">
             <div className="modal-body">
               <div className="modal-header">
-                <h3 className="modal-title">Bootcamp Management</h3>
+                <h3 className="modal-title">Bootcamps</h3>
                 <SelectOptions
                     containerClassOverride='overview-page__select-container'
                     selectClassOverride='overview-page__select-box'
@@ -251,6 +248,8 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
                                 className="date-input"
                                 defaultValue={utcFormatterSlash(bootcamp.graduationDate)}
                                 key={`dategrad_${bootcamp.guidId}`}
+                                ref={item => (calendarPickers.current[index] = item)}
+                                onClick={() => handleCalendarClick(index)}
                               />
                             </td>
                             <td className="table-cell">

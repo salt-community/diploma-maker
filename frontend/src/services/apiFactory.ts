@@ -9,6 +9,8 @@ import { getAllTracks } from "./trackService";
 import { getUserFonts, postUserFonts } from "./UserFontService";
 
 export const initApiEndpoints = (apiParameters: apiEndpointParameters) => {
+
+
     return {
         // Template Endpoint
         getAllTemplates: (setLoadingMessage: (message: string) => void) => getAllTemplates(apiParameters, setLoadingMessage),

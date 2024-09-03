@@ -26,28 +26,28 @@ export const NavBar = () => {
                                     Home
                                 </Link>
                             </li>
-                            <li className="navbar__item overview">
-                                <Link to="/overview" className={"navbar__link " + ((location.pathname === '/overview' || location.pathname === '/Overview') && "active")}>
-                                    <DashBoardIcon />
-                                    Dashboard
+                            <li className="navbar__item template-creator">
+                                <Link to="/template-creator" className={"navbar__link " + ((location.pathname === '/template-creator' || location.pathname === '/Template-creator') && "active")}>
+                                    <TemplateCreatorIcon />
+                                    Make Template
                                 </Link>
                             </li>
                             <li className="navbar__item pdf-creator">
                                 <Link to="/pdf-creator" className={"navbar__link " + (location.pathname === '/pdf-creator' && "active")}>
                                     <PdfCreatorIcon />
-                                    PDFcreator
+                                    Create Diplomas
                                 </Link>
                             </li>
-                            <li className="navbar__item template-creator">
-                                <Link to="/template-creator" className={"navbar__link " + ((location.pathname === '/template-creator' || location.pathname === '/Template-creator') && "active")}>
-                                    <TemplateCreatorIcon />
-                                    TemplateCreator
+                            <li className="navbar__item overview">
+                                <Link to="/overview" className={"navbar__link " + ((location.pathname === '/overview' || location.pathname === '/Overview') && "active")}>
+                                    <DashBoardIcon />
+                                    Generated Diplomas
                                 </Link>
                             </li>
                             <li className="navbar__item bootcamp-management">
                                 <Link to="/bootcamp-management" className={"navbar__link " + ((location.pathname === '/bootcamp-management' || location.pathname === '/Bootcamp-management') && "active")}>
                                     <CogWheelIcon />
-                                    BootcampOptions
+                                    Bootcamps
                                 </Link>
                             </li>
                             <li className="navbar__item history">

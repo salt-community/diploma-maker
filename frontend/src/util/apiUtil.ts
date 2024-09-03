@@ -10,5 +10,5 @@ export const getToken = (): string => {
   
 export let api = initApiEndpoints({
     endpointUrl: import.meta.env.VITE_API_URL,
-    token: getToken()
+    token: getToken
 });

@@ -114,7 +114,7 @@
 
                 transition: all 1s ease-out;
             }
-                .emailclient__list--input-wrapper .rotatesvg {
+                .emailclient__list--input-wrapper .rotatesvg .fill {
                     opacity: 1;
                     visibility: visible;
                     fill: #5dc53e;
@@ -243,6 +243,6 @@
     width: 100%;
     height: 100%;
     backdrop-filter: blur(10px);
-    z-index: 5001;
+    z-index: 100;
     transition: all .15s ease-in-out;
 }

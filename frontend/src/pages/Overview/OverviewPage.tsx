@@ -6,7 +6,7 @@ import { SelectOptions } from '../../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse, EmailConfigRequestDto } from '../../util/types';
+import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse } from '../../util/types';
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
@@ -49,7 +49,6 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
 
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
-    const { loadingMessage } = useLoadingMessage();
 
     const api = import.meta.env.VITE_API_URL + "/api/Blob/";
 
@@ -61,8 +60,6 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             setLoading(true);
         }
     }, [bootcamps]);
-
-    
     
     const items = bootcamps?.flatMap(bootcamp => bootcamp.students) || []; // Flatmap instead of map to flatten [][] into []
     
@@ -109,7 +106,9 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     };
 
     const handleBootcampChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedBootcamp(e.target.value);
+        e.target.selectedIndex === 0 ?
+            setSelectedBootcamp(null) : 
+            setSelectedBootcamp(e.target.value);
         setCurrentPage(1);
     };
 
@@ -137,48 +136,6 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
             customAlert('fail', "Something went wrong.", `${error}`)
         }
         
-    };
-
-    const generatePDFsHandler = async () => {
-        if (!bootcamps || !templates) {
-            customAlert('fail', "Error", "Bootcamps or Templates data is missing.");
-            return;
-        }
-
-        customAlert('loading', `Generating Pdfs...`, ``);
-    
-        const templatesArr: Template[] = [];
-        const inputsArray = visibleItems
-            .map(student => {
-            const selectedBootcamp = bootcamps.find(b => b.students.some(s => s.guidId === student.guidId));
-            if (!selectedBootcamp) {
-                customAlert('fail', "Error", `Bootcamp for student ${student.name} not found.`);
-                return null;
-            }
-            const templateData = templates.find(t => t.id === selectedBootcamp.templateId);
-            if (!templateData) {
-                customAlert('fail', "Error", `Template for bootcamp ${selectedBootcamp.name} not found.`);
-                return null;
-            }
-    
-            const inputs = templateInputsFromBootcampData(mapBootcampToSaltData(selectedBootcamp, templateData), student.name, student.verificationCode);
-            templatesArr.push(mapTemplateInputsBootcampsToTemplateViewer(templateData, inputs));
-            return inputs;
-        }).filter(inputs => inputs !== null);
-    
-        if (inputsArray.length === 0) {
-            customAlert('fail', "Error", "No valid inputs found for PDF generation.");
-            return;
-        }
-
-        const setLoadingMessageAndAlert = (message: string) => {
-            setLoadingMessage(message);
-            customAlert('loading', message, '');
-          };
-    
-        await newGenerateCombinedPDF(templatesArr, inputsArray, setLoadingMessageAndAlert);
-
-        customAlert('success', "PDFs Generated", "The combined PDF has been successfully generated.");
     };
 
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
@@ -240,24 +197,14 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         for (let i = 0; i < userIds.length; i++) {
             try {
                 var file = await generatePDFFile(userIds[i], true);
-                const emailConfigRequest: EmailConfigRequestDto = JSON.parse(localStorage.getItem('emailConfigRequest'));
-
-                if (!emailConfigRequest.senderEmail || !emailConfigRequest.senderCode) {
-                    //@ts-ignore
-                    customInfoPopup('fail', `Opps, Something went wrong`, `Email configuration fields cannot be empty`, () => {});
-                }
-
                 var emailSendRequest: EmailSendRequest = {
                     guidId: userIds[i],
                     //@ts-ignore
                     file: file,
-                    email: emailConfigRequest.senderEmail,
-                    senderCode: emailConfigRequest.senderCode,
                     title: title,
                     description: description,
                 }
 
-                
                 await sendEmail(emailSendRequest)
             } catch (error) {
                 //@ts-ignore
@@ -285,7 +232,6 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         !emails && customAlert('loading', `Generating Pdf File...`, ``);
         
         // displayName: "Fullstack " + TrackName 
-
         const pdfInput = makeTemplateInput(
             populateField(templates.find(t => t.id === bootcamp.templateId).intro , ("Fullstack " + bootcamp.track.name), bootcamp.graduationDate.toString().slice(0, 10), student.name),
             populateField(student.name, ("Fullstack " + bootcamp.track.name), bootcamp.graduationDate.toString().slice(0, 10), student.name),
@@ -312,6 +258,13 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
         const url = `/verify/${verificationCode}`;
         window.open(url, '_blank');
     };
+
+    const showEmailClientHandler = () => {
+        console.log(selectedBootcamp);
+        selectedBootcamp === null
+            ? customAlert('message', 'Please select a bootcamp', 'Select a bootcamp from the dropdown menu') 
+            : setShowEmailClient(true)
+    }
 
     return (
         <main className="overview-page">
@@ -434,11 +387,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
                         />
                     </section>
                     <section className="sidebar-menu__section">
-                        <h3>Generate</h3>
-                        <PublishButton text='Generate PDFs' onClick={generatePDFsHandler} />
-                    </section>
-                    <section className="sidebar-menu__section">
-                        <SaveButton textfield="Email Management" saveButtonType={'normal'} onClick={() => setShowEmailClient(true)} customIcon={<EmailIcon />} />
+                        <SaveButton textfield="Email Management" saveButtonType={'normal'} onClick={() => showEmailClientHandler()} customIcon={<EmailIcon />} />
                     </section>
                 </div>
             </section>

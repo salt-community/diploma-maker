@@ -47,6 +47,72 @@
         justify-content: space-between;
     }
 
+.diploma-making-form__addbootcamp-btn {
+    gap: .15rem !important;
+    padding: .65rem .8rem .65rem .4rem !important;
+    border-radius: 1.5rem !important;
+}
+    .diploma-making-form__addbootcamp-btn svg{
+        width: 15px;
+        height: 15px;
+    }
+    .diploma-making-form__addbootcamp-btn .save-btn_title{
+        font-size: .7rem;
+        color: #ababba;
+        transition: all .2s ease;
+    }
+    .diploma-making-form__addbootcamp-btn:hover .save-btn_title{
+        color: #000;
+        transition: all .2s ease;
+    }
+    .diploma-making__add-bootcamp-form{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 500;
+
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10% 10% 15% 10%;
+
+        backdrop-filter: blur(0px) brightness(0%);
+
+        visibility: hidden;
+        opacity: 0;
+
+        transition: visibility 0ms 850ms, opacity 850ms ease, backdrop-filter 850ms ease;
+    }
+    .diploma-making__add-bootcamp-form.visible{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 500;
+
+        width: 100%;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10% 10% 15% 10%;
+
+        backdrop-filter: blur(50px) brightness(50%);
+        visibility: visible;
+        opacity: 1;
+
+        transition: visibility 0ms, opacity 650ms ease, backdrop-filter 650ms ease;
+    }
+    .diploma-making__add-bootcamp-form .content-container{
+        position: relative;
+        outline: none;
+        max-width: 1200px;
+        color: #fff;
+    }
+
 .diploma-making-form__select-container,
 .diploma-making-form__checkboxes, 
 .diploma-making-form__radio-group{

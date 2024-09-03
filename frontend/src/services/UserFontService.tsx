@@ -35,7 +35,7 @@ export const getFontPreviewImage = async (apiParameters: apiEndpointParameters, 
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiParameters.token}` 
+                'Authorization': `Bearer ${apiParameters.token()}` 
             },
         });
 
@@ -44,7 +44,7 @@ export const getFontPreviewImage = async (apiParameters: apiEndpointParameters, 
         }
 
         const fontBlob = await response.blob();
-        console.log("Font preview image fetched successfully");
+        // console.log("Font preview image fetched successfully");
         return fontBlob;
     } catch (error) {
         console.error('Error fetching font preview image:', error);
@@ -62,7 +62,7 @@ export const postUserFonts = async (apiParameters: apiEndpointParameters, userFo
       });
   
       const response = await fetch(`${apiParameters.endpointUrl}/api/UserFonts`, {
-        headers: {'Authorization': `Bearer ${apiParameters.token}`},
+        headers: {'Authorization': `Bearer ${apiParameters.token()}`},
         method: 'POST',
         body: formData,
       });

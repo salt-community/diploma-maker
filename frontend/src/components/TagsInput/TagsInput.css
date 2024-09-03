@@ -46,26 +46,48 @@
 	outline: none;
   }
   
-  .taginputbox {
+  .taginputbox__wrapper{
+	position: relative;
 	flex-grow: 1;
 	flex-basis: 100%;
-	padding: 0.4em 1em;
-	margin: 0.5rem 0.2rem;
-	font-size: .9rem;
-	font-family: inherit;
-	font-weight: 500;
-	border: 1px solid transparent;
-	border-radius: .6rem;
-	color: white;
-	transition: all 0.2s ease;
-	background-color: #20202a;
   }
-  @media (max-width: 1920px) {
-	.taginputbox{
-		padding: 0.3em .7em;
-		font-size: .85rem;
+	.tags-input__total-label{
+		position: absolute;
+		top: 50%;
+		right: 5%;
+		transform: translateY(-50%);
+
+		font-size: .6rem;
+		
+		cursor: text;
+		pointer-events: none;
+
+		color: #197dffe5;
+		background-color: #1a2135bc;
+
+		border-radius: 1rem;
+		padding: .2rem .4rem;
 	}
-  }
+	.taginputbox {
+		width: 100%;
+		height: 100%;
+		padding: 0.4em 1em;
+		margin: 0.5rem 0.2rem;
+		font-size: .9rem;
+		font-family: inherit;
+		font-weight: 500;
+		border: 1px solid transparent;
+		border-radius: .6rem;
+		color: white;
+		transition: all 0.2s ease;
+		background-color: #20202a;
+	}
+	@media (max-width: 1920px) {
+		.taginputbox{
+			padding: 0.3em .7em;
+			font-size: .85rem;
+		}
+	}
   
   .taginputbox:focus {
 	background-color: #2c2c36;
@@ -192,12 +214,13 @@
   }
   
   .tag.hover-right .tag-close-icon {
-	fill: var(--delete-color);
+	/* fill: var(--delete-color); */
+	fill: #fe1a1a;
 	transform: rotate(5deg) translateX(1px);
 	transition: all .2s ease;
   }
   .tag.hover-right .tag-open-icon path{
-	stroke: var(--delete-color);;
+	stroke: var(--delete-color);
 	transition: all .2s ease;
   }
   .tag.hover-left .tag-close-icon{
@@ -205,7 +228,8 @@
 	transition: all .2s ease;
   }
   .tag.hover-left .tag-open-icon path{
-	stroke: #54df77;;
+	/* stroke: #54df77;; */
+	stroke: #1fd94d;;
 	transition: all .2s ease;
   }
   .tag.hover-edit .tag-close-icon{

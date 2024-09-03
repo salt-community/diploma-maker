@@ -6,13 +6,13 @@ import { AddIcon } from '../Icons/AddIcon';
 import { PDFDocument } from 'pdf-lib';
 
 type Props = {
-  fileResult: (file: File) => void;
+  returnPdf: (base64Pdf: string) => void;
   setFileAdded?: (added: boolean) => void;
   reset?: boolean;
   setReset?: (value: boolean) => void;
 }
 
-export const PdfFileUpload = ({ fileResult, setFileAdded, reset, setReset }: Props) => {
+export const PdfFileUpload = ({ returnPdf, setFileAdded, reset, setReset }: Props) => {
   const [isFileValid, setIsFileValid] = useState<boolean | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
 
@@ -36,10 +36,13 @@ export const PdfFileUpload = ({ fileResult, setFileAdded, reset, setReset }: Pro
       const arrayBuffer = await file.arrayBuffer();
       const pdfDoc = await PDFDocument.load(arrayBuffer);
   
-      const resizedPdfBytes = await pdfDoc.save();
-      const resizedFile = new File([resizedPdfBytes], file.name, { type: file.type });
+      const finalFile = await PDFDocument.create();
+      const [firstPage] = await finalFile.copyPages(pdfDoc, [0]);
+      finalFile.addPage(firstPage);
   
-      fileResult(resizedFile);
+      const base64Pdf = await finalFile.saveAsBase64({ dataUri: true });
+  
+      returnPdf(base64Pdf);
       setFileName(file.name);
       if (setFileAdded) {
         setFileAdded(true);
@@ -50,7 +53,7 @@ export const PdfFileUpload = ({ fileResult, setFileAdded, reset, setReset }: Pro
         setFileAdded(false);
       }
     }
-  }, [fileResult, setFileAdded]);
+  }, [returnPdf, setFileAdded]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

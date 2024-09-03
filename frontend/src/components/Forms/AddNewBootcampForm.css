@@ -1,6 +1,12 @@
 .content-container {
     position: relative;
     flex: 1 1 auto;
+    outline: 1px solid #007bff52;
+    border-radius: .5rem;
+    padding: 0% 1.5rem;
+    padding-bottom: 2rem;
+    background-color: #181824;
+    width: 65%;
 }
 
 .auto-table {
@@ -16,6 +22,8 @@
 }
     .newbootcamp-title{
         font-size: 1.2rem;
+        color: #ffffff;
+        margin-bottom: .5rem;
     }
 
 .input-cell {
@@ -29,6 +37,7 @@
 
 .text-input,
 .date-input {
+    position: relative;
     margin-top: 0.25rem;
     display: block;
     width: 100%;
@@ -50,12 +59,29 @@
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
 }
 
-.date-input{
-    max-width: 100%;
+.date-input:focus {
+    border-color: #007BFF;
+    outline: none;
 }
-.date-cell:nth-of-type(1){
-    width: 30%;
+
+
+.newbootcamp-close-btn{
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    width: 40px;
+    height: 40px;
 }
-.date-cell:nth-of-type(2){
-    width: 20%;
-}
+    .newbootcamp-close-btn svg{
+        width: 25px;
+        height: 25px;
+    }
+    .newbootcamp-close-btn svg .fill{
+        fill: #ababba;
+        transition: all .2s ease;
+    }
+    .newbootcamp-close-btn:hover svg .fill{
+        fill: #fff;
+        transition: all .2s ease;
+    }

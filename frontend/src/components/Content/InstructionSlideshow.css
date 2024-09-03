@@ -35,7 +35,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 5001;
+    z-index: 500;
 }
 
 .slideshow__closebtn svg {
