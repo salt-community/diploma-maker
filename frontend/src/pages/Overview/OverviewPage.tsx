@@ -70,21 +70,20 @@ export const OverviewPage = ({ tracks, bootcamps, templates, deleteStudent, upda
     let filteredBootcamps = [];
 
     filteredBootcamps = !selectedTrack
-        ? tracks?.flatMap(t => t.bootcamps)
-        : tracks[selectedTrack].bootcamps || [];
-    
-    console.log(filteredBootcamps);
+        ? tracks?.flatMap(t => t.bootcamps.map(b => ({ ...b, track: t })))
+        : tracks[selectedTrack].bootcamps.map(b => ({ ...b, track: tracks[selectedTrack] })) || [];
 
     const sortedBootcamps = filteredBootcamps?.sort((a, b) => new Date(b.graduationDate).getTime() - new Date(a.graduationDate).getTime());
 
-    console.log("SelectedTrack " + selectedTrack)
     const visibleItems = items.filter(item => 
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (!selectedBootcamp || filteredBootcamps?.some(bootcamp => bootcamp.guidId === selectedBootcamp && bootcamp.students.includes(item))) //Filter by bootcamp selector
-        // (!selectedTrack || bootcamps?.some(bootcamp => bootcamp.track.id.toString() === selectedTrack && bootcamp.students.includes(item)))
+        (!selectedBootcamp || 
+            filteredBootcamps?.some(b => b.guidId === selectedBootcamp && b.students.includes(item)) //Filter by Bootcamp Selector
+        ) &&
+        (!selectedTrack || 
+            filteredBootcamps?.some(bootcamp => bootcamp.students.includes(item)) //Filter by Track Selector
+        )
     );
-
-    console.log(visibleItems);
 
     const [imageLoadedStates, setImageLoadedStates] = useState<boolean[]>(new Array(visibleItems.length).fill(false));
     
