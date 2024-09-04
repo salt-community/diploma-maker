@@ -31,7 +31,6 @@ import { generatePDF, newGenerateCombinedPDF } from '../../util/pdfGenerationUti
 
 type Props = {
     tracks: TrackResponse[] | null;
-    bootcamps: BootcampResponse[] | null;
     deleteStudent: (id: string) => Promise<void>;
     updateStudentInformation: (studentRequest: StudentUpdateRequestDto) => Promise<StudentResponse>;
     sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
@@ -39,7 +38,7 @@ type Props = {
     setLoadingMessage: (message: string) => void;
 }
 
-export const OverviewPage = ({ tracks, bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail, setLoadingMessage  }: Props) => {
+export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentInformation, sendEmail, setLoadingMessage  }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -68,7 +67,6 @@ export const OverviewPage = ({ tracks, bootcamps, templates, deleteStudent, upda
     const startIndex = (currentPage - 1) * itemsPerPage;
 
     let filteredBootcamps = [];
-    console.log(bootcamps);
 
     filteredBootcamps = !selectedTrack
         ? tracks?.flatMap(t => t.bootcamps.map(b => ({ ...b, track: t })))
@@ -127,8 +125,8 @@ export const OverviewPage = ({ tracks, bootcamps, templates, deleteStudent, upda
     };
 
     const modifyHandler = (guidId: string) => {
-       if (bootcamps) {
-            const bootcampIndex = bootcamps.findIndex(bootcamp =>
+       if (tracks) {
+            const bootcampIndex = tracks?.flatMap(t => t.bootcamps)?.findIndex(bootcamp =>
                 bootcamp.students.some(student => student.guidId === guidId)
             );
             navigate(`/${bootcampIndex}`);
@@ -231,7 +229,8 @@ export const OverviewPage = ({ tracks, bootcamps, templates, deleteStudent, upda
             customAlert('fail', "Selection Error:", "No Emails Selected");
             return;
         }
-        const bootcamp = bootcamps?.find(b => b.students.some(d => d.guidId === guidId));
+        const bootcamp = filteredBootcamps.find(b => b.students.some(d => d.guidId === guidId));
+
         if (!bootcamp) {
             customAlert('fail', "Bootcamp Error:", "Bootcamp not found");
             return;
@@ -288,9 +287,9 @@ export const OverviewPage = ({ tracks, bootcamps, templates, deleteStudent, upda
                 currentProgress={progress}
                 setCurrentProgress={setProgress}
             />
-            {selectedItems.length > 0 &&
+            {selectedItems.length > 0 && tracks &&
                 <EmailClient
-                    title={selectedBootcamp ? bootcamps?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'}
+                    title={selectedBootcamp ? tracks?.flatMap(t => t.bootcamps)?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'}
                     clients={visibleItems}
                     closeEmailClient={() => { setShowEmailClient(false) }}
                     show={showEmailClient}
@@ -361,19 +360,20 @@ export const OverviewPage = ({ tracks, bootcamps, templates, deleteStudent, upda
                     </section>
                     <section className='sidebar-menu__section'>
                         <h3>Track</h3>
-                        <SelectOptions
-                            containerClassOverride='overview-page__select-container'
-                            selectClassOverride='overview-page__select-box'
-                            options={[
-                                { value: "", label: "All Tracks" },
-                                ...(tracks.map(track => ({
-                                    value: track.id.toString(),
-                                    label: track.name
-                                })) || [])
-                            ]}
-                            onChange={handleTrackChange}
-                        />
-                        
+                        {tracks && 
+                            <SelectOptions
+                                containerClassOverride='overview-page__select-container'
+                                selectClassOverride='overview-page__select-box'
+                                options={[
+                                    { value: "", label: "All Tracks" },
+                                    ...(tracks.map(track => ({
+                                        value: track.id.toString(),
+                                        label: track.name
+                                    })) || [])
+                                ]}
+                                onChange={handleTrackChange}
+                            />
+                        }
                     </section>
                     <section className="sidebar-menu__section">
                         <h3>Bootcamp</h3>
