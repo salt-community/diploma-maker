@@ -55,7 +55,7 @@ export async function getBootcampById(apiParameters: apiEndpointParameters, guid
 export async function updateBootcamp(apiParameters: apiEndpointParameters, bootcampRequest: BootcampRequest): Promise<BootcampResponse>{
     const formattedRequest = {
         ...bootcampRequest,
-        graduationDate: bootcampRequest.graduationDate? bootcampRequest.graduationDate.toISOString(): undefined
+        graduationDate: bootcampRequest.graduationDate.toISOString()
     };
 
     const response = await fetch(`${apiParameters.endpointUrl}/api/bootcamps/${bootcampRequest.guidId!}`,{

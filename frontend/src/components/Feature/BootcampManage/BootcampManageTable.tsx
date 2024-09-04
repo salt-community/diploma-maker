@@ -243,13 +243,13 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
                             <td className="table-cell">
                               <input
                                 id={bootcamp.guidId + "1"}
-                                {...register(`dategraduate${actualIndex}`)}
+                                {...register(`dategraduate${actualIndex}`, { required: true })}
                                 type="date"
                                 className="date-input"
                                 defaultValue={utcFormatterSlash(bootcamp.graduationDate)}
                                 key={`dategrad_${bootcamp.guidId}`}
                                 ref={item => (calendarPickers.current[index] = item)}
-                                onClick={() => handleCalendarClick(index)}
+                                onChange={(e) => setValue(`dategraduate${actualIndex}`, e.target.value)}
                               />
                             </td>
                             <td className="table-cell">

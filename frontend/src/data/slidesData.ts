@@ -20,8 +20,26 @@ export const ReadmeInstructionSlides =
     },
     {
       image: '/instructionslides/readme_slide4.webp',
-      title: 'Step 4 - Send Emails To Each Student',
+      title: 'Step 4 - Sending Emails To Each Student',
       description: 'On the "Generated Diplomas" page - select bootcamp & press the email management button!',
+      alt: 'Email Sender view',
+    },
+    {
+      image: '/instructionslides/readme_slide5.webp',
+      title: 'Edit The Email Content',
+      description: '{studentName} replaces that text with that students name',
+      alt: 'Email Sender view',
+    },
+    {
+      image: '/instructionslides/readme_slide6.webp',
+      title: 'Send Out The Emails',
+      description: 'Select recipients to send to and press "Send Emails to Selected Clients"',
+      alt: 'Email Sender view',
+    },
+    {
+      image: '/instructionslides/readme_slide7.webp',
+      title: 'Step 5 - A Cup of Black Gold to Celebrate',
+      description: 'Well Done!',
       alt: 'Email Sender view',
     },
 ]
