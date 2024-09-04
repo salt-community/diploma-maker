@@ -6,7 +6,7 @@ import { SelectOptions } from '../../components/MenuItems/Inputs/SelectOptions';
 import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
 import { PaginationMenu } from '../../components/MenuItems/PaginationMenu';
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse } from '../../util/types';
+import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse, TrackResponse } from '../../util/types';
 import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
 import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +30,8 @@ import { delay } from '../../util/timeUtil';
 import { generatePDF, newGenerateCombinedPDF } from '../../util/pdfGenerationUtil';
 
 type Props = {
-    bootcamps: BootcampResponse[] | null,
+    tracks: TrackResponse[] | null;
+    bootcamps: BootcampResponse[] | null;
     deleteStudent: (id: string) => Promise<void>;
     updateStudentInformation: (studentRequest: StudentUpdateRequestDto) => Promise<StudentResponse>;
     sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
@@ -38,7 +39,7 @@ type Props = {
     setLoadingMessage: (message: string) => void;
 }
 
-export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail, setLoadingMessage  }: Props) => {
+export const OverviewPage = ({ tracks, bootcamps, templates, deleteStudent, updateStudentInformation, sendEmail, setLoadingMessage  }: Props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
@@ -53,30 +54,37 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     const api = import.meta.env.VITE_API_URL + "/api/Blob/";
 
     useEffect(() => {
-        if (bootcamps) {
+        if (tracks) {
             setLoading(false);
         }
         else{
             setLoading(true);
         }
-    }, [bootcamps]);
+    }, [tracks]);
     
-    const items = bootcamps?.flatMap(bootcamp => bootcamp.students) || []; // Flatmap instead of map to flatten [][] into []
+    const items = tracks?.flatMap(t => t.bootcamps.flatMap(b => b.students)) || [];
     
     const itemsPerPage = 8;
     const startIndex = (currentPage - 1) * itemsPerPage;
 
-    const filteredBootcamps = !selectedTrack
-        ? bootcamps
-        : bootcamps?.filter(bootcamp => bootcamp.track.id.toString() === selectedTrack);
+    let filteredBootcamps = [];
+
+    filteredBootcamps = !selectedTrack
+        ? tracks?.flatMap(t => t.bootcamps)
+        : tracks[selectedTrack].bootcamps || [];
+    
+    console.log(filteredBootcamps);
 
     const sortedBootcamps = filteredBootcamps?.sort((a, b) => new Date(b.graduationDate).getTime() - new Date(a.graduationDate).getTime());
 
-    const visibleItems = items.filter((item: any) =>
+    console.log("SelectedTrack " + selectedTrack)
+    const visibleItems = items.filter(item => 
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (!selectedBootcamp || filteredBootcamps?.some(bootcamp => bootcamp.guidId === selectedBootcamp && bootcamp.students.includes(item))) &&
-        (!selectedTrack || bootcamps?.some(bootcamp => bootcamp.track.id.toString() === selectedTrack && bootcamp.students.includes(item)))
+        (!selectedBootcamp || filteredBootcamps?.some(bootcamp => bootcamp.guidId === selectedBootcamp && bootcamp.students.includes(item))) //Filter by bootcamp selector
+        // (!selectedTrack || bootcamps?.some(bootcamp => bootcamp.track.id.toString() === selectedTrack && bootcamp.students.includes(item)))
     );
+
+    console.log(visibleItems);
 
     const [imageLoadedStates, setImageLoadedStates] = useState<boolean[]>(new Array(visibleItems.length).fill(false));
     
@@ -113,7 +121,7 @@ export const OverviewPage = ({ bootcamps, templates, deleteStudent, updateStuden
     };
 
     const handleTrackChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedTrack(e.target.value);
+        e.target.value === "" ? setSelectedTrack(null) : setSelectedTrack((parseInt(e.target.value) - 1).toString());
         setSelectedBootcamp(null);
         setCurrentPage(1);
     };
