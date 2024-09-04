@@ -68,6 +68,7 @@ export const OverviewPage = ({ tracks, bootcamps, templates, deleteStudent, upda
     const startIndex = (currentPage - 1) * itemsPerPage;
 
     let filteredBootcamps = [];
+    console.log(bootcamps);
 
     filteredBootcamps = !selectedTrack
         ? tracks?.flatMap(t => t.bootcamps.map(b => ({ ...b, track: t })))
@@ -365,11 +366,7 @@ export const OverviewPage = ({ tracks, bootcamps, templates, deleteStudent, upda
                             selectClassOverride='overview-page__select-box'
                             options={[
                                 { value: "", label: "All Tracks" },
-                                ...(bootcamps?.flatMap(bootcamp => bootcamp.track).filter((value, index, self) => 
-                                    index === self.findIndex((t) => (
-                                        t.id === value.id
-                                    ))
-                                ).map(track => ({
+                                ...(tracks.map(track => ({
                                     value: track.id.toString(),
                                     label: track.name
                                 })) || [])
