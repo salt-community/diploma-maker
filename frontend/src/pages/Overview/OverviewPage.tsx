@@ -26,7 +26,7 @@ import { useLoadingMessage } from '../../components/Contexts/LoadingMessageConte
 import { LazyImageLoader } from '../../components/Content/LazyImageLoader';
 import { utcFormatter } from '../../util/datesUtil';
 import { populateField, populateIdField } from '../../util/fieldReplacersUtil';
-import { delay } from '../../util/timeUtil';
+import { blendProgress, delay } from '../../util/timeUtil';
 import { generatePDF, newGenerateCombinedPDF } from '../../util/pdfGenerationUtil';
 
 type Props = {
@@ -219,7 +219,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
             }
            
             const progressBarValue = ((i + 1) / userIds.length) * 100;
-            await blendProgress((i / userIds.length) * 100, progressBarValue, blendProgressDelay);
+            await blendProgress((i / userIds.length) * 100, progressBarValue, blendProgressDelay, setProgress);
         }
     }
 
@@ -251,15 +251,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
         const pdfFile = await generatePDF(template, [pdfInput], true);
         return pdfFile;
     };
-
-    const blendProgress = async (start: number, end: number, blendDelay: number) => {
-        const steps = Math.abs(end - start);
-        const stepDelay = blendDelay / steps;
-        for (let i = 1; i <= steps; i++) {
-            await delay(stepDelay);
-            setProgress(Math.round(start + i * Math.sign(end - start)));
-        }
-    }
 
     const navigateToVerificationPage = (verificationCode: string) => {
         const url = `/verify/${verificationCode}`;
