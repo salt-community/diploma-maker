@@ -292,50 +292,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                     callCustomAlert={customAlert}
                 />
             }
-            {/* <section className='overview-page__list-module'>
-                <div className='overview-page__list-module-card-container'>
-                    {loading ? (
-                        <SpinnerDefault classOverride="spinner" />
-                    ) : (
-                        visibleItems.length > 0 ? visibleItems.map((student: Student, index) => {
-                            const isVisible = index >= startIndex && index < startIndex + itemsPerPage;
-                            const defaultImg = "https://res.cloudinary.com/dlw9fdrql/image/upload/v1718105458/diploma_xmqcfi.jpg";
-                            return (
-                                <button key={student.guidId} className={`list-module__item ${isVisible ? 'visible' : 'hidden'}`}>
-                                    {!student.previewImageUrl && <p className='list-module__item-title'>{student.name}</p>}
-                                    <LazyImageLoader 
-                                        previewImageLQIPUrl={student.previewImageLQIPUrl ? `${api}${student.previewImageLQIPUrl}` : defaultImg} 
-                                        previewImageUrl={student.previewImageUrl ? `${api}${student.previewImageUrl}` : defaultImg} 
-                                        loadTrigger={() => handleImageLoad(index)}
-                                    />
-                                    <section className='list-module__item-menu'>
-                                        <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
-                                        <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
-                                        <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
-                                    </section>
-                                    {student.lastGenerated && imageLoadedStates[index] && 
-                                        <div onClick={() => navigateToVerificationPage(student.verificationCode)} className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
-                                            <VerifyIcon />
-                                        </div>
-                                    }
-                                </button>
-                            );
-                        }) :
-                        <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />
-                    )}
-                </div>
-                {selectedItems.length > 0 &&
-                    <PaginationMenu
-                        containerClassOverride='overview-page__footer'
-                        buttonClassOverride='pagination-button'
-                        textContainerClassOverride='pagination-info'
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        handleNextPage={handleNextPage}
-                        handlePrevPage={handlePrevPage}
-                    />
-                }
-            </section> */}
             <DiplomaCardContainer 
                 visibleItems={visibleItems}
                 selectedItems={selectedItems}
@@ -355,59 +311,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 imageLoadedStates={imageLoadedStates}
                 showStudentInfohandler={showStudentInfohandler}
             />
-            {/* <section className='overview-page__sidebar'>
-                <div className='overview-page__sidebar-menu'>
-                    <header className="sidebar-menu__header">
-                        <button>
-                            Browse
-                        </button>
-                    </header>
-                    <section className="sidebar-menu__section">
-                        <h3>Filtering</h3>
-                        <SearchInput
-                            containerClassOverride='sidebar-menu__input-wrapper'
-                            inputClassOverride='sidebar-menu__search-input'
-                            searchQuery={searchQuery}
-                            handleSearchChange={handleSearchChange}
-                        />
-                    </section>
-                    <section className='sidebar-menu__section'>
-                        <h3>Track</h3>
-                        {tracks && 
-                            <SelectOptions
-                                containerClassOverride='overview-page__select-container'
-                                selectClassOverride='overview-page__select-box'
-                                options={[
-                                    { value: "", label: "All Tracks" },
-                                    ...(tracks.map(track => ({
-                                        value: track.id.toString(),
-                                        label: track.name
-                                    })) || [])
-                                ]}
-                                onChange={handleTrackChange}
-                            />
-                        }
-                    </section>
-                    <section className="sidebar-menu__section">
-                        <h3>Bootcamp</h3>
-                        <SelectOptions
-                            containerClassOverride='sidebar-menu__select-container'
-                            selectClassOverride='sidebar-menu__select-box'
-                            options={[
-                                { value: "", label: "All Bootcamps" },
-                                ...(sortedBootcamps?.map(bootcamp => ({
-                                    value: bootcamp.guidId,
-                                    label: bootcamp.name
-                                })) || [])
-                            ]}
-                            onChange={handleBootcampChange}
-                        />
-                    </section>
-                    <section className="sidebar-menu__section">
-                        <SaveButton textfield="Email Management" saveButtonType={'normal'} onClick={() => showEmailClientHandler()} customIcon={<EmailIcon />} />
-                    </section>
-                </div>
-            </section> */}
             <OverviewSideBar 
                 tracks={tracks}
                 sortedBootcamps={sortedBootcamps}
