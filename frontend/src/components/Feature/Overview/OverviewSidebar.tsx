@@ -8,22 +8,43 @@ type Props = {
     tracks: TrackResponse[];
     sortedBootcamps: any[];
     searchQuery: string;
-    handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleTrackChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    handleBootcampChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     showEmailClientHandler: () => void;
+    setCurrentPage: (value: React.SetStateAction<number>) => void
+    setSearchQuery: (value: React.SetStateAction<string>) => void;
+    setSelectedTrack: (value: React.SetStateAction<string>) => void;
+    setSelectedBootcamp: (value: React.SetStateAction<string>) => void;
 }
 
 export const OverviewSideBar = ({ 
     tracks, 
     sortedBootcamps, 
     searchQuery, 
-    handleSearchChange,
-    handleTrackChange,
-    handleBootcampChange,
-    showEmailClientHandler
+    showEmailClientHandler,
+    setCurrentPage,
+    setSearchQuery,
+    setSelectedTrack,
+    setSelectedBootcamp
 }: Props) => {
-  return (
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const handleBootcampChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        e.target.selectedIndex === 0 ?
+        setSelectedBootcamp(null) : 
+        setSelectedBootcamp(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const handleTrackChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        e.target.value === "" ? setSelectedTrack(null) : setSelectedTrack((parseInt(e.target.value) - 1).toString());
+        setSelectedBootcamp(null);
+        setCurrentPage(1);
+    };
+
+    return (
     <section className='overview-page__sidebar'>
         <div className='overview-page__sidebar-menu'>
             <header className="sidebar-menu__header">

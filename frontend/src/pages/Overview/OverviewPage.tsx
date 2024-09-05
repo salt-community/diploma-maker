@@ -65,24 +65,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
     
     const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
     const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
-    
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const handleBootcampChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        e.target.selectedIndex === 0 ?
-        setSelectedBootcamp(null) : 
-        setSelectedBootcamp(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const handleTrackChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        e.target.value === "" ? setSelectedTrack(null) : setSelectedTrack((parseInt(e.target.value) - 1).toString());
-        setSelectedBootcamp(null);
-        setCurrentPage(1);
-    };
 
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
         if (!validateEmail(studentInput, originalEmail, customAlert, closeInfoPopup)) {
@@ -162,10 +144,11 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 tracks={tracks}
                 sortedBootcamps={sortedBootcamps}
                 searchQuery={searchQuery}
-                handleSearchChange={handleSearchChange}
-                handleTrackChange={handleTrackChange}
-                handleBootcampChange={handleBootcampChange}
                 showEmailClientHandler={showEmailClientHandler}
+                setCurrentPage={setCurrentPage}
+                setSearchQuery={setSearchQuery}
+                setSelectedTrack={setSelectedTrack}
+                setSelectedBootcamp={setSelectedBootcamp}
             />
         </main>
     );
