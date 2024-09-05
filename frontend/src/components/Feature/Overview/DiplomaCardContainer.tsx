@@ -11,6 +11,7 @@ import { PaginationMenu } from "../../MenuItems/PaginationMenu";
 import { Popup404 } from "../../MenuItems/Popups/Popup404";
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { useNavigate } from "react-router-dom";
+import { InfoPopupType } from "../../MenuItems/Popups/InfoPopup";
 
 type Props = {
     tracks: TrackResponse[];
@@ -25,8 +26,9 @@ type Props = {
     startIndex: number;
     itemsPerPage: number;
     deleteStudent: (id: string) => Promise<void>;
-    showStudentInfohandler: (student: Student) => void;
+    modifyStudentEmailHandler: (studentInput?: Student, originalEmail?: string) => Promise<void>;
     customAlert: (alertType: PopupType, title: string, content: string) => void;
+    customInfoPopup: (type: InfoPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => void;
 }
 
 export const DiplomaCardContainer = ({ 
@@ -42,12 +44,13 @@ export const DiplomaCardContainer = ({
     startIndex,
     itemsPerPage,
     deleteStudent,
-    showStudentInfohandler,
     customAlert,
+    customInfoPopup,
+    modifyStudentEmailHandler
 }: Props) => {
     const [imageLoadedStates, setImageLoadedStates] = useState<boolean[]>(new Array(visibleItems.length).fill(false));
     const navigate = useNavigate();
-    
+
     const api = import.meta.env.VITE_API_URL + "/api/Blob/";
     
     const handleImageLoad = (index: number) => {
@@ -80,7 +83,22 @@ export const DiplomaCardContainer = ({
              );
              navigate(`/${bootcampIndex}`);
          } 
-     };
+    };
+
+    const showStudentInfohandler = (student: Student) => {
+        if(student){
+            var emailAddress = student.email;
+            if(!student.email){
+                emailAddress = "No Email"
+            }
+            customInfoPopup('form', student.name, emailAddress, () => (inputContent?: Student) => modifyStudentEmailHandler({
+                guidId: student.guidId,
+                name: student.name,
+                //@ts-ignore
+                email: inputContent
+            }, emailAddress))
+        }
+    }
 
     return (
         <section className='overview-page__list-module'>

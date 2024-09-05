@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './OverviewPage.css';
 import { Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse, TrackResponse } from '../../util/types';
-import { useNavigate } from 'react-router-dom';
 import { AlertPopup } from '../../components/MenuItems/Popups/AlertPopup';
 import { EmailClient } from '../../components/EmailClient/EmailClient';
 import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
@@ -82,8 +81,8 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
 
     const handleBootcampChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         e.target.selectedIndex === 0 ?
-            setSelectedBootcamp(null) : 
-            setSelectedBootcamp(e.target.value);
+        setSelectedBootcamp(null) : 
+        setSelectedBootcamp(e.target.value);
         setCurrentPage(1);
     };
 
@@ -93,26 +92,11 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
         setCurrentPage(1);
     };
 
-    const showStudentInfohandler = (student: Student) => {
-        if(student){
-            var emailAddress = student.email;
-            if(!student.email){
-                emailAddress = "No Email"
-            }
-            customInfoPopup('form', student.name, emailAddress, () => (inputContent?: Student) => modifyStudentEmailHandler({
-                guidId: student.guidId,
-                name: student.name,
-                //@ts-ignore
-                email: inputContent
-            }, emailAddress))
-        }
-    }
-
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
         if (!validateEmail(studentInput, originalEmail, customAlert, closeInfoPopup)) {
             return;
         }
-        
+
         customAlert('loading', `Changing ${studentInput.name}s email...`, ``);
         
         try {
@@ -179,8 +163,9 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 startIndex={startIndex}
                 itemsPerPage={itemsPerPage}
                 deleteStudent={deleteStudent}
-                showStudentInfohandler={showStudentInfohandler}
+                modifyStudentEmailHandler={modifyStudentEmailHandler}
                 customAlert={customAlert}
+                customInfoPopup={customInfoPopup}
             />
             <OverviewSideBar 
                 tracks={tracks}
