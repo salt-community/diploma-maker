@@ -39,32 +39,30 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
             setLoading(true);
         }
     }, [tracks]);
-    
-    const items = tracks?.flatMap(t => t.bootcamps.flatMap(b => b.students)) || [];
-    
+
     const itemsPerPage = 8;
     const startIndex = (currentPage - 1) * itemsPerPage;
+    
+    const allStudents: Student[] = tracks?.flatMap(t => t.bootcamps.flatMap(b => b.students)) || [];
 
     let filteredBootcamps = [];
-
     filteredBootcamps = !selectedTrack
         ? tracks?.flatMap(t => t.bootcamps.map(b => ({ ...b, track: t })))
         : tracks[selectedTrack].bootcamps.map(b => ({ ...b, track: tracks[selectedTrack] })) || [];
 
     const sortedBootcamps = filteredBootcamps?.sort((a, b) => new Date(b.graduationDate).getTime() - new Date(a.graduationDate).getTime());
 
-    const visibleItems = items.filter(item => 
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (!selectedBootcamp || 
-            filteredBootcamps?.some(b => b.guidId === selectedBootcamp && b.students.includes(item)) // Filter by Bootcamp Selector
-        ) &&
-        (!selectedTrack || 
-            filteredBootcamps?.some(bootcamp => bootcamp.students.includes(item)) // Filter by Track Selector
-        )
+    const visibleStudents: Student[] = allStudents.filter(s => 
+        s.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+            (!selectedBootcamp || 
+                filteredBootcamps?.some(b => b.guidId === selectedBootcamp && b.students.includes(s)) // Filter by Bootcamp Selector
+            ) &&
+            (!selectedTrack || 
+                filteredBootcamps?.some(bootcamp => bootcamp.students.includes(s)) // Filter by Track Selector
+            )
     );
     
-    const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
-    const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
+    const totalPages = Math.ceil(visibleStudents.length / itemsPerPage);
 
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
         if (!validateEmail(studentInput, originalEmail, customAlert, closeInfoPopup)) {
@@ -108,11 +106,11 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 currentProgress={progress}
                 setCurrentProgress={setProgress}
             />
-            {selectedItems.length > 0 && tracks &&
+            {visibleStudents.length > 0 && tracks &&
                 <EmailClient
                     title={selectedBootcamp ? tracks?.flatMap(t => t.bootcamps)?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'}
-                    clients={visibleItems}
-                    items={items}
+                    clients={visibleStudents}
+                    items={allStudents}
                     templates={templates}
                     filteredBootcamps={filteredBootcamps}
                     closeEmailClient={() => { setShowEmailClient(false) }}
@@ -126,8 +124,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
             }
             <DiplomaCardContainer 
                 tracks={tracks}
-                visibleItems={visibleItems}
-                selectedItems={selectedItems}
+                visibleItems={visibleStudents}
                 currentPage={currentPage}
                 totalPages={totalPages}
                 setCurrentPage={setCurrentPage}

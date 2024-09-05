@@ -16,7 +16,6 @@ import { InfoPopupType } from "../../MenuItems/Popups/InfoPopup";
 type Props = {
     tracks: TrackResponse[];
     visibleItems: Student[];
-    selectedItems: Student[];
     currentPage: number;
     totalPages: number;
     setCurrentPage: (value: React.SetStateAction<number>) => void;
@@ -33,7 +32,6 @@ type Props = {
 export const DiplomaCardContainer = ({ 
     tracks,
     visibleItems, 
-    selectedItems, 
     currentPage, 
     totalPages,
     setCurrentPage,
@@ -138,7 +136,7 @@ export const DiplomaCardContainer = ({
                     <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />
                 )}
             </div>
-            {selectedItems.length > 0 &&
+            {visibleItems.length > 0 &&
                 <PaginationMenu
                     containerClassOverride='overview-page__footer'
                     buttonClassOverride='pagination-button'
