@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Student } from "../../util/types";
+import { EmailSendRequest, Student, TemplateResponse } from "../../util/types";
 import './EmailClient.css';
 import { CloseWindowIcon } from "../MenuItems/Icons/CloseWindowIcon";
 import { SaveButton } from "../MenuItems/Buttons/SaveButton";
@@ -11,18 +11,42 @@ import { CloudUploadIcon } from "../MenuItems/Icons/CloudUploadIcon";
 import { NextIcon } from "../MenuItems/Icons/NextIcon";
 import { EmailContentConfigSection } from "./EmailContentConfigSection";
 import { EmailSendSection } from "./EmailSendSection";
+import { blendProgress } from "../../util/timeUtil";
+import { makeTemplateInput } from "../../templates/baseTemplate";
+import { populateField, populateIdField } from "../../util/fieldReplacersUtil";
+import { mapTemplateInputsBootcampsToTemplateViewer } from "../../util/dataHelpers";
+import { generatePDF } from "../../util/pdfGenerationUtil";
+import { InfoPopupType } from "../MenuItems/Popups/InfoPopup";
 
 type Props = {
-    clients: Student[],
-    title: string | undefined,
-    show: boolean,
-    closeEmailClient: () => void,
-    modifyStudentEmailHandler: (studentInput?: Student, originalEmail?: string) => void,
-    sendEmails: (userIds: string[], title: string, description: string) => void,
-    callCustomAlert: (alertType: PopupType, title: string, content: string) => void,
+    clients: Student[];
+    items: Student[];
+    templates: TemplateResponse[];
+    filteredBootcamps: any[];
+    title: string | undefined;
+    show: boolean;
+    closeEmailClient: () => void;
+    modifyStudentEmailHandler: (studentInput?: Student, originalEmail?: string) => void;
+    sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
+    callCustomAlert: (alertType: PopupType, title: string, content: string) => void;
+    setProgress: React.Dispatch<React.SetStateAction<number>>;
+    customInfoPopup: (type: InfoPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => void;
 };
 
-export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStudentEmailHandler, sendEmails, callCustomAlert }: Props) => {
+export const EmailClient = ({ 
+    clients, 
+    items,
+    templates,
+    filteredBootcamps,
+    title, 
+    show, 
+    closeEmailClient, 
+    modifyStudentEmailHandler, 
+    sendEmail, 
+    callCustomAlert,
+    setProgress,
+    customInfoPopup,
+}: Props) => {
     const [emailChanges, setEmailChanges] = useState<{[key: string]: string}>({});
     const [checkedUsers, setCheckedUsers] = useState<{[key: string]: boolean}>({});
     const [emailEditContentActive, setEmailEditContentActive] = useState<boolean>(false);
@@ -99,6 +123,64 @@ export const EmailClient = ({ clients, title, show, closeEmailClient, modifyStud
     const handleEmailDescriptionChange = (event) => {
         setEmailDescription(event.target.value);
     }
+
+    const sendEmails = async (userIds: string[], title: string, description: string) => {
+        if(userIds.length === 0) return
+        // @ts-ignore
+        customInfoPopup("progress", "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
+        const blendProgressDelay = 750;
+
+        for (let i = 0; i < userIds.length; i++) {
+            try {
+                var file = await generatePDFFile(userIds[i], true);
+                var emailSendRequest: EmailSendRequest = {
+                    guidId: userIds[i],
+                    //@ts-ignore
+                    file: file,
+                    title: title,
+                    description: description,
+                }
+
+                await sendEmail(emailSendRequest)
+            } catch (error) {
+                //@ts-ignore
+                customInfoPopup('fail', `Opps, Something went wrong`, `${error}`, () => {});
+                return;
+            }
+           
+            const progressBarValue = ((i + 1) / userIds.length) * 100;
+            await blendProgress((i / userIds.length) * 100, progressBarValue, blendProgressDelay, setProgress);
+        }
+    }
+
+    const generatePDFFile = async (guidId: string, emails?: boolean): Promise<Blob | void> => {
+        const student = items.find(item => item.guidId === guidId);
+        if (!student) {
+            customAlert('fail', "Selection Error:", "No Emails Selected");
+            return;
+        }
+        const bootcamp = filteredBootcamps.find(b => b.students.some(d => d.guidId === guidId));
+
+        if (!bootcamp) {
+            customAlert('fail', "Bootcamp Error:", "Bootcamp not found");
+            return;
+        }
+
+        !emails && customAlert('loading', `Generating Pdf File...`, ``);
+        
+        // displayName: "Fullstack " + TrackName 
+        const pdfInput = makeTemplateInput(
+            populateField(templates.find(t => t.id === bootcamp.templateId).intro , ("Fullstack " + bootcamp.track.name), bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            populateField(student.name, ("Fullstack " + bootcamp.track.name), bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            populateField(templates.find(t => t.id === bootcamp.templateId).footer, ("Fullstack " + bootcamp.track.name), bootcamp.graduationDate.toString().slice(0, 10), student.name),
+            templates.find(t => t.id === bootcamp.templateId).basePdf,
+            populateIdField(templates.find(t => t.id === bootcamp.templateId).link, student.verificationCode)
+        );
+
+        const template = mapTemplateInputsBootcampsToTemplateViewer(templates.find(t => t.id === bootcamp.templateId), pdfInput);
+        const pdfFile = await generatePDF(template, [pdfInput], true);
+        return pdfFile;
+    };
 
 
     return (
