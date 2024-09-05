@@ -1,33 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './OverviewPage.css';
-import { ModifyButton } from '../../components/MenuItems/Buttons/ModifyButton';
-import { RemoveButton } from '../../components/MenuItems/Buttons/RemoveButton';
-import { SelectOptions } from '../../components/MenuItems/Inputs/SelectOptions';
-import { SearchInput } from '../../components/MenuItems/Inputs/SearchInput';
-import { PaginationMenu } from '../../components/MenuItems/PaginationMenu';
-import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
-import { BootcampResponse, Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse, TrackResponse } from '../../util/types';
-import { Popup404 } from '../../components/MenuItems/Popups/Popup404';
-import { SpinnerDefault } from '../../components/MenuItems/Loaders/SpinnerDefault';
+import { Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse, TrackResponse } from '../../util/types';
 import { useNavigate } from 'react-router-dom';
-import { getTemplate, makeTemplateInput } from '../../templates/baseTemplate';
-import { AlertPopup, CustomAlertPopupProps, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
-import { SaveButton, SaveButtonType } from '../../components/MenuItems/Buttons/SaveButton';
-import { SelectButton, SelectButtonType } from '../../components/MenuItems/Buttons/SelectButton';
+import { AlertPopup } from '../../components/MenuItems/Popups/AlertPopup';
 import { EmailClient } from '../../components/EmailClient/EmailClient';
-import { EmailIcon } from '../../components/MenuItems/Icons/EmailIcon';
-import { mapBootcampToSaltData, mapTemplateInputsBootcampsToTemplateViewer, templateInputsFromBootcampData } from '../../util/dataHelpers';
 import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
 import { useCustomInfoPopup } from '../../components/Hooks/useCustomInfoPopup';
-import { Template } from '@pdfme/common';
 import { InfoPopup } from '../../components/MenuItems/Popups/InfoPopup';
-import { VerifyIcon } from '../../components/MenuItems/Icons/VerifyIcon';
-import { useLoadingMessage } from '../../components/Contexts/LoadingMessageContext';
-import { LazyImageLoader } from '../../components/Content/LazyImageLoader';
-import { utcFormatter } from '../../util/datesUtil';
-import { populateField, populateIdField } from '../../util/fieldReplacersUtil';
-import { blendProgress, delay } from '../../util/timeUtil';
-import { generatePDF, newGenerateCombinedPDF } from '../../util/pdfGenerationUtil';
 import { DiplomaCardContainer } from '../../components/Feature/Overview/DiplomaCardContainer';
 import { defaultOverviewCardImage } from '../../data/data';
 import { OverviewSideBar } from '../../components/Feature/Overview/OverviewSidebar';
@@ -160,7 +139,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 emailAddress: studentInput.email
             }
             closeInfoPopup();
-            const emailUpdateResponse = await updateStudentInformation(emailUpdateRequest);
+            await updateStudentInformation(emailUpdateRequest);
             customAlert('success', "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateRequest.studentName}`)
 
         } catch (error) {
