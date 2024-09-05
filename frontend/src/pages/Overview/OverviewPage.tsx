@@ -10,6 +10,7 @@ import { InfoPopup } from '../../components/MenuItems/Popups/InfoPopup';
 import { DiplomaCardContainer } from '../../components/Feature/Overview/DiplomaCardContainer';
 import { defaultOverviewCardImage } from '../../data/data';
 import { OverviewSideBar } from '../../components/Feature/Overview/OverviewSidebar';
+import { validateEmail } from '../../util/validationUtil';
 
 type Props = {
     tracks: TrackResponse[] | null;
@@ -92,41 +93,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
         setCurrentPage(1);
     };
 
-    const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
-        if(!studentInput?.email || studentInput?.email === "No Email"){
-            customAlert('fail', "Validation Error", "Email field is empty!")
-            closeInfoPopup();
-            return;
-        }
-        if(!studentInput?.email.includes('@')){
-            customAlert('fail', "Validation Error", "Please put in a valid email address")
-            closeInfoPopup();
-            return;
-        }
-        if(studentInput?.email == originalEmail){
-            customAlert('message', "No changes", "Email was unchanged so no changes were made")
-            closeInfoPopup();
-            return;
-        }
-        
-        customAlert('loading', `Changing ${studentInput.name}s email...`, ``);
-        
-        try {
-            
-            const emailUpdateRequest: StudentUpdateRequestDto = {
-                guidId: studentInput.guidId,
-                studentName: studentInput.name,
-                emailAddress: studentInput.email
-            }
-            closeInfoPopup();
-            await updateStudentInformation(emailUpdateRequest);
-            customAlert('success', "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateRequest.studentName}`)
-
-        } catch (error) {
-            customAlert('fail', "Something Went Wroing", `${error}`)
-        }
-    }
-
     const showStudentInfohandler = (student: Student) => {
         if(student){
             var emailAddress = student.email;
@@ -139,6 +105,28 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 //@ts-ignore
                 email: inputContent
             }, emailAddress))
+        }
+    }
+
+    const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
+        if (!validateEmail(studentInput, originalEmail, customAlert, closeInfoPopup)) {
+            return;
+        }
+        
+        customAlert('loading', `Changing ${studentInput.name}s email...`, ``);
+        
+        try {
+            const emailUpdateRequest: StudentUpdateRequestDto = {
+                guidId: studentInput.guidId,
+                studentName: studentInput.name,
+                emailAddress: studentInput.email
+            }
+            closeInfoPopup();
+            await updateStudentInformation(emailUpdateRequest);
+            customAlert('success', "Email Successfully Updated", `Email Successfully Updated for ${emailUpdateRequest.studentName}`)
+
+        } catch (error) {
+            customAlert('fail', "Something Went Wroing", `${error}`)
         }
     }
 
