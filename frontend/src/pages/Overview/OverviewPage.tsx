@@ -65,15 +65,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
     
     const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
     const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
-
-    const handlePrevPage = () => {
-        setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
-    };
-
-    const handleNextPage = () => {
-        setCurrentPage(prev => (prev < totalPages ? prev + 1 : prev));
-    };
-
+    
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
         setCurrentPage(1);
@@ -156,8 +148,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 selectedItems={selectedItems}
                 currentPage={currentPage}
                 totalPages={totalPages}
-                handleNextPage={handleNextPage}
-                handlePrevPage={handlePrevPage}
+                setCurrentPage={setCurrentPage}
                 defaultImg={defaultOverviewCardImage}
                 loading={loading}
                 startIndex={startIndex}

@@ -18,9 +18,8 @@ type Props = {
     visibleItems: Student[];
     selectedItems: Student[];
     currentPage: number;
-    totalPages: number
-    handleNextPage: () => void;
-    handlePrevPage: () => void;
+    totalPages: number;
+    setCurrentPage: (value: React.SetStateAction<number>) => void;
     defaultImg: string;
     loading: boolean;
     startIndex: number;
@@ -37,8 +36,7 @@ export const DiplomaCardContainer = ({
     selectedItems, 
     currentPage, 
     totalPages,
-    handleNextPage,
-    handlePrevPage,
+    setCurrentPage,
     defaultImg,
     loading,
     startIndex,
@@ -52,6 +50,14 @@ export const DiplomaCardContainer = ({
     const navigate = useNavigate();
 
     const api = import.meta.env.VITE_API_URL + "/api/Blob/";
+
+    const handlePrevPage = () => {
+        setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
+    };
+
+    const handleNextPage = () => {
+        setCurrentPage(prev => (prev < totalPages ? prev + 1 : prev));
+    };
     
     const handleImageLoad = (index: number) => {
         setImageLoadedStates(prevStates => {
