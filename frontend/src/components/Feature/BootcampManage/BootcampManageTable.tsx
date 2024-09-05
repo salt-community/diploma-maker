@@ -14,7 +14,6 @@ import "./BootcampManageTable.css"
 import { utcFormatterSlash } from "../../../util/datesUtil";
 
 type Props = {
-  bootcamps: BootcampResponse[] | null;
   deleteBootcamp: (i: number) => Promise<void>;
   addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   updateBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
@@ -26,16 +25,32 @@ type SortOrder =
   'graduationdate-ascending' | 'graduationdate-descending' |
   'track-ascending' | 'track-descending';
 
-export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewBootcamp, updateBootcamp, tracks  }: Props) {
-  const { register, handleSubmit, setValue, watch, reset } = useForm();
-  const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
-  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+export default function BootcampManageTable({ deleteBootcamp, addNewBootcamp, updateBootcamp, tracks  }: Props) {
+  const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
+  const [filteredBootcamps, setFilteredBootcamps] = useState<BootcampResponse[] | null>(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1920 ? 5 : 11);
   const [sortOrder, setSortOrder] = useState<SortOrder>('graduationdate-descending');
   const [sortingChanged, setSortingChanged] = useState(false);
-  const [filteredBootcamps, setFilteredBootcamps] = useState<BootcampResponse[] | null>(bootcamps);
+
   const calendarPickers = useRef([]);
+  const { register, handleSubmit, setValue, watch, reset } = useForm();
+  const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
+  const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
+
+  useEffect(() => {
+    if(tracks){
+      setBootcamps(tracks.flatMap(t => t.bootcamps.map(b => ({...b, track: t}))));
+    }
+  }, [tracks])
+
+  useEffect(() => {
+    if(tracks){
+      setFilteredBootcamps(bootcamps);
+    }
+    
+  }, [bootcamps]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,10 +63,6 @@ export default function BootcampManageTable({ bootcamps, deleteBootcamp, addNewB
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  useEffect(() => {
-    setFilteredBootcamps(bootcamps);
-  }, [bootcamps]);
 
   const totalPages = Math.ceil((filteredBootcamps?.length || 0) / itemsPerPage);
 
