@@ -9,6 +9,7 @@ import { VerifyIcon } from "../../MenuItems/Icons/VerifyIcon";
 import { SpinnerDefault } from "../../MenuItems/Loaders/SpinnerDefault";
 import { PaginationMenu } from "../../MenuItems/PaginationMenu";
 import { Popup404 } from "../../MenuItems/Popups/Popup404";
+import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 
 type Props = {
   visibleItems: Student[];
@@ -22,8 +23,9 @@ type Props = {
   startIndex: number;
   itemsPerPage: number;
   modifyHandler: (guidId: string) => void;
-  deleteHandler: (id: string) => Promise<void>;
+  deleteStudent: (id: string) => Promise<void>;
   showStudentInfohandler: (student: Student) => void;
+  customAlert: (alertType: PopupType, title: string, content: string) => void;
 }
 
 export const DiplomaCardContainer = ({ 
@@ -38,8 +40,9 @@ export const DiplomaCardContainer = ({
   startIndex,
   itemsPerPage,
   modifyHandler,
-  deleteHandler,
+  deleteStudent,
   showStudentInfohandler,
+  customAlert,
 }: Props) => {
     const api = import.meta.env.VITE_API_URL + "/api/Blob/";
     const [imageLoadedStates, setImageLoadedStates] = useState<boolean[]>(new Array(visibleItems.length).fill(false));
@@ -55,6 +58,16 @@ export const DiplomaCardContainer = ({
     const navigateToVerificationPage = (verificationCode: string) => {
         const url = `/verify/${verificationCode}`;
         window.open(url, '_blank');
+    };
+
+    const deleteStudentHandler = async (id: string) => {
+        customAlert('loading', `Deleting Student...`, ``);
+        try {
+            await deleteStudent(id);
+            customAlert('message', "Successfully deleted", "Diploma has been successfully deleted from the database.")
+        } catch (error) {
+            customAlert('fail', "Something went wrong.", `${error}`)
+        }
     };
 
     return (
@@ -75,7 +88,7 @@ export const DiplomaCardContainer = ({
                                 />
                                 <section className='list-module__item-menu'>
                                     <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
-                                    <RemoveButton text='Remove' onClick={() => deleteHandler(student.guidId)} />
+                                    <RemoveButton text='Remove' onClick={() => deleteStudentHandler(student.guidId)} />
                                     <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
                                 </section>
                                 {student.lastGenerated && imageLoadedStates[index] && 

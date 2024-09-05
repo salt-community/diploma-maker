@@ -57,10 +57,10 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
     const visibleItems = items.filter(item => 
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
         (!selectedBootcamp || 
-            filteredBootcamps?.some(b => b.guidId === selectedBootcamp && b.students.includes(item)) //Filter by Bootcamp Selector
+            filteredBootcamps?.some(b => b.guidId === selectedBootcamp && b.students.includes(item)) // Filter by Bootcamp Selector
         ) &&
         (!selectedTrack || 
-            filteredBootcamps?.some(bootcamp => bootcamp.students.includes(item)) //Filter by Track Selector
+            filteredBootcamps?.some(bootcamp => bootcamp.students.includes(item)) // Filter by Track Selector
         )
     );
     
@@ -100,16 +100,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
             );
             navigate(`/${bootcampIndex}`);
         } 
-    };
-
-    const deleteHandler = async (id: string) => {
-        customAlert('loading', `Deleting Student...`, ``);
-        try {
-            await deleteStudent(id);
-            customAlert('message', "Successfully deleted", "Diploma has been successfully deleted from the database.")
-        } catch (error) {
-            customAlert('fail', "Something went wrong.", `${error}`)
-        }
     };
 
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
@@ -210,8 +200,9 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 startIndex={startIndex}
                 itemsPerPage={itemsPerPage}
                 modifyHandler={modifyHandler}
-                deleteHandler={deleteHandler}
+                deleteStudent={deleteStudent}
                 showStudentInfohandler={showStudentInfohandler}
+                customAlert={customAlert}
             />
             <OverviewSideBar 
                 tracks={tracks}
