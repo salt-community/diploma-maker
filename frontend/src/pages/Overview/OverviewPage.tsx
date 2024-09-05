@@ -53,8 +53,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
 
-    const api = import.meta.env.VITE_API_URL + "/api/Blob/";
-
     useEffect(() => {
         if (tracks) {
             setLoading(false);
@@ -86,17 +84,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
             filteredBootcamps?.some(bootcamp => bootcamp.students.includes(item)) //Filter by Track Selector
         )
     );
-
-    const [imageLoadedStates, setImageLoadedStates] = useState<boolean[]>(new Array(visibleItems.length).fill(false));
-    
-    const handleImageLoad = (index: number) => {
-        setImageLoadedStates(prevStates => {
-          const newStates = [...prevStates];
-          newStates[index] = true;
-          return newStates;
-        });
-      };
-
     
     const selectedItems = visibleItems.slice(startIndex, startIndex + itemsPerPage);
     const totalPages = Math.ceil(visibleItems.length / itemsPerPage);
@@ -144,7 +131,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
         } catch (error) {
             customAlert('fail', "Something went wrong.", `${error}`)
         }
-        
     };
 
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
@@ -197,71 +183,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
         }
     }
 
-    const sendEmailsHandler = async (userIds: string[], title: string, description: string) => {
-        if(userIds.length === 0) return
-        //@ts-ignore
-        customInfoPopup("progress", "Just a minute...", "Mails are journeying through the ether as we speak. Hold tight, your patience is a quiet grace.", () => {});
-        const blendProgressDelay = 750;
-
-        for (let i = 0; i < userIds.length; i++) {
-            try {
-                var file = await generatePDFFile(userIds[i], true);
-                var emailSendRequest: EmailSendRequest = {
-                    guidId: userIds[i],
-                    //@ts-ignore
-                    file: file,
-                    title: title,
-                    description: description,
-                }
-
-                await sendEmail(emailSendRequest)
-            } catch (error) {
-                //@ts-ignore
-                customInfoPopup('fail', `Opps, Something went wrong`, `${error}`, () => {});
-                return;
-            }
-           
-            const progressBarValue = ((i + 1) / userIds.length) * 100;
-            await blendProgress((i / userIds.length) * 100, progressBarValue, blendProgressDelay, setProgress);
-        }
-    }
-
-    const generatePDFFile = async (guidId: string, emails?: boolean): Promise<Blob | void> => {
-        const student = items.find(item => item.guidId === guidId);
-        if (!student) {
-            customAlert('fail', "Selection Error:", "No Emails Selected");
-            return;
-        }
-        const bootcamp = filteredBootcamps.find(b => b.students.some(d => d.guidId === guidId));
-
-        if (!bootcamp) {
-            customAlert('fail', "Bootcamp Error:", "Bootcamp not found");
-            return;
-        }
-
-        !emails && customAlert('loading', `Generating Pdf File...`, ``);
-        
-        // displayName: "Fullstack " + TrackName 
-        const pdfInput = makeTemplateInput(
-            populateField(templates.find(t => t.id === bootcamp.templateId).intro , ("Fullstack " + bootcamp.track.name), bootcamp.graduationDate.toString().slice(0, 10), student.name),
-            populateField(student.name, ("Fullstack " + bootcamp.track.name), bootcamp.graduationDate.toString().slice(0, 10), student.name),
-            populateField(templates.find(t => t.id === bootcamp.templateId).footer, ("Fullstack " + bootcamp.track.name), bootcamp.graduationDate.toString().slice(0, 10), student.name),
-            templates.find(t => t.id === bootcamp.templateId).basePdf,
-            populateIdField(templates.find(t => t.id === bootcamp.templateId).link, student.verificationCode)
-        );
-
-        const template = mapTemplateInputsBootcampsToTemplateViewer(templates.find(t => t.id === bootcamp.templateId), pdfInput);
-        const pdfFile = await generatePDF(template, [pdfInput], true);
-        return pdfFile;
-    };
-
-    const navigateToVerificationPage = (verificationCode: string) => {
-        const url = `/verify/${verificationCode}`;
-        window.open(url, '_blank');
-    };
-
     const showEmailClientHandler = () => {
-        console.log(selectedBootcamp);
         selectedBootcamp === null
             ? customAlert('message', 'Please select a bootcamp', 'Select a bootcamp from the dropdown menu') 
             : setShowEmailClient(true)
@@ -285,11 +207,16 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 <EmailClient
                     title={selectedBootcamp ? tracks?.flatMap(t => t.bootcamps)?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'}
                     clients={visibleItems}
+                    items={items}
+                    templates={templates}
+                    filteredBootcamps={filteredBootcamps}
                     closeEmailClient={() => { setShowEmailClient(false) }}
                     show={showEmailClient}
                     modifyStudentEmailHandler={modifyStudentEmailHandler}
-                    sendEmails={(userIds: string[], title: string, description: string) => { sendEmailsHandler(userIds, title, description) }}
+                    sendEmail={sendEmail}
                     callCustomAlert={customAlert}
+                    setProgress={setProgress}
+                    customInfoPopup={customInfoPopup}
                 />
             }
             <DiplomaCardContainer 
@@ -300,15 +227,11 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 handleNextPage={handleNextPage}
                 handlePrevPage={handlePrevPage}
                 defaultImg={defaultOverviewCardImage}
-                handleImageLoad={handleImageLoad}
                 loading={loading}
-                navigateToVerificationPage={navigateToVerificationPage}
                 startIndex={startIndex}
                 itemsPerPage={itemsPerPage}
-                api={api}
                 modifyHandler={modifyHandler}
                 deleteHandler={deleteHandler}
-                imageLoadedStates={imageLoadedStates}
                 showStudentInfohandler={showStudentInfohandler}
             />
             <OverviewSideBar 
