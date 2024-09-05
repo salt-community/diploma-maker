@@ -30,6 +30,7 @@ import { blendProgress, delay } from '../../util/timeUtil';
 import { generatePDF, newGenerateCombinedPDF } from '../../util/pdfGenerationUtil';
 import { DiplomaCardContainer } from '../../components/Feature/Overview/DiplomaCardContainer';
 import { defaultOverviewCardImage } from '../../data/data';
+import { OverviewSideBar } from '../../components/Feature/Overview/OverviewSidebar';
 
 type Props = {
     tracks: TrackResponse[] | null;
@@ -354,7 +355,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 imageLoadedStates={imageLoadedStates}
                 showStudentInfohandler={showStudentInfohandler}
             />
-            <section className='overview-page__sidebar'>
+            {/* <section className='overview-page__sidebar'>
                 <div className='overview-page__sidebar-menu'>
                     <header className="sidebar-menu__header">
                         <button>
@@ -406,7 +407,16 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                         <SaveButton textfield="Email Management" saveButtonType={'normal'} onClick={() => showEmailClientHandler()} customIcon={<EmailIcon />} />
                     </section>
                 </div>
-            </section>
+            </section> */}
+            <OverviewSideBar 
+                tracks={tracks}
+                sortedBootcamps={sortedBootcamps}
+                searchQuery={searchQuery}
+                handleSearchChange={handleSearchChange}
+                handleTrackChange={handleTrackChange}
+                handleBootcampChange={handleBootcampChange}
+                showEmailClientHandler={showEmailClientHandler}
+            />
         </main>
     );
 };
