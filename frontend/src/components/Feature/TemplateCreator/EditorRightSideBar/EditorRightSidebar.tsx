@@ -7,7 +7,7 @@ type Page = {
     sections: { sectionTitle: string; component: React.ReactNode }[];
 }
   
-interface Props {
+type Props = {
     pages: Page[];
     activePage: number;
     setActivePage: (pageIndex: number) => void;
