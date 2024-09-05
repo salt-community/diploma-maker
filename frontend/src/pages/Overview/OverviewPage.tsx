@@ -45,8 +45,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
     
     const allStudents: Student[] = tracks?.flatMap(t => t.bootcamps.flatMap(b => b.students)) || [];
 
-    let filteredBootcamps = [];
-    filteredBootcamps = !selectedTrack
+    let filteredBootcamps = !selectedTrack
         ? tracks?.flatMap(t => t.bootcamps.map(b => ({ ...b, track: t })))
         : tracks[selectedTrack].bootcamps.map(b => ({ ...b, track: tracks[selectedTrack] })) || [];
 
