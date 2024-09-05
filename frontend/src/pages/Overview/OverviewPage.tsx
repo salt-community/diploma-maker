@@ -28,6 +28,8 @@ import { utcFormatter } from '../../util/datesUtil';
 import { populateField, populateIdField } from '../../util/fieldReplacersUtil';
 import { blendProgress, delay } from '../../util/timeUtil';
 import { generatePDF, newGenerateCombinedPDF } from '../../util/pdfGenerationUtil';
+import { DiplomaCardContainer } from '../../components/Feature/Overview/DiplomaCardContainer';
+import { defaultOverviewCardImage } from '../../data/data';
 
 type Props = {
     tracks: TrackResponse[] | null;
@@ -289,7 +291,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                     callCustomAlert={customAlert}
                 />
             }
-            <section className='overview-page__list-module'>
+            {/* <section className='overview-page__list-module'>
                 <div className='overview-page__list-module-card-container'>
                     {loading ? (
                         <SpinnerDefault classOverride="spinner" />
@@ -332,7 +334,26 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                         handlePrevPage={handlePrevPage}
                     />
                 }
-            </section>
+            </section> */}
+            <DiplomaCardContainer 
+                visibleItems={visibleItems}
+                selectedItems={selectedItems}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                handleNextPage={handleNextPage}
+                handlePrevPage={handlePrevPage}
+                defaultImg={defaultOverviewCardImage}
+                handleImageLoad={handleImageLoad}
+                loading={loading}
+                navigateToVerificationPage={navigateToVerificationPage}
+                startIndex={startIndex}
+                itemsPerPage={itemsPerPage}
+                api={api}
+                modifyHandler={modifyHandler}
+                deleteHandler={deleteHandler}
+                imageLoadedStates={imageLoadedStates}
+                showStudentInfohandler={showStudentInfohandler}
+            />
             <section className='overview-page__sidebar'>
                 <div className='overview-page__sidebar-menu'>
                     <header className="sidebar-menu__header">
