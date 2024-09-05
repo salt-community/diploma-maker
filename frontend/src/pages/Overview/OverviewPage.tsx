@@ -25,7 +25,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
     const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
 
@@ -91,15 +90,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
         e.target.value === "" ? setSelectedTrack(null) : setSelectedTrack((parseInt(e.target.value) - 1).toString());
         setSelectedBootcamp(null);
         setCurrentPage(1);
-    };
-
-    const modifyHandler = (guidId: string) => {
-       if (tracks) {
-            const bootcampIndex = tracks?.flatMap(t => t.bootcamps)?.findIndex(bootcamp =>
-                bootcamp.students.some(student => student.guidId === guidId)
-            );
-            navigate(`/${bootcampIndex}`);
-        } 
     };
 
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
@@ -189,6 +179,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 />
             }
             <DiplomaCardContainer 
+                tracks={tracks}
                 visibleItems={visibleItems}
                 selectedItems={selectedItems}
                 currentPage={currentPage}
@@ -199,7 +190,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 loading={loading}
                 startIndex={startIndex}
                 itemsPerPage={itemsPerPage}
-                modifyHandler={modifyHandler}
                 deleteStudent={deleteStudent}
                 showStudentInfohandler={showStudentInfohandler}
                 customAlert={customAlert}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { utcFormatter } from "../../../util/datesUtil";
-import { Student } from "../../../util/types";
+import { Student, TrackResponse } from "../../../util/types";
 import { LazyImageLoader } from "../../Content/LazyImageLoader";
 import { ModifyButton } from "../../MenuItems/Buttons/ModifyButton";
 import { RemoveButton } from "../../MenuItems/Buttons/RemoveButton";
@@ -10,42 +10,45 @@ import { SpinnerDefault } from "../../MenuItems/Loaders/SpinnerDefault";
 import { PaginationMenu } from "../../MenuItems/PaginationMenu";
 import { Popup404 } from "../../MenuItems/Popups/Popup404";
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
-  visibleItems: Student[];
-  selectedItems: Student[];
-  currentPage: number;
-  totalPages: number
-  handleNextPage: () => void;
-  handlePrevPage: () => void;
-  defaultImg: string;
-  loading: boolean;
-  startIndex: number;
-  itemsPerPage: number;
-  modifyHandler: (guidId: string) => void;
-  deleteStudent: (id: string) => Promise<void>;
-  showStudentInfohandler: (student: Student) => void;
-  customAlert: (alertType: PopupType, title: string, content: string) => void;
+    tracks: TrackResponse[];
+    visibleItems: Student[];
+    selectedItems: Student[];
+    currentPage: number;
+    totalPages: number
+    handleNextPage: () => void;
+    handlePrevPage: () => void;
+    defaultImg: string;
+    loading: boolean;
+    startIndex: number;
+    itemsPerPage: number;
+    deleteStudent: (id: string) => Promise<void>;
+    showStudentInfohandler: (student: Student) => void;
+    customAlert: (alertType: PopupType, title: string, content: string) => void;
 }
 
 export const DiplomaCardContainer = ({ 
-  visibleItems, 
-  selectedItems, 
-  currentPage, 
-  totalPages,
-  handleNextPage,
-  handlePrevPage,
-  defaultImg,
-  loading,
-  startIndex,
-  itemsPerPage,
-  modifyHandler,
-  deleteStudent,
-  showStudentInfohandler,
-  customAlert,
+    tracks,
+    visibleItems, 
+    selectedItems, 
+    currentPage, 
+    totalPages,
+    handleNextPage,
+    handlePrevPage,
+    defaultImg,
+    loading,
+    startIndex,
+    itemsPerPage,
+    deleteStudent,
+    showStudentInfohandler,
+    customAlert,
 }: Props) => {
-    const api = import.meta.env.VITE_API_URL + "/api/Blob/";
     const [imageLoadedStates, setImageLoadedStates] = useState<boolean[]>(new Array(visibleItems.length).fill(false));
+    const navigate = useNavigate();
+    
+    const api = import.meta.env.VITE_API_URL + "/api/Blob/";
     
     const handleImageLoad = (index: number) => {
         setImageLoadedStates(prevStates => {
@@ -70,6 +73,15 @@ export const DiplomaCardContainer = ({
         }
     };
 
+    const modifyStudentHandler = (guidId: string) => {
+        if (tracks) {
+             const bootcampIndex = tracks?.flatMap(t => t.bootcamps)?.findIndex(bootcamp =>
+                 bootcamp.students.some(student => student.guidId === guidId)
+             );
+             navigate(`/${bootcampIndex}`);
+         } 
+     };
+
     return (
         <section className='overview-page__list-module'>
             <div className='overview-page__list-module-card-container'>
@@ -87,7 +99,7 @@ export const DiplomaCardContainer = ({
                                     loadTrigger={() => handleImageLoad(index)}
                                 />
                                 <section className='list-module__item-menu'>
-                                    <ModifyButton text='Modify' onClick={() => modifyHandler(student.guidId)} />
+                                    <ModifyButton text='Modify' onClick={() => modifyStudentHandler(student.guidId)} />
                                     <RemoveButton text='Remove' onClick={() => deleteStudentHandler(student.guidId)} />
                                     <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
                                 </section>
