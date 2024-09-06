@@ -7,7 +7,7 @@ type Props = {
     handleTrackChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-export const BootcampsTableHeader = (  { bootcamps, title, handleTrackChange }: Props) => {
+export const BootcampsSectionHeader = (  { bootcamps, title, handleTrackChange }: Props) => {
   return (
     <div className="modal-header">
         <h3 className="modal-title">{title}</h3>

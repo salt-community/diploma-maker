@@ -4,7 +4,7 @@ import { BootcampResponse, TrackResponse } from "../../../util/types";
 import { DeleteButtonSimple } from "../../MenuItems/Buttons/DeleteButtonSimple";
 import { ArrowIcon } from "../../MenuItems/Icons/ArrowIcon";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
-import { SortOrder } from "./BootcampManageTable";
+import { SortOrder } from "../../../pages/BootcampManagement/BootcampManagement";
 
 type Props = {
     tracks: TrackResponse[];

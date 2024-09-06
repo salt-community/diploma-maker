@@ -1,4 +1,4 @@
-export const BootcampsTableFooter = () => {
+export const BootcampsSectionFooter = () => {
   return (
     <div className="footer-container">
         <button

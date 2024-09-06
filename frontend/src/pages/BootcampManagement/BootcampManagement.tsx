@@ -2,17 +2,16 @@ import './BootcampManagement.css'
 import { FieldValues, useForm } from "react-hook-form";
 import { BootcampsTable } from "../../components/Feature/BootcampManage/BootcampsTable";
 import AddNewBootcampForm from "../../components/Forms/AddNewBootcampForm";
-import { SelectOptions } from "../../components/MenuItems/Inputs/SelectOptions";
 import { PaginationMenu } from "../../components/MenuItems/PaginationMenu";
-import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
+import { AlertPopup } from "../../components/MenuItems/Popups/AlertPopup";
 import { ConfirmationPopup } from "../../components/MenuItems/Popups/ConfirmationPopup";
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../util/types";
 import { useEffect, useRef, useState } from "react";
 import { utcFormatterSlash } from "../../util/datesUtil";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
-import { BootcampsTableHeader } from '../../components/Feature/BootcampManage/BootcampsTableHeader';
-import { BootcampsTableFooter } from '../../components/Feature/BootcampManage/BootcampsTableFooter';
+import { BootcampsSectionHeader } from '../../components/Feature/BootcampManage/BootcampsSectionHeader';
+import { BootcampsSectionFooter } from '../../components/Feature/BootcampManage/BootcampsSectionFooter';
 
 type Props = {
   deleteBootcamp: (i: number) => Promise<void>;
@@ -187,7 +186,7 @@ export default function BootcampManagement({ deleteBootcamp, addNewBootcamp, upd
         <div className="modal-container">
           <div className="modal-content">
             <div className="modal-body">
-              <BootcampsTableHeader 
+              <BootcampsSectionHeader 
                 bootcamps={bootcamps}
                 title={'Bootcamps'}
                 handleTrackChange={handleTrackChange}
@@ -221,7 +220,7 @@ export default function BootcampManagement({ deleteBootcamp, addNewBootcamp, upd
                   />
                 )}
               </div>
-              <BootcampsTableFooter />
+              <BootcampsSectionFooter />
             </div>
           </div>
         </div>
