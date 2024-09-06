@@ -12,6 +12,7 @@ import { utcFormatterSlash } from "../../util/datesUtil";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
 import { BootcampsTableHeader } from '../../components/Feature/BootcampManage/BootcampsTableHeader';
+import { BootcampsTableFooter } from '../../components/Feature/BootcampManage/BootcampsTableFooter';
 
 type Props = {
   deleteBootcamp: (i: number) => Promise<void>;
@@ -220,14 +221,7 @@ export default function BootcampManagement({ deleteBootcamp, addNewBootcamp, upd
                   />
                 )}
               </div>
-              <div className="footer-container">
-                <button
-                  className="submit-button"
-                  type="submit"
-                >
-                  Save Changes
-                </button>
-              </div>
+              <BootcampsTableFooter />
             </div>
           </div>
         </div>
