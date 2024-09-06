@@ -1,9 +1,9 @@
-import { FieldValues, useForm, useWatch } from "react-hook-form";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { FieldValues, useForm } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
 import { useCustomAlert } from "../../Hooks/useCustomAlert";
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../../util/types";
 import { ConfirmationPopup } from "../../MenuItems/Popups/ConfirmationPopup";
-import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../MenuItems/Popups/AlertPopup";
+import { AlertPopup } from "../../MenuItems/Popups/AlertPopup";
 import { ArrowIcon } from "../../MenuItems/Icons/ArrowIcon";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
 import { DeleteButtonSimple } from "../../MenuItems/Buttons/DeleteButtonSimple";
@@ -41,16 +41,11 @@ export default function BootcampManageTable({ deleteBootcamp, addNewBootcamp, up
 
   useEffect(() => {
     if(tracks){
-      setBootcamps(tracks.flatMap(t => t.bootcamps.map(b => ({...b, track: t}))));
+      const bootcampsArr = tracks.flatMap(t => t.bootcamps.map(b => ({...b, track: t})));
+      setBootcamps(bootcampsArr)
+      setFilteredBootcamps(bootcampsArr);
     }
   }, [tracks])
-
-  useEffect(() => {
-    if(tracks){
-      setFilteredBootcamps(bootcamps);
-    }
-    
-  }, [bootcamps]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -171,7 +166,6 @@ export default function BootcampManageTable({ deleteBootcamp, addNewBootcamp, up
       }
     }
   }
-  const handleCalendarClick = (index) => calendarPickers.current[index].showPicker();
 
   const confirmChangeBootcampHandler = async (data: FieldValues) => customPopup('question2', "Are you sure you want to change existing bootcamps?", "This can be destructive if you've already generated diplomas with that bootcamp.", () => () => handleUpdateBootcamp(data));
   const confirmDeleteBootcampHandler = async (index: number) => customPopup('warning2', "Warning", <>By deleting this, you will lose <b style={{ color: '#EF4444' }}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(index));
