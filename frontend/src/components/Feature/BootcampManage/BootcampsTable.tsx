@@ -6,19 +6,19 @@ import { ArrowIcon } from "../../MenuItems/Icons/ArrowIcon";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
 import { SortOrder } from "../../../pages/BootcampManagement/BootcampManagement";
 import { PaginationMenu } from "../../MenuItems/PaginationMenu";
+import { useEffect, useState } from "react";
 
 type Props = {
     tracks: TrackResponse[];
     bootcamps: BootcampResponse[];
     paginatedBootcamps: BootcampResponse[];
+    filteredBootcamps: BootcampResponse[] | null;
     sortOrder: SortOrder;
     handleSortChange: (sortType: SortOrder) => void;
     confirmDeleteBootcampHandler: (index: number) => Promise<void>;
     currentPage: number;
-    itemsPerPage: number;
-    totalPages: number;
-    handleNextPage: () => void;
-    handlePrevPage: () => void;
+    setCurrentPage: (value: React.SetStateAction<number>) => void;
+    setSortingChanged: (value: React.SetStateAction<boolean>) => void;
     calendarPickers: React.MutableRefObject<any[]>;
     register: UseFormRegister<FieldValues>;
     setValue: (name: string, value: any, options?: Partial<{
@@ -33,20 +33,45 @@ export const BootcampsTable = ( {
     tracks,
     bootcamps,
     paginatedBootcamps, 
+    filteredBootcamps,
     sortOrder, 
     handleSortChange, 
     confirmDeleteBootcampHandler, 
     currentPage, 
-    itemsPerPage, 
-    totalPages,
-    handleNextPage,
-    handlePrevPage,
+    setCurrentPage,
+    setSortingChanged,
     calendarPickers,
     register,
     setValue,
     watch,
 }: Props) => {
-  return (
+    const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1920 ? 5 : 11);
+
+    useEffect(() => {
+        const handleResize = () => {
+          setItemsPerPage(window.innerWidth < 1920 ? 5 : 11);
+        };
+    
+        window.addEventListener('resize', handleResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    const totalPages = Math.ceil((filteredBootcamps?.length || 0) / itemsPerPage);
+
+    const handleNextPage = () => {
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+        setSortingChanged(prev => !prev);
+    };
+
+    const handlePrevPage = () => {
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+        setSortingChanged(prev => !prev);
+    };
+    
+    return (
     <>
         <div className="modal-main">
             <table className="table-auto">

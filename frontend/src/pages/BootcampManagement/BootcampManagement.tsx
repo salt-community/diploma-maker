@@ -47,30 +47,6 @@ export default function BootcampManagement({ deleteBootcamp, addNewBootcamp, upd
     }
   }, [tracks])
 
-  useEffect(() => {
-    const handleResize = () => {
-      setItemsPerPage(window.innerWidth < 1920 ? 5 : 11);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  const totalPages = Math.ceil((filteredBootcamps?.length || 0) / itemsPerPage);
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-    setSortingChanged(prev => !prev);
-  };
-
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    setSortingChanged(prev => !prev);
-  };
-
   const sortedBootcamps = filteredBootcamps?.sort((a, b) => {
     switch (sortOrder) {
       case 'bootcampname-ascending':
@@ -195,14 +171,13 @@ export default function BootcampManagement({ deleteBootcamp, addNewBootcamp, upd
                 tracks={tracks}
                 bootcamps={bootcamps}
                 paginatedBootcamps={paginatedBootcamps}
+                filteredBootcamps={filteredBootcamps}
                 sortOrder={sortOrder}
                 handleSortChange={handleSortChange}
                 confirmDeleteBootcampHandler={confirmDeleteBootcampHandler}
                 currentPage={currentPage}
-                itemsPerPage={itemsPerPage}
-                totalPages={totalPages}
-                handleNextPage={handleNextPage}
-                handlePrevPage={handlePrevPage}
+                setCurrentPage={setCurrentPage}
+                setSortingChanged={setSortingChanged}
                 calendarPickers={calendarPickers}
                 register={register}
                 setValue={setValue}
