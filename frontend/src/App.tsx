@@ -103,9 +103,8 @@ export default function App() {
   };
 
   // Bootcamp Endpoint
-  const deleteBootcamp = async (i: number) => {
-    const guid = bootcamps![i].guidId;
-    await api.deleteBootcampById(guid);
+  const deleteBootcamp = async (guidId: string) => {
+    await api.deleteBootcampById(guidId);
     await refresh();
   }
 

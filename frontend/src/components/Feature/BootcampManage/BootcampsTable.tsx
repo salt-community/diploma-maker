@@ -25,7 +25,7 @@ type Props = {
     bootcamps: BootcampResponse[];
     filteredBootcamps: BootcampResponse[] | null;
     setFilteredBootcamps: (value: React.SetStateAction<BootcampResponse[]>) => void;
-    deleteBootcamp: (i: number) => Promise<void>;
+    deleteBootcamp: (guidId: string) => Promise<void>;
     calendarPickers: React.MutableRefObject<any[]>;
     closeConfirmationPopup: () => void;
     customAlert: (alertType: PopupType, title: string, content: string) => void;
@@ -155,15 +155,15 @@ export const BootcampsTable = ( {
         }
     }, [sortingChanged, filteredBootcamps]);
     
-    const handleDeleteBootcamp = async (i: number) => {
+    const handleDeleteBootcamp = async (guidId: string) => {
         closeConfirmationPopup();
         customAlert('loading', "Deleting Bootcamp...", ``);
-        await deleteBootcamp(i);
+        await deleteBootcamp(guidId);
         customAlert('message', "Delete Successful", `Successfully removed bootcamp from database.`);
         setSortingChanged(prev => !prev);
     }
 
-    const confirmDeleteBootcampHandler = async (index: number) => customPopup('warning2', "Warning", <>By deleting this, you will lose <b style={{ color: '#EF4444' }}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(index));
+    const confirmDeleteBootcampHandler = async (guidId: string) => customPopup('warning2', "Warning", <>By deleting this, you will lose <b style={{ color: '#EF4444' }}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(guidId));
     
     return (
     <>
@@ -257,7 +257,7 @@ export const BootcampsTable = ( {
                             />
                         </td>
                         <td>
-                            <DeleteButtonSimple onClick={() => confirmDeleteBootcampHandler(actualIndex)} />
+                            <DeleteButtonSimple onClick={() => confirmDeleteBootcampHandler(bootcamp.guidId)} />
                         </td>
                         </tr>
                     )

@@ -8,7 +8,7 @@ import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConf
 import { BootcampsManageForm } from '../../components/Feature/BootcampManage/BootcampsManageForm';
 
 type Props = {
-  deleteBootcamp: (i: number) => Promise<void>;
+  deleteBootcamp: (guidId: string) => Promise<void>;
   addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   updateBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   tracks: TrackResponse[];

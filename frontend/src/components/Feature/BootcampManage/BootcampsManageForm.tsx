@@ -12,7 +12,7 @@ type Props = {
   bootcamps: BootcampResponse[];
   filteredBootcamps: BootcampResponse[] | null;
   setFilteredBootcamps: (value: React.SetStateAction<BootcampResponse[]>) => void;
-  deleteBootcamp: (i: number) => Promise<void>;
+  deleteBootcamp: (guidId: string) => Promise<void>;
   addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   updateBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
   closeConfirmationPopup: () => void;
