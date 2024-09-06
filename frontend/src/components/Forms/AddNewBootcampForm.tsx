@@ -53,58 +53,60 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks, 
     const calendarClickHandler = () => dateInput.current.showPicker();
 
     return (
-        <div className="content-container">
-            {enableClose &&
-                <button onClick={onClick} className="newbootcamp-close-btn">
-                    <CloseWindowIcon />
-                </button>
-            }
-            <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
-            <br />
-            <table className="auto-table">
-                <div className="newbootcamp-title-container">
-                    <h1 className="newbootcamp-title">Add Bootcamp</h1>
-                </div>
-                <tbody>
-                    <tr>
-                        <th className="date-header">Graduation Date</th>
-                        <th className="date-header">Track</th>
-                        <th className="date-header"></th>
-                        <th className="date-header"></th>
-                    </tr>
-                    <tr>
-                        <td className="date-cell">
-                            <input 
-                                type="date" 
-                                onClick={calendarClickHandler}
-                                onChange={event => setGradDate(new Date(event.target.value))} 
-                                className="date-input"
-                                ref={dateInput}
-                            />
-                        </td>
-                        <td className="date-cell">
-                            {tracks && 
-                                <SelectOptions
-                                    containerClassOverride='normal'
-                                    selectClassOverride='normal'
-                                    options={tracks.map(track => ({
-                                        value: track.id.toString(),
-                                        label: track.name
-                                    }))}
-                                    value={track?.id.toString() || ""}
-                                    onChange={(e) => {
-                                        const selectedTrack = tracks.find(t => t.id.toString() === e.target.value);
-                                        setTrack(selectedTrack || null);
-                                    }}
+        <div className="modal-main-footer">
+            <div className="content-container">
+                {enableClose &&
+                    <button onClick={onClick} className="newbootcamp-close-btn">
+                        <CloseWindowIcon />
+                    </button>
+                }
+                <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert}/>
+                <br />
+                <table className="auto-table">
+                    <div className="newbootcamp-title-container">
+                        <h1 className="newbootcamp-title">Add Bootcamp</h1>
+                    </div>
+                    <tbody>
+                        <tr>
+                            <th className="date-header">Graduation Date</th>
+                            <th className="date-header">Track</th>
+                            <th className="date-header"></th>
+                            <th className="date-header"></th>
+                        </tr>
+                        <tr>
+                            <td className="date-cell">
+                                <input 
+                                    type="date" 
+                                    onClick={calendarClickHandler}
+                                    onChange={event => setGradDate(new Date(event.target.value))} 
+                                    className="date-input"
+                                    ref={dateInput}
                                 />
-                            }
-                        </td>
-                        <td>
-                            <AddButtonSimple onClick={() => addBootcampHandler()}/>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                            </td>
+                            <td className="date-cell">
+                                {tracks && 
+                                    <SelectOptions
+                                        containerClassOverride='normal'
+                                        selectClassOverride='normal'
+                                        options={tracks.map(track => ({
+                                            value: track.id.toString(),
+                                            label: track.name
+                                        }))}
+                                        value={track?.id.toString() || ""}
+                                        onChange={(e) => {
+                                            const selectedTrack = tracks.find(t => t.id.toString() === e.target.value);
+                                            setTrack(selectedTrack || null);
+                                        }}
+                                    />
+                                }
+                            </td>
+                            <td>
+                                <AddButtonSimple onClick={() => addBootcampHandler()}/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

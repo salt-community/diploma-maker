@@ -191,35 +191,24 @@ export default function BootcampManagement({ deleteBootcamp, addNewBootcamp, upd
                 title={'Bootcamps'}
                 handleTrackChange={handleTrackChange}
               />
-              <div className="modal-main">
-                <BootcampsTable 
-                  tracks={tracks}
-                  paginatedBootcamps={paginatedBootcamps}
-                  sortOrder={sortOrder}
-                  handleSortChange={handleSortChange}
-                  confirmDeleteBootcampHandler={confirmDeleteBootcampHandler}
-                  currentPage={currentPage}
-                  itemsPerPage={itemsPerPage}
-                  calendarPickers={calendarPickers}
-                  register={register}
-                  setValue={setValue}
-                  watch={watch}
-                />
-              </div>
-              <div className="modal-main-footer">
-                <AddNewBootcampForm addNewBootcamp={addNewBootcampHandler} bootcamps={bootcamps} tracks={tracks} />
-                {bootcamps && bootcamps.length > itemsPerPage && (
-                  <PaginationMenu
-                    containerClassOverride='modal-main-footer--pagination'
-                    buttonClassOverride='pagination-button'
-                    textContainerClassOverride='pagination-info'
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    handleNextPage={handleNextPage}
-                    handlePrevPage={handlePrevPage}
-                  />
-                )}
-              </div>
+              <BootcampsTable 
+                tracks={tracks}
+                bootcamps={bootcamps}
+                paginatedBootcamps={paginatedBootcamps}
+                sortOrder={sortOrder}
+                handleSortChange={handleSortChange}
+                confirmDeleteBootcampHandler={confirmDeleteBootcampHandler}
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                totalPages={totalPages}
+                handleNextPage={handleNextPage}
+                handlePrevPage={handlePrevPage}
+                calendarPickers={calendarPickers}
+                register={register}
+                setValue={setValue}
+                watch={watch}
+              />
+              <AddNewBootcampForm addNewBootcamp={addNewBootcampHandler} bootcamps={bootcamps} tracks={tracks} />
               <BootcampsSectionFooter />
             </div>
           </div>
