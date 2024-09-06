@@ -27,7 +27,6 @@ export default function BootcampManagement({ deleteBootcamp, addNewBootcamp, upd
   const [currentPage, setCurrentPage] = useState(1);
   const [sortingChanged, setSortingChanged] = useState(false);
 
-
   const calendarPickers = useRef([]);
   const { register, handleSubmit, setValue, watch, reset } = useForm();
   const { showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup } = useCustomConfirmationPopup();
@@ -41,17 +40,6 @@ export default function BootcampManagement({ deleteBootcamp, addNewBootcamp, upd
     }
   }, [tracks])
 
-  const handleTrackChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedTrackId = e.target.value;
-      setCurrentPage(1);
-      if (selectedTrackId === "") {
-          setFilteredBootcamps(bootcamps);
-      } else {
-          setFilteredBootcamps(bootcamps?.filter(b => b.track.id.toString() === selectedTrackId) || null);
-      }
-      setSortingChanged(prev => !prev);
-  };
-
   const addNewBootcampHandler = async (bootcamp: BootcampRequest) => {
       customAlert('loading', "Adding New Bootcamp...", ``);
       try {
@@ -64,7 +52,6 @@ export default function BootcampManagement({ deleteBootcamp, addNewBootcamp, upd
 
   const handleUpdateBootcamp = async (data: FieldValues) => {
       closeConfirmationPopup();
-
       customAlert('loading', "Updating Bootcamp...", ``);
       for (let i = 0; i < bootcamps!.length; i++) {
           const newBootcamp: BootcampRequest = {
@@ -102,11 +89,6 @@ export default function BootcampManagement({ deleteBootcamp, addNewBootcamp, upd
         <div className="modal-container">
           <div className="modal-content">
             <div className="modal-body">
-              <BootcampsSectionHeader 
-                bootcamps={bootcamps}
-                title={'Bootcamps'}
-                handleTrackChange={handleTrackChange}
-              />
               <BootcampsTable 
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}

@@ -8,6 +8,7 @@ import { PaginationMenu } from "../../MenuItems/PaginationMenu";
 import { useEffect, useState } from "react";
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { ConfirmationPopupType } from "../../MenuItems/Popups/ConfirmationPopup";
+import { BootcampsSectionHeader } from "./BootcampsSectionHeader";
 
 
 type SortOrder =
@@ -128,6 +129,17 @@ export const BootcampsTable = ( {
         setSortingChanged(prev => !prev);
     };
 
+    const handleTrackChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedTrackId = e.target.value;
+        setCurrentPage(1);
+        if (selectedTrackId === "") {
+            setFilteredBootcamps(bootcamps);
+        } else {
+            setFilteredBootcamps(bootcamps?.filter(b => b.track.id.toString() === selectedTrackId) || null);
+        }
+        setSortingChanged(prev => !prev);
+    };
+
     const paginatedBootcamps = sortedBootcamps?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     useEffect(() => {
@@ -155,6 +167,11 @@ export const BootcampsTable = ( {
     
     return (
     <>
+        <BootcampsSectionHeader 
+            bootcamps={bootcamps}
+            title={'Bootcamps'}
+            handleTrackChange={handleTrackChange}
+        />
         <div className="modal-main">
             <table className="table-auto">
                 <thead>
