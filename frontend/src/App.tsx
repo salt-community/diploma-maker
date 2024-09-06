@@ -103,9 +103,8 @@ export default function App() {
   };
 
   // Bootcamp Endpoint
-  const deleteBootcamp = async (i: number) => {
-    const guid = bootcamps![i].guidId;
-    await api.deleteBootcampById(guid);
+  const deleteBootcamp = async (guidId: string) => {
+    await api.deleteBootcampById(guidId);
     await refresh();
   }
 
@@ -226,10 +225,10 @@ export default function App() {
           }
         >
           <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} addNewBootcamp={addNewBootcamp}/>} />
-          <Route path="bootcamp-management" element={<BootcampManagement bootcamps={bootcamps} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp} tracks={tracks} />} />
+          <Route path="bootcamp-management" element={<BootcampManagement tracks={tracks} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}  />} />
           <Route path="overview" element={<OverviewPage tracks={tracks} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} />} />
           <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate} postUserFonts={postUserFonts}/>} />
-          <Route path="history" element={<HistoryPage getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot} tracks={tracks} />} />
+          <Route path="history" element={<HistoryPage tracks={tracks} getHistory={getHistory} changeActiveHistorySnapShot={changeActiveHistorySnapShot}  />} />
           <Route path="*" element={<ErrorPage code={404} />} />
         </Route>
 

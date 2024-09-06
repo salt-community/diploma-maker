@@ -172,12 +172,11 @@
 }
     .modal-main-footer--pagination{
         position: absolute;
-        top: 20%;
+        top: 62%;
         right: 10.25%;
         margin: 0 1.5rem;
         max-width: 200px;
-
-        
+        z-index: 20;
     }
     .modal-main-footer--pagination button{
         background-color: #20202a84;
