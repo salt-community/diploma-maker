@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { utcFormatterSlash } from "../../util/datesUtil";
 import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { useCustomConfirmationPopup } from "../../components/Hooks/useCustomConfirmationPopup";
+import { BootcampsTableHeader } from '../../components/Feature/BootcampManage/BootcampsTableHeader';
 
 type Props = {
   deleteBootcamp: (i: number) => Promise<void>;
@@ -185,25 +186,11 @@ export default function BootcampManagement({ deleteBootcamp, addNewBootcamp, upd
         <div className="modal-container">
           <div className="modal-content">
             <div className="modal-body">
-              <div className="modal-header">
-                <h3 className="modal-title">Bootcamps</h3>
-                <SelectOptions
-                    containerClassOverride='overview-page__select-container'
-                    selectClassOverride='overview-page__select-box'
-                    options={[
-                        { value: "", label: "All Tracks" },
-                        ...(bootcamps?.flatMap(bootcamp => bootcamp.track).filter((value, index, self) => 
-                            index === self.findIndex((t) => (
-                                t.id === value.id
-                            ))
-                        ).map(track => ({
-                            value: track.id.toString(),
-                            label: track.name
-                        })) || [])
-                    ]}
-                    onChange={handleTrackChange}
-                />
-              </div>
+              <BootcampsTableHeader 
+                bootcamps={bootcamps}
+                title={'Bootcamps'}
+                handleTrackChange={handleTrackChange}
+              />
               <div className="modal-main">
                 <BootcampsTable 
                   tracks={tracks}
