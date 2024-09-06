@@ -1,25 +1,35 @@
 import { FieldValues, UseFormRegister } from "react-hook-form";
 import { utcFormatterSlash } from "../../../util/datesUtil";
-import { BootcampResponse, TrackResponse } from "../../../util/types";
+import { BootcampRequest, BootcampResponse, TrackResponse } from "../../../util/types";
 import { DeleteButtonSimple } from "../../MenuItems/Buttons/DeleteButtonSimple";
 import { ArrowIcon } from "../../MenuItems/Icons/ArrowIcon";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";
-import { SortOrder } from "../../../pages/BootcampManagement/BootcampManagement";
 import { PaginationMenu } from "../../MenuItems/PaginationMenu";
 import { useEffect, useState } from "react";
+import { PopupType } from "../../MenuItems/Popups/AlertPopup";
+import { ConfirmationPopupType } from "../../MenuItems/Popups/ConfirmationPopup";
+
+
+type SortOrder =
+  'bootcampname-ascending' | 'bootcampname-descending' |
+  'graduationdate-ascending' | 'graduationdate-descending' |
+  'track-ascending' | 'track-descending';
 
 type Props = {
+    currentPage: number;
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+    sortingChanged: boolean;
+    setSortingChanged: React.Dispatch<React.SetStateAction<boolean>>;
     tracks: TrackResponse[];
     bootcamps: BootcampResponse[];
-    paginatedBootcamps: BootcampResponse[];
     filteredBootcamps: BootcampResponse[] | null;
-    sortOrder: SortOrder;
-    handleSortChange: (sortType: SortOrder) => void;
-    confirmDeleteBootcampHandler: (index: number) => Promise<void>;
-    currentPage: number;
-    setCurrentPage: (value: React.SetStateAction<number>) => void;
-    setSortingChanged: (value: React.SetStateAction<boolean>) => void;
+    setFilteredBootcamps: (value: React.SetStateAction<BootcampResponse[]>) => void;
+    deleteBootcamp: (i: number) => Promise<void>;
     calendarPickers: React.MutableRefObject<any[]>;
+    closeConfirmationPopup: () => void;
+    customAlert: (alertType: PopupType, title: string, content: string) => void;
+    customPopup: (type: ConfirmationPopupType, title: string, content: React.ReactNode, handler: () => void) => void
+
     register: UseFormRegister<FieldValues>;
     setValue: (name: string, value: any, options?: Partial<{
         shouldValidate: boolean;
@@ -27,25 +37,42 @@ type Props = {
         shouldTouch: boolean;
     }>) => void;
     watch: (name: string, defaultValue?: any) => any;
+    reset: (values?: FieldValues | {
+        [x: string]: any;
+    } | undefined, keepStateOptions?: Partial<{
+        keepDirty: boolean;
+        keepTouched: boolean;
+        keepErrors: boolean;
+        keepValues: boolean;
+        keepDefaultValues: boolean;
+        keepIsSubmitted: boolean;
+        keepSubmitCount: boolean;
+        keepDirtyValues: boolean;
+        keepIsValid: boolean;
+    }>) => void;
 }
 
 export const BootcampsTable = ( { 
-    tracks,
-    bootcamps,
-    paginatedBootcamps, 
-    filteredBootcamps,
-    sortOrder, 
-    handleSortChange, 
-    confirmDeleteBootcampHandler, 
-    currentPage, 
+    currentPage,
     setCurrentPage,
+    sortingChanged,
     setSortingChanged,
+    tracks,
+    bootcamps, 
+    filteredBootcamps, 
+    setFilteredBootcamps,
+    deleteBootcamp,
     calendarPickers,
+    closeConfirmationPopup,
+    customAlert,
+    customPopup,
     register,
     setValue,
     watch,
+    reset
 }: Props) => {
     const [itemsPerPage, setItemsPerPage] = useState(window.innerWidth < 1920 ? 5 : 11);
+    const [sortOrder, setSortOrder] = useState<SortOrder>('graduationdate-descending');
 
     useEffect(() => {
         const handleResize = () => {
@@ -70,6 +97,61 @@ export const BootcampsTable = ( {
         setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
         setSortingChanged(prev => !prev);
     };
+
+    const sortedBootcamps = filteredBootcamps?.sort((a, b) => {
+        switch (sortOrder) {
+            case 'bootcampname-ascending':
+            return a.name.localeCompare(b.name);
+            case 'bootcampname-descending':
+            return b.name.localeCompare(a.name);
+            case 'graduationdate-ascending':
+            return new Date(a.graduationDate).getTime() - new Date(b.graduationDate).getTime();
+            case 'graduationdate-descending':
+            return new Date(b.graduationDate).getTime() - new Date(a.graduationDate).getTime();
+            case 'track-ascending':
+            return a.track?.name.localeCompare(b.track?.name);
+            case 'track-descending':
+            return b.track?.name.localeCompare(a.track?.name);
+            default:
+            return 0;
+        }
+    });    
+
+    const handleSortChange = (sortType: SortOrder) => {
+        setSortOrder(prevOrder => {
+            if (prevOrder.startsWith(sortType.split('-')[0])) {
+            return prevOrder === sortType ? `${sortType.split('-')[0]}-ascending` as SortOrder : sortType;
+            } else {
+            return sortType;
+            }
+        });
+        setSortingChanged(prev => !prev);
+    };
+
+    const paginatedBootcamps = sortedBootcamps?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    useEffect(() => {
+        if (paginatedBootcamps) {
+          const formValues = paginatedBootcamps.reduce((acc, bootcamp, index) => {
+            const actualIndex = (currentPage - 1) * itemsPerPage + index;
+            acc[`name${actualIndex}`] = bootcamp.name;
+            acc[`dategraduate${actualIndex}`] = utcFormatterSlash(bootcamp.graduationDate);
+            acc[`track${actualIndex}`] = bootcamp.track.id.toString();
+            return acc;
+          }, {});
+          reset(formValues);
+        }
+    }, [sortingChanged, filteredBootcamps]);
+    
+    const handleDeleteBootcamp = async (i: number) => {
+        closeConfirmationPopup();
+        customAlert('loading', "Deleting Bootcamp...", ``);
+        await deleteBootcamp(i);
+        customAlert('message', "Delete Successful", `Successfully removed bootcamp from database.`);
+        setSortingChanged(prev => !prev);
+    }
+
+    const confirmDeleteBootcampHandler = async (index: number) => customPopup('warning2', "Warning", <>By deleting this, you will lose <b style={{ color: '#EF4444' }}>ALL OF THE DIPLOMAS</b> associated with this bootcamp. This action cannot be undone.</>, () => () => handleDeleteBootcamp(index));
     
     return (
     <>
