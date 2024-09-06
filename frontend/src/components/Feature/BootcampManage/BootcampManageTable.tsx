@@ -12,6 +12,7 @@ import { useCustomConfirmationPopup } from "../../Hooks/useCustomConfirmationPop
 import AddNewBootcampForm from '../../Forms/AddNewBootcampForm';
 import "./BootcampManageTable.css"
 import { utcFormatterSlash } from "../../../util/datesUtil";
+import { BootcampsTable } from "./BootcampsTable";
 
 type Props = {
   deleteBootcamp: (i: number) => Promise<void>;
@@ -20,7 +21,7 @@ type Props = {
   tracks: TrackResponse[];
 }
 
-type SortOrder =
+export type SortOrder =
   'bootcampname-ascending' | 'bootcampname-descending' |
   'graduationdate-ascending' | 'graduationdate-descending' |
   'track-ascending' | 'track-descending';
@@ -206,86 +207,19 @@ export default function BootcampManageTable({ deleteBootcamp, addNewBootcamp, up
                 />
               </div>
               <div className="modal-main">
-                <table className="table-auto">
-                  <thead>
-                    <tr>
-                      <th
-                        onClick={() => handleSortChange(sortOrder === 'bootcampname-descending' ? 'bootcampname-ascending' : 'bootcampname-descending')}
-                        className={'sortable-header ' + (sortOrder.includes('bootcampname') ? (sortOrder === 'bootcampname-descending' ? 'descending' : 'ascending') : '')}
-                      >
-                        Bootcamp Name <div className={'icon-container ' + (!sortOrder.includes('bootcampname') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'bootcampname-descending' ? 180 : 0} /></div>
-                      </th>
-                      <th
-                        onClick={() => handleSortChange(sortOrder === 'graduationdate-descending' ? 'graduationdate-ascending' : 'graduationdate-descending')}
-                        className={'sortable-header ' + (sortOrder.includes('graduationdate') ? (sortOrder === 'graduationdate-descending' ? 'descending' : 'ascending') : '')}
-                      >
-                        Graduation Date <div className={'icon-container ' + (!sortOrder.includes('graduationdate') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'graduationdate-descending' ? 180 : 0} /></div>
-                      </th>
-                      <th
-                        onClick={() => handleSortChange(sortOrder === 'track-descending' ? 'track-ascending' : 'track-descending')}
-                        className={'sortable-header ' + (sortOrder.includes('track') ? (sortOrder === 'track-descending' ? 'descending' : 'ascending') : '')}
-                      >
-                        Track <div className={'icon-container ' + (!sortOrder.includes('track') ? 'hidden' : '')}><ArrowIcon rotation={sortOrder === 'track-descending' ? 180 : 0} /></div>
-                      </th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paginatedBootcamps &&
-                      paginatedBootcamps.map((bootcamp, index) => {
-                        const actualIndex = (currentPage - 1) * itemsPerPage + index;
-                        return (
-                          <tr className="table-row" key={`tablecell_${bootcamp.guidId}`}>
-                            <td className="table-cell">
-                              <input
-                                type="text"
-                                {...register(`name${actualIndex}`)}
-                                defaultValue={bootcamp.name}
-                                className="date-input disabled"
-                                disabled
-                              />
-                            </td>
-                            <td className="table-cell">
-                              <input
-                                id={bootcamp.guidId + "1"}
-                                {...register(`dategraduate${actualIndex}`, { required: true })}
-                                type="date"
-                                className="date-input"
-                                defaultValue={utcFormatterSlash(bootcamp.graduationDate)}
-                                key={`dategrad_${bootcamp.guidId}`}
-                                ref={item => (calendarPickers.current[index] = item)}
-                                onChange={(e) => setValue(`dategraduate${actualIndex}`, e.target.value)}
-                              />
-                            </td>
-                            <td className="table-cell">
-                              <SelectOptions
-                                containerClassOverride='normal'
-                                selectClassOverride='normal'
-                                options={[
-                                  ...(tracks?.map(track => ({
-                                    value: track.id.toString(),
-                                    label: track.name
-                                  })) || [])
-                                ]}
-                                defaultValue={watch(`track${actualIndex}`, bootcamp.track.id.toString())}
-                                {...register(`track${actualIndex}`)}
-                                onChange={(e) => {
-                                  setValue(`track${actualIndex}`, e.target.value);
-                                  bootcamp.track.id = parseInt(e.target.value);
-                                }}
-                                reactHookForm={true}
-                                register={register}
-                                name={`track${actualIndex}`}
-                              />
-                            </td>
-                            <td>
-                              <DeleteButtonSimple onClick={() => confirmDeleteBootcampHandler(actualIndex)} />
-                            </td>
-                          </tr>
-                        )
-                      })}
-                  </tbody>
-                </table>
+                <BootcampsTable 
+                  tracks={tracks}
+                  paginatedBootcamps={paginatedBootcamps}
+                  sortOrder={sortOrder}
+                  handleSortChange={handleSortChange}
+                  confirmDeleteBootcampHandler={confirmDeleteBootcampHandler}
+                  currentPage={currentPage}
+                  itemsPerPage={itemsPerPage}
+                  calendarPickers={calendarPickers}
+                  register={register}
+                  setValue={setValue}
+                  watch={watch}
+                />
               </div>
               <div className="modal-main-footer">
                 <AddNewBootcampForm addNewBootcamp={addNewBootcampHandler} bootcamps={bootcamps} tracks={tracks} />
