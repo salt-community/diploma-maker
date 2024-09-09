@@ -23,7 +23,7 @@ import AddNewBootcampForm from "../../Forms/AddNewBootcampForm";
 import { AddIcon } from "../../MenuItems/Icons/AddIcon";
 import { ZipIcon } from "../../MenuItems/Icons/ZipIcon";
 import { PrintIcon } from "../../MenuItems/Icons/PrintIcon";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 type FormData = {
   optionA: boolean;
@@ -44,8 +44,11 @@ type Props = {
   addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
 };
 
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
 export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex, updateStudentThumbnails, addNewBootcamp }: Props) {
-  const { track, bootcamp } = useParams<{ track: string; bootcamp: string }>();
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>();
   const [TrackIndex, setTrackIndex] = useState<number>(0);
@@ -63,11 +66,19 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [printActive, setPrintActive] = useState<boolean>(false);
   const [downloadActive, setDownloadActive] = useState<boolean>(false);
   const [generateBtnActive, setGenerateBtnActive] = useState<boolean>(false);
+
+  // Query parameters for track/bootcamp selection
+  const query = useQuery();
+  const track = query.get('track');
+  const bootcamp = query.get('bootcamp');
+
+  const trackIndex = track ? parseInt(track) : 0;
+  const bootcampIndex = bootcamp ? parseInt(bootcamp) : 0;
   
   useEffect(() => {
-    track && setTrackIndex(parseInt(track))
-    bootcamp && setBootcampIndex(parseInt(bootcamp))
-  }, [track, bootcamp])
+    setTrackIndex(trackIndex);
+    setBootcampIndex(bootcampIndex);
+  }, [trackIndex, bootcampIndex]);
 
   useEffect(() => {
     if(tracks && templates){
