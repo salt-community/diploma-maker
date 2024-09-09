@@ -68,6 +68,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [generateBtnActive, setGenerateBtnActive] = useState<boolean>(false);
 
   // Query parameters for track/bootcamp selection
+  const navigate = useNavigate();
   const query = useQuery();
   const track = query.get('track');
   const bootcamp = query.get('bootcamp');
@@ -76,6 +77,8 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const bootcampIndex = bootcamp ? parseInt(bootcamp) : 0;
   
   useEffect(() => {
+    trackIndex < 0 || trackIndex >= tracks.length && navigate("/404");
+    bootcampIndex < 0 || bootcampIndex >= tracks.flatMap(t => t.bootcamps).length && navigate("/404");
     setTrackIndex(trackIndex);
     setBootcampIndex(bootcampIndex);
   }, [trackIndex, bootcampIndex]);
