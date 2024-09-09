@@ -11,7 +11,7 @@ type Props = {
     showEmailClientHandler: () => void;
     setCurrentPage: (value: React.SetStateAction<number>) => void
     setSearchQuery: (value: React.SetStateAction<string>) => void;
-    setSelectedTrack: (value: React.SetStateAction<string>) => void;
+    setSelectedTrack: (value: React.SetStateAction<number>) => void;
     setSelectedBootcamp: (value: React.SetStateAction<string>) => void;
 }
 
@@ -39,7 +39,7 @@ export const OverviewSideBar = ({
     };
 
     const handleTrackChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        e.target.value === "" ? setSelectedTrack(null) : setSelectedTrack((parseInt(e.target.value) - 1).toString());
+        e.target.value === "" ? setSelectedTrack(null) : setSelectedTrack((parseInt(e.target.value) - 1));
         setSelectedBootcamp(null);
         setCurrentPage(1);
     };
