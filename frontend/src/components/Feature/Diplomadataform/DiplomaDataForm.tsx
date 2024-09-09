@@ -23,6 +23,7 @@ import AddNewBootcampForm from "../../Forms/AddNewBootcampForm";
 import { AddIcon } from "../../MenuItems/Icons/AddIcon";
 import { ZipIcon } from "../../MenuItems/Icons/ZipIcon";
 import { PrintIcon } from "../../MenuItems/Icons/PrintIcon";
+import { useParams } from "react-router-dom";
 
 type FormData = {
   optionA: boolean;
@@ -44,6 +45,7 @@ type Props = {
 };
 
 export default function DiplomaDataForm({ setSaltData, tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, selectedStudentIndex, setSelectedStudentIndex, updateStudentThumbnails, addNewBootcamp }: Props) {
+  const { track, bootcamp } = useParams<{ track: string; bootcamp: string }>();
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormData>();
   const [AllTrackData, setAllTrackData] = useState<TrackResponse[]>();
   const [TrackIndex, setTrackIndex] = useState<number>(0);
@@ -61,6 +63,11 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   const [printActive, setPrintActive] = useState<boolean>(false);
   const [downloadActive, setDownloadActive] = useState<boolean>(false);
   const [generateBtnActive, setGenerateBtnActive] = useState<boolean>(false);
+  
+  useEffect(() => {
+    track && setTrackIndex(parseInt(track))
+    bootcamp && setBootcampIndex(parseInt(bootcamp))
+  }, [track, bootcamp])
 
   useEffect(() => {
     if(tracks && templates){
