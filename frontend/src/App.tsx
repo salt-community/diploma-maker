@@ -225,6 +225,7 @@ export default function App() {
           }
         >
           <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} addNewBootcamp={addNewBootcamp}/>} />
+          {/* <Route path="pdf-creator/:track/:bootcamp" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} addNewBootcamp={addNewBootcamp}/>} /> */}
           <Route path="bootcamp-management" element={<BootcampManagement tracks={tracks} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}  />} />
           <Route path="overview" element={<OverviewPage tracks={tracks} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} />} />
           <Route path={"/template-creator"} element={<TemplateCreatorPage templates={templates} addNewTemplate={addNewTemplate} updateTemplate={updateTemplate} deleteTemplate={deleteTemplate} postUserFonts={postUserFonts}/>} />

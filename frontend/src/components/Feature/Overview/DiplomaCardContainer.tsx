@@ -15,6 +15,7 @@ import { InfoPopupType } from "../../MenuItems/Popups/InfoPopup";
 
 type Props = {
     tracks: TrackResponse[];
+    selectedTrack: number | null;
     visibleItems: Student[];
     currentPage: number;
     totalPages: number;
@@ -31,6 +32,7 @@ type Props = {
 
 export const DiplomaCardContainer = ({ 
     tracks,
+    selectedTrack,
     visibleItems, 
     currentPage, 
     totalPages,
@@ -81,12 +83,14 @@ export const DiplomaCardContainer = ({
     };
 
     const modifyStudentHandler = (guidId: string) => {
-        if (tracks) {
-             const bootcampIndex = tracks?.flatMap(t => t.bootcamps)?.findIndex(bootcamp =>
-                 bootcamp.students.some(student => student.guidId === guidId)
-             );
-             navigate(`/${bootcampIndex}`);
-         } 
+        const trackIndex = tracks.findIndex(track =>
+            track.bootcamps.some(bootcamp => bootcamp.students.some(student => student.guidId === guidId))
+        );
+        const bootcampIndex = tracks[trackIndex].bootcamps.findIndex(bootcamp =>
+            bootcamp.students.some(student => student.guidId === guidId)
+        );
+
+        navigate(`/pdf-creator?track=${trackIndex}&bootcamp=${bootcampIndex}`);
     };
 
     const showStudentInfohandler = (student: Student) => {

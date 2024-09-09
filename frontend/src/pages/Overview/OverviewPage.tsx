@@ -26,10 +26,12 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
-    const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
+    const [selectedTrack, setSelectedTrack] = useState<number | null>(0);
 
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
+
+    
 
     useEffect(() => {
         if (tracks) {
@@ -123,6 +125,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
             }
             <DiplomaCardContainer 
                 tracks={tracks}
+                selectedTrack={selectedTrack}
                 visibleItems={visibleStudents}
                 currentPage={currentPage}
                 totalPages={totalPages}
