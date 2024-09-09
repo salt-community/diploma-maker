@@ -83,12 +83,14 @@ export const DiplomaCardContainer = ({
     };
 
     const modifyStudentHandler = (guidId: string) => {
-        if (tracks) {
-            const bootcampIndex = tracks?.flatMap(t => t.bootcamps)?.findIndex(bootcamp =>
-                bootcamp.students.some(student => student.guidId === guidId)
-            );
-            navigate(`/pdf-creator?track=${selectedTrack}&bootcamp=${bootcampIndex}`);
-         } 
+        const trackIndex = tracks.findIndex(track =>
+            track.bootcamps.some(bootcamp => bootcamp.students.some(student => student.guidId === guidId))
+        );
+        const bootcampIndex = tracks[trackIndex].bootcamps.findIndex(bootcamp =>
+            bootcamp.students.some(student => student.guidId === guidId)
+        );
+
+        navigate(`/pdf-creator?track=${trackIndex}&bootcamp=${bootcampIndex}`);
     };
 
     const showStudentInfohandler = (student: Student) => {

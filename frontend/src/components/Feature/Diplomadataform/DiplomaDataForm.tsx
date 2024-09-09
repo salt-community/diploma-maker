@@ -78,7 +78,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
   
   useEffect(() => {
     trackIndex < 0 || trackIndex >= tracks.length && navigate("/404");
-    bootcampIndex < 0 || bootcampIndex >= tracks.flatMap(t => t.bootcamps).length && navigate("/404");
+    bootcampIndex < 0 || bootcampIndex >= tracks[trackIndex].bootcamps.length && navigate("/404");
     setTrackIndex(trackIndex);
     setBootcampIndex(bootcampIndex);
   }, [trackIndex, bootcampIndex]);

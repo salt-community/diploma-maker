@@ -31,6 +31,8 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
 
+    
+
     useEffect(() => {
         if (tracks) {
             setLoading(false);
