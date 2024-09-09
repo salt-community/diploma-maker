@@ -5,7 +5,7 @@ import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { ConfirmationPopupType } from "../../MenuItems/Popups/ConfirmationPopup";
 import { BootcampsSectionFooter } from "./BootcampsSectionFooter";
 import { BootcampsTable } from "./BootcampsTable";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Props = {
   tracks: TrackResponse[];
@@ -35,9 +35,16 @@ export const BootcampsManageForm = ({
 }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortingChanged, setSortingChanged] = useState(false);
+  const [prevBootcamps, setPrevBootcamps] = useState<BootcampResponse[]>();
 
   const calendarPickers = useRef([]);
   const { register, handleSubmit, setValue, watch, reset } = useForm();
+
+  useEffect(() => {
+    if(bootcamps){
+      setPrevBootcamps(bootcamps);
+    }
+  }, [bootcamps])
 
   const addNewBootcampHandler = async (bootcamp: BootcampRequest) => {
       customAlert('loading', "Adding New Bootcamp...", ``);
@@ -52,20 +59,28 @@ export const BootcampsManageForm = ({
   const handleUpdateBootcamp = async (data: FieldValues) => {
       closeConfirmationPopup();
       customAlert('loading', "Updating Bootcamp...", ``);
+      
       for (let i = 0; i < bootcamps!.length; i++) {
-          const newBootcamp: BootcampRequest = {
-          guidId: bootcamps![i].guidId,
-          name: data[`name${i}`],
-          graduationDate: new Date(data[`dategraduate${i}`]),
-          trackId: parseInt(data[`track${i}`])
-          };
+        const inputDate = data[`dategraduate${i}` as keyof typeof data];
 
-          try {
-          await updateBootcamp(newBootcamp);
-          customAlert('success', "Updated Bootcamps Successfully.", `Successfully updated bootcamp in the database.`);
-          setSortingChanged(prev => !prev);
-          } catch (error) {
-          customAlert('fail', "Error Updating Bootcamp", `${error}`);
+        const prevDate = new Date(prevBootcamps[i].graduationDate).toISOString().split('T')[0];
+        const matchingBootcamp = (prevDate === inputDate) || inputDate === undefined;
+
+          if (!matchingBootcamp) {
+            try {
+              const newBootcamp: BootcampRequest = {
+                guidId: bootcamps![i].guidId,
+                name: data[`name${i}`],
+                graduationDate: new Date(data[`dategraduate${i}`]),
+                trackId: parseInt(data[`track${i}`])
+              };
+              
+              await updateBootcamp(newBootcamp);
+              customAlert('success', "Updated Bootcamps Successfully.", `Successfully updated bootcamp in the database.`);
+              setSortingChanged(prev => !prev);
+            } catch (error) {
+              customAlert('fail', "Error Updating Bootcamp", `${error}`);
+            }
           }
       }
   }
