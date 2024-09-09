@@ -217,7 +217,7 @@ export const BootcampsTable = ( {
                         <td className="table-cell">
                             <input
                                 type="text"
-                                {...register(`name${actualIndex}`)}
+                                {...register(`name${actualIndex}`, { required: true })}
                                 defaultValue={bootcamp.name}
                                 className="date-input disabled"
                                 disabled
@@ -240,16 +240,16 @@ export const BootcampsTable = ( {
                                 containerClassOverride='normal'
                                 selectClassOverride='normal'
                                 options={[
-                                    ...(tracks?.map(track => ({
+                                ...(tracks?.map(track => ({
                                     value: track.id.toString(),
                                     label: track.name
-                                    })) || [])
+                                })) || [])
                                 ]}
                                 defaultValue={watch(`track${actualIndex}`, bootcamp.track.id.toString())}
-                                {...register(`track${actualIndex}`)}
+                                {...register(`track${actualIndex}`, { required: true })}
                                 onChange={(e) => {
-                                    setValue(`track${actualIndex}`, e.target.value);
-                                    bootcamp.track.id = parseInt(e.target.value);
+                                setValue(`track${actualIndex}`, e.target.value);
+                                bootcamp.track.id = parseInt(e.target.value);
                                 }}
                                 reactHookForm={true}
                                 register={register}
