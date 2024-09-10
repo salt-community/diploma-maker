@@ -24,3 +24,10 @@ export const populateIdField = (input: string, verificationCode: string): string
     return input
         .replace('{id}', verificationCode)
 }
+
+export const getDisplayNameFromBootcampName = (bootcampName: string) => {
+    return bootcampName.includes("dnfs") ? 'Fullstack C# Dotnet'
+            : bootcampName.includes("jfs") ? 'Fullstack Java'
+            : bootcampName.includes("jsfs") ? 'Fullstack Javascript'
+            : 'ERR READING BOOTCAMP NAME';
+}

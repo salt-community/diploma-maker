@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { SaveButton } from '../../components/MenuItems/Buttons/SaveButton';
-import { VerifyIcon } from '../../components/MenuItems/Icons/VerifyIcon';
 import './VerificationInputPage.css'
 import { AlertPopup } from '../../components/MenuItems/Popups/AlertPopup';
 import { useCustomAlert } from '../../components/Hooks/useCustomAlert';
 import { useNavigate } from 'react-router-dom';
+import { DiplomaVerificationInput } from '../../components/Feature/Verification/DiplomaVerificationInput';
 
 export function VerificationInputPage() {
     const [inputContent, setInputContent] = useState<string>('');
@@ -29,19 +28,11 @@ export function VerificationInputPage() {
                 show={showPopup}
                 onClose={closeAlert}
             />
-            <div className='verificationinput-container'>
-                <div className='verificationinput__title-wrapper'>
-                    <div className='verificationinput__logo-wrapper'>
-                        <img src="/icons/logoBlack.png" alt="" />
-                    </div>
-                    <p>Please put in your diploma verification code.</p>
-                    <input type="text" onChange={(e) => setInputContent(e.target.value)} value={inputContent}/>
-                    <SaveButton classNameOverride='verificationinput__title-wrapper--savebtn' textfield='Verify' customIcon={<VerifyIcon />} onClick={() => submitHandler()} saveButtonType={'normal'}/>
-                </div>
-                <div className='verificationinput__footer-wrapper'>
-                    <p>This page verifies the authenticity of salt diplomas.</p>
-                </div>
-            </div>
+            <DiplomaVerificationInput 
+                inputContent={inputContent}
+                setInputContent={setInputContent}
+                submitHandler={submitHandler}
+            />
         </>
     );
     }
