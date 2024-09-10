@@ -12,10 +12,11 @@ import { Popup404 } from "../../MenuItems/Popups/Popup404";
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";
 import { useNavigate } from "react-router-dom";
 import { InfoPopupType } from "../../MenuItems/Popups/InfoPopup";
+import { ConfirmationPopup } from "../../MenuItems/Popups/ConfirmationPopup";
+import { useCustomConfirmationPopup } from "../../Hooks/useCustomConfirmationPopup";
 
 type Props = {
     tracks: TrackResponse[];
-    selectedTrack: number | null;
     visibleItems: Student[];
     currentPage: number;
     totalPages: number;
@@ -32,7 +33,6 @@ type Props = {
 
 export const DiplomaCardContainer = ({ 
     tracks,
-    selectedTrack,
     visibleItems, 
     currentPage, 
     totalPages,
@@ -72,7 +72,11 @@ export const DiplomaCardContainer = ({
         window.open(url, '_blank');
     };
 
-    const deleteStudentHandler = async (id: string) => {
+    const deleteStudentHandler = async (id: string, name: string) => {
+        confirmRemoveTemplateHandler(id, name);
+    };
+
+    const deleteStudentByGuidId = async (id: string) => {
         customAlert('loading', `Deleting Student...`, ``);
         try {
             await deleteStudent(id);
@@ -108,49 +112,63 @@ export const DiplomaCardContainer = ({
         }
     }
 
+    const {showConfirmationPopup, confirmationPopupContent, confirmationPopupType, confirmationPopupHandler, customPopup, closeConfirmationPopup} = useCustomConfirmationPopup();
+    const confirmRemoveTemplateHandler = async (guidId: string, name: string) => customPopup('warning2', `Are you sure you want to remove ${name}?`, `You can modify the name if you made a mistake on the "create diplomas" page.`, () => () => {deleteStudentByGuidId(guidId); closeConfirmationPopup()});
+
     return (
-        <section className='overview-page__list-module'>
-            <div className='overview-page__list-module-card-container'>
-                {loading ? (
-                    <SpinnerDefault classOverride="spinner" />
-                ) : (
-                    visibleItems.length > 0 ? visibleItems.map((student: Student, index) => {
-                        const isVisible = index >= startIndex && index < startIndex + itemsPerPage;
-                        return (
-                            <button key={student.guidId} className={`list-module__item ${isVisible ? 'visible' : 'hidden'}`}>
-                                {!student.previewImageUrl && <p className='list-module__item-title'>{student.name}</p>}
-                                <LazyImageLoader 
-                                    previewImageLQIPUrl={student.previewImageLQIPUrl ? `${api}${student.previewImageLQIPUrl}` : defaultImg} 
-                                    previewImageUrl={student.previewImageUrl ? `${api}${student.previewImageUrl}` : defaultImg} 
-                                    loadTrigger={() => handleImageLoad(index)}
-                                />
-                                <section className='list-module__item-menu'>
-                                    <ModifyButton text='Modify' onClick={() => modifyStudentHandler(student.guidId)} />
-                                    <RemoveButton text='Remove' onClick={() => deleteStudentHandler(student.guidId)} />
-                                    <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
-                                </section>
-                                {student.lastGenerated && imageLoadedStates[index] && 
-                                    <div onClick={() => navigateToVerificationPage(student.verificationCode)} className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
-                                        <VerifyIcon />
-                                    </div>
-                                }
-                            </button>
-                        );
-                    }) :
-                    <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />
-                )}
-            </div>
-            {visibleItems.length > 0 &&
-                <PaginationMenu
-                    containerClassOverride='overview-page__footer'
-                    buttonClassOverride='pagination-button'
-                    textContainerClassOverride='pagination-info'
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    handleNextPage={handleNextPage}
-                    handlePrevPage={handlePrevPage}
-                />
-            }
-        </section>
+        <>
+            <ConfirmationPopup
+                title={confirmationPopupContent[0]}
+                text={confirmationPopupContent[1]}
+                show={showConfirmationPopup}
+                confirmationPopupType={confirmationPopupType}
+                abortClick={() => closeConfirmationPopup()}
+                // @ts-ignore
+                confirmClick={(inputContent?: string) => { confirmationPopupHandler(inputContent) }}
+            />
+            <section className='overview-page__list-module'>
+                <div className='overview-page__list-module-card-container'>
+                    {loading ? (
+                        <SpinnerDefault classOverride="spinner" />
+                    ) : (
+                        visibleItems.length > 0 ? visibleItems.map((student: Student, index) => {
+                            const isVisible = index >= startIndex && index < startIndex + itemsPerPage;
+                            return (
+                                <button key={student.guidId} className={`list-module__item ${isVisible ? 'visible' : 'hidden'}`}>
+                                    {!student.previewImageUrl && <p className='list-module__item-title'>{student.name}</p>}
+                                    <LazyImageLoader 
+                                        previewImageLQIPUrl={student.previewImageLQIPUrl ? `${api}${student.previewImageLQIPUrl}` : defaultImg} 
+                                        previewImageUrl={student.previewImageUrl ? `${api}${student.previewImageUrl}` : defaultImg} 
+                                        loadTrigger={() => handleImageLoad(index)}
+                                    />
+                                    <section className='list-module__item-menu'>
+                                        <ModifyButton text='Modify' onClick={() => modifyStudentHandler(student.guidId)} />
+                                        <RemoveButton text='Remove' onClick={() => deleteStudentHandler(student.guidId, student.name)} />
+                                        <SelectButton classOverride="email-btn" selectButtonType={'email'} onClick={() => showStudentInfohandler(student)} />
+                                    </section>
+                                    {student.lastGenerated && imageLoadedStates[index] && 
+                                        <div onClick={() => navigateToVerificationPage(student.verificationCode)} className='list-module__item-menu--verifiedcontainer' data-student-lastgenerated={`last generated: ${utcFormatter(student.lastGenerated)}`}>
+                                            <VerifyIcon />
+                                        </div>
+                                    }
+                                </button>
+                            );
+                        }) :
+                        <Popup404 text='No Diplomas Generated Yet For This Bootcamp' />
+                    )}
+                </div>
+                {visibleItems.length > 0 &&
+                    <PaginationMenu
+                        containerClassOverride='overview-page__footer'
+                        buttonClassOverride='pagination-button'
+                        textContainerClassOverride='pagination-info'
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        handleNextPage={handleNextPage}
+                        handlePrevPage={handlePrevPage}
+                    />
+                }
+            </section>
+        </>
   );
 };
