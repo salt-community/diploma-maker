@@ -12,6 +12,7 @@ import { generatePDFDownload } from '../../util/pdfGenerationUtil';
 import { DiplomaRenderer } from '../../components/Feature/Verification/DiplomaRenderer';
 import { DiplomaInvalidModule } from '../../components/Feature/Verification/DiplomaInvalidModule';
 import { DiplomaValidModule } from '../../components/Feature/Verification/DiplomaValidModule';
+import { DiplomaDropDown } from '../../components/Feature/Verification/DiplomaDropDown';
 
 type Props = {
     getHistoryByVerificationCode: (verificationCode: string) => void;
@@ -70,9 +71,10 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
                     displayName={displayName}
                     setShowDiploma={setShowDiploma}
                 />
-                <div className={'diploma-container ' + (showDiploma ? 'visible' : '')}>
-                    <div className='diploma-container-content'>
-                        <PublishButton classNameOverride='diploma-container--downloadbtn' text="Download Diploma" onClick={generatePDFHandler} />
+                <DiplomaDropDown 
+                    showDiploma={showDiploma}
+                    generatePDFHandler={generatePDFHandler}
+                    diplomaRenderer={
                         <DiplomaRenderer 
                             uiRef={uiRef}
                             uiInstance={uiInstance}
@@ -80,8 +82,8 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
                             displayName={displayName}
                             setDisplayName={setDisplayName}
                         />
-                    </div>
-                </div>
+                    }
+                />
             </main>
         }
         </>
