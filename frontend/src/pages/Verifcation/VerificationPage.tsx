@@ -3,15 +3,14 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom"
 import { HistorySnapshotResponse } from "../../util/types";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
-import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistorySnapshot } from "../../util/dataHelpers";
+import { mapTemplateInputsToTemplateViewerFromSnapshot } from "../../util/dataHelpers";
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
 import { NextIcon } from '../../components/MenuItems/Icons/NextIcon';
 import logoBlack from '/icons/logoBlack.png'
-import { getFontsData } from '../../util/fontsUtil';
 import { generatePDFDownload } from '../../util/pdfGenerationUtil';
-import { getPlugins } from '../../util/pdfmeUtil';
+import { DiplomaRenderer } from '../../components/Feature/Verification/DiplomaRenderer';
 
 type Props = {
     getHistoryByVerificationCode: (verificationCode: string) => void;
@@ -26,42 +25,6 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
     const [studentData, setStudentData] = useState<HistorySnapshotResponse>(null);
     const [showDiploma, setShowDiploma] = useState<boolean>(false);
     const [displayName, setDisplayName] = useState('');
-
-    useEffect(() => {
-        if(studentData){
-            const displayname = 
-                studentData.bootcampName.includes("dnfs") ? 'Fullstack C# Dotnet'
-                : studentData.bootcampName.includes("jfs") ? 'Fullstack Java'
-                : studentData.bootcampName.includes("jsfs") ? 'Fullstack Javascript'
-                : 'ERR READING BOOTCAMP NAME';
-
-        setDisplayName(displayname);
-
-            const inputs = templateInputsFromHistorySnapshot(studentData, displayName);
-            const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
-
-            getFontsData().then((font) => {
-                if(uiInstance.current){
-                    uiInstance.current.destroy();
-                }
-                uiInstance.current = new Viewer({
-                    domContainer: uiRef.current,
-                    template,
-                    inputs,
-                    options: { font },
-                    plugins: getPlugins()
-                });
-            })
-
-            return () => {
-                if(uiInstance.current){
-                    uiInstance.current.destroy();
-                    uiInstance.current = null;
-                }
-            }
-            
-        }
-    }, [uiRef, studentData])
 
     const generatePDFHandler = async () => {
         if (uiInstance.current && studentData) {
@@ -148,10 +111,12 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
                 <div className={'diploma-container ' + (showDiploma ? 'visible' : '')}>
                     <div className='diploma-container-content'>
                         <PublishButton classNameOverride='diploma-container--downloadbtn' text="Download Diploma" onClick={generatePDFHandler} />
-                        <div
-                            className="pdfpreview-smallcontainer"
-                            ref={uiRef}
-                            style={{ width: "100%", height: "100%", marginBottom: '2rem'}}
+                        <DiplomaRenderer 
+                            uiRef={uiRef}
+                            uiInstance={uiInstance}
+                            studentData={studentData}
+                            displayName={displayName}
+                            setDisplayName={setDisplayName}
                         />
                     </div>
                 </div>
