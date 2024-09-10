@@ -6,14 +6,14 @@ import { getFontsData } from "../../../util/fontsUtil";
 import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistorySnapshot } from "../../../util/dataHelpers";
 
 type Props = {
-  uiRef: React.MutableRefObject<HTMLDivElement>
-  uiInstance: React.MutableRefObject<Viewer | Form>
-  studentData: HistorySnapshotResponse;
-  displayName: string;
-  setDisplayName: (value: React.SetStateAction<string>) => void;
+    uiInstance: React.MutableRefObject<Form | Viewer>;
+    studentData: HistorySnapshotResponse;
+    displayName: string;
 }
 
-export const DiplomaRenderer = ({ uiRef, uiInstance, studentData, displayName, setDisplayName }: Props) => {
+export const DiplomaRenderer = ({ studentData, displayName, uiInstance }: Props) => {
+    const uiRef = useRef<HTMLDivElement | null>(null);
+
     useEffect(() => {
         if(studentData){
             const inputs = templateInputsFromHistorySnapshot(studentData, displayName);

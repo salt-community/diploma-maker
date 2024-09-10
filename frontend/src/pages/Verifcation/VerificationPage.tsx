@@ -6,8 +6,6 @@ import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefaul
 import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
 import { mapTemplateInputsToTemplateViewerFromSnapshot } from "../../util/dataHelpers";
-import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
-import { NextIcon } from '../../components/MenuItems/Icons/NextIcon';
 import { generatePDFDownload } from '../../util/pdfGenerationUtil';
 import { DiplomaRenderer } from '../../components/Feature/Verification/DiplomaRenderer';
 import { DiplomaInvalidModule } from '../../components/Feature/Verification/DiplomaInvalidModule';
@@ -21,22 +19,11 @@ type Props = {
 
 export function VertificationPage( { getHistoryByVerificationCode }: Props) {
     const { verificationCode } = useParams<{ verificationCode: string }>();
-
-    const uiRef = useRef<HTMLDivElement | null>(null);
     const uiInstance = useRef<Form | Viewer | null>(null);
 
     const [studentData, setStudentData] = useState<HistorySnapshotResponse>(null);
     const [showDiploma, setShowDiploma] = useState<boolean>(false);
     const [displayName, setDisplayName] = useState('');
-
-    const generatePDFHandler = async () => {
-    if (uiInstance.current && studentData) {
-        const inputs = uiInstance.current.getInputs();
-        const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
-        
-        await generatePDFDownload(template, inputs, `${studentData.studentName} Diploma`);
-    }
-    };
 
     useEffect(() => {
         if(studentData){
@@ -44,12 +31,20 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
         }
     }, [studentData])
 
+    const generatePDFHandler = async () => {
+        if (uiInstance.current && studentData) {
+            const inputs = uiInstance.current.getInputs();
+            const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
+
+            await generatePDFDownload(template, inputs, `${studentData.studentName} Diploma`);
+        }
+    };
+
     const { isLoading, data: student, isError } = useQuery({
         queryKey: ['getDiplomaById'],
         queryFn: () => getHistoryByVerificationCode(verificationCode || ''),
         onSuccess: (data: HistorySnapshotResponse[]) => {
-            // Selects the first active template that was generated.
-            const activeData = data.find(h => h.active === true);
+            const activeData = data.find(h => h.active === true); // Selects the first active template that was generated.
             setStudentData(activeData);
         },
         retry: false
@@ -83,11 +78,9 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
                     generatePDFHandler={generatePDFHandler}
                     diplomaRenderer={
                         <DiplomaRenderer 
-                            uiRef={uiRef}
-                            uiInstance={uiInstance}
                             studentData={studentData}
                             displayName={displayName}
-                            setDisplayName={setDisplayName}
+                            uiInstance={uiInstance}
                         />
                     }
                 />

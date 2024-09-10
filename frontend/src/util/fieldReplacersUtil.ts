@@ -1,5 +1,3 @@
-import { HistorySnapshotResponse } from "./types"
-
 export const populateIntroField = (input: string): string => {
     return input
 }
