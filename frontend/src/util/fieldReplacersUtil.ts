@@ -1,3 +1,5 @@
+import { HistorySnapshotResponse } from "./types"
+
 export const populateIntroField = (input: string): string => {
     return input
 }
@@ -23,4 +25,11 @@ export const populateField = (input: string, classname: string, datebootcamp: st
 export const populateIdField = (input: string, verificationCode: string): string => {
     return input
         .replace('{id}', verificationCode)
+}
+
+export const getDisplayNameFromBootcampName = (bootcampName: string) => {
+    return bootcampName.includes("dnfs") ? 'Fullstack C# Dotnet'
+            : bootcampName.includes("jfs") ? 'Fullstack Java'
+            : bootcampName.includes("jsfs") ? 'Fullstack Javascript'
+            : 'ERR READING BOOTCAMP NAME';
 }

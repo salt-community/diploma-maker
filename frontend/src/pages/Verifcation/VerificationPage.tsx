@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom"
 import { HistorySnapshotResponse } from "../../util/types";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
 import { mapTemplateInputsToTemplateViewerFromSnapshot } from "../../util/dataHelpers";
 import { PublishButton } from '../../components/MenuItems/Buttons/PublishButton';
@@ -13,6 +13,7 @@ import { DiplomaRenderer } from '../../components/Feature/Verification/DiplomaRe
 import { DiplomaInvalidModule } from '../../components/Feature/Verification/DiplomaInvalidModule';
 import { DiplomaValidModule } from '../../components/Feature/Verification/DiplomaValidModule';
 import { DiplomaDropDown } from '../../components/Feature/Verification/DiplomaDropDown';
+import { getDisplayNameFromBootcampName } from '../../util/fieldReplacersUtil';
 
 type Props = {
     getHistoryByVerificationCode: (verificationCode: string) => void;
@@ -29,13 +30,19 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
     const [displayName, setDisplayName] = useState('');
 
     const generatePDFHandler = async () => {
-        if (uiInstance.current && studentData) {
-          const inputs = uiInstance.current.getInputs();
-          const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
-         
-          await generatePDFDownload(template, inputs, `${studentData.studentName} Diploma`);
+    if (uiInstance.current && studentData) {
+        const inputs = uiInstance.current.getInputs();
+        const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
+        
+        await generatePDFDownload(template, inputs, `${studentData.studentName} Diploma`);
+    }
+    };
+
+    useEffect(() => {
+        if(studentData){
+            setDisplayName(getDisplayNameFromBootcampName(studentData.bootcampName));
         }
-      };
+    }, [studentData])
 
     const { isLoading, data: student, isError } = useQuery({
         queryKey: ['getDiplomaById'],

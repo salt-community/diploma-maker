@@ -1,3 +1,5 @@
+import { mapTemplateInputsToTemplateViewerFromSnapshot } from "../../../util/dataHelpers";
+import { generatePDFDownload } from "../../../util/pdfGenerationUtil";
 import { PublishButton } from "../../MenuItems/Buttons/PublishButton";
 import { DiplomaRenderer } from "./DiplomaRenderer";
 
@@ -8,12 +10,13 @@ type Props = {
 }
 
 export const DiplomaDropDown = ({ showDiploma, generatePDFHandler, diplomaRenderer }: Props) => {
-  return (
-    <div className={'diploma-container ' + (showDiploma ? 'visible' : '')}>
-        <div className='diploma-container-content'>
-            <PublishButton classNameOverride='diploma-container--downloadbtn' text="Download Diploma" onClick={generatePDFHandler} />
-            {diplomaRenderer}
+
+    return (
+        <div className={'diploma-container ' + (showDiploma ? 'visible' : '')}>
+            <div className='diploma-container-content'>
+                <PublishButton classNameOverride='diploma-container--downloadbtn' text="Download Diploma" onClick={generatePDFHandler} />
+                {diplomaRenderer}
+            </div>
         </div>
-    </div>
-  );
+    );
 };

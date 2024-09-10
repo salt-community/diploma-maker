@@ -16,14 +16,6 @@ type Props = {
 export const DiplomaRenderer = ({ uiRef, uiInstance, studentData, displayName, setDisplayName }: Props) => {
     useEffect(() => {
         if(studentData){
-            const displayname = 
-                studentData.bootcampName.includes("dnfs") ? 'Fullstack C# Dotnet'
-                : studentData.bootcampName.includes("jfs") ? 'Fullstack Java'
-                : studentData.bootcampName.includes("jsfs") ? 'Fullstack Javascript'
-                : 'ERR READING BOOTCAMP NAME';
-
-            setDisplayName(displayname);
-
             const inputs = templateInputsFromHistorySnapshot(studentData, displayName);
             const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
 
