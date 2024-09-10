@@ -25,12 +25,6 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
     const [showDiploma, setShowDiploma] = useState<boolean>(false);
     const [displayName, setDisplayName] = useState('');
 
-    useEffect(() => {
-        if(studentData){
-            setDisplayName(getDisplayNameFromBootcampName(studentData.bootcampName));
-        }
-    }, [studentData])
-
     const generatePDFHandler = async () => {
         if (uiInstance.current && studentData) {
             const inputs = uiInstance.current.getInputs();
@@ -81,6 +75,7 @@ export function VertificationPage( { getHistoryByVerificationCode }: Props) {
                             studentData={studentData}
                             displayName={displayName}
                             uiInstance={uiInstance}
+                            setDisplayName={setDisplayName}
                         />
                     }
                 />

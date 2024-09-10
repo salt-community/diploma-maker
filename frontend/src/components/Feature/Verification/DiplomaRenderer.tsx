@@ -4,18 +4,23 @@ import { HistorySnapshotResponse } from "../../../util/types";
 import { getPlugins } from "../../../util/pdfmeUtil";
 import { getFontsData } from "../../../util/fontsUtil";
 import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistorySnapshot } from "../../../util/dataHelpers";
+import { getDisplayNameFromBootcampName } from "../../../util/fieldReplacersUtil";
 
 type Props = {
     uiInstance: React.MutableRefObject<Form | Viewer>;
     studentData: HistorySnapshotResponse;
     displayName: string;
+    setDisplayName: (name: string) => void;
 }
 
-export const DiplomaRenderer = ({ studentData, displayName, uiInstance }: Props) => {
+export const DiplomaRenderer = ({ studentData, displayName, uiInstance, setDisplayName }: Props) => {
     const uiRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if(studentData){
+            const displayname = getDisplayNameFromBootcampName(studentData.bootcampName);
+            setDisplayName(displayname);
+            
             const inputs = templateInputsFromHistorySnapshot(studentData, displayName);
             const template = mapTemplateInputsToTemplateViewerFromSnapshot(studentData, inputs[0])
 
@@ -40,7 +45,7 @@ export const DiplomaRenderer = ({ studentData, displayName, uiInstance }: Props)
             }
             
         }
-    }, [uiRef, studentData])
+    }, [uiRef, studentData, displayName])
 
   return (
     <div
