@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom"
 import { HistorySnapshotResponse } from "../../util/types";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Form, Viewer } from "@pdfme/ui";
 import { mapTemplateInputsToTemplateViewerFromSnapshot } from "../../util/dataHelpers";
 import { generatePDFDownload } from '../../util/pdfGenerationUtil';
@@ -11,7 +11,6 @@ import { DiplomaRenderer } from '../../components/Feature/Verification/DiplomaRe
 import { DiplomaInvalidModule } from '../../components/Feature/Verification/DiplomaInvalidModule';
 import { DiplomaValidModule } from '../../components/Feature/Verification/DiplomaValidModule';
 import { DiplomaDropDown } from '../../components/Feature/Verification/DiplomaDropDown';
-import { getDisplayNameFromBootcampName } from '../../util/fieldReplacersUtil';
 
 type Props = {
     getHistoryByVerificationCode: (verificationCode: string) => void;
