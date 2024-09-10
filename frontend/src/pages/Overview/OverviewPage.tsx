@@ -125,7 +125,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
             }
             <DiplomaCardContainer 
                 tracks={tracks}
-                selectedTrack={selectedTrack}
                 visibleItems={visibleStudents}
                 currentPage={currentPage}
                 totalPages={totalPages}
