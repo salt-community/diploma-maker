@@ -17,8 +17,10 @@ import { populateField, populateIdField } from "../../util/fieldReplacersUtil";
 import { mapTemplateInputsBootcampsToTemplateViewer } from "../../util/dataHelpers";
 import { generatePDF } from "../../util/pdfGenerationUtil";
 import { InfoPopupType } from "../MenuItems/Popups/InfoPopup";
+import { defaultEmailContent } from "../../data/data";
 
 type Props = {
+    sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
     clients: Student[];
     items: Student[];
     templates: TemplateResponse[];
@@ -27,13 +29,14 @@ type Props = {
     show: boolean;
     closeEmailClient: () => void;
     modifyStudentEmailHandler: (studentInput?: Student, originalEmail?: string) => void;
-    sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
     callCustomAlert: (alertType: PopupType, title: string, content: string) => void;
     setProgress: React.Dispatch<React.SetStateAction<number>>;
     customInfoPopup: (type: InfoPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => void;
+    isCancelled: boolean;
 };
 
 export const EmailClient = ({ 
+    sendEmail,
     clients, 
     items,
     templates,
@@ -41,11 +44,11 @@ export const EmailClient = ({
     title, 
     show, 
     closeEmailClient, 
-    modifyStudentEmailHandler, 
-    sendEmail, 
+    modifyStudentEmailHandler,
     callCustomAlert,
     setProgress,
     customInfoPopup,
+    isCancelled,
 }: Props) => {
     const [emailChanges, setEmailChanges] = useState<{[key: string]: string}>({});
     const [checkedUsers, setCheckedUsers] = useState<{[key: string]: boolean}>({});
@@ -56,13 +59,18 @@ export const EmailClient = ({
     const [emailTitle, setEmailTitle] = useState<string>('');
     const [emailDescription, setEmailDescription] = useState<string>('');
 
+    const isCancelledRef = useRef(isCancelled); //useRef instead of useState due to how JavaScript handles closures (for loop inside emailClient.sendEmail)
+    useEffect(() => {
+        isCancelledRef.current = isCancelled;
+    }, [isCancelled]);
+
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
     useEffect(() => {
-        const storedEmailTitle = localStorage.getItem('emailcontent_title');
-        const storedEmailDescription = localStorage.getItem('emailcontent_description');
-        setEmailTitle(storedEmailTitle ? JSON.parse(storedEmailTitle) : `<h1>Congratulations, {studentName}! 🎉</h1>`);
-        setEmailDescription(storedEmailDescription ? JSON.parse(storedEmailDescription) : `<p>We are thrilled to award you the Salt Diploma. Your hard work and dedication have paid off, and we are excited to see what you accomplish next.</p> <p>Keep striving for greatness, and remember that this is just the beginning of your journey. Well done on completing the bootcamp!</p>`);
+        const storedEmailTitle = localStorage.getItem(defaultEmailContent.titleHeader);
+        const storedEmailDescription = localStorage.getItem(defaultEmailContent.descriptionHeader);
+        setEmailTitle(storedEmailTitle ? JSON.parse(storedEmailTitle) : defaultEmailContent.title);
+        setEmailDescription(storedEmailDescription ? JSON.parse(storedEmailDescription) : defaultEmailContent.description);
     }, []);
 
     // To Prevent Sending to students that are not visible in dom
@@ -111,8 +119,8 @@ export const EmailClient = ({
     }
 
     const emailContentSaveHandler = () => {
-        localStorage.setItem('emailcontent_title', JSON.stringify(emailTitle));
-        localStorage.setItem('emailcontent_description', JSON.stringify(emailDescription));
+        localStorage.setItem(defaultEmailContent.titleHeader, JSON.stringify(emailTitle));
+        localStorage.setItem(defaultEmailContent.descriptionHeader, JSON.stringify(emailDescription));
         customAlert('success',"Successfully Saved Email Content",``);
     }
 
@@ -131,6 +139,9 @@ export const EmailClient = ({
         const blendProgressDelay = 750;
 
         for (let i = 0; i < userIds.length; i++) {
+            if (isCancelledRef.current === true) {
+                break;
+            }
             try {
                 var file = await generatePDFFile(userIds[i], true);
                 var emailSendRequest: EmailSendRequest = {
@@ -141,7 +152,7 @@ export const EmailClient = ({
                     description: description,
                 }
 
-                await sendEmail(emailSendRequest)
+                // await sendEmail(emailSendRequest)
             } catch (error) {
                 //@ts-ignore
                 customInfoPopup('fail', `Opps, Something went wrong`, `${error}`, () => {});
