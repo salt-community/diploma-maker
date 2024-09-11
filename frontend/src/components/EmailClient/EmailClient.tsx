@@ -112,8 +112,8 @@ export const EmailClient = ({
     }
 
     const emailContentSaveHandler = () => {
-        localStorage.setItem('emailcontent_title', JSON.stringify(emailTitle));
-        localStorage.setItem('emailcontent_description', JSON.stringify(emailDescription));
+        localStorage.setItem(defaultEmailContent.titleHeader, JSON.stringify(emailTitle));
+        localStorage.setItem(defaultEmailContent.descriptionHeader, JSON.stringify(emailDescription));
         customAlert('success',"Successfully Saved Email Content",``);
     }
 
