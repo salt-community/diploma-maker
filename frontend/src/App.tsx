@@ -26,7 +26,6 @@ import { generatePreviewImages } from "./util/previewImageUtil";
 
 export default function App() {
   const [tracks, setTracks] = useState<TrackResponse[] | null>(null);
-  const [bootcamps, setBootcamps] = useState<BootcampResponse[] | null>(null);
   const [templates, setTemplates] = useState<TemplateResponse[] | null>(null);
 
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
@@ -36,18 +35,13 @@ export default function App() {
   const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert()
   const { user, isSignedIn } = useUser();
 
-  async function getBootcampsFromBackend() {
-    const newBootcamps: BootcampResponse[] = await api.getBootcamps(setLoadingMessage);
-    setBootcamps(newBootcamps);
-    const Tracks = await api.getAllTracks(setLoadingMessage)
-    setTracks(Tracks)
-  }
+  
   
   let api = initApiEndpoints({
     endpointUrl: import.meta.env.VITE_API_URL,
     token: getToken 
   });
-
+  
   useEffect(() => {
     if (isSignedIn) {
       if (!localStorage.getItem('isFirstLogin')) {
@@ -58,49 +52,53 @@ export default function App() {
     } else {
       localStorage.removeItem('isFirstLogin');
     }
-
-    if (isSignedIn && !bootcamps) {
-      getBootcampsFromBackend();
+    
+    if (isSignedIn && !tracks) {
       getTemplates();
       getTracks();
     }
-  }, [isSignedIn, bootcamps]);
-
+  }, [isSignedIn, tracks]);
+  
   const refresh = async () => {
-    const newBootcamps = await api.getBootcamps(setLoadingMessage);
     const newTemplates = await api.getAllTemplates(setLoadingMessage);
-    setBootcamps(newBootcamps);
     setTemplates(newTemplates);
     getTracks();
   }
-
+  
   // State Update Functions
   const bootcampStateUpdateFromImagePreview = (response: StudentResponse) => {
-    setBootcamps(prevBootcamps =>
-      prevBootcamps!.map(bootcamp => ({
-        ...bootcamp,
-        students: bootcamp.students.map(student =>
-          student.guidId === response.guidId
-            ? {
-              ...student,
-              previewImageUrl: response.previewImageUrl,
-              previewImageLQIPUrl: response.previewImageLQIPUrl,
-            }
-            : student
-        ),
+    setTracks(prevTracks =>
+      prevTracks!.map(track => ({
+        ...track,
+        bootcamps: track.bootcamps.map(bootcamp => ({
+          ...bootcamp,
+          students: bootcamp.students.map(student =>
+            student.guidId === response.guidId
+              ? {
+                  ...student,
+                  previewImageUrl: response.previewImageUrl,
+                  previewImageLQIPUrl: response.previewImageLQIPUrl,
+                }
+              : student
+          ),
+        })),
       }))
     );
   };
 
   const bootcampStateUpdateFromNewFormData = (bootcampResponse: BootcampResponse) => {
-    setBootcamps(prevBootcamps =>
-      prevBootcamps!.map(item =>
-        item.guidId === bootcampResponse.guidId
-          ? { ...item, students: bootcampResponse.students, templateId: bootcampResponse.templateId } as BootcampResponse
-          : item
-      )
+    setTracks(prevTracks =>
+      prevTracks!.map(track => ({
+        ...track,
+        bootcamps: track.bootcamps.map(bootcamp =>
+          bootcamp.guidId === bootcampResponse.guidId
+            ? { ...bootcamp, students: bootcampResponse.students, templateId: bootcampResponse.templateId }
+            : bootcamp
+        ),
+      }))
     );
   };
+  
 
   // Bootcamp Endpoint
   const deleteBootcamp = async (guidId: string) => {
