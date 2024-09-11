@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './OverviewPage.css';
 import { Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse, TrackResponse } from '../../util/types';
 import { AlertPopup } from '../../components/MenuItems/Popups/AlertPopup';
@@ -28,6 +28,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
     const [selectedTrack, setSelectedTrack] = useState<number | null>(0);
 
+    const [isCancelled, setIsCancelled] = useState<boolean>(false);
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
 
@@ -91,6 +92,12 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
             : setShowEmailClient(true)
     }
 
+    const cancelHandler = () => {
+        setIsCancelled(true);
+        closeInfoPopup();
+        customAlert('message', 'Operation Cancelled', 'The email sending process has been canceled.')
+    };
+
     return (
         <main className="overview-page">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} />
@@ -104,6 +111,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 confirmClick={(inputContent?: string) => infoPopupHandler(inputContent)}
                 currentProgress={progress}
                 setCurrentProgress={setProgress}
+                cancelHandler={cancelHandler}
             />
             {visibleStudents.length > 0 && tracks &&
                 <EmailClient
@@ -115,10 +123,11 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                     closeEmailClient={() => { setShowEmailClient(false) }}
                     show={showEmailClient}
                     modifyStudentEmailHandler={modifyStudentEmailHandler}
-                    sendEmail={sendEmail}
                     callCustomAlert={customAlert}
                     setProgress={setProgress}
                     customInfoPopup={customInfoPopup}
+                    isCancelled={isCancelled}
+                    setIsCancelled={setIsCancelled}
                 />
             }
             <DiplomaCardContainer 

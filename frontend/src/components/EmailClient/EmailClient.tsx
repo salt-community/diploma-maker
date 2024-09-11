@@ -28,10 +28,11 @@ type Props = {
     show: boolean;
     closeEmailClient: () => void;
     modifyStudentEmailHandler: (studentInput?: Student, originalEmail?: string) => void;
-    sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
     callCustomAlert: (alertType: PopupType, title: string, content: string) => void;
     setProgress: React.Dispatch<React.SetStateAction<number>>;
     customInfoPopup: (type: InfoPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => void;
+    isCancelled: boolean;
+    setIsCancelled: (cancelled: boolean) => void;
 };
 
 export const EmailClient = ({ 
@@ -42,11 +43,12 @@ export const EmailClient = ({
     title, 
     show, 
     closeEmailClient, 
-    modifyStudentEmailHandler, 
-    sendEmail, 
+    modifyStudentEmailHandler,
     callCustomAlert,
     setProgress,
     customInfoPopup,
+    isCancelled,
+    setIsCancelled
 }: Props) => {
     const [emailChanges, setEmailChanges] = useState<{[key: string]: string}>({});
     const [checkedUsers, setCheckedUsers] = useState<{[key: string]: boolean}>({});
@@ -56,6 +58,11 @@ export const EmailClient = ({
     
     const [emailTitle, setEmailTitle] = useState<string>('');
     const [emailDescription, setEmailDescription] = useState<string>('');
+
+    const isCancelledRef = useRef(isCancelled); //useRef instead of useState due to how JavaScript handles closures (for loop inside emailClient.sendEmail)
+    useEffect(() => {
+        isCancelledRef.current = isCancelled;
+    }, [isCancelled]);
 
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
@@ -132,6 +139,9 @@ export const EmailClient = ({
         const blendProgressDelay = 750;
 
         for (let i = 0; i < userIds.length; i++) {
+            if (isCancelledRef.current === true) {
+                break;
+            }
             try {
                 var file = await generatePDFFile(userIds[i], true);
                 var emailSendRequest: EmailSendRequest = {
@@ -142,7 +152,7 @@ export const EmailClient = ({
                     description: description,
                 }
 
-                await sendEmail(emailSendRequest)
+                // await sendEmail(emailSendRequest)
             } catch (error) {
                 //@ts-ignore
                 customInfoPopup('fail', `Opps, Something went wrong`, `${error}`, () => {});
@@ -152,6 +162,7 @@ export const EmailClient = ({
             const progressBarValue = ((i + 1) / userIds.length) * 100;
             await blendProgress((i / userIds.length) * 100, progressBarValue, blendProgressDelay, setProgress);
         }
+        setIsCancelled(false);
     }
 
     const generatePDFFile = async (guidId: string, emails?: boolean): Promise<Blob | void> => {

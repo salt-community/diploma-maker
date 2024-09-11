@@ -18,9 +18,10 @@ type Props = {
   abortClick: () => void;
   currentProgress?: number;
   setCurrentProgress: (value: number) => void;
+  cancelHandler?: () => void;
 }
 
-export const InfoPopup = ({ show, infoPopupType, title, text, confirmClick, abortClick, currentProgress, setCurrentProgress }: Props) => {
+export const InfoPopup = ({ show, infoPopupType, title, text, confirmClick, abortClick, currentProgress, setCurrentProgress, cancelHandler }: Props) => {
   const [inputContent, setInputContent] = useState<string>('');
   const [finished, setFinished] = useState<boolean>(false);
 
@@ -101,7 +102,7 @@ export const InfoPopup = ({ show, infoPopupType, title, text, confirmClick, abor
                     <label htmlFor="progress-bar">{currentProgress}%</label>
                     <progress id="progress-bar" value={currentProgress} max="100"></progress>
                   </div>
-                  <button onClick={() => {closeProgressWindowHandler()}} 
+                  <button onClick={() => {finished === false ? cancelHandler() : closeProgressWindowHandler()}} 
                     className={'popup_confirmation-content-btn ' + (finished ? 'finished' : 'progress')}
                   >
                     {infoPopupType === 'fail' ?
