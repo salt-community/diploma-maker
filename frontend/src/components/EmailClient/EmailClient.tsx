@@ -17,6 +17,7 @@ import { populateField, populateIdField } from "../../util/fieldReplacersUtil";
 import { mapTemplateInputsBootcampsToTemplateViewer } from "../../util/dataHelpers";
 import { generatePDF } from "../../util/pdfGenerationUtil";
 import { InfoPopupType } from "../MenuItems/Popups/InfoPopup";
+import { defaultEmailContent } from "../../data/data";
 
 type Props = {
     clients: Student[];
@@ -59,10 +60,10 @@ export const EmailClient = ({
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
 
     useEffect(() => {
-        const storedEmailTitle = localStorage.getItem('emailcontent_title');
-        const storedEmailDescription = localStorage.getItem('emailcontent_description');
-        setEmailTitle(storedEmailTitle ? JSON.parse(storedEmailTitle) : `<h1>Congratulations, {studentName}! 🎉</h1>`);
-        setEmailDescription(storedEmailDescription ? JSON.parse(storedEmailDescription) : `<p>We are thrilled to award you the Salt Diploma. Your hard work and dedication have paid off, and we are excited to see what you accomplish next.</p> <p>Keep striving for greatness, and remember that this is just the beginning of your journey. Well done on completing the bootcamp!</p>`);
+        const storedEmailTitle = localStorage.getItem(defaultEmailContent.titleHeader);
+        const storedEmailDescription = localStorage.getItem(defaultEmailContent.descriptionHeader);
+        setEmailTitle(storedEmailTitle ? JSON.parse(storedEmailTitle) : defaultEmailContent.title);
+        setEmailDescription(storedEmailDescription ? JSON.parse(storedEmailDescription) : defaultEmailContent.description);
     }, []);
 
     // To Prevent Sending to students that are not visible in dom
