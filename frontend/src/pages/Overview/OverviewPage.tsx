@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './OverviewPage.css';
 import { Student, StudentResponse, StudentUpdateRequestDto, EmailSendRequest, TemplateResponse, TrackResponse } from '../../util/types';
 import { AlertPopup } from '../../components/MenuItems/Popups/AlertPopup';
@@ -10,6 +10,7 @@ import { DiplomaCardContainer } from '../../components/Feature/Overview/DiplomaC
 import { defaultOverviewCardImage } from '../../data/data';
 import { OverviewSideBar } from '../../components/Feature/Overview/OverviewSidebar';
 import { validateEmail } from '../../util/validationUtil';
+import { delay } from '../../util/timeUtil';
 
 type Props = {
     tracks: TrackResponse[] | null;
@@ -28,10 +29,9 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
     const [selectedTrack, setSelectedTrack] = useState<number | null>(0);
 
+    const [isCancelled, setIsCancelled] = useState<boolean>(false);
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
     const { showInfoPopup, infoPopupContent, infoPopupType, infoPopupHandler, customInfoPopup, closeInfoPopup, progress, setProgress } = useCustomInfoPopup();
-
-    
 
     useEffect(() => {
         if (tracks) {
@@ -93,6 +93,21 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
             : setShowEmailClient(true)
     }
 
+    const cancelHandler = async () => {
+        if(isCancelled === false){
+            setIsCancelled(true);
+            customAlert('loading', 'Cancelling Operation...', '')
+            await delay(750);
+            //@ts-ignore
+            customInfoPopup('progress', 'Operation Cancelled', 'The email sending process has been canceled.', () => {})
+            customAlert('loadingfadeout', 'Operation Cancelled...', '')
+            setIsCancelled(false);
+        } else{
+            closeInfoPopup();
+            setIsCancelled(false);
+        }
+    };
+
     return (
         <main className="overview-page">
             <AlertPopup title={popupContent[0]} text={popupContent[1]} popupType={popupType} show={showPopup} onClose={closeAlert} />
@@ -106,9 +121,11 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 confirmClick={(inputContent?: string) => infoPopupHandler(inputContent)}
                 currentProgress={progress}
                 setCurrentProgress={setProgress}
+                cancel={() => cancelHandler()}
             />
             {visibleStudents.length > 0 && tracks &&
                 <EmailClient
+                    sendEmail={sendEmail}
                     title={selectedBootcamp ? tracks?.flatMap(t => t.bootcamps)?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'}
                     clients={visibleStudents}
                     items={allStudents}
@@ -117,10 +134,10 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                     closeEmailClient={() => { setShowEmailClient(false) }}
                     show={showEmailClient}
                     modifyStudentEmailHandler={modifyStudentEmailHandler}
-                    sendEmail={sendEmail}
                     callCustomAlert={customAlert}
                     setProgress={setProgress}
                     customInfoPopup={customInfoPopup}
+                    isCancelled={isCancelled}
                 />
             }
             <DiplomaCardContainer 
