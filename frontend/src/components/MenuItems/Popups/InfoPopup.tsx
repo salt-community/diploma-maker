@@ -18,12 +18,13 @@ type Props = {
   abortClick: () => void;
   currentProgress?: number;
   setCurrentProgress: (value: number) => void;
-  cancelHandler?: () => void;
+  cancel?: () => void;
 }
 
-export const InfoPopup = ({ show, infoPopupType, title, text, confirmClick, abortClick, currentProgress, setCurrentProgress, cancelHandler }: Props) => {
+export const InfoPopup = ({ show, infoPopupType, title, text, confirmClick, abortClick, currentProgress, setCurrentProgress, cancel }: Props) => {
   const [inputContent, setInputContent] = useState<string>('');
   const [finished, setFinished] = useState<boolean>(false);
+  const [cancelled, setCancelled] = useState<boolean>(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputContent(event.target.value);
@@ -56,13 +57,23 @@ export const InfoPopup = ({ show, infoPopupType, title, text, confirmClick, abor
     abortClick(); 
     await delay(750)
     setFinished(false);
+    setCancelled(false);
     setCurrentProgress(0);
+  }
+
+  const cancelHandler = async () => {
+    if(cancelled === false && !finished){
+      cancel();
+      setCancelled(true);
+    } else{
+      await closeProgressWindowHandler() 
+    }
   }
 
   return (
     <>
     <div className={`preventClickBGinfo ${show ? 'fade-in' : 'fade-out'}`}></div>
-      <div className={`popup_confirmation 
+      <div className={`popup_confirmation
           ${infoPopupType === 'fail' ? 'fail' : infoPopupType === 'form' ? 'form' : finished ? 'finished' : 'progress'} 
           ${show ? 'fade-in ' : 'fade-out '}`}>
         <div className="popup_confirmation-content">
@@ -102,13 +113,13 @@ export const InfoPopup = ({ show, infoPopupType, title, text, confirmClick, abor
                     <label htmlFor="progress-bar">{currentProgress}%</label>
                     <progress id="progress-bar" value={currentProgress} max="100"></progress>
                   </div>
-                  <button onClick={() => {finished === false ? cancelHandler() : closeProgressWindowHandler()}} 
+                  <button onClick={() => cancelHandler()} 
                     className={'popup_confirmation-content-btn ' + (finished ? 'finished' : 'progress')}
                   >
                     {infoPopupType === 'fail' ?
                      'Exit'
                     :
-                    finished ? 'Done' : 'Cancel'}
+                    finished || cancelled ? 'Done' : 'Cancel'}
                   </button>
                 </>
               }

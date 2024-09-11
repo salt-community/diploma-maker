@@ -10,6 +10,7 @@ import { DiplomaCardContainer } from '../../components/Feature/Overview/DiplomaC
 import { defaultOverviewCardImage } from '../../data/data';
 import { OverviewSideBar } from '../../components/Feature/Overview/OverviewSidebar';
 import { validateEmail } from '../../util/validationUtil';
+import { delay } from '../../util/timeUtil';
 
 type Props = {
     tracks: TrackResponse[] | null;
@@ -92,10 +93,19 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
             : setShowEmailClient(true)
     }
 
-    const cancelHandler = () => {
-        setIsCancelled(true);
-        closeInfoPopup();
-        customAlert('message', 'Operation Cancelled', 'The email sending process has been canceled.')
+    const cancelHandler = async () => {
+        if(isCancelled === false){
+            setIsCancelled(true);
+            customAlert('loading', 'Cancelling Operation...', '')
+            await delay(750);
+            //@ts-ignore
+            customInfoPopup('progress', 'Operation Cancelled', 'The email sending process has been canceled.', () => {})
+            customAlert('loadingfadeout', 'Operation Cancelled...', '')
+            setIsCancelled(false);
+        } else{
+            closeInfoPopup();
+            setIsCancelled(false);
+        }
     };
 
     return (
@@ -111,10 +121,11 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                 confirmClick={(inputContent?: string) => infoPopupHandler(inputContent)}
                 currentProgress={progress}
                 setCurrentProgress={setProgress}
-                cancelHandler={cancelHandler}
+                cancel={() => cancelHandler()}
             />
             {visibleStudents.length > 0 && tracks &&
                 <EmailClient
+                    sendEmail={sendEmail}
                     title={selectedBootcamp ? tracks?.flatMap(t => t.bootcamps)?.find(bootcamp => bootcamp.guidId === selectedBootcamp)?.name : 'All Bootcamps'}
                     clients={visibleStudents}
                     items={allStudents}
@@ -127,7 +138,6 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
                     setProgress={setProgress}
                     customInfoPopup={customInfoPopup}
                     isCancelled={isCancelled}
-                    setIsCancelled={setIsCancelled}
                 />
             }
             <DiplomaCardContainer 

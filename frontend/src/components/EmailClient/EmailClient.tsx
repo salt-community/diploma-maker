@@ -20,6 +20,7 @@ import { InfoPopupType } from "../MenuItems/Popups/InfoPopup";
 import { defaultEmailContent } from "../../data/data";
 
 type Props = {
+    sendEmail: (emailRequest: EmailSendRequest) => Promise<void>;
     clients: Student[];
     items: Student[];
     templates: TemplateResponse[];
@@ -32,10 +33,10 @@ type Props = {
     setProgress: React.Dispatch<React.SetStateAction<number>>;
     customInfoPopup: (type: InfoPopupType, title: string, content: string, handler: () => ((inputContent?: string) => void) | (() => void)) => void;
     isCancelled: boolean;
-    setIsCancelled: (cancelled: boolean) => void;
 };
 
 export const EmailClient = ({ 
+    sendEmail,
     clients, 
     items,
     templates,
@@ -48,7 +49,6 @@ export const EmailClient = ({
     setProgress,
     customInfoPopup,
     isCancelled,
-    setIsCancelled
 }: Props) => {
     const [emailChanges, setEmailChanges] = useState<{[key: string]: string}>({});
     const [checkedUsers, setCheckedUsers] = useState<{[key: string]: boolean}>({});
@@ -162,7 +162,6 @@ export const EmailClient = ({
             const progressBarValue = ((i + 1) / userIds.length) * 100;
             await blendProgress((i / userIds.length) * 100, progressBarValue, blendProgressDelay, setProgress);
         }
-        setIsCancelled(false);
     }
 
     const generatePDFFile = async (guidId: string, emails?: boolean): Promise<Blob | void> => {
