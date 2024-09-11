@@ -152,7 +152,7 @@ export const EmailClient = ({
                     description: description,
                 }
 
-                // await sendEmail(emailSendRequest)
+                await sendEmail(emailSendRequest)
             } catch (error) {
                 //@ts-ignore
                 customInfoPopup('fail', `Opps, Something went wrong`, `${error}`, () => {});
