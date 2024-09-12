@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -28,10 +29,19 @@ namespace DiplomaMakerApi.Tests.Integration
                 logging.ClearProviders();
             });
 
+            builder.ConfigureAppConfiguration((context, config) =>
+            {
+                var configuration = new Dictionary<string, string>
+                {
+                    { "Blob:UseBlobStorage", "false" },
+                    { "GoogleCloud:BucketName", "test-bucket" },
+                };
+                config.AddInMemoryCollection(configuration!);
+            });
+
             builder.ConfigureTestServices(services => {
                 services.RemoveAll(typeof(IHostedService));
                 services.RemoveAll(typeof(DiplomaMakingContext));
-                services.RemoveAll(typeof(DbContext));
                 services.AddDbContext<DiplomaMakingContext>(opt => {
                     opt.UseNpgsql(_dbContainer.GetConnectionString());
                 });
@@ -43,7 +53,7 @@ namespace DiplomaMakerApi.Tests.Integration
                     options.DefaultAuthenticateScheme = "Test";
                     options.DefaultChallengeScheme = "Test";
                 })
-                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+                .AddScheme<AuthenticationSchemeOptions, MockAuthorization>("Test", options => { });
 
                 services.AddAuthorization(options =>
                 {
@@ -62,10 +72,43 @@ namespace DiplomaMakerApi.Tests.Integration
                 var services = scope.ServiceProvider;
                 SeedData.Initialize(services);
             }
+            cloneDefaultFiles();
         }
         public new async Task DisposeAsync()
         {
             await _dbContainer.DisposeAsync();
+            cleanupTestFiles();
         }
+        private void cloneDefaultFiles()
+        {
+            var testProjectBinRoot = Directory.GetCurrentDirectory();
+            var solutionRoot = Path.GetFullPath(Path.Combine(testProjectBinRoot, "..", "..", "..", ".."));
+            var apiProjectRoot = Path.Combine(solutionRoot, "DiplomaMakerApi");
+            var sourceFilePath = Path.Combine(apiProjectRoot, "Blob", "DiplomaPdfs", "Default.pdf");
+            var destinationDirectory = Path.Combine(testProjectBinRoot, "Blob", "DiplomaPdfs");
+
+            if (!Directory.Exists(destinationDirectory))
+            {
+                Directory.CreateDirectory(destinationDirectory);
+            }
+
+            var destinationFilePath = Path.Combine(destinationDirectory, "Default.pdf");
+            if (File.Exists(sourceFilePath))
+            {
+                File.Copy(sourceFilePath, destinationFilePath, true);
+            }
+            else
+            {
+                throw new FileNotFoundException($"Source file {sourceFilePath} not found.");
+            }
+        }
+
+        private void cleanupTestFiles()
+        {
+            var testProjectBinRoot = Directory.GetCurrentDirectory();
+            var blobDirectoryPath = Path.Combine(testProjectBinRoot, "Blob");
+            Directory.Delete(blobDirectoryPath, true);
+        }
+
     }
 }

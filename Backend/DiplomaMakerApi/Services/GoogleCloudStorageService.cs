@@ -19,7 +19,7 @@ namespace DiplomaMakerApi.Services
             _context = context;
             _env = env;
             _fileUtilityService = fileUtilityService;
-            _bucketName = _env.IsDevelopment()
+            _bucketName = _env.IsDevelopment() || _env.IsEnvironment("Test")
                 ? configuration["GoogleCloud:BucketName"] ?? throw new ArgumentNullException("GoogleCloud:BucketName configuration is missing")
                 : Environment.GetEnvironmentVariable("BucketName") ?? throw new ArgumentNullException("BucketName environment variable is missing");
         }
