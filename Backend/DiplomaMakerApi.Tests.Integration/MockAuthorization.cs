@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+public class MockAuthorization : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public TestAuthHandler(
+    public MockAuthorization(
         IOptionsMonitor<AuthenticationSchemeOptions> options, 
         ILoggerFactory logger, 
         UrlEncoder encoder)
