@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -30,6 +32,23 @@ namespace DiplomaMakerApi.Tests.Integration
                 services.RemoveAll(typeof(DbContext));
                 services.AddDbContext<DiplomaMakingContext>(opt => {
                     opt.UseNpgsql(_dbContainer.GetConnectionString());
+                });
+                
+                services.RemoveAll(typeof(JwtBearerHandler));
+
+                services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = "Test";
+                    options.DefaultChallengeScheme = "Test";
+                })
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+
+                services.AddAuthorization(options =>
+                {
+                    options.AddPolicy("TestPolicy", policy =>
+                    {
+                        policy.RequireAuthenticatedUser();
+                    });
                 });
             });
 
