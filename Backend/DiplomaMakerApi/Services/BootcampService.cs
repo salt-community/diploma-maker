@@ -12,7 +12,8 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
     private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
     private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
     private readonly FileUtilityService _fileUtilityService = fileUtilityService;
-    private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
+    private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]
+        ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
 
     public async Task<Bootcamp> PostBootcamp( BootcampRequestDto requestDto )
     {

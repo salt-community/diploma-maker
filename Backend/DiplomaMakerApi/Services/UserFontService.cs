@@ -9,7 +9,8 @@ namespace DiplomaMakerApi.Services
         private readonly DiplomaMakingContext _context = context;
         private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
         private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
-        private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
+        private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]
+            ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
         public async Task<List<UserFont>> GetUserFonts(){
             return await _context.UserFonts
                 .ToListAsync();
