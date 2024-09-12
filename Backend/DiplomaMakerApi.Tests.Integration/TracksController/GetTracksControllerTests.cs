@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using Bogus;
 using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
@@ -17,7 +16,6 @@ namespace DiplomaMakerApi.Tests.Integration.TracksControllerTests
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "mock-token");
         }
-
 
         [Fact ]
         public async void GetAll_ReturnsTracks_WhenTracksExist()

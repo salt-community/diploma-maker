@@ -22,6 +22,8 @@ namespace DiplomaMakerApi.Tests.Integration
             .Build();
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.UseEnvironment("Test");
+
             builder.ConfigureLogging(logging => {
                 logging.ClearProviders();
             });
@@ -51,10 +53,7 @@ namespace DiplomaMakerApi.Tests.Integration
                     });
                 });
             });
-
-            builder.UseEnvironment("Test");
         }
-
         public async Task InitializeAsync()
         {
             await _dbContainer.StartAsync();
@@ -64,7 +63,6 @@ namespace DiplomaMakerApi.Tests.Integration
                 SeedData.Initialize(services);
             }
         }
-
         public new async Task DisposeAsync()
         {
             await _dbContainer.DisposeAsync();

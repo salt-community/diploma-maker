@@ -9,8 +9,7 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
     public TestAuthHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options, 
         ILoggerFactory logger, 
-        UrlEncoder encoder, 
-        TimeProvider timeProvider)
+        UrlEncoder encoder)
         : base(options, logger, encoder)
     { }
 
