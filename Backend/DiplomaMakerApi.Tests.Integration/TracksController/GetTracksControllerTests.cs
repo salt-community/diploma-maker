@@ -20,7 +20,7 @@ namespace DiplomaMakerApi.Tests.Integration.TracksControllerTests
             var response = await _client.GetAsync("Tracks");
 
             // Assert
-            await Task.Delay(10000);
+            await Task.Delay(2000);
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
     }

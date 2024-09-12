@@ -27,6 +27,7 @@ namespace DiplomaMakerApi.Tests.Integration
             builder.ConfigureTestServices(services => {
                 services.RemoveAll(typeof(IHostedService));
                 services.RemoveAll(typeof(DiplomaMakingContext));
+                services.RemoveAll(typeof(DbContext));
                 services.AddDbContext<DiplomaMakingContext>(opt => {
                     opt.UseNpgsql(_dbContainer.GetConnectionString());
                 });

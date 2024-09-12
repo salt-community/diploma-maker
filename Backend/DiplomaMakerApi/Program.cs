@@ -24,14 +24,22 @@ if(!builder.Environment.IsDevelopment()) {
     });
 }
 
-string? connectionstr = builder.Environment.IsDevelopment() ?
-                        builder.Configuration.GetConnectionString("PostgreSQLConnectionLocal") :
-                        Environment.GetEnvironmentVariable("PostgreConnection");
+if (!builder.Environment.IsEnvironment("Test"))
+{
+    string? connectionstr = builder.Environment.IsDevelopment() ?
+                            builder.Configuration.GetConnectionString("PostgreSQLConnectionLocal") :
+                            Environment.GetEnvironmentVariable("PostgreConnection");
 
+    builder.Services.AddDbContext<DiplomaMakingContext>(options =>
+        options.UseNpgsql(connectionstr 
+            ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")
+        ));
 
-builder.Services.AddDbContext<DiplomaMakingContext>(options =>
-    options.UseNpgsql(connectionstr ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
-// Add services to the container.
+    builder.Services.AddHostedService(service => 
+        new DatabasePokeService(service, connectionstr 
+            ?? throw new InvalidOperationException("Connection string is null")
+        ));
+}
 
 builder.Services.AddControllers().AddJsonOptions(opt => {
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -116,8 +124,6 @@ builder.Services.AddScoped<ClerkService>();
 
 
 builder.Services.AddLogging();
-builder.Services.AddHostedService(service => 
-    new DatabasePokeService(service, connectionstr ?? throw new InvalidOperationException("Connection string is null")));
 
 var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>();
