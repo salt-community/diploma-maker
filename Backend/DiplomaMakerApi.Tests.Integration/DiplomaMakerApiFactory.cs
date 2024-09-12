@@ -8,10 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Testcontainers.PostgreSql;
+using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration
 {
-    public class DiplomaMakerApiFactory : WebApplicationFactory<IDiplomaApiMarker>
+    public class DiplomaMakerApiFactory : WebApplicationFactory<IDiplomaApiMarker>, IAsyncLifetime
     {
         private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
             .WithDatabase("diploma_maker_db")
@@ -30,6 +31,16 @@ namespace DiplomaMakerApi.Tests.Integration
                     opt.UseNpgsql(_dbContainer.GetConnectionString());
                 });
             });
+        }
+
+        public async Task InitializeAsync()
+        {
+            await _dbContainer.StartAsync();
+        }
+
+        public new async Task DisposeAsync()
+        {
+            await _dbContainer.DisposeAsync();
         }
     }
 }
