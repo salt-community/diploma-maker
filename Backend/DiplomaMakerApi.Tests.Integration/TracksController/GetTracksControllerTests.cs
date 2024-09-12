@@ -17,10 +17,9 @@ namespace DiplomaMakerApi.Tests.Integration.TracksControllerTests
         public async void GetAll_ReturnsUnathorized_WhenInvalidToken()
         {
             // Act
-            var response = await _client.GetAsync("Tracks");
+            var response = await _client.GetAsync("api/Tracks");
 
             // Assert
-            await Task.Delay(2000);
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
     }
