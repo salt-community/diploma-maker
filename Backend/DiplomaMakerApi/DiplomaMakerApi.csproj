@@ -7,6 +7,7 @@
     <UserSecretsId>fc4fd1a1-0f1d-4af0-a4c5-569b8b8fe1bd</UserSecretsId>
 
     <SelfContained>true</SelfContained>
+    <NoWarn>NU1701</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
