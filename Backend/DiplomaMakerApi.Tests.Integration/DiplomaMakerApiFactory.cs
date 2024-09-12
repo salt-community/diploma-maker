@@ -29,6 +29,8 @@ namespace DiplomaMakerApi.Tests.Integration
                     opt.UseNpgsql(_dbContainer.GetConnectionString());
                 });
             });
+
+            builder.UseEnvironment("Test");
         }
 
         public async Task InitializeAsync()

@@ -11,12 +11,18 @@ public static class SeedData
 
         using (var _context = new DiplomaMakingContext(serviceProvider.GetRequiredService<DbContextOptions<DiplomaMakingContext>>()))
         {
-            // Clears all pdfbackgroundfiles except Default.pdf
-            var _fileUtilityService = serviceProvider.GetRequiredService<FileUtilityService>();
-            var fileOperations = new LocalFileStorageService(_context, _fileUtilityService);
-            fileOperations.ClearFolderExceptDefault();
-            fileOperations.ClearFolderExceptDefault("ImagePreview");
-            fileOperations.ClearFolderExceptDefault("ImagePreviewLQIP");
+            var environment = serviceProvider.GetService<IWebHostEnvironment>();
+            bool isTestEnvironment = environment?.EnvironmentName == "Test";
+
+            if (!isTestEnvironment)
+            {
+                // Clears all pdfbackgroundfiles except Default.pdf
+                var _fileUtilityService = serviceProvider.GetRequiredService<FileUtilityService>();
+                var fileOperations = new LocalFileStorageService(_context, _fileUtilityService);
+                fileOperations.ClearFolderExceptDefault();
+                fileOperations.ClearFolderExceptDefault("ImagePreview");
+                fileOperations.ClearFolderExceptDefault("ImagePreviewLQIP");
+            }
             
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
