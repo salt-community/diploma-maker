@@ -1,5 +1,3 @@
-using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Containers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -36,6 +34,11 @@ namespace DiplomaMakerApi.Tests.Integration
         public async Task InitializeAsync()
         {
             await _dbContainer.StartAsync();
+            using (var scope = Server.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                SeedData.Initialize(services);
+            }
         }
 
         public new async Task DisposeAsync()
