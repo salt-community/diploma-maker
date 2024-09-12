@@ -25,13 +25,24 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         {
             // Arrange
             var templateRequest = _templateRequestGenerator.Generate();
+            var newTemplate = new DiplomaTemplate()
+            {
+                Id = 2,
+                Name = templateRequest.templateName,
+            };
 
             // Act
             var response = await _client.PostAsJsonAsync("api/Templates", templateRequest);
 
             // Assert
-            // var templateResponse = await response.Content.ReadFromJsonAsync<TemplateResponseDto>();
             response.StatusCode.Should().Be(HttpStatusCode.Created);
+            var templateResponse = await response.Content.ReadFromJsonAsync<TemplateResponseDto>();
+            templateResponse!.BasePdf.Should().Be($"Blob/{templateRequest.templateName}.pdf");
+            TestUtil.CheckFileExists(templateRequest.templateName, ".pdf", "DiplomaPdfs");
+            templateResponse.Should().BeEquivalentTo(newTemplate, options => options
+                .Excluding(t => t.PdfBackgroundLastUpdated)
+                .Excluding(t => t.LastUpdated));
+
         }
     }
 }
