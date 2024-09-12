@@ -20,11 +20,11 @@ namespace DiplomaMakerApi.Services
             _env = env;
             _fileUtilityService = fileUtilityService;
             _bucketName = _env.IsDevelopment()
-                ? configuration["GoogleCloud:BucketName"]
-                : Environment.GetEnvironmentVariable("BucketName");
+                ? configuration["GoogleCloud:BucketName"] ?? throw new ArgumentNullException("GoogleCloud:BucketName configuration is missing")
+                : Environment.GetEnvironmentVariable("BucketName") ?? throw new ArgumentNullException("BucketName environment variable is missing");
         }
 
-        public async Task<string> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
+        public async Task<string?> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
         {
             var objectName = templateName.Equals("Default.pdf", StringComparison.OrdinalIgnoreCase)
                 ? $"{_basePath}/{subDirectory}/{templateName}"

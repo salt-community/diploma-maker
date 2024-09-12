@@ -32,7 +32,8 @@ namespace DiplomaMakerApi.Controllers
             _localFileStorageService = localFileStorageService;
             _googleCloudStorageService = googleCloudStorageService;
             _env = env;
-            _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
+            _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]
+                ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
             _bootcampService = bootcampService;
             _mapper = mapper;
         }

@@ -15,7 +15,7 @@ namespace DiplomaMakerApi.Services
             _fileUtilityService = fileUtilityService;
         }
 
-        public async Task<string> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
+        public async Task<string?> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
         {
             var directoryPath = Path.Combine(_basePath, subDirectory ?? string.Empty);
             var filePath = Path.Combine(directoryPath, templateName);
@@ -46,7 +46,7 @@ namespace DiplomaMakerApi.Services
                 throw new FileNotFoundException("No files found in the directory.");
             }
 
-            var fileBytes = _fileUtilityService.CreateZipFromFiles(files, zipFileName);
+            var fileBytes = await Task.Run(() => _fileUtilityService.CreateZipFromFiles(files, zipFileName));
 
             return new FileContentResult(fileBytes, "application/zip")
             {
