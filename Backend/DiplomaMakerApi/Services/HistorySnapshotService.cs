@@ -21,7 +21,8 @@ namespace DiplomaMakerApi.Services
         private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
         private readonly IMapper _mapper = mapper;
         private readonly IWebHostEnvironment _env = env;
-        private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
+        private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"] 
+            ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
 
         private readonly FileUtilityService _fileUtilityService = fileUtilityService;
 
@@ -82,7 +83,7 @@ namespace DiplomaMakerApi.Services
                     {
                         opt.Items["bootcampUsed"] = bootcampUsed;
                         opt.Items["templateUsed"] = templateUsed;
-                        opt.Items["templateBackgroundLocation"] = "Blob/" + templateBackgroundLocation.Replace('\\', '/');
+                        opt.Items["templateBackgroundLocation"] = "Blob/" + templateBackgroundLocation!.Replace('\\', '/');
                         opt.Items["lastSnapshot"] = lastSnapshot;
                         opt.Items["lastSnapshots"] = lastSnapshots;
                         opt.Items["timeUtcNow"] = timeUtcNow;
@@ -95,18 +96,18 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        private async Task<string> GetFileLocation(string fileName)
+        private async Task<string?> GetFileLocation(string fileName)
         {
             var fileLocationResponse = (!_useBlobStorage)
                 ? await _localFileStorageService.GetFilePath(Path.GetFileName(fileName))
                 : await _googleCloudStorageService.GetFilePath(Path.GetFileName(fileName));
-            
-            if(fileLocationResponse != null)
+
+            if (fileLocationResponse != null)
             {
                 fileLocationResponse = await _fileUtilityService.GetRelativePathAsync(fileLocationResponse, "DiplomaPdfs");
             }
-            
-            return fileLocationResponse != null ? fileLocationResponse : null; // Temp Fix: when generating a second time it gives the absolute path for some strange reason.
+
+            return fileLocationResponse;
         }
 
         public async Task<List<DiplomaSnapshot>> GetHistorySnapshots()
@@ -140,7 +141,7 @@ namespace DiplomaMakerApi.Services
         public async Task<List<DiplomaSnapshot>> MakeActiveHistorySnapshot(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
         {
 
-            var studentGuidIdsList = makeActiveSnapshotRequestDto.StudentGuidIds.ToList();
+            var studentGuidIdsList = makeActiveSnapshotRequestDto.StudentGuidIds!.ToList();
             var idsList = makeActiveSnapshotRequestDto.Ids.ToList();
 
             var historySnapshots = await _context.DiplomaSnapshots

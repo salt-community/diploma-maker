@@ -17,7 +17,8 @@ public class TemplateService
     private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
     private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
     private readonly IWebHostEnvironment _env = env;
-    private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]);
+    private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]
+        ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
 
     public async Task<List<DiplomaTemplate>> GetTemplates(){
         return await _context.DiplomaTemplates

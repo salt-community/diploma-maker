@@ -116,7 +116,8 @@ builder.Services.AddScoped<ClerkService>();
 
 
 builder.Services.AddLogging();
-builder.Services.AddHostedService(service => new DatabasePokeService(service, connectionstr));
+builder.Services.AddHostedService(service => 
+    new DatabasePokeService(service, connectionstr ?? throw new InvalidOperationException("Connection string is null")));
 
 var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>();
