@@ -7,14 +7,14 @@ using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.TracksControllerTests
 {
-    public class GetTracksControllerTests : IClassFixture<DiplomaMakerApiFactory>
+    public class GetAllTracksControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
 
-        public GetTracksControllerTests(DiplomaMakerApiFactory apiFactory)
+        public GetAllTracksControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "mock-token");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "test-token");
         }
 
         [Fact ]
