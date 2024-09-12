@@ -18,7 +18,6 @@ public class StudentService
         _logger = logger;
         _historySnapshotService = historySnapshotService;
     }
-    // public async Task<List<Student>> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
     public async Task<Bootcamp> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
     {
         var bootcamp = await _context.Bootcamps.Include(b => b.Students)
@@ -58,7 +57,7 @@ public class StudentService
             .Include(b => b.Track)
             .FirstOrDefaultAsync(b => b.GuidId == BootcampGuidId);
 
-        return updatedBootcamp;
+        return updatedBootcamp ?? throw new Exception($"Failed to retrieve updated Bootcamp with ID {BootcampGuidId}");
     }
     public async Task<List<Student>> GetAllStudents(){
         return await _context.Students
