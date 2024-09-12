@@ -24,7 +24,7 @@ namespace DiplomaMakerApi.Services
                 : Environment.GetEnvironmentVariable("BucketName");
         }
 
-        public async Task<string> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
+        public async Task<string?> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
         {
             var objectName = templateName.Equals("Default.pdf", StringComparison.OrdinalIgnoreCase)
                 ? $"{_basePath}/{subDirectory}/{templateName}"
