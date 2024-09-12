@@ -148,10 +148,10 @@ namespace DiplomaMakerApi.Services
 
                     using (MemoryStream pngStream = new MemoryStream())
                     {
-                        using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load<Rgba32>(imageStream))
+                        using (Image<Rgba32> image = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(imageStream))
                         {
                             _logger.LogInformation("Loaded image from stream.");
-                            image.Save(pngStream, new PngEncoder());
+                            await image.SaveAsync(pngStream, new PngEncoder());
                         }
 
                         _logger.LogInformation("Saved image as PNG to memory stream. Stream length: {Length}", pngStream.Length);
