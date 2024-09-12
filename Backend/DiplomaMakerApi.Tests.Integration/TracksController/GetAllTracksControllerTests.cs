@@ -18,7 +18,7 @@ namespace DiplomaMakerApi.Tests.Integration.TracksControllerTests
         }
 
         [Fact ]
-        public async void GetAll_ReturnsTracks_WhenTracksExist()
+        public async void GetTracks_ReturnsTracks_WhenTracksExist()
         {
             // Act
             var response = await _client.GetAsync("api/Tracks");
@@ -32,7 +32,7 @@ namespace DiplomaMakerApi.Tests.Integration.TracksControllerTests
         }
 
         [Fact]
-        public async void GetAll_ReturnsUnathorized_WhenInvalidToken()
+        public async void GetTracks_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange
             _client.DefaultRequestHeaders.Authorization = null;
