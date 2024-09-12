@@ -95,18 +95,18 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        private async Task<string> GetFileLocation(string fileName)
+        private async Task<string?> GetFileLocation(string fileName)
         {
             var fileLocationResponse = (!_useBlobStorage)
                 ? await _localFileStorageService.GetFilePath(Path.GetFileName(fileName))
                 : await _googleCloudStorageService.GetFilePath(Path.GetFileName(fileName));
-            
-            if(fileLocationResponse != null)
+
+            if (fileLocationResponse != null)
             {
                 fileLocationResponse = await _fileUtilityService.GetRelativePathAsync(fileLocationResponse, "DiplomaPdfs");
             }
-            
-            return fileLocationResponse != null ? fileLocationResponse : null; // Temp Fix: when generating a second time it gives the absolute path for some strange reason.
+
+            return fileLocationResponse;
         }
 
         public async Task<List<DiplomaSnapshot>> GetHistorySnapshots()
