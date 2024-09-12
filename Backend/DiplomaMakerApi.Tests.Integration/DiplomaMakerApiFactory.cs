@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Testcontainers.PostgreSql;
 using Xunit;
@@ -24,6 +25,7 @@ namespace DiplomaMakerApi.Tests.Integration
             });
 
             builder.ConfigureTestServices(services => {
+                services.RemoveAll(typeof(IHostedService));
                 services.RemoveAll(typeof(DiplomaMakingContext));
                 services.AddDbContext<DiplomaMakingContext>(opt => {
                     opt.UseNpgsql(_dbContainer.GetConnectionString());
