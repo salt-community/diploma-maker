@@ -35,7 +35,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             // Assert
             var templatesResponse = await response.Content.ReadFromJsonAsync<List<TemplateResponseDto>>();
             templatesResponse.Should().HaveCount(6);
-            TestUtil.CheckNumberOfFilesInFolder(7, "DiplomaPdfs");
+            TestUtil.CheckNumberOfFilesInFolder(6, "DiplomaPdfs");
         }
     }
 }

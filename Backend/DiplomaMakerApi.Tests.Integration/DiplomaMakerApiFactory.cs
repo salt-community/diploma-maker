@@ -67,6 +67,7 @@ namespace DiplomaMakerApi.Tests.Integration
         public async Task InitializeAsync()
         {
             await _dbContainer.StartAsync();
+            cleanupTestFiles();
             using (var scope = Server.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
