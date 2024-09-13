@@ -23,9 +23,11 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         public async void GetTemplates_ReturnsAllTemplates_WhenAuthorized()
         {
             // Arrange
+            var templateRequests = new List<TemplatePostRequestDto>();
             for (int i = 0; i < 5; i++)
             {
                 var templateRequest = _templateRequestGenerator.Generate();
+                templateRequests.Add(templateRequest);
                 await _client.PostAsJsonAsync("api/Templates", templateRequest);
             }
             
@@ -35,7 +37,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             // Assert
             var templatesResponse = await response.Content.ReadFromJsonAsync<List<TemplateResponseDto>>();
             templatesResponse.Should().HaveCount(6);
-            TestUtil.CheckNumberOfFilesInFolder(6, "DiplomaPdfs");
+            templateRequests.All(tr => TestUtil.CheckFileExists(tr.templateName, ".pdf", "DiplomaPdfs"));
         }
     }
 }
