@@ -107,7 +107,11 @@ namespace DiplomaMakerApi.Tests.Integration
         {
             var testProjectBinRoot = Directory.GetCurrentDirectory();
             var blobDirectoryPath = Path.Combine(testProjectBinRoot, "Blob");
-            Directory.Delete(blobDirectoryPath, true);
+
+            if (Directory.Exists(blobDirectoryPath))
+            {
+                Directory.Delete(blobDirectoryPath, true);
+            }
         }
 
     }
