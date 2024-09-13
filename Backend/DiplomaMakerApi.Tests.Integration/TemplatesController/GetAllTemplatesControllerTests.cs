@@ -1,4 +1,8 @@
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using Bogus;
+using DiplomaMakerApi.Models;
+using FluentAssertions;
 using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.TemplatesController
@@ -6,10 +10,32 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
     public class GetAllTemplatesControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
+        private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
+            new Faker<TemplatePostRequestDto>()
+                .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
         public GetAllTemplatesControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "test-token");
+        }
+
+        [Fact]
+        public async void GetTemplates_ReturnsAllTemplates_WhenAuthorized()
+        {
+            // Arrange
+            for (int i = 0; i < 5; i++)
+            {
+                var templateRequest = _templateRequestGenerator.Generate();
+                await _client.PostAsJsonAsync("api/Templates", templateRequest);
+            }
+            
+            // Act
+            var response = await _client.GetAsync("api/Templates");
+
+            // Assert
+            var templatesResponse = await response.Content.ReadFromJsonAsync<List<TemplateResponseDto>>();
+            templatesResponse.Should().HaveCount(6);
+            TestUtil.CheckNumberOfFilesInFolder(7, "DiplomaPdfs");
         }
     }
 }
