@@ -44,14 +44,16 @@ public class TemplatesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<TemplateResponseDto>> DeleteTemplate(int id)
+    public async Task<IActionResult> DeleteTemplate(int id)
     {
-        if(id == 1){
-            throw new NotFoundByIdException("Student", id);
-        }
         var template = await _templateService.DeleteTemplate(id);
-        return _mapper.Map<TemplateResponseDto>(template);
         
+        if (template == null)
+        {
+            return NotFound();
+        }
+        
+        return NoContent();
     }
 
     [HttpPut("{id}")]
