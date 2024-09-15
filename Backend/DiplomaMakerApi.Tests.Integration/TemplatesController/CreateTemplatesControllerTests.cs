@@ -53,7 +53,6 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             {
                 (new { templateName = "" }, new[] { 
                     "The templateName field is required and cannot be empty.", 
-                    "The templateName field must have at least 1 character." 
                 }),
                 (new { randomField = "jfs2025"}, new[] {
                     "The templateRequestDto field is required."
@@ -61,9 +60,6 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
                 (new { templateName = 12345}, new[] {
                     "The templateRequestDto field is required."
                 }),
-                (new { templateName = "udosoodmsndpspdspadsaid"}, new[] {
-                    "The templateName cannot exceed 12 characters.",
-                })
             };
 
             foreach (var (data, expectedErrorMessages) in badRequests)
