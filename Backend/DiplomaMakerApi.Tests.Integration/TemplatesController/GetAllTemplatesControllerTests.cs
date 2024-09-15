@@ -24,12 +24,14 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         public async void GetTemplates_ReturnsAllTemplates_WhenAuthorized()
         {
             // Arrange
-            var setupTemplates = new List<TemplatePostRequestDto>();
+            var setupTemplates = new List<TemplateResponseDto>();
             for (int i = 0; i < 5; i++)
             {
-                var templateRequest = _templateRequestGenerator.Generate();
-                setupTemplates.Add(templateRequest);
-                await _client.PostAsJsonAsync("api/Templates", templateRequest);
+                var setupTemplate = _templateRequestGenerator.Generate();
+                var setupTemplateResponse = await TestUtil.CreateAndPostAsync<TemplatePostRequestDto, TemplateResponseDto>(
+                    _client, setupTemplate, "api/Templates"
+                );
+                setupTemplates.Add(setupTemplateResponse);
             }
             
             // Act
@@ -38,8 +40,8 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var templatesResponse = await response.Content.ReadFromJsonAsync<List<TemplateResponseDto>>();
-            setupTemplates.All(tr => TestUtil.CheckFileExists(tr.templateName, ".pdf", "DiplomaPdfs"));
-            setupTemplates.All(tr => templatesResponse!.Any(r => r.Name == tr.templateName)).Should().BeTrue();
+            setupTemplates.All(tr => TestUtil.CheckFileExists(tr.Name, ".pdf", "DiplomaPdfs"));
+            setupTemplates.All(tr => templatesResponse!.Any(r => r.Name == tr.Name)).Should().BeTrue();
         }
     }
 }

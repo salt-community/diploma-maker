@@ -9,14 +9,14 @@ namespace DiplomaMakerApi.Tests.Integration
         {
             var filePath = GetFilePath(templateName, extension, subDirectory);
             bool fileExists = File.Exists(filePath);
-            fileExists.Should().BeTrue($"File {templateName}.{extension} should exist at {filePath}");
+            fileExists.Should().BeTrue($"File {templateName}{extension} should exist at {filePath}");
             return fileExists;
         }
 
         public static void CheckFileDoesNotExist(string templateName, string extension, string subDirectory)
         {
             var filePath = GetFilePath(templateName, extension, subDirectory);
-            File.Exists(filePath).Should().BeFalse($"File {templateName}.{extension} should not exist at {filePath}");
+            File.Exists(filePath).Should().BeFalse($"File {templateName}{extension} should not exist at {filePath}");
         }
 
         private static string GetFilePath(string templateName, string extension, string subDirectory)
