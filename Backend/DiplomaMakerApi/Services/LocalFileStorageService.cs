@@ -5,14 +5,19 @@ namespace DiplomaMakerApi.Services
 {
     public class LocalFileStorageService
     {
-        private readonly string _basePath = Path.Combine(Directory.GetCurrentDirectory(), "Blob/");
+        private readonly string _basePath;
         private readonly DiplomaMakingContext _context;
         private readonly FileUtilityService _fileUtilityService;
 
-        public LocalFileStorageService(DiplomaMakingContext context, FileUtilityService fileUtilityService)
+        public LocalFileStorageService(DiplomaMakingContext context, FileUtilityService fileUtilityService, IConfiguration configuration)
         {
             _context = context;
             _fileUtilityService = fileUtilityService;
+            _basePath = Path.Combine(Directory.GetCurrentDirectory(), configuration["Blob:BlobStorageFolder"] ?? "Blob");
+            if (!Directory.Exists(_basePath))
+            {
+                SetupBlobFolder();
+            }
         }
 
         public async Task<string?> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
@@ -148,6 +153,47 @@ namespace DiplomaMakerApi.Services
                 if (Path.GetFileName(file) != defaultFile)
                 {
                     File.Delete(file);
+                }
+            }
+        }
+
+        private void SetupBlobFolder()
+        {
+            var sourceFolder = Path.Combine(Directory.GetCurrentDirectory(), "Blob");
+            if (Directory.Exists(sourceFolder))
+            {
+                DirectoryCopy(sourceFolder, _basePath, copySubDirs: true);
+            }
+        }
+
+        private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        {
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException("Source directory does not exist or could not be found: " + sourceDirName);
+            }
+
+            if (!Directory.Exists(destDirName))
+            {
+                Directory.CreateDirectory(destDirName);
+            }
+
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string tempPath = Path.Combine(destDirName, file.Name);
+                file.CopyTo(tempPath, false);
+            }
+
+            if (copySubDirs)
+            {
+                foreach (DirectoryInfo subdir in dirs)
+                {
+                    string tempPath = Path.Combine(destDirName, subdir.Name);
+                    DirectoryCopy(subdir.FullName, tempPath, copySubDirs);
                 }
             }
         }
