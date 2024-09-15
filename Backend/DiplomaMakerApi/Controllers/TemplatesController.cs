@@ -38,6 +38,10 @@ public class TemplatesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TemplateResponseDto>> PostTemplate(TemplatePostRequestDto templateRequestDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         var template = await _templateService.PostTemplate(templateRequestDto);
         var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);
         return CreatedAtAction(nameof(GetTemplateById), new { id = template.Id }, templateResponseDto);
