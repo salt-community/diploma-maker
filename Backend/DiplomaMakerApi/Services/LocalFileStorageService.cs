@@ -13,7 +13,7 @@ namespace DiplomaMakerApi.Services
         {
             _context = context;
             _fileUtilityService = fileUtilityService;
-            _basePath = Path.Combine(Directory.GetCurrentDirectory(), configuration["Blob:BlobStorageFolder"] ?? "Blob");
+            _basePath = Path.Combine(Directory.GetCurrentDirectory(), configuration["Blob:BlobStorageFolder"] ?? "Blob") + "/";
             if (!Directory.Exists(_basePath))
             {
                 SetupBlobFolder();

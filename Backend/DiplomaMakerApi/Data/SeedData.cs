@@ -14,11 +14,12 @@ public static class SeedData
             var environment = serviceProvider.GetService<IWebHostEnvironment>();
             bool isTestEnvironment = environment?.EnvironmentName == "Test";
 
+            var _fileUtilityService = serviceProvider.GetRequiredService<FileUtilityService>();
+            var _configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
             if (!isTestEnvironment)
             {
                 // Clears all pdfbackgroundfiles except Default.pdf
-                var _fileUtilityService = serviceProvider.GetRequiredService<FileUtilityService>();
-                var _configuration = serviceProvider.GetRequiredService<IConfiguration>();
                 var fileOperations = new LocalFileStorageService(_context, _fileUtilityService, _configuration);
                 fileOperations.ClearFolderExceptDefault();
                 fileOperations.ClearFolderExceptDefault("ImagePreview");
@@ -28,7 +29,7 @@ public static class SeedData
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
             
-            DiplomaTemplate diploma = new DiplomaTemplate { Name = "Default" };
+            DiplomaTemplate diploma = new DiplomaTemplate(_configuration) { Name = "Default" };
 
             var Dotnet = new Track { Name = "C# Dotnet", Tag = "dnfs"};
             var Java = new Track { Name = "Java", Tag ="jfs"};

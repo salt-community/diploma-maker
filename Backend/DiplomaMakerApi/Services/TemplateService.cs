@@ -37,7 +37,7 @@ public class TemplateService
 
     public async Task<DiplomaTemplate> PostTemplate(TemplatePostRequestDto templateRequest)
     {
-        var newTemplate = new DiplomaTemplate()
+        var newTemplate = new DiplomaTemplate(configuration)
         {
             Name = templateRequest.templateName,
         };
