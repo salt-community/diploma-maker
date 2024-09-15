@@ -35,5 +35,22 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
             TestUtil.CheckFileDoesNotExist(setupTemplate.templateName, ".pdf", "DiplomaPdfs");
         }
+
+        [Fact]
+        public async Task DeleteTemplate_ReturnsUnathorized_WhenInvalidToken()
+        {
+            // Arrange
+            var setupTemplate = _templateRequestGenerator.Generate();
+            var setupTemplateResponse = await TestUtil.CreateAndPostAsync<TemplatePostRequestDto, TemplateResponseDto>(
+                _client, setupTemplate, "api/Templates"
+            );
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            // Act
+            var response = await _client.DeleteAsync($"api/Templates/{setupTemplateResponse.Id}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
     }
 }

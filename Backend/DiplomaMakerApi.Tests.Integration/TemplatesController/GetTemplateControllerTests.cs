@@ -39,5 +39,22 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             templateResponse.Should().NotBeNull();
             templateResponse.Name.Should().Be(setupTemplateResponse.Name);
         }
+
+        [Fact]
+        public async Task GetTemplateById_ReturnsUnathorized_WhenInvalidToken()
+        {
+            // Arrange
+            var setupTemplate = _templateRequestGenerator.Generate();
+            var setupTemplateResponse = await TestUtil.CreateAndPostAsync<TemplatePostRequestDto, TemplateResponseDto>(
+                _client, setupTemplate, "api/Templates"
+            );
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            // Act
+            var response = await _client.GetAsync($"api/Templates/{setupTemplateResponse.Id}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
     }
 }

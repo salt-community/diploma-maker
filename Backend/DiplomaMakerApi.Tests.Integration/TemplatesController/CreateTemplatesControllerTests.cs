@@ -42,7 +42,25 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             templateResponse.Should().BeEquivalentTo(newTemplate, options => options
                 .Excluding(t => t.PdfBackgroundLastUpdated)
                 .Excluding(t => t.LastUpdated));
+        }
 
+        [Fact]
+        public async Task PostTemplate_ReturnsUnathorized_WhenInvalidToken()
+        {
+            // Arrange
+            var templateRequest = _templateRequestGenerator.Generate();
+            var newTemplate = new DiplomaTemplate()
+            {
+                Id = 2,
+                Name = templateRequest.templateName,
+            };
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            // Act
+            var response = await _client.PostAsJsonAsync("api/Templates", templateRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
     }
 }

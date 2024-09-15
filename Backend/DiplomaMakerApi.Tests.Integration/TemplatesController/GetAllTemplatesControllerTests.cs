@@ -43,5 +43,18 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             setupTemplates.All(tr => TestUtil.CheckFileExists(tr.Name, ".pdf", "DiplomaPdfs"));
             setupTemplates.All(tr => templatesResponse!.Any(r => r.Name == tr.Name)).Should().BeTrue();
         }
+
+        [Fact]
+        public async Task GetTemplates_ReturnsUnathorized_WhenInvalidToken()
+        {
+            // Arrange
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            // Act
+            var response = await _client.GetAsync("api/Templates");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
     }
 }

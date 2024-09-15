@@ -8,7 +8,7 @@ namespace DiplomaMakerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-// [Authorize]
+[Authorize]
 public class TemplatesController : ControllerBase
 {
     private readonly IMapper _mapper;
