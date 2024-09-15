@@ -24,15 +24,16 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         public async void DeleteTemplate_ReturnsNoContent_WhenValidRequest()
         {
             // Arrange
-            var templateRequest = _templateRequestGenerator.Generate();
-            await _client.PostAsJsonAsync("api/Templates", templateRequest);
-
+            var initTemplateRequest = _templateRequestGenerator.Generate();
+            var initResponse = await _client.PostAsJsonAsync("api/Templates", initTemplateRequest);
+            var initTemplateResponse = await initResponse.Content.ReadFromJsonAsync<TemplateResponseDto>();
+            var initTemplateResponseId = initTemplateResponse!.Id;
             // Act
-            var response = await _client.DeleteAsync($"api/Templates/{2}");
+            var response = await _client.DeleteAsync($"api/Templates/{initTemplateResponseId}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-            TestUtil.CheckFileDoesNotExist(templateRequest.templateName, ".pdf", "DiplomaPdfs");
+            TestUtil.CheckFileDoesNotExist(initTemplateRequest.templateName, ".pdf", "DiplomaPdfs");
         }
     }
 }

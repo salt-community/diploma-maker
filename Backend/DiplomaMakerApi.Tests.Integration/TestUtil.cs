@@ -1,3 +1,4 @@
+using System.Net.Http.Json;
 using FluentAssertions;
 
 namespace DiplomaMakerApi.Tests.Integration

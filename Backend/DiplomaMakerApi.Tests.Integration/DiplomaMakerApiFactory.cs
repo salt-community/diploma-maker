@@ -94,9 +94,10 @@ namespace DiplomaMakerApi.Tests.Integration
             }
 
             var destinationFilePath = Path.Combine(destinationDirectory, "Default.pdf");
+
             if (File.Exists(sourceFilePath))
             {
-                File.Copy(sourceFilePath, destinationFilePath, true);
+                RetryFileCopy(sourceFilePath, destinationFilePath, 5, TimeSpan.FromMilliseconds(200));
             }
             else
             {
@@ -115,5 +116,30 @@ namespace DiplomaMakerApi.Tests.Integration
             }
         }
 
+        private void RetryFileCopy(string sourceFilePath, string destinationFilePath, int maxRetries, TimeSpan delay)
+        {
+            int attempts = 0;
+            while (attempts < maxRetries)
+            {
+                try
+                {
+                    using (FileStream sourceStream = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (FileStream destinationStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        sourceStream.CopyTo(destinationStream);
+                    }
+                    return;
+                }
+                catch (IOException)
+                {
+                    attempts++;
+                    if (attempts == maxRetries)
+                    {
+                        throw;
+                    }
+                    Thread.Sleep(delay);
+                }
+            }
+        }
     }
 }

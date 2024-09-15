@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Bogus;
@@ -35,9 +36,10 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             var response = await _client.GetAsync("api/Templates");
 
             // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             var templatesResponse = await response.Content.ReadFromJsonAsync<List<TemplateResponseDto>>();
-            templatesResponse.Should().HaveCount(6);
             templateRequests.All(tr => TestUtil.CheckFileExists(tr.templateName, ".pdf", "DiplomaPdfs"));
+            templateRequests.All(tr => templatesResponse!.Any(r => r.Name == tr.templateName)).Should().BeTrue();
         }
     }
 }
