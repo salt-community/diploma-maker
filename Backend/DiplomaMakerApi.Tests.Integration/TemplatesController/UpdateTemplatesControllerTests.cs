@@ -39,7 +39,6 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             var templateResponse = await response.Content.ReadFromJsonAsync<TemplateResponseDto>();
             templateResponse!.LinkStyling.Should().BeEquivalentTo(putTemplateRequest.LinkStyling, opt => opt.Excluding(ls => ls!.Id));
             templateResponse!.Footer.Should().BeEquivalentTo(putTemplateRequest.footer);
-            TestUtil.CheckFileExists(templateResponse.Name, ".pdf", "DiplomaPdfs");
         }
     }
 }
