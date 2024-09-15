@@ -25,19 +25,19 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         public async void GetTemplateById_ReturnsTemplate_WhenIdExists()
         {
             // Arrange
-            var initTemplateRequest = _templateRequestGenerator.Generate();
-            var initResponse = await _client.PostAsJsonAsync("api/Templates", initTemplateRequest);
-            var initTemplateResponse = await initResponse.Content.ReadFromJsonAsync<TemplateResponseDto>();
-            var initTemplateResponseId = initTemplateResponse!.Id;
+            var setupTemplate = _templateRequestGenerator.Generate();
+            var setupTemplateResponse = await TestUtil.CreateAndPostAsync<TemplatePostRequestDto, TemplateResponseDto>(
+                _client, setupTemplate, "api/Templates"
+            );
 
             // Act
-            var response = await _client.GetAsync($"api/Templates/{initTemplateResponseId}");
+            var response = await _client.GetAsync($"api/Templates/{setupTemplateResponse.Id}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var templateResponse = await response.Content.ReadFromJsonAsync<TemplateResponseDto>();
             templateResponse.Should().NotBeNull();
-            templateResponse.Name.Should().Be(initTemplateResponse.Name);
+            templateResponse.Name.Should().Be(setupTemplateResponse.Name);
         }
     }
 }

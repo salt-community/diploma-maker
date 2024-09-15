@@ -30,5 +30,13 @@ namespace DiplomaMakerApi.Tests.Integration
             var testProjectBinRoot = Directory.GetCurrentDirectory();
             return Path.Combine(testProjectBinRoot, "Blob", subDirectory);
         }
+
+        public static async Task<TResponse> CreateAndPostAsync<TRequest, TResponse>(HttpClient client, TRequest request, string endpoint)
+        {
+            var response = await client.PostAsJsonAsync(endpoint, request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<TResponse>() 
+                ?? throw new InvalidOperationException($"Failed to deserialize response from {endpoint}");
+        }
     }
 }
