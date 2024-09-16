@@ -22,6 +22,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
             _testBlobFolder = apiFactory.TestBlobFolder;
         }
+        
         [Fact]
         public async void PostTemplate_ReturnsTemplate_WhenValidTemplateName()
         {

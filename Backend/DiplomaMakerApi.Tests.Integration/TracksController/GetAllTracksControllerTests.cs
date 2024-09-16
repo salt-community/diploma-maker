@@ -10,14 +10,13 @@ namespace DiplomaMakerApi.Tests.Integration.TracksControllerTests
     public class GetAllTracksControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
-
         public GetAllTracksControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "test-token");
         }
 
-        [Fact ]
+        [Fact]
         public async void GetTracks_ReturnsTracks_WhenTracksExist()
         {
             // Act

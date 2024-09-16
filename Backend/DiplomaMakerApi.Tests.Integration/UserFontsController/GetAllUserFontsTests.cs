@@ -4,7 +4,6 @@ using System.Text;
 using DiplomaMakerApi.Dtos.UserFont;
 using DiplomaMakerApi.Models;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.UserFontsController
@@ -12,12 +11,10 @@ namespace DiplomaMakerApi.Tests.Integration.UserFontsController
     public class GetAllUserFontsTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
-        private readonly string _testBlobFolder;
 
         public GetAllUserFontsTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
-            _testBlobFolder = apiFactory.TestBlobFolder;
         }
 
         [Fact]
