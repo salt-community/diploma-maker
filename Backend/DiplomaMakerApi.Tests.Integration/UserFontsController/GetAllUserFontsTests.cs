@@ -12,5 +12,15 @@ namespace DiplomaMakerApi.Tests.Integration.UserFontsController
             _client = apiFactory.CreateClient();
             _testBlobFolder = apiFactory.TestBlobFolder;
         }
+
+        // [Fact]
+        // public void GetUserFonts_ReturnsUserFonts_WhenUserFontExists()
+        // {
+        //     // Arrange
+
+        //     // Act
+
+        //     // Assert
+        // }
     }
 }

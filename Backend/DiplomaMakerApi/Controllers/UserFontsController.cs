@@ -32,7 +32,9 @@ namespace DiplomaMakerApi.Controllers
         public async Task<ActionResult<List<UserFontResponseDto>>> PostUserFonts([FromForm] UserFontRequestsDto userFonts)
         {
             var newFonts = await _userFontService.PostUserFonts(userFonts);
-            return _mapper.Map<List<UserFontResponseDto>>(newFonts);
+            var createdFonts = _mapper.Map<List<UserFontResponseDto>>(newFonts);
+
+            return CreatedAtAction(nameof(GetUserFonts), null, createdFonts);
         }
     }
 }
