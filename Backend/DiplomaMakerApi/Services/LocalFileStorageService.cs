@@ -8,7 +8,6 @@ namespace DiplomaMakerApi.Services
         private readonly string _basePath;
         private readonly DiplomaMakingContext _context;
         private readonly FileUtilityService _fileUtilityService;
-
         public LocalFileStorageService(DiplomaMakingContext context, FileUtilityService fileUtilityService, IConfiguration configuration)
         {
             _context = context;
