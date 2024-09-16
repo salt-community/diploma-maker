@@ -31,6 +31,10 @@ namespace DiplomaMakerApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<List<UserFontResponseDto>>> PostUserFonts([FromForm] UserFontRequestsDto userFonts)
         {
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem(ModelState);
+            }
             var newFonts = await _userFontService.PostUserFonts(userFonts);
             var createdFonts = _mapper.Map<List<UserFontResponseDto>>(newFonts);
 
