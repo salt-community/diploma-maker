@@ -8,7 +8,6 @@ namespace DiplomaMakerApi.Services
         private readonly string _basePath;
         private readonly DiplomaMakingContext _context;
         private readonly FileUtilityService _fileUtilityService;
-
         public LocalFileStorageService(DiplomaMakingContext context, FileUtilityService fileUtilityService, IConfiguration configuration)
         {
             _context = context;
@@ -72,8 +71,6 @@ namespace DiplomaMakerApi.Services
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
-                var directoryInfo = new DirectoryInfo(directoryPath);
-                directoryInfo.Attributes &= ~FileAttributes.ReadOnly;
             }
             
             var filePath = Path.Combine(directoryPath, templateName);
