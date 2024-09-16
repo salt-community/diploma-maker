@@ -72,6 +72,8 @@ namespace DiplomaMakerApi.Services
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
+                var directoryInfo = new DirectoryInfo(directoryPath);
+                directoryInfo.Attributes &= ~FileAttributes.ReadOnly;
             }
             
             var filePath = Path.Combine(directoryPath, templateName);

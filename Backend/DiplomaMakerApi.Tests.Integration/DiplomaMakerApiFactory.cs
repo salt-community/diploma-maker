@@ -91,6 +91,7 @@ namespace DiplomaMakerApi.Tests.Integration
             var basePdfTemplateFile = Path.Combine(apiProjectRoot, "Blob", "DiplomaPdfs", "Default.pdf");
 
             var destinationDirectory = Path.Combine(testProjectBinRoot, _testBlobFolder, "DiplomaPdfs");
+            Console.WriteLine($"Destination Directory: {destinationDirectory}");
 
             if (!Directory.Exists(destinationDirectory))
             {
@@ -116,6 +117,7 @@ namespace DiplomaMakerApi.Tests.Integration
             if (Directory.Exists(blobDirectoryPath))
             {
                 Directory.Delete(blobDirectoryPath, true);
+                Console.WriteLine("Test files cleaned up.");
             }
         }
     }
