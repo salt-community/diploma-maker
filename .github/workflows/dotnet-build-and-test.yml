@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore Backend/DiplomaMakerApi
     - name: Test
-      run: dotnet test --no-build --verbosity normal Backend/DiplomaMakerApi.Tests.Integration
+      run: dotnet test --no-build --verbosity normal Backend/DiplomaMakerApi.Tests.Integration/DiplomaMakerApi.Tests.Integration.csproj
