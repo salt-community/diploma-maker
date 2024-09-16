@@ -28,16 +28,10 @@ public class TemplateService
             .Include(t => t.LinkStyling)
             .ToListAsync();
     }
-
-    public async Task<DiplomaTemplate> GetTemplate(int id)
-    {
-        var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
-        return template ?? throw new NotFoundByIdException("Template", id);
-    }
-
+    public async Task<DiplomaTemplate?> GetTemplate(int id) => await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
     public async Task<DiplomaTemplate> PostTemplate(TemplatePostRequestDto templateRequest)
     {
-        var newTemplate = new DiplomaTemplate()
+        var newTemplate = new DiplomaTemplate(configuration)
         {
             Name = templateRequest.templateName,
         };

@@ -11,7 +11,7 @@ namespace DiplomaMakerApi.Services
         private readonly StorageClient _storageClient;
         private readonly FileUtilityService _fileUtilityService;
         private readonly IWebHostEnvironment _env;
-        private readonly string _basePath = "Blob";
+        private readonly string _basePath;
 
         public GoogleCloudStorageService(DiplomaMakingContext context, IConfiguration configuration, FileUtilityService fileUtilityService, IWebHostEnvironment env)
         {
@@ -19,9 +19,15 @@ namespace DiplomaMakerApi.Services
             _context = context;
             _env = env;
             _fileUtilityService = fileUtilityService;
-            _bucketName = _env.IsDevelopment()
+            _bucketName = _env.IsDevelopment() || _env.IsEnvironment("Test")
                 ? configuration["GoogleCloud:BucketName"] ?? throw new ArgumentNullException("GoogleCloud:BucketName configuration is missing")
                 : Environment.GetEnvironmentVariable("BucketName") ?? throw new ArgumentNullException("BucketName environment variable is missing");
+            _basePath = configuration["Blob:BlobStorageFolder"] ?? "Blob";
+
+            if (!Directory.Exists(_basePath))
+            {
+                Directory.CreateDirectory(_basePath);
+            }
         }
 
         public async Task<string?> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
