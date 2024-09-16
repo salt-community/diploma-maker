@@ -29,10 +29,9 @@ public class TemplateService
             .ToListAsync();
     }
 
-    public async Task<DiplomaTemplate> GetTemplate(int id)
+    public async Task<DiplomaTemplate?> GetTemplate(int id)
     {
-        var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
-        return template ?? throw new NotFoundByIdException("Template", id);
+        return await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
     }
 
     public async Task<DiplomaTemplate> PostTemplate(TemplatePostRequestDto templateRequest)

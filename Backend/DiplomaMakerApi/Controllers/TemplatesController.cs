@@ -31,6 +31,10 @@ public class TemplatesController : ControllerBase
     public async Task<ActionResult<TemplateResponseDto>> GetTemplateById(int id)
     {
         var template = await _templateService.GetTemplate(id);
+        if (template == null)
+        {
+            return NotFound();
+        }
         return _mapper.Map<TemplateResponseDto>(template);
      
     }
