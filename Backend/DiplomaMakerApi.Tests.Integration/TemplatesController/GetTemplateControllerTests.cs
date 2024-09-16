@@ -41,6 +41,16 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         }
 
         [Fact]
+        public async Task GetTemplateById_ReturnsNotFound_WhenTemplateDoesNotExist()
+        {
+            // Act
+            var response = await _client.GetAsync($"api/Templates/{Guid.NewGuid()}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task GetTemplateById_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange
