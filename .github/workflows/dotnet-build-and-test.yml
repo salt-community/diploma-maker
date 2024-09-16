@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore Backend/DiplomaMakerApi/DiplomaMakerApi.csproj
+      run: dotnet restore $GITHUB_WORKSPACE/Backend/DiplomaMakerApi/DiplomaMakerApi.csproj
     - name: Build
-      run: dotnet build --no-restore Backend/DiplomaMakerApi
+      run: dotnet build --no-restore $GITHUB_WORKSPACE/Backend/DiplomaMakerApi
     - name: Test
-      run: dotnet test Backend/DiplomaMakerApi.Tests.Integration/DiplomaMakerApi.Tests.Integration.csproj
+      run: dotnet test $GITHUB_WORKSPACE/Backend/DiplomaMakerApi.Tests.Integration/DiplomaMakerApi.Tests.Integration.csproj
