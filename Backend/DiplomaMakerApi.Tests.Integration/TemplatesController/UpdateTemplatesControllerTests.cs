@@ -42,6 +42,26 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         }
 
         [Fact]
+        public async Task PutTemplate_ReturnsBadRequest_WhenDataIsInvalid()
+        {
+            // Arrange
+            var setupTemplate = _templateRequestGenerator.Generate();
+            var setupTemplateResponse = await TestUtil.CreateAndPostAsync<TemplatePostRequestDto, TemplateResponseDto>(
+                _client, setupTemplate, "api/Templates"
+            );
+
+            // Act
+            var putTemplateRequest = TestData.getPutTemplateData();
+            putTemplateRequest.basePdf = (string)null!;
+            putTemplateRequest.templateName = (string)null!;
+            var response = await _client.PutAsJsonAsync($"api/Templates/{setupTemplateResponse.Id}", putTemplateRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+
+        [Fact]
         public async Task PutTemplate_ReturnsNotFound_WhenTemplateDoesNotExist()
         {
             // Act
