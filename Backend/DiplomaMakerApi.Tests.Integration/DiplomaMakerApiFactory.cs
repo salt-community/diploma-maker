@@ -21,8 +21,12 @@ namespace DiplomaMakerApi.Tests.Integration
             .WithUsername("postgres")
             .WithPassword("Password_2_Change_4_Real_Cases_&")
             .Build();
+        private string _testBlobFolder = null!;
+        public string TestBlobFolder => _testBlobFolder;
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            _testBlobFolder = $"TestBlob{Guid.NewGuid()}";
+
             builder.UseEnvironment("Test");
 
             builder.ConfigureLogging(logging => {
@@ -32,9 +36,9 @@ namespace DiplomaMakerApi.Tests.Integration
             builder.ConfigureAppConfiguration((context, config) =>
             {
                 var configuration = new Dictionary<string, string>
-                {
-                    { "Blob:UseBlobStorage", "false" },
-                    { "GoogleCloud:BucketName", "test-bucket" },
+                {   
+                    { "Blob:UseBlobStorage", "false" }, // Disables GoogleCloud Blob Storage
+                    { "Blob:BlobStorageFolder", _testBlobFolder }
                 };
                 config.AddInMemoryCollection(configuration!);
             });
@@ -67,7 +71,6 @@ namespace DiplomaMakerApi.Tests.Integration
         public async Task InitializeAsync()
         {
             await _dbContainer.StartAsync();
-            cleanupTestFiles();
             using (var scope = Server.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -85,8 +88,9 @@ namespace DiplomaMakerApi.Tests.Integration
             var testProjectBinRoot = Directory.GetCurrentDirectory();
             var solutionRoot = Path.GetFullPath(Path.Combine(testProjectBinRoot, "..", "..", "..", ".."));
             var apiProjectRoot = Path.Combine(solutionRoot, "DiplomaMakerApi");
-            var sourceFilePath = Path.Combine(apiProjectRoot, "Blob", "DiplomaPdfs", "Default.pdf");
-            var destinationDirectory = Path.Combine(testProjectBinRoot, "Blob", "DiplomaPdfs");
+            var basePdfTemplateFile = Path.Combine(apiProjectRoot, "Blob", "DiplomaPdfs", "Default.pdf");
+
+            var destinationDirectory = Path.Combine(testProjectBinRoot, _testBlobFolder, "DiplomaPdfs");
 
             if (!Directory.Exists(destinationDirectory))
             {
@@ -95,50 +99,23 @@ namespace DiplomaMakerApi.Tests.Integration
 
             var destinationFilePath = Path.Combine(destinationDirectory, "Default.pdf");
 
-            if (File.Exists(sourceFilePath))
+            if (File.Exists(basePdfTemplateFile))
             {
-                RetryFileCopy(sourceFilePath, destinationFilePath, 5, TimeSpan.FromMilliseconds(200));
+                File.Copy(basePdfTemplateFile, destinationFilePath, overwrite: true);
             }
             else
             {
-                throw new FileNotFoundException($"Source file {sourceFilePath} not found.");
+                throw new FileNotFoundException($"Basetemplatepdf not found (Blob/DiplomaPdfs/Default.pdf).");
             }
         }
-
         private void cleanupTestFiles()
         {
             var testProjectBinRoot = Directory.GetCurrentDirectory();
-            var blobDirectoryPath = Path.Combine(testProjectBinRoot, "Blob");
+            var blobDirectoryPath = Path.Combine(testProjectBinRoot, _testBlobFolder);
 
             if (Directory.Exists(blobDirectoryPath))
             {
                 Directory.Delete(blobDirectoryPath, true);
-            }
-        }
-
-        private void RetryFileCopy(string sourceFilePath, string destinationFilePath, int maxRetries, TimeSpan delay)
-        {
-            int attempts = 0;
-            while (attempts < maxRetries)
-            {
-                try
-                {
-                    using (FileStream sourceStream = new FileStream(sourceFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    using (FileStream destinationStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
-                    {
-                        sourceStream.CopyTo(destinationStream);
-                    }
-                    return;
-                }
-                catch (IOException)
-                {
-                    attempts++;
-                    if (attempts == maxRetries)
-                    {
-                        throw;
-                    }
-                    Thread.Sleep(delay);
-                }
             }
         }
     }

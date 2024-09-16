@@ -11,6 +11,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
     public class GetAllTemplatesControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
+        private readonly string _testBlobFolder;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
@@ -18,6 +19,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "test-token");
+            _testBlobFolder = apiFactory.TestBlobFolder;
         }
 
         [Fact]
@@ -40,7 +42,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var templatesResponse = await response.Content.ReadFromJsonAsync<List<TemplateResponseDto>>();
-            setupTemplates.All(tr => TestUtil.CheckFileExists(tr.Name, ".pdf", "DiplomaPdfs"));
+            setupTemplates.All(tr => TestUtil.CheckFileExists(tr.Name, ".pdf", _testBlobFolder, "DiplomaPdfs"));
             setupTemplates.All(tr => templatesResponse!.Any(r => r.Name == tr.Name)).Should().BeTrue();
         }
 

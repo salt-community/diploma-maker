@@ -12,6 +12,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
     public class CreateTemplatesControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
+        private readonly string _testBlobFolder;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
@@ -19,18 +20,13 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
+            _testBlobFolder = apiFactory.TestBlobFolder;
         }
-
         [Fact]
         public async void PostTemplate_ReturnsTemplate_WhenValidTemplateName()
         {
             // Arrange
             var templateRequest = _templateRequestGenerator.Generate();
-            var newTemplate = new DiplomaTemplate()
-            {
-                Id = 2,
-                Name = templateRequest.templateName,
-            };
 
             // Act
             var response = await _client.PostAsJsonAsync("api/Templates", templateRequest);
@@ -38,11 +34,9 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
             var templateResponse = await response.Content.ReadFromJsonAsync<TemplateResponseDto>();
-            templateResponse!.BasePdf.Should().Be($"Blob/{templateRequest.templateName}.pdf");
-            TestUtil.CheckFileExists(templateRequest.templateName, ".pdf", "DiplomaPdfs");
-            templateResponse.Should().BeEquivalentTo(newTemplate, options => options
-                .Excluding(t => t.PdfBackgroundLastUpdated)
-                .Excluding(t => t.LastUpdated));
+            templateResponse!.Name.Should().Be(templateRequest.templateName);
+            templateResponse!.BasePdf.Should().Be($"{_testBlobFolder}/{templateRequest.templateName}.pdf");
+            TestUtil.CheckFileExists(templateRequest.templateName, ".pdf", _testBlobFolder, "DiplomaPdfs");  
         }
 
         [Fact]
@@ -83,11 +77,6 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         {
             // Arrange
             var templateRequest = _templateRequestGenerator.Generate();
-            var newTemplate = new DiplomaTemplate()
-            {
-                Id = 2,
-                Name = templateRequest.templateName,
-            };
             _client.DefaultRequestHeaders.Authorization = null;
 
             // Act

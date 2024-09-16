@@ -11,6 +11,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
     public class DeleteTemplatesControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
+        private readonly string _testBlobFolder;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
@@ -18,6 +19,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "test-token");
+            _testBlobFolder = apiFactory.TestBlobFolder;
         }
 
         [Fact]
@@ -33,7 +35,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-            TestUtil.CheckFileDoesNotExist(setupTemplate.templateName, ".pdf", "DiplomaPdfs");
+            TestUtil.CheckFileDoesNotExist(setupTemplate.templateName, ".pdf", _testBlobFolder, "DiplomaPdfs");
         }
 
         [Fact]
