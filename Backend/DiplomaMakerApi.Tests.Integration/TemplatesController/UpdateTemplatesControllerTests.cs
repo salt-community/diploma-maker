@@ -42,6 +42,17 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         }
 
         [Fact]
+        public async Task PutTemplate_ReturnsNotFound_WhenTemplateDoesNotExist()
+        {
+            // Act
+            var putTemplateRequest = TestData.getPutTemplateData();
+            var response = await _client.PutAsJsonAsync($"api/Templates/{21491053}", putTemplateRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task PutTemplate_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange
