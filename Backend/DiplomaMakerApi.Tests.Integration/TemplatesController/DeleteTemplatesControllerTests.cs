@@ -39,6 +39,16 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         }
 
         [Fact]
+        public async Task DeleteTemplate_ReturnsNotFound_WhenTemplateDoesNotExist()
+        {
+            // Act
+            var response = await _client.DeleteAsync($"customers/{Guid.NewGuid()}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task DeleteTemplate_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange
