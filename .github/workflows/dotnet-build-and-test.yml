@@ -22,7 +22,7 @@ jobs:
           POSTGRES_PASSWORD: Password_2_Change_4_Real_Cases_&
         ports:
           - 5432:5432
-        options: > 
+        options: |
           --health-cmd "pg_isready" 
           --health-interval 10s 
           --health-timeout 5s 
