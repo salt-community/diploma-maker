@@ -30,7 +30,16 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
                 builder.AddXUnit(outputHelper);
             });
             _logger = loggerFactory.CreateLogger<CreateTemplatesControllerTests>();
-            _logger.LogInformation("Hi!");
+
+            var testProjectBinRoot = Directory.GetCurrentDirectory();
+            var solutionRoot = Path.GetFullPath(Path.Combine(testProjectBinRoot, "..", "..", "..", ".."));
+            var apiProjectRoot = Path.Combine(solutionRoot, "DiplomaMakerApi");
+            var basePdfTemplateFile = Path.Combine(apiProjectRoot, "Blob", "DiplomaPdfs", "Default.pdf");
+
+            _logger.LogInformation($"testProjectBinRoot: {testProjectBinRoot}");
+            _logger.LogInformation($"solutionRoot: {solutionRoot}");
+            _logger.LogInformation($"apiProjectRoot: {apiProjectRoot}");
+            _logger.LogInformation($"basePdfTemplateFile: {basePdfTemplateFile}");
         }
         [Fact]
         public async void PostTemplate_ReturnsTemplate_WhenValidTemplateName()
@@ -39,7 +48,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             var templateRequest = _templateRequestGenerator.Generate();
 
             // Act
-            var response = await _client.PostAsJsonAsync("api/Templates", templateRequest);
+            var response = await _client.PostAsJsonAsync("api/Templates/321321", templateRequest);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
