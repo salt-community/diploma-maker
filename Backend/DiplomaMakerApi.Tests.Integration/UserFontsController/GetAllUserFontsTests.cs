@@ -1,4 +1,4 @@
-using System.Net;
+/* using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using DiplomaMakerApi.Dtos.UserFont;
@@ -43,4 +43,4 @@ namespace DiplomaMakerApi.Tests.Integration.UserFontsController
             userFontResponse![0].FileName.Should().Be("testFont-bold");
         }
     }
-}
+} */

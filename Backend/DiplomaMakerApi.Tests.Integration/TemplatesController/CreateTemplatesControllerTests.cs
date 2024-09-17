@@ -6,6 +6,7 @@ using DiplomaMakerApi.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DiplomaMakerApi.Tests.Integration.TemplatesController
 {
@@ -16,8 +17,9 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
-        public CreateTemplatesControllerTests(DiplomaMakerApiFactory apiFactory)
-        {
+        public CreateTemplatesControllerTests(DiplomaMakerApiFactory apiFactory, ITestOutputHelper outputHelper)
+        {   
+            apiFactory.OutputHelper = outputHelper;
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
             _testBlobFolder = apiFactory.TestBlobFolder;
