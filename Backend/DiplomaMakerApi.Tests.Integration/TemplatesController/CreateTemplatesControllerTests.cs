@@ -5,6 +5,7 @@ using Bogus;
 using DiplomaMakerApi.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,15 +15,22 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
     {
         private readonly HttpClient _client;
         private readonly string _testBlobFolder;
+        private readonly ILogger<CreateTemplatesControllerTests> _logger;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
         public CreateTemplatesControllerTests(DiplomaMakerApiFactory apiFactory, ITestOutputHelper outputHelper)
         {   
-            apiFactory.OutputHelper = outputHelper;
+            // apiFactory.OutputHelper = outputHelper;
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
             _testBlobFolder = apiFactory.TestBlobFolder;
+
+            var loggerFactory = LoggerFactory.Create(builder => {
+                builder.AddXUnit(outputHelper);
+            });
+            _logger = loggerFactory.CreateLogger<CreateTemplatesControllerTests>();
+            _logger.LogInformation("Hi!");
         }
         [Fact]
         public async void PostTemplate_ReturnsTemplate_WhenValidTemplateName()
