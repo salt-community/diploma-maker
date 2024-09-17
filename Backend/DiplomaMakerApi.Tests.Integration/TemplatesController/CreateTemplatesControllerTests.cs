@@ -36,19 +36,24 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             var apiProjectRoot = Path.Combine(solutionRoot, "DiplomaMakerApi");
             var basePdfTemplateFile = Path.Combine(apiProjectRoot, "Blob", "DiplomaPdfs", "Default.pdf");
 
-            _logger.LogInformation($"testProjectBinRoot: {testProjectBinRoot}");
-            _logger.LogInformation($"solutionRoot: {solutionRoot}");
-            _logger.LogInformation($"apiProjectRoot: {apiProjectRoot}");
-            _logger.LogInformation($"basePdfTemplateFile: {basePdfTemplateFile}");
+            // _logger.LogInformation($"testProjectBinRoot: {testProjectBinRoot}");
+            // _logger.LogInformation($"solutionRoot: {solutionRoot}");
+            // _logger.LogInformation($"apiProjectRoot: {apiProjectRoot}");
+            // _logger.LogInformation($"basePdfTemplateFile: {basePdfTemplateFile}");
         }
         [Fact]
         public async void PostTemplate_ReturnsTemplate_WhenValidTemplateName()
         {
+            var testFileExists = TestUtil.CheckFileExists("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
+            if(testFileExists)
+            {
+                _logger.LogInformation($"Default.pdf exists! in {_testBlobFolder}/DiplomaPdfs");
+            }
             // Arrange
             var templateRequest = _templateRequestGenerator.Generate();
 
             // Act
-            var response = await _client.PostAsJsonAsync("api/Templates/321321", templateRequest);
+            var response = await _client.PostAsJsonAsync("api/Templates", templateRequest);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
