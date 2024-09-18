@@ -40,5 +40,18 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             bootcampResponse!.GraduationDate.Date.Should().Be(putBootcampRequest.GraduationDate.Date);
             bootcampResponse!.GraduationDate.Date.Should().NotBe(bootcampSetupResponse[0].GraduationDate.Date);
         }
+
+        [Fact]
+        public async Task PutBootcamp_ReturnsNotFound_WhenBootcampDoesNotExist()
+        {
+            // Setup
+            var putBootcampRequest = _bootcampPutRequestGenerator.Generate();
+
+            // Act
+            var response = await _client.PutAsJsonAsync($"api/Bootcamps/{Guid.NewGuid()}", putBootcampRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
     }
 }
