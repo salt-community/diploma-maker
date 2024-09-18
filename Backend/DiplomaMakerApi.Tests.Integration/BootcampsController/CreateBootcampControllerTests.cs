@@ -50,21 +50,21 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             // Arrange
             var badRequests = new List<(object data, string[] expectedErrorMessages)>()
             {
-                (new { templateName = "" }, new[] { 
-                    "The templateName field is required and cannot be empty.", 
+                (new { TrackId = 0, GraduationDate = DateTime.UtcNow }, new[] { 
+                    "TrackId must be between 1 and 3.", 
                 }),
-                (new { randomField = "jfs2025"}, new[] {
-                    "The templateRequestDto field is required."
+                (new { TrackId = 4, GraduationDate = DateTime.UtcNow }, new[] { 
+                    "TrackId must be between 1 and 3.", 
                 }),
-                (new { templateName = 12345}, new[] {
-                    "The templateRequestDto field is required."
+                 (new { TrackId = 1, GraduationDate = "invalidDate" }, new[] { 
+                    "The requestDto field is required."
                 }),
             };
 
             foreach (var (data, expectedErrorMessages) in badRequests)
             {
                 // Act
-                var response = await _client.PostAsJsonAsync("api/templates", data);
+                var response = await _client.PostAsJsonAsync("api/Bootcamps", data);
 
                 // Assert
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
