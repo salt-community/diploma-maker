@@ -55,7 +55,7 @@ public class BootcampsController : ControllerBase
     public async Task<IActionResult> DeleteBootcamp(Guid guidId)
     {  
         await _bootcampservice.DeleteBootcampByGuidId(guidId);
-        return Ok();
+        return NoContent();
     }
 
     [HttpPut("{guidId}")]
