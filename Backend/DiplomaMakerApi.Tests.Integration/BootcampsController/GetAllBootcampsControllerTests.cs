@@ -3,10 +3,10 @@ using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.BootcampsController
 {
-    public class GetBootcampsControllerTests : IClassFixture<DiplomaMakerApiFactory>
+    public class GetAllBootcampsControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
-        public GetBootcampsControllerTests(DiplomaMakerApiFactory apiFactory)
+        public GetAllBootcampsControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
