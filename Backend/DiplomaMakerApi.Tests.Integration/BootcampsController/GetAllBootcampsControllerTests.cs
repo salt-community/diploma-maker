@@ -47,5 +47,18 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
                 b.GraduationDate.Date == setupBootcamp.GraduationDate.Date &&
                 b.Track.Name == trackIdToNameMap[setupBootcamp.TrackId]);
         }
+
+        [Fact]
+        public async Task GetBootcamps_ReturnsUnathorized_WhenInvalidToken()
+        {
+            // Arrange
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            // Act
+            var response = await _client.GetAsync("api/Bootcamps");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
     }
 }
