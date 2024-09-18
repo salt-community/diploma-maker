@@ -68,5 +68,20 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
+
+        [Fact]
+        public async Task GetStudent_ReturnsUnathorized_WhenInvalidToken()
+        {
+            // Arrange
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            // Act
+            var GetStudentByGuidIdResponse = await _client.GetAsync($"api/Students/{Guid.NewGuid()}");
+            var getStudentByVerificationCodeResponse = await _client.GetAsync($"api/Students/verificationCode/{552315}");
+
+            // Assert
+            GetStudentByGuidIdResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            getStudentByVerificationCodeResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
     }
 }
