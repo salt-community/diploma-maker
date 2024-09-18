@@ -34,6 +34,16 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
         }
 
         [Fact]
+        public async Task GetStudentByGuidId_ReturnsNotFound_WhenStudentDoesNotExist()
+        {
+            // Act
+            var response = await _client.GetAsync($"api/Students/{Guid.NewGuid()}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task getStudentByVerificationCode_ReturnsStudent_WhenStudentExists()
         {
             // Arrange
