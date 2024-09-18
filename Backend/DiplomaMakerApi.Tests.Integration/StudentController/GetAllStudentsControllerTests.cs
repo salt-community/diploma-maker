@@ -1,5 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using DiplomaMakerApi.Models;
 using FluentAssertions;
 using Xunit;
 
@@ -12,6 +14,18 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
+        }
+
+        [Fact]
+        public async Task GetStudents_ReturnsAllStudents_WhenAuthorized()
+        {
+            // Act
+            var response = await _client.GetAsync("api/Students");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var students = await response.Content.ReadFromJsonAsync<List<StudentResponseDto>>();
+            students.Should().HaveCountGreaterThan(2);
         }
 
         [Fact]
