@@ -14,7 +14,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
         private readonly Faker<BootcampRequestDto> _bootcampRequestGenerator = 
             new Faker<BootcampRequestDto>()
                 .RuleFor(b => b.GraduationDate, _ => DateTime.UtcNow)
-                .RuleFor(b => b.TrackId, faker => faker.Random.Int(0, 2));
+                .RuleFor(b => b.TrackId, faker => faker.Random.Int(1, 3));
         public CreateBootcampControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
