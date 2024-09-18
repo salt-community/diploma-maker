@@ -32,5 +32,15 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             var studentsAssertResponse = await assertResponse.Content.ReadFromJsonAsync<List<StudentResponseDto>>();
             studentsAssertResponse!.Count.Should().Be(studentSetupResponse.Count - 1);
         }
+
+        [Fact]
+        public async Task DeleteStudent__ReturnsNoContent_WhenValidRequest()
+        {
+            // Act
+            var response = await _client.DeleteAsync($"api/Students/{Guid.NewGuid()}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
     }
 }
