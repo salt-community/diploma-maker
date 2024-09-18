@@ -45,7 +45,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
         }
 
         [Fact]
-        public async Task PostTemplate_ReturnsValidationError_WhenDataIsInvalid()
+        public async Task PostBootcamp_ReturnsValidationError_WhenDataIsInvalid()
         {
             // Arrange
             var badRequests = new List<(object data, string[] expectedErrorMessages)>()
@@ -75,6 +75,20 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
                 var allErrorMessages = error.Errors.SelectMany(kvp => kvp.Value).ToArray();
                 allErrorMessages.Should().Contain(message => expectedErrorMessages.Any(expected => message.Contains(expected)));
             }
+        }
+
+        [Fact]
+        public async Task PostBootcamp_ReturnsUnathorized_WhenInvalidToken()
+        {
+            // Arrange
+            var bootcampRequest = _bootcampRequestGenerator.Generate();
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            // Act
+            var response = await _client.PostAsJsonAsync("api/Templates", bootcampRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
     }
 }
