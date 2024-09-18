@@ -64,15 +64,36 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             var bootcampSetupResponse = await bootcampSetupRequest.Content.ReadFromJsonAsync<List<BootcampResponseDto>>();
             var badRequests = new List<(object data, string[] expectedErrorMessages)>()
             {
-                (new { TrackId = 0, GraduationDate = DateTime.UtcNow }, new[] { 
-                    "TrackId must be between 1 and 3.", 
+                (new { templateId = -1, students = new List<object>() }, new[] {
+                    "TemplateId must be a positive number."
                 }),
-                (new { TrackId = 4, GraduationDate = DateTime.UtcNow }, new[] { 
-                    "TrackId must be between 1 and 3.", 
+                (new { templateId = 1, students = new List<object>() }, new[] {
+                    "At least one student must be provided."
                 }),
-                 (new { TrackId = 1, GraduationDate = "invalidDate" }, new[] { 
-                    "The requestDto field is required."
-                }),
+                (new { templateId = 1, students = new List<object> 
+                    { 
+                        new { Name = "", VerificationCode = "abc123", Email = "bob.ryder@gmail.com" }
+                    }}, 
+                    new[] { 
+                        "Name is required." 
+                    }
+                ),
+                (new { templateId = 1, students = new List<object> 
+                    { 
+                        new { Name = "John Doe", VerificationCode = "", Email = "bob.ryder@gmail.com" }
+                    }}, 
+                    new[] { 
+                        "VerificationCode is required." 
+                    }
+                ),
+                (new { templateId = 1, students = new List<object> 
+                    { 
+                        new { Name = "John Doe", VerificationCode = "abc123", Email = "invalid-email" }
+                    }}, 
+                    new[] { 
+                        "The Email field is not a valid e-mail address." 
+                    }
+                )
             };
             foreach (var (data, expectedErrorMessages) in badRequests)
             {

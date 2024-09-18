@@ -7,7 +7,6 @@ public class StudentRequestDto
     public Guid? GuidId { get; set; }
 
     [Required(ErrorMessage = "VerificationCode is required.")]
-    [MinLength(6, ErrorMessage = "VerificationCode must be at least 6 characters long.")]
     public required string VerificationCode { get; set; }
 
     [Required(ErrorMessage = "Name is required.")]
