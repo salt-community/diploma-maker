@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Testcontainers.PostgreSql;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DiplomaMakerApi.Tests.Integration
 {
@@ -22,6 +23,9 @@ namespace DiplomaMakerApi.Tests.Integration
             .WithPassword("Password_2_Change_4_Real_Cases_&")
             .Build();
         private string _testBlobFolder = null!;
+
+        public ITestOutputHelper? OutputHelper { get; set; }
+
         public string TestBlobFolder => _testBlobFolder;
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -31,7 +35,10 @@ namespace DiplomaMakerApi.Tests.Integration
 
             builder.ConfigureLogging(logging => {
                 logging.ClearProviders();
+        
             });
+
+            builder.ConfigureLogging((p) => p.AddXUnit());
 
             builder.ConfigureAppConfiguration((context, config) =>
             {

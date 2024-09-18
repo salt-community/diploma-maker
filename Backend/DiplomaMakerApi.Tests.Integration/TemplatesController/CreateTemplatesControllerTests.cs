@@ -5,7 +5,9 @@ using Bogus;
 using DiplomaMakerApi.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DiplomaMakerApi.Tests.Integration.TemplatesController
 {
@@ -13,19 +15,41 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
     {
         private readonly HttpClient _client;
         private readonly string _testBlobFolder;
+        private readonly ILogger<CreateTemplatesControllerTests> _logger;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
-        public CreateTemplatesControllerTests(DiplomaMakerApiFactory apiFactory)
-        {
+        public CreateTemplatesControllerTests(DiplomaMakerApiFactory apiFactory, ITestOutputHelper outputHelper)
+        {   
+            // apiFactory.OutputHelper = outputHelper;
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
             _testBlobFolder = apiFactory.TestBlobFolder;
+
+            var loggerFactory = LoggerFactory.Create(builder => {
+                builder.AddXUnit(outputHelper);
+            });
+            _logger = loggerFactory.CreateLogger<CreateTemplatesControllerTests>();
+
+            var testProjectBinRoot = Directory.GetCurrentDirectory();
+            var solutionRoot = Path.GetFullPath(Path.Combine(testProjectBinRoot, "..", "..", "..", ".."));
+            var apiProjectRoot = Path.Combine(solutionRoot, "DiplomaMakerApi");
+            var basePdfTemplateFile = Path.Combine(apiProjectRoot, "Blob", "DiplomaPdfs", "Default.pdf");
+
+            // _logger.LogInformation($"testProjectBinRoot: {testProjectBinRoot}");
+            // _logger.LogInformation($"solutionRoot: {solutionRoot}");
+            // _logger.LogInformation($"apiProjectRoot: {apiProjectRoot}");
+            // _logger.LogInformation($"basePdfTemplateFile: {basePdfTemplateFile}");
         }
         
         [Fact]
         public async void PostTemplate_ReturnsTemplate_WhenValidTemplateName()
         {
+            var testFileExists = TestUtil.CheckFileExists("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
+            if(testFileExists)
+            {
+                _logger.LogInformation($"Default.pdf exists! in {_testBlobFolder}/DiplomaPdfs");
+            }
             // Arrange
             var templateRequest = _templateRequestGenerator.Generate();
 
