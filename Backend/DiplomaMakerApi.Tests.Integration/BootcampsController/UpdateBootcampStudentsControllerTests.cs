@@ -6,6 +6,7 @@ using Bogus;
 using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Models;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.BootcampsController
@@ -53,6 +54,40 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
                         student.VerificationCode == updatedStudent.VerificationCode &&
                         student.Email == updatedStudent.Email))
                 .Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task UpdatePreviewData_ReturnsValidationError_WhenDataIsInvalid()
+        {
+            // Arrange
+            var bootcampSetupRequest = await _client.GetAsync("api/Bootcamps");
+            var bootcampSetupResponse = await bootcampSetupRequest.Content.ReadFromJsonAsync<List<BootcampResponseDto>>();
+            var badRequests = new List<(object data, string[] expectedErrorMessages)>()
+            {
+                (new { TrackId = 0, GraduationDate = DateTime.UtcNow }, new[] { 
+                    "TrackId must be between 1 and 3.", 
+                }),
+                (new { TrackId = 4, GraduationDate = DateTime.UtcNow }, new[] { 
+                    "TrackId must be between 1 and 3.", 
+                }),
+                 (new { TrackId = 1, GraduationDate = "invalidDate" }, new[] { 
+                    "The requestDto field is required."
+                }),
+            };
+            foreach (var (data, expectedErrorMessages) in badRequests)
+            {
+                // Act
+                var response = await _client.PutAsJsonAsync($"api/Bootcamps/dynamicfields/{bootcampSetupResponse![0].GuidId}", data);
+            
+                // Assert
+                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var error = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+                error!.Status.Should().Be(400);
+                error.Title.Should().Be("One or more validation errors occurred.");
+                
+                var allErrorMessages = error.Errors.SelectMany(kvp => kvp.Value).ToArray();
+                allErrorMessages.Should().Contain(message => expectedErrorMessages.Any(expected => message.Contains(expected)));
+            }
         }
 
         [Fact]

@@ -76,6 +76,10 @@ public class BootcampsController : ControllerBase
     [HttpPut("dynamicfields/{guidId}")]
     public async Task<ActionResult<BootcampResponseDto>> UpdatePreviewData(Guid guidId, BootcampRequestUpdateDto requestDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         var updatedBootcamp = await _studentservice.ReplaceStudents(requestDto, guidId);
         if (updatedBootcamp == null)
         {
