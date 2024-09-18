@@ -1,4 +1,4 @@
-/* using System.Net;
+using System.Net;
 using System.Text;
 using Xunit;
 using FluentAssertions;
@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomaMakerApi.Tests.Integration.UserFontsController
 {
-    public class CreateUserFontsTests : IClassFixture<DiplomaMakerApiFactory>
+    public class CreateUserFontsControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
         private readonly string _testBlobFolder;
 
-        public CreateUserFontsTests(DiplomaMakerApiFactory apiFactory)
+        public CreateUserFontsControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
             _testBlobFolder = apiFactory.TestBlobFolder;
@@ -98,4 +98,4 @@ namespace DiplomaMakerApi.Tests.Integration.UserFontsController
             }
         }
     }
-} */
+}

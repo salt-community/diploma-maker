@@ -1,4 +1,4 @@
-/* using System.Net;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using DiplomaMakerApi.Dtos.UserFont;
@@ -8,11 +8,11 @@ using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.UserFontsController
 {
-    public class GetAllUserFontsTests : IClassFixture<DiplomaMakerApiFactory>
+    public class GetAllUserFontsControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
 
-        public GetAllUserFontsTests(DiplomaMakerApiFactory apiFactory)
+        public GetAllUserFontsControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
         }
@@ -40,4 +40,4 @@ namespace DiplomaMakerApi.Tests.Integration.UserFontsController
             userFontResponse![0].FileName.Should().Be("testFont-bold");
         }
     }
-} */
+}
