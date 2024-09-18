@@ -54,5 +54,18 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
                         student.Email == updatedStudent.Email))
                 .Should().BeTrue();
         }
+
+        [Fact]
+        public async Task UpdatePreviewData_ReturnsNotFound_WhenBootcampDoesNotExist()
+        {
+            // Setup
+            var updatedStudentsRequest = _bootcampStudentRequestGenerator.Generate();
+
+            // Act
+            var response = await _client.PutAsJsonAsync($"api/Bootcamps/dynamicfields/{Guid.NewGuid()}", updatedStudentsRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
     }
 }
