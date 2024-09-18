@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DiplomaMakerApi.Models;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Xunit;
 
@@ -52,6 +53,43 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task UpdateStudents_ReturnsValidationError_WhenDataIsInvalid()
+        {
+            // Arrange
+            var studentSetup = await _client.GetAsync("api/Students");
+            var studentSetupResponse = await studentSetup.Content.ReadFromJsonAsync<List<StudentResponseDto>>();
+            var badRequests = new List<(object data, string[] expectedErrorMessages)>()
+            {
+                (new {}, new[]{
+                    "The updateDto field is required."
+                }),
+                (new {Name = "", Email = "bob@gmail.com"}, new[]{
+                    "Name cannot be empty"
+                }),
+                (new {Name = "Bob", Email = ""}, new[]{
+                    "Email cannot be empty"
+                }),
+                (new {Name = "bob", Email = "invalidEmail"}, new[]{
+                    "Invalid email format"
+                }),
+            };
+            foreach (var (data, expectedErrorMessages) in badRequests)
+            {
+                // Act
+                var response = await _client.PutAsJsonAsync($"api/Students/{studentSetupResponse![0].GuidId}", data);
+            
+                // Assert
+                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var error = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+                error!.Status.Should().Be(400);
+                error.Title.Should().Be("One or more validation errors occurred.");
+                
+                var allErrorMessages = error.Errors.SelectMany(kvp => kvp.Value).ToArray();
+                allErrorMessages.Should().Contain(message => expectedErrorMessages.Any(expected => message.Contains(expected)));
+            }
         }
 
         [Fact]
