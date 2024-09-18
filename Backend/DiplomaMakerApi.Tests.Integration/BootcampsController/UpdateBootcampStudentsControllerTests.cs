@@ -67,5 +67,19 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
+
+        [Fact]
+        public async Task PutBootcamp_ReturnsUnathorized_WhenInvalidToken()
+        {
+            // Arrange
+            var updatedStudentsRequest = _bootcampStudentRequestGenerator.Generate();
+            _client.DefaultRequestHeaders.Authorization = null;
+            
+            // Act
+            var response = await _client.PutAsJsonAsync($"api/Bootcamps/dynamicfields/{Guid.NewGuid()}", updatedStudentsRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
     }
 }
