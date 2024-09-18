@@ -48,6 +48,10 @@ public class BootcampsController : ControllerBase
     public async Task<ActionResult<BootcampResponseDto>> GetBootcampByGuidId(Guid guidId)
     {
         var bootcamp = await _bootcampservice.GetBootcampByGuidId(guidId);
+        if(bootcamp == null)
+        {
+            return NotFound();
+        }
         return _mapper.Map<BootcampResponseDto>(bootcamp);
     }
 

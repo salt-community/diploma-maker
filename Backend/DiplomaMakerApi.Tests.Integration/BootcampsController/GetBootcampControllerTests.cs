@@ -15,13 +15,23 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
         }
 
         [Fact]
+        public async Task GetBootcampByGuidId_ReturnsNotFound_WhenBootcampDoesNotExist()
+        {
+            // Act
+            var response = await _client.GetAsync($"api/Bootcamps/{Guid.NewGuid()}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task GetBootcampByGuidId_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange
             _client.DefaultRequestHeaders.Authorization = null;
 
             // Act
-            var response = await _client.GetAsync($"api/Templates/{32135}");
+            var response = await _client.GetAsync($"api/Bootcamps/{32135}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
