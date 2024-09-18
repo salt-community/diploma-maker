@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DiplomaMakerApi.Models;
 using FluentAssertions;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.StudentController
@@ -35,6 +36,22 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             var studentResponse = await response.Content.ReadFromJsonAsync<StudentResponseDto>();
             studentResponse!.Name.Should().Be(newStudentRequest.Name);
             studentResponse!.Email.Should().Be(newStudentRequest.Email);
+        }
+
+        [Fact]
+        public async Task UpdateStudents_ReturnsNotFound_WhenStudentDoesNotExist()
+        {
+            // Setup
+            var newStudentRequest = new StudentUpdateRequestDto()
+            {
+                Name = "Bob Ryder",
+                Email = "bob.ryder@gmail.com"   
+            };
+            // Act
+            var response = await _client.PutAsJsonAsync($"api/Students/{Guid.NewGuid()}", newStudentRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Fact]

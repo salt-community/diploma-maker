@@ -17,6 +17,10 @@ public class StudentsController(StudentService service, IMapper mapper) : Contro
     [HttpPut("{GuidID}")]
     public async Task<ActionResult<StudentResponseDto>> UpdateStudents(Guid GuidID, StudentUpdateRequestDto updateDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         var updatedStudent = await _service.UpdateStudent(GuidID, updateDto);
         return _mapper.Map<StudentResponseDto>(updatedStudent);
     }
