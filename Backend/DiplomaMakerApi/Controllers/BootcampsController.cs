@@ -29,6 +29,10 @@ public class BootcampsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<BootcampResponseDto>> PostBootcamp(BootcampRequestDto requestDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         Bootcamp createdBootcamp = await _bootcampservice.PostBootcamp(requestDto);
         return CreatedAtAction(nameof(GetBootcamps), new { id = createdBootcamp.GuidId }, _mapper.Map<BootcampResponseDto>(createdBootcamp));
     }
