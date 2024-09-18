@@ -37,5 +37,25 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             studentResponse!.Email.Should().Be(newStudentRequest.Email);
         }
 
+        [Fact]
+        public async Task UpdateStudents_ReturnsUnathorized_WhenInvalidToken()
+        {
+            // Arrange
+            var studentSetup = await _client.GetAsync("api/Students");
+            var studentSetupResponse = await studentSetup.Content.ReadFromJsonAsync<List<StudentResponseDto>>();
+            var newStudentRequest = new StudentUpdateRequestDto()
+            {
+                Name = "Bob Ryder",
+                Email = "bob.ryder@gmail.com"   
+            };
+            _client.DefaultRequestHeaders.Authorization = null;
+            
+            // Act
+            var response = await _client.PutAsJsonAsync($"api/Students/{studentSetupResponse![0].GuidId}", newStudentRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
+
     }
 }
