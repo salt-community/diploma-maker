@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using Bogus;
 using DiplomaMakerApi.Models;
 using FluentAssertions;
@@ -42,7 +41,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         public async Task DeleteTemplate_ReturnsNotFound_WhenTemplateDoesNotExist()
         {
             // Act
-            var response = await _client.DeleteAsync($"customers/{Guid.NewGuid()}");
+            var response = await _client.DeleteAsync($"api/Templates/{23109591}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);

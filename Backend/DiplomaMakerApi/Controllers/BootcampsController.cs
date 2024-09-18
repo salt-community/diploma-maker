@@ -29,6 +29,10 @@ public class BootcampsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<BootcampResponseDto>> PostBootcamp(BootcampRequestDto requestDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         Bootcamp createdBootcamp = await _bootcampservice.PostBootcamp(requestDto);
         return CreatedAtAction(nameof(GetBootcamps), new { id = createdBootcamp.GuidId }, _mapper.Map<BootcampResponseDto>(createdBootcamp));
     }
@@ -44,6 +48,10 @@ public class BootcampsController : ControllerBase
     public async Task<ActionResult<BootcampResponseDto>> GetBootcampByGuidId(Guid guidId)
     {
         var bootcamp = await _bootcampservice.GetBootcampByGuidId(guidId);
+        if(bootcamp == null)
+        {
+            return NotFound();
+        }
         return _mapper.Map<BootcampResponseDto>(bootcamp);
     }
 
@@ -51,7 +59,7 @@ public class BootcampsController : ControllerBase
     public async Task<IActionResult> DeleteBootcamp(Guid guidId)
     {  
         await _bootcampservice.DeleteBootcampByGuidId(guidId);
-        return Ok();
+        return NoContent();
     }
 
     [HttpPut("{guidId}")]
@@ -68,7 +76,16 @@ public class BootcampsController : ControllerBase
     [HttpPut("dynamicfields/{guidId}")]
     public async Task<ActionResult<BootcampResponseDto>> UpdatePreviewData(Guid guidId, BootcampRequestUpdateDto requestDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var updatedBootcamp = await _studentservice.ReplaceStudents(requestDto, guidId);
+        if (updatedBootcamp == null)
+        {
+            return NotFound($"Bootcamp with ID {guidId} does not exist.");
+        }
         await _bootcampservice.UpdateBootcampTemplate(guidId, requestDto.templateId);
         return _mapper.Map<BootcampResponseDto>(updatedBootcamp);
     }
