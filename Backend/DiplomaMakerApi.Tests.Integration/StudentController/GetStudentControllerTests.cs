@@ -58,5 +58,15 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             var studentResponse = await response.Content.ReadFromJsonAsync<StudentResponseDto>();
             studentResponse.Should().BeEquivalentTo(studentSetupResponse[0]);
         }
+
+        [Fact]
+        public async Task getStudentByVerificationCode_ReturnsNotFound_WhenStudentDoesNotExist()
+        {
+            // Act
+            var response = await _client.GetAsync($"api/Students/verificationCode/{552315}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
     }
 }
