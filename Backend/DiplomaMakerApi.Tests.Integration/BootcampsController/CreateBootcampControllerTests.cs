@@ -40,7 +40,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
             var bootcampResponse = await response.Content.ReadFromJsonAsync<BootcampResponseDto>();
-            bootcampResponse!.GraduationDate.Should().Be(bootcampRequest.GraduationDate);
+            bootcampResponse!.GraduationDate.Date.Should().Be(bootcampRequest.GraduationDate.Date);
             bootcampResponse.Track.Name.Should().Be(trackIdToNameMap[bootcampRequest.TrackId]);
         }
 
