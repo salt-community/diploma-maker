@@ -18,13 +18,17 @@ public class StudentService
         _logger = logger;
         _historySnapshotService = historySnapshotService;
     }
-    public async Task<Bootcamp> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
+    public async Task<Bootcamp?> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
     {
         var bootcamp = await _context.Bootcamps.Include(b => b.Students)
                 .Include(b => b.Track)
-                .FirstOrDefaultAsync(b => b.GuidId == BootcampGuidId)
-                ?? throw new Exception($"Bootcamp with ID {BootcampGuidId} does not exist");
+                .FirstOrDefaultAsync(b => b.GuidId == BootcampGuidId);
         
+        if (bootcamp == null)
+        {
+            return null;
+        }
+
         if (requestDto.students.Count == 0)
         {
             throw new NotFoundByGuidException("You need to add students to perform this update");

@@ -77,6 +77,10 @@ public class BootcampsController : ControllerBase
     public async Task<ActionResult<BootcampResponseDto>> UpdatePreviewData(Guid guidId, BootcampRequestUpdateDto requestDto)
     {
         var updatedBootcamp = await _studentservice.ReplaceStudents(requestDto, guidId);
+        if (updatedBootcamp == null)
+        {
+            return NotFound($"Bootcamp with ID {guidId} does not exist.");
+        }
         await _bootcampservice.UpdateBootcampTemplate(guidId, requestDto.templateId);
         return _mapper.Map<BootcampResponseDto>(updatedBootcamp);
     }
