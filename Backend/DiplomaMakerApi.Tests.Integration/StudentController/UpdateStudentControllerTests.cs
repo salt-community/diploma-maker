@@ -4,7 +4,6 @@ using System.Net.Http.Json;
 using DiplomaMakerApi.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.StudentController

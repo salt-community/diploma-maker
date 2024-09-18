@@ -21,7 +21,6 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
         public CreateTemplateControllerTests(DiplomaMakerApiFactory apiFactory, ITestOutputHelper outputHelper)
         {   
-            // apiFactory.OutputHelper = outputHelper;
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
             _testBlobFolder = apiFactory.TestBlobFolder;
@@ -29,17 +28,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             var loggerFactory = LoggerFactory.Create(builder => {
                 builder.AddXUnit(outputHelper);
             });
-            _logger = loggerFactory.CreateLogger<CreateTemplateControllerTests>();
-
-            var testProjectBinRoot = Directory.GetCurrentDirectory();
-            var solutionRoot = Path.GetFullPath(Path.Combine(testProjectBinRoot, "..", "..", "..", ".."));
-            var apiProjectRoot = Path.Combine(solutionRoot, "DiplomaMakerApi");
-            var basePdfTemplateFile = Path.Combine(apiProjectRoot, "Blob", "DiplomaPdfs", "Default.pdf");
-
-            // _logger.LogInformation($"testProjectBinRoot: {testProjectBinRoot}");
-            // _logger.LogInformation($"solutionRoot: {solutionRoot}");
-            // _logger.LogInformation($"apiProjectRoot: {apiProjectRoot}");
-            // _logger.LogInformation($"basePdfTemplateFile: {basePdfTemplateFile}");
+            _logger = loggerFactory.CreateLogger<CreateTemplateControllerTests>(); // Run dotnet test --logger "console;verbosity=detailed" to see logs
         }
         
         [Fact]
