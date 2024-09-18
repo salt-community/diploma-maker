@@ -8,14 +8,14 @@ using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.TemplatesController
 {
-    public class UpdateTemplatesControllerTests : IClassFixture<DiplomaMakerApiFactory>
+    public class UpdateTemplateControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
 
-        public UpdateTemplatesControllerTests(DiplomaMakerApiFactory apiFactory)
+        public UpdateTemplateControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "test-token");

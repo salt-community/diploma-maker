@@ -11,15 +11,15 @@ using Xunit.Abstractions;
 
 namespace DiplomaMakerApi.Tests.Integration.TemplatesController
 {
-    public class CreateTemplatesControllerTests : IClassFixture<DiplomaMakerApiFactory>
+    public class CreateTemplateControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
         private readonly string _testBlobFolder;
-        private readonly ILogger<CreateTemplatesControllerTests> _logger;
+        private readonly ILogger<CreateTemplateControllerTests> _logger;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
-        public CreateTemplatesControllerTests(DiplomaMakerApiFactory apiFactory, ITestOutputHelper outputHelper)
+        public CreateTemplateControllerTests(DiplomaMakerApiFactory apiFactory, ITestOutputHelper outputHelper)
         {   
             // apiFactory.OutputHelper = outputHelper;
             _client = apiFactory.CreateClient();
@@ -29,7 +29,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             var loggerFactory = LoggerFactory.Create(builder => {
                 builder.AddXUnit(outputHelper);
             });
-            _logger = loggerFactory.CreateLogger<CreateTemplatesControllerTests>();
+            _logger = loggerFactory.CreateLogger<CreateTemplateControllerTests>();
 
             var testProjectBinRoot = Directory.GetCurrentDirectory();
             var solutionRoot = Path.GetFullPath(Path.Combine(testProjectBinRoot, "..", "..", "..", ".."));
