@@ -1,6 +1,11 @@
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 using Bogus;
 using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Models;
+using FluentAssertions;
 using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.BootcampsController
@@ -8,16 +13,12 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
     public class UpdateBootcampStudentsControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
-        private readonly Faker<BootcampRequestDto> _bootcampPutRequestGenerator;
         private readonly Faker<StudentRequestDto> _studentRequestsGenerator;
         private readonly Faker<BootcampRequestUpdateDto> _bootcampStudentRequestGenerator;
         public UpdateBootcampStudentsControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
-
-            _bootcampPutRequestGenerator = new Faker<BootcampRequestDto>()
-                .RuleFor(b => b.GraduationDate, _ => DateTime.UtcNow)
-                .RuleFor(b => b.TrackId, faker => faker.Random.Int(1, 3));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
 
             _studentRequestsGenerator = new Faker<StudentRequestDto>()
                 .RuleFor(s => s.GuidId, faker => Guid.NewGuid())
@@ -28,6 +29,30 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             _bootcampStudentRequestGenerator = new Faker<BootcampRequestUpdateDto>()
                 .RuleFor(b => b.templateId, faker => 1)
                 .RuleFor(b => b.students, faker => _studentRequestsGenerator.GenerateBetween(10, 15));
+        }
+
+        [Fact]
+        public async Task UpdatePreviewData_UpdatesBootcampStudents_WhenDataIsValid()
+        {
+            // Arrange
+            var bootcampSetupRequest = await _client.GetAsync("api/Bootcamps");
+            var bootcampSetupResponse = await bootcampSetupRequest.Content.ReadFromJsonAsync<List<BootcampResponseDto>>();
+            var updatedStudentsRequest = _bootcampStudentRequestGenerator.Generate();
+
+            // Act
+            var response = await _client.PutAsJsonAsync($"api/Bootcamps/dynamicfields/{bootcampSetupResponse![0].GuidId}", updatedStudentsRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var updatedStudentsResponse = await response.Content.ReadFromJsonAsync<BootcampResponseDto>();
+            updatedStudentsRequest.students
+                .All(updatedStudent => updatedStudentsResponse!.Students
+                    .Any(student =>
+                        student.GuidId == updatedStudent.GuidId &&
+                        student.Name == updatedStudent.Name &&
+                        student.VerificationCode == updatedStudent.VerificationCode &&
+                        student.Email == updatedStudent.Email))
+                .Should().BeTrue();
         }
     }
 }
