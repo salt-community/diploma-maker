@@ -85,7 +85,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             _client.DefaultRequestHeaders.Authorization = null;
 
             // Act
-            var response = await _client.PostAsJsonAsync("api/Templates", bootcampRequest);
+            var response = await _client.PostAsJsonAsync("api/Bootcamps", bootcampRequest);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

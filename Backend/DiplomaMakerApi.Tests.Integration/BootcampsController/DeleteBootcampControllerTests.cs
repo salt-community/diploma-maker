@@ -22,7 +22,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
         }
 
         [Fact]
-        public async void DeleteTemplate_ReturnsNoContent_WhenValidRequest()
+        public async void DeleteBootcamp_ReturnsNoContent_WhenBootcampExists()
         {
             // Arrange
             var setupBootcamp = _bootcampRequestGenerator.Generate();
@@ -38,6 +38,16 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             var assertResponse = await _client.GetAsync("api/Bootcamps");
             var bootcampsAssertResponse = await assertResponse.Content.ReadFromJsonAsync<List<BootcampResponseDto>>();
             bootcampsAssertResponse.Should().NotContain(b => b.GuidId == setupBootcampResponse.GuidId);
+        }
+
+        [Fact]
+        public async Task DeleteBootcamp_ReturnsNotFound_WhenBootcampDoesNotExist()
+        {
+            // Act
+            var response = await _client.DeleteAsync($"api/Bootcamps/{Guid.NewGuid()}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }
 }
