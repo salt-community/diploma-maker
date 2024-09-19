@@ -57,6 +57,16 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
         }
 
         [Fact]
+        public async Task GetFonts_ReturnsNotFound_WhenFontDoesNotExist()
+        {
+                // Act
+                var response = await _client.GetAsync($"api/Blob/UserFonts/{Guid.NewGuid()}?fontType={1}");
+
+                // Assert
+                response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task GetFontsHeadRequest_ReturnsCorrectHeader_WhenFontExists()
         {
             // Arrange
