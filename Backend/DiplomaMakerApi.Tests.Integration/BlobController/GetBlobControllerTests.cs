@@ -60,7 +60,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
         public async Task GetFonts_ReturnsNotFound_WhenFontDoesNotExist()
         {
                 // Act
-                var response = await _client.GetAsync($"api/Blob/UserFonts/{Guid.NewGuid()}?fontType={1}");
+                var response = await _client.GetAsync($"api/Blob/UserFonts/{Guid.NewGuid()}?fontType={0}");
 
                 // Assert
                 response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -83,6 +83,16 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
                 response.StatusCode.Should().Be(HttpStatusCode.OK);
                 response.Content.Headers.ContentType!.MediaType.Should().Be("font/woff");
             }
+        }
+
+        [Fact]
+        public async Task GetFontsHeadRequest_ReturnsNotFound_WhenFontDoesNotExist()
+        {
+            // Act
+            var response = await _client.SendAsync(new HttpRequestMessage(HttpMethod.Head, $"api/Blob/UserFonts/{Guid.NewGuid()}?fontType={0}"));
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }
 }
