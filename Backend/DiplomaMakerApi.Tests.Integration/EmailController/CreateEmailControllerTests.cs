@@ -34,15 +34,19 @@ namespace DiplomaMakerApi.Tests.Integration.EmailController
             // Arrange
             var studentSetup = await _client.GetAsync("api/Students");
             var studentSetupResponse = await studentSetup.Content.ReadFromJsonAsync<List<StudentResponseDto>>();
+            var loggedInUserEmail = await _googleAuthService.GetGoogleEmailAsync();
+
             var newStudentRequest = new StudentUpdateRequestDto()
             {
                 Name = "Bob Ryder",
-                Email = "william.f.lindberg@hotmail.com"
+                Email = loggedInUserEmail
             };
+            
             await _client.PutAsJsonAsync($"api/Students/{studentSetupResponse![0].GuidId}", newStudentRequest);
 
             var pdfFile = TestUtil.GetFileContent("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
             var pdfFormFile = TestUtil.ConvertToIFormFile(pdfFile, "Default.pdf", "application/pdf");
+
             var googleToken = await _googleAuthService.GetGoogleOAuthTokenAsync();
             var emailRequestContent = new MultipartFormDataContent
             {
