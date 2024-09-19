@@ -45,6 +45,23 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
         }
 
         [Fact]
+        public async Task UpdateStudentsPreviewImages_ReturnsNotFound_WhenStudentDoesNotExist()
+        {
+            var pdfFile = TestUtil.GetFileContent("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
+            var pdfBase64String = Convert.ToBase64String(pdfFile);
+            var previewImageRequest = new MultipartFormDataContent
+            {
+                { new StringContent(Guid.NewGuid().ToString()), "StudentGuidId" },
+                { new StringContent(pdfBase64String), "Image" }
+            };
+            // Act
+            var response = await _client.PutAsync("api/Blob/UpdateStudentsPreviewImage", previewImageRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task UpdateBundledStudentsPreviewImages_UpdatesStudentPreviewImages_WhenDataIsValid()
         {
             // Arrange
