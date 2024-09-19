@@ -56,6 +56,28 @@ private static Task HandleExceptionAsync(HttpContext context, Exception exceptio
             resourceId = ex2.ResourceId
         });
     }
+
+    else if (exception is InvalidDataException invalidDataEx)
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        return context.Response.WriteAsJsonAsync(new
+        {
+            status = context.Response.StatusCode,
+            message = invalidDataEx.Message,
+        });
+    }
+
+    else if (exception is NotFoundByGuidException notFoundByGuidException)
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+        return context.Response.WriteAsJsonAsync(new
+        {
+            status = context.Response.StatusCode,
+            message = notFoundByGuidException.Message,
+            resource = notFoundByGuidException.ResourceName,
+            resourceId = notFoundByGuidException.ResourceId
+        });
+    }
     
     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
     var response = new
