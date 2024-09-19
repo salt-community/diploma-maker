@@ -48,5 +48,18 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
             historySnapshotsResponse!.Count.Should().Be(updatedStudentsRequest.students.Count);
             historySnapshotsResponse[0].BasePdf.Should().Be($"Blob/DiplomaPdfs/Default.v1.pdf");
         }
+
+        [Fact]
+        public async Task GetHistory_ReturnsUnathorized_WhenInvalidToken()
+        {
+            // Arrange
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            // Act
+            var response = await _client.GetAsync("api/HistorySnapshots");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
     }
 }
