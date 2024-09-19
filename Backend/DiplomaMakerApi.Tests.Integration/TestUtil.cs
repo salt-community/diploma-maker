@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 
 namespace DiplomaMakerApi.Tests.Integration
 {
@@ -33,6 +34,16 @@ namespace DiplomaMakerApi.Tests.Integration
             fileContent.Should().NotBeEmpty($"File {templateName}{extension} should not be empty at {filePath}");
 
             return fileContent;
+        }
+
+        public static IFormFile ConvertToIFormFile(byte[] fileBytes, string fileName, string contentType)
+        {
+            var stream = new MemoryStream(fileBytes);
+            return new FormFile(stream, 0, stream.Length, "file", fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = contentType
+            };
         }
 
         private static string GetFilePath(string templateName, string extension, string testBlobDirectory, string subDirectory)
