@@ -43,5 +43,37 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             studentResponse!.GuidId.Should().Be(studentSetup.GuidId);
             TestUtil.CheckFileExists(studentSetup.GuidId.ToString(), ".webp", _testBlobFolder, "ImagePreview");
         }
+
+        [Fact]
+        public async Task UpdateBundledStudentsPreviewImages_UpdatesStudentPreviewImages_WhenDataIsValid()
+        {
+            // Arrange
+            var bootcampSetup = await _client.GetAsync("api/Bootcamps");
+            var bootcampSetupResponse = await bootcampSetup.Content.ReadFromJsonAsync<List<BootcampResponseDto>>();
+            var students = bootcampSetupResponse![0].Students;
+            var pdfFile = TestUtil.GetFileContent("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
+            var pdfBase64String = Convert.ToBase64String(pdfFile);
+            var previewImageRequest = new MultipartFormDataContent();
+            for (int i = 0; i < students.Count; i++)
+            {
+                var student = students[i];
+                previewImageRequest.Add(new StringContent(student.GuidId.ToString()), $"PreviewImageRequests[{i}].StudentGuidId");
+                previewImageRequest.Add(new StringContent(pdfBase64String), $"PreviewImageRequests[{i}].Image");
+            }
+
+            // Act
+            var response = await _client.PutAsync("api/Blob/UpdateBundledStudentsPreviewImages", previewImageRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var studentsResponse = await response.Content.ReadFromJsonAsync<List<StudentResponseDto>>();
+            studentsResponse!.Count.Should().Be(students.Count);
+            foreach (var student in students)
+            {
+                var studentResponse = studentsResponse.FirstOrDefault(s => s.GuidId == student.GuidId);
+                studentResponse.Should().NotBeNull();
+                TestUtil.CheckFileExists(student.GuidId.ToString(), ".webp", _testBlobFolder, "ImagePreview");
+            }
+        }
     }
 }
