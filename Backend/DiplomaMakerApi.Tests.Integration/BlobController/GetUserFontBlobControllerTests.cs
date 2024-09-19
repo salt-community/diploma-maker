@@ -1,17 +1,16 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using DiplomaMakerApi.Dtos.UserFont;
 using FluentAssertions;
 using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.BlobController
 {
-    public class GetBlobControllerTests : IClassFixture<DiplomaMakerApiFactory>
+    public class GetUserFontBlobControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
-        public GetBlobControllerTests(DiplomaMakerApiFactory apiFactory)
+        public GetUserFontBlobControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
