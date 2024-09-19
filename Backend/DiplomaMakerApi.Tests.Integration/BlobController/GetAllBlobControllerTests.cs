@@ -10,7 +10,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
     public class GetAllBlobControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
-         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
+        private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
         public GetAllBlobControllerTests(DiplomaMakerApiFactory apiFactory)
