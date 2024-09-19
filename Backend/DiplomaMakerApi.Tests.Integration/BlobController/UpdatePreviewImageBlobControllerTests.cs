@@ -116,5 +116,25 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
                 TestUtil.CheckFileExists(student.GuidId.ToString(), ".webp", _testBlobFolder, "ImagePreview");
             }
         }
+
+        [Fact]
+        public async Task UpdateBundledStudentsPreviewImages_ReturnsBadRequest_WhenStudentDoesNotExist()
+        {
+            // Arrange
+            var previewImageRequest = new MultipartFormDataContent();
+            var pdfFile = TestUtil.GetFileContent("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
+            var pdfBase64String = Convert.ToBase64String(pdfFile);
+            for (int i = 0; i < 3; i++)
+            {
+                previewImageRequest.Add(new StringContent(Guid.NewGuid().ToString()), $"PreviewImageRequests[{i}].StudentGuidId");
+                previewImageRequest.Add(new StringContent(pdfBase64String), $"PreviewImageRequests[{i}].Image");
+            }
+            
+            // Act
+            var response = await _client.PutAsync("api/Blob/UpdateBundledStudentsPreviewImages", previewImageRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
     }
 }
