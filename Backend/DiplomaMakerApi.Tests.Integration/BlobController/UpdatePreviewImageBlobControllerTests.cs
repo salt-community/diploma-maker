@@ -20,7 +20,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
         }
 
         [Fact]
-        public async Task GetPreviewImage_ReturnsHighQualityImage_WhenFileExists()
+        public async Task UpdateStudentsPreviewImages_UpdatesStudentPreviewImage_WhenDataIsValid()
         {
             // Arrange
             var bootcampSetup = await _client.GetAsync("api/Bootcamps");
