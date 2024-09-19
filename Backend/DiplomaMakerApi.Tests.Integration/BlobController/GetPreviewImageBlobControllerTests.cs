@@ -1,0 +1,15 @@
+using System.Net.Http.Headers;
+using Xunit;
+
+namespace DiplomaMakerApi.Tests.Integration.BlobController
+{
+    public class GetPreviewImageBlobControllerTests : IClassFixture<DiplomaMakerApiFactory>
+    {
+        private readonly HttpClient _client;
+        public GetPreviewImageBlobControllerTests(DiplomaMakerApiFactory apiFactory)
+        {
+            _client = apiFactory.CreateClient();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
+        }
+    }
+}
