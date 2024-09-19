@@ -60,6 +60,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
+        
 
         [Fact]
         public async Task UpdateBundledStudentsPreviewImages_UpdatesStudentPreviewImages_WhenDataIsValid()
