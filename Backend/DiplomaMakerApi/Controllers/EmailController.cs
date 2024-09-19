@@ -26,18 +26,21 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpPost("email-student/{guidID}")]
-        public async Task<IActionResult> SendEmailToStudent(Guid guidID, SendEmailRequest req)
+        public async Task<IActionResult> SendEmailToStudent(Guid guidID, SendEmailRequest req, [FromQuery] string? googleToken)
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (userId == null)
+                if (string.IsNullOrEmpty(googleToken))
                 {
-                    throw new Exception("The user does not exist");
-                }
-                var secretKey = _env.IsDevelopment() ? _configuration["Clerk:SecretKey"]! : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
-                var googleToken = await _clerkService.GetGoogleOAuthTokenAsync(userId, secretKey);
+                    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    if (userId == null)
+                    {
+                        throw new Exception("The user does not exist");
+                    }
 
+                    var secretKey = _env.IsDevelopment() ? _configuration["Clerk:SecretKey"]! : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
+                    googleToken = await _clerkService.GetGoogleOAuthTokenAsync(userId, secretKey);
+                }
                 await _emailService.SendEmailWithAttachmentAsync(guidID, req.File, googleToken, req.Title, req.Description);
             }
             catch (Exception ex)
