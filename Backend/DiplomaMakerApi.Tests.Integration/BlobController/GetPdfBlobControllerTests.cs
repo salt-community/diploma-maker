@@ -35,5 +35,17 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
+        [Fact]
+        public async Task GetDiplomaPdf_ReturnsFile_WhenFileExists()
+        {
+            // Act
+            var response = await _client.GetAsync("api/Blob/DiplomaPdfs/Default.pdf");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/pdf");
+        }
+
+        
     }
 }
