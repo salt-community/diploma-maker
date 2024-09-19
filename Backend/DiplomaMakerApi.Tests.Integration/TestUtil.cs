@@ -24,7 +24,16 @@ namespace DiplomaMakerApi.Tests.Integration
             var filePath = GetFilePath(templateName, extension, testBlobDirectory, subDirectory);
             File.Exists(filePath).Should().BeFalse($"File {templateName}{extension} should not exist at {filePath}");
         }
+        public static byte[] GetFileContent(string templateName, string extension, string testBlobDirectory, string subDirectory)
+        {
+            var filePath = GetFilePath(templateName, extension, testBlobDirectory, subDirectory);
+            CheckFileExists(templateName, extension, testBlobDirectory, subDirectory);
 
+            var fileContent = File.ReadAllBytes(filePath);
+            fileContent.Should().NotBeEmpty($"File {templateName}{extension} should not be empty at {filePath}");
+
+            return fileContent;
+        }
         private static string GetFilePath(string templateName, string extension, string testBlobDirectory, string subDirectory)
         {
             var testProjectBinRoot = Directory.GetCurrentDirectory();
