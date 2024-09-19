@@ -1,4 +1,6 @@
+using System.Net;
 using System.Net.Http.Headers;
+using FluentAssertions;
 using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.BlobController
@@ -12,10 +14,15 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
         }
 
-        // [Fact]
-        // public async Task GetFile_ReturnsFile_WhenFileExists()
-        // {
+        [Fact]
+        public async Task GetFile_ReturnsFile_WhenFileExists()
+        {
+            // Act
+            var response = await _client.GetAsync("api/Blob/Default.pdf");
 
-        // }
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.Content.Headers.ContentType!.MediaType.Should().Be("application/pdf");
+        }
     }
 }
