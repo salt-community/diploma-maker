@@ -51,5 +51,15 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
                 historySnapshotsResponse![0].VerificationCode.Should().Be(student.VerificationCode);
             }
         }
+
+        [Fact]
+        public async Task GetHistoryByVerificationCode_ReturnsNotFound_WhenHistorySnapshotDoesNotExist()
+        {
+            // Act
+            var response = await _client.GetAsync($"api/HistorySnapshots/{Guid.NewGuid()}");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
     }
 }
