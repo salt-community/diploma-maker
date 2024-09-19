@@ -11,5 +11,11 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
         }
+
+        // [Fact]
+        // public async Task GetFile_ReturnsFile_WhenFileExists()
+        // {
+
+        // }
     }
 }

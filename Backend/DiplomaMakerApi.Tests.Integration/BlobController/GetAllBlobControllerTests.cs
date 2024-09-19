@@ -47,5 +47,18 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
                 }
             }
         }
+
+        [Fact]
+        public async Task DownloadAllFiles_ReturnsUnathorized_WhenInvalidToken()
+        {
+            // Arrange
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            // Act
+            var response = await _client.GetAsync("api/Blob/download-all-templatebackgrounds");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
     }
 }
