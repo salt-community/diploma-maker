@@ -34,6 +34,7 @@ namespace DiplomaMakerApi.Tests.Integration
 
             return fileContent;
         }
+
         private static string GetFilePath(string templateName, string extension, string testBlobDirectory, string subDirectory)
         {
             var testProjectBinRoot = Directory.GetCurrentDirectory();

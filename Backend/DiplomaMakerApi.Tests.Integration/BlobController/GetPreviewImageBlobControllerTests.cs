@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DiplomaMakerApi.Dtos;
-using DiplomaMakerApi.Models;
 using FluentAssertions;
 using Xunit;
 
