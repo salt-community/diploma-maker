@@ -1,9 +1,14 @@
+using System.Text;
 using DiplomaMakerApi.Models;
 
 namespace DiplomaMakerApi.Tests.Integration
 {
     public static class TestData
     {
+        public static byte[] GetFileMockData()
+        {
+            return Encoding.UTF8.GetBytes("mockData");
+        }
         public static TemplateRequestDto getPutTemplateData()
         {
             return new TemplateRequestDto()
