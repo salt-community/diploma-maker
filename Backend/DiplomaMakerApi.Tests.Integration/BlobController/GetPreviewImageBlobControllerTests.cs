@@ -82,5 +82,15 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             response.Content.Headers.ContentType!.MediaType.Should().Be("application/webp");
             (await response.Content.ReadAsByteArrayAsync()).Length.Should().BeGreaterThan(5 * 1024); // Takes up more than 5kb
         }
+
+        [Fact]
+        public async Task GetPreviewImage_ReturnsNotFound_WhenFileDoesNotExist()
+        {
+            // Act
+            var response = await _client.GetAsync($"api/Blob/GetPreviewImage/{Guid.NewGuid()}.webp");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
     }
 }
