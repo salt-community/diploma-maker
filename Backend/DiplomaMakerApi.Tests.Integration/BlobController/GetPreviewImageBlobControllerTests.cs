@@ -47,6 +47,16 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
         }
 
         [Fact]
+        public async Task GetLQPreviewImage_ReturnsNotFound_WhenFileDoesNotExist()
+        {
+            // Act
+            var response = await _client.GetAsync($"api/Blob/ImagePreviewLQIP/{Guid.NewGuid()}.webp");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task GetPreviewImage_ReturnsHighQualityImage_WhenFileExists()
         {
             // Arrange
