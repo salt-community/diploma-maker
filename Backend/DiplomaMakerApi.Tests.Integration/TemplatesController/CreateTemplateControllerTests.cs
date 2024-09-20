@@ -48,6 +48,11 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
+            if (response.StatusCode != HttpStatusCode.Created)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                _logger.LogError($"Failed to create template. Status Code: {(int)response.StatusCode}, Error: {errorMessage}");
+            }
             var templateResponse = await response.Content.ReadFromJsonAsync<TemplateResponseDto>();
             templateResponse!.Name.Should().Be(templateRequest.templateName);
             templateResponse!.BasePdf.Should().Be($"{_testBlobFolder}/{templateRequest.templateName}.pdf");
