@@ -53,7 +53,7 @@ jobs:
         echo "Waiting for PostgreSQL..."
         until pg_isready -h localhost -p 5432; do sleep 1; done
 
-    - name: Install Dependencies For Imageconversion tests to work
+    - name: Install Dependencies (For Image Conversion Tests)
       run: |
         sudo apt update -y && sudo apt full-upgrade -y && sudo apt autoremove -y
         sudo apt install -y --no-install-recommends \
@@ -71,8 +71,7 @@ jobs:
           libxcb1 \
           libxi6
 
-    # Create symbolic link for libdl.so if needed by PDFium
-    - name: Create symbolic link for libdl.so
+    - name: Create Reference for Image conversion to use
       run: sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
 
     - name: Test
