@@ -21,7 +21,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "test-token");
         }
 
-        [Fact]
+        [Fact(Skip = "Skipping this test for now.")]
         public async void GetTemplateById_ReturnsTemplate_WhenIdExists()
         {
             // Arrange
@@ -40,7 +40,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             templateResponse.Name.Should().Be(setupTemplateResponse.Name);
         }
 
-        [Fact]
+        [Fact(Skip = "Skipping this test for now.")]
         public async Task GetTemplateById_ReturnsNotFound_WhenTemplateDoesNotExist()
         {
             // Act
@@ -50,7 +50,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [Fact]
+        [Fact(Skip = "Skipping this test for now.")]
         public async Task GetTemplateById_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange

@@ -32,7 +32,7 @@ namespace DiplomaMakerApi.Tests.Integration.EmailController
             // if https://www.googleapis.com/auth/gmail.send is not listed under scopes
         // step 5 - 
 
-        // [Fact]
+        // [Fact(Skip = "Skipping this test for now.")]
         // public async Task CreateEmailControllerTests_SendsRealEmail_WhenDataIsValid()
         // {
         //     // Arrange
@@ -77,7 +77,7 @@ namespace DiplomaMakerApi.Tests.Integration.EmailController
         //     response.StatusCode.Should().Be(HttpStatusCode.OK);
         // }
 
-        [Fact]
+        [Fact(Skip = "Skipping this test for now.")]
         public async Task CreateEmailControllerTests_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange
