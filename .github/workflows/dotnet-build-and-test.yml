@@ -39,6 +39,9 @@ jobs:
     - name: Build
       run: dotnet build --no-restore $GITHUB_WORKSPACE/Backend/DiplomaMakerApi
 
+    - name: Set file permissions
+      run: chmod -R 777 $GITHUB_WORKSPACE
+
     - name: Wait for PostgreSQL to be ready
       run: |
         echo "Waiting for PostgreSQL..."
