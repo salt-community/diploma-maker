@@ -113,14 +113,17 @@ builder.Services.AddAutoMapper(typeof(AutomapperConfig));
 builder.Services.AddScoped<BootcampService>();
 builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<TemplateService>();
-builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<TrackService>();
 builder.Services.AddTransient<LocalFileStorageService>();
 builder.Services.AddScoped<HistorySnapshotService>();
-builder.Services.AddScoped<GoogleCloudStorageService>();
 builder.Services.AddTransient<FileUtilityService>();
 builder.Services.AddScoped<UserFontService>();
 builder.Services.AddScoped<ClerkService>();
+if (!builder.Environment.IsEnvironment("Test"))
+{
+    builder.Services.AddScoped<GoogleCloudStorageService>();
+    builder.Services.AddScoped<EmailService>();
+}
 
 
 builder.Services.AddLogging();
