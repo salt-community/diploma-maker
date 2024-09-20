@@ -11,13 +11,13 @@ namespace DiplomaMakerApi.Tests.Integration.EmailController
     {
         private readonly HttpClient _client;
         private readonly string _testBlobFolder;
-        private readonly GoogleAuthService _googleAuthService;
+        // private readonly GoogleAuthService _googleAuthService;
         public CreateEmailControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
             _testBlobFolder = apiFactory.TestBlobFolder;
-            _googleAuthService = new GoogleAuthService();
+            // _googleAuthService = new GoogleAuthService();
         }
 
         // Work in progress to make this pass... It gets stuck on THE LAST PART OF EMAILSERVICE
