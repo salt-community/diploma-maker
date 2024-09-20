@@ -40,7 +40,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             if (response.StatusCode != HttpStatusCode.Created)
             {
                 var errorMessage = await response.Content.ReadAsStringAsync();
-                _logger.LogError($"Failed to create template. Status Code: {(int)response.StatusCode}, Error: {errorMessage}");
+                _logger.LogInformation($"Failed to create template. Status Code: {(int)response.StatusCode}, Error: {errorMessage}");
             }
             response.Content.Headers.ContentType!.MediaType.Should().Be("application/pdf");
         }
