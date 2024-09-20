@@ -23,9 +23,7 @@ namespace DiplomaMakerApi.Tests.Integration
             .WithPassword("Password_2_Change_4_Real_Cases_&")
             .Build();
         private string _testBlobFolder = null!;
-
         public ITestOutputHelper? OutputHelper { get; set; }
-
         public string TestBlobFolder => _testBlobFolder;
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -35,7 +33,12 @@ namespace DiplomaMakerApi.Tests.Integration
 
             builder.ConfigureLogging(logging => {
                 logging.ClearProviders();
-        
+                logging.SetMinimumLevel(LogLevel.Debug);
+                if (OutputHelper != null)
+                {
+                    logging.AddXUnit(OutputHelper);
+                }
+                logging.AddConsole();
             });
 
             builder.ConfigureLogging((p) => p.AddXUnit());
