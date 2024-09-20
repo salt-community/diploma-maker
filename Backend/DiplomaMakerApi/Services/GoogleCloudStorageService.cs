@@ -30,7 +30,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<string?> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
+        public async virtual Task<string?> GetFilePath(string templateName, string subDirectory = "DiplomaPdfs")
         {
             var objectName = templateName.Equals("Default.pdf", StringComparison.OrdinalIgnoreCase)
                 ? $"{_basePath}/{subDirectory}/{templateName}"
@@ -55,7 +55,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<(byte[] FileBytes, string ContentType)> GetFileFromFilePath(string templateName, string subDirectory = "DiplomaPdfs")
+        public async virtual Task<(byte[] FileBytes, string ContentType)> GetFileFromFilePath(string templateName, string subDirectory = "DiplomaPdfs")
         {
             var filePath = await GetFilePath(templateName, subDirectory);
 
@@ -71,7 +71,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<string> SaveFile(IFormFile file, string templateName, string subDirectory = "DiplomaPdfs")
+        public async virtual Task<string> SaveFile(IFormFile file, string templateName, string subDirectory = "DiplomaPdfs")
         {
             var fileExtension = Path.GetExtension(file.FileName);
             if (!templateName.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase))
@@ -87,7 +87,7 @@ namespace DiplomaMakerApi.Services
             return objectName;
         }
 
-        public async Task<bool> DeleteFile(string templateName, string subDirectory = "DiplomaPdfs")
+        public async virtual Task<bool> DeleteFile(string templateName, string subDirectory = "DiplomaPdfs")
         {
             if (templateName.Equals("Default.pdf", StringComparison.OrdinalIgnoreCase))
             {
@@ -107,7 +107,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task InitFileFromNewTemplate(string templateName, string subDirectory = "DiplomaPdfs")
+        public async virtual Task InitFileFromNewTemplate(string templateName, string subDirectory = "DiplomaPdfs")
         {
             var sourceFileName = $"{_basePath}/{subDirectory}/Default.pdf";
             var destinationFileName = $"{_basePath}/{subDirectory}/{templateName}.pdf";
@@ -128,7 +128,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<string> CreateBackup(string fileName, string subDirectory = "DiplomaPdfs")
+        public async virtual Task<string> CreateBackup(string fileName, string subDirectory = "DiplomaPdfs")
         {
             var sourceFileName = $"{_basePath}/{subDirectory}/{fileName}.pdf";
             var version = 1;
@@ -178,7 +178,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async Task<FileContentResult> GetFilesFromPath(string folderPath, string zipFileName, string subDirectory = "DiplomaPdfs")
+        public async virtual Task<FileContentResult> GetFilesFromPath(string folderPath, string zipFileName, string subDirectory = "DiplomaPdfs")
         {
             var storageObjects = _storageClient.ListObjects(_bucketName, $"{_basePath}/{subDirectory}");
             var files = new List<(Stream Stream, string FileName)>();

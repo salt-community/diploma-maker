@@ -1,3 +1,4 @@
+using DiplomaMakerApi.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
@@ -59,9 +60,11 @@ namespace DiplomaMakerApi.Tests.Integration
                 services.AddDbContext<DiplomaMakingContext>(opt => {
                     opt.UseNpgsql(_dbContainer.GetConnectionString());
                 });
+
+                services.RemoveAll(typeof(GoogleCloudStorageService));
+                services.AddScoped<GoogleCloudStorageService, MockGoogleCloudStorageService>();
                 
                 services.RemoveAll(typeof(JwtBearerHandler));
-
                 services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = "Test";
