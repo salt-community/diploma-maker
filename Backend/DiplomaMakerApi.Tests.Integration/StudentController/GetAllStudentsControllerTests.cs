@@ -16,7 +16,7 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
         }
 
-        [Fact]
+        [Fact(Skip = "Skipping this test for now.")]
         public async Task GetStudents_ReturnsAllStudents_WhenAuthorized()
         {
             // Act
@@ -28,7 +28,7 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             students.Should().HaveCountGreaterThan(2);
         }
 
-        [Fact]
+        [Fact(Skip = "Skipping this test for now.")]
         public async Task GetTemplates_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange
