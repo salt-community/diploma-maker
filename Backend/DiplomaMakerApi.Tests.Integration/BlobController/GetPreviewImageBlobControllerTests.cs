@@ -69,7 +69,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetPreviewImage_ReturnsHighQualityImage_WhenFileExists()
         {
             // Arrange

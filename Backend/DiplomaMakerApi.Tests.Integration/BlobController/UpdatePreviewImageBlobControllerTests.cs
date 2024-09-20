@@ -21,7 +21,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             _testBlobFolder = apiFactory.TestBlobFolder;
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateStudentsPreviewImages_UpdatesStudentPreviewImage_WhenDataIsValid()
         {
             // Arrange
@@ -85,7 +85,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             errorResponse!.Message.Should().Be("The provided image is not a valid Base64 PDF string.");
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateBundledStudentsPreviewImages_UpdatesStudentPreviewImages_WhenDataIsValid()
         {
             // Arrange
