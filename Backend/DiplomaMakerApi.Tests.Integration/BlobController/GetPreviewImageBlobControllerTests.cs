@@ -3,7 +3,9 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DiplomaMakerApi.Dtos;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DiplomaMakerApi.Tests.Integration.BlobController
 {
@@ -11,11 +13,18 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
     {
         private readonly HttpClient _client;
         private readonly string _testBlobFolder;
-        public GetPreviewImageBlobControllerTests(DiplomaMakerApiFactory apiFactory)
+
+        private readonly ILogger<GetPdfBlobControllerTests> _logger;
+        public GetPreviewImageBlobControllerTests(DiplomaMakerApiFactory apiFactory, ITestOutputHelper outputHelper)
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
             _testBlobFolder = apiFactory.TestBlobFolder;
+
+            var loggerFactory = LoggerFactory.Create(builder => {
+                builder.AddXUnit(outputHelper);
+            });
+            _logger = loggerFactory.CreateLogger<GetPdfBlobControllerTests>();
         }
 
         [Fact]
@@ -40,6 +49,11 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             var response = await _client.GetAsync($"api/Blob/ImagePreviewLQIP/{studentSetup!.GuidId}.webp");
 
             // Assert
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogError("Failed to get preview image. Status Code: {StatusCode}, Error: {ErrorContent}", response.StatusCode, errorContent);
+            }
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.Content.Headers.ContentType!.MediaType.Should().Be("application/webp");
             (await response.Content.ReadAsByteArrayAsync()).Length.Should().BeLessThan(5 * 1024); // Takes up less than 5kb
