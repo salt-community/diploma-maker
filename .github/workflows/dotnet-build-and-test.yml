@@ -53,5 +53,27 @@ jobs:
         echo "Waiting for PostgreSQL..."
         until pg_isready -h localhost -p 5432; do sleep 1; done
 
+    - name: Install Dependencies For Imageconversion tests to work
+      run: |
+        sudo apt update -y && sudo apt full-upgrade -y && sudo apt autoremove -y
+        sudo apt install -y --no-install-recommends \
+          libc6 \
+          libgcc-s1 \
+          libstdc++6 \
+          zlib1g \
+          libfontconfig1 \
+          libfreetype6 \
+          libjpeg-turbo8 \
+          libpng16-16 \
+          libx11-6 \
+          libxext6 \
+          libxrender1 \
+          libxcb1 \
+          libxi6
+
+    # Create symbolic link for libdl.so if needed by PDFium
+    - name: Create symbolic link for libdl.so
+      run: sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
+
     - name: Test
       run: dotnet test --logger "console;verbosity=detailed" $GITHUB_WORKSPACE/Backend/DiplomaMakerApi.Tests.Integration/DiplomaMakerApi.Tests.Integration.csproj
