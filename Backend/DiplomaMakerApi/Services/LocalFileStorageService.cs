@@ -8,11 +8,13 @@ namespace DiplomaMakerApi.Services
         private readonly string _basePath;
         private readonly DiplomaMakingContext _context;
         private readonly FileUtilityService _fileUtilityService;
-        public LocalFileStorageService(DiplomaMakingContext context, FileUtilityService fileUtilityService, IConfiguration configuration)
+        private readonly ILogger<LocalFileStorageService> _logger;
+        public LocalFileStorageService(DiplomaMakingContext context, FileUtilityService fileUtilityService, IConfiguration configuration, ILogger<LocalFileStorageService> logger)
         {
             _context = context;
             _fileUtilityService = fileUtilityService;
             _basePath = Path.Combine(Directory.GetCurrentDirectory(), configuration["Blob:BlobStorageFolder"] ?? "Blob") + "/";
+            _logger = logger;
             if (!Directory.Exists(_basePath))
             {
                 SetupBlobFolder();
@@ -23,6 +25,7 @@ namespace DiplomaMakerApi.Services
         {
             var directoryPath = Path.Combine(_basePath, subDirectory ?? string.Empty);
             var filePath = Path.Combine(directoryPath, templateName);
+            _logger.LogInformation($"\nGetFilePath directoryPath: ${directoryPath}\n");
             
             if (File.Exists(filePath))
             {
@@ -44,6 +47,7 @@ namespace DiplomaMakerApi.Services
         {
             var directoryPath = Path.Combine(_basePath, subDirectory);
             var files = Directory.GetFiles(directoryPath);
+            _logger.LogInformation($"\nGetFilesFromPath directoryPath: ${directoryPath}\n");
 
             if (files.Length == 0)
             {
@@ -68,6 +72,8 @@ namespace DiplomaMakerApi.Services
             }
 
             var directoryPath = Path.Combine(_basePath, subDirectory ?? string.Empty);
+            _logger.LogInformation($"\nSaveFile directoryPath: ${directoryPath}\n");
+
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
@@ -91,6 +97,8 @@ namespace DiplomaMakerApi.Services
 
             var directoryPath = Path.Combine(_basePath, subDirectory ?? string.Empty);
             var filePath = Path.Combine(directoryPath, templateName + ".pdf");
+            _logger.LogInformation($"\nDeleteFile directoryPath: ${directoryPath}\n");
+            _logger.LogInformation($"\nDeleteFile filePath: ${filePath}\n");
 
             if (File.Exists(filePath))
             {
@@ -105,6 +113,9 @@ namespace DiplomaMakerApi.Services
             var sourceFilePath = Path.Combine($"{_basePath}{subDirectory}", "Default.pdf");
             var destinationDirectoryPath = Path.Combine(_basePath, subDirectory ?? string.Empty);
             var destinationFilePath = Path.Combine(destinationDirectoryPath, templateName + ".pdf");
+            _logger.LogInformation($"\nInitFileFromNewTemplate sourceFilePath: ${sourceFilePath}\n");
+            _logger.LogInformation($"\nInitFileFromNewTemplate destinationDirectoryPath: ${destinationDirectoryPath}\n");
+            _logger.LogInformation($"\nInitFileFromNewTemplate destinationFilePath: ${destinationFilePath}\n");
 
             if (!File.Exists(sourceFilePath))
             {
@@ -122,6 +133,7 @@ namespace DiplomaMakerApi.Services
         public async Task<string> CreateBackup(string fileName, string subDirectory = "DiplomaPdfs")
         {
             var filePath = Path.Combine(_basePath, subDirectory ?? string.Empty, fileName + ".pdf");
+            _logger.LogInformation($"\nCreateBackup: ${filePath}\n");
             
             int version = 1;
             string newFileName;
@@ -146,6 +158,7 @@ namespace DiplomaMakerApi.Services
         {
             var clearDiplomasPath = Path.Combine(_basePath, subDirectory ?? string.Empty);
             var defaultFile = "Default.pdf";
+            _logger.LogInformation($"\nClearFolderExceptDefault: ${clearDiplomasPath}\n");
 
             foreach (var file in Directory.GetFiles(clearDiplomasPath))
             {
@@ -159,6 +172,7 @@ namespace DiplomaMakerApi.Services
         private void SetupBlobFolder()
         {
             var sourceFolder = Path.Combine(Directory.GetCurrentDirectory(), "Blob");
+            _logger.LogInformation($"\nSetupBlobFolder: ${sourceFolder}\n");
             if (Directory.Exists(sourceFolder))
             {
                 DirectoryCopy(sourceFolder, _basePath, copySubDirs: true);
