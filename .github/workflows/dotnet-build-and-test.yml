@@ -1,5 +1,3 @@
-# This workflow will build a .NET project and run integration tests with Docker support
-
 name: .NET
 
 on:
@@ -41,6 +39,14 @@ jobs:
 
     - name: Set file permissions
       run: chmod -R 777 $GITHUB_WORKSPACE
+
+    - name: Setup Google Credentials
+      run: echo "$GOOGLE_CREDENTIALS" > $HOME/gcloud.json
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: Set Google Application Credentials
+      run: echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json" >> $GITHUB_ENV
 
     - name: Wait for PostgreSQL to be ready
       run: |
