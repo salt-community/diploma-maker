@@ -36,12 +36,12 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             var response = await _client.GetAsync("api/Blob/Default.pdf");
 
             // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
             if (response.StatusCode != HttpStatusCode.Created)
             {
                 var errorMessage = await response.Content.ReadAsStringAsync();
                 _logger.LogInformation($"Failed to create template. Status Code: {(int)response.StatusCode}, Error: {errorMessage}");
             }
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.Content.Headers.ContentType!.MediaType.Should().Be("application/pdf");
         }
 
