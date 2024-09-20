@@ -17,7 +17,7 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateStudents_UpdatesStudent_WhenDataIsValid()
         {
             // Arrange
@@ -38,7 +38,7 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             studentResponse!.Email.Should().Be(newStudentRequest.Email);
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateStudents_ReturnsNotFound_WhenStudentDoesNotExist()
         {
             // Setup
@@ -54,7 +54,7 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateStudents_ReturnsValidationError_WhenDataIsInvalid()
         {
             // Arrange
@@ -91,7 +91,7 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             }
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateStudents_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange

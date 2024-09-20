@@ -17,7 +17,7 @@ namespace DiplomaMakerApi.Tests.Integration.UserFontsController
             _client = apiFactory.CreateClient();
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetUserFonts_ReturnsUserFonts_WhenUserFontExists()
         {
             // Arrange

@@ -19,7 +19,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task DownloadAllFiles_ReturnsZipOfAllTemplateBackgrounds_WhenAuthorized()
         {
             // Arrange
@@ -48,7 +48,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             }
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task DownloadAllFiles_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange

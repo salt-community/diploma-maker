@@ -33,7 +33,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             };
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetFonts_ReturnsCorrectFont_WhenFontExists()
         {
             // Arrange
@@ -55,7 +55,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             }
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetFonts_ReturnsNotFound_WhenFontDoesNotExist()
         {
                 // Act
@@ -65,7 +65,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
                 response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetFontsHeadRequest_ReturnsCorrectHeader_WhenFontExists()
         {
             // Arrange
@@ -84,7 +84,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             }
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetFontsHeadRequest_ReturnsNotFound_WhenFontDoesNotExist()
         {
             // Act

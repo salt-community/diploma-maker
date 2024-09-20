@@ -59,7 +59,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             (await response.Content.ReadAsByteArrayAsync()).Length.Should().BeLessThan(5 * 1024); // Takes up less than 5kb
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetLQPreviewImage_ReturnsNotFound_WhenFileDoesNotExist()
         {
             // Act
@@ -96,7 +96,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             (await response.Content.ReadAsByteArrayAsync()).Length.Should().BeGreaterThan(5 * 1024); // Takes up more than 5kb
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetPreviewImage_ReturnsNotFound_WhenFileDoesNotExist()
         {
             // Act

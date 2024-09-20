@@ -46,7 +46,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             TestUtil.CheckFileExists(studentSetup.GuidId.ToString(), ".webp", _testBlobFolder, "ImagePreview");
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateStudentsPreviewImages_ReturnsNotFound_WhenStudentDoesNotExist()
         {
             var pdfFile = TestUtil.GetFileContent("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
@@ -63,7 +63,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateStudentsPreviewImages_ReturnsBadRequest_WhenDataIsInvalid()
         {
             // Arrange
@@ -117,7 +117,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             }
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateBundledStudentsPreviewImages_ReturnsBadRequest_WhenStudentDoesNotExist()
         {
             // Arrange

@@ -26,7 +26,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             _testBlobFolder = apiFactory.TestBlobFolder;
         }
         
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async void PostTemplate_ReturnsTemplate_WhenValidTemplateName()
         {
             // Arrange
@@ -43,7 +43,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             TestUtil.CheckFileExists(templateRequest.templateName, ".pdf", _testBlobFolder, "DiplomaPdfs");  
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task PostTemplate_ReturnsValidationError_WhenDataIsInvalid()
         {
             // Arrange
@@ -76,7 +76,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             }
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task PostTemplate_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange
