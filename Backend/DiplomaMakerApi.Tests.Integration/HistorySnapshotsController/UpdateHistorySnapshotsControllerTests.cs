@@ -34,7 +34,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
         }
 
         // Each HistorySnapshot represents a student generated at some point in time
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task MakeActiveHistorySnapshot_MakesActiveHistorysnapshot_WhenDataIsInvalid()
         {
             // Initial Setup
@@ -96,7 +96,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
             studenthistorySnapshots[studenthistorySnapshots.Count - 1].BasePdf.Should().Be($"Blob/DiplomaPdfs/{templateSetupRequest.templateName}.v1.pdf");
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task MakeActiveHistorySnapshot_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange

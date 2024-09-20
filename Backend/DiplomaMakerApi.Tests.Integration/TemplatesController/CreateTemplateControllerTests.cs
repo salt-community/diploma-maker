@@ -15,7 +15,6 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
     {
         private readonly HttpClient _client;
         private readonly string _testBlobFolder;
-        private readonly ILogger<CreateTemplateControllerTests> _logger;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
@@ -25,21 +24,11 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
             _testBlobFolder = apiFactory.TestBlobFolder;
-
-            var loggerFactory = LoggerFactory.Create(builder => {
-                builder.AddXUnit(outputHelper);
-            });
-            _logger = loggerFactory.CreateLogger<CreateTemplateControllerTests>(); // Run dotnet test --logger "console;verbosity=detailed" to see logs
         }
         
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async void PostTemplate_ReturnsTemplate_WhenValidTemplateName()
         {
-            var testFileExists = TestUtil.CheckFileExists("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
-            if(testFileExists)
-            {
-                _logger.LogInformation($"Default.pdf exists! in {_testBlobFolder}/DiplomaPdfs");
-            }
             // Arrange
             var templateRequest = _templateRequestGenerator.Generate();
 
@@ -48,18 +37,13 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
-            if (response.StatusCode != HttpStatusCode.Created)
-            {
-                var errorMessage = await response.Content.ReadAsStringAsync();
-                _logger.LogError($"Failed to create template. Status Code: {(int)response.StatusCode}, Error: {errorMessage}");
-            }
             var templateResponse = await response.Content.ReadFromJsonAsync<TemplateResponseDto>();
             templateResponse!.Name.Should().Be(templateRequest.templateName);
             templateResponse!.BasePdf.Should().Be($"{_testBlobFolder}/{templateRequest.templateName}.pdf");
             TestUtil.CheckFileExists(templateRequest.templateName, ".pdf", _testBlobFolder, "DiplomaPdfs");  
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task PostTemplate_ReturnsValidationError_WhenDataIsInvalid()
         {
             // Arrange
@@ -92,7 +76,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             }
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task PostTemplate_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange

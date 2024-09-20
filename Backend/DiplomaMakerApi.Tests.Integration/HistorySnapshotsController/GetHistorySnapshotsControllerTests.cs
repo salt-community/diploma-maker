@@ -30,7 +30,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
                 .RuleFor(b => b.students, faker => _studentRequestsGenerator.GenerateBetween(10, 20));
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetHistoryByVerificationCode_ReturnsHistorySnapshot_WhenHistorySnapshotExists()
         {
             // Arrange
@@ -52,7 +52,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
             }
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetHistoryByVerificationCode_ReturnsNotFound_WhenHistorySnapshotDoesNotExist()
         {
             // Act

@@ -11,12 +11,10 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
     {
         private readonly HttpClient _client;
         private readonly ILogger<GetPdfBlobControllerTests> _logger;
-        private readonly string _testBlobFolder;
         public GetPdfBlobControllerTests(DiplomaMakerApiFactory apiFactory, ITestOutputHelper outputHelper)
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
-            _testBlobFolder = apiFactory.TestBlobFolder;
 
             var loggerFactory = LoggerFactory.Create(builder => {
                 builder.AddXUnit(outputHelper);
@@ -27,25 +25,15 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
         [Fact]
         public async Task GetFile_ReturnsFile_WhenFileExists()
         {
-            var testFileExists = TestUtil.CheckFileExists("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
-            if(testFileExists)
-            {
-                _logger.LogError($"Default.pdf exists! in {_testBlobFolder}/DiplomaPdfs");
-            }
             // Act
             var response = await _client.GetAsync("api/Blob/Default.pdf");
 
             // Assert
-            if (response.StatusCode != HttpStatusCode.Created)
-            {
-                var errorMessage = await response.Content.ReadAsStringAsync();
-                _logger.LogError($"Failed to create template. Status Code: {(int)response.StatusCode}, Error: {errorMessage}");
-            }
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.Content.Headers.ContentType!.MediaType.Should().Be("application/pdf");
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetFile_ReturnsNotFound_WhenFileDoesNotExist()
         {
             // Act
@@ -55,7 +43,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetDiplomaPdf_ReturnsFile_WhenFileExists()
         {
             // Act
@@ -66,7 +54,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             response.Content.Headers.ContentType!.MediaType.Should().Be("application/pdf");
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetDiplomaPdf_ReturnsNotFound_WhenFileDoesNotExist()
         {
             // Act

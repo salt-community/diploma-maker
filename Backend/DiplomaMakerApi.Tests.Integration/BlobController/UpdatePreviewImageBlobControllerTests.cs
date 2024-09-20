@@ -21,7 +21,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             _testBlobFolder = apiFactory.TestBlobFolder;
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateStudentsPreviewImages_UpdatesStudentPreviewImage_WhenDataIsValid()
         {
             // Arrange
@@ -46,7 +46,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             TestUtil.CheckFileExists(studentSetup.GuidId.ToString(), ".webp", _testBlobFolder, "ImagePreview");
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateStudentsPreviewImages_ReturnsNotFound_WhenStudentDoesNotExist()
         {
             var pdfFile = TestUtil.GetFileContent("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
@@ -63,7 +63,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateStudentsPreviewImages_ReturnsBadRequest_WhenDataIsInvalid()
         {
             // Arrange
@@ -85,7 +85,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             errorResponse!.Message.Should().Be("The provided image is not a valid Base64 PDF string.");
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateBundledStudentsPreviewImages_UpdatesStudentPreviewImages_WhenDataIsValid()
         {
             // Arrange
@@ -117,7 +117,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             }
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdateBundledStudentsPreviewImages_ReturnsBadRequest_WhenStudentDoesNotExist()
         {
             // Arrange

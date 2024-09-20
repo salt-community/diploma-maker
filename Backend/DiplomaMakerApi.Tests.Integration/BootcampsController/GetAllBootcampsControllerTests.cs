@@ -21,7 +21,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async void GetBootcamps_ReturnsAllBootcamps_WhenAuthorized()
         {
             // Arrange
@@ -48,7 +48,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
                 b.Track.Name == trackIdToNameMap[setupBootcamp.TrackId]);
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task GetBootcamps_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange

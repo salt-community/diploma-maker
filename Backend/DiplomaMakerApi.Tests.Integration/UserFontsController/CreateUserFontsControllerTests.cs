@@ -19,7 +19,7 @@ namespace DiplomaMakerApi.Tests.Integration.UserFontsController
             _testBlobFolder = apiFactory.TestBlobFolder;
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task PostUserFonts_ReturnsUserFont_WhenValidFontRequest()
         {
             // Arrange
@@ -55,7 +55,7 @@ namespace DiplomaMakerApi.Tests.Integration.UserFontsController
             TestUtil.CheckFileExists($"{fontResponse![0].Name}-italic", ".woff", _testBlobFolder, $"UserFonts/{fontResponse![0].Name}");
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task PostUserFonts_ReturnsValidationError_WhenDataIsInvalid()
         {
             // Arrange

@@ -32,7 +32,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
                 .RuleFor(b => b.students, faker => _studentRequestsGenerator.GenerateBetween(10, 15));
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdatePreviewData_UpdatesBootcampStudents_WhenDataIsValid()
         {
             // Arrange
@@ -56,7 +56,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
                 .Should().BeTrue();
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdatePreviewData_ReturnsValidationError_WhenDataIsInvalid()
         {
             // Arrange
@@ -111,7 +111,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             }
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task UpdatePreviewData_ReturnsNotFound_WhenBootcampDoesNotExist()
         {
             // Setup
@@ -124,7 +124,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
-        [Fact(Skip = "Skipping this test for now.")]
+        [Fact]
         public async Task PutBootcamp_ReturnsUnathorized_WhenInvalidToken()
         {
             // Arrange
