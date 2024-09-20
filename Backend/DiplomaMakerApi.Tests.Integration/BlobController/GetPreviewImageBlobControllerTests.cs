@@ -43,17 +43,17 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             };
 
             var previewImageSetup = await _client.PutAsync("api/Blob/UpdateStudentsPreviewImage", previewImageRequest);
+            if (previewImageSetup.StatusCode != HttpStatusCode.OK)
+            {
+                var errorContent = await previewImageSetup.Content.ReadAsStringAsync();
+                _logger.LogError("Failed to get preview image. Status Code: {StatusCode}, Error: {ErrorContent}", previewImageSetup.StatusCode, errorContent);
+            }
             previewImageSetup.StatusCode.Should().Be(HttpStatusCode.OK);
 
             // Act
             var response = await _client.GetAsync($"api/Blob/ImagePreviewLQIP/{studentSetup!.GuidId}.webp");
 
             // Assert
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                _logger.LogError("Failed to get preview image. Status Code: {StatusCode}, Error: {ErrorContent}", response.StatusCode, errorContent);
-            }
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.Content.Headers.ContentType!.MediaType.Should().Be("application/webp");
             (await response.Content.ReadAsByteArrayAsync()).Length.Should().BeLessThan(5 * 1024); // Takes up less than 5kb
