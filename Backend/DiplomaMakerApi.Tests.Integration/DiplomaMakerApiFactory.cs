@@ -34,7 +34,7 @@ namespace DiplomaMakerApi.Tests.Integration
 
             builder.ConfigureLogging(logging => {
                 logging.ClearProviders();
-                logging.SetMinimumLevel(LogLevel.Error);
+                logging.SetMinimumLevel(LogLevel.Debug);
                 if (OutputHelper != null)
                 {
                     logging.AddXUnit(OutputHelper);
@@ -100,7 +100,26 @@ namespace DiplomaMakerApi.Tests.Integration
             var apiProjectRoot = Path.Combine(solutionRoot, "DiplomaMakerApi");
             var basePdfTemplateFile = Path.Combine(apiProjectRoot, "Blob", "DiplomaPdfs", "Default.pdf");
 
+            var imagePreviewLQIPDirectory = Path.Combine(testProjectBinRoot, _testBlobFolder, "ImagePreviewLQIP");
+            var imagePreviewDirectory = Path.Combine(testProjectBinRoot, _testBlobFolder, "ImagePreview");
+            var userFontsDirectory = Path.Combine(testProjectBinRoot, _testBlobFolder, "UserFonts");
+
             var destinationDirectory = Path.Combine(testProjectBinRoot, _testBlobFolder, "DiplomaPdfs");
+
+            if (!Directory.Exists(imagePreviewLQIPDirectory))
+            {
+                Directory.CreateDirectory(imagePreviewLQIPDirectory);
+            }
+
+            if (!Directory.Exists(imagePreviewDirectory))
+            {
+                Directory.CreateDirectory(imagePreviewDirectory);
+            }
+
+            if (!Directory.Exists(userFontsDirectory))
+            {
+                Directory.CreateDirectory(userFontsDirectory);
+            }
 
             if (!Directory.Exists(destinationDirectory))
             {
