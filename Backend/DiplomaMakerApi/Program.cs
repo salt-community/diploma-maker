@@ -120,10 +120,7 @@ builder.Services.AddTransient<FileUtilityService>();
 builder.Services.AddScoped<UserFontService>();
 builder.Services.AddScoped<ClerkService>();
 builder.Services.AddScoped<EmailService>();
-if (!builder.Environment.IsEnvironment("Test"))
-{
-    builder.Services.AddScoped<GoogleCloudStorageService>();
-}
+builder.Services.AddScoped<GoogleCloudStorageService>();
 
 
 builder.Services.AddLogging();

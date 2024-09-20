@@ -60,9 +60,6 @@ namespace DiplomaMakerApi.Tests.Integration
                 services.AddDbContext<DiplomaMakingContext>(opt => {
                     opt.UseNpgsql(_dbContainer.GetConnectionString());
                 });
-
-                services.RemoveAll(typeof(GoogleCloudStorageService));
-                services.AddScoped<GoogleCloudStorageService, MockGoogleCloudStorageService>();
                 
                 services.RemoveAll(typeof(JwtBearerHandler));
                 services.AddAuthentication(options =>
