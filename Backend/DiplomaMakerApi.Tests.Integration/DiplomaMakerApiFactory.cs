@@ -33,7 +33,7 @@ namespace DiplomaMakerApi.Tests.Integration
 
             builder.ConfigureLogging(logging => {
                 logging.ClearProviders();
-                logging.SetMinimumLevel(LogLevel.Debug);
+                logging.SetMinimumLevel(LogLevel.Information);
                 if (OutputHelper != null)
                 {
                     logging.AddXUnit(OutputHelper);
