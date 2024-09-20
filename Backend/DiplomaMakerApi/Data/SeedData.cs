@@ -16,11 +16,12 @@ public static class SeedData
 
             var _fileUtilityService = serviceProvider.GetRequiredService<FileUtilityService>();
             var _configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            var _logger = serviceProvider.GetRequiredService<ILogger<LocalFileStorageService>>();
 
             if (!isTestEnvironment)
             {
                 // Clears all pdfbackgroundfiles except Default.pdf
-                var fileOperations = new LocalFileStorageService(_context, _fileUtilityService, _configuration);
+                var fileOperations = new LocalFileStorageService(_context, _fileUtilityService, _configuration, _logger);
                 fileOperations.ClearFolderExceptDefault();
                 fileOperations.ClearFolderExceptDefault("ImagePreview");
                 fileOperations.ClearFolderExceptDefault("ImagePreviewLQIP");
