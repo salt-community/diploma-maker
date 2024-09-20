@@ -34,7 +34,7 @@ namespace DiplomaMakerApi.Tests.Integration
 
             builder.ConfigureLogging(logging => {
                 logging.ClearProviders();
-                logging.SetMinimumLevel(LogLevel.Debug);
+                logging.SetMinimumLevel(LogLevel.Error);
                 if (OutputHelper != null)
                 {
                     logging.AddXUnit(OutputHelper);
@@ -61,8 +61,8 @@ namespace DiplomaMakerApi.Tests.Integration
                     opt.UseNpgsql(_dbContainer.GetConnectionString());
                 });
 
-                // services.RemoveAll(typeof(GoogleCloudStorageService));
-                // services.AddScoped<GoogleCloudStorageService, MockGoogleCloudStorageService>();
+                services.RemoveAll(typeof(GoogleCloudStorageService));
+                services.AddScoped<GoogleCloudStorageService, MockGoogleCloudStorageService>();
                 
                 services.RemoveAll(typeof(JwtBearerHandler));
                 services.AddAuthentication(options =>

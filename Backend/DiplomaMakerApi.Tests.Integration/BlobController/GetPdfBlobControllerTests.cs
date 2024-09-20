@@ -30,7 +30,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             var testFileExists = TestUtil.CheckFileExists("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
             if(testFileExists)
             {
-                _logger.LogInformation($"Default.pdf exists! in {_testBlobFolder}/DiplomaPdfs");
+                _logger.LogError($"Default.pdf exists! in {_testBlobFolder}/DiplomaPdfs");
             }
             // Act
             var response = await _client.GetAsync("api/Blob/Default.pdf");
@@ -39,7 +39,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             if (response.StatusCode != HttpStatusCode.Created)
             {
                 var errorMessage = await response.Content.ReadAsStringAsync();
-                _logger.LogInformation($"Failed to create template. Status Code: {(int)response.StatusCode}, Error: {errorMessage}");
+                _logger.LogError($"Failed to create template. Status Code: {(int)response.StatusCode}, Error: {errorMessage}");
             }
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             response.Content.Headers.ContentType!.MediaType.Should().Be("application/pdf");
