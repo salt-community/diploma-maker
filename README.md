@@ -1,54 +1,61 @@
-# Diploma Maker
+# Diploma Pro
 
-Diploma Maker is an intuitive tool designed to simplify the diploma generation process for <Salt/> (School of Applied Technology). This comprehensive full-stack application enables efficient batch generation of PDF diplomas, management of bootcamp details, and provides a temporary solution for diploma verification through QR code scanning.
+[Trailer](https://youtu.be/cXqTTuOJLXw)
 
+Diploma Pro is an intuitive tool designed to simplify the diploma generation process for </Salt> (School of Applied Technology). This comprehensive full-stack application enables efficient batch generation of PDF Diplomas and Certificates in an organization.
 
 ## Features
 
-- **Batch Diploma Generation**: Easily generate PDF diplomas in bulk by entering names manually or importing them from a file.
+- **Batch Diploma Generation**: Easily generate PDF diplomas in bulk by entering names manually or importing them from a csv, json or excel file. 
+
+- **Template Creator**: Create and edit dynamic text fields through our template editor. Import custom pdf backgrounds, custom user fonts and edit font size, color, weight, position, alignment.
+
+- **Verification System**: Verification system ensuring authenticity of each diploma.
+
+- **History System**: Version Control for each student generation allowing the user to revert to previous diploma generations.
+
+- **Email Management**: Send out generated pdfs to their respective recipients with ease.
+
+- **Generated Diplomas**: A detailed overview of all diplomas associated with each bootcamp.
   
 - **Bootcamp Management**: Manage bootcamp details, including creating, editing, and viewing information about each bootcamp.
-  
-- **Diploma Overview**: Access a detailed overview of all diplomas associated with each bootcamp.
-  
-- **QR Code Verification**: Scan QR codes to view more information about a diploma, serving as a temporary verification method.
-  
-- **Edit Diplomas**: Edit diploma details directly from the overview page for enhanced flexibility.
-  
-- **Search and Filter**: Quickly find specific diplomas or bootcamp names with search and filter options.
   
 
 ## Technologies Used
 
 ### Backend
-- **C#**: Primary coding language.
-- **.NET**: Runtime engine.
+- **C#/.NET**: Coding language & Runtime engine.
 - **ASP.NET CORE Web API**: Framework for building Web APIs.
-- **Swagger**: API development helper.
 - **Entity Framework Core**: Database interaction.
+- **Clerk & Google OAuth 2.0**: Authentication and authorization.
+- **xUnit**: Unit testing framework for .NET applications.
 - **AutoMapper**: DTO mapping.
-- **Auth0**: Authentication and authorization.
+- **SixLabors.ImageSharp**: Library for advanced image processing.
 
 ### Frontend
-- **TypeScript and JavaScript**: Frontend development languages.
-- **Vite**: Development server setup.
-- **HTML & CSS**: Styling.
-- **Tailwind CSS**: CSS framework for styling.
-- **pdfme**: Generation of pdf.
-- **React Hook Form**: Form management.
-- **React useQuery**: Data fetching management.
-- **React router dom**: Page routing.
+- **TypeScript**: Typed superset of JavaScript. 
+- **Vite**: Fast build tool for modern SPAs
+- **React**: JS Library for building user interfaces.
+	- ***React Hook Form***: Form management in React.
+	- ***React Router DOM***: Routing for React apps.
+	- ***React useQuery***: Data fetching and caching in React.
+- **HTML & CSS**: Markup and styling languages.
+- **pdfjs**: PDF rendering in the browser.
+- **pdfme**: PDF generation library.
+- **Clerk**: User authentication and management.
 
 ### Database
-- **Azure Data Studio**: Development database management.
+- **Postgres**: Relational database system.
 
-### Others
-- **Font Awesome**: Icon usage.
-- **react-qr-code**: QR code generation for diploma verification.
+### Deployment
+- **GitHub Actions**: CI/CD for automating workflows.
+- **Supabase**: Hosting and deployment for Postgres-based applications.
+- **Vercel**: Frontend
+- **Google Cloud Run**: Backend
 
 ## Future Enhancements
 
-- **Enhanced Diploma Verification**: Implement a more robust and secure diploma verification system.
+- **UX Enhancements & Bug fixing**: We are continously working on improving these areas.
   
 - **User Roles and Permissions**: Introduce different user roles and permissions for better access control.
   
