@@ -75,4 +75,4 @@ jobs:
       run: sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
 
     - name: Test
-      run: dotnet test --logger "console;verbosity=detailed" $GITHUB_WORKSPACE/Backend/DiplomaMakerApi.Tests.Integration/DiplomaMakerApi.Tests.Integration.csproj
+      run: dotnet test $GITHUB_WORKSPACE/Backend/DiplomaMakerApi.Tests.Integration/DiplomaMakerApi.Tests.Integration.csproj
