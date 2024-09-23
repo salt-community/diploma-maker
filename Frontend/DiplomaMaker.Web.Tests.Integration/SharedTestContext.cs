@@ -27,7 +27,7 @@ public class SharedTestContext : IAsyncLifetime
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = false,
-            SlowMo = 1000
+            SlowMo = 10000
         });
     }
     public async Task DisposeAsync()
