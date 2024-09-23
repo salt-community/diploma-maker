@@ -11,6 +11,11 @@ services:
       - "3100:80"
     depends_on:
       - diploma-maker-test-backend
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - diploma-maker-network
 
@@ -26,6 +31,11 @@ services:
       - ConnectionStrings__Postgres=Host=diploma-maker-test-postgres-db;Port=5434;Database=diploma_maker_db;Username=postgres;Password=Password_2_Change_4_Real_Cases_&
     depends_on:
       - diploma-maker-test-postgres-db
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - diploma-maker-network
 
