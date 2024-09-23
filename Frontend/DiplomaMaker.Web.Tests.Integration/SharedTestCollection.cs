@@ -1,6 +1,6 @@
 namespace DiplomaMaker.Web.Tests.Integration
 {
-    [CollectionDefinition("tests DiplomaMaker.Web")]
+    [CollectionDefinition("Tests DiplomaMaker.Web")]
     public class SharedTestCollection : ICollectionFixture<SharedTestContext>
     {
 
