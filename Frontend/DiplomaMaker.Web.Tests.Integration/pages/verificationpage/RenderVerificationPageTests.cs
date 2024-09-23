@@ -1,24 +1,24 @@
 using FluentAssertions;
 
-namespace DiplomaMaker.Web.Tests.Integration.pages.landingpage
+namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
 {
     [Collection("Tests DiplomaMaker.Web")]
-    public class RenderLandingPageTests
+    public class RenderVerificationPageTests
     {
         private readonly SharedTestContext _testContext;
-        public RenderLandingPageTests(SharedTestContext testContext)
+        public RenderVerificationPageTests(SharedTestContext testContext)
         {
             _testContext = testContext;
         }
 
         [Fact]
-        public async Task LandingPage_ShouldRenderSuccessfully_WhenNavigating()
+        public async Task VerficiationPage_ShouldRenderSuccessfully_WhenNavigating()
         {
             // Arrange
             var page = await _testContext.Browser!.NewPageAsync(new Microsoft.Playwright.BrowserNewPageOptions{
                 BaseURL = SharedTestContext.AppUrl
             });
-            await page.GotoAsync("");
+            await page.GotoAsync("/verify");
 
             // Act
             var content = await page.TextContentAsync("body");
