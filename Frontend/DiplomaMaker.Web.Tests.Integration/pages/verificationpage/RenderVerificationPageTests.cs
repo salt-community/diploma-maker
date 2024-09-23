@@ -13,7 +13,7 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
         }
 
         [Fact]
-        public async Task VerficiationPage_ShouldRenderSuccessfully_WhenNavigating()
+        public async Task VerificationPage_ShouldRenderSuccessfully_WhenNavigating()
         {
             // Arrange
             var page = await _testContext.Browser!.NewPageAsync(new Microsoft.Playwright.BrowserNewPageOptions{
@@ -29,7 +29,7 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
         }
 
         [Fact]
-        public async Task VerficiationValidPage_ShouldRenderSuccessfully_WhenNavigating()
+        public async Task VerificationCheckPage_ShouldRenderSuccessfully_WhenNavigating()
         {
             // Arrange
             var page = await _testContext.Browser!.NewPageAsync(new Microsoft.Playwright.BrowserNewPageOptions{

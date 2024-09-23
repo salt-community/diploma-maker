@@ -32,7 +32,7 @@ public class SharedTestContext : IAsyncLifetime
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = false,
-            SlowMo = 1000
+            SlowMo = 1500
         });
     }
     public async Task DisposeAsync()
@@ -45,7 +45,7 @@ public class SharedTestContext : IAsyncLifetime
     private void LoadConfiguration()
     {
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
+            .SetBasePath(Directory.GetCurrentDirectory() + "../../../../")
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .Build();
 
