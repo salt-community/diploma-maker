@@ -2,6 +2,7 @@
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Model.Common;
 using Ductus.FluentDocker.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using Xunit;
 
@@ -21,8 +22,11 @@ public class SharedTestContext : IAsyncLifetime
         .Build();
     private IPlaywright? _playwright;
     public IBrowser? Browser {get; private set;}
+    public string? ClerkLoginUser { get; private set; }
+    public string? ClerkLoginPassword { get; private set; }
     public async Task InitializeAsync()
     {
+        LoadConfiguration();
         _dockerService.Start();
         _playwright = await Playwright.CreateAsync();
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
@@ -36,5 +40,16 @@ public class SharedTestContext : IAsyncLifetime
         _dockerService.Dispose();
         await Browser!.DisposeAsync();
         _playwright!.Dispose();
+    }
+
+    private void LoadConfiguration()
+    {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+
+        ClerkLoginUser = configuration["clerk:loginuser"] ?? throw new ArgumentNullException("clerk:loginuser", "Clerk login user is not configured.");
+        ClerkLoginPassword = configuration["clerk:loginpassword"] ?? throw new ArgumentNullException("clerk:loginpassword", "Clerk login password is not configured.");
     }
 }
