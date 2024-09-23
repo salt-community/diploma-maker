@@ -8,7 +8,7 @@ services:
       context: ../DiplomaMaker.Web
       dockerfile: Dockerfile
     ports:
-      - "3000:80"
+      - "3100:80"
     depends_on:
       - diploma-maker-test-backend
     networks:
@@ -20,10 +20,10 @@ services:
       context: ../../Backend/DiplomaMakerApi
       dockerfile: Dockerfile
     ports:
-      - "5000:80"
+      - "5100:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Test
-      - ConnectionStrings__Postgres=Host=diploma-maker-test-postgres-db;Port=5432;Database=diploma_maker_db;Username=postgres;Password=Password_2_Change_4_Real_Cases_&
+      - ConnectionStrings__Postgres=Host=diploma-maker-test-postgres-db;Port=5434;Database=diploma_maker_db;Username=postgres;Password=Password_2_Change_4_Real_Cases_&
     depends_on:
       - diploma-maker-test-postgres-db
     networks:
@@ -31,10 +31,10 @@ services:
 
   # PostgreSQL
   diploma-maker-test-postgres-db:
-    container_name: diploma-maker-development-postgres-db
+    container_name: diploma-maker-test-postgres-db
     image: postgres:latest
     ports:
-      - '5432:5432'
+      - '5434:5432'
     environment:
       POSTGRES_PASSWORD: 'Password_2_Change_4_Real_Cases_&'
       POSTGRES_USER: 'postgres'
