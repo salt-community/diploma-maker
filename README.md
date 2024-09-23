@@ -2,7 +2,7 @@
 
 [Trailer](https://youtu.be/cXqTTuOJLXw)
 
-Diploma Pro is an intuitive tool designed to simplify the diploma generation process for </Salt> (School of Applied Technology). This comprehensive full-stack application enables efficient batch generation of PDF Diplomas and Certificates in an organization.
+Diploma Pro is an intuitive tool designed to simplify the diploma generation process for \<\/Salt\> (School of Applied Technology). This comprehensive full-stack application enables efficient batch generation of PDF Diplomas and Certificates in an organization.
 
 ## Features
 
@@ -29,6 +29,7 @@ Diploma Pro is an intuitive tool designed to simplify the diploma generation pro
 - **Entity Framework Core**: Database interaction.
 - **Clerk & Google OAuth 2.0**: Authentication and authorization.
 - **xUnit**: Unit testing framework for .NET applications.
+	- **FluentAssertions**: Writing readable assertions in tests.
 - **AutoMapper**: DTO mapping.
 - **SixLabors.ImageSharp**: Library for advanced image processing.
 
