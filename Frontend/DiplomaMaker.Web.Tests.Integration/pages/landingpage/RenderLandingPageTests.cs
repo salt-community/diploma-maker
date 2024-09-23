@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Xunit;
 
 namespace DiplomaMaker.Web.Tests.Integration.pages.landingpage
 {
@@ -11,20 +12,20 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.landingpage
             _testContext = testContext;
         }
 
-        // [Fact]
-        // public async Task LandingPage_ShouldRenderSuccessfully_WhenNavigating()
-        // {
-        //     // Arrange
-        //     var page = await _testContext.Browser!.NewPageAsync(new Microsoft.Playwright.BrowserNewPageOptions{
-        //         BaseURL = SharedTestContext.AppUrl
-        //     });
-        //     await page.GotoAsync("");
+        [Fact]
+        public async Task LandingPage_ShouldRenderSuccessfully_WhenNavigating()
+        {
+            // Arrange
+            var page = await _testContext.Browser!.NewPageAsync(new Microsoft.Playwright.BrowserNewPageOptions{
+                BaseURL = SharedTestContext.AppUrl
+            });
+            await page.GotoAsync("");
 
-        //     // Act
-        //     var content = await page.TextContentAsync("body");
+            // Act
+            var content = await page.TextContentAsync("body");
 
-        //     // Assert
-        //     content.Should().Contain("Verify");
-        // }
+            // Assert
+            content.Should().Contain("Verify");
+        }
     }
 }

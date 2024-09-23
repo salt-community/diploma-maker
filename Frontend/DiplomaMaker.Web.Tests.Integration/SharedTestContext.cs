@@ -3,6 +3,7 @@ using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Model.Common;
 using Ductus.FluentDocker.Services;
 using Microsoft.Playwright;
+using Xunit;
 
 namespace DiplomaMaker.Web.Tests.Integration;
 
@@ -27,7 +28,7 @@ public class SharedTestContext : IAsyncLifetime
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = false,
-            SlowMo = 10000
+            SlowMo = 1000
         });
     }
     public async Task DisposeAsync()

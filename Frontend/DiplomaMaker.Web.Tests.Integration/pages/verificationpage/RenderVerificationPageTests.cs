@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Xunit;
 
 namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
 {
@@ -25,6 +26,22 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
 
             // Assert
             content.Should().Contain("Verify");
+        }
+
+        [Fact]
+        public async Task VerficiationValidPage_ShouldRenderSuccessfully_WhenNavigating()
+        {
+            // Arrange
+            var page = await _testContext.Browser!.NewPageAsync(new Microsoft.Playwright.BrowserNewPageOptions{
+                BaseURL = SharedTestContext.AppUrl
+            });
+            await page.GotoAsync($"/verify/{Guid.NewGuid()}");
+
+            // Act
+            var content = await page.TextContentAsync("body");
+
+            // Assert
+            content.Should().Contain("Veri");
         }
     }
 }
