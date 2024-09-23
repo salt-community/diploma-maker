@@ -47,6 +47,7 @@ public class SharedTestContext : IAsyncLifetime
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory() + "../../../../")
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddUserSecrets<SharedTestContext>()
             .Build();
 
         ClerkLoginUser = configuration["clerk:loginuser"] ?? throw new ArgumentNullException("clerk:loginuser", "Clerk login user is not configured.");

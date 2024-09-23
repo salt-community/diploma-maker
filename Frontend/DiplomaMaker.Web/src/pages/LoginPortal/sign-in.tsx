@@ -5,13 +5,14 @@ export default function SignInPage() {
   return (
 
     <div className='login-view'>
-      <SignIn path="/sign-in" 
+      <SignIn
           appearance={{
             elements: {
               footerAction: { display: "none" },
             },
           }} 
-          fallbackRedirectUrl="/home" signUpUrl={null} afterSignOutUrl="/home"/>
+          fallbackRedirectUrl="/home" signUpUrl={null} afterSignOutUrl="/home"
+      />
     </div>
   )
 }
