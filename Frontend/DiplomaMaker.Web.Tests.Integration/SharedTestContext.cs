@@ -8,7 +8,7 @@ namespace DiplomaMaker.Web.Tests.Integration;
 
 public class SharedTestContext : IAsyncLifetime
 {
-    public const string AppUrl = "http://localhost:5000";
+    public const string AppUrl = "http://localhost:3100";
     private static readonly string DockerComposeFile = 
         Path.Combine(Directory.GetCurrentDirectory(), (TemplateString)"../../../docker-compose.integration.yml");
     private readonly ICompositeService _dockerService = new Builder()
@@ -16,7 +16,7 @@ public class SharedTestContext : IAsyncLifetime
         .UseCompose()
         .FromFile(DockerComposeFile)
         .RemoveOrphans()
-        .WaitForHttp("diploma-maker-test-backend", AppUrl)
+        .WaitForHttp("diploma-maker-test-frontend", AppUrl)
         .Build();
     private IPlaywright? _playwright;
     public IBrowser? Browser {get; private set;}
