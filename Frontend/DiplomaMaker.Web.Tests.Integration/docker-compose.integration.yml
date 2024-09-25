@@ -1,21 +1,18 @@
 version: '3.9'
 
 services:
-
   # Frontend
   diploma-maker-test-frontend:
     build:
       context: ../DiplomaMaker.Web
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:5258
+        VITE_CLERK_PUBLISHABLE_KEY: pk_test_d2lyZWQtYnVjay00Ny5jbGVyay5hY2NvdW50cy5kZXYk
     ports:
-      - "3100:80"
+      - "5173:80"
     depends_on:
       - diploma-maker-test-backend
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     networks:
       - diploma-maker-network
 
@@ -25,14 +22,29 @@ services:
       context: ../../Backend/DiplomaMakerApi
       dockerfile: Dockerfile
     ports:
-      - "5100:80"
+      - "5258:443"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Test
-      - ConnectionStrings__Postgres=Host=diploma-maker-test-postgres-db;Port=5434;Database=diploma_maker_db;Username=postgres;Password=Password_2_Change_4_Real_Cases_&
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:443
+      - ConnectionStrings__PostgreSQLConnectionLocal=Host=diploma-maker-test-postgres-db;Port=5432;Database=diploma_maker_db;Username=postgres;Password=Password_2_Change_4_Real_Cases_&
+      - GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/google-credentials.json
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetcore.crt
+      - ASPNETCORE_Kestrel__Certificates__Default__KeyPath=/https/aspnetcore.key
+    secrets:
+      - clerk_secretkey
+      - clerk_authorizedparty
+      - clerk_authority
+      - google_credentials
     depends_on:
-      - diploma-maker-test-postgres-db
+      diploma-maker-test-postgres-db:
+        condition: service_healthy
+    volumes:
+      - ../../Backend/DiplomaMakerApi/Blob:/app/Blob
+      - ~/secrets/google-credentials.json:/run/secrets/google-credentials.json
+      - ~/secrets/certificates/aspnetcore.crt:/https/aspnetcore.crt
+      - ~/secrets/certificates/aspnetcore.key:/https/aspnetcore.key
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:443 || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -44,7 +56,7 @@ services:
     container_name: diploma-maker-test-postgres-db
     image: postgres:latest
     ports:
-      - '5434:5432'
+      - '5435:5432'
     environment:
       POSTGRES_PASSWORD: 'Password_2_Change_4_Real_Cases_&'
       POSTGRES_USER: 'postgres'
@@ -65,3 +77,13 @@ networks:
 
 volumes:
   postgres-data:
+
+secrets:
+  clerk_secretkey:
+    file: ~/secrets/clerk-secretKey.txt
+  clerk_authorizedparty:
+    file: ~/secrets/clerk-authorizedParty.txt
+  clerk_authority:
+    file: ~/secrets/clerk-authority.txt
+  google_credentials:
+    file: ~/secrets/google-credentials.json

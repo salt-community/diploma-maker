@@ -11,11 +11,11 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-/* var logger = LoggerFactory.Create(loggingBuilder => 
+var logger = LoggerFactory.Create(loggingBuilder => 
 {
     loggingBuilder.AddConsole();
 }).CreateLogger<Program>();
-logger.LogInformation("Connection string: {ConnectionString}", connectionstr); */
+
 if(!builder.Environment.IsDevelopment()) {
     builder.WebHost.UseKestrel(options =>
     {
@@ -41,6 +41,10 @@ if (!builder.Environment.IsEnvironment("Test"))
         ));
 }
 
+builder.Services.AddLogging(loggingBuilder => {
+    loggingBuilder.AddConsole();
+});
+
 builder.Services.AddControllers().AddJsonOptions(opt => {
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
@@ -58,6 +62,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         x.Authority = builder.Environment.IsDevelopment() 
             ? builder.Configuration["Clerk:Authority"] 
             : Environment.GetEnvironmentVariable("Clerk:Authority")!;
+        
+        x.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
             
         x.TokenValidationParameters = new TokenValidationParameters()
         {
@@ -122,30 +128,31 @@ builder.Services.AddScoped<ClerkService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<GoogleCloudStorageService>();
 
-
-builder.Services.AddLogging();
-
 var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{   
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Test"))
+{
+    logger.LogInformation($"Clerk:Authority: {builder.Configuration["Clerk:Authority"]}");
+    logger.LogInformation($"Clerk:SecretKey: {builder.Configuration["Clerk:SecretKey"]}");
+    logger.LogInformation($"Clerk:AuthorizedParty: {builder.Configuration["Clerk:AuthorizedParty"]}");
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
         SeedData.Initialize(services);
     }
-  
 }
 
 app.UseSwagger();
 
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+if(!builder.Environment.IsDevelopment()){
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 

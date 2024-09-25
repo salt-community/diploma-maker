@@ -33,4 +33,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Backend\DiplomaMakerApi\DiplomaMakerApi.csproj" />
+  </ItemGroup>
+
 </Project>

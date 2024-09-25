@@ -3,10 +3,15 @@ FROM node:18-alpine AS build
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-
 RUN npm install
 
 COPY . .
+
+ARG VITE_API_URL
+ARG VITE_CLERK_PUBLISHABLE_KEY
+
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY
 
 RUN npm run build
 
