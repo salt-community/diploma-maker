@@ -2,9 +2,7 @@
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Model.Common;
 using Ductus.FluentDocker.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
 using Xunit;
 
@@ -40,8 +38,6 @@ public class SharedTestContext : IAsyncLifetime
     }
     public async Task DisposeAsync()
     {
-        // Console.WriteLine("Press Enter to close the browser...");
-        // Console.ReadLine();
         _dockerService.Dispose();
         await Browser!.DisposeAsync();
         _playwright!.Dispose();
