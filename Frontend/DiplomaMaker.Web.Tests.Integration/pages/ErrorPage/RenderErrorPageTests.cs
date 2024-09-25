@@ -31,13 +31,10 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.ErrorPage
         public async Task ErrorPage_ShouldRenderSuccessfully_WhenNavigating()
         {
             // Arrange
-            var page = await _testContext.Browser!.NewPageAsync(new BrowserNewPageOptions{
-                BaseURL = SharedTestContext.AppUrl
-            });
-            await page.GotoAsync($"/{Guid.NewGuid()}");
+            await _page.GotoAsync($"/{Guid.NewGuid()}");
 
             // Act
-            var content = await page.TextContentAsync("body");
+            var content = await _page.TextContentAsync("body");
 
             // Assert
             content.Should().Contain("404");
