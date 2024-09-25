@@ -12,7 +12,7 @@ public class SharedTestContext : IAsyncLifetime
 {
     public const string AppUrl = "http://localhost:5173";
     private static readonly string DockerComposeFile = 
-        Path.Combine(Directory.GetCurrentDirectory(), (TemplateString)"../../../docker-compose.integration.yml");
+        Path.Combine(Directory.GetCurrentDirectory(), (TemplateString)"../../../../docker-compose.integration.yml");
     private readonly ICompositeService _dockerService = new Builder()
         .UseContainer()
         .UseCompose()
@@ -31,7 +31,7 @@ public class SharedTestContext : IAsyncLifetime
         _playwright = await Playwright.CreateAsync();
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            Headless = false,
+            // Headless = false,
             SlowMo = 1500
         });
     }

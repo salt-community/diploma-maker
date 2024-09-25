@@ -4,7 +4,7 @@ services:
   # Frontend
   diploma-maker-test-frontend:
     build:
-      context: ../DiplomaMaker.Web
+      context: DiplomaMaker.Web
       dockerfile: Dockerfile
       args:
         VITE_API_URL: http://localhost:5258
@@ -19,7 +19,7 @@ services:
   # Backend
   diploma-maker-test-backend:
     build:
-      context: ../../Backend/DiplomaMakerApi
+      context: ../Backend/DiplomaMakerApi
       dockerfile: Dockerfile
     ports:
       - "5258:443"
@@ -39,7 +39,7 @@ services:
       diploma-maker-test-postgres-db:
         condition: service_healthy
     volumes:
-      - ../../Backend/DiplomaMakerApi/Blob:/app/Blob
+      - ../Backend/DiplomaMakerApi/Blob:/app/Blob
       - ~/secrets/google-credentials.json:/run/secrets/google-credentials.json
       - ~/secrets/certificates/aspnetcore.crt:/https/aspnetcore.crt
       - ~/secrets/certificates/aspnetcore.key:/https/aspnetcore.key
