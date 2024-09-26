@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.Playwright;
 using Xunit;
 
 namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
@@ -7,9 +8,15 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
     public class RenderVerificationPageTests
     {
         private readonly SharedTestContext _testContext;
+        private readonly IPage _page;
         public RenderVerificationPageTests(SharedTestContext testContext)
         {
             _testContext = testContext;
+            _page = _testContext.Browser!.NewPageAsync(new BrowserNewPageOptions
+            {
+                BaseURL = SharedTestContext.AppUrl,
+                StorageStatePath = "loginState.json"
+            }).GetAwaiter().GetResult();
         }
 
         [Fact]
@@ -29,16 +36,31 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
         }
 
         [Fact]
-        public async Task VerificationCheckPage_ShouldRenderSuccessfully_WhenNavigating()
+        public async Task VerificationIncorrectCheckPage_ShouldRenderSuccessfully_WhenNavigating()
         {
             // Arrange
-            var page = await _testContext.Browser!.NewPageAsync(new Microsoft.Playwright.BrowserNewPageOptions{
+            var page = await _testContext.Browser!.NewPageAsync(new BrowserNewPageOptions{
                 BaseURL = SharedTestContext.AppUrl
             });
             await page.GotoAsync($"/verify/{Guid.NewGuid()}");
 
             // Act
             var content = await page.TextContentAsync("body");
+
+            // Assert
+            content.Should().Contain("Veri");
+        }
+
+        [Fact]
+        public async Task VerificationCorrectCheckPage_ShouldRenderSuccessfully_WhenNavigating()
+        {
+            // Arrange
+            await _page.GotoAsync("/overview");
+            var cookies = await _page.Context.CookiesAsync();
+            var sessionCookie = cookies.FirstOrDefault(cookie => cookie.Name == "__session");
+
+            // Act
+            var content = await _page.TextContentAsync("body");
 
             // Assert
             content.Should().Contain("Veri");

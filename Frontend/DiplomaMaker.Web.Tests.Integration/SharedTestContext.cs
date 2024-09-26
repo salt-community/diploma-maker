@@ -31,8 +31,24 @@ public class SharedTestContext : IAsyncLifetime
         _playwright = await Playwright.CreateAsync();
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            // Headless = false,
+            Headless = false,
             SlowMo = 1500
+        });
+
+        // Login Procedure (So we don't have to do it in every test class)
+        var page = await Browser.NewPageAsync(new BrowserNewPageOptions
+        {
+            BaseURL = AppUrl
+        });
+        await page.GotoAsync("/sign-in");
+        await page.FillAsync("input:nth-of-type(1)", ClerkLoginUser!);
+        await page.ClickAsync("button.cl-formButtonPrimary");
+        await page.ClickAsync("button.cl-alternativeMethodsBlockButton");
+        await page.FillAsync("input[name='password']", ClerkLoginPassword!);
+        await page.ClickAsync("span.cl-internal-2iusy0");
+        await page.Context.StorageStateAsync(new BrowserContextStorageStateOptions
+        {
+            Path = "loginState.json"
         });
     }
     public async Task DisposeAsync()

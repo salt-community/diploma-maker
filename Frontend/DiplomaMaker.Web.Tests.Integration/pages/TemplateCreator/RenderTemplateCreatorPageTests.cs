@@ -14,17 +14,11 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.TemplateCreator
         {
             _testContext = testContext;
 
-            _page = _testContext.Browser!.NewPageAsync(new Microsoft.Playwright.BrowserNewPageOptions
+            _page = _testContext.Browser!.NewPageAsync(new BrowserNewPageOptions
             {
-                BaseURL = SharedTestContext.AppUrl
+                BaseURL = SharedTestContext.AppUrl,
+                StorageStatePath = "loginState.json"
             }).GetAwaiter().GetResult();
-            
-            _page.GotoAsync("/sign-in").GetAwaiter().GetResult();
-            _page.FillAsync("input:nth-of-type(1)", _testContext.ClerkLoginUser!).GetAwaiter().GetResult();
-            _page.ClickAsync("button.cl-formButtonPrimary").GetAwaiter().GetResult();
-            _page.ClickAsync("button.cl-alternativeMethodsBlockButton").GetAwaiter().GetResult();
-            _page.FillAsync("input[name='password']", _testContext.ClerkLoginPassword!).GetAwaiter().GetResult();
-            _page.ClickAsync("span.cl-internal-2iusy0").GetAwaiter().GetResult();
         }
 
         [Fact]
