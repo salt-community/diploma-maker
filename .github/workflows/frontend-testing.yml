@@ -69,6 +69,7 @@ jobs:
         docker-compose -f Frontend/docker-compose.integration.yml ps
         until [ $(docker inspect --format='{{json .State.Health.Status}}' diploma-maker-test-backend) == '"healthy"' ]; do
           echo "Waiting for backend to be healthy...";
+          docker-compose -f Frontend/docker-compose.integration.yml logs --tail=50;
           sleep 10;
         done
 
