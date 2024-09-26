@@ -13,6 +13,7 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
         private readonly SharedTestContext _testContext;
         private IPage? _page;
         private readonly string _currentDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
+        private readonly string _studentName = "Bob Ryder";
 
         public GenerateDiplomasFlowTests(SharedTestContext testContext)
         {
@@ -76,12 +77,12 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
 
             // Act
             var inputBox = await _page.QuerySelectorAsync("input.taginputbox");
-            await inputBox!.FillAsync("Bob Ryder");
+            await inputBox!.FillAsync(_studentName);
             await inputBox.PressAsync("Enter");
 
             // Assert
             var content = await _page.ContentAsync();
-            content.Should().Contain("Bob Ryder", "Bob Ryder should be in the nametaginput.");
+            content.Should().Contain(_studentName, $"{_studentName} should be in the nametaginput.");
         }
 
         [Fact, TestPriority(3)]
@@ -95,11 +96,11 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             await _page.SelectOptionAsync("select[test-identifier='bootcamp-selector']", $"jfs-{_currentDate}");
 
             var inputBox = await _page.QuerySelectorAsync("input.taginputbox");
-            await inputBox!.FillAsync("Bob Ryder");
+            await inputBox!.FillAsync(_studentName);
             await inputBox.PressAsync("Enter");
 
             var content = await _page.ContentAsync();
-            content.Should().Contain("Bob Ryder", "Bob Ryder should be in the nametaginput.");
+            content.Should().Contain(_studentName, $"{_studentName} should be in the nametaginput.");
 
             // Act
             await _page!.ClickAsync(".diploma-making-form__submit-button");
@@ -121,6 +122,20 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             }
 
             newPage.Should().NotBeNull("New window should open after generating diplomas.");
+        }
+
+        [Fact, TestPriority(4)]
+        public async Task GeneratedStudent_ShouldExist_OnOverviewPage()
+        {
+            // Arrange
+            await _page!.GotoAsync("/overview");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+            // Act
+            var buttonWithTestId = await _page.QuerySelectorAsync($"button.list-module__item[test-identifier='{_studentName}']");
+
+            // Assert
+            buttonWithTestId.Should().NotBeNull($"There should be a button with test-identifier '{_studentName}'.");
         }
     }
 }
