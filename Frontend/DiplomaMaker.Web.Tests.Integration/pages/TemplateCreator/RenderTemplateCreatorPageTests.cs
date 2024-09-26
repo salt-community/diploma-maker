@@ -29,7 +29,14 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.TemplateCreator
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
-            var pdfPreviewDiv = await _page.QuerySelectorAsync(".pdfpreview div div div div div div div div:nth-of-type(2)");
+            IElementHandle? pdfPreviewDiv = null;
+            for (int i = 0; i < 12; i++)
+            {
+                pdfPreviewDiv = await _page.QuerySelectorAsync(".pdfpreview div div div div div div div div:nth-of-type(2)");
+                if (pdfPreviewDiv != null)
+                    break;
+                await Task.Delay(1000);
+            }
 
             // Assert
             pdfPreviewDiv.Should().NotBeNull();
