@@ -33,7 +33,7 @@ public class SharedTestContext : IAsyncLifetime
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             // Headless = false,
-            SlowMo = 1500
+            SlowMo = 4000
         });
 
         // Login Procedure (So we don't have to do it in every test class)
