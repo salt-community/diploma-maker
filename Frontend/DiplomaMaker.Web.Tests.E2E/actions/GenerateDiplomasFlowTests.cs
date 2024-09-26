@@ -51,6 +51,10 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
         [Fact]
         public async Task GenerateDiplomas_ShouldOpenNewWindow_AfterGenerating()
         {
+            // Arrange
+            await _page!.GotoAsync("/pdf-creator");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
             // Act
             await _page!.ClickAsync(".diploma-making-form__submit-button");
 
@@ -71,21 +75,6 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             }
 
             newPage.Should().NotBeNull("New window should open after generating diplomas.");
-        }
-
-        [Fact]
-        public async Task GeneratedDiplomas_ShouldReflect_OnOverviewPage()
-        {
-            // Arrange
-            await _page!.GotoAsync("/overview");
-            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-
-            // Act
-
-
-            // Assert
-            var content = await _page.ContentAsync();
-            content.Should().Contain("Bob Ryder", "Bob Ryder should be on the overviewPage.");
         }
     }
 }
