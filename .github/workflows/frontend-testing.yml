@@ -40,6 +40,14 @@ jobs:
     - name: Set up Playwright
       uses: microsoft/playwright-github-action@v1
 
+    - name: Create secret files
+      run: |
+        mkdir -p /home/runner/secrets
+        echo "${{ secrets.CLERK_SECRET_KEY }}" > /home/runner/secrets/clerk-secretKey.txt
+        echo "${{ secrets.CLERK_AUTHORIZED_PARTY }}" > /home/runner/secrets/clerk-authorizedParty.txt
+        echo "${{ secrets.CLERK_AUTHORITY }}" > /home/runner/secrets/clerk-authority.txt
+        echo "${{ secrets.GOOGLE_GCLOUD_CREDENTIALS }}" > /home/runner/secrets/google-credentials.json
+
     - name: Setup environment variables
       run: |
         echo "Clerk__SecretKey=${{ secrets.CLERK_SECRET_KEY }}" >> $GITHUB_ENV
