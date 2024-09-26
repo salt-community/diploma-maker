@@ -2,9 +2,11 @@ name: Frontend Testing
 
 on:
   push:
+    branches: [ "main" ]
     paths:
       - 'FrontEnd/**'
   pull_request:
+    branches: [ "main" ]
     paths:
       - 'FrontEnd/**'
   workflow_dispatch:
