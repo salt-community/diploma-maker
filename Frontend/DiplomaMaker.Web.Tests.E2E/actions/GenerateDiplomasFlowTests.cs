@@ -91,9 +91,8 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             await _page!.GotoAsync("/pdf-creator");
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-            await _page.SelectOptionAsync("select.overview-page__select-box", new[] { "1" });
-            await Task.Delay(5000);
-            await _page.SelectOptionAsync("select.overview-page__select-box:nth-of-type(2)", $"jfs-{_currentDate}");
+            await _page.SelectOptionAsync("select[test-identifier='track-selector']", new[] { "1" });
+            await _page.SelectOptionAsync("select[test-identifier='bootcamp-selector']", $"jfs-{_currentDate}");
             await Task.Delay(5000);
 
             var inputBox = await _page.QuerySelectorAsync("input.taginputbox");
