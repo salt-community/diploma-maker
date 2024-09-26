@@ -3,8 +3,12 @@ name: .NET Testing
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'Backend/**'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'Backend/**'
   workflow_dispatch:
   
 jobs:
