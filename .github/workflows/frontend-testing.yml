@@ -45,10 +45,11 @@ jobs:
 
     - name: Run Integration Tests
       run: |
-        dotnet test ./Frontend/DiplomaMaker.Web.Tests.Integration/DiplomaMaker.Web.Tests.Integration.csproj --no-build --configuration Release --logger 'trx;LogFileName=test_results.trx'
+        cd Frontend
+        dotnet test DiplomaMaker.Web.Tests.sln --no-build --configuration Release --logger 'trx;LogFileName=test_results.trx'
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
       with:
         name: test-results
-        path: test_results.trx
+        path: Frontend/test_results.trx
