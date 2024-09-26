@@ -1,4 +1,4 @@
-**Setup Instructions Integration Testing**
+**Setup Instructions For E2E Testing**
 ***Install .NET 8***
     Step 1 - Install .NET 8.0 https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 
