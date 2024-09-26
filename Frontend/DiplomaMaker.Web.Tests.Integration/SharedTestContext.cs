@@ -37,16 +37,16 @@ public class SharedTestContext : IAsyncLifetime
         _playwright = await Playwright.CreateAsync();
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            Headless = false,
-            SlowMo = 1500
+            Headless = false
         });
 
-        // Login Procedure (So we don't have to do it in every test class)
         var page = await Browser.NewPageAsync(new BrowserNewPageOptions
         {
             BaseURL = AppUrl
         });
         await page.GotoAsync("/sign-in");
+        // Wait for the pageload instead of slowmo
+        await page.WaitForLoadStateAsync(LoadState.NetworkIdle);  
         await page.FillAsync("input:nth-of-type(1)", ClerkLoginUser!);
         await page.ClickAsync("button.cl-formButtonPrimary");
         await page.ClickAsync("button.cl-alternativeMethodsBlockButton");

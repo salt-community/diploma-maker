@@ -26,6 +26,7 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.HistoryPage
         {
             // Arrange
             await _page.GotoAsync("/history");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
             var content = await _page.TextContentAsync("body");

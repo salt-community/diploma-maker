@@ -26,6 +26,7 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.ErrorPage
         {
             // Arrange
             await _page.GotoAsync($"/{Guid.NewGuid()}");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
             var content = await _page.TextContentAsync("body");

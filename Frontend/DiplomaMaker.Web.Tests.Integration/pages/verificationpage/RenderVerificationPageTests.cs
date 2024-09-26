@@ -27,6 +27,7 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
                 BaseURL = SharedTestContext.AppUrl
             });
             await page.GotoAsync("/verify");
+            await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
             var content = await page.TextContentAsync("body");
@@ -43,6 +44,7 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
                 BaseURL = SharedTestContext.AppUrl
             });
             await page.GotoAsync($"/verify/{Guid.NewGuid()}");
+            await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
             var content = await page.TextContentAsync("body");

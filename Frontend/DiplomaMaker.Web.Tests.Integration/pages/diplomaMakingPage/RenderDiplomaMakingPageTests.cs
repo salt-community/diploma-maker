@@ -26,6 +26,7 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.diplomaMakingPage
         {
             // Arrange
             await _page.GotoAsync("/pdf-creator");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
             var content = await _page.TextContentAsync("body");

@@ -26,6 +26,7 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.BootcampManagementPage
         {
             // Arrange
             await _page.GotoAsync("/bootcamp-management");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
             var content = await _page.TextContentAsync("body");

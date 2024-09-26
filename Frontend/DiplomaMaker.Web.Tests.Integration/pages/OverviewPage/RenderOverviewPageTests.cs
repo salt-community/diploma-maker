@@ -26,6 +26,7 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.OverviewPage
         {
             // Arrange
             await _page.GotoAsync("/overview");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
             var buttons = await _page.QuerySelectorAllAsync("button.list-module__item");

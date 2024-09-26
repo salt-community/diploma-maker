@@ -26,6 +26,7 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.TemplateCreator
         {
             // Arrange
             await _page.GotoAsync("/template-creator");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
             var pdfPreviewDiv = await _page.QuerySelectorAsync(".pdfpreview div div div div div div div div:nth-of-type(2)");

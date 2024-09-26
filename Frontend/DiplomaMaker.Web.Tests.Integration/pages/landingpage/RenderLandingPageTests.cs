@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.Playwright;
 using Xunit;
 
 namespace DiplomaMaker.Web.Tests.Integration.pages.landingpage
@@ -20,6 +21,7 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.landingpage
                 BaseURL = SharedTestContext.AppUrl
             });
             await page.GotoAsync("");
+            await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
             var content = await page.TextContentAsync("body");
