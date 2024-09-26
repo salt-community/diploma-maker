@@ -11,6 +11,7 @@ namespace DiplomaMaker.Web.Tests.Integration;
 public class SharedTestContext : IAsyncLifetime
 {
     public const string AppUrl = "http://localhost:5173";
+    public const string ApiUrl = "http://localhost:5258";
     private static readonly string DockerComposeFile = 
         Path.Combine(Directory.GetCurrentDirectory(), (TemplateString)"../../../../docker-compose.integration.yml");
     private readonly ICompositeService _dockerService = new Builder()
