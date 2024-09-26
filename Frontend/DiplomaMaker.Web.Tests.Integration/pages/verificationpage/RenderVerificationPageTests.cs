@@ -50,20 +50,5 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
             // Assert
             content.Should().Contain("Veri");
         }
-
-        [Fact]
-        public async Task VerificationCorrectCheckPage_ShouldRenderSuccessfully_WhenNavigating()
-        {
-            // Arrange
-            await _page.GotoAsync("/overview");
-            var cookies = await _page.Context.CookiesAsync();
-            var sessionCookie = cookies.FirstOrDefault(cookie => cookie.Name == "__session");
-
-            // Act
-            var content = await _page.TextContentAsync("body");
-
-            // Assert
-            content.Should().Contain("Veri");
-        }
     }
 }

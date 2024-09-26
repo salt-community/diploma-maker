@@ -28,8 +28,8 @@ services:
       - ASPNETCORE_URLS=http://+:443
       - ConnectionStrings__PostgreSQLConnectionLocal=Host=diploma-maker-test-postgres-db;Port=5432;Database=diploma_maker_db;Username=postgres;Password=Password_2_Change_4_Real_Cases_&
       - GOOGLE_APPLICATION_CREDENTIALS=/run/secrets/google-credentials.json
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetcore.crt
-      - ASPNETCORE_Kestrel__Certificates__Default__KeyPath=/https/aspnetcore.key
+      # - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetcore.crt
+      # - ASPNETCORE_Kestrel__Certificates__Default__KeyPath=/https/aspnetcore.key
     secrets:
       - clerk_secretkey
       - clerk_authorizedparty
@@ -41,8 +41,8 @@ services:
     volumes:
       - ../Backend/DiplomaMakerApi/Blob:/app/Blob
       - ~/secrets/google-credentials.json:/run/secrets/google-credentials.json
-      - ~/secrets/certificates/aspnetcore.crt:/https/aspnetcore.crt
-      - ~/secrets/certificates/aspnetcore.key:/https/aspnetcore.key
+      # - ~/secrets/certificates/aspnetcore.crt:/https/aspnetcore.crt
+      # - ~/secrets/certificates/aspnetcore.key:/https/aspnetcore.key
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:443 || exit 1"]
       interval: 10s
