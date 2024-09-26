@@ -23,14 +23,11 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
         public async Task VerificationPage_ShouldRenderSuccessfully_WhenNavigating()
         {
             // Arrange
-            var page = await _testContext.Browser!.NewPageAsync(new Microsoft.Playwright.BrowserNewPageOptions{
-                BaseURL = SharedTestContext.AppUrl
-            });
-            await page.GotoAsync("/verify");
-            await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+            await _page.GotoAsync("/verify");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
-            var content = await page.TextContentAsync("body");
+            var content = await _page.TextContentAsync("body");
 
             // Assert
             content.Should().Contain("Verify");
@@ -40,14 +37,11 @@ namespace DiplomaMaker.Web.Tests.Integration.pages.verificationpage
         public async Task VerificationIncorrectCheckPage_ShouldRenderSuccessfully_WhenNavigating()
         {
             // Arrange
-            var page = await _testContext.Browser!.NewPageAsync(new BrowserNewPageOptions{
-                BaseURL = SharedTestContext.AppUrl
-            });
-            await page.GotoAsync($"/verify/{Guid.NewGuid()}");
-            await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+            await _page.GotoAsync($"/verify/{Guid.NewGuid()}");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
-            var content = await page.TextContentAsync("body");
+            var content = await _page.TextContentAsync("body");
 
             // Assert
             content.Should().Contain("Veri");
