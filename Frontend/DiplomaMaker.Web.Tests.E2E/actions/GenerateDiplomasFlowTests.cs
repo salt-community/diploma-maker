@@ -1,3 +1,4 @@
+using DiplomaMaker.Web.Tests.E2E.testUtil;
 using DiplomaMaker.Web.Tests.Integration;
 using FluentAssertions;
 using Microsoft.Playwright;
@@ -6,11 +7,12 @@ using Xunit;
 namespace DiplomaMaker.Web.Tests.E2E.actions
 {
     [Collection("Tests DiplomaMaker.Web.Tests.E2E")]
-    [TestCaseOrderer("DiplomaMaker.Web.Tests.E2E.CustomOrderer", "DiplomaMaker.Web.Tests.E2E")]
+    [TestCaseOrderer("DiplomaMaker.Web.Tests.E2E.testUtil.CustomOrderer", "DiplomaMaker.Web.Tests.E2E")]
     public class GenerateDiplomasFlowTests : IAsyncLifetime
     {
         private readonly SharedTestContext _testContext;
         private IPage? _page;
+        private readonly string _currentDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
 
         public GenerateDiplomasFlowTests(SharedTestContext testContext)
         {
@@ -31,7 +33,7 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             await _page!.CloseAsync();
         }
 
-        [Fact]
+        [Fact, TestPriority(1)]
         public async Task NewBootcamp_ShouldAppearInBootcampTable_AfterAddingBootcamp()
         {
             // Arrange
@@ -39,8 +41,7 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
-            var currentDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
-            await _page.FillAsync("div.modal-main-footer input.date-input", currentDate);
+            await _page.FillAsync("div.modal-main-footer input.date-input", _currentDate);
             await _page.SelectOptionAsync("div.modal-main-footer select.normal", "2");
             await _page.ClickAsync("div.modal-main-footer button.add-button--simple");
 
@@ -51,7 +52,7 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             while (!isDateFound && attempts < maxAttempts)
             {
                 var content = await _page.ContentAsync();
-                if (content.Contains(currentDate))
+                if (content.Contains(_currentDate))
                 {
                     isDateFound = true;
                 }
@@ -63,10 +64,10 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             }
 
             // Assert
-            isDateFound.Should().BeTrue($"The date {currentDate} should appear on the page.");           
+            isDateFound.Should().BeTrue($"The date {_currentDate} should appear on the page.");           
         }
 
-        [Fact]
+        [Fact, TestPriority(2)]
         public async Task EnteredStudentName_ShouldAppearInTagList_AfterSubmission()
         {
             // Arrange
@@ -83,14 +84,19 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             content.Should().Contain("Bob Ryder", "Bob Ryder should be in the nametaginput.");
         }
 
-        [Fact]
+        [Fact, TestPriority(3)]
         public async Task GenerateDiplomas_ShouldOpenNewWindow_AfterGenerating()
         {
             // Arrange
             await _page!.GotoAsync("/pdf-creator");
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-            var inputBox = await _page.QuerySelectorAsync("input.taginputbox");
 
+            await _page.SelectOptionAsync("select.overview-page__select-box", new[] { "1" });
+            await Task.Delay(5000);
+            await _page.SelectOptionAsync("select.overview-page__select-box:nth-of-type(2)", $"jfs-{_currentDate}");
+            await Task.Delay(5000);
+
+            var inputBox = await _page.QuerySelectorAsync("input.taginputbox");
             await inputBox!.FillAsync("Bob Ryder");
             await inputBox.PressAsync("Enter");
 
