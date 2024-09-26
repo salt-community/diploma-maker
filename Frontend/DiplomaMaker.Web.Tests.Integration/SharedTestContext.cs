@@ -28,11 +28,15 @@ public class SharedTestContext : IAsyncLifetime
     public async Task InitializeAsync()
     {
         LoadConfiguration();
-        _dockerService.Start();
+        if (_dockerService.State != ServiceRunningState.Running)
+        {
+            _dockerService.Start();
+        }
+
         _playwright = await Playwright.CreateAsync();
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            // Headless = false,
+            Headless = false,
             SlowMo = 1500
         });
 

@@ -137,7 +137,6 @@ app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Test"))
 {
     logger.LogInformation($"Clerk:Authority: {builder.Configuration["Clerk:Authority"]}");
-    logger.LogInformation($"Clerk:SecretKey: {builder.Configuration["Clerk:SecretKey"]}");
     logger.LogInformation($"Clerk:AuthorizedParty: {builder.Configuration["Clerk:AuthorizedParty"]}");
     using (var scope = app.Services.CreateScope())
     {
