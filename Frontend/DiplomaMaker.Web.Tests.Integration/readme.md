@@ -5,6 +5,10 @@
 ***Install Docker***
     Step 1 - Install docker desktop https://www.docker.com/products/docker-desktop/
 
+***Check if project builds correctly***
+    Step 1 - Inside Frontend/DiplomaMaker.Web.Tests.E2E run -> dotnet build
+    Step 2 - Check if docker installed correctly run -> docker --version 
+
 ***Setting Up Docker Secrets***
     Step 1 - create new folder called "secrets" in root directory ~ so you can navigate to ~/secrets
     Step 2 - create clerk-secretKey.txt clerk-authority.txt clerk-authorizedParty.txt google-credentials.json in the directory
