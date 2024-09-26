@@ -38,5 +38,34 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             var content = await _page.ContentAsync();
             content.Should().Contain("Bob Ryder", "Bob Ryder should be in the nametaginput.");
         }
+
+        [Fact]
+        public async Task GenerateDiplomas_ShouldOpenNewWindow_AfterGenerating()
+        {
+            // Arrange
+            await _page.GotoAsync("/pdf-creator");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+            // Act
+            await _page.ClickAsync(".diploma-making-form__submit-button");
+
+            // Assert
+            IBrowserContext browserContext = _page.Context;
+            IPage? newPage = null;
+
+            for (int i = 0; i < 10; i++)
+            {
+                var pages = browserContext.Pages;
+                if (pages.Count > 1)
+                {
+                    newPage = pages.Last();
+                    break;
+                }
+
+                await Task.Delay(1000);
+            }
+
+            newPage.Should().NotBeNull("New window should open after generating diplomas.");
+        }
     }
 }
