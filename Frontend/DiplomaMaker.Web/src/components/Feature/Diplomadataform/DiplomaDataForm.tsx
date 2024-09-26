@@ -139,7 +139,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
 
 
   const handleFileUpload = async (file: File) => {
-    const dataFromFile = await ParseFileData(file, null, customAlert);
+    const dataFromFile = await ParseFileData(file, customAlert);
     const updatedStudents = dataFromFile.map(student => ({
       ...student,
       verificationCode: generateVerificationCode(tracks)
