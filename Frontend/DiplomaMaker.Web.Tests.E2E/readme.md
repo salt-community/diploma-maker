@@ -29,6 +29,7 @@
     Step 5 - Run -> pwsh playwright.ps1 install
 
 ***Running the tests***
+    inside Frontend run -> docker-compose -f docker-compose.integration.yml build (This builds the database, backend and frontend so might take a little time if first run, grab some coffee)
     inside Frontend/DiplomaMaker.Web.Tests.E2E run -> dotnet test
 
 ***Useful Commands***
