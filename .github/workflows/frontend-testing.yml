@@ -4,11 +4,11 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'FrontEnd/**'
+      - 'Frontend/**'
   pull_request:
     branches: [ "main" ]
     paths:
-      - 'FrontEnd/**'
+      - 'Frontend/**'
   workflow_dispatch:
 
 jobs:
@@ -45,16 +45,16 @@ jobs:
 
     - name: Set up Docker Compose
       run: |
-        cd FrontEnd
+        cd Frontend
         docker-compose -f ./docker-compose.integration.yml up -d
 
     - name: Run Integration Tests
       run: |
-        docker-compose exec -T diploma-maker-test-backend bash -c "dotnet test ./FrontEnd/DiplomaMaker.Web.Tests.Integration/DiplomaMaker.Web.Tests.Integration.csproj --no-build --configuration Release --logger 'trx;LogFileName=test_results.trx'"
+        docker-compose exec -T diploma-maker-test-backend bash -c "dotnet test ./Frontend/DiplomaMaker.Web.Tests.Integration/DiplomaMaker.Web.Tests.Integration.csproj --no-build --configuration Release --logger 'trx;LogFileName=test_results.trx'"
       
     - name: Tear down Docker Compose
       run: |
-        cd FrontEnd
+        cd Frontend
         docker-compose -f ./docker-compose.integration.yml down
 
     - name: Upload Test Results
