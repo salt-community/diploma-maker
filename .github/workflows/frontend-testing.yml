@@ -43,19 +43,9 @@ jobs:
         echo "${{ secrets.GOOGLE_GCLOUD_CREDENTIALS }}" > google-credentials.json
         echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/google-credentials.json" >> $GITHUB_ENV
 
-    - name: Set up Docker Compose
-      run: |
-        cd Frontend
-        docker-compose -f ./docker-compose.integration.yml up -d
-
     - name: Run Integration Tests
       run: |
-        docker-compose exec -T diploma-maker-test-backend bash -c "dotnet test ./Frontend/DiplomaMaker.Web.Tests.Integration/DiplomaMaker.Web.Tests.Integration.csproj --no-build --configuration Release --logger 'trx;LogFileName=test_results.trx'"
-      
-    - name: Tear down Docker Compose
-      run: |
-        cd Frontend
-        docker-compose -f ./docker-compose.integration.yml down
+        dotnet test ./Frontend/DiplomaMaker.Web.Tests.Integration/DiplomaMaker.Web.Tests.Integration.csproj --no-build --configuration Release --logger 'trx;LogFileName=test_results.trx'
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
