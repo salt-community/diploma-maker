@@ -60,20 +60,6 @@ jobs:
         echo "${{ secrets.GOOGLE_GCLOUD_CREDENTIALS }}" > google-credentials.json
         echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/google-credentials.json" >> $GITHUB_ENV
 
-    - name: Start Docker containers
-      run: |
-        docker-compose -f Frontend/docker-compose.integration.yml up -d
-
-    - name: Wait for containers to be healthy
-      run: |
-        docker-compose -f Frontend/docker-compose.integration.yml ps
-        until [ $(docker inspect --format='{{json .State.Health.Status}}' diploma-maker-test-backend_1) == '"healthy"' ]; do
-          echo "Waiting for backend to be healthy...";
-          docker inspect --format='{{json .State.Health.Status}}' diploma-maker-test-backend_1
-          docker logs diploma-maker-test-backend_1
-          sleep 10;
-        done
-
     - name: Run Integration Tests
       run: |
         cd Frontend
