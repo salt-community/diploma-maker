@@ -1,0 +1,59 @@
+name: Frontend Testing
+
+on:
+  push:
+    paths:
+      - 'FrontEnd/**'
+  pull_request:
+    paths:
+      - 'FrontEnd/**'
+  workflow_dispatch:
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:19.03.12
+        options: --privileged
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Set up Playwright
+      uses: microsoft/playwright-github-action@v1
+
+    - name: Setup environment variables
+      run: |
+        echo "Clerk__SecretKey=${{ secrets.CLERK_SECRET_KEY }}" >> $GITHUB_ENV
+        echo "Clerk__AuthorizedParty=${{ secrets.CLERK_AUTHORIZED_PARTY }}" >> $GITHUB_ENV
+        echo "Clerk__Authority=${{ secrets.CLERK_AUTHORITY }}" >> $GITHUB_ENV
+        echo "${{ secrets.GOOGLE_GCLOUD_CREDENTIALS }}" > google-credentials.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/google-credentials.json" >> $GITHUB_ENV
+
+    - name: Set up Docker Compose
+      run: |
+        docker-compose -f ./docker-compose.integration.yml up -d
+
+    - name: Run Integration Tests
+      run: |
+        docker-compose exec -T diploma-maker-test-backend bash -c "dotnet test ./FrontEnd/DiplomaMaker.Web.Tests.Integration/DiplomaMaker.Web.Tests.Integration.csproj --no-build --configuration Release --logger 'trx;LogFileName=test_results.trx'"
+      
+    - name: Tear down Docker Compose
+      run: docker-compose -f ./docker-compose.integration.yml down
+
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: test_results.trx
