@@ -77,6 +77,7 @@ public class SharedTestContext : IAsyncLifetime
         ClerkLoginPassword = configuration["clerk:loginpassword"] ?? throw new ArgumentNullException("clerk:loginpassword", "Clerk login password is not configured.");
     }
 
+    // JUST IN CASE - The docker-compose should do this already but I'm not convinced!
     private void cloneDefaultFiles()
     {
         var testProjectBinRoot = Directory.GetCurrentDirectory();
