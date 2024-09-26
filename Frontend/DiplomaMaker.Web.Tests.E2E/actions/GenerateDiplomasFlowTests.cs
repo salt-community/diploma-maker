@@ -154,5 +154,29 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             var subtableRow = await _page.QuerySelectorAsync($"tr.historypage__subtable-row:has(td:text('{_studentName}'))");
             subtableRow.Should().NotBeNull($"{_studentName} should be present in the subtable fields.");
         }
+
+        [Fact, TestPriority(6)]
+        public async Task GeneratedStudent_ShouldBeVerified_OnVerificationPage()
+        {
+            // Arrange
+            await _page!.GotoAsync("/history");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+            // Act
+            var rowToClick = await _page.QuerySelectorAsync("tr.historypage__table-row:first-child");
+            await rowToClick!.ClickAsync();
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+            var subtableRow = await _page.QuerySelectorAsync($"tr.historypage__subtable-row:has(td:text('{_studentName}'))");
+            subtableRow.Should().NotBeNull($"{_studentName} should be present in the subtable fields.");
+            var verificationCodeElement = await subtableRow!.QuerySelectorAsync("td:nth-child(3)");
+            var verificationCode = await verificationCodeElement!.InnerTextAsync();
+
+            await _page.GotoAsync($"/verify/{verificationCode}");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+            // Assert
+            var pageContent = await _page.ContentAsync();
+            pageContent.Should().Contain("authentic", "The verification page should contain the word 'authentic'.");
+        }
     }
 }
