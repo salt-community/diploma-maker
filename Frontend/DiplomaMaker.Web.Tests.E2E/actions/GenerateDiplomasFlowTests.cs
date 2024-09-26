@@ -137,5 +137,22 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             // Assert
             buttonWithTestId.Should().NotBeNull($"There should be a button with test-identifier '{_studentName}'.");
         }
+
+        [Fact, TestPriority(5)]
+        public async Task GeneratedStudent_ShouldExistInHistoryTable_OnHistoryPage()
+        {
+            // Arrange
+            await _page!.GotoAsync("/history");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+            // Act
+            var rowToClick = await _page.QuerySelectorAsync("tr.historypage__table-row:first-child");
+            await rowToClick!.ClickAsync();
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+            // Assert
+            var subtableRow = await _page.QuerySelectorAsync($"tr.historypage__subtable-row:has(td:text('{_studentName}'))");
+            subtableRow.Should().NotBeNull($"{_studentName} should be present in the subtable fields.");
+        }
     }
 }
