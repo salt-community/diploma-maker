@@ -46,7 +46,7 @@ jobs:
     - name: Run Integration Tests
       run: |
         cd Frontend
-        dotnet test DiplomaMaker.Web.Tests.sln --no-build --configuration Release --logger 'trx;LogFileName=test_results.trx'
+        dotnet test DiplomaMaker.Web.Tests.sln --configuration Release --logger 'trx;LogFileName=test_results.trx'
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
