@@ -34,9 +34,6 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Set file permissions
-      run: chmod -R 777 $GITHUB_WORKSPACE
-
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
@@ -44,15 +41,16 @@ jobs:
       uses: microsoft/playwright-github-action@v1
 
     - name: Install Playwright Browsers
-      run: npx playwright install
+      run: |
+        npx playwright install
 
     - name: Create secret files
       run: |
-        mkdir -p $GITHUB_WORKSPACE/secrets
-        echo "${{ secrets.CLERK_SECRET_KEY }}" > $GITHUB_WORKSPACE/secrets/clerk-secretKey.txt
-        echo "${{ secrets.CLERK_AUTHORIZED_PARTY }}" > $GITHUB_WORKSPACE/secrets/clerk-authorizedParty.txt
-        echo "${{ secrets.CLERK_AUTHORITY }}" > $GITHUB_WORKSPACE/secrets/clerk-authority.txt
-        echo "${{ secrets.GOOGLE_GCLOUD_CREDENTIALS }}" > $GITHUB_WORKSPACE/secrets/google-credentials.json
+        mkdir -p /home/runner/secrets
+        echo "${{ secrets.CLERK_SECRET_KEY }}" > /home/runner/secrets/clerk-secretKey.txt
+        echo "${{ secrets.CLERK_AUTHORIZED_PARTY }}" > /home/runner/secrets/clerk-authorizedParty.txt
+        echo "${{ secrets.CLERK_AUTHORITY }}" > /home/runner/secrets/clerk-authority.txt
+        echo "${{ secrets.GOOGLE_GCLOUD_CREDENTIALS }}" > /home/runner/secrets/google-credentials.json
 
     - name: Setup environment variables
       run: |
@@ -63,24 +61,24 @@ jobs:
         echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/google-credentials.json" >> $GITHUB_ENV
 
     - name: Start Docker containers
-      run: docker-compose -f $GITHUB_WORKSPACE/Frontend/docker-compose.integration.yml up -d
+      run: |
+        docker-compose -f Frontend/docker-compose.integration.yml up -d
 
     - name: Wait for containers to be healthy
       run: |
-        docker-compose -f $GITHUB_WORKSPACE/Frontend/docker-compose.integration.yml ps
+        docker-compose -f Frontend/docker-compose.integration.yml ps
         until [ $(docker inspect --format='{{json .State.Health.Status}}' diploma-maker-test-backend) == '"healthy"' ]; do
           echo "Waiting for backend to be healthy...";
-          docker-compose -f $GITHUB_WORKSPACE/Frontend/docker-compose.integration.yml logs --tail=50;
           sleep 10;
         done
 
     - name: Run Integration Tests
       run: |
-        cd $GITHUB_WORKSPACE/Frontend
+        cd Frontend
         dotnet test DiplomaMaker.Web.Tests.sln --configuration Release --logger 'trx;LogFileName=test_results.trx' --logger "console;verbosity=detailed"
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
       with:
         name: test-results
-        path: $GITHUB_WORKSPACE/Frontend/test_results.trx
+        path: Frontend/test_results.trx
