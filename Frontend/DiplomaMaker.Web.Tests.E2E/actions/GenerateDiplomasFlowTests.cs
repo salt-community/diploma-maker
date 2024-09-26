@@ -6,27 +6,36 @@ using Xunit;
 namespace DiplomaMaker.Web.Tests.E2E.actions
 {
     [Collection("Tests DiplomaMaker.Web.Tests.E2E")]
-    public class GenerateDiplomasFlowTests
+    [TestCaseOrderer("DiplomaMaker.Web.Tests.E2E.CustomOrderer", "DiplomaMaker.Web.Tests.E2E")]
+    public class GenerateDiplomasFlowTests : IAsyncLifetime
     {
         private readonly SharedTestContext _testContext;
-        private readonly IPage _page;
+        private IPage? _page;
 
         public GenerateDiplomasFlowTests(SharedTestContext testContext)
         {
             _testContext = testContext;
+        }
 
-            _page = _testContext.Browser!.NewPageAsync(new BrowserNewPageOptions
+        public async Task InitializeAsync()
+        {
+            _page = await _testContext.Browser!.NewPageAsync(new BrowserNewPageOptions
             {
                 BaseURL = SharedTestContext.AppUrl,
                 StorageStatePath = "loginState.json"
-            }).GetAwaiter().GetResult();
+            });
+        }
+
+        public async Task DisposeAsync()
+        {
+            await _page!.CloseAsync();
         }
 
         [Fact]
-        public async Task EnteredStudentName_ShouldAppearInTagList_AfterSubmissio()
+        public async Task EnteredStudentName_ShouldAppearInTagList_AfterSubmission()
         {
             // Arrange
-            await _page.GotoAsync("/pdf-creator");
+            await _page!.GotoAsync("/pdf-creator");
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
@@ -42,12 +51,8 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
         [Fact]
         public async Task GenerateDiplomas_ShouldOpenNewWindow_AfterGenerating()
         {
-            // Arrange
-            await _page.GotoAsync("/pdf-creator");
-            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-
             // Act
-            await _page.ClickAsync(".diploma-making-form__submit-button");
+            await _page!.ClickAsync(".diploma-making-form__submit-button");
 
             // Assert
             IBrowserContext browserContext = _page.Context;
@@ -66,6 +71,21 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             }
 
             newPage.Should().NotBeNull("New window should open after generating diplomas.");
+        }
+
+        [Fact]
+        public async Task GeneratedDiplomas_ShouldReflect_OnOverviewPage()
+        {
+            // Arrange
+            await _page!.GotoAsync("/overview");
+            await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+
+            // Act
+
+
+            // Assert
+            var content = await _page.ContentAsync();
+            content.Should().Contain("Bob Ryder", "Bob Ryder should be on the overviewPage.");
         }
     }
 }
