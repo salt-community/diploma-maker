@@ -7,6 +7,7 @@ using SixLabors.ImageSharp;
 using System.Drawing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Formats.Png;
+using System.Text.RegularExpressions;
 
 namespace DiplomaMakerApi.Services
 {
@@ -186,6 +187,21 @@ namespace DiplomaMakerApi.Services
                 Headers = new HeaderDictionary(),
                 ContentType = contentType
             };
+        }
+
+        public bool IsValidBase64Pdf(string base64String)
+        {
+            if (!IsBase64String(base64String))
+            {
+                return false;
+            }
+            var pdfBytes = Convert.FromBase64String(base64String);
+            return pdfBytes.Length > 4 && pdfBytes[0] == 0x25 && pdfBytes[1] == 0x50 && pdfBytes[2] == 0x44 && pdfBytes[3] == 0x46;
+        }
+
+        private bool IsBase64String(string base64String)
+        {
+            return (base64String.Length % 4 == 0) && Regex.IsMatch(base64String, @"^[a-zA-Z0-9\+/]*={0,2}$");
         }
     }
 }

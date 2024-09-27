@@ -1,0 +1,82 @@
+name: .NET Testing
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'Backend/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'Backend/**'
+  workflow_dispatch:
+  
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: diploma_maker_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: Password_2_Change_4_Real_Cases_&
+        ports:
+          - 5432:5432
+        options: --health-cmd "pg_isready" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore $GITHUB_WORKSPACE/Backend/DiplomaMakerApi/DiplomaMakerApi.csproj
+
+    - name: Build
+      run: dotnet build --no-restore $GITHUB_WORKSPACE/Backend/DiplomaMakerApi
+
+    - name: Set file permissions
+      run: chmod -R 777 $GITHUB_WORKSPACE
+
+    - name: Setup Google Credentials
+      run: echo "$GOOGLE_CREDENTIALS" > $HOME/gcloud.json
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: Set Google Application Credentials
+      run: echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json" >> $GITHUB_ENV
+
+    - name: Wait for PostgreSQL to be ready
+      run: |
+        echo "Waiting for PostgreSQL..."
+        until pg_isready -h localhost -p 5432; do sleep 1; done
+
+    - name: Install Dependencies (For Image Conversion Tests)
+      run: |
+        sudo apt update -y && sudo apt full-upgrade -y && sudo apt autoremove -y
+        sudo apt install -y --no-install-recommends \
+          libc6 \
+          libgcc-s1 \
+          libstdc++6 \
+          zlib1g \
+          libfontconfig1 \
+          libfreetype6 \
+          libjpeg-turbo8 \
+          libpng16-16 \
+          libx11-6 \
+          libxext6 \
+          libxrender1 \
+          libxcb1 \
+          libxi6
+
+    - name: Create Reference for Image conversion to use
+      run: sudo ln -s /usr/lib/x86_64-linux-gnu/libdl.so.2 /usr/lib/x86_64-linux-gnu/libdl.so
+
+    - name: Test
+      run: dotnet test $GITHUB_WORKSPACE/Backend/DiplomaMakerApi.Tests.Integration/DiplomaMakerApi.Tests.Integration.csproj

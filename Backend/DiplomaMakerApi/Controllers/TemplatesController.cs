@@ -31,6 +31,10 @@ public class TemplatesController : ControllerBase
     public async Task<ActionResult<TemplateResponseDto>> GetTemplateById(int id)
     {
         var template = await _templateService.GetTemplate(id);
+        if (template == null)
+        {
+            return NotFound();
+        }
         return _mapper.Map<TemplateResponseDto>(template);
      
     }
@@ -38,20 +42,26 @@ public class TemplatesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TemplateResponseDto>> PostTemplate(TemplatePostRequestDto templateRequestDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         var template = await _templateService.PostTemplate(templateRequestDto);
         var templateResponseDto = _mapper.Map<TemplateResponseDto>(template);
         return CreatedAtAction(nameof(GetTemplateById), new { id = template.Id }, templateResponseDto);
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<TemplateResponseDto>> DeleteTemplate(int id)
+    public async Task<IActionResult> DeleteTemplate(int id)
     {
-        if(id == 1){
-            throw new NotFoundByIdException("Student", id);
-        }
         var template = await _templateService.DeleteTemplate(id);
-        return _mapper.Map<TemplateResponseDto>(template);
         
+        if (template == null)
+        {
+            return NotFound();
+        }
+        
+        return NoContent();
     }
 
     [HttpPut("{id}")]

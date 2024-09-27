@@ -1,7 +1,11 @@
-namespace DiplomaMakerApi.Dtos;
+using System.ComponentModel.DataAnnotations;
 
-public class BootcampRequestDto
+namespace DiplomaMakerApi.Dtos
 {
-    public required int TrackId { get; set; }
-    public required DateTime GraduationDate { get; set; } 
+    public class BootcampRequestDto
+    {
+        [Range(1, 3, ErrorMessage = "TrackId must be between 1 and 3.")]
+        public required int TrackId { get; set; }
+        public required DateTime GraduationDate { get; set; }
+    }
 }

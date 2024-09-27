@@ -120,6 +120,10 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
 
     public async Task<Student> PutStudentPreviewImage(PreviewImageRequestDto previewImageRequestDto)
     {
+        if (!_fileUtilityService.IsValidBase64Pdf(previewImageRequestDto.Image))
+        {
+            throw new InvalidDataException("The provided image is not a valid Base64 PDF string.");
+        }
         var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == previewImageRequestDto.StudentGuidId);
         if(student == null)
         {

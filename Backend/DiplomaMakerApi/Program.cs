@@ -11,11 +11,11 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-/* var logger = LoggerFactory.Create(loggingBuilder => 
+var logger = LoggerFactory.Create(loggingBuilder => 
 {
     loggingBuilder.AddConsole();
 }).CreateLogger<Program>();
-logger.LogInformation("Connection string: {ConnectionString}", connectionstr); */
+
 if(!builder.Environment.IsDevelopment()) {
     builder.WebHost.UseKestrel(options =>
     {
@@ -24,14 +24,26 @@ if(!builder.Environment.IsDevelopment()) {
     });
 }
 
-string? connectionstr = builder.Environment.IsDevelopment() ?
-                        builder.Configuration.GetConnectionString("PostgreSQLConnectionLocal") :
-                        Environment.GetEnvironmentVariable("PostgreConnection");
+if (!builder.Environment.IsEnvironment("Test"))
+{
+    string? connectionstr = builder.Environment.IsDevelopment() ?
+                            builder.Configuration.GetConnectionString("PostgreSQLConnectionLocal") :
+                            Environment.GetEnvironmentVariable("PostgreConnection");
 
+    builder.Services.AddDbContext<DiplomaMakingContext>(options =>
+        options.UseNpgsql(connectionstr 
+            ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")
+        ));
 
-builder.Services.AddDbContext<DiplomaMakingContext>(options =>
-    options.UseNpgsql(connectionstr ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")));
-// Add services to the container.
+    builder.Services.AddHostedService(service => 
+        new DatabasePokeService(service, connectionstr 
+            ?? throw new InvalidOperationException("Connection string is null")
+        ));
+}
+
+builder.Services.AddLogging(loggingBuilder => {
+    loggingBuilder.AddConsole();
+});
 
 builder.Services.AddControllers().AddJsonOptions(opt => {
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -50,6 +62,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         x.Authority = builder.Environment.IsDevelopment() 
             ? builder.Configuration["Clerk:Authority"] 
             : Environment.GetEnvironmentVariable("Clerk:Authority")!;
+        
+        x.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
             
         x.TokenValidationParameters = new TokenValidationParameters()
         {
@@ -105,19 +119,14 @@ builder.Services.AddAutoMapper(typeof(AutomapperConfig));
 builder.Services.AddScoped<BootcampService>();
 builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<TemplateService>();
-builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<TrackService>();
 builder.Services.AddTransient<LocalFileStorageService>();
 builder.Services.AddScoped<HistorySnapshotService>();
-builder.Services.AddScoped<GoogleCloudStorageService>();
 builder.Services.AddTransient<FileUtilityService>();
 builder.Services.AddScoped<UserFontService>();
 builder.Services.AddScoped<ClerkService>();
-
-
-builder.Services.AddLogging();
-builder.Services.AddHostedService(service => 
-    new DatabasePokeService(service, connectionstr ?? throw new InvalidOperationException("Connection string is null")));
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<GoogleCloudStorageService>();
 
 var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>();
@@ -125,21 +134,24 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{   
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Test"))
+{
+    logger.LogInformation($"Clerk:Authority: {builder.Configuration["Clerk:Authority"]}");
+    logger.LogInformation($"Clerk:AuthorizedParty: {builder.Configuration["Clerk:AuthorizedParty"]}");
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
         SeedData.Initialize(services);
     }
-  
 }
 
 app.UseSwagger();
 
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+if(!builder.Environment.IsDevelopment()){
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 
