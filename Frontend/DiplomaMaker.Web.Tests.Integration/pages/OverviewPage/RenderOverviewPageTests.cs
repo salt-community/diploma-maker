@@ -4,7 +4,7 @@ using Xunit;
 
 namespace DiplomaMaker.Web.Tests.Integration.pages.OverviewPage
 {
-    [Collection("Tests DiplomaMaker.Web")]
+    [Collection("Tests DiplomaMaker.Web.Tests.Integration")]
     public class RenderOverviewPageTests
     {
         private readonly SharedTestContext _testContext;

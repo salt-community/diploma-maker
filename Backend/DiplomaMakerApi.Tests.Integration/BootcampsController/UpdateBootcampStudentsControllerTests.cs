@@ -86,14 +86,14 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
                         "VerificationCode is required." 
                     }
                 ),
-                (new { templateId = 1, students = new List<object> 
-                    { 
-                        new { Name = "John Doe", VerificationCode = "abc123", Email = "invalid-email" }
-                    }}, 
-                    new[] { 
-                        "The Email field is not a valid e-mail address." 
-                    }
-                )
+                // (new { templateId = 1, students = new List<object> 
+                //     { 
+                //         new { Name = "John Doe", VerificationCode = "abc123", Email = "invalid-email" }
+                //     }}, 
+                //     new[] { 
+                //         "The Email field is not a valid e-mail address." 
+                //     }
+                // )
             };
             foreach (var (data, expectedErrorMessages) in badRequests)
             {

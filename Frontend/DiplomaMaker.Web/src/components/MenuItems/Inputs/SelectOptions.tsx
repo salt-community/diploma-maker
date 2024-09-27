@@ -17,13 +17,14 @@ type Props = {
     reactHookForm?: boolean;
     register?: (name: string) => { name: string };
     name?: string;
+    testIdentifier?: string;
 };
 
-export const SelectOptions = React.forwardRef<HTMLSelectElement, Props>(({ options, containerClassOverride, selectClassOverride, onChange, value, defaultValue, disabled = false, reactHookForm = false, register, name }, ref) => {
+export const SelectOptions = React.forwardRef<HTMLSelectElement, Props>(({ options, containerClassOverride, selectClassOverride, onChange, value, defaultValue, disabled = false, reactHookForm = false, register, name, testIdentifier }, ref) => {
     return (
         <div className={"select-wrapper " + (disabled ? ' disabled ' : '') + (containerClassOverride || '')}>
             {reactHookForm && register && name ? (
-                <select defaultValue={defaultValue} value={value} onChange={onChange} className={selectClassOverride} {...register(name)} ref={ref}>
+                <select defaultValue={defaultValue} value={value} onChange={onChange} className={selectClassOverride} {...register(name)} ref={ref} test-identifier={testIdentifier}>
                     {options.map(option => (
                         <option key={option.value} value={option.value}>
                             {option.label}
@@ -31,7 +32,7 @@ export const SelectOptions = React.forwardRef<HTMLSelectElement, Props>(({ optio
                     ))}
                 </select>
             ) : (
-                <select value={value} onChange={onChange} className={selectClassOverride} ref={ref}>
+                <select value={value} onChange={onChange} className={selectClassOverride} ref={ref} test-identifier={testIdentifier}>
                     {options.map(option => (
                         <option key={option.value} value={option.value}>
                             {option.label}

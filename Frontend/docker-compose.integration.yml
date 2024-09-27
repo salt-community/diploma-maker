@@ -20,7 +20,7 @@ services:
   diploma-maker-test-backend:
     build:
       context: ../Backend/DiplomaMakerApi
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-testing
     ports:
       - "5258:443"
     environment:

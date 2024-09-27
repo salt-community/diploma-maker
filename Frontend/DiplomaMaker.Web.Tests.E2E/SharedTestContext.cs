@@ -37,7 +37,7 @@ public class SharedTestContext : IAsyncLifetime
         _playwright = await Playwright.CreateAsync();
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            Headless = true
+            // Headless = false
         });
 
         var page = await Browser.NewPageAsync(new BrowserNewPageOptions
