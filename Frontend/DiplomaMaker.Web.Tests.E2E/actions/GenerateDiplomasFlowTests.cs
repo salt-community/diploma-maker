@@ -132,10 +132,10 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Act
-            var buttonWithTestId = await _page.QuerySelectorAsync($"button.list-module__item[test-identifier='{_studentName}']");
+            var buttonWithTestId = await _page.QuerySelectorAsync("button.list-module__item.visible[test-identifier='Bob Ryder']");
 
             // Assert
-            buttonWithTestId.Should().NotBeNull($"There should be a button with test-identifier '{_studentName}'.");
+            buttonWithTestId.Should().NotBeNull("There should be a button with class 'list-module__item visible' and test-identifier 'Bob Ryder'.");
         }
 
         [Fact, TestPriority(5)]
@@ -151,8 +151,8 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
             // Assert
-            var subtableRow = await _page.QuerySelectorAsync($"tr.historypage__subtable-row:has(td:text('{_studentName}'))");
-            subtableRow.Should().NotBeNull($"{_studentName} should be present in the subtable fields.");
+            var subtableRow = await _page.QuerySelectorAsync($"tr.historypage__subtable-row:has(td:text('Bob Ryder'))");
+            subtableRow.Should().NotBeNull("Bob Ryder should be present in the subtable fields.");
         }
 
         [Fact, TestPriority(6)]
@@ -166,8 +166,8 @@ namespace DiplomaMaker.Web.Tests.E2E.actions
             var rowToClick = await _page.QuerySelectorAsync("tr.historypage__table-row:first-child");
             await rowToClick!.ClickAsync();
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
-            var subtableRow = await _page.QuerySelectorAsync($"tr.historypage__subtable-row:has(td:text('{_studentName}'))");
-            subtableRow.Should().NotBeNull($"{_studentName} should be present in the subtable fields.");
+            var subtableRow = await _page.QuerySelectorAsync("tbody.historypage__subtable-body > tr:has(td:text('Bob Ryder'))");
+            subtableRow.Should().NotBeNull("Bob Ryder should be present in the subtable fields.");
             var verificationCodeElement = await subtableRow!.QuerySelectorAsync("td:nth-child(3)");
             var verificationCode = await verificationCodeElement!.InnerTextAsync();
 
