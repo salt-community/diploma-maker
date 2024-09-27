@@ -7,7 +7,7 @@
     Step 1 - Install docker desktop https://www.docker.com/products/docker-desktop/
 
 ***Check if project builds correctly***
-    Step 1 - Inside Frontend/DiplomaMaker.Web.Tests.E2E run -> dotnet build
+    Step 1 - Inside Frontend/DiplomaMaker.Web.Tests.Integration run -> dotnet build
     Step 2 - Check if docker installed correctly run -> docker --version 
 
 ***Setting Up Docker Secrets***
@@ -21,7 +21,7 @@
 
 ***Setting Up Dotnet User Login Secrets***
     Step 1 - inside clerk -> create or select what account in clerk the tests should login with -> in our case It's the frontend-integrationtesting@serviceaccount.com.
-    Step 2 - Fill in the user-secrets (Inside Frontend/DiplomaMaker.Web.Tests.E2E run)
+    Step 2 - Fill in the user-secrets (Inside Frontend/DiplomaMaker.Web.Tests.Integration run)
         dotnet user-secrets set "clerk:loginuser" "UserNameFromClerk"
         dotnet user-secrets set "clerk:loginpassword" "UserPasswordFromClerk"
 
@@ -36,7 +36,7 @@
 
 ***Running the tests***
     inside Frontend run -> docker-compose -f docker-compose.integration.yml build (This builds the database, backend and frontend so might take a little time if first run, grab some coffee)
-    inside Frontend/DiplomaMaker.Web.Tests.E2E run -> dotnet test
+    inside Frontend/DiplomaMaker.Web.Tests.Integration run -> dotnet test
 
 ***Useful Commands***
     To test the docker-compose.integration.yml is running the way it is supposed to
