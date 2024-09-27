@@ -32,8 +32,8 @@
     Step 3 - Go to win menu "Edit system enviroment variables" -> Env Variables -> System Variables -> Path -> Edit -> New -> *Paste in the path*
     Step 3 - Run powershell terminal OBS MAKE SURE IT'S NOT Windows Powershell but the Powershell you just installed!
         you can check if you are in the right terminal by running -> pwsh
-    Step 4 - Navigate to DiplomaMaker.Web.Tests.Integration\bin\Debug\net8.0 
-    Step 5 - Run -> pwsh playwright.ps1 install
+    Step 4 - Navigate to DiplomaMaker.Web.Tests.E2E\bin\Debug\net8.0 
+    Step 5 - Run -> pwsh playwright.ps1 install - This installs the playwright browser plugin on your system
 
 ***Running the tests***
     inside Frontend run -> docker-compose -f docker-compose.integration.yml build (This builds the database, backend and frontend so might take a little time if first run, grab some coffee)
