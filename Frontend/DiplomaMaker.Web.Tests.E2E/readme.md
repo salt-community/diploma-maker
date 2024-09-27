@@ -1,4 +1,6 @@
 **Setup Instructions For E2E Testing**
+(view in code mode)
+
 ***Install .NET 8***
     Step 1 - Install .NET 8.0 https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 

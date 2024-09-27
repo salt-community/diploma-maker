@@ -1,3 +1,5 @@
+(read in code mode)
+
 ***Setup npm***
     Step 1 - install npm run -> npm install -g npm
 
