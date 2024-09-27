@@ -12,7 +12,7 @@
     Step 2 - Check if docker installed correctly run -> docker --version 
 
 ***Setting Up Docker Secrets***
-    Step 1 - create new folder called "secrets" in root directory ~ so you can navigate to ~/secrets
+    Step 1 - create new folder called "secrets" in windows root directory ~ so you can navigate to ~/secrets
     Step 2 - create clerk-secretKey.txt clerk-authority.txt clerk-authorizedParty.txt google-credentials.json in the directory
     Step 3 - Paste In some magic
         3.1 - clerk-secretKey.txt -> Login to clerk -> Configure -> API Keys -> Secret keys
