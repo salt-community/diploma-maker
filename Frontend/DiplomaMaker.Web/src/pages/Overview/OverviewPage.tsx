@@ -27,7 +27,7 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
     const [selectedBootcamp, setSelectedBootcamp] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [showEmailClient, setShowEmailClient] = useState<boolean>(false);
-    const [selectedTrack, setSelectedTrack] = useState<number | null>(0);
+    const [selectedTrack, setSelectedTrack] = useState<number | null>(null);
 
     const [isCancelled, setIsCancelled] = useState<boolean>(false);
     const {showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
@@ -42,27 +42,30 @@ export const OverviewPage = ({ tracks, templates, deleteStudent, updateStudentIn
         }
     }, [tracks]);
 
+    
+    
     const itemsPerPage = 8;
     const startIndex = (currentPage - 1) * itemsPerPage;
     
     const allStudents: Student[] = tracks?.flatMap(t => t.bootcamps.flatMap(b => b.students)) || [];
-
-    let filteredBootcamps = !selectedTrack
-        ? tracks?.flatMap(t => t.bootcamps.map(b => ({ ...b, track: t })))
-        : tracks[selectedTrack].bootcamps.map(b => ({ ...b, track: tracks[selectedTrack] })) || [];
-
+    
+    let filteredBootcamps = selectedTrack === null
+    ? tracks?.flatMap(t => t.bootcamps.map(b => ({ ...b, track: t })))
+    : tracks[selectedTrack].bootcamps.map(b => ({ ...b, track: tracks[selectedTrack] })) || [];
+    
+    
     const sortedBootcamps = filteredBootcamps?.sort((a, b) => new Date(b.graduationDate).getTime() - new Date(a.graduationDate).getTime());
-
+    
     const visibleStudents: Student[] = allStudents.filter(s => 
         s.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-            (!selectedBootcamp || 
-                filteredBootcamps?.some(b => b.guidId === selectedBootcamp && b.students.includes(s)) // Filter by Bootcamp Selector
-            ) &&
-            (!selectedTrack || 
-                filteredBootcamps?.some(bootcamp => bootcamp.students.includes(s)) // Filter by Track Selector
-            )
+        (!selectedBootcamp || 
+            filteredBootcamps?.some(b => b.guidId === selectedBootcamp && b.students.includes(s))
+        ) &&
+        (selectedTrack === null || 
+            filteredBootcamps?.some(bootcamp => bootcamp.students.includes(s))
+        )
     );
-    
+
     const totalPages = Math.ceil(visibleStudents.length / itemsPerPage);
 
     const modifyStudentEmailHandler = async (studentInput?: Student, originalEmail?: string) => {
