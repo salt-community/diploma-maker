@@ -10,7 +10,6 @@ import { Popup404 } from "../../components/MenuItems/Popups/Popup404";
 import { ErrorIcon } from "../../components/MenuItems/Icons/ErrorIcon";
 import PreviewDiploma from "../../components/Feature/PreviewDiploma/PreviewDiploma";
 import { SaltDataDefaultStudent } from "../../data/data";
-/* import { NextIcon } from "../../components/MenuItems/Icons/NextIcon"; */
 
 type Props = {
   tracks: TrackResponse[] | null;
@@ -24,7 +23,6 @@ type Props = {
 
 export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNewFormdata, setLoadingMessage, updateStudentThumbnails, addNewBootcamp }: Props) {
 
-  /*  const [IsFullScreen, setIsFullScreen] = useState<boolean>(true) */
   const [saltData, setSaltData] = useState<SaltData | null>();
   const { loadingMessage } = useLoadingMessage();
   const isFailed = loadingMessage.includes('Failed');
@@ -34,14 +32,10 @@ export default function DiplomaMaking({ tracks, templates, UpdateBootcampWithNew
   const handleIndexChange = (index: number) => {
     setSelectedStudentIndex(index);
   };
-  /*   const TogglePreview = () => setIsFullScreen(prev => !prev) */
 
   return (
     tracks && templates ? (
       <div className={'diplomamaking-container'}>
-        {/*        {  <button className="toggle-button" onClick={TogglePreview}>
-          {IsFullScreen ? <NextIcon rotation={180} /> : <NextIcon />}
-        </button> } */}
         <>
           <section className="previewdiploma-container">
             {saltData && (
