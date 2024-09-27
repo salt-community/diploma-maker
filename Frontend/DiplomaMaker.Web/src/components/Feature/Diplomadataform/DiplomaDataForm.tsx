@@ -315,6 +315,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
                 setTrackIndex(Number(e.target.value));
                 setBootcampIndex(0);
               }}
+              testIdentifier="track-selector"
             />
           }
         </div>
@@ -338,6 +339,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
                 setBootcampIndex(selectedBootcampIndex);
               }}
               value={AllTrackData[TrackIndex]?.bootcamps[BootcampIndex]?.guidId || ''}
+              testIdentifier="bootcamp-selector"
             />
           }
           <SaveButton 
@@ -372,6 +374,7 @@ export default function DiplomaDataForm({ setSaltData, tracks, templates, Update
                 setSelectedTemplate(selectedTemplateObject);
               }}
               value={selectedTemplate.id.toString()}
+              testIdentifier="template-selector"
             />
           }
         </div>

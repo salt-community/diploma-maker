@@ -134,7 +134,7 @@ export const DiplomaCardContainer = ({
                         visibleItems.length > 0 ? visibleItems.map((student: Student, index) => {
                             const isVisible = index >= startIndex && index < startIndex + itemsPerPage;
                             return (
-                                <button key={student.guidId} className={`list-module__item ${isVisible ? 'visible' : 'hidden'}`}>
+                                <button key={student.guidId} className={`list-module__item ${isVisible ? 'visible' : 'hidden'}`} test-identifier={student.name}>
                                     {!student.previewImageUrl && <p className='list-module__item-title'>{student.name}</p>}
                                     <LazyImageLoader 
                                         previewImageLQIPUrl={student.previewImageLQIPUrl ? `${api}${student.previewImageLQIPUrl}` : defaultImg} 
