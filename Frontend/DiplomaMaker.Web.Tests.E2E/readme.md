@@ -39,6 +39,10 @@
     inside Frontend run -> docker-compose -f docker-compose.integration.yml build (This builds the database, backend and frontend so might take a little time if first run, grab some coffee)
     inside Frontend/DiplomaMaker.Web.Tests.E2E run -> dotnet test
 
+***Known Bugs***
+    Error 1 cannot find entrypoint.sh 
+        - If the backend cannot connect to the database most likely you are getting an error 1 cannot find entrypoint.sh or something similar. The fix to this is to literally delete the file, build and then re add the same exact file and rebuild again. Currently no idea why this happens.
+
 ***Useful Commands***
     To test the docker-compose.integration.yml is running the way it is supposed to
         docker-compose -f docker-compose.integration.yml down
