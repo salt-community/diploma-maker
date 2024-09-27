@@ -39,7 +39,12 @@ export default function AddNewBootcampForm({ addNewBootcamp, bootcamps, tracks, 
             customAlert('fail', "Input Validation Error", "Must select a date!");
             return;
         }
-        const newBootcamp: BootcampRequest = {graduationDate: gradDate, trackId: track.id};
+        const trackid = track.name === "C# Dotnet" ? 1
+              : track.name === "Java" ? 2
+              : track.name === "Javascript" ? 3
+              : undefined;
+              
+        const newBootcamp: BootcampRequest = {graduationDate: gradDate, trackId: trackid};
         try {
             await addNewBootcamp(newBootcamp);
             customAlert('success', "Successfully added!", "Successfully added new bootcamp to database");
