@@ -72,7 +72,7 @@ export default function PreviewDiploma({ setSelectedStudentIndex, saltData, curr
         ref={uiRef }
         style={{ width: "100%", height: "calc(82vh - 68px)" }}
       />
-      <div className="pdfpreview__pagination-menu-wrapper pdfpreview-container" style={{ width: "100%", height: "calc(82vh - 68px)" }}>
+      <div className="pdfpreview__pagination-menu-wrapper pdfpreview-container" style={{ width: "100%", height: "calc(25vh - 68px)" }}>
         <PaginationMenu
           containerClassOverride="pdfpreview__pagination-menu"
           currentPage={currentPageIndex + 1}

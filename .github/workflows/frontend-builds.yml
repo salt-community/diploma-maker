@@ -1,0 +1,35 @@
+name: Frontend Builds
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'Frontend/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'Frontend/**'
+  workflow_dispatch:
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+
+    - name: Install dependencies
+      run: |
+        cd Frontend/DiplomaMaker.Web
+        npm install
+
+    - name: Build Frontend
+      run: |
+        cd Frontend/DiplomaMaker.Web
+        npm run build
