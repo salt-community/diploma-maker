@@ -27,10 +27,11 @@
         dotnet user-secrets set "clerk:loginpassword" "UserPasswordFromClerk"
 
 ***Getting playwright to work on windows machine (Hard Part)***
-    Step 1 - Download Powershell,
+    Step 1 - Download Powershell https://github.com/PowerShell/PowerShell/releases
     Step 2 - Find C:/ProgramFiles/Powershell/VersionXX/pwsh.exe right click *copy as path*
     Step 3 - Go to win menu "Edit system enviroment variables" -> Env Variables -> System Variables -> Path -> Edit -> New -> *Paste in the path*
-    Step 3 - Run powershell terminal
+    Step 3 - Run powershell terminal OBS MAKE SURE IT'S NOT Windows Powershell but the Powershell you just installed!
+        you can check if you are in the right terminal by running -> pwsh
     Step 4 - Navigate to DiplomaMaker.Web.Tests.Integration\bin\Debug\net8.0 
     Step 5 - Run -> pwsh playwright.ps1 install
 
