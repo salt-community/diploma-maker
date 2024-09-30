@@ -5,6 +5,7 @@
   flex-direction: column;
   align-items: center;
   padding: 1rem;
+  margin-top: 10vh;
 }
 
 .homepage__header {
