@@ -72,7 +72,7 @@ export function HomePage({ userName, signedIn = false }: Props) {
   return (
     <>
       {isCSSLoaded ? (
-        <div className="homepage">
+        <div className={`homepage ${!userName ? 'signin-view' : ''}`} >
           <header className={`homepage__header ${isFirstLogin ? 'animate' : ''}`}>
             <h1>Welcome <span>{userName ?? "Guest"}!</span></h1>
           </header>
