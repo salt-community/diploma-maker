@@ -52,10 +52,10 @@
     }
         .emailclient__list-label{ 
             position: absolute;
-            top: -1.5rem;
-            left: .5rem;
+            top: -2.3rem;
+            left: 1rem;
             color: #ababba;
-            font-size: .6rem;
+            font-size: 1.1rem;
         }
         .emailclient__list--item{
             display: flex;
