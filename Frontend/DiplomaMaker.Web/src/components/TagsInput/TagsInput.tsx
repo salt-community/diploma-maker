@@ -126,7 +126,7 @@ export const TagsInput = ({ selectedTags, tags, setPage }: Props) => {
             className="taginputbox"
             type="text"
             onKeyDown={addTags}
-            placeholder="Add student names here"
+            placeholder="Add student name here"
           />
         </div>
         <ul id="tags">
