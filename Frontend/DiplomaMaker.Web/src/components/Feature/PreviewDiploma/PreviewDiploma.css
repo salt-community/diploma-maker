@@ -14,3 +14,10 @@
     transform: translateX(-50%);
     max-width: 250px;
 }
+.modal-main-footer{
+    padding: 0% !important;
+}
+.content-container{
+    left: 50%;
+    transform: translateX(-50%);
+}
