@@ -23,7 +23,6 @@
         width: 90%;
         text-align: center;
         border-bottom: 1px solid #ababba42;
-        padding-top: 1.2rem;
         padding-bottom: 1.2rem;
     }
         .emailclient h1{
@@ -223,11 +222,6 @@
             fill: #fff;
             transition: all .1s ease-in-out;
         }
-
-
-
-
-
 
 .emailclient.fade-in {
     opacity: 1;
