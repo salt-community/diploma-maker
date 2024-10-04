@@ -30,6 +30,7 @@ export default function App() {
 
   const { setLoadingMessage, loadingMessage } = useLoadingMessage();
   const { setBGLoadingMessage, loadingBGMessage } = useBGLoadingMessage();
+  const [tracksWithoutPreviewImages, setTracksWithoutPreviewImages] = useState<TrackResponse[] | null>(null);
 
   // const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert()
@@ -88,6 +89,16 @@ export default function App() {
 
   const bootcampStateUpdateFromNewFormData = (bootcampResponse: BootcampResponse) => {
     setTracks(prevTracks =>
+      prevTracks!.map(track => ({
+        ...track,
+        bootcamps: track.bootcamps.map(bootcamp =>
+          bootcamp.guidId === bootcampResponse.guidId
+            ? { ...bootcamp, students: bootcampResponse.students, templateId: bootcampResponse.templateId }
+            : bootcamp
+        ),
+      }))
+    );
+    setTracksWithoutPreviewImages(prevTracks =>
       prevTracks!.map(track => ({
         ...track,
         bootcamps: track.bootcamps.map(bootcamp =>
@@ -186,6 +197,7 @@ export default function App() {
   const getTracks = async () => {
     const tracks = await api.getAllTracks(setLoadingMessage);
     setTracks(tracks);
+    setTracksWithoutPreviewImages(JSON.parse(JSON.stringify(tracks)));
   }
 
   // User Fonts Endpoint
@@ -222,7 +234,7 @@ export default function App() {
             </ClerkAuthGuard>
           }
         >
-          <Route path="pdf-creator" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} addNewBootcamp={addNewBootcamp}/>} />
+          <Route path="pdf-creator" element={<DiplomaMaking tracks={tracksWithoutPreviewImages} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} addNewBootcamp={addNewBootcamp}/>} />
           {/* <Route path="pdf-creator/:track/:bootcamp" element={<DiplomaMaking tracks={tracks} templates={templates} UpdateBootcampWithNewFormdata={UpdateBootcampWithNewFormdata} updateStudentThumbnails={updateStudentThumbnails} setLoadingMessage={setLoadingMessage} addNewBootcamp={addNewBootcamp}/>} /> */}
           <Route path="bootcamp-management" element={<BootcampManagement tracks={tracks} deleteBootcamp={deleteBootcamp} addNewBootcamp={addNewBootcamp} updateBootcamp={updateBootcamp}  />} />
           <Route path="overview" element={<OverviewPage tracks={tracks} deleteStudent={deleteStudent} updateStudentInformation={updateStudentInformation} sendEmail={sendEmail} templates={templates} setLoadingMessage={setLoadingMessage} />} />
