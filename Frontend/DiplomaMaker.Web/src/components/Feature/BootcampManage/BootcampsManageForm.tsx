@@ -1,4 +1,4 @@
-import { FieldValues, useForm, UseFormRegister } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../../util/types";
 import AddNewBootcampForm from "../../Forms/AddNewBootcampForm";
 import { PopupType } from "../../MenuItems/Popups/AlertPopup";

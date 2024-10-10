@@ -8,7 +8,7 @@ import { useCustomAlert } from '../../Hooks/useCustomAlert';
 import { mapTemplateInputsToTemplateViewerFromSnapshot, templateInputsFromHistorySnapshot } from '../../../util/dataHelpers';
 import { SpinnerDefault } from '../../MenuItems/Loaders/SpinnerDefault';
 import { ConfirmationPopup } from '../../MenuItems/Popups/ConfirmationPopup';
-import { AlertPopup, CustomAlertPopupProps, PopupType } from '../../MenuItems/Popups/AlertPopup';
+import { AlertPopup } from '../../MenuItems/Popups/AlertPopup';
 import { SearchInput } from '../../MenuItems/Inputs/SearchInput';
 import { SortByIcon } from '../../MenuItems/Icons/SortbyIcon';
 import { SelectOptions } from '../../MenuItems/Inputs/SelectOptions';

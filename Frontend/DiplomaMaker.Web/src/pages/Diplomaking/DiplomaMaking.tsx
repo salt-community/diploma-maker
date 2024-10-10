@@ -1,12 +1,9 @@
-import { useEffect, useState } from "react";
-import { BootcampResponse, SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse, StudentResponse, Student, BootcampRequest } from "../../util/types";
+import { useState } from "react";
+import { BootcampResponse, SaltData, TemplateResponse, FormDataUpdateRequest, TrackResponse, Student, BootcampRequest } from "../../util/types";
 import DiplomaDataForm from "../../components/Feature/Diplomadataform/DiplomaDataForm";
 import './DiplomaMaking.css';
-import { AlertPopup, CustomAlertPopupProps, PopupType } from "../../components/MenuItems/Popups/AlertPopup";
-import { useCustomAlert } from "../../components/Hooks/useCustomAlert";
 import { SpinnerDefault } from "../../components/MenuItems/Loaders/SpinnerDefault";
 import { useLoadingMessage } from "../../components/Contexts/LoadingMessageContext";
-import { Popup404 } from "../../components/MenuItems/Popups/Popup404";
 import { ErrorIcon } from "../../components/MenuItems/Icons/ErrorIcon";
 import PreviewDiploma from "../../components/Feature/PreviewDiploma/PreviewDiploma";
 import { SaltDataDefaultStudent } from "../../data/data";

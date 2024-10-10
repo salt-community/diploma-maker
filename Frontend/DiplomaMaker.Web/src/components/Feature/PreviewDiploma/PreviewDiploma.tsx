@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import {  SaltData } from "../../../util/types"
 import { Form, Viewer } from "@pdfme/ui";
-import { mapTemplateInputsToTemplateViewer, templateInputsFromBootcampData, templateInputsFromSaltData } from "../../../util/dataHelpers";
+import { mapTemplateInputsToTemplateViewer, templateInputsFromSaltData } from "../../../util/dataHelpers";
 import './PreviewDiploma.css'
 
 import { PaginationMenu } from "../../MenuItems/PaginationMenu";

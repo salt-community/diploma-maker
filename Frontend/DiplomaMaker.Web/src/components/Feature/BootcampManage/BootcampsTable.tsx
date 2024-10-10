@@ -1,6 +1,6 @@
 import { FieldValues, UseFormRegister } from "react-hook-form";
 import { utcFormatterSlash } from "../../../util/datesUtil";
-import { BootcampRequest, BootcampResponse, TrackResponse } from "../../../util/types";
+import { BootcampResponse, TrackResponse } from "../../../util/types";
 import { DeleteButtonSimple } from "../../MenuItems/Buttons/DeleteButtonSimple";
 import { ArrowIcon } from "../../MenuItems/Icons/ArrowIcon";
 import { SelectOptions } from "../../MenuItems/Inputs/SelectOptions";

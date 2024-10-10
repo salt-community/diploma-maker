@@ -5,8 +5,6 @@ import { DashBoardIcon } from "../../../components/MenuItems/Icons/DashBoardIcon
 import { TemplateCreatorIcon } from "../../../components/MenuItems/Icons/TemplateCreatorIcon";
 import { CogWheelIcon } from "../../../components/MenuItems/Icons/CogWheelIcon";
 import { HistoryIcon } from "../../../components/MenuItems/Icons/HistoryIcon";
-import { MountainIcon } from "../../../components/MenuItems/Icons/MountainIcon";
-import { HelpIcon } from "../../../components/MenuItems/Icons/HelpIcon";
 import { HomeIcon } from "../../../components/MenuItems/Icons/HomeIcon";
 import { UserButton } from "@clerk/clerk-react";
 

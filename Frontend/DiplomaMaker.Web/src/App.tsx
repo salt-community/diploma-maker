@@ -10,7 +10,6 @@ import { TemplateCreatorPage } from "./pages/TemplateCreator/TemplateCreatorPage
 import { useLoadingMessage } from "./components/Contexts/LoadingMessageContext";
 import { initApiEndpoints } from "./services/apiFactory";
 import { VerificationInputPage } from "./pages/Verifcation/VerificationInputPage";
-import { set } from "react-hook-form";
 import { HistoryPage } from "./pages/History/HistoryPage";
 import { HomePage } from "./pages/Homepage/HomePage"
 import { Footer } from "./components/Footer/Footer";
@@ -19,7 +18,7 @@ import { useBGLoadingMessage } from "./components/Contexts/LoadingBGMessageConte
 import { AlertPopup } from "./components/MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "./components/Hooks/useCustomAlert";
 import { ClerkAuthGuard } from "./components/Feature/Auth/ClerkAuthGaurd";
-import { ClerkProvider, SignIn, useAuth, useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 import SignInPage from "./pages/LoginPortal/sign-in";
 import { getToken } from "./util/apiUtil";
 import { generatePreviewImages } from "./util/previewImageUtil";
@@ -32,11 +31,8 @@ export default function App() {
   const { setBGLoadingMessage, loadingBGMessage } = useBGLoadingMessage();
   const [tracksWithoutPreviewImages, setTracksWithoutPreviewImages] = useState<TrackResponse[] | null>(null);
 
-  // const { showPopup, popupContent, popupType, customAlert, closeAlert } = useCustomAlert();
   const { showPopup: BGshowPopup, popupContent: BGpopupContent, popupType: BGpopupType, customAlert: BGcustomAlert, closeAlert: BGcloseAlert } = useCustomAlert()
   const { user, isSignedIn } = useUser();
-
-  
   
   let api = initApiEndpoints({
     endpointUrl: import.meta.env.VITE_API_URL,

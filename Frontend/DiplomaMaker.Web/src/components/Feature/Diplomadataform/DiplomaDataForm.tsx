@@ -23,7 +23,7 @@ import AddNewBootcampForm from "../../Forms/AddNewBootcampForm";
 import { AddIcon } from "../../MenuItems/Icons/AddIcon";
 import { ZipIcon } from "../../MenuItems/Icons/ZipIcon";
 import { PrintIcon } from "../../MenuItems/Icons/PrintIcon";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type FormData = {
   optionA: boolean;

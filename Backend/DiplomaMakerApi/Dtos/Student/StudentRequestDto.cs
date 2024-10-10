@@ -11,7 +11,5 @@ public class StudentRequestDto
 
     [Required(ErrorMessage = "Name is required.")]
     public required string Name { get; set; }
-
-    // [EmailAddress(ErrorMessage = "The Email field is not a valid e-mail address.")]
     public string? Email { get; set; }
 }

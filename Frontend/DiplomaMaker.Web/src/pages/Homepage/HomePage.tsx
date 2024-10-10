@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { highlightBootcampOptionsNav, highlightDashboardNav, highlightHistoryNav, highlightPDFcreatorNav, highlightTemplateCreatorNav, homePageLoggedInData, homePageLoggedOutData } from './HomepageData';
 import { AddButtonSimple } from '../../components/MenuItems/Buttons/AddButtonSimple';
 import { useAuth } from '@clerk/clerk-react';
-import { EmailConfigInstructionSlides, ReadmeInstructionSlides } from '../../data/slidesData';
+import { ReadmeInstructionSlides } from '../../data/slidesData';
 
 type Props = {
   userName: string | null;

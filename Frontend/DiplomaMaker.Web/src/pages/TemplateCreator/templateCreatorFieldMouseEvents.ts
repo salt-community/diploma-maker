@@ -1,4 +1,4 @@
-import { Designer } from "@pdfme/ui"; // Import your types
+import { Designer } from "@pdfme/ui";
 
 export const handleFieldMouseEvents = (
   designer: React.MutableRefObject<Designer | null>,

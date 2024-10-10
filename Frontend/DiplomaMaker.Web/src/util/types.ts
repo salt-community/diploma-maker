@@ -109,8 +109,6 @@ export type TemplateRequest = {
 export type EmailSendRequest = {
     guidId: string;
     file: Blob;
-    // email: string;
-    // senderCode: string;
     title: string;
     description: string;
 }
@@ -198,12 +196,6 @@ export type MakeActiveSnapshotRequestDto = {
     Ids: number[];
     StudentGuidIds: string[];
 }
-
-// Email
-// export type EmailConfigRequestDto = {
-//     senderEmail: string;
-//     senderCode: string;
-// }
 
 // Preview Images
 export type studentImagePreview = {
