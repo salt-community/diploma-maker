@@ -212,3 +212,24 @@
         font-size: 1rem;
     }
 }
+
+@media screen and (max-width: 1599px) {
+  .homepage__header h1 {
+    font-size: 2rem;
+  }
+
+  .homepage__grid {
+    grid-template-columns: repeat(2, 1fr);
+    width: 90%;
+  }
+
+  .homepage__card {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .homepage_sign-in-section {
+    padding-top: 10px;
+    gap: 8px;
+  }
+}

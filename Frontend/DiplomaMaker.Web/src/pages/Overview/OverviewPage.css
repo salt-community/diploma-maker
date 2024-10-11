@@ -17,17 +17,8 @@
         height: 100%;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: 1fr 0.9fr;
+        grid-template-rows: auto 0.9fr;
         gap: 1rem;
-    }
-
-    @media screen and (max-width: 1000px) {
-        .overview-page__list-module-card-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: 1fr 1fr;
-            gap: 1rem;
-        }
     }
 
     .spinner {
@@ -212,3 +203,28 @@
 .visible {
     display: block;
 }
+
+@media screen and (max-width: 1000px) {
+    .overview-page {
+      grid-template-columns: 1fr;
+      padding: 1rem;
+    }
+  
+    .overview-page__list-module {
+      padding: 5% 5%;
+    }
+  
+    .overview-page__list-module-card-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  
+    .list-module__item-title {
+      font-size: 0.8rem;
+    }
+  
+    .overview-page__sidebar {
+      padding: 5% 0 0 0;
+      max-height: unset;
+    }
+  }
+  

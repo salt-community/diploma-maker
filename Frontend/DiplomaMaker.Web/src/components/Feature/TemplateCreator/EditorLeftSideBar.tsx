@@ -17,8 +17,8 @@ export const EditorLeftSideBar = ({ optionsItems }: Props) => {
         <section className="templatecreator-page__leftsidebar">
             <div className="templatecreator-page__leftsidebar-menu">
                 <section className="templatecreator-page__leftsidebar-menu-section">
-                    {optionsItems.map(item => (
-                        <button onClick={item.onClick} className={item.className}>
+                    {optionsItems.map((item, indx) => (
+                        <button onClick={item.onClick} key={indx} className={item.className}>
                             {item.icon}
                             <p>{item.text}</p>
                         </button>

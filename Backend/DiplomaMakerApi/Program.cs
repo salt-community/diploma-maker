@@ -133,7 +133,6 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Test"))
 {
     logger.LogInformation($"Clerk:Authority: {builder.Configuration["Clerk:Authority"]}");

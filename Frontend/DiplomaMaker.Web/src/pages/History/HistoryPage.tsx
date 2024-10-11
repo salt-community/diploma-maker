@@ -1,7 +1,6 @@
 import './HistoryPage.css';
 import { MakeActiveSnapshotRequestDto, TrackResponse } from '../../util/types';
 import HistoryManageTable from '../../components/Feature/History/HistoryManageTable';
-import { CustomAlertPopupProps, PopupType } from '../../components/MenuItems/Popups/AlertPopup';
 
 type Props = {
     getHistory: () => void;

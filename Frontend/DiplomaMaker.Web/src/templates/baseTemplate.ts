@@ -1,6 +1,5 @@
 import { Size, Template } from "@pdfme/common";
 import { XYPosition } from "../util/types";
-import { Link } from "react-router-dom";
 
 export const makeTemplateInput= (header: string, main: string, footer: string, pdfbase: string, link: string) => {
   return {

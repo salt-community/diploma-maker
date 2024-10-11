@@ -30,7 +30,7 @@ public class EmailService
         }
 
         var message = new MimeMessage();
-        //google will override sender field and set to the user email so can leave it with whatever
+        // google will override sender field and set to the user email so can leave it with whatever
         message.From.Add(new MailboxAddress("DiplomaMakers", "email"));
         message.To.Add(new MailboxAddress("Salt Graduate", diplomaByGuid.Email));
         message.Subject = "Salt Diploma";

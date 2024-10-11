@@ -3,7 +3,7 @@ import { getTemplatePdfFile } from "./fileService";
 
 export async function getAllTemplates(apiParameters: apiEndpointParameters, setLoadingMessage: (message: string) => void): Promise<TemplateResponse[]> {
     setLoadingMessage('Fetching Templates...');
-    
+
     const response = await fetch(`${apiParameters.endpointUrl}/api/templates`, {
         headers: {'Authorization': `Bearer ${apiParameters.token()}` }
     });
@@ -30,7 +30,7 @@ export async function getTemplateById(apiParameters: apiEndpointParameters, id: 
         headers: {'Authorization': `Bearer ${apiParameters.token()}` }
     });
     if (!response.ok) {
-        throw new Error('Failed to get Template!');
+        throw new Error('Failed to get Template!'); 
     }
     const result = await response.json() as TemplateResponse;
     result.basePdf = await getTemplatePdfFile(apiParameters, result.basePdf, result.lastUpdated, setLoadingMessage);

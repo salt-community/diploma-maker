@@ -6,8 +6,6 @@ import { AttentionIcon } from '../Icons/AttentionIcon';
 import { SuccessIcon } from '../Icons/SuccessIcon';
 import { CloseWindowIcon } from '../Icons/CloseWindowIcon';
 import { WarningIcon } from '../Icons/WarningIcon';
-import { DeleteButtonSimple } from '../Buttons/DeleteButtonSimple';
-import { AddButtonSimple } from '../Buttons/AddButtonSimple';
 
 export type ConfirmationPopupType = 'question' | 'form' | 'warning' | 'question2' | 'warning2';
 

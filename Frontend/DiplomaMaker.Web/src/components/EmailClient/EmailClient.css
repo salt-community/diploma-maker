@@ -223,11 +223,6 @@
             transition: all .1s ease-in-out;
         }
 
-
-
-
-
-
 .emailclient.fade-in {
     opacity: 1;
     pointer-events: auto;

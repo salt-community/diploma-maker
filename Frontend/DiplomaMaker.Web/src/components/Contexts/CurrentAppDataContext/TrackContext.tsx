@@ -9,9 +9,6 @@ type TrackContextType = {
   setCurrentTrackIndex: (index: number) => void;
 };
 
-//trackindex bootcampindex tracks  
-
-
 const TrackContext = createContext<TrackContextType | undefined>(undefined);
 
 export const useTrack = () => {

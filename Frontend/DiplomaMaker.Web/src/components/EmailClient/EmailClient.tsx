@@ -252,7 +252,7 @@ export const EmailClient = ({
                         <SaveButton 
                             classNameOverride="send-emails-btn" 
                             saveButtonType={'normal'} 
-                            textfield={`Send Emails to Selected Clients`}
+                            textfield={`Send Emails to Selected Students`}
                             onClick={() => sendEmailsHandler()}
                             customIcon={<CloudUploadIcon />} 
                         />

@@ -1,12 +1,11 @@
 import { BootcampRequest, BootcampResponse, TrackResponse } from "../../util/types";
 import { useEffect, useRef, useState } from "react";
-import { AlertPopup, PopupType } from "../MenuItems/Popups/AlertPopup";
+import { AlertPopup } from "../MenuItems/Popups/AlertPopup";
 import { useCustomAlert } from "../Hooks/useCustomAlert";
 import './AddNewBootcampForm.css'
 import { SelectOptions } from "../MenuItems/Inputs/SelectOptions";
 import { AddButtonSimple } from "../MenuItems/Buttons/AddButtonSimple";
 import { CloseWindowIcon } from "../MenuItems/Icons/CloseWindowIcon";
-import { delay } from "../../util/timeUtil";
 
 type Props = {
     addNewBootcamp: (bootcamp: BootcampRequest) => Promise<void>;
