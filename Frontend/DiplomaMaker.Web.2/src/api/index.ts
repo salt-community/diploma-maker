@@ -1,5 +1,9 @@
-import * as blob from './controllers/blob';
-export * as apiTypes from './types';
+import * as Blob from './controllers/blob';
+import * as Bootcamps from './controllers/bootcamps';
+import * as Email from './controllers/email'
 
-const DiplomaMakerAPI = {
+export const DiplomaMakerAPI = {
+    Blob,
+    Bootcamps,
+    Email,
 };

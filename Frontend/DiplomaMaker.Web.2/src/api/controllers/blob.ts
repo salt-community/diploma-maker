@@ -27,7 +27,7 @@ export async function updateBundledStudentsPreviewImages(request: PreviewImageRe
     });
 
     if (!data) {
-        console.error("updateStudentsPreviewImage: no data");
+        console.error("updateBundledStudentsPreviewImages: no data");
     }
 
     return data as StudentResponseDto[];
