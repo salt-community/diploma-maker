@@ -4,6 +4,7 @@ import * as Email from './controllers/email'
 import * as HistorySnapshots from './controllers/history-snapshots'
 import * as Students from './controllers/students'
 import * as Templates from './controllers/templates'
+import * as Tracks from './controllers/tracks'
 
 export const DiplomaMakerAPI = {
     Blob,
@@ -11,5 +12,7 @@ export const DiplomaMakerAPI = {
     Email,
     HistorySnapshots,
     Students,
-    Templates
+    Templates,
+    Tracks
+
 };
