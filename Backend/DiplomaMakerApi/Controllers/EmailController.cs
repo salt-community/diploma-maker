@@ -9,7 +9,7 @@ namespace DiplomaMakerApi.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class EmailController : ControllerBase
     {
         private readonly EmailService _emailService;

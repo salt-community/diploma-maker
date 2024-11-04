@@ -8,7 +8,7 @@ namespace DiplomaMakerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+// [Authorize]
 public class TracksController : Controller
 {
     private readonly TrackService _trackservice;

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+// [Authorize]
 public class StudentsController(StudentService service, IMapper mapper) : ControllerBase
 {
     private readonly StudentService _service = service;

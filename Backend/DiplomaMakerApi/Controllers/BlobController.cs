@@ -53,7 +53,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpGet("download-all-templatebackgrounds")]
-        [Authorize]
+        // [Authorize]
         public async Task<IActionResult> DownloadAllFiles()
         {
             if (!_useBlobStorage)

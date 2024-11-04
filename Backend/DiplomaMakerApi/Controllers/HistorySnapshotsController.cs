@@ -20,7 +20,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> GetHistory()
         {    
             var snapshots = await _historySnapShotService.GetHistorySnapshots();
@@ -36,7 +36,7 @@ namespace DiplomaMakerApi.Controllers
         }
 
         [HttpPut("/api/make-active-historysnapshot")]
-        [Authorize]
+        // [Authorize]
         public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> MakeActiveHistorySnapshot([FromBody] MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
         {
             var changedHistorySnapshot = await _historySnapShotService.MakeActiveHistorySnapshot(makeActiveSnapshotRequestDto);
