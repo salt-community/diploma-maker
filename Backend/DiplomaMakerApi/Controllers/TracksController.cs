@@ -12,6 +12,7 @@ namespace DiplomaMakerApi.Controllers;
 public class TracksController(TrackService _trackservice, IMapper _mapper) : Controller
 {
     [HttpGet("GetTracks")]
+    [ProducesResponseType<List<TracksResponseDto>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<List<TracksResponseDto>>> GetTracks()
     {
         var tracks = await _trackservice.GetAllTracks();
