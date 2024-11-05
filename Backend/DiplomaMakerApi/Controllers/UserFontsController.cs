@@ -13,6 +13,7 @@ public class UserFontsController(UserFontService _userFontService, IMapper _mapp
 {
 
     [HttpGet("GetUserFonts")]
+    [ProducesResponseType<List<UserFontResponseDto>>(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public async Task<ActionResult<List<UserFontResponseDto>>> GetUserFonts()
     {
@@ -22,6 +23,8 @@ public class UserFontsController(UserFontService _userFontService, IMapper _mapp
 
     [HttpPost("PostUserFonts")]
     [AllowAnonymous]
+    [ProducesResponseType<List<UserFontResponseDto>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<List<UserFontResponseDto>>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<UserFontResponseDto>>> PostUserFonts([FromForm] List<UserFontRequestDto> userFonts)
     {
         if (!ModelState.IsValid)
