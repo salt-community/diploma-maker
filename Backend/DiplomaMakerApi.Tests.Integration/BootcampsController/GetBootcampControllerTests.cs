@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Bogus;
 using DiplomaMakerApi.Dtos;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
 
@@ -12,7 +12,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
     public class GetBootcampControllerTests : IClassFixture<DiplomaMakerApiFactory>
     {
         private readonly HttpClient _client;
-        private readonly Faker<BootcampRequestDto> _bootcampRequestGenerator = 
+        private readonly Faker<BootcampRequestDto> _bootcampRequestGenerator =
             new Faker<BootcampRequestDto>()
                 .RuleFor(b => b.GraduationDate, _ => DateTime.UtcNow)
                 .RuleFor(b => b.TrackId, faker => faker.Random.Int(1, 3));

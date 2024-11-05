@@ -1,9 +1,8 @@
-namespace DiplomaMakerApi.Models
+namespace DiplomaMakerApi.Models;
+
+public enum FontType
 {
-    public enum FontType
-    {
-        regular,
-        bold,
-        italic,
-    }
+    regular,
+    bold,
+    italic,
 }

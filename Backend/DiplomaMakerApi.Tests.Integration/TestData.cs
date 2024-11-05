@@ -1,5 +1,5 @@
 using System.Text;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 
 namespace DiplomaMakerApi.Tests.Integration
 {

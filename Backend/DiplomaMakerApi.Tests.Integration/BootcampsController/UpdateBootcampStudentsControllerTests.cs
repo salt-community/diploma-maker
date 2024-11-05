@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using Bogus;
 using DiplomaMakerApi.Dtos;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;

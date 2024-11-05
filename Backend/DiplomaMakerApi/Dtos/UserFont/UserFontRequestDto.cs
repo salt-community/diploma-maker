@@ -1,32 +1,32 @@
 using System.ComponentModel.DataAnnotations;
+
 using DiplomaMakerApi.Models;
 
-namespace DiplomaMakerApi.Dtos.UserFont
-{
-    public class UserFontRequestDto
-    {
-        [Required(ErrorMessage = "The Name field is required.")]
-        public required string Name { get; set; }
-        
-        [Required(ErrorMessage = "The FontType field is required.")]
-        public required FontType FontType { get; set; }
+namespace DiplomaMakerApi.Dtos;
 
-        public string FileName
+public class UserFontRequestDto
+{
+    [Required(ErrorMessage = "The Name field is required.")]
+    public required string Name { get; set; }
+
+    [Required(ErrorMessage = "The FontType field is required.")]
+    public required FontType FontType { get; set; }
+
+    public string FileName
+    {
+        get
         {
-            get
+            if (FontType == FontType.regular)
             {
-                if (FontType == FontType.regular)
-                {
-                    return Name;
-                }
-                else
-                {
-                    return $"{Name}-{FontType}.woff";
-                }
+                return Name;
+            }
+            else
+            {
+                return $"{Name}-{FontType}.woff";
             }
         }
-
-        [Required(ErrorMessage = "The File field is required.")]
-        public IFormFile? File { get; set; }
     }
+
+    [Required(ErrorMessage = "The File field is required.")]
+    public IFormFile? File { get; set; }
 }

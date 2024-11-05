@@ -3,8 +3,8 @@ using AutoMapper;
 
 using DiplomaMakerApi.Data;
 using DiplomaMakerApi.Exceptions;
+using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Models;
-using DiplomaMakerApi.Services.Interfaces;
 
 namespace DiplomaMakerApi.Services;
 

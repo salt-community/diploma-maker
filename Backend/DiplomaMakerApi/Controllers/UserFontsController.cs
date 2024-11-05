@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 
-using DiplomaMakerApi.Dtos.UserFont;
+using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Services;
 
 namespace DiplomaMakerApi.Controllers;

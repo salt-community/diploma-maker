@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using DiplomaMakerApi.Dtos.UserFont;
-using DiplomaMakerApi.Services.Interfaces;
+using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Data;
+using DiplomaMakerApi.Models;
 
 namespace DiplomaMakerApi.Services;
+
 public class UserFontService(
     DiplomaMakingContext _context,
     IStorageService _storageService
@@ -29,16 +29,16 @@ public class UserFontService(
 
         foreach (var userFont in userFontRequestsDto)
         {
-            if (userFont.File != null)
-            {
-                await _storageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}");
+            if (userFont.File is null)
+                continue;
+                
+            await _storageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}");
 
-                newFonts.Add(new UserFont()
-                {
-                    Name = userFont.Name,
-                    FontType = userFont.FontType,
-                });
-            }
+            newFonts.Add(new UserFont()
+            {
+                Name = userFont.Name,
+                FontType = userFont.FontType,
+            });
         }
 
         await _context.UserFonts.AddRangeAsync(newFonts);

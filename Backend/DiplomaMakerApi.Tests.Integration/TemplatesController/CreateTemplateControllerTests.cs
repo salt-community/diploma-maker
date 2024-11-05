@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Bogus;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,13 +19,13 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             new Faker<TemplatePostRequestDto>()
                 .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
         public CreateTemplateControllerTests(DiplomaMakerApiFactory apiFactory, ITestOutputHelper outputHelper)
-        {   
+        {
             apiFactory.OutputHelper = outputHelper;
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
             _testBlobFolder = apiFactory.TestBlobFolder;
         }
-        
+
         [Fact]
         public async void PostTemplate_ReturnsTemplate_WhenValidTemplateName()
         {
@@ -40,7 +40,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             var templateResponse = await response.Content.ReadFromJsonAsync<TemplateResponseDto>();
             templateResponse!.Name.Should().Be(templateRequest.templateName);
             templateResponse!.BasePdf.Should().Be($"{_testBlobFolder}/{templateRequest.templateName}.pdf");
-            TestUtil.CheckFileExists(templateRequest.templateName, ".pdf", _testBlobFolder, "DiplomaPdfs");  
+            TestUtil.CheckFileExists(templateRequest.templateName, ".pdf", _testBlobFolder, "DiplomaPdfs");
         }
 
         [Fact]
@@ -49,8 +49,8 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             // Arrange
             var badRequests = new List<(object data, string[] expectedErrorMessages)>()
             {
-                (new { templateName = "" }, new[] { 
-                    "The templateName field is required and cannot be empty.", 
+                (new { templateName = "" }, new[] {
+                    "The templateName field is required and cannot be empty.",
                 }),
                 (new { randomField = "jfs2025"}, new[] {
                     "The templateRequestDto field is required."

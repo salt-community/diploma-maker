@@ -1,8 +1,7 @@
-namespace DiplomaMakerApi.Models
+namespace DiplomaMakerApi.Dtos;
+
+public class MakeActiveSnapshotRequestDto
 {
-    public class MakeActiveSnapshotRequestDto
-    {
-        public required int[] Ids { get; set; }
-        public Guid[]? StudentGuidIds { get; set; }
-    }
+    public required int[] Ids { get; set; }
+    public Guid[]? StudentGuidIds { get; set; }
 }

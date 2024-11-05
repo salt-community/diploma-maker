@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using DiplomaMakerApi.Dtos.UserFont;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
 

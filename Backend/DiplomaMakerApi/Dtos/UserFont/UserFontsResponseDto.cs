@@ -1,7 +1,6 @@
-namespace DiplomaMakerApi.Dtos.UserFont
+namespace DiplomaMakerApi.Dtos;
+
+public class UserFontsResponseDto
 {
-    public class UserFontsResponseDto
-    {
-        public required List<UserFontResponseDto> UserFonts { get; set; }
-    }
+    public required List<UserFontResponseDto> UserFonts { get; set; }
 }

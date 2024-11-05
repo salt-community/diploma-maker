@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
-using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
+using DiplomaMakerApi.Models;
 
 namespace DiplomaMakerApi.Data;
 
@@ -30,7 +30,7 @@ public static class SeedData
         _context.Database.EnsureDeleted();
         _context.Database.EnsureCreated();
 
-        DiplomaTemplate diploma = new DiplomaTemplate() { Name = "Default" };
+        var diploma = new DiplomaTemplate() { Name = "Default" };
 
         var Dotnet = new Track { Name = "C# Dotnet", Tag = "dnfs" };
         var Java = new Track { Name = "Java", Tag = "jfs" };

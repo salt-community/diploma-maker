@@ -1,7 +1,6 @@
-
 using Microsoft.EntityFrameworkCore;
+
 using DiplomaMakerApi.Models;
-using DiplomaMakerApi.Dtos.UserFont;
 
 namespace DiplomaMakerApi.Data;
 
@@ -19,7 +18,7 @@ public class DiplomaMakingContext(DbContextOptions<DiplomaMakingContext> options
         modelBuilder.Entity<Track>()
             .HasIndex(Track => Track.Name)
             .IsUnique();
-        
+
         base.OnModelCreating(modelBuilder);
     }
 

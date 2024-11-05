@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Bogus;
 using DiplomaMakerApi.Dtos;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
 

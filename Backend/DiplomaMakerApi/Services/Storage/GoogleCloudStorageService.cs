@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Google.Cloud.Storage.V1;
 
 using DiplomaMakerApi.Data;
-using DiplomaMakerApi.Services.Interfaces;
 
 namespace DiplomaMakerApi.Services;
+
 public class GoogleCloudStorageService : IStorageService
 {
     private readonly string _bucketName;

@@ -1,10 +1,8 @@
 using AutoMapper;
+using DiplomaMakerApi.Dtos;
+using DiplomaMakerApi.Models;
 
 namespace DiplomaMakerApi.Configuration;
-using DiplomaMakerApi.Models;
-using DiplomaMakerApi.Dtos;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
-using DiplomaMakerApi.Dtos.UserFont;
 
 public class AutomapperConfig : Profile
 {
@@ -17,7 +15,7 @@ public class AutomapperConfig : Profile
         CreateMap<StudentResponseDto, Student>().ReverseMap();
         CreateMap<TemplateResponseDto, DiplomaTemplate>().ReverseMap();
         CreateMap<StudentUpdateRequestDto, Student>().ReverseMap();
-        CreateMap<Track,TracksResponseDto>();
+        CreateMap<Track, TracksResponseDto>();
         CreateMap<DiplomaSnapshotResponseDto, DiplomaSnapshot>().ReverseMap();
         CreateMap<StudentRequestDto, DiplomaSnapshot>()
             .ForMember(d => d.GeneratedAt, opt => opt.Ignore())

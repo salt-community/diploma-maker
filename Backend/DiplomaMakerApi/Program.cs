@@ -1,13 +1,13 @@
+using System.Text.Json.Serialization;
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Clerk.Net.DependencyInjection;
+
 using DiplomaMakerApi.Services;
 using DiplomaMakerApi.Middleware;
 using DiplomaMakerApi.Configuration;
-using System.Text.Json.Serialization;
-using Clerk.Net.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using DiplomaMakerApi.Services.Interfaces;
 using DiplomaMakerApi.Data;
 
 
@@ -62,20 +62,21 @@ builder.Services.AddClerkApiClient(config =>
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(x =>
+    .AddJwtBearer(options =>
     {
-        x.Authority = builder.Environment.IsDevelopment()
+        options.Authority = builder.Environment.IsDevelopment()
             ? builder.Configuration["Clerk:Authority"]
             : Environment.GetEnvironmentVariable("Clerk:Authority")!;
 
-        x.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
 
-        x.TokenValidationParameters = new TokenValidationParameters()
+        options.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateAudience = false,
             NameClaimType = ClaimTypes.NameIdentifier
         };
-        x.Events = new JwtBearerEvents()
+
+        options.Events = new JwtBearerEvents()
         {
             OnTokenValidated = context =>
             {
@@ -88,10 +89,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 return Task.CompletedTask;
             }
         };
-    });
-
+    }
+);
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -115,7 +117,7 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
@@ -132,10 +134,8 @@ builder.Services.AddScoped<UserFontService>();
 builder.Services.AddScoped<ClerkService>();
 builder.Services.AddScoped<EmailService>();
 
-var useBlobStorage = bool.Parse(builder.Configuration["Blob:UseBlobStorage"]
-        ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
-
-if (useBlobStorage)
+if (bool.Parse(builder.Configuration["Blob:UseBlobStorage"]
+    ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing")))
 {
     builder.Services.AddScoped<IStorageService, GoogleCloudStorageService>();
 }
@@ -145,23 +145,21 @@ else
 }
 
 var app = builder.Build();
-app.UseMiddleware<ErrorHandlingMiddleware>();
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Test"))
 {
     logger.LogInformation($"Clerk:Authority: {builder.Configuration["Clerk:Authority"]}");
     logger.LogInformation($"Clerk:AuthorizedParty: {builder.Configuration["Clerk:AuthorizedParty"]}");
-    using (var scope = app.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-        SeedData.Initialize(services);
-    }
+
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services);
 }
 
 app.UseSwagger();
-
 app.UseSwaggerUI();
 
 if (!builder.Environment.IsDevelopment())
@@ -170,7 +168,6 @@ if (!builder.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

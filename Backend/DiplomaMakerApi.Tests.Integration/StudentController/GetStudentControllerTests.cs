@@ -1,14 +1,14 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.StudentController
 {
     public class GetStudentControllerTests : IClassFixture<DiplomaMakerApiFactory>
-    { 
+    {
         private readonly HttpClient _client;
         public GetStudentControllerTests(DiplomaMakerApiFactory apiFactory)
         {

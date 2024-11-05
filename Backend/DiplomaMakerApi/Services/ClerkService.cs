@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Net.Http.Headers;
 
-using DiplomaMakerApi.Models.Clerk;
+using DiplomaMakerApi.Models;
 
 namespace DiplomaMakerApi.Services;
 

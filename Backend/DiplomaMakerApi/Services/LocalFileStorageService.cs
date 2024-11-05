@@ -1,15 +1,16 @@
 using DiplomaMakerApi.Data;
-using DiplomaMakerApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services;
+
 public class LocalFileStorageService : IStorageService
 {
     private readonly string _basePath;
     private readonly DiplomaMakingContext _context;
     private readonly FileUtilityService _fileUtilityService;
     private readonly ILogger<LocalFileStorageService> _logger;
+
     public LocalFileStorageService(DiplomaMakingContext context, FileUtilityService fileUtilityService, IConfiguration configuration, ILogger<LocalFileStorageService> logger)
     {
         _context = context;
@@ -56,7 +57,7 @@ public class LocalFileStorageService : IStorageService
             throw new FileNotFoundException("No files found in the directory.");
         }
 
-        var fileBytes = await Task.Run(() => _fileUtilityService.CreateZipFromFiles(files, zipFileName));
+        var fileBytes = await Task.Run(() => _fileUtilityService.CreateZipFromFiles(files));
 
         return new FileContentResult(fileBytes, "application/zip")
         {

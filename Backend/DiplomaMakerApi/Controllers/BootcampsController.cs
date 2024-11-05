@@ -1,11 +1,11 @@
-namespace DiplomaMakerApi.Controllers;
-
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 
-using DiplomaMakerApi.Models;
-using DiplomaMakerApi.Services;
 using DiplomaMakerApi.Dtos;
+using DiplomaMakerApi.Services;
+using DiplomaMakerApi.Models;
+
+namespace DiplomaMakerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -39,7 +39,7 @@ public class BootcampsController(BootcampService bootcampService, StudentService
     {
         var bootcamp = await _bootcampService.GetBootcampByGuidId(guid);
 
-        return bootcamp != null
+        return bootcamp is not null
         ? _mapper.Map<BootcampResponseDto>(bootcamp)
         : NotFound();
     }
@@ -57,7 +57,7 @@ public class BootcampsController(BootcampService bootcampService, StudentService
         await _bootcampService.PutBootcampAsync(guid, requestDto);
         var updatedBootcamp = await _studentService.ReplaceStudents(requestDto, guid);
 
-        return updatedBootcamp != null
+        return updatedBootcamp is not null
         ? Ok(_mapper.Map<BootcampResponseDto>(updatedBootcamp))
         : NotFound($"Bootcamp with ID {guid} does not exist.");
     }

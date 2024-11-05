@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Bogus;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
 
@@ -35,7 +35,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
                 );
                 setupTemplates.Add(setupTemplateResponse);
             }
-            
+
             // Act
             var response = await _client.GetAsync("api/Templates");
 

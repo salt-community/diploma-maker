@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.MIddleware;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -129,7 +129,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
                 previewImageRequest.Add(new StringContent(Guid.NewGuid().ToString()), $"PreviewImageRequests[{i}].StudentGuidId");
                 previewImageRequest.Add(new StringContent(pdfBase64String), $"PreviewImageRequests[{i}].Image");
             }
-            
+
             // Act
             var response = await _client.PutAsync("api/Blob/UpdateBundledStudentsPreviewImages", previewImageRequest);
 

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DiplomaMakerApi.Models;
+namespace DiplomaMakerApi.Dtos;
 
 public class BootcampRequestUpdateDto
 {

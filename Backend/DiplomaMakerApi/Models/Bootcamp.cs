@@ -2,7 +2,6 @@ using System.Text.Json.Serialization;
 
 namespace DiplomaMakerApi.Models;
 
-
 public class Bootcamp
 {
     public int Id { get; set; }

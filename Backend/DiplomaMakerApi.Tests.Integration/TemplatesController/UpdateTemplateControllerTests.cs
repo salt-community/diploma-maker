@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Bogus;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
 
@@ -20,7 +20,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "test-token");
         }
-        
+
         [Fact]
         public async Task PutTemplate_UpdatesTemplate_WhenDataIsValid()
         {

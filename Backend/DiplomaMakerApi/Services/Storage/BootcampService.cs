@@ -1,11 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 
-using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Exceptions;
-using DiplomaMakerApi.Dtos.Diploma;
-using DiplomaMakerApi.Services.Interfaces;
 using DiplomaMakerApi.Data;
+using DiplomaMakerApi.Models;
 
 namespace DiplomaMakerApi.Services;
 
@@ -72,8 +70,6 @@ public class BootcampService(
         bootcamp.DiplomaTemplate = newDiplomaTemplate;
         return await _context.SaveChangesAsync();
     }
-
-
 
     public async Task<Bootcamp> PutBootcampAsync(Guid GuidID, BootcampRequestUpdateDto requestDto)
     {

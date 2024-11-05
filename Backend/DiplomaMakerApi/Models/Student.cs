@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+
 namespace DiplomaMakerApi.Models;
 
 public class Student

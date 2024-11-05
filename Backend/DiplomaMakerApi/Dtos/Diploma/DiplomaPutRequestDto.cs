@@ -1,8 +1,7 @@
-namespace DiplomaMakerApi.Dtos.Diploma
+namespace DiplomaMakerApi.Dtos;
+
+public class DiplomaPutRequestDto
 {
-    public class DiplomaPutRequestDto
-    {
-        public required Guid StudentGuidId { get; set; }
-        public required string ImageData { get; set; }
-    }
+    public required Guid StudentGuidId { get; set; }
+    public required string ImageData { get; set; }
 }

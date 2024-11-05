@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration; // Ensure this namespace is included
 using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Services;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using System.Security.Claims;
 
 namespace DiplomaMakerApi.Controllers;

@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Services;
 
 namespace DiplomaMakerApi.Controllers;
@@ -25,7 +25,7 @@ public class TemplatesController(IMapper _mapper, TemplateService _templateServi
     {
         var template = await _templateService.GetTemplate(id);
 
-        return template != null
+        return template is not null
             ? _mapper.Map<TemplateResponseDto>(template)
             : NotFound();
     }

@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DiplomaMakerApi.Models;
+namespace DiplomaMakerApi.Dtos;
 
 public class StudentUpdateRequestDto
-{   
+{
     [MinLength(1, ErrorMessage = "Name cannot be empty")]
     public required string Name { get; set; }
 
