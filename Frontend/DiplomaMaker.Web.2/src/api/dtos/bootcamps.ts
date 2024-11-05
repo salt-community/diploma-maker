@@ -1,5 +1,5 @@
-import { TrackResponse } from "../types"
 import { StudentRequest, StudentResponse } from "./students"
+import { TracksResponse } from "./tracks"
 
 export type BootcampRequest = {
     trackId: number,
@@ -15,7 +15,7 @@ export type BootcampResponse = {
     guidId: string;
     graduationDate: Date;
     name: string;
-    track: TrackResponse;
+    track: TracksResponse;
     templateId: number;
     students: StudentResponse[];
 }

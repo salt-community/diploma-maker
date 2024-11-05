@@ -1,6 +1,5 @@
 import createClient from "openapi-fetch"
 import type { paths } from "../open-api-schema";
-import { PreviewImageRequestDto, StudentResponseDto } from "../types";
 
 const client = createClient<paths>({ baseUrl: "http://localhost:5258/api/" });
 
