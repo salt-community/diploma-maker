@@ -16,7 +16,7 @@ public class BlobController(
     IMapper _mapper
     ) : Controller
 {
-    private async Task<IActionResult> GetFile(string fileName, string subDirectory)
+    private async Task<ActionResult<FileContentResult>> GetFile(string fileName, string subDirectory)
     {
         var extension = Path.GetExtension(fileName);
         fileName = Path.GetFileName(fileName);
@@ -34,26 +34,31 @@ public class BlobController(
     }
 
     [HttpGet("GetTemplateBackground/{filename}")]
+    [ProducesResponseType<FileContentResult>(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetTemplateBackground(string filename) =>
+    public async Task<ActionResult<FileContentResult>> GetTemplateBackground(string filename) =>
         await GetFile(filename, "DiplomaPdfs");
 
     [HttpGet("GetTemplateBackgrounds")]
+    [ProducesResponseType<FileContentResult>(StatusCodes.Status200OK)]
     // [Authorize]
-    public async Task<IActionResult> GetTemplateBackgrounds()
-    {
-        return await _storageService.GetFilesFromPath("TemplateBackgroundPdfs.zip", "DiplomaPdfs");
-    }
+    public async Task<ActionResult<FileContentResult>> GetTemplateBackgrounds() =>
+        await _storageService.GetFilesFromPath("TemplateBackgroundPdfs.zip", "DiplomaPdfs");
 
     [HttpGet("GetDiploma/{filename}")]
+    [ProducesResponseType<FileContentResult>(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetDiploma(string filename) => await GetFile(filename, "ImagePreview");
+    public async Task<ActionResult<FileContentResult>> GetDiploma(string filename) =>
+        await GetFile(filename, "ImagePreview");
 
     [HttpGet("GetDiplomaThumbnail/{filename}")]
+    [ProducesResponseType<FileContentResult>(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetDiplomaThumbnail(string filename) => await GetFile(filename, "ImagePreviewLQIP");
+    public async Task<ActionResult<FileContentResult>> GetDiplomaThumbnail(string filename) =>
+        await GetFile(filename, "ImagePreviewLQIP");
 
     [HttpPut("PutDiploma")]
+    [ProducesResponseType<StudentResponseDto>(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public async Task<ActionResult<StudentResponseDto>> PutDiploma([FromBody] DiplomaPutRequestDto diplomaPutRequest)
     {
@@ -62,6 +67,7 @@ public class BlobController(
     }
 
     [HttpPut("PutDiplomas")]
+    [ProducesResponseType<List<StudentResponseDto>>(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public async Task<ActionResult<List<StudentResponseDto>>> PutDiplomas([FromBody] List<DiplomaPutRequestDto> diplomaPutRequests)
     {
@@ -70,11 +76,11 @@ public class BlobController(
     }
 
     [HttpGet("GetFont/{fontName}/{fontType}"), HttpHead("GetFont/{fontName}/{fontType}")]
+    [ProducesResponseType<FileContentResult>(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetFont(string fontName, FontType fontType)
+    public async Task<ActionResult<FileContentResult>> GetFont(string fontName, FontType fontType)
     {
         var fontNameUsed = fontType == FontType.regular ? $"{fontName}" : $"{fontName}-{fontType}";
-        var font = await GetFile($"{fontNameUsed}.woff", $"UserFonts/{fontName}");
-        return font;
+        return await GetFile($"{fontNameUsed}.woff", $"UserFonts/{fontName}");
     }
 }
