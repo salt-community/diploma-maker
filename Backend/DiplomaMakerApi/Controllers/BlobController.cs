@@ -1,7 +1,6 @@
 using System.IO.Compression;
 using AutoMapper;
-using DiplomaMakerApi.Dtos.PreviewImage;
-using DiplomaMakerApi.Dtos.UserFont;
+using DiplomaMakerApi.Dtos.Diploma;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -11,100 +10,80 @@ namespace DiplomaMakerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BlobController : Controller
+    public class BlobController(
+        LocalFileStorageService localFileStorageService,
+        GoogleCloudStorageService googleCloudStorageService,
+        IWebHostEnvironment env, IConfiguration configuration,
+        BootcampService bootcampService,
+        IMapper mapper
+        ) : Controller
     {
-        private readonly LocalFileStorageService _localFileStorageService;
-        private readonly GoogleCloudStorageService _googleCloudStorageService;
-        private readonly IWebHostEnvironment _env;
-        private readonly bool _useBlobStorage;
-        private readonly BootcampService _bootcampService;
-        private readonly IMapper _mapper;
-
-        public BlobController
-        (
-            LocalFileStorageService localFileStorageService, 
-            GoogleCloudStorageService googleCloudStorageService, 
-            IWebHostEnvironment env, IConfiguration configuration, 
-            BootcampService bootcampService,
-            IMapper mapper
-        )
-        {
-            _localFileStorageService = localFileStorageService;
-            _googleCloudStorageService = googleCloudStorageService;
-            _env = env;
-            _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]
+        private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
+        private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
+        private readonly IWebHostEnvironment _env = env;
+        private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]
                 ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
-            _bootcampService = bootcampService;
-            _mapper = mapper;
-        }
+        private readonly BootcampService _bootcampService = bootcampService;
+        private readonly IMapper _mapper = mapper;
 
-        [HttpGet("{filename}")]
+        [HttpGet("GetTemplateBackground/{filename}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetFile(string filename)
-        {
-            return await GetPdfBlob(filename);
-        }
+        public async Task<IActionResult> GetTemplateBackground(string filename) =>
+            await GetPdfBlob(filename);
 
-        [HttpGet("DiplomaPdfs/{filename}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetDiplomaPdf(string filename)
-        {
-            return await GetPdfBlob(filename);
-        }
-
-        [HttpGet("download-all-templatebackgrounds")]
+        [HttpGet("GetTemplateBackgrounds")]
         // [Authorize]
-        public async Task<IActionResult> DownloadAllFiles()
+        public async Task<IActionResult> GetTemplateBackgrounds()
         {
-            if (!_useBlobStorage)
-            {
-                return await _localFileStorageService.GetFilesFromPath("TemplateBackgroundPdfs.zip", "DiplomaPdfs");
-            }
-            else{
-                return await _googleCloudStorageService.GetFilesFromPath("TemplateBackgroundPdfs.zip", "DiplomaPdfs");
-            }
+            return _useBlobStorage
+            ? await _googleCloudStorageService.GetFilesFromPath("TemplateBackgroundPdfs.zip", "DiplomaPdfs")
+            : await _localFileStorageService.GetFilesFromPath("TemplateBackgroundPdfs.zip", "DiplomaPdfs");
         }
 
-        [HttpGet("ImagePreview/{filename}")]
+        [HttpGet("GetDiploma/{filename}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetPreviewImage(string filename)
-        {
-            return await GetImageBlob(filename, "ImagePreview");
-        }
+        public async Task<IActionResult> GetDiploma(string filename) => await GetImageBlob(filename, "ImagePreview");
 
-        [HttpGet("ImagePreviewLQIP/{filename}")]
+        [HttpGet("GetDiplomaThumbnail/{filename}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetLQPreviewImage(string filename)
-        {
-            return await GetImageBlob(filename, "ImagePreviewLQIP");
-        }
+        public async Task<IActionResult> GetDiplomaThumbnail(string filename) => await GetImageBlob(filename, "ImagePreviewLQIP");
 
-        [HttpPut("UpdateStudentsPreviewImage")]
+        [HttpPut("PutDiploma")]
         [AllowAnonymous]
-        public async Task<ActionResult<StudentResponseDto>> UpdateStudentsPreviewImages([FromForm] PreviewImageRequestDto previewImageRequestDto)
+        public async Task<ActionResult<StudentResponseDto>> PutDiploma([FromBody] DiplomaPutRequestDto diplomaPutRequest)
         {
-            var studentResponse = await _bootcampService.PutStudentPreviewImage(previewImageRequestDto);
+            var studentResponse = await _bootcampService.PutDiploma(diplomaPutRequest);
             return _mapper.Map<StudentResponseDto>(studentResponse);
         }
 
-        [HttpPut("UpdateBundledStudentsPreviewImages")]
+        [HttpPut("PutDiplomas")]
         [AllowAnonymous]
-        public async Task<ActionResult<List<StudentResponseDto>>> UpdateBundledStudentsPreviewImages([FromForm] PreviewImageRequestsDto previewImageRequestsDto)
+        public async Task<ActionResult<List<StudentResponseDto>>> PutDiplomas([FromBody] List<DiplomaPutRequestDto> diplomaPutRequests)
         {
-            var studentsResponses = await _bootcampService.PutStudentsPreviewImages(previewImageRequestsDto);
+            var studentsResponses = await _bootcampService.PutDiplomas(diplomaPutRequests);
             return _mapper.Map<List<StudentResponseDto>>(studentsResponses);
         }
 
         private async Task<IActionResult> GetPdfBlob(string filename)
         {
             filename = Path.GetFileName(filename);
-            
+
             if (!filename.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest("Invalid file type.");
             }
 
-            if (!_useBlobStorage)
+            if (_useBlobStorage)
+            {
+                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename, "DiplomaPdfs");
+
+                if (fileBytes == null)
+                {
+                    return NotFound("File not found.");
+                }
+                return File(fileBytes, contentType, filename);
+            }
+            else
             {
                 var filePath = await _localFileStorageService.GetFilePath(filename, "DiplomaPdfs");
 
@@ -116,62 +95,46 @@ namespace DiplomaMakerApi.Controllers
                 var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
                 return File(fileBytes, "application/pdf", filename);
             }
-            else
-            {
-                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename, "DiplomaPdfs");
-
-                if (fileBytes == null)
-                {
-                    return NotFound("File not found.");
-                }
-                return File(fileBytes, contentType, filename);
-            }
-        }   
-
+        }
 
         private async Task<IActionResult> GetImageBlob(string filename, string subDirectory)
         {
             filename = Path.GetFileName(filename);
-            
+
             if (!filename.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest("Invalid file type.");
             }
 
-            if (!_useBlobStorage)
+            byte[] fileBytes;
+
+            if (_useBlobStorage)
             {
-                var filePath = await _localFileStorageService.GetFilePath(filename, subDirectory);
+                fileBytes = (await _googleCloudStorageService.GetFileFromFilePath(filename, subDirectory)).FileBytes;
 
-                if (filePath == null)
-                {
-                    return NotFound("File not found.");
-                }
-
-                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-                return File(fileBytes, "application/webp", filename);
+                if (fileBytes == null) return NotFound("File not found.");
             }
             else
             {
-                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename, subDirectory);
+                var filePath = await _localFileStorageService.GetFilePath(filename, subDirectory);
 
-                if (fileBytes == null)
-                {
-                    return NotFound("File not found.");
-                }
+                if (filePath == null) return NotFound("File not found.");
 
-                return File(fileBytes, "application/webp", filename);
-            }   
-        }  
+                fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+            }
 
-        [HttpGet("UserFonts/{fontName}"), HttpHead("UserFonts/{fontName}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetFonts(string fontName, FontType fontType)
-        {
-            var fontFileName = $"{fontName}-{fontType}";
-            var fontNameUsed = fontType == FontType.regular ? $"{fontName}" : $"{fontName}-{fontType}";
-            var fonts = await GetFontBlob($"{fontNameUsed}.woff", $"UserFonts/{fontName}");
-            return fonts;
+            return File(fileBytes, "application/webp", filename);
         }
+
+        [HttpGet("GetFont/{fontName}/{fontType}"), HttpHead("GetFont/{fontName}/{fontType}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetFont(string fontName, FontType fontType)
+        {
+            var fontNameUsed = fontType == FontType.regular ? $"{fontName}" : $"{fontName}-{fontType}";
+            var font = await GetFontBlob($"{fontNameUsed}.woff", $"UserFonts/{fontName}");
+            return font;
+        }
+
         private async Task<IActionResult> GetFontBlob(string filename, string subDirectory)
         {
             filename = Path.GetFileName(filename);
@@ -181,29 +144,24 @@ namespace DiplomaMakerApi.Controllers
                 return BadRequest("Invalid file type. Only .woff files are supported.");
             }
 
-            if (!_useBlobStorage)
+            byte[] fileBytes;
+
+            if (_useBlobStorage)
             {
-                var filePath = await _localFileStorageService.GetFilePath(filename, subDirectory);
+                fileBytes = (await _googleCloudStorageService.GetFileFromFilePath(filename, subDirectory)).FileBytes;
 
-                if (filePath == null)
-                {
-                    return NotFound("File not found.");
-                }
-
-                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-                return File(fileBytes, "font/woff", filename);
+                if (fileBytes == null) return NotFound("File not found.");
             }
             else
             {
-                var (fileBytes, contentType) = await _googleCloudStorageService.GetFileFromFilePath(filename, subDirectory);
+                var filePath = await _localFileStorageService.GetFilePath(filename, subDirectory);
 
-                if (fileBytes == null)
-                {
-                    return NotFound("File not found.");
-                }
+                if (filePath == null) return NotFound("File not found.");
 
-                return File(fileBytes, "font/woff", filename);
-            }   
+                fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+            }
+
+            return File(fileBytes, "font/woff", filename);
         }
     }
 }

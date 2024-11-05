@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Exceptions;
-using DiplomaMakerApi.Dtos.PreviewImage;
+using DiplomaMakerApi.Dtos.Diploma;
 
 namespace DiplomaMakerApi.Services;
 
@@ -106,36 +106,36 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
             return bootcamp;
     }
 
-    public async Task<List<Student>> PutStudentsPreviewImages(PreviewImageRequestsDto previewImageRequestsDto)
+    public async Task<List<Student>> PutDiplomas(List<DiplomaPutRequestDto> diplomaPutRequests)
     {
         var studentsUpdated = new List<Student>();
-        foreach(var studentPreviewImageRequest in previewImageRequestsDto.PreviewImageRequests)
+        foreach(var diplomaPutRequest in diplomaPutRequests)
         {
-            var studentResponse = await PutStudentPreviewImage(studentPreviewImageRequest);
+            var studentResponse = await PutDiploma(diplomaPutRequest);
             studentsUpdated.Add(studentResponse);
         }
 
         return studentsUpdated;
     }
 
-    public async Task<Student> PutStudentPreviewImage(PreviewImageRequestDto previewImageRequestDto)
+    public async Task<Student> PutDiploma(DiplomaPutRequestDto diplomaPutRequest)
     {
-        if (!_fileUtilityService.IsValidBase64Pdf(previewImageRequestDto.Image))
+        if (!_fileUtilityService.IsValidBase64Pdf(diplomaPutRequest.ImageData))
         {
             throw new InvalidDataException("The provided image is not a valid Base64 PDF string.");
         }
-        var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == previewImageRequestDto.StudentGuidId);
+        var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == diplomaPutRequest.StudentGuidId);
         if(student == null)
         {
-            throw new NotFoundByGuidException("Student", previewImageRequestDto.StudentGuidId);
+            throw new NotFoundByGuidException("Student", diplomaPutRequest.StudentGuidId);
         }
-        var pdfImage = await _fileUtilityService.ConvertPdfToPng(previewImageRequestDto.Image, previewImageRequestDto.StudentGuidId.ToString());
+        var pdfImage = await _fileUtilityService.ConvertPdfToPng(diplomaPutRequest.ImageData, diplomaPutRequest.StudentGuidId.ToString());
         
-        var HQFile = await _fileUtilityService.ConvertPngToWebP(pdfImage, previewImageRequestDto.StudentGuidId.ToString());
-        var LQFile = await _fileUtilityService.ConvertPngToWebP(pdfImage, previewImageRequestDto.StudentGuidId.ToString(), true);
+        var HQFile = await _fileUtilityService.ConvertPngToWebP(pdfImage, diplomaPutRequest.StudentGuidId.ToString());
+        var LQFile = await _fileUtilityService.ConvertPngToWebP(pdfImage, diplomaPutRequest.StudentGuidId.ToString(), true);
 
-        var HQFilePath = await SaveFileAsync(HQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreview");
-        var LQFilePath = await SaveFileAsync(LQFile, previewImageRequestDto.StudentGuidId.ToString(), "ImagePreviewLQIP");
+        var HQFilePath = await SaveFileAsync(HQFile, diplomaPutRequest.StudentGuidId.ToString(), "ImagePreview");
+        var LQFilePath = await SaveFileAsync(LQFile, diplomaPutRequest.StudentGuidId.ToString(), "ImagePreviewLQIP");
 
         student.PreviewImageUrl = await _fileUtilityService.GetRelativePathAsync(HQFilePath, "ImagePreview");
         student.PreviewImageLQIPUrl = await _fileUtilityService.GetRelativePathAsync(LQFilePath, "ImagePreviewLQIP");
