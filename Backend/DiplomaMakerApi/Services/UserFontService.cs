@@ -1,49 +1,48 @@
-using DiplomaMakerApi.Dtos.UserFont;
-using DiplomaMakerApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DiplomaMakerApi.Services
+using DiplomaMakerApi.Dtos.UserFont;
+using DiplomaMakerApi.Services.Interfaces;
+
+namespace DiplomaMakerApi.Services;
+public class UserFontService(
+    DiplomaMakingContext _context,
+    IStorageService _storageService
+)
 {
-    public class UserFontService(
-        DiplomaMakingContext _context,
-        IStorageService _storageService
-    )
+    public async Task<List<UserFont>> GetUserFonts()
     {
-        public async Task<List<UserFont>> GetUserFonts()
+        return await _context.UserFonts
+            .ToListAsync();
+    }
+
+    public async Task<List<UserFont>> PostUserFonts(List<UserFontRequestDto> userFontRequestsDto)
+    {
+        var firstFontRequest = userFontRequestsDto[0];
+        var newFonts = new List<UserFont>();
+
+        if (firstFontRequest.File is null)
         {
-            return await _context.UserFonts
-                .ToListAsync();
+            throw new ArgumentException("Normal Font Missing.");
         }
 
-        public async Task<List<UserFont>> PostUserFonts(UserFontRequestsDto userFontRequestsDto)
+        foreach (var userFont in userFontRequestsDto)
         {
-            var firstFontRequest = userFontRequestsDto.UserFontRequests[0];
-            var newFonts = new List<UserFont>();
-
-            if (firstFontRequest.File is null)
+            if (userFont.File != null)
             {
-                throw new ArgumentException("Normal Font Missing.");
-            }
+                await _storageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}");
 
-            foreach (var userFont in userFontRequestsDto.UserFontRequests)
-            {
-                if (userFont.File != null)
+                newFonts.Add(new UserFont()
                 {
-                    await _storageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}");
-
-                    newFonts.Add(new UserFont()
-                    {
-                        Name = userFont.Name,
-                        FontType = userFont.FontType,
-                    });
-                }
+                    Name = userFont.Name,
+                    FontType = userFont.FontType,
+                });
             }
-
-            await _context.UserFonts.AddRangeAsync(newFonts);
-            await _context.SaveChangesAsync();
-
-            return newFonts;
         }
+
+        await _context.UserFonts.AddRangeAsync(newFonts);
+        await _context.SaveChangesAsync();
+
+        return newFonts;
     }
 }
