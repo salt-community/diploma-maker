@@ -12,6 +12,7 @@ namespace DiplomaMakerApi.Controllers;
 public class TemplatesController(IMapper _mapper, TemplateService _templateService) : ControllerBase
 {
     [HttpGet("GetTemplates")]
+    [ProducesResponseType<List<TemplatesResponseDto>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<List<TemplatesResponseDto>>> GetTemplates()
     {
         var templates = await _templateService.GetTemplates();
@@ -21,6 +22,8 @@ public class TemplatesController(IMapper _mapper, TemplateService _templateServi
     }
 
     [HttpGet("GetTemplate/{id}")]
+    [ProducesResponseType<TemplatesResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TemplateResponseDto>> GetTemplateById(int id)
     {
         var template = await _templateService.GetTemplate(id);
@@ -31,6 +34,8 @@ public class TemplatesController(IMapper _mapper, TemplateService _templateServi
     }
 
     [HttpPost("PostTemplate")]
+    [ProducesResponseType<TemplatesResponseDto>(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TemplateResponseDto>> PostTemplate(TemplatePostRequestDto templateRequestDto)
     {
         if (!ModelState.IsValid)
@@ -43,6 +48,8 @@ public class TemplatesController(IMapper _mapper, TemplateService _templateServi
     }
 
     [HttpDelete("DeleteTemplate/{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteTemplate(int id)
     {
         var template = await _templateService.DeleteTemplate(id);
@@ -53,6 +60,7 @@ public class TemplatesController(IMapper _mapper, TemplateService _templateServi
     }
 
     [HttpPut("PutTemplate/{id}")]
+    [ProducesResponseType<TemplatesResponseDto>(StatusCodes.Status200OK)]
     public async Task<ActionResult<TemplateResponseDto>> PutTemplate(int id, TemplateRequestDto templateRequestDto)
     {
         var template = await _templateService.PutTemplate(id, templateRequestDto);
