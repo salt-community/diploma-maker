@@ -11,6 +11,7 @@ namespace DiplomaMakerApi.Controllers;
 public class StudentsController(StudentService _service, IMapper _mapper) : ControllerBase
 {
     [HttpGet("GetStudents")]
+    [ProducesResponseType<List<StudentResponseDto>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<List<StudentResponseDto>>> GetStudents()
     {
         var students = await _service.GetAllStudents();
@@ -18,6 +19,7 @@ public class StudentsController(StudentService _service, IMapper _mapper) : Cont
     }
 
     [HttpGet("GetStudent/{guid}")]
+    [ProducesResponseType<StudentResponseDto>(StatusCodes.Status200OK)]
     public async Task<ActionResult<StudentResponseDto>> GetStudent(Guid guid)
     {
         var student = await _service.GetStudentByGuidId(guid);
@@ -25,6 +27,8 @@ public class StudentsController(StudentService _service, IMapper _mapper) : Cont
     }
 
     [HttpGet("GetStudentByVericationCode/{verificationCode}")]
+    [ProducesResponseType<StudentResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<StudentResponseDto>> GetStudentByVerificationCode(string verificationCode)
     {
         var student = await _service.GetStudentByVerificationCode(verificationCode);
@@ -34,6 +38,8 @@ public class StudentsController(StudentService _service, IMapper _mapper) : Cont
     }
 
     [HttpPut("UpdateStudent/{guid}")]
+    [ProducesResponseType<StudentResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<StudentResponseDto>> UpdateStudent(Guid guid, StudentUpdateRequestDto updateDto)
     {
         return ModelState.IsValid
@@ -42,6 +48,7 @@ public class StudentsController(StudentService _service, IMapper _mapper) : Cont
     }
 
     [HttpDelete("DeleteStudent/{guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteStudent(Guid guid)
     {
         await _service.DeleteStudentByGuidId(guid);
