@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/Blob/{filename}": {
+    "/api/Blob/GetTemplateBackground/{filename}": {
         parameters: {
             query?: never;
             header?: never;
@@ -27,42 +27,11 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/Blob/DiplomaPdfs/{filename}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    filename: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Success */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
                     };
-                    content?: never;
                 };
             };
         };
@@ -74,7 +43,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Blob/download-all-templatebackgrounds": {
+    "/api/Blob/GetTemplateBackgrounds": {
         parameters: {
             query?: never;
             header?: never;
@@ -95,7 +64,11 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
                 };
             };
         };
@@ -107,7 +80,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Blob/ImagePreview/{filename}": {
+    "/api/Blob/GetDiploma/{filename}": {
         parameters: {
             query?: never;
             header?: never;
@@ -130,7 +103,11 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
                 };
             };
         };
@@ -142,7 +119,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Blob/ImagePreviewLQIP/{filename}": {
+    "/api/Blob/GetDiplomaThumbnail/{filename}": {
         parameters: {
             query?: never;
             header?: never;
@@ -165,7 +142,11 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
                 };
             };
         };
@@ -177,7 +158,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Blob/UpdateStudentsPreviewImage": {
+    "/api/Blob/PutDiploma": {
         parameters: {
             query?: never;
             header?: never;
@@ -194,11 +175,9 @@ export interface paths {
             };
             requestBody?: {
                 content: {
-                    "multipart/form-data": {
-                        /** Format: uuid */
-                        StudentGuidId?: string;
-                        Image?: string;
-                    };
+                    "application/json": components["schemas"]["DiplomaPutRequestDto"];
+                    "text/json": components["schemas"]["DiplomaPutRequestDto"];
+                    "application/*+json": components["schemas"]["DiplomaPutRequestDto"];
                 };
             };
             responses: {
@@ -222,50 +201,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Blob/UpdateBundledStudentsPreviewImages": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "multipart/form-data": {
-                        PreviewImageRequests?: components["schemas"]["PreviewImageRequestDto"][];
-                    };
-                };
-            };
-            responses: {
-                /** @description Success */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["StudentResponseDto"][];
-                        "application/json": components["schemas"]["StudentResponseDto"][];
-                        "text/json": components["schemas"]["StudentResponseDto"][];
-                    };
-                };
-            };
-        };
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/Blob/UserFonts/{fontName}": {
+    "/api/Blob/GetFont/{fontName}/{fontType}": {
         parameters: {
             query?: never;
             header?: never;
@@ -274,12 +210,11 @@ export interface paths {
         };
         get: {
             parameters: {
-                query?: {
-                    fontType?: components["schemas"]["FontType"];
-                };
+                query?: never;
                 header?: never;
                 path: {
                     fontName: string;
+                    fontType: components["schemas"]["FontType"];
                 };
                 cookie?: never;
             };
@@ -290,7 +225,11 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
                 };
             };
         };
@@ -300,12 +239,11 @@ export interface paths {
         options?: never;
         head: {
             parameters: {
-                query?: {
-                    fontType?: components["schemas"]["FontType"];
-                };
+                query?: never;
                 header?: never;
                 path: {
                     fontName: string;
+                    fontType: components["schemas"]["FontType"];
                 };
                 cookie?: never;
             };
@@ -316,14 +254,61 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
                 };
             };
         };
         patch?: never;
         trace?: never;
     };
-    "/api/Bootcamps": {
+    "/api/Bootcamps/PostBootcamp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["BootcampRequestDto"];
+                    "text/json": components["schemas"]["BootcampRequestDto"];
+                    "application/*+json": components["schemas"]["BootcampRequestDto"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["BootcampResponseDto"];
+                        "application/json": components["schemas"]["BootcampResponseDto"];
+                        "text/json": components["schemas"]["BootcampResponseDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Bootcamps/GetBootcamps": {
         parameters: {
             query?: never;
             header?: never;
@@ -353,41 +338,14 @@ export interface paths {
             };
         };
         put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": components["schemas"]["BootcampRequestDto"];
-                    "text/json": components["schemas"]["BootcampRequestDto"];
-                    "application/*+json": components["schemas"]["BootcampRequestDto"];
-                };
-            };
-            responses: {
-                /** @description Success */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["BootcampResponseDto"];
-                        "application/json": components["schemas"]["BootcampResponseDto"];
-                        "text/json": components["schemas"]["BootcampResponseDto"];
-                    };
-                };
-            };
-        };
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/Bootcamps/{guidId}": {
+    "/api/Bootcamps/GetBootcamp/{guid}": {
         parameters: {
             query?: never;
             header?: never;
@@ -399,7 +357,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    guidId: string;
+                    guid: string;
                 };
                 cookie?: never;
             };
@@ -416,52 +374,50 @@ export interface paths {
                         "text/json": components["schemas"]["BootcampResponseDto"];
                     };
                 };
-            };
-        };
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    guidId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": components["schemas"]["BootcampRequestDto"];
-                    "text/json": components["schemas"]["BootcampRequestDto"];
-                    "application/*+json": components["schemas"]["BootcampRequestDto"];
-                };
-            };
-            responses: {
-                /** @description Success */
-                200: {
+                /** @description Not Found */
+                404: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["BootcampResponseDto"];
-                        "application/json": components["schemas"]["BootcampResponseDto"];
-                        "text/json": components["schemas"]["BootcampResponseDto"];
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
                     };
                 };
             };
         };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Bootcamps/DeleteBootcamp/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
         post?: never;
         delete: {
             parameters: {
                 query?: never;
                 header?: never;
                 path: {
-                    guidId: string;
+                    guid: string;
                 };
                 cookie?: never;
             };
             requestBody?: never;
             responses: {
-                /** @description Success */
-                200: {
+                /** @description No Content */
+                204: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -474,7 +430,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Bootcamps/dynamicfields/{guidId}": {
+    "/api/Bootcamps/PutBootcamp/{guid}": {
         parameters: {
             query?: never;
             header?: never;
@@ -487,7 +443,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    guidId: string;
+                    guid: string;
                 };
                 cookie?: never;
             };
@@ -510,6 +466,17 @@ export interface paths {
                         "text/json": components["schemas"]["BootcampResponseDto"];
                     };
                 };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
             };
         };
         post?: never;
@@ -519,7 +486,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Email/email-student/{guidID}": {
+    "/api/Email/SendEmailToStudent/{guid}": {
         parameters: {
             query?: never;
             header?: never;
@@ -533,11 +500,10 @@ export interface paths {
                 query?: {
                     Title?: string;
                     Description?: string;
-                    googleToken?: string;
                 };
                 header?: never;
                 path: {
-                    guidID: string;
+                    guid: string;
                 };
                 cookie?: never;
             };
@@ -565,7 +531,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/HistorySnapshots": {
+    "/api/Snapshots/GetSnapshots": {
         parameters: {
             query?: never;
             header?: never;
@@ -587,9 +553,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["DiplomaSnapshotResponseDto"][];
-                        "application/json": components["schemas"]["DiplomaSnapshotResponseDto"][];
-                        "text/json": components["schemas"]["DiplomaSnapshotResponseDto"][];
+                        "text/plain": components["schemas"]["SnapshotResponseDto"][];
+                        "application/json": components["schemas"]["SnapshotResponseDto"][];
+                        "text/json": components["schemas"]["SnapshotResponseDto"][];
                     };
                 };
             };
@@ -602,7 +568,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/HistorySnapshots/{verificationCode}": {
+    "/api/Snapshots/GetSnapshot/{verificationCode}": {
         parameters: {
             query?: never;
             header?: never;
@@ -626,9 +592,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["DiplomaSnapshotResponseDto"][];
-                        "application/json": components["schemas"]["DiplomaSnapshotResponseDto"][];
-                        "text/json": components["schemas"]["DiplomaSnapshotResponseDto"][];
+                        "text/plain": components["schemas"]["SnapshotResponseDto"][];
+                        "application/json": components["schemas"]["SnapshotResponseDto"][];
+                        "text/json": components["schemas"]["SnapshotResponseDto"][];
                     };
                 };
             };
@@ -641,7 +607,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/make-active-historysnapshot": {
+    "/api/Snapshots/MakeSnapshotActive": {
         parameters: {
             query?: never;
             header?: never;
@@ -658,9 +624,9 @@ export interface paths {
             };
             requestBody?: {
                 content: {
-                    "application/json": components["schemas"]["MakeActiveSnapshotRequestDto"];
-                    "text/json": components["schemas"]["MakeActiveSnapshotRequestDto"];
-                    "application/*+json": components["schemas"]["MakeActiveSnapshotRequestDto"];
+                    "application/json": components["schemas"]["MakeSnapshotActiveRequestDto"];
+                    "text/json": components["schemas"]["MakeSnapshotActiveRequestDto"];
+                    "application/*+json": components["schemas"]["MakeSnapshotActiveRequestDto"];
                 };
             };
             responses: {
@@ -670,9 +636,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["DiplomaSnapshotResponseDto"][];
-                        "application/json": components["schemas"]["DiplomaSnapshotResponseDto"][];
-                        "text/json": components["schemas"]["DiplomaSnapshotResponseDto"][];
+                        "text/plain": components["schemas"]["SnapshotResponseDto"][];
+                        "application/json": components["schemas"]["SnapshotResponseDto"][];
+                        "text/json": components["schemas"]["SnapshotResponseDto"][];
                     };
                 };
             };
@@ -684,52 +650,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Students/{GuidID}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    GuidID: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": components["schemas"]["StudentUpdateRequestDto"];
-                    "text/json": components["schemas"]["StudentUpdateRequestDto"];
-                    "application/*+json": components["schemas"]["StudentUpdateRequestDto"];
-                };
-            };
-            responses: {
-                /** @description Success */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["StudentResponseDto"];
-                        "application/json": components["schemas"]["StudentResponseDto"];
-                        "text/json": components["schemas"]["StudentResponseDto"];
-                    };
-                };
-            };
-        };
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/Students": {
+    "/api/Students/GetStudents": {
         parameters: {
             query?: never;
             header?: never;
@@ -766,7 +687,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Students/{guidId}": {
+    "/api/Students/GetStudent/{guid}": {
         parameters: {
             query?: never;
             header?: never;
@@ -778,7 +699,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    guidId: string;
+                    guid: string;
                 };
                 cookie?: never;
             };
@@ -799,32 +720,13 @@ export interface paths {
         };
         put?: never;
         post?: never;
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    guidId: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Success */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/Students/verificationCode/{verificationCode}": {
+    "/api/Students/GetStudentByVericationCode/{verificationCode}": {
         parameters: {
             query?: never;
             header?: never;
@@ -853,6 +755,17 @@ export interface paths {
                         "text/json": components["schemas"]["StudentResponseDto"];
                     };
                 };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
             };
         };
         put?: never;
@@ -863,7 +776,98 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/Templates": {
+    "/api/Students/UpdateStudent/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["StudentUpdateRequestDto"];
+                    "text/json": components["schemas"]["StudentUpdateRequestDto"];
+                    "application/*+json": components["schemas"]["StudentUpdateRequestDto"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["StudentResponseDto"];
+                        "application/json": components["schemas"]["StudentResponseDto"];
+                        "text/json": components["schemas"]["StudentResponseDto"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Students/DeleteStudent/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Templates/GetTemplates": {
         parameters: {
             query?: never;
             header?: never;
@@ -885,49 +889,22 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["TemplatesResponseDto"][];
-                        "application/json": components["schemas"]["TemplatesResponseDto"][];
-                        "text/json": components["schemas"]["TemplatesResponseDto"][];
+                        "text/plain": components["schemas"]["TemplateResponseDto"][];
+                        "application/json": components["schemas"]["TemplateResponseDto"][];
+                        "text/json": components["schemas"]["TemplateResponseDto"][];
                     };
                 };
             };
         };
         put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": components["schemas"]["TemplatePostRequestDto"];
-                    "text/json": components["schemas"]["TemplatePostRequestDto"];
-                    "application/*+json": components["schemas"]["TemplatePostRequestDto"];
-                };
-            };
-            responses: {
-                /** @description Success */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["TemplateResponseDto"];
-                        "application/json": components["schemas"]["TemplateResponseDto"];
-                        "text/json": components["schemas"]["TemplateResponseDto"];
-                    };
-                };
-            };
-        };
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/Templates/{id}": {
+    "/api/Templates/GetTemplate/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -956,8 +933,135 @@ export interface paths {
                         "text/json": components["schemas"]["TemplateResponseDto"];
                     };
                 };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
             };
         };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Templates/PostTemplate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["TemplatePostRequestDto"];
+                    "text/json": components["schemas"]["TemplatePostRequestDto"];
+                    "application/*+json": components["schemas"]["TemplatePostRequestDto"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TemplateResponseDto"];
+                        "application/json": components["schemas"]["TemplateResponseDto"];
+                        "text/json": components["schemas"]["TemplateResponseDto"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Templates/DeleteTemplate/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Templates/PutTemplate/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
         put: {
             parameters: {
                 query?: never;
@@ -989,32 +1093,13 @@ export interface paths {
             };
         };
         post?: never;
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Success */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/Tracks": {
+    "/api/Tracks/GetTracks": {
         parameters: {
             query?: never;
             header?: never;
@@ -1051,7 +1136,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/UserFonts": {
+    "/api/UserFonts/GetUserFonts": {
         parameters: {
             query?: never;
             header?: never;
@@ -1081,6 +1166,22 @@ export interface paths {
             };
         };
         put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/UserFonts/PostUserFonts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
         post: {
             parameters: {
                 query?: never;
@@ -1091,13 +1192,24 @@ export interface paths {
             requestBody?: {
                 content: {
                     "multipart/form-data": {
-                        UserFontRequests?: components["schemas"]["UserFontRequestDto"][];
+                        userFonts?: components["schemas"]["UserFontRequestDto"][];
                     };
                 };
             };
             responses: {
-                /** @description Success */
-                200: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["UserFontResponseDto"][];
+                        "application/json": components["schemas"]["UserFontResponseDto"][];
+                        "text/json": components["schemas"]["UserFontResponseDto"][];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -1129,6 +1241,10 @@ export interface components {
             students: components["schemas"]["StudentRequestDto"][];
             /** Format: int32 */
             templateId?: number;
+            /** Format: int32 */
+            trackId?: number;
+            /** Format: date-time */
+            graduationDate?: string;
         };
         BootcampResponseDto: {
             /** Format: uuid */
@@ -1141,7 +1257,31 @@ export interface components {
             templateId?: number;
             students?: components["schemas"]["StudentResponseDto"][] | null;
         };
-        DiplomaSnapshotResponseDto: {
+        DiplomaPutRequestDto: {
+            /** Format: uuid */
+            studentGuidId?: string;
+            imageData?: string | null;
+        };
+        /**
+         * Format: int32
+         * @enum {integer}
+         */
+        FontType: 0 | 1 | 2;
+        MakeSnapshotActiveRequestDto: {
+            ids?: number[] | null;
+            studentGuidIds?: string[] | null;
+        };
+        ProblemDetails: {
+            type?: string | null;
+            title?: string | null;
+            /** Format: int32 */
+            status?: number | null;
+            detail?: string | null;
+            instance?: string | null;
+        } & {
+            [key: string]: unknown;
+        };
+        SnapshotResponseDto: {
             /** Format: int32 */
             id?: number;
             /** Format: date-time */
@@ -1169,20 +1309,6 @@ export interface components {
             templateLastUpdated?: string;
             active?: boolean;
         };
-        /**
-         * Format: int32
-         * @enum {integer}
-         */
-        FontType: 0 | 1 | 2;
-        MakeActiveSnapshotRequestDto: {
-            ids?: number[] | null;
-            studentGuidIds?: string[] | null;
-        };
-        PreviewImageRequestDto: {
-            /** Format: uuid */
-            studentGuidId?: string;
-            image?: string | null;
-        };
         StudentRequestDto: {
             /** Format: uuid */
             guidId?: string | null;
@@ -1192,7 +1318,7 @@ export interface components {
         };
         StudentResponseDto: {
             /** Format: uuid */
-            guidId?: string;
+            guid?: string;
             verificationCode?: string | null;
             name?: string | null;
             email?: string | null;
@@ -1206,6 +1332,23 @@ export interface components {
             /** Format: email */
             email?: string | null;
         };
+        TemplateFieldStyleDto: {
+            /** Format: int32 */
+            id?: number;
+            /** Format: double */
+            xPos?: number | null;
+            /** Format: double */
+            yPos?: number | null;
+            /** Format: double */
+            width?: number | null;
+            /** Format: double */
+            height?: number | null;
+            /** Format: double */
+            fontSize?: number | null;
+            fontColor?: string | null;
+            fontName?: string | null;
+            alignment?: string | null;
+        };
         TemplatePostRequestDto: {
             /** Format: string */
             templateName: string;
@@ -1213,13 +1356,13 @@ export interface components {
         TemplateRequestDto: {
             templateName?: string | null;
             footer?: string | null;
-            footerStyling?: components["schemas"]["TemplateStyle"];
+            footerStyling?: components["schemas"]["TemplateFieldStyleDto"];
             intro?: string | null;
-            introStyling?: components["schemas"]["TemplateStyle"];
+            introStyling?: components["schemas"]["TemplateFieldStyleDto"];
             main?: string | null;
-            mainStyling?: components["schemas"]["TemplateStyle"];
+            mainStyling?: components["schemas"]["TemplateFieldStyleDto"];
             link?: string | null;
-            linkStyling?: components["schemas"]["TemplateStyle"];
+            linkStyling?: components["schemas"]["TemplateFieldStyleDto"];
             basePdf?: string | null;
             /** Format: date-time */
             pdfBackgroundLastUpdated?: string | null;
@@ -1227,15 +1370,15 @@ export interface components {
         TemplateResponseDto: {
             /** Format: int32 */
             id?: number;
-            name?: string | null;
+            templateName?: string | null;
             footer?: string | null;
-            footerStyling?: components["schemas"]["TemplateStyle"];
+            footerStyling?: components["schemas"]["TemplateFieldStyleDto"];
             intro?: string | null;
-            introStyling?: components["schemas"]["TemplateStyle"];
+            introStyling?: components["schemas"]["TemplateFieldStyleDto"];
             main?: string | null;
-            mainStyling?: components["schemas"]["TemplateStyle"];
+            mainStyling?: components["schemas"]["TemplateFieldStyleDto"];
             link?: string | null;
-            linkStyling?: components["schemas"]["TemplateStyle"];
+            linkStyling?: components["schemas"]["TemplateFieldStyleDto"];
             basePdf?: string | null;
             /** Format: date-time */
             lastUpdated?: string;
@@ -1259,9 +1402,6 @@ export interface components {
             fontName?: string | null;
             alignment?: string | null;
         };
-        TemplatesResponseDto: {
-            templates?: components["schemas"]["TemplateResponseDto"][] | null;
-        };
         TracksResponseDto: {
             /** Format: int32 */
             id?: number;
@@ -1272,9 +1412,9 @@ export interface components {
         UserFontRequestDto: {
             name: string;
             fontType: components["schemas"]["FontType"];
-            readonly fileName?: string | null;
             /** Format: binary */
             file: string;
+            readonly fileName?: string | null;
         };
         UserFontResponseDto: {
             name?: string | null;
