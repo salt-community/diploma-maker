@@ -35,6 +35,7 @@ public class BlobController(
 
     [HttpGet("GetTemplateBackground/{filename}")]
     [ProducesResponseType<FileContentResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
     public async Task<ActionResult<FileContentResult>> GetTemplateBackground(string filename) =>
         await GetFile(filename, "DiplomaPdfs");
@@ -47,12 +48,14 @@ public class BlobController(
 
     [HttpGet("GetDiploma/{filename}")]
     [ProducesResponseType<FileContentResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
     public async Task<ActionResult<FileContentResult>> GetDiploma(string filename) =>
         await GetFile(filename, "ImagePreview");
 
     [HttpGet("GetDiplomaThumbnail/{filename}")]
     [ProducesResponseType<FileContentResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
     public async Task<ActionResult<FileContentResult>> GetDiplomaThumbnail(string filename) =>
         await GetFile(filename, "ImagePreviewLQIP");
