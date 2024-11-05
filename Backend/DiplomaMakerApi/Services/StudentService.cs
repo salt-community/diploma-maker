@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Exceptions;
-
+using DiplomaMakerApi.Data;
 
 namespace DiplomaMakerApi.Services;
 
-
-public class StudentService(DiplomaMakingContext _context, HistorySnapshotService _historySnapshotService)
+public class StudentService(
+    DiplomaMakingContext _context,
+    HistorySnapshotService _historySnapshotService)
 {
     public async Task<Bootcamp?> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
     {
@@ -43,6 +44,7 @@ public class StudentService(DiplomaMakingContext _context, HistorySnapshotServic
             _context.Students.Add(newStudent);
             Students.Add(newStudent);
         }
+
         await _context.SaveChangesAsync();
 
         await _historySnapshotService.CreateHistorySnapshotFromBootcamp(requestDto, bootcamp);
@@ -53,6 +55,7 @@ public class StudentService(DiplomaMakingContext _context, HistorySnapshotServic
 
         return updatedBootcamp ?? throw new Exception($"Failed to retrieve updated Bootcamp with ID {BootcampGuidId}");
     }
+
     public async Task<List<Student>> GetAllStudents()
     {
         return await _context.Students
@@ -98,6 +101,7 @@ public class StudentService(DiplomaMakingContext _context, HistorySnapshotServic
         await _context.SaveChangesAsync();
         return Student;
     }
+    
     public async Task<Student> UpdateStudent(Guid GuidID, StudentUpdateRequestDto updateDto)
     {
         var Student = await _context.Students.FirstOrDefaultAsync(b => b.GuidId == GuidID);
@@ -111,9 +115,7 @@ public class StudentService(DiplomaMakingContext _context, HistorySnapshotServic
         Student.Email = updateDto.Email;
         await _context.SaveChangesAsync();
         return Student;
-
     }
-
 }
 
 

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 using DiplomaMakerApi.Dtos.UserFont;
 using DiplomaMakerApi.Services.Interfaces;
+using DiplomaMakerApi.Data;
 
 namespace DiplomaMakerApi.Services;
 public class UserFontService(

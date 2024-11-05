@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using DiplomaMakerApi.Services.Interfaces;
+using DiplomaMakerApi.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -118,6 +119,7 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
+
 builder.Services.AddCors();
 builder.Services.AddAutoMapper(typeof(AutomapperConfig));
 builder.Services.AddScoped<BootcampService>();

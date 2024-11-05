@@ -1,10 +1,12 @@
-namespace DiplomaMakerApi.Services;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
 using MimeKit;
 using Microsoft.EntityFrameworkCore;
+using DiplomaMakerApi.Data;
+
+namespace DiplomaMakerApi.Services;
 
 public class EmailService(DiplomaMakingContext _context)
 {

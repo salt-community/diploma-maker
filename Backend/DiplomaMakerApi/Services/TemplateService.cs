@@ -1,3 +1,4 @@
+using DiplomaMakerApi.Data;
 using DiplomaMakerApi.Exceptions;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services.Interfaces;

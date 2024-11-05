@@ -1,4 +1,3 @@
-using DiplomaMakerApi.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
@@ -10,9 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Testcontainers.PostgreSql;
 using Xunit;
 using Xunit.Abstractions;
+
+using DiplomaMakerApi.Data;
+using Testcontainers.PostgreSql;
 
 namespace DiplomaMakerApi.Tests.Integration
 {

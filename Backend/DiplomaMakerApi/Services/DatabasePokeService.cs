@@ -1,3 +1,4 @@
+using DiplomaMakerApi.Data;
 using Microsoft.EntityFrameworkCore;
 
 public class DatabasePokeService(IServiceProvider _serviceProvider, string _dbConnectionString) : IHostedService, IDisposable
@@ -11,31 +12,29 @@ public class DatabasePokeService(IServiceProvider _serviceProvider, string _dbCo
     }
     private async void PokeDatabase(object? state)
     {
-        using (var scope = _serviceProvider.CreateScope())
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DiplomaMakingContext>();
+
+        try
         {
-            var context = scope.ServiceProvider.GetRequiredService<DiplomaMakingContext>();
-
-            try
+            if (string.IsNullOrEmpty(_dbConnectionString))
             {
-                if (string.IsNullOrEmpty(_dbConnectionString))
-                {
-                    Console.WriteLine("Connection string not found.");
-                    return;
-                }
-
-                context.Database.SetConnectionString(_dbConnectionString);
-
-                var connectionOk = context.Database.CanConnect();
-                if (connectionOk)
-                {
-                    var records = await context.Tracks.ToListAsync();
-                    Console.WriteLine(records != null ? "Database Poke Complete." : "Failed to connect and poke database.");
-                }
+                Console.WriteLine("Connection string not found.");
+                return;
             }
-            catch (Exception ex)
+
+            context.Database.SetConnectionString(_dbConnectionString);
+
+            var connectionOk = context.Database.CanConnect();
+            if (connectionOk)
             {
-                Console.WriteLine($"An error occurred while poking the database: {ex.Message}");
+                var records = await context.Tracks.ToListAsync();
+                Console.WriteLine(records != null ? "Database Poke Complete." : "Failed to connect and poke database.");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while poking the database: {ex.Message}");
         }
     }
     public Task StopAsync(CancellationToken cancellationToken)

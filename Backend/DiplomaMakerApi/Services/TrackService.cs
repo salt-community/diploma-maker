@@ -1,4 +1,6 @@
+using DiplomaMakerApi.Data;
 using DiplomaMakerApi.Models;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services;

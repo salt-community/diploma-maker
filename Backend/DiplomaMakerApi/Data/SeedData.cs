@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services;
-using DiplomaMakerApi.Dtos.UserFont;
 
-public static class SeedData 
+namespace DiplomaMakerApi.Data;
+
+public static class SeedData
 {
     public static void Initialize(IServiceProvider serviceProvider)
     {
