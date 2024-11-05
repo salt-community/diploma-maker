@@ -1,9 +1,14 @@
-using DiplomaMakerApi.Data;
 using Microsoft.EntityFrameworkCore;
+
+using DiplomaMakerApi.Data;
 
 namespace DiplomaMakerApi.Services;
 
-public class DatabasePokeService(IServiceProvider _serviceProvider, string _dbConnectionString) : IHostedService, IDisposable
+//TODO: inject logger and use
+public class DatabasePokeService(
+    IServiceProvider _serviceProvider,
+    string _dbConnectionString
+) : IHostedService, IDisposable
 {
     private Timer? _timer;
 
@@ -12,26 +17,30 @@ public class DatabasePokeService(IServiceProvider _serviceProvider, string _dbCo
         _timer = new Timer(PokeDatabase, null, TimeSpan.Zero, TimeSpan.FromHours(1));
         return Task.CompletedTask;
     }
+
     private async void PokeDatabase(object? state)
     {
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DiplomaMakingContext>();
 
+        if (string.IsNullOrEmpty(_dbConnectionString))
+        {
+            Console.WriteLine("Connection string not found.");
+            return;
+        }
+
         try
         {
-            if (string.IsNullOrEmpty(_dbConnectionString))
-            {
-                Console.WriteLine("Connection string not found.");
-                return;
-            }
-
             context.Database.SetConnectionString(_dbConnectionString);
 
             var connectionOk = context.Database.CanConnect();
+
             if (connectionOk)
             {
                 var records = await context.Tracks.ToListAsync();
-                Console.WriteLine(records != null ? "Database Poke Complete." : "Failed to connect and poke database.");
+                Console.WriteLine(records != null
+                    ? "Database Poke Complete."
+                    : "Failed to connect and poke database.");
             }
         }
         catch (Exception ex)
@@ -39,13 +48,12 @@ public class DatabasePokeService(IServiceProvider _serviceProvider, string _dbCo
             Console.WriteLine($"An error occurred while poking the database: {ex.Message}");
         }
     }
+
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _timer?.Change(Timeout.Infinite, 0);
         return Task.CompletedTask;
     }
-    public void Dispose()
-    {
-        _timer?.Dispose();
-    }
+
+    public void Dispose() => _timer?.Dispose();
 }
