@@ -1,61 +1,51 @@
-namespace StudentMakerApi.Controllers;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Models;
-using AutoMapper;
 using DiplomaMakerApi.Services;
-using Microsoft.AspNetCore.Authorization;
+
+namespace DiplomaMakerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 // [Authorize]
-public class StudentsController(StudentService service, IMapper mapper) : ControllerBase
+public class StudentsController(StudentService _service, IMapper _mapper) : ControllerBase
 {
-    private readonly StudentService _service = service;
-    private readonly IMapper _mapper = mapper;
-
-
-    [HttpPut("{GuidID}")]
-    public async Task<ActionResult<StudentResponseDto>> UpdateStudents(Guid GuidID, StudentUpdateRequestDto updateDto)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        var updatedStudent = await _service.UpdateStudent(GuidID, updateDto);
-        return _mapper.Map<StudentResponseDto>(updatedStudent);
-    }
-
-    [HttpGet]
+    [HttpGet("GetStudents")]
     public async Task<ActionResult<List<StudentResponseDto>>> GetStudents()
-    {    
+    {
         var students = await _service.GetAllStudents();
         return _mapper.Map<List<StudentResponseDto>>(students);
     }
 
-    [HttpGet("{guidId}")]
-    public async Task<ActionResult<StudentResponseDto>> GetStudentByGuidId(Guid guidId)
+    [HttpGet("GetStudent/{guid}")]
+    public async Task<ActionResult<StudentResponseDto>> GetStudent(Guid guid)
     {
-        var Student = await _service.GetStudentByGuidId(guidId);
-        return _mapper.Map<StudentResponseDto>(Student);
+        var student = await _service.GetStudentByGuidId(guid);
+        return _mapper.Map<StudentResponseDto>(student);
     }
 
-    [HttpDelete("{guidId}")]
-    public async Task<IActionResult> DeleteStudent(Guid guidId)
+    [HttpGet("GetStudentByVericationCode/{verificationCode}")]
+    public async Task<ActionResult<StudentResponseDto>> GetStudentByVerificationCode(string verificationCode)
     {
-        await _service.DeleteStudentByGuidId(guidId);
+        var student = await _service.GetStudentByVerificationCode(verificationCode);
+        return student != null
+            ? _mapper.Map<StudentResponseDto>(student)
+            : NotFound();
+    }
+
+    [HttpPut("UpdateStudent/{guid}")]
+    public async Task<ActionResult<StudentResponseDto>> UpdateStudent(Guid guid, StudentUpdateRequestDto updateDto)
+    {
+        return ModelState.IsValid
+            ? _mapper.Map<StudentResponseDto>(await _service.UpdateStudent(guid, updateDto))
+            : BadRequest(ModelState);
+    }
+
+    [HttpDelete("DeleteStudent/{guid}")]
+    public async Task<IActionResult> DeleteStudent(Guid guid)
+    {
+        await _service.DeleteStudentByGuidId(guid);
         return NoContent();
     }
-
-    [HttpGet("verificationCode/{verificationCode}")]
-    public async Task<ActionResult<StudentResponseDto>> getStudentByVerificationCode(string verificationCode)
-    {
-        var Student = await _service.GetStudentByVerificationCode(verificationCode);
-        if (Student == null)
-            return NotFound();
-        var responseDto = _mapper.Map<StudentResponseDto>(Student);
-
-        return responseDto;
-    }
-
 }
 

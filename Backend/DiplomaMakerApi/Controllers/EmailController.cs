@@ -1,10 +1,10 @@
-namespace DiplomaMakerApi.Controllers;
-
+using Microsoft.Extensions.Configuration; // Ensure this namespace is included
 using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Services;
 using DiplomaMakerApi.Models;
 using System.Security.Claims;
-using Microsoft.Extensions.Configuration; // Ensure this namespace is included
+
+namespace DiplomaMakerApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -16,8 +16,8 @@ public class EmailController(
     IWebHostEnvironment _env) : ControllerBase
 {
     private readonly string _secretKey = _env.IsDevelopment()
-    ? _configuration["Clerk:SecretKey"]!
-    : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
+        ? _configuration["Clerk:SecretKey"]!
+        : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
 
     [HttpPost("SendEmailToStudent/{guid}")]
     public async Task<IActionResult> SendEmailToStudent(Guid guid, SendEmailRequest req)
