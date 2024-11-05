@@ -10,6 +10,7 @@ namespace DiplomaMakerApi.Controllers;
 public class SnapshotsController(SnapshotService _historySnapShotService, IMapper _mapper) : ControllerBase
 {
     [HttpGet("GetSnapshots")]
+    [ProducesResponseType<List<SnapshotResponseDto>>(StatusCodes.Status200OK)]
     // [Authorize]
     public async Task<ActionResult<List<SnapshotResponseDto>>> GetSnapshots()
     {
@@ -18,6 +19,7 @@ public class SnapshotsController(SnapshotService _historySnapShotService, IMappe
     }
 
     [HttpGet("GetSnapshot/{verificationCode}")]
+    [ProducesResponseType<List<SnapshotResponseDto>>(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public async Task<ActionResult<List<SnapshotResponseDto>>> GetSnapshot(string verificationCode)
     {
@@ -26,6 +28,7 @@ public class SnapshotsController(SnapshotService _historySnapShotService, IMappe
     }
 
     [HttpPut("MakeSnapshotActive")]
+    [ProducesResponseType<List<SnapshotResponseDto>>(StatusCodes.Status200OK)]
     // [Authorize]
     public async Task<ActionResult<List<SnapshotResponseDto>>> MakeSnapshotActive([FromBody] MakeSnapshotActiveRequestDto makeActiveSnapshotRequestDto)
     {
