@@ -1,18 +1,19 @@
 import createClient from "openapi-fetch"
-import type { paths } from "../open-api-schema";
+import type { paths } from "../openApiSchema";
 
 const client = createClient<paths>({ baseUrl: "http://localhost:5258/api/" });
 
-//TODO: Figure out how to send multipart form data
-export async function sendEmailToStudent(guidID: string, googleToken: string) {
-    await client.POST('/api/Email/email-student/{guidID}', {
+export async function sendEmailToStudent(guid: string, title: string, description: string, file: string) {
+    await client.POST('/api/Email/SendEmailToStudent/{guid}', {
         params: {
-            path: {
-                guidID
-            },
+            path: { guid },
             query: {
-                googleToken
+                Title: title,
+                Description: description
             }
         },
+        body: {
+            File: file
+        }
     });
 }

@@ -1,6 +1,6 @@
 import { TemplateFieldStyle } from "./templates"
 
-export type SnapShotResponse = {
+export type SnapshotResponse = {
     id?: number,
     generatedAt?: Date,
     bootcampName: string,

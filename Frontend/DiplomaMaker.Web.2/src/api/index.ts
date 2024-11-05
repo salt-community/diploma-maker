@@ -4,7 +4,7 @@ import * as BootcampsEndpoints from './controllers/bootcamps';
 import * as BootcampTypes from './dtos/bootcamps';
 import * as EmailEndpoints from './controllers/email'
 import * as EmailTypes from './dtos/email';
-import * as HistorySnapshotsEndpoints from './controllers/history-snapshots'
+import * as HistorySnapshotsEndpoints from './controllers/snapshots'
 import * as HistorySnapshotsTypes from './dtos/snapshots';
 import * as StudentsEndpoints from './controllers/students'
 import * as StudentsTypes from './dtos/students';
