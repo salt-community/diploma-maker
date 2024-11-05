@@ -9,7 +9,10 @@ namespace DiplomaMakerApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserFontsController(UserFontService _userFontService, IMapper _mapper) : ControllerBase
+public class UserFontsController(
+    UserFontService _userFontService,
+    IMapper _mapper
+) : ControllerBase
 {
 
     [HttpGet("GetUserFonts")]

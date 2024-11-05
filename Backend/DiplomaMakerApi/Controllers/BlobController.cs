@@ -66,15 +66,6 @@ public class BlobController(
         return _mapper.Map<StudentResponseDto>(studentResponse);
     }
 
-    [HttpPut("PutDiplomas")]
-    [ProducesResponseType<List<StudentResponseDto>>(StatusCodes.Status200OK)]
-    [AllowAnonymous]
-    public async Task<ActionResult<List<StudentResponseDto>>> PutDiplomas([FromBody] List<DiplomaPutRequestDto> diplomaPutRequests)
-    {
-        var studentsResponses = await _bootcampService.PutDiplomas(diplomaPutRequests);
-        return _mapper.Map<List<StudentResponseDto>>(studentsResponses);
-    }
-
     [HttpGet("GetFont/{fontName}/{fontType}"), HttpHead("GetFont/{fontName}/{fontType}")]
     [ProducesResponseType<FileContentResult>(StatusCodes.Status200OK)]
     [AllowAnonymous]

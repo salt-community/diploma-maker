@@ -12,8 +12,8 @@ namespace DiplomaMakerApi.Controllers;
 public class TemplatesController(IMapper _mapper, TemplateService _templateService) : ControllerBase
 {
     [HttpGet("GetTemplates")]
-    [ProducesResponseType<List<TemplatesResponseDto>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<TemplatesResponseDto>>> GetTemplates()
+    [ProducesResponseType<List<TemplateResponseDto>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<TemplateResponseDto>>> GetTemplates()
     {
         var templates = await _templateService.GetTemplates();
         var templateResponseDtos = _mapper.Map<List<TemplateResponseDto>>(templates);
@@ -22,7 +22,7 @@ public class TemplatesController(IMapper _mapper, TemplateService _templateServi
     }
 
     [HttpGet("GetTemplate/{id}")]
-    [ProducesResponseType<TemplatesResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<TemplateResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TemplateResponseDto>> GetTemplateById(int id)
     {
@@ -34,7 +34,7 @@ public class TemplatesController(IMapper _mapper, TemplateService _templateServi
     }
 
     [HttpPost("PostTemplate")]
-    [ProducesResponseType<TemplatesResponseDto>(StatusCodes.Status201Created)]
+    [ProducesResponseType<TemplateResponseDto>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TemplateResponseDto>> PostTemplate(TemplatePostRequestDto templateRequestDto)
     {
@@ -60,7 +60,7 @@ public class TemplatesController(IMapper _mapper, TemplateService _templateServi
     }
 
     [HttpPut("PutTemplate/{id}")]
-    [ProducesResponseType<TemplatesResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<TemplateResponseDto>(StatusCodes.Status200OK)]
     public async Task<ActionResult<TemplateResponseDto>> PutTemplate(int id, TemplateRequestDto templateRequestDto)
     {
         var template = await _templateService.PutTemplate(id, templateRequestDto);

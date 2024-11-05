@@ -15,11 +15,6 @@ export type StudentResponse = {
     lastGenerated?: Date;
 }
 
-export type StudentsResponse = {
-    students: StudentResponse[],
-    bootcampGuid: string
-}
-
 export type StudentUpdateRequest = {
     guidId: string;
     studentName: string;
