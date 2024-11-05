@@ -15,16 +15,18 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
     private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]
         ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
 
-    public async Task<Bootcamp> PostBootcamp( BootcampRequestDto requestDto )
+    public async Task<Bootcamp> PostBootcamp(BootcampRequestDto requestDto)
     {
-        var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(d => d.Name == "Default") ?? throw new Exception("Default template does not exist");
-        var track = await _context.Tracks.FindAsync(requestDto.TrackId);
-        if(track == null)
-        {
-            throw new NotFoundByIdException("Track", requestDto.TrackId);
-        }            
+        var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(d => d.Name == "Default")
+            ?? throw new Exception("Default template does not exist");
 
-        var bootcamp = new Bootcamp{
+        var track = await _context.Tracks.FindAsync(requestDto.TrackId);
+
+        if (track == null)
+            throw new NotFoundByIdException("Track", requestDto.TrackId);
+
+        var bootcamp = new Bootcamp
+        {
             DiplomaTemplate = template,
             GraduationDate = requestDto.GraduationDate,
             Track = track
@@ -82,34 +84,34 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
 
 
 
-    public async Task<Bootcamp> PutBootcampAsync(Guid GuidID, BootcampRequestDto requestDto)
+    public async Task<Bootcamp> PutBootcampAsync(Guid GuidID, BootcampRequestUpdateDto requestDto)
     {
 
-            var bootcamp = await _context.Bootcamps
-                .Include(b => b.Students)
-                .Include(b => b.Track)
-                .Include(b => b.DiplomaTemplate)
-                .FirstOrDefaultAsync(b => b.GuidId == GuidID) ?? throw new NotFoundByGuidException("Template", GuidID);
+        var bootcamp = await _context.Bootcamps
+            .Include(b => b.Students)
+            .Include(b => b.Track)
+            .Include(b => b.DiplomaTemplate)
+            .FirstOrDefaultAsync(b => b.GuidId == GuidID) ?? throw new NotFoundByGuidException("Template", GuidID);
 
-            var track = await _context.Tracks
-                .FirstOrDefaultAsync(t => t.Id == requestDto.TrackId);
+        var track = await _context.Tracks
+            .FirstOrDefaultAsync(t => t.Id == requestDto.TrackId);
 
-            if (track == null)
-            {
-                throw new NotFoundByIdException("Track", requestDto.TrackId);
-            }
+        if (track == null)
+        {
+            throw new NotFoundByIdException("Track", requestDto.TrackId);
+        }
 
-            bootcamp.GraduationDate = requestDto.GraduationDate;
-            bootcamp.Track = track;
+        bootcamp.GraduationDate = requestDto.GraduationDate;
+        bootcamp.Track = track;
 
-            await _context.SaveChangesAsync();
-            return bootcamp;
+        await _context.SaveChangesAsync();
+        return bootcamp;
     }
 
     public async Task<List<Student>> PutDiplomas(List<DiplomaPutRequestDto> diplomaPutRequests)
     {
         var studentsUpdated = new List<Student>();
-        foreach(var diplomaPutRequest in diplomaPutRequests)
+        foreach (var diplomaPutRequest in diplomaPutRequests)
         {
             var studentResponse = await PutDiploma(diplomaPutRequest);
             studentsUpdated.Add(studentResponse);
@@ -125,12 +127,12 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
             throw new InvalidDataException("The provided image is not a valid Base64 PDF string.");
         }
         var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == diplomaPutRequest.StudentGuidId);
-        if(student == null)
+        if (student == null)
         {
             throw new NotFoundByGuidException("Student", diplomaPutRequest.StudentGuidId);
         }
         var pdfImage = await _fileUtilityService.ConvertPdfToPng(diplomaPutRequest.ImageData, diplomaPutRequest.StudentGuidId.ToString());
-        
+
         var HQFile = await _fileUtilityService.ConvertPngToWebP(pdfImage, diplomaPutRequest.StudentGuidId.ToString());
         var LQFile = await _fileUtilityService.ConvertPngToWebP(pdfImage, diplomaPutRequest.StudentGuidId.ToString(), true);
 
@@ -147,8 +149,8 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
 
     private async Task<string> SaveFileAsync(IFormFile file, string studentGuidId, string folderName)
     {
-        return !_useBlobStorage 
-            ? await _localFileStorageService.SaveFile(file, studentGuidId, folderName) 
+        return !_useBlobStorage
+            ? await _localFileStorageService.SaveFile(file, studentGuidId, folderName)
             : await _googleCloudStorageService.SaveFile(file, studentGuidId, folderName);
     }
 

@@ -9,7 +9,7 @@ export type BootcampRequest = {
 }
 
 export type BootcampRequestUpdate = {
-    students: Dtos..StudentRequest[],
+    students: Dtos.StudentRequest[],
     templateId: number
 }
 

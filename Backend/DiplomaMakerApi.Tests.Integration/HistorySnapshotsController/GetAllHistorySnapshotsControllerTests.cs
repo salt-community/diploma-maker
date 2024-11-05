@@ -26,8 +26,8 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
                 .RuleFor(s => s.Email, faker => faker.Internet.Email());
 
             _bootcampStudentRequestGenerator = new Faker<BootcampRequestUpdateDto>()
-                .RuleFor(b => b.templateId, faker => 1)
-                .RuleFor(b => b.students, faker => _studentRequestsGenerator.GenerateBetween(25, 30));
+                .RuleFor(b => b.TemplateId, faker => 1)
+                .RuleFor(b => b.Students, faker => _studentRequestsGenerator.GenerateBetween(25, 30));
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
             // Arrange
             var bootcampSetupRequest = await _client.GetAsync("api/Bootcamps");
             var bootcampSetupResponse = await bootcampSetupRequest.Content.ReadFromJsonAsync<List<BootcampResponseDto>>();
-            var updatedStudentsRequest = _bootcampStudentRequestGenerator.Generate(); 
+            var updatedStudentsRequest = _bootcampStudentRequestGenerator.Generate();
             await _client.PutAsJsonAsync($"api/Bootcamps/dynamicfields/{bootcampSetupResponse![0].GuidId}", updatedStudentsRequest);
 
             // Act
@@ -45,7 +45,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var historySnapshotsResponse = await response.Content.ReadFromJsonAsync<List<DiplomaSnapshotResponseDto>>();
-            historySnapshotsResponse!.Count.Should().Be(updatedStudentsRequest.students.Count);
+            historySnapshotsResponse!.Count.Should().Be(updatedStudentsRequest.Students.Count);
             historySnapshotsResponse[0].BasePdf.Should().Be($"Blob/DiplomaPdfs/Default.v1.pdf");
         }
 
