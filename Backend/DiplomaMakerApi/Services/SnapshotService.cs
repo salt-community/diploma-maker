@@ -1,12 +1,14 @@
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+
 using DiplomaMakerApi.Data;
 using DiplomaMakerApi.Exceptions;
 using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services;
-public class HistorySnapshotService
+
+public class SnapshotService
 (
     DiplomaMakingContext _context,
     IStorageService _storageService,
@@ -14,7 +16,7 @@ public class HistorySnapshotService
     FileUtilityService _fileUtilityService
 )
 {
-    public async Task CreateHistorySnapshotFromBootcamp(BootcampRequestUpdateDto requestDto, Bootcamp bootcampUsed)
+    public async Task CreateSnapshotFromBootcamp(BootcampRequestUpdateDto requestDto, Bootcamp bootcampUsed)
     {
         var templateUsed = await _context.DiplomaTemplates
             .Include(d => d.IntroStyling)
@@ -30,53 +32,55 @@ public class HistorySnapshotService
 
         var lastSnapshot = lastSnapshots.FirstOrDefault();
 
-        if (templateUsed != null)
+        if (templateUsed == null)
+            return;
+
+        var templateBackgroundLocation = string.Empty;
+
+        if (lastSnapshot == null)
         {
-            var templateBackgroundLocation = string.Empty;
+            templateBackgroundLocation = await GetFileLocation(templateUsed.Name + ".v1.pdf")
+            ?? (await _storageService.CreateBackup(templateUsed.Name)).Replace("/DiplomaPdfs", "");
+        }
+        else if (templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
+        {
+            templateBackgroundLocation = await _storageService.CreateBackup(templateUsed.Name);
+        }
+        else
+        {
+            templateBackgroundLocation = await GetFileLocation(lastSnapshot.BasePdf);
+        }
 
-            if (lastSnapshot == null)
-            {
-                templateBackgroundLocation = await GetFileLocation(templateUsed.Name + ".v1.pdf")
-                ?? (await _storageService.CreateBackup(templateUsed.Name)).Replace("/DiplomaPdfs", "");
-            }
-            else if (templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
-            {
-                templateBackgroundLocation = await _storageService.CreateBackup(templateUsed.Name);
-            }
-            else
-            {
-                templateBackgroundLocation = await GetFileLocation(lastSnapshot.BasePdf);
-            }
+        var timeUtcNow = DateTime.UtcNow;
 
-            var timeUtcNow = DateTime.UtcNow;
-
-            if (lastSnapshot != null)
+        if (lastSnapshot != null)
+        {
+            foreach (var snapshot in lastSnapshots)
             {
-                foreach (var snapshot in lastSnapshots)
-                {
-                    snapshot.Active = false;
-                    _context.DiplomaSnapshots.Update(snapshot);
-                }
-
-                await _context.SaveChangesAsync();
+                snapshot.Active = false;
+                _context.DiplomaSnapshots.Update(snapshot);
             }
 
-            foreach (var student in requestDto.Students)
+            await _context.SaveChangesAsync();
+        }
+
+        foreach (var student in requestDto.Students)
+        {
+            var studentSnapshot = _mapper.Map<DiplomaSnapshot>(student, opt =>
             {
-                var studentSnapshot = _mapper.Map<DiplomaSnapshot>(student, opt =>
-                {
-                    opt.Items["bootcampUsed"] = bootcampUsed;
-                    opt.Items["templateUsed"] = templateUsed;
-                    opt.Items["templateBackgroundLocation"] = "Blob/" + templateBackgroundLocation!.Replace('\\', '/');
-                    opt.Items["lastSnapshot"] = lastSnapshot;
-                    opt.Items["lastSnapshots"] = lastSnapshots;
-                    opt.Items["timeUtcNow"] = timeUtcNow;
-                });
-                studentSnapshot.GeneratedAt = timeUtcNow;
-                studentSnapshot.Active = true;
-                _context.DiplomaSnapshots.Add(studentSnapshot);
-                await _context.SaveChangesAsync();
-            }
+                opt.Items["bootcampUsed"] = bootcampUsed;
+                opt.Items["templateUsed"] = templateUsed;
+                opt.Items["templateBackgroundLocation"] = "Blob/" + templateBackgroundLocation!.Replace('\\', '/');
+                opt.Items["lastSnapshot"] = lastSnapshot;
+                opt.Items["lastSnapshots"] = lastSnapshots;
+                opt.Items["timeUtcNow"] = timeUtcNow;
+            });
+
+            studentSnapshot.GeneratedAt = timeUtcNow;
+            studentSnapshot.Active = true;
+            _context.DiplomaSnapshots.Add(studentSnapshot);
+
+            await _context.SaveChangesAsync();
         }
     }
 
@@ -85,14 +89,12 @@ public class HistorySnapshotService
         var fileLocationResponse = await _storageService.GetFilePath(Path.GetFileName(fileName));
 
         if (fileLocationResponse != null)
-        {
             fileLocationResponse = await _fileUtilityService.GetRelativePathAsync(fileLocationResponse, "DiplomaPdfs");
-        }
 
         return fileLocationResponse;
     }
 
-    public async Task<List<DiplomaSnapshot>> GetHistorySnapshots()
+    public async Task<List<DiplomaSnapshot>> GetSnapshots()
     {
         return await _context.DiplomaSnapshots
             .Include(d => d.FooterStyling)
@@ -102,7 +104,7 @@ public class HistorySnapshotService
             .ToListAsync();
     }
 
-    public async Task<List<DiplomaSnapshot>> GetHistorySnapshotsByVerificationCode(string verificationCode)
+    public async Task<List<DiplomaSnapshot>> GetSnapshotsByVerificationCode(string verificationCode)
     {
         var historySnapshots = await _context.DiplomaSnapshots
             .Where(d => d.VerificationCode == verificationCode)
@@ -112,17 +114,14 @@ public class HistorySnapshotService
             .Include(d => d.LinkStyling)
             .ToListAsync();
 
-        if (!historySnapshots.Any())
-        {
+        if (historySnapshots.Count == 0)
             throw new NotFoundByIdException($"Student with verification code '{verificationCode}' not found.");
-        }
 
         return historySnapshots;
     }
 
     public async Task<List<DiplomaSnapshot>> MakeSnapshotActive(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
     {
-
         var studentGuidIdsList = makeActiveSnapshotRequestDto.StudentGuidIds!.ToList();
         var idsList = makeActiveSnapshotRequestDto.Ids.ToList();
 
@@ -132,25 +131,21 @@ public class HistorySnapshotService
 
         var makeActiveSnapShot = await _context.DiplomaSnapshots
             .Where(h => makeActiveSnapshotRequestDto.Ids.Contains(h.Id))
-            .ToListAsync();
-
-        if (makeActiveSnapShot == null)
-        {
-            throw new NotFoundByIdException($"Snapshots not found.");
-        }
+            .ToListAsync()
+            ?? throw new NotFoundByIdException($"Snapshots not found.");
 
         foreach (var snapshot in historySnapshots)
         {
             snapshot.Active = false;
             _context.DiplomaSnapshots.Update(snapshot);
-
         }
+
         foreach (var snapshot in makeActiveSnapShot)
         {
             snapshot.Active = true;
             _context.DiplomaSnapshots.Update(snapshot);
-
         }
+
         await _context.SaveChangesAsync();
 
         return makeActiveSnapShot;

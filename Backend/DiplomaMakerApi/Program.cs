@@ -126,7 +126,7 @@ builder.Services.AddScoped<BootcampService>();
 builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<TemplateService>();
 builder.Services.AddScoped<TrackService>();
-builder.Services.AddScoped<HistorySnapshotService>();
+builder.Services.AddScoped<SnapshotService>();
 builder.Services.AddTransient<FileUtilityService>();
 builder.Services.AddScoped<UserFontService>();
 builder.Services.AddScoped<ClerkService>();

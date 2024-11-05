@@ -7,7 +7,7 @@ namespace DiplomaMakerApi.Services;
 
 public class StudentService(
     DiplomaMakingContext _context,
-    HistorySnapshotService _historySnapshotService)
+    SnapshotService _historySnapshotService)
 {
     public async Task<Bootcamp?> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
     {
@@ -47,7 +47,7 @@ public class StudentService(
 
         await _context.SaveChangesAsync();
 
-        await _historySnapshotService.CreateHistorySnapshotFromBootcamp(requestDto, bootcamp);
+        await _historySnapshotService.CreateSnapshotFromBootcamp(requestDto, bootcamp);
 
         var updatedBootcamp = await _context.Bootcamps.Include(b => b.Students)
             .Include(b => b.Track)
@@ -101,7 +101,7 @@ public class StudentService(
         await _context.SaveChangesAsync();
         return Student;
     }
-    
+
     public async Task<Student> UpdateStudent(Guid GuidID, StudentUpdateRequestDto updateDto)
     {
         var Student = await _context.Students.FirstOrDefaultAsync(b => b.GuidId == GuidID);
