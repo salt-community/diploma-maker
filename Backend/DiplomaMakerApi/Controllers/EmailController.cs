@@ -20,6 +20,7 @@ public class EmailController(
         : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
 
     [HttpPost("SendEmailToStudent/{guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> SendEmailToStudent(Guid guid, SendEmailRequest req)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
