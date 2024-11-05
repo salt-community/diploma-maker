@@ -4,6 +4,7 @@ using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
 using MimeKit;
 using Microsoft.EntityFrameworkCore;
+
 using DiplomaMakerApi.Data;
 
 namespace DiplomaMakerApi.Services;
@@ -12,19 +13,14 @@ public class EmailService(DiplomaMakingContext _context)
 {
     public async Task SendEmailWithAttachmentAsync(Guid guidid, IFormFile file, string oauthToken, string title, string description)
     {
-        var diplomaByGuid = await _context.Students.FirstOrDefaultAsync(d => d.GuidId == guidid);
-
-        if (diplomaByGuid == null)
-        {
-            throw new ArgumentException("Invalid guid");
-        }
+        var diplomaByGuid = await _context.Students.FirstOrDefaultAsync(d => d.GuidId == guidid)
+            ?? throw new ArgumentException("Invalid guid");
 
         if (string.IsNullOrEmpty(diplomaByGuid.Email))
-        {
             throw new ArgumentException("The Student about to receive the diploma has no email set for them");
-        }
 
         var message = new MimeMessage();
+
         // google will override sender field and set to the user email so can leave it with whatever
         message.From.Add(new MailboxAddress("DiplomaMakers", "email"));
         message.To.Add(new MailboxAddress("Salt Graduate", diplomaByGuid.Email));
@@ -55,25 +51,25 @@ public class EmailService(DiplomaMakingContext _context)
 
         message.Body = multipart;
         var credential = GoogleCredential.FromAccessToken(oauthToken);
+
         var service = new GmailService(new BaseClientService.Initializer
         {
             HttpClientInitializer = credential,
             ApplicationName = "DiplomaProAPI",
         });
 
-        using (var stream = new MemoryStream())
-        {
-            await message.WriteToAsync(stream);
-            var gmailMessage = new Message
-            {
-                Raw = Convert.ToBase64String(stream.ToArray())
-                    .Replace('+', '-')
-                    .Replace('/', '_')
-                    .Replace("=", "")
-            };
+        using var stream = new MemoryStream();
+        await message.WriteToAsync(stream);
 
-            var request = service.Users.Messages.Send(gmailMessage, "me");
-            await request.ExecuteAsync();
-        }
+        var gmailMessage = new Message
+        {
+            Raw = Convert.ToBase64String(stream.ToArray())
+                .Replace('+', '-')
+                .Replace('/', '_')
+                .Replace("=", "")
+        };
+
+        var request = service.Users.Messages.Send(gmailMessage, "me");
+        await request.ExecuteAsync();
     }
 }
