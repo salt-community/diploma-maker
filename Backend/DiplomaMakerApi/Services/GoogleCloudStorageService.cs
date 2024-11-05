@@ -1,10 +1,11 @@
+using DiplomaMakerApi.Services.Interfaces;
 using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services
 {
-    public class GoogleCloudStorageService
+    public class GoogleCloudStorageService : IStorageService
     {
         private readonly string _bucketName;
         private readonly DiplomaMakingContext _context;
@@ -55,22 +56,17 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async virtual Task<(byte[] FileBytes, string ContentType)> GetFileFromFilePath(string templateName, string subDirectory = "DiplomaPdfs")
+        public async virtual Task<byte[]?> GetFileFromPath(string templateName, string subDirectory = "DiplomaPdfs")
         {
             var filePath = await GetFilePath(templateName, subDirectory);
 
-            if (filePath == null)
-            {
-                throw new FileNotFoundException("File not found in storage.");
-            }
+            if (filePath == null) return null;
 
-            using (var memoryStream = new MemoryStream())
-            {
-                await _storageClient.DownloadObjectAsync(_bucketName, filePath, memoryStream);
-                return (memoryStream.ToArray(), "application/pdf");
-            }
+            using var memoryStream = new MemoryStream();
+            await _storageClient.DownloadObjectAsync(_bucketName, filePath, memoryStream);
+            return memoryStream.ToArray();
         }
-
+        
         public async virtual Task<string> SaveFile(IFormFile file, string templateName, string subDirectory = "DiplomaPdfs")
         {
             var fileExtension = Path.GetExtension(file.FileName);
@@ -178,7 +174,7 @@ namespace DiplomaMakerApi.Services
             }
         }
 
-        public async virtual Task<FileContentResult> GetFilesFromPath(string folderPath, string zipFileName, string subDirectory = "DiplomaPdfs")
+        public async virtual Task<FileContentResult> GetFilesFromPath(string zipFileName, string subDirectory = "DiplomaPdfs")
         {
             var storageObjects = _storageClient.ListObjects(_bucketName, $"{_basePath}/{subDirectory}");
             var files = new List<(Stream Stream, string FileName)>();

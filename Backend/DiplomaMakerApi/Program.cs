@@ -7,19 +7,21 @@ using Clerk.Net.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using DiplomaMakerApi.Services.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-var logger = LoggerFactory.Create(loggingBuilder => 
+var logger = LoggerFactory.Create(loggingBuilder =>
 {
     loggingBuilder.AddConsole();
 }).CreateLogger<Program>();
 
-if(!builder.Environment.IsDevelopment()) {
+if (!builder.Environment.IsDevelopment())
+{
     builder.WebHost.UseKestrel(options =>
     {
-        var port = Environment.GetEnvironmentVariable("PORT") ?? "8080"; 
+        var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
         options.ListenAnyIP(int.Parse(port));
     });
 }
@@ -31,52 +33,54 @@ if (!builder.Environment.IsEnvironment("Test"))
                             Environment.GetEnvironmentVariable("PostgreConnection");
 
     builder.Services.AddDbContext<DiplomaMakingContext>(options =>
-        options.UseNpgsql(connectionstr 
+        options.UseNpgsql(connectionstr
             ?? throw new InvalidOperationException("Connection string 'DiplomaMakingContext' not found.")
         ));
 
-    builder.Services.AddHostedService(service => 
-        new DatabasePokeService(service, connectionstr 
+    builder.Services.AddHostedService(service =>
+        new DatabasePokeService(service, connectionstr
             ?? throw new InvalidOperationException("Connection string is null")
         ));
 }
 
-builder.Services.AddLogging(loggingBuilder => {
+builder.Services.AddLogging(loggingBuilder =>
+{
     loggingBuilder.AddConsole();
 });
 
-builder.Services.AddControllers().AddJsonOptions(opt => {
+builder.Services.AddControllers().AddJsonOptions(opt =>
+{
     opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
 builder.Services.AddClerkApiClient(config =>
 {
-    config.SecretKey = builder.Environment.IsDevelopment() 
-        ? builder.Configuration["Clerk:SecretKey"]! 
+    config.SecretKey = builder.Environment.IsDevelopment()
+        ? builder.Configuration["Clerk:SecretKey"]!
         : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(x =>
     {
-        x.Authority = builder.Environment.IsDevelopment() 
-            ? builder.Configuration["Clerk:Authority"] 
+        x.Authority = builder.Environment.IsDevelopment()
+            ? builder.Configuration["Clerk:Authority"]
             : Environment.GetEnvironmentVariable("Clerk:Authority")!;
-        
+
         x.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
-            
+
         x.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateAudience = false,
-            NameClaimType = ClaimTypes.NameIdentifier 
+            NameClaimType = ClaimTypes.NameIdentifier
         };
         x.Events = new JwtBearerEvents()
         {
             OnTokenValidated = context =>
             {
                 var azp = context.Principal?.FindFirstValue("azp");
-                if (string.IsNullOrEmpty(azp) || !azp.Equals(builder.Environment.IsDevelopment() 
-                        ? builder.Configuration["Clerk:AuthorizedParty"] 
+                if (string.IsNullOrEmpty(azp) || !azp.Equals(builder.Environment.IsDevelopment()
+                        ? builder.Configuration["Clerk:AuthorizedParty"]
                         : Environment.GetEnvironmentVariable("Clerk:AuthorizedParty")!))
                     context.Fail("AZP Claim is invalid or missing");
 
@@ -85,7 +89,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-    
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -120,13 +124,23 @@ builder.Services.AddScoped<BootcampService>();
 builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<TemplateService>();
 builder.Services.AddScoped<TrackService>();
-builder.Services.AddTransient<LocalFileStorageService>();
 builder.Services.AddScoped<HistorySnapshotService>();
 builder.Services.AddTransient<FileUtilityService>();
 builder.Services.AddScoped<UserFontService>();
 builder.Services.AddScoped<ClerkService>();
 builder.Services.AddScoped<EmailService>();
-builder.Services.AddScoped<GoogleCloudStorageService>();
+
+var useBlobStorage = bool.Parse(builder.Configuration["Blob:UseBlobStorage"]
+        ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
+
+if (useBlobStorage)
+{
+    builder.Services.AddScoped<IStorageService, GoogleCloudStorageService>();
+}
+else
+{
+    builder.Services.AddScoped<IStorageService, LocalFileStorageService>();
+}
 
 var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>();
@@ -148,7 +162,8 @@ app.UseSwagger();
 
 app.UseSwaggerUI();
 
-if(!builder.Environment.IsDevelopment()){
+if (!builder.Environment.IsDevelopment())
+{
     app.UseHttpsRedirection();
 }
 

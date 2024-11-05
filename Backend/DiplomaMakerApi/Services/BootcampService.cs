@@ -3,18 +3,12 @@ using DiplomaMakerApi.Models;
 using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.Exceptions;
 using DiplomaMakerApi.Dtos.Diploma;
+using DiplomaMakerApi.Services.Interfaces;
 
 namespace DiplomaMakerApi.Services;
 
-public class BootcampService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService, GoogleCloudStorageService googleCloudStorageService, FileUtilityService fileUtilityService, IConfiguration configuration)
+public class BootcampService(DiplomaMakingContext _context, IStorageService _storageService, FileUtilityService _fileUtilityService)
 {
-    private readonly DiplomaMakingContext _context = context;
-    private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
-    private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
-    private readonly FileUtilityService _fileUtilityService = fileUtilityService;
-    private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]
-        ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
-
     public async Task<Bootcamp> PostBootcamp(BootcampRequestDto requestDto)
     {
         var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(d => d.Name == "Default")
@@ -149,9 +143,6 @@ public class BootcampService(DiplomaMakingContext context, LocalFileStorageServi
 
     private async Task<string> SaveFileAsync(IFormFile file, string studentGuidId, string folderName)
     {
-        return !_useBlobStorage
-            ? await _localFileStorageService.SaveFile(file, studentGuidId, folderName)
-            : await _googleCloudStorageService.SaveFile(file, studentGuidId, folderName);
+        return await _storageService.SaveFile(file, studentGuidId, folderName);
     }
-
 }

@@ -1,9 +1,10 @@
+using DiplomaMakerApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services
 {
-    public class LocalFileStorageService
+    public class LocalFileStorageService : IStorageService
     {
         private readonly string _basePath;
         private readonly DiplomaMakingContext _context;
@@ -15,7 +16,7 @@ namespace DiplomaMakerApi.Services
             _fileUtilityService = fileUtilityService;
             _basePath = Path.Combine(Directory.GetCurrentDirectory(), configuration["Blob:BlobStorageFolder"] ?? "Blob");
             _logger = logger;
-            
+
             if (!Directory.Exists(_basePath))
             {
                 SetupBlobFolder();
@@ -27,7 +28,7 @@ namespace DiplomaMakerApi.Services
             var directoryPath = Path.Combine(_basePath, subDirectory ?? string.Empty);
             var filePath = Path.Combine(directoryPath, templateName);
             _logger.LogInformation($"\nGetFilePath directoryPath: {directoryPath}\n");
-            
+
             if (File.Exists(filePath))
             {
                 return filePath;
@@ -61,6 +62,15 @@ namespace DiplomaMakerApi.Services
             {
                 FileDownloadName = zipFileName
             };
+        }
+
+        public async Task<byte[]?> GetFileFromPath(string fileName, string subDirectory)
+        {
+            var filePath = await GetFilePath(fileName, subDirectory);
+
+            if (filePath == null) return null;
+
+            return await File.ReadAllBytesAsync(filePath);
         }
 
         public async Task<string> SaveFile(IFormFile file, string templateName, string subDirectory = "DiplomaPdfs")
