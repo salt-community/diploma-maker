@@ -1,31 +1,19 @@
 using AutoMapper;
 using DiplomaMakerApi.Exceptions;
 using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services
 {
     public class HistorySnapshotService
     (
-        DiplomaMakingContext context,
-        LocalFileStorageService localFileStorageService,
-        GoogleCloudStorageService googleCloudStorageService,
-        IMapper mapper,
-        IWebHostEnvironment env,
-        IConfiguration configuration,
-        FileUtilityService fileUtilityService
+        DiplomaMakingContext _context,
+        IStorageService _storageService,
+        IMapper _mapper,
+        FileUtilityService _fileUtilityService
     )
     {
-        private readonly DiplomaMakingContext _context = context;
-        private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
-        private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
-        private readonly IMapper _mapper = mapper;
-        private readonly IWebHostEnvironment _env = env;
-        private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]
-            ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
-
-        private readonly FileUtilityService _fileUtilityService = fileUtilityService;
-
         public async Task CreateHistorySnapshotFromBootcamp(BootcampRequestUpdateDto requestDto, Bootcamp bootcampUsed)
         {
             var templateUsed = await _context.DiplomaTemplates
@@ -49,15 +37,11 @@ namespace DiplomaMakerApi.Services
                 if (lastSnapshot == null)
                 {
                     templateBackgroundLocation = await GetFileLocation(templateUsed.Name + ".v1.pdf")
-                    ?? ((!_useBlobStorage)
-                        ? await _localFileStorageService.CreateBackup(templateUsed.Name)
-                        : await _googleCloudStorageService.CreateBackup(templateUsed.Name)).Replace("/DiplomaPdfs", "");
+                    ?? (await _storageService.CreateBackup(templateUsed.Name)).Replace("/DiplomaPdfs", "");
                 }
                 else if (templateUsed.PdfBackgroundLastUpdated != null && templateUsed.PdfBackgroundLastUpdated != lastSnapshot.BasePdfBackgroundLastUpdated)
                 {
-                    templateBackgroundLocation = (!_useBlobStorage)
-                        ? await _localFileStorageService.CreateBackup(templateUsed.Name)
-                        : await _googleCloudStorageService.CreateBackup(templateUsed.Name);
+                    templateBackgroundLocation = await _storageService.CreateBackup(templateUsed.Name);
                 }
                 else
                 {
@@ -98,9 +82,7 @@ namespace DiplomaMakerApi.Services
 
         private async Task<string?> GetFileLocation(string fileName)
         {
-            var fileLocationResponse = (!_useBlobStorage)
-                ? await _localFileStorageService.GetFilePath(Path.GetFileName(fileName))
-                : await _googleCloudStorageService.GetFilePath(Path.GetFileName(fileName));
+            var fileLocationResponse = await _storageService.GetFilePath(Path.GetFileName(fileName));
 
             if (fileLocationResponse != null)
             {

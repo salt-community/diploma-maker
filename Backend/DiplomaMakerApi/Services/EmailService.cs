@@ -6,16 +6,9 @@ using Google.Apis.Services;
 using MimeKit;
 using Microsoft.EntityFrameworkCore;
 
-public class EmailService
+public class EmailService(DiplomaMakingContext _context)
 {
-    private readonly DiplomaMakingContext _context;
-
-    public EmailService(IConfiguration configuration, IWebHostEnvironment env, ILogger<EmailService> logger, DiplomaMakingContext context)
-    {
-        _context = context;
-    }
-
-    public async Task SendEmailWithAttachmentAsync(Guid guidid, IFormFile file, string oauthToken, string title , string description)
+    public async Task SendEmailWithAttachmentAsync(Guid guidid, IFormFile file, string oauthToken, string title, string description)
     {
         var diplomaByGuid = await _context.Students.FirstOrDefaultAsync(d => d.GuidId == guidid);
 

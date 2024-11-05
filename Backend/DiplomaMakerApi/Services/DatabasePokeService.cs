@@ -1,15 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 
-public class DatabasePokeService : IHostedService, IDisposable
+public class DatabasePokeService(IServiceProvider _serviceProvider, string _dbConnectionString) : IHostedService, IDisposable
 {
     private Timer? _timer;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly string _dbConnectionString;
-    public DatabasePokeService(IServiceProvider serviceProvider, string dbConnectionString)
-    {
-        _serviceProvider = serviceProvider;
-        _dbConnectionString = dbConnectionString;
-    }
+
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _timer = new Timer(PokeDatabase, null, TimeSpan.Zero, TimeSpan.FromHours(1));

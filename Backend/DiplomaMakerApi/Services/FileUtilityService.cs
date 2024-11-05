@@ -11,15 +11,8 @@ using System.Text.RegularExpressions;
 
 namespace DiplomaMakerApi.Services
 {
-    public class FileUtilityService
+    public class FileUtilityService(ILogger<FileUtilityService> _logger)
     {
-        private readonly ILogger<FileUtilityService> _logger;
-
-        public FileUtilityService(ILogger<FileUtilityService> logger)
-        {
-            _logger = logger;
-        }
-
         public byte[] CreateZipFromFiles(IEnumerable<string> filePaths, string zipFileName)
         {
             using (var memoryStream = new MemoryStream())
@@ -76,7 +69,7 @@ namespace DiplomaMakerApi.Services
 
             using var outStream = new MemoryStream();
 
-            if(lowQuality)
+            if (lowQuality)
             {
                 myImage.Mutate(x => x.Resize(new ResizeOptions
                 {
@@ -84,14 +77,16 @@ namespace DiplomaMakerApi.Services
                     Mode = ResizeMode.Max
                 }));
 
-                await myImage.SaveAsync(outStream, new WebpEncoder(){
+                await myImage.SaveAsync(outStream, new WebpEncoder()
+                {
                     FileFormat = WebpFileFormatType.Lossy,
                     Quality = 0,
                 });
             }
             else
             {
-                await myImage.SaveAsync(outStream, new WebpEncoder(){
+                await myImage.SaveAsync(outStream, new WebpEncoder()
+                {
                     FileFormat = WebpFileFormatType.Lossy,
                 });
             }
@@ -99,7 +94,7 @@ namespace DiplomaMakerApi.Services
             outStream.Position = 0;
 
             var webpFileName = Path.ChangeExtension(fileName, ".webp");
-           
+
             var webpStreamCopy = new MemoryStream(outStream.ToArray());  // To fix "Cannot access a closed Stream." error
 
             var webpFormFile = new FormFile(webpStreamCopy, 0, webpStreamCopy.Length, "file", webpFileName)

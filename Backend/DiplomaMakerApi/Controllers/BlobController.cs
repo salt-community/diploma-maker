@@ -17,10 +17,27 @@ namespace DiplomaMakerApi.Controllers
         IMapper _mapper
         ) : Controller
     {
+        private async Task<IActionResult> GetFile(string fileName, string subDirectory)
+        {
+            var extension = Path.GetExtension(fileName);
+            fileName = Path.GetFileName(fileName);
+
+            if (!String.Equals(extension, "pdf", StringComparison.OrdinalIgnoreCase) ||
+                !String.Equals(extension, "wepb", StringComparison.OrdinalIgnoreCase) ||
+                !String.Equals(extension, "woff", StringComparison.OrdinalIgnoreCase))
+                return BadRequest("Invalid file type.");
+
+            var fileBytes = await _storageService.GetFileFromPath(fileName, subDirectory);
+
+            if (fileBytes == null) return NotFound($"File {fileName} not found.");
+
+            return File(fileBytes, $"application/{extension}", fileName);
+        }
+
         [HttpGet("GetTemplateBackground/{filename}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetTemplateBackground(string filename) =>
-            await GetPdfBlob(filename);
+            await GetFile(filename, "DiplomaPdfs");
 
         [HttpGet("GetTemplateBackgrounds")]
         // [Authorize]
@@ -31,11 +48,11 @@ namespace DiplomaMakerApi.Controllers
 
         [HttpGet("GetDiploma/{filename}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetDiploma(string filename) => await GetImageBlob(filename, "ImagePreview");
+        public async Task<IActionResult> GetDiploma(string filename) => await GetFile(filename, "ImagePreview");
 
         [HttpGet("GetDiplomaThumbnail/{filename}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetDiplomaThumbnail(string filename) => await GetImageBlob(filename, "ImagePreviewLQIP");
+        public async Task<IActionResult> GetDiplomaThumbnail(string filename) => await GetFile(filename, "ImagePreviewLQIP");
 
         [HttpPut("PutDiploma")]
         [AllowAnonymous]
@@ -53,62 +70,13 @@ namespace DiplomaMakerApi.Controllers
             return _mapper.Map<List<StudentResponseDto>>(studentsResponses);
         }
 
-        private async Task<IActionResult> GetPdfBlob(string fileName)
-        {
-            fileName = Path.GetFileName(fileName);
-
-            if (!fileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
-            {
-                return BadRequest("Invalid file type.");
-            }
-
-            var fileBytes = await _storageService.GetFileFromPath(fileName);
-
-            if (fileBytes == null) return NotFound("File not found.");
-
-            return File(fileBytes, "application/pdf", fileName);
-
-        }
-
-        private async Task<IActionResult> GetImageBlob(string fileName, string subDirectory)
-        {
-            fileName = Path.GetFileName(fileName);
-
-            if (!fileName.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
-            {
-                return BadRequest("Invalid file type.");
-            }
-
-            var fileBytes = await _storageService.GetFileFromPath(fileName, subDirectory);
-
-            if (fileBytes == null) return NotFound("File not found.");
-
-            return File(fileBytes, "application/webp", fileName);
-        }
-
         [HttpGet("GetFont/{fontName}/{fontType}"), HttpHead("GetFont/{fontName}/{fontType}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetFont(string fontName, FontType fontType)
         {
             var fontNameUsed = fontType == FontType.regular ? $"{fontName}" : $"{fontName}-{fontType}";
-            var font = await GetFontBlob($"{fontNameUsed}.woff", $"UserFonts/{fontName}");
+            var font = await GetFile($"{fontNameUsed}.woff", $"UserFonts/{fontName}");
             return font;
-        }
-
-        private async Task<IActionResult> GetFontBlob(string fileName, string subDirectory)
-        {
-            fileName = Path.GetFileName(fileName);
-
-            if (!fileName.EndsWith(".woff", StringComparison.OrdinalIgnoreCase))
-            {
-                return BadRequest("Invalid file type. Only .woff files are supported.");
-            }
-
-            var fileBytes = await _storageService.GetFileFromPath(fileName, subDirectory);
-
-            if (fileBytes == null) return NotFound("File not found.");
-
-            return File(fileBytes, "font/woff", fileName);
         }
     }
 }

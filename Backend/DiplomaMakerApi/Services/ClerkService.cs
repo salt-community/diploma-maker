@@ -4,15 +4,8 @@ using DiplomaMakerApi.Models.Clerk;
 
 namespace DiplomaMakerApi.Services
 {
-    public class ClerkService 
+    public class ClerkService(HttpClient _httpClient)
     {
-        private readonly HttpClient _httpClient;
-
-        public ClerkService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
-
         public async Task<string> GetGoogleOAuthTokenAsync(string userId, string key)
         {
             var url = $"https://api.clerk.com/v1/users/{userId}/oauth_access_tokens/oauth_google";

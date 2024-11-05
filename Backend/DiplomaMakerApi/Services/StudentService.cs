@@ -6,18 +6,8 @@ using DiplomaMakerApi.Exceptions;
 namespace DiplomaMakerApi.Services;
 
 
-public class StudentService
+public class StudentService(DiplomaMakingContext _context, HistorySnapshotService _historySnapshotService)
 {
-    private readonly DiplomaMakingContext _context;
-    private readonly ILogger<StudentService> _logger;
-    private readonly HistorySnapshotService _historySnapshotService;
-
-    public StudentService(DiplomaMakingContext context, ILogger<StudentService> logger, HistorySnapshotService historySnapshotService)
-    {
-        _context = context;
-        _logger = logger;
-        _historySnapshotService = historySnapshotService;
-    }
     public async Task<Bootcamp?> ReplaceStudents(BootcampRequestUpdateDto requestDto, Guid BootcampGuidId)
     {
         var bootcamp = await _context.Bootcamps.Include(b => b.Students)

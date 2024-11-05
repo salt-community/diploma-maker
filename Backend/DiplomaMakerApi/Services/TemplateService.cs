@@ -1,26 +1,18 @@
 using DiplomaMakerApi.Exceptions;
 using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiplomaMakerApi.Services;
 
 public class TemplateService
 (
-    DiplomaMakingContext context, 
-    LocalFileStorageService localFileStorageService, 
-    GoogleCloudStorageService googleCloudStorageService,
-    IWebHostEnvironment env,
-    IConfiguration configuration
+    DiplomaMakingContext _context,
+    IStorageService _storageService
 )
 {
-    private readonly DiplomaMakingContext _context = context;
-    private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
-    private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
-    private readonly IWebHostEnvironment _env = env;
-    private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]
-        ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
-
-    public async Task<List<DiplomaTemplate>> GetTemplates(){
+    public async Task<List<DiplomaTemplate>> GetTemplates()
+    {
         return await _context.DiplomaTemplates
             .Include(t => t.IntroStyling)
             .Include(t => t.MainStyling)
@@ -31,14 +23,12 @@ public class TemplateService
     public async Task<DiplomaTemplate?> GetTemplate(int id) => await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
     public async Task<DiplomaTemplate> PostTemplate(TemplatePostRequestDto templateRequest)
     {
-        var newTemplate = new DiplomaTemplate(configuration)
+        var newTemplate = new DiplomaTemplate()
         {
             Name = templateRequest.templateName,
         };
 
-        await ((!_useBlobStorage)
-            ? _localFileStorageService.InitFileFromNewTemplate(templateRequest.templateName, "DiplomaPdfs")
-            : _googleCloudStorageService.InitFileFromNewTemplate(templateRequest.templateName, "DiplomaPdfs"));
+        await _storageService.InitFileFromNewTemplate(templateRequest.templateName, "DiplomaPdfs");
 
         await _context.DiplomaTemplates.AddAsync(newTemplate);
         await _context.SaveChangesAsync();
@@ -68,9 +58,7 @@ public class TemplateService
 
         IFormFile file = ConvertBase64ToIFormFile(templateRequest.basePdf, templateRequest.templateName);
 
-        await ((!_useBlobStorage)
-            ? _localFileStorageService.SaveFile(file, templateRequest.templateName)
-            : _googleCloudStorageService.SaveFile(file, templateRequest.templateName));
+        await _storageService.SaveFile(file, templateRequest.templateName);
 
         _context.DiplomaTemplates.Update(template);
         await _context.SaveChangesAsync();
@@ -86,19 +74,17 @@ public class TemplateService
             throw new NotFoundByIdException("Template", id);
         }
 
-        await ((!_useBlobStorage) 
-            ? _localFileStorageService.DeleteFile(template.Name)
-            : _googleCloudStorageService.DeleteFile(template.Name));
+        await _storageService.DeleteFile(template.Name);
 
         _context.DiplomaTemplates.Remove(template);
         await _context.SaveChangesAsync();
 
         return template;
     }
-    private IFormFile ConvertBase64ToIFormFile(string base64String, string fileName)
+    private static IFormFile ConvertBase64ToIFormFile(string base64String, string fileName)
     {
         var base64Data = base64String.Contains(",") ? base64String.Split(',')[1] : base64String;
-        
+
         byte[] byteArray = Convert.FromBase64String(base64Data);
         var stream = new MemoryStream(byteArray);
         return new FormFile(stream, 0, byteArray.Length, fileName, $"{fileName}.pdf")
