@@ -59,7 +59,7 @@ public class BootcampsController(
     [HttpPut("PutBootcamp/{guid}")]
     [ProducesResponseType<BootcampResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<BootcampResponseDto>> PutBootcamp(Guid guid, BootcampRequestUpdateDto requestDto)
+    public async Task<ActionResult<BootcampResponseDto>> PutBootcamp(Guid guid, [FromBody] BootcampRequestUpdateDto requestDto)
     {
         await _bootcampService.PutBootcampAsync(guid, requestDto);
         var updatedBootcamp = await _studentService.ReplaceStudents(requestDto, guid);

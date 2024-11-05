@@ -1,88 +1,51 @@
 import createClient from "openapi-fetch"
-import type { paths } from "../open-api-schema";
-import { BootcampRequestDto, BootcampRequestUpdateDto, BootcampResponseDto } from "../types";
+import type { paths, components } from "../openApiSchema";
+import { BootcampRequest, BootcampRequestUpdate, BootcampResponse } from "../dtos/bootcamps";
 
 const client = createClient<paths>({ baseUrl: "http://localhost:5258/api/" });
 
-export async function postBootCamp(request: BootcampRequestDto) {
-    const { data } = await client.POST('/api/Bootcamps', {
-        body: request
+export async function postBootcamp(request: BootcampRequest) {
+    const { data } = await client.POST("/api/Bootcamps/PostBootcamp", {
+        body: request as unknown as components["schemas"]["BootcampRequestDto"]
     });
 
-    if (!data) {
-        console.error("postBootCamp: no data");
-    }
-
-    return data as BootcampResponseDto;
+    return data as unknown as BootcampResponse;
 }
 
-export async function getBootCamps() {
-    const { data } = await client.GET('/api/Bootcamps', {
-    });
+export async function getBootcamps() {
+    const { data } = await client.GET("/api/Bootcamps/GetBootcamps");
 
-    if (!data) {
-        console.error("getBootCamps: no data");
-    }
-
-    return data as unknown as BootcampResponseDto;
+    return data as unknown as BootcampResponse[];
 }
 
-export async function getBootcampByGuidId(guidId: string) {
-    const { data } = await client.GET('/api/Bootcamps/{guidId}', {
+export async function getBootcamp(guid: string) {
+    const { data } = await client.GET("/api/Bootcamps/GetBootcamp/{guid}", {
         params: {
-            path: {
-                guidId
-            }
+            path: { guid }
         }
     });
 
-    if (!data) {
-        console.error("getBootcampByGuidId: no data");
-    }
-
-    return data as BootcampResponseDto;
+    return data as unknown as BootcampResponse;
 }
 
-export async function deleteBootcamp(guidId: string) {
-    await client.DELETE('/api/Bootcamps/{guidId}', {
+export async function deleteBootcamp(guid: string) {
+    await client.DELETE("/api/Bootcamps/DeleteBootcamp/{guid}", {
         params: {
-            path: {
-                guidId
-            }
+            path: { guid }
         }
     });
 }
 
-export async function putBootcamp(guidId: string, request: BootcampRequestDto) {
-    const { data } = await client.PUT('/api/Bootcamps/{guidId}', {
+export async function putBootcamp(guid: string, request: BootcampRequestUpdate) {
+    const { data, error } = await client.PUT("/api/Bootcamps/PutBootcamp/{guid}", {
         params: {
-            path: {
-                guidId
-            }
+            path: { guid }
         },
-        body: request
+        body: request as unknown as components['schemas']['BootcampRequestUpdateDto'] 
     });
 
-    if (!data) {
-        console.error("putBootcamp: no data");
-    }
+    if (error)
+        throw new Error("NotFound");
 
-    return data as BootcampResponseDto;
-}
-
-export async function updatePreviewData(guidId: string, request: BootcampRequestUpdateDto) {
-    const { data } = await client.PUT('/api/Bootcamps/dynamicfields/{guidId}', {
-        params: {
-            path: {
-                guidId
-            }
-        },
-        body: request
-    });
-
-    if (!data) {
-        console.error("putBootcamp: no data");
-    }
-
-    return data as BootcampResponseDto;
+    return data as unknown as BootcampResponse;
 }
