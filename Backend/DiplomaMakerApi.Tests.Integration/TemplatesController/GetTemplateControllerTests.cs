@@ -13,7 +13,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         private readonly HttpClient _client;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
-                .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
+                .RuleFor(x => x.TemplateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
 
         public GetTemplateControllerTests(DiplomaMakerApiFactory apiFactory)
         {
@@ -37,7 +37,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var templateResponse = await response.Content.ReadFromJsonAsync<TemplateResponseDto>();
             templateResponse.Should().NotBeNull();
-            templateResponse.Name.Should().Be(setupTemplateResponse.Name);
+            templateResponse.TemplateName.Should().Be(setupTemplateResponse.TemplateName);
         }
 
         [Fact]

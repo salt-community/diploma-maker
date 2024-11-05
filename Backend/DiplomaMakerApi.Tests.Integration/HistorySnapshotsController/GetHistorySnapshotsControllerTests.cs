@@ -47,7 +47,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
 
                 // Assert
                 response.StatusCode.Should().Be(HttpStatusCode.OK);
-                var historySnapshotsResponse = await response.Content.ReadFromJsonAsync<List<DiplomaSnapshotResponseDto>>();
+                var historySnapshotsResponse = await response.Content.ReadFromJsonAsync<List<SnapshotResponseDto>>();
                 historySnapshotsResponse![0].VerificationCode.Should().Be(student.VerificationCode);
             }
         }

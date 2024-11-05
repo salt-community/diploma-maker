@@ -11,25 +11,25 @@ public class SnapshotsController(SnapshotService _historySnapShotService, IMappe
 {
     [HttpGet("GetSnapshots")]
     // [Authorize]
-    public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> GetSnapshots()
+    public async Task<ActionResult<List<SnapshotResponseDto>>> GetSnapshots()
     {
         var snapshots = await _historySnapShotService.GetSnapshots();
-        return _mapper.Map<List<DiplomaSnapshotResponseDto>>(snapshots);
+        return _mapper.Map<List<SnapshotResponseDto>>(snapshots);
     }
 
     [HttpGet("GetSnapshot/{verificationCode}")]
     [AllowAnonymous]
-    public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> GetSnapshot(string verificationCode)
+    public async Task<ActionResult<List<SnapshotResponseDto>>> GetSnapshot(string verificationCode)
     {
         var snapshots = await _historySnapShotService.GetSnapshotsByVerificationCode(verificationCode);
-        return _mapper.Map<List<DiplomaSnapshotResponseDto>>(snapshots);
+        return _mapper.Map<List<SnapshotResponseDto>>(snapshots);
     }
 
     [HttpPut("MakeSnapshotActive")]
     // [Authorize]
-    public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> MakeSnapshotActive([FromBody] MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
+    public async Task<ActionResult<List<SnapshotResponseDto>>> MakeSnapshotActive([FromBody] MakeSnapshotActiveRequestDto makeActiveSnapshotRequestDto)
     {
         var changedHistorySnapshot = await _historySnapShotService.MakeSnapshotActive(makeActiveSnapshotRequestDto);
-        return _mapper.Map<List<DiplomaSnapshotResponseDto>>(changedHistorySnapshot);
+        return _mapper.Map<List<SnapshotResponseDto>>(changedHistorySnapshot);
     }
 }

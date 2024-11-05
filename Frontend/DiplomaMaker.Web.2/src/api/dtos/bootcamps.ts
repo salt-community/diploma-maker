@@ -1,24 +1,21 @@
-import type { components } from "./../open-api-schema";
-import { StudentResponse } from './students';
+import { TrackResponse } from "../types"
+import { StudentRequest, StudentResponse } from "./students"
 
 export type BootcampRequest = {
-    guidId?: string;
-    name?: string;
-    graduationDate?: Date;
-    trackId: number;
+    trackId: number,
+    graduationDate: Date
 }
 
-export type BootcampRequestUpdate = {
-    students: Dtos.StudentRequest[],
+export type BootcampRequestUpdate = BootcampRequest & {
+    students: StudentRequest[],
     templateId: number
 }
 
 export type BootcampResponse = {
     guidId: string;
-    name: string;
     graduationDate: Date;
-    templateId: number;
-    students: Student[];
+    name: string;
     track: TrackResponse;
-    displayName?: string;
+    templateId: number;
+    students: StudentResponse[];
 }

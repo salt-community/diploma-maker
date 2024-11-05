@@ -16,7 +16,8 @@ public class AutomapperConfig : Profile
         CreateMap<TemplateResponseDto, DiplomaTemplate>().ReverseMap();
         CreateMap<StudentUpdateRequestDto, Student>().ReverseMap();
         CreateMap<Track, TracksResponseDto>();
-        CreateMap<DiplomaSnapshotResponseDto, DiplomaSnapshot>().ReverseMap();
+        CreateMap<TemplateStyle, TemplateFieldStyleDto>();
+        CreateMap<SnapshotResponseDto, DiplomaSnapshot>().ReverseMap();
         CreateMap<StudentRequestDto, DiplomaSnapshot>()
             .ForMember(d => d.GeneratedAt, opt => opt.Ignore())
             .ForMember(d => d.BootcampName, opt => opt.MapFrom((src, d, _, context) => ((Bootcamp)context.Items["bootcampUsed"]).Name))

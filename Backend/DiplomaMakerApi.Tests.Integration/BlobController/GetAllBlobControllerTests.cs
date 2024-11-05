@@ -12,7 +12,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
         private readonly HttpClient _client;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
-                .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
+                .RuleFor(x => x.TemplateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
         public GetAllBlobControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
@@ -42,7 +42,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
                     var defaultpdfExists = zip.GetEntry("Default.pdf");
                     defaultpdfExists.Should().NotBeNull();
 
-                    var addedPdfExists = zip.GetEntry($"{setupTemplateResponse.Name}.pdf");
+                    var addedPdfExists = zip.GetEntry($"{setupTemplateResponse.TemplateName}.pdf");
                     addedPdfExists.Should().NotBeNull();
                 }
             }

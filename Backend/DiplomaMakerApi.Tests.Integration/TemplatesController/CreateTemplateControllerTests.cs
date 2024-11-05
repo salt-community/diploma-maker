@@ -17,7 +17,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         private readonly string _testBlobFolder;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
-                .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
+                .RuleFor(x => x.TemplateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
         public CreateTemplateControllerTests(DiplomaMakerApiFactory apiFactory, ITestOutputHelper outputHelper)
         {
             apiFactory.OutputHelper = outputHelper;
@@ -38,9 +38,9 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
             var templateResponse = await response.Content.ReadFromJsonAsync<TemplateResponseDto>();
-            templateResponse!.Name.Should().Be(templateRequest.templateName);
-            templateResponse!.BasePdf.Should().Be($"{_testBlobFolder}/{templateRequest.templateName}.pdf");
-            TestUtil.CheckFileExists(templateRequest.templateName, ".pdf", _testBlobFolder, "DiplomaPdfs");
+            templateResponse!.TemplateName.Should().Be(templateRequest.TemplateName);
+            templateResponse!.BasePdf.Should().Be($"{_testBlobFolder}/{templateRequest.TemplateName}.pdf");
+            TestUtil.CheckFileExists(templateRequest.TemplateName, ".pdf", _testBlobFolder, "DiplomaPdfs");
         }
 
         [Fact]

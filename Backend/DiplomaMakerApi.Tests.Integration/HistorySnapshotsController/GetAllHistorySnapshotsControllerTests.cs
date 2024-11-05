@@ -44,7 +44,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var historySnapshotsResponse = await response.Content.ReadFromJsonAsync<List<DiplomaSnapshotResponseDto>>();
+            var historySnapshotsResponse = await response.Content.ReadFromJsonAsync<List<SnapshotResponseDto>>();
             historySnapshotsResponse!.Count.Should().Be(updatedStudentsRequest.Students.Count);
             historySnapshotsResponse[0].BasePdf.Should().Be($"Blob/DiplomaPdfs/Default.v1.pdf");
         }

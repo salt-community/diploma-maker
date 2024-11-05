@@ -49,7 +49,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             updatedStudentsRequest.Students
                 .All(updatedStudent => updatedStudentsResponse!.Students
                     .Any(student =>
-                        student.GuidId == updatedStudent.GuidId &&
+                        student.Guid == updatedStudent.GuidId &&
                         student.Name == updatedStudent.Name &&
                         student.VerificationCode == updatedStudent.VerificationCode &&
                         student.Email == updatedStudent.Email))

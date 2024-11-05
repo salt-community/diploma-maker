@@ -12,21 +12,10 @@ public class UserFontRequestDto
     [Required(ErrorMessage = "The FontType field is required.")]
     public required FontType FontType { get; set; }
 
-    public string FileName
-    {
-        get
-        {
-            if (FontType == FontType.regular)
-            {
-                return Name;
-            }
-            else
-            {
-                return $"{Name}-{FontType}.woff";
-            }
-        }
-    }
-
     [Required(ErrorMessage = "The File field is required.")]
     public IFormFile? File { get; set; }
+
+    public string FileName => FontType == FontType.regular 
+        ? Name 
+        : $"{Name}-{FontType}.woff";
 }

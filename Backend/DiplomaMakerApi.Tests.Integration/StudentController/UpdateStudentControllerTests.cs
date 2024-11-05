@@ -29,7 +29,7 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
                 Email = "bob.ryder@gmail.com"
             };
             // Act
-            var response = await _client.PutAsJsonAsync($"api/Students/{studentSetupResponse![0].GuidId}", newStudentRequest);
+            var response = await _client.PutAsJsonAsync($"api/Students/{studentSetupResponse![0].Guid}", newStudentRequest);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -78,7 +78,7 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             foreach (var (data, expectedErrorMessages) in badRequests)
             {
                 // Act
-                var response = await _client.PutAsJsonAsync($"api/Students/{studentSetupResponse![0].GuidId}", data);
+                var response = await _client.PutAsJsonAsync($"api/Students/{studentSetupResponse![0].Guid}", data);
 
                 // Assert
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -105,7 +105,7 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             _client.DefaultRequestHeaders.Authorization = null;
 
             // Act
-            var response = await _client.PutAsJsonAsync($"api/Students/{studentSetupResponse![0].GuidId}", newStudentRequest);
+            var response = await _client.PutAsJsonAsync($"api/Students/{studentSetupResponse![0].Guid}", newStudentRequest);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

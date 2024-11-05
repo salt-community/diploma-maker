@@ -2,7 +2,7 @@ using DiplomaMakerApi.Models;
 
 namespace DiplomaMakerApi.Dtos;
 
-public class DiplomaSnapshotResponseDto
+public class SnapshotResponseDto
 {
     public int Id { get; set; }
     public required DateTime GeneratedAt { get; set; }

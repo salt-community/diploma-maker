@@ -24,7 +24,7 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             var studentSetupResponse = await studentSetup.Content.ReadFromJsonAsync<List<StudentResponseDto>>();
 
             // Act
-            var response = await _client.GetAsync($"api/Students/{studentSetupResponse![0].GuidId}");
+            var response = await _client.GetAsync($"api/Students/{studentSetupResponse![0].Guid}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);

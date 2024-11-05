@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 using DiplomaMakerApi.Data;
@@ -10,7 +11,8 @@ namespace DiplomaMakerApi.Services;
 public class TemplateService
 (
     DiplomaMakingContext _context,
-    IStorageService _storageService
+    IStorageService _storageService,
+    IMapper _mapper
 )
 {
     public async Task<List<DiplomaTemplate>> GetTemplates()
@@ -27,10 +29,10 @@ public class TemplateService
     {
         var newTemplate = new DiplomaTemplate()
         {
-            Name = templateRequest.templateName,
+            Name = templateRequest.TemplateName,
         };
 
-        await _storageService.InitFileFromNewTemplate(templateRequest.templateName, "DiplomaPdfs");
+        await _storageService.InitFileFromNewTemplate(templateRequest.TemplateName, "DiplomaPdfs");
 
         await _context.DiplomaTemplates.AddAsync(newTemplate);
         await _context.SaveChangesAsync();
@@ -41,26 +43,24 @@ public class TemplateService
     {
         var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
         if (template == null)
-        {
             throw new NotFoundByIdException("Template", id);
-        }
 
-        template.Name = templateRequest.templateName;
-        template.Footer = templateRequest.footer;
-        template.FooterStyling = templateRequest.footerStyling;
-        template.Intro = templateRequest.intro;
-        template.IntroStyling = templateRequest.introStyling;
-        template.Main = templateRequest.main;
-        template.MainStyling = templateRequest.mainStyling;
+        template.Name = templateRequest.TemplateName;
+        template.Footer = templateRequest.Footer;
+        template.FooterStyling = _mapper.Map<TemplateStyle>(templateRequest.FooterStyling);
+        template.Intro = templateRequest.Intro;
+        template.IntroStyling = _mapper.Map<TemplateStyle>(templateRequest.IntroStyling);
+        template.Main = templateRequest.Main;
+        template.MainStyling = _mapper.Map<TemplateStyle>(templateRequest.MainStyling);
         template.Link = templateRequest.Link;
-        template.LinkStyling = templateRequest.LinkStyling;
+        template.LinkStyling = _mapper.Map<TemplateStyle>(templateRequest.LinkStyling);
         // template.BasePdf = templateRequest.basePdf;
         template.LastUpdated = DateTime.UtcNow;
         template.PdfBackgroundLastUpdated = templateRequest.PdfBackgroundLastUpdated;
 
-        IFormFile file = ConvertBase64ToIFormFile(templateRequest.basePdf, templateRequest.templateName);
+        IFormFile file = ConvertBase64ToIFormFile(templateRequest.BasePdf, templateRequest.TemplateName);
 
-        await _storageService.SaveFile(file, templateRequest.templateName);
+        await _storageService.SaveFile(file, templateRequest.TemplateName);
 
         _context.DiplomaTemplates.Update(template);
         await _context.SaveChangesAsync();
@@ -85,7 +85,7 @@ public class TemplateService
     }
     private static IFormFile ConvertBase64ToIFormFile(string base64String, string fileName)
     {
-        var base64Data = base64String.Contains(",") ? base64String.Split(',')[1] : base64String;
+        var base64Data = base64String.Contains(',') ? base64String.Split(',')[1] : base64String;
 
         byte[] byteArray = Convert.FromBase64String(base64Data);
         var stream = new MemoryStream(byteArray);

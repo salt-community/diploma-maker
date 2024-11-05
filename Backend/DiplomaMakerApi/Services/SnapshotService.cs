@@ -120,7 +120,7 @@ public class SnapshotService
         return historySnapshots;
     }
 
-    public async Task<List<DiplomaSnapshot>> MakeSnapshotActive(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
+    public async Task<List<DiplomaSnapshot>> MakeSnapshotActive(MakeSnapshotActiveRequestDto makeActiveSnapshotRequestDto)
     {
         var studentGuidIdsList = makeActiveSnapshotRequestDto.StudentGuidIds!.ToList();
         var idsList = makeActiveSnapshotRequestDto.Ids.ToList();

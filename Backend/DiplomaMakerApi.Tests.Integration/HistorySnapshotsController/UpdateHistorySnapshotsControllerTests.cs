@@ -14,7 +14,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
         private readonly HttpClient _client;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
-                .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
+                .RuleFor(x => x.TemplateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
         private readonly Faker<StudentRequestDto> _studentRequestsGenerator;
         private readonly Faker<BootcampRequestUpdateDto> _bootcampStudentRequestGenerator;
         public UpdateHistorySnapshotsControllerTests(DiplomaMakerApiFactory apiFactory)
@@ -54,7 +54,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
 
             // Each student has now updated twice -> checking historysnapshots reflect that
             var historySetupHttpResponse = await _client.GetAsync($"api/HistorySnapshots");
-            var historySetupResponse = await historySetupHttpResponse.Content.ReadFromJsonAsync<List<DiplomaSnapshotResponseDto>>();
+            var historySetupResponse = await historySetupHttpResponse.Content.ReadFromJsonAsync<List<SnapshotResponseDto>>();
             historySetupResponse!.Count.Should().Be(studentsSetupRequest.Students.Count * 2);
 
             var studentHistorySnapshots = historySetupResponse.Where(hs => hs.VerificationCode == studentsSetupRequest.Students[0].VerificationCode).ToList();
@@ -62,7 +62,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
             studentHistorySnapshots[0].BasePdf.Should().Be($"Blob/DiplomaPdfs/Default.v1.pdf");
 
             studentHistorySnapshots[studentHistorySnapshots.Count - 1].Active.Should().BeTrue();
-            studentHistorySnapshots[studentHistorySnapshots.Count - 1].BasePdf.Should().Be($"Blob/DiplomaPdfs/{templateSetupRequest.templateName}.v1.pdf");
+            studentHistorySnapshots[studentHistorySnapshots.Count - 1].BasePdf.Should().Be($"Blob/DiplomaPdfs/{templateSetupRequest.TemplateName}.v1.pdf");
 
             // Arrange
             var snapshotIds = historySetupResponse
@@ -75,7 +75,7 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
                 .Select(h => h.StudentGuidId!.Value)
                 .ToArray();
 
-            var makeActiveSnapshotRequest = new MakeActiveSnapshotRequestDto()
+            var makeActiveSnapshotRequest = new MakeSnapshotActiveRequestDto()
             {
                 Ids = snapshotIds,
                 StudentGuidIds = studentGuidIds,
@@ -87,13 +87,13 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var historySnapshotHttpResponse = await _client.GetAsync($"api/HistorySnapshots");
-            var historySnapshotResponse = await historySnapshotHttpResponse.Content.ReadFromJsonAsync<List<DiplomaSnapshotResponseDto>>();
+            var historySnapshotResponse = await historySnapshotHttpResponse.Content.ReadFromJsonAsync<List<SnapshotResponseDto>>();
             var studenthistorySnapshots = historySnapshotResponse!.Where(hs => hs.VerificationCode == studentsSetupRequest.Students[0].VerificationCode).ToList();
             studenthistorySnapshots[0].Active.Should().BeTrue();
             studenthistorySnapshots[0].BasePdf.Should().Be($"Blob/DiplomaPdfs/Default.v1.pdf");
 
             studenthistorySnapshots[studenthistorySnapshots.Count - 1].Active.Should().BeFalse();
-            studenthistorySnapshots[studenthistorySnapshots.Count - 1].BasePdf.Should().Be($"Blob/DiplomaPdfs/{templateSetupRequest.templateName}.v1.pdf");
+            studenthistorySnapshots[studenthistorySnapshots.Count - 1].BasePdf.Should().Be($"Blob/DiplomaPdfs/{templateSetupRequest.TemplateName}.v1.pdf");
         }
 
         [Fact]
