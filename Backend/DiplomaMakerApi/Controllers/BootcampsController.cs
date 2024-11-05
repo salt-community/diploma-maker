@@ -10,13 +10,14 @@ namespace DiplomaMakerApi.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 // [Authorize]
-public class BootcampsController(BootcampService bootcampService, StudentService studentService, IMapper mapper) : ControllerBase
+public class BootcampsController(
+    BootcampService _bootcampService,
+    StudentService _studentService,
+    IMapper _mapper
+) : ControllerBase
 {
-    private readonly IMapper _mapper = mapper;
-    private readonly BootcampService _bootcampService = bootcampService;
-    private readonly StudentService _studentService = studentService;
-
     [HttpPost("PostBootcamp")]
+    [ProducesResponseType<BootcampResponseDto>(StatusCodes.Status201Created)]
     public async Task<ActionResult<BootcampResponseDto>> PostBootcamp(BootcampRequestDto requestDto)
     {
         Bootcamp createdBootcamp = await _bootcampService.PostBootcamp(requestDto);
@@ -29,12 +30,15 @@ public class BootcampsController(BootcampService bootcampService, StudentService
     }
 
     [HttpGet("GetBootcamps")]
-    public async Task<ActionResult<IEnumerable<BootcampResponseDto>>> GetBootcamps()
+    [ProducesResponseType<List<BootcampResponseDto>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<BootcampResponseDto>>> GetBootcamps()
     {
         return _mapper.Map<List<BootcampResponseDto>>(await _bootcampService.GetBootcamps());
     }
 
     [HttpGet("GetBootcamp/{guid}")]
+    [ProducesResponseType<BootcampResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BootcampResponseDto>> GetBootcamp(Guid guid)
     {
         var bootcamp = await _bootcampService.GetBootcampByGuidId(guid);
@@ -45,6 +49,7 @@ public class BootcampsController(BootcampService bootcampService, StudentService
     }
 
     [HttpDelete("DeleteBootcamp/{guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteBootcamp(Guid guid)
     {
         await _bootcampService.DeleteBootcampByGuidId(guid);
@@ -52,6 +57,8 @@ public class BootcampsController(BootcampService bootcampService, StudentService
     }
 
     [HttpPut("PutBootcamp/{guid}")]
+    [ProducesResponseType<BootcampResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BootcampResponseDto>> PutBootcamp(Guid guid, BootcampRequestUpdateDto requestDto)
     {
         await _bootcampService.PutBootcampAsync(guid, requestDto);
