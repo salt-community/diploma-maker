@@ -4,43 +4,32 @@ using DiplomaMakerApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+namespace DiplomaMakerApi.Controllers;
 
-namespace DiplomaMakerApi.Controllers
+[Route("api/[controller]")]
+public class SnapshotsController(HistorySnapshotService _historySnapShotService, IMapper _mapper) : ControllerBase
 {
-    [Route("api/[controller]")]
-    public class HistorySnapshotsController : ControllerBase
+    [HttpGet("GetSnapshots")]
+    // [Authorize]
+    public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> GetSnapshots()
     {
-        private readonly HistorySnapshotService _historySnapShotService;
-        private readonly IMapper _mapper;
+        var snapshots = await _historySnapShotService.GetHistorySnapshots();
+        return _mapper.Map<List<DiplomaSnapshotResponseDto>>(snapshots);
+    }
 
-        public HistorySnapshotsController(HistorySnapshotService historySnapShotService, IMapper mapper)
-        {
-            _historySnapShotService = historySnapShotService;
-            _mapper = mapper;
-        }
+    [HttpGet("GetSnapshot/{verificationCode}")]
+    [AllowAnonymous]
+    public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> GetSnapshot(string verificationCode)
+    {
+        var snapshots = await _historySnapShotService.GetHistorySnapshotsByVerificationCode(verificationCode);
+        return _mapper.Map<List<DiplomaSnapshotResponseDto>>(snapshots);
+    }
 
-        [HttpGet]
-        // [Authorize]
-        public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> GetHistory()
-        {    
-            var snapshots = await _historySnapShotService.GetHistorySnapshots();
-            return _mapper.Map<List<DiplomaSnapshotResponseDto>>(snapshots);
-        }
-
-        [HttpGet("{verificationCode}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> GetHistoryByVerificationCode(string verificationCode)
-        {
-            var snapshots = await _historySnapShotService.GetHistorySnapshotsByVerificationCode(verificationCode);
-            return _mapper.Map<List<DiplomaSnapshotResponseDto>>(snapshots);
-        }
-
-        [HttpPut("/api/make-active-historysnapshot")]
-        // [Authorize]
-        public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> MakeActiveHistorySnapshot([FromBody] MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
-        {
-            var changedHistorySnapshot = await _historySnapShotService.MakeActiveHistorySnapshot(makeActiveSnapshotRequestDto);
-            return _mapper.Map<List<DiplomaSnapshotResponseDto>>(changedHistorySnapshot);
-        }
+    [HttpPut("MakeSnapshotActive")]
+    // [Authorize]
+    public async Task<ActionResult<List<DiplomaSnapshotResponseDto>>> MakeSnapshotActive([FromBody] MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
+    {
+        var changedHistorySnapshot = await _historySnapShotService.MakeSnapshotActive(makeActiveSnapshotRequestDto);
+        return _mapper.Map<List<DiplomaSnapshotResponseDto>>(changedHistorySnapshot);
     }
 }

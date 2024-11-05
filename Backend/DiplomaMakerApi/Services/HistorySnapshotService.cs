@@ -120,7 +120,7 @@ namespace DiplomaMakerApi.Services
             return historySnapshots;
         }
 
-        public async Task<List<DiplomaSnapshot>> MakeActiveHistorySnapshot(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
+        public async Task<List<DiplomaSnapshot>> MakeSnapshotActive(MakeActiveSnapshotRequestDto makeActiveSnapshotRequestDto)
         {
 
             var studentGuidIdsList = makeActiveSnapshotRequestDto.StudentGuidIds!.ToList();
