@@ -9,7 +9,10 @@ using DiplomaMakerApi.Data;
 
 namespace DiplomaMakerApi.Services;
 
-public class BootcampService(DiplomaMakingContext _context, IStorageService _storageService, FileUtilityService _fileUtilityService)
+public class BootcampService(
+    DiplomaMakingContext _context,
+    IStorageService _storageService,
+    FileUtilityService _fileUtilityService)
 {
     public async Task<Bootcamp> PostBootcamp(BootcampRequestDto requestDto)
     {
@@ -34,14 +37,14 @@ public class BootcampService(DiplomaMakingContext _context, IStorageService _sto
     }
 
     public async Task<List<Bootcamp>> GetBootcamps() =>
-            await _context.Bootcamps
+        await _context.Bootcamps
             .Include(b => b.Students)
             .Include(b => b.Track)
             .Include(b => b.DiplomaTemplate)
             .ToListAsync();
 
     public async Task<Bootcamp?> GetBootcampByGuidId(Guid guidId) =>
-            await _context.Bootcamps
+        await _context.Bootcamps
             .Include(b => b.Students)
             .Include(b => b.Track)
             .Include(b => b.DiplomaTemplate)
@@ -49,11 +52,9 @@ public class BootcampService(DiplomaMakingContext _context, IStorageService _sto
 
     public async Task<Bootcamp> DeleteBootcampByGuidId(Guid guidId)
     {
-        var bootcamp = await _context.Bootcamps.FirstOrDefaultAsync(b => b.GuidId == guidId);
-        if (bootcamp == null)
-        {
-            throw new NotFoundByGuidException("Bootcamp", guidId);
-        }
+        var bootcamp = await _context.Bootcamps.FirstOrDefaultAsync(b => b.GuidId == guidId)
+            ?? throw new NotFoundByGuidException("Bootcamp", guidId);
+
         _context.Remove(bootcamp);
         await _context.SaveChangesAsync();
 
@@ -62,17 +63,11 @@ public class BootcampService(DiplomaMakingContext _context, IStorageService _sto
 
     public async Task<int> UpdateBootcampTemplate(Guid guidId, int templateId)
     {
-        var bootcamp = await _context.Bootcamps.FirstOrDefaultAsync(b => b.GuidId == guidId);
-        if (bootcamp == null)
-        {
-            throw new NotFoundByGuidException("Bootcamp", guidId);
-        }
+        var bootcamp = await _context.Bootcamps.FirstOrDefaultAsync(b => b.GuidId == guidId)
+            ?? throw new NotFoundByGuidException("Bootcamp", guidId);
 
-        var newDiplomaTemplate = await _context.DiplomaTemplates.FirstOrDefaultAsync(dt => dt.Id == templateId);
-        if (newDiplomaTemplate == null)
-        {
-            throw new NotFoundByIdException("Template", templateId);
-        }
+        var newDiplomaTemplate = await _context.DiplomaTemplates.FirstOrDefaultAsync(dt => dt.Id == templateId)
+            ?? throw new NotFoundByIdException("Template", templateId);
 
         bootcamp.DiplomaTemplate = newDiplomaTemplate;
         return await _context.SaveChangesAsync();
@@ -82,20 +77,16 @@ public class BootcampService(DiplomaMakingContext _context, IStorageService _sto
 
     public async Task<Bootcamp> PutBootcampAsync(Guid GuidID, BootcampRequestUpdateDto requestDto)
     {
-
         var bootcamp = await _context.Bootcamps
             .Include(b => b.Students)
             .Include(b => b.Track)
             .Include(b => b.DiplomaTemplate)
-            .FirstOrDefaultAsync(b => b.GuidId == GuidID) ?? throw new NotFoundByGuidException("Template", GuidID);
+            .FirstOrDefaultAsync(b => b.GuidId == GuidID)
+            ?? throw new NotFoundByGuidException("Template", GuidID);
 
         var track = await _context.Tracks
-            .FirstOrDefaultAsync(t => t.Id == requestDto.TrackId);
-
-        if (track == null)
-        {
-            throw new NotFoundByIdException("Track", requestDto.TrackId);
-        }
+            .FirstOrDefaultAsync(t => t.Id == requestDto.TrackId)
+            ?? throw new NotFoundByIdException("Track", requestDto.TrackId);
 
         bootcamp.GraduationDate = requestDto.GraduationDate;
         bootcamp.Track = track;
@@ -107,11 +98,9 @@ public class BootcampService(DiplomaMakingContext _context, IStorageService _sto
     public async Task<List<Student>> PutDiplomas(List<DiplomaPutRequestDto> diplomaPutRequests)
     {
         var studentsUpdated = new List<Student>();
+
         foreach (var diplomaPutRequest in diplomaPutRequests)
-        {
-            var studentResponse = await PutDiploma(diplomaPutRequest);
-            studentsUpdated.Add(studentResponse);
-        }
+            studentsUpdated.Add(await PutDiploma(diplomaPutRequest));
 
         return studentsUpdated;
     }
@@ -119,14 +108,11 @@ public class BootcampService(DiplomaMakingContext _context, IStorageService _sto
     public async Task<Student> PutDiploma(DiplomaPutRequestDto diplomaPutRequest)
     {
         if (!_fileUtilityService.IsValidBase64Pdf(diplomaPutRequest.ImageData))
-        {
             throw new InvalidDataException("The provided image is not a valid Base64 PDF string.");
-        }
-        var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == diplomaPutRequest.StudentGuidId);
-        if (student == null)
-        {
-            throw new NotFoundByGuidException("Student", diplomaPutRequest.StudentGuidId);
-        }
+
+        var student = await _context.Students.FirstOrDefaultAsync(t => t.GuidId == diplomaPutRequest.StudentGuidId)
+            ?? throw new NotFoundByGuidException("Student", diplomaPutRequest.StudentGuidId);
+
         var pdfImage = await _fileUtilityService.ConvertPdfToPng(diplomaPutRequest.ImageData, diplomaPutRequest.StudentGuidId.ToString());
 
         var HQFile = await _fileUtilityService.ConvertPngToWebP(pdfImage, diplomaPutRequest.StudentGuidId.ToString());
@@ -143,8 +129,6 @@ public class BootcampService(DiplomaMakingContext _context, IStorageService _sto
         return student;
     }
 
-    private async Task<string> SaveFileAsync(IFormFile file, string studentGuidId, string folderName)
-    {
-        return await _storageService.SaveFile(file, studentGuidId, folderName);
-    }
+    private async Task<string> SaveFileAsync(IFormFile file, string studentGuidId, string folderName) =>
+        await _storageService.SaveFile(file, studentGuidId, folderName);
 }

@@ -1,6 +1,8 @@
 using DiplomaMakerApi.Data;
 using Microsoft.EntityFrameworkCore;
 
+namespace DiplomaMakerApi.Services;
+
 public class DatabasePokeService(IServiceProvider _serviceProvider, string _dbConnectionString) : IHostedService, IDisposable
 {
     private Timer? _timer;
