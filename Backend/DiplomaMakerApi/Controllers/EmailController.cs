@@ -1,54 +1,34 @@
-namespace DiplomaMakerApi.Controllers
+namespace DiplomaMakerApi.Controllers;
+
+using Microsoft.AspNetCore.Mvc;
+using DiplomaMakerApi.Services;
+using DiplomaMakerApi.Models;
+using System.Security.Claims;
+using Microsoft.Extensions.Configuration; // Ensure this namespace is included
+
+[Route("api/[controller]")]
+[ApiController]
+// [Authorize]
+public class EmailController(
+    EmailService _emailService,
+    ClerkService _clerkService,
+    IConfiguration _configuration,
+    IWebHostEnvironment _env) : ControllerBase
 {
-    using Microsoft.AspNetCore.Mvc;
-    using DiplomaMakerApi.Services;
-    using DiplomaMakerApi.Models;
-    using Microsoft.AspNetCore.Authorization;
-    using System.Security.Claims;
-    using Microsoft.Extensions.Configuration; // Ensure this namespace is included
+    private readonly string _secretKey = _env.IsDevelopment()
+    ? _configuration["Clerk:SecretKey"]!
+    : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
 
-    [Route("api/[controller]")]
-    [ApiController]
-    // [Authorize]
-    public class EmailController : ControllerBase
+    [HttpPost("SendEmailToStudent/{guid}")]
+    public async Task<IActionResult> SendEmailToStudent(Guid guid, SendEmailRequest req)
     {
-        private readonly EmailService _emailService;
-        private readonly ClerkService _clerkService;
-        private readonly IConfiguration _configuration;
-        private readonly IWebHostEnvironment _env;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null) return BadRequest("The user does not exist.");
 
-        public EmailController(EmailService emailService, ClerkService clerkService, IConfiguration configuration, IWebHostEnvironment env)
-        {
-            _emailService = emailService;
-            _clerkService = clerkService;
-            _configuration = configuration; 
-            _env = env;
-        }
+        var googleToken = await _clerkService.GetGoogleOAuthTokenAsync(userId, _secretKey);
 
-        [HttpPost("email-student/{guidID}")]
-        public async Task<IActionResult> SendEmailToStudent(Guid guidID, SendEmailRequest req, [FromQuery] string? googleToken)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(googleToken))
-                {
-                    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                    if (userId == null)
-                    {
-                        throw new Exception("The user does not exist");
-                    }
+        await _emailService.SendEmailWithAttachmentAsync(guid, req.File, googleToken, req.Title, req.Description);
 
-                    var secretKey = _env.IsDevelopment() ? _configuration["Clerk:SecretKey"]! : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
-                    googleToken = await _clerkService.GetGoogleOAuthTokenAsync(userId, secretKey);
-                }
-                await _emailService.SendEmailWithAttachmentAsync(guidID, req.File, googleToken, req.Title, req.Description);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-            return Ok("The Diploma has been successfully sent to your email");
-        }
+        return Ok("The Diploma has been successfully sent to your email");
     }
 }
