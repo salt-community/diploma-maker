@@ -64,7 +64,10 @@ public class TemplatesController(IMapper _mapper, TemplateService _templateServi
     public async Task<ActionResult<TemplateResponseDto>> PutTemplate(int id, TemplateRequestDto templateRequestDto)
     {
         var template = await _templateService.PutTemplate(id, templateRequestDto);
-        return _mapper.Map<TemplateResponseDto>(template);
+
+        return template != null
+            ? _mapper.Map<TemplateResponseDto>(template)
+            : NotFound("Template not found");
     }
 }
 

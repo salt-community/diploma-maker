@@ -78,11 +78,9 @@ public class StudentService(
 
     public async Task<Student?> GetStudentByGuidId(Guid guidId)
     {
-        var Student = await _context.Students
+        return await _context.Students
             .Include(d => d.Bootcamp)
             .FirstOrDefaultAsync(b => b.GuidId == guidId);
-
-        return Student ?? throw new NotFoundByGuidException("Student", guidId);
     }
 
     public async Task<Student?> GetStudentByVerificationCode(string verificationCode)

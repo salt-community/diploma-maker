@@ -39,11 +39,10 @@ public class TemplateService
         return newTemplate;
     }
 
-    public async Task<DiplomaTemplate> PutTemplate(int id, TemplateRequestDto templateRequest)
+    public async Task<DiplomaTemplate?> PutTemplate(int id, TemplateRequestDto templateRequest)
     {
         var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
-        if (template == null)
-            throw new NotFoundByIdException("Template", id);
+        if (template == null) return null;
 
         template.Name = templateRequest.TemplateName;
         template.Footer = templateRequest.Footer;

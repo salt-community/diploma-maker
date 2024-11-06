@@ -20,9 +20,15 @@ public class StudentsController(StudentService _service, IMapper _mapper) : Cont
 
     [HttpGet("GetStudent/{guid}")]
     [ProducesResponseType<StudentResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<StudentResponseDto>> GetStudent(Guid guid)
     {
         var student = await _service.GetStudentByGuidId(guid);
+
+        if (student == null) {
+            return NotFound("Could not find student with that ID");
+        }
+
         return _mapper.Map<StudentResponseDto>(student);
     }
 

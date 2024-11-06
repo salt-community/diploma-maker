@@ -28,7 +28,7 @@ public class UserFontsController(
     [AllowAnonymous]
     [ProducesResponseType<List<UserFontResponseDto>>(StatusCodes.Status201Created)]
     [ProducesResponseType<List<UserFontResponseDto>>(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<List<UserFontResponseDto>>> PostUserFonts([FromForm] List<UserFontRequestDto> userFonts)
+    public async Task<ActionResult<List<UserFontResponseDto>>> PostUserFonts([FromBody] List<UserFontRequestDto> userFonts)
     {
         if (!ModelState.IsValid)
             return ValidationProblem(ModelState);
