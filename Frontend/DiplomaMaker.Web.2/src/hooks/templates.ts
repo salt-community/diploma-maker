@@ -15,7 +15,7 @@ export function useTemplates() {
     const getTemplateQuery = useMutation({
         mutationFn: async (id: number) => await Endpoints.Templates.getTemplateById(id),
         onSuccess: (templateResponse) => updateTemplateCacheWith(templateResponse)
-    })
+    });
 
     const postTemplateQuery = useMutation({
         mutationFn: async (request: TemplatePostRequest) => await Endpoints.Templates.postTemplate(request),
@@ -54,9 +54,9 @@ export function useTemplates() {
 
     return {
         templates,
-        postTemplate: postTemplateQuery.mutate,
-        putTemplate: putTemplateQuery.mutate,
+        postTemplate: (template: TemplatePostRequest) => postTemplateQuery.mutate(template),
+        putTemplate: (id: number, template: TemplateRequest) => putTemplateQuery.mutate({ id, request: template }),
         templateById,
-        deleteTemplate: deleteTemplateMutation.mutate
+        deleteTemplate: (id: number) => deleteTemplateMutation.mutate(id)
     }
 }
