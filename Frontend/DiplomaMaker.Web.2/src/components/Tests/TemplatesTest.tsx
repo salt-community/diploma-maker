@@ -14,6 +14,9 @@ export default function TemplatesTest() {
 
   return (
     <>
+      <button onClick={() => postTemplate({ templateName: "New template" })}>
+        New template
+      </button>
     </>
   );
 }
