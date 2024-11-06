@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
 
@@ -29,7 +29,7 @@ namespace DiplomaMakerApi.Tests.Integration.EmailController
         // step 2 - Login through terminal -> gcloud auth login
         // step 3 - Check if logged in -> gcloud auth list
         // step 4 - List what scopes your account has -> gcloud auth application-default print-access-token | xargs -I {} curl -H "Authorization: Bearer {}" https://www.googleapis.com/oauth2/v1/tokeninfo
-            // if https://www.googleapis.com/auth/gmail.send is not listed under scopes
+        // if https://www.googleapis.com/auth/gmail.send is not listed under scopes
         // step 5 - 
 
         // [Fact]
@@ -45,7 +45,7 @@ namespace DiplomaMakerApi.Tests.Integration.EmailController
         //         Name = "Bob Ryder",
         //         Email = loggedInUserEmail
         //     };
-            
+
         //     await _client.PutAsJsonAsync($"api/Students/{studentSetupResponse![0].GuidId}", newStudentRequest);
 
         //     var pdfFile = TestUtil.GetFileContent("Default", ".pdf", _testBlobFolder, "DiplomaPdfs");
@@ -84,7 +84,7 @@ namespace DiplomaMakerApi.Tests.Integration.EmailController
             _client.DefaultRequestHeaders.Authorization = null;
 
             // Act
-            var response = await _client.PostAsJsonAsync($"api/Email/email-student/{Guid.NewGuid()}", new object{});
+            var response = await _client.PostAsJsonAsync($"api/Email/email-student/{Guid.NewGuid()}", new object { });
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

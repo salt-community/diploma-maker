@@ -1,44 +1,41 @@
-using AutoMapper;
-using DiplomaMakerApi.Dtos.UserFont;
-using DiplomaMakerApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
-namespace DiplomaMakerApi.Controllers
+using DiplomaMakerApi.Dtos;
+using DiplomaMakerApi.Services;
+
+namespace DiplomaMakerApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class UserFontsController(
+    UserFontService _userFontService,
+    IMapper _mapper
+) : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UserFontsController : ControllerBase
+
+    [HttpGet("GetUserFonts")]
+    [ProducesResponseType<List<UserFontResponseDto>>(StatusCodes.Status200OK)]
+    [AllowAnonymous]
+    public async Task<ActionResult<List<UserFontResponseDto>>> GetUserFonts()
     {
-        private readonly UserFontService _userFontService;
-        private readonly IMapper _mapper;
+        var userFonts = await _userFontService.GetUserFonts();
+        return _mapper.Map<List<UserFontResponseDto>>(userFonts);
+    }
 
-        public UserFontsController(UserFontService userFontService, IMapper mapper)
-        {
-            _userFontService = userFontService;
-            _mapper = mapper;
-        }
+    [HttpPost("PostUserFonts")]
+    [AllowAnonymous]
+    [ProducesResponseType<List<UserFontResponseDto>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<List<UserFontResponseDto>>(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<List<UserFontResponseDto>>> PostUserFonts([FromBody] List<UserFontRequestDto> userFonts)
+    {
+        if (!ModelState.IsValid)
+            return ValidationProblem(ModelState);
 
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult<List<UserFontResponseDto>>> GetUserFonts()
-        {
-            var userFonts = await _userFontService.GetUserFonts();
-            return _mapper.Map<List<UserFontResponseDto>>(userFonts);
-        }
+        var newFonts = await _userFontService.PostUserFonts(userFonts);
+        var createdFonts = _mapper.Map<List<UserFontResponseDto>>(newFonts);
 
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult<List<UserFontResponseDto>>> PostUserFonts([FromForm] UserFontRequestsDto userFonts)
-        {
-            if (!ModelState.IsValid)
-            {
-                return ValidationProblem(ModelState);
-            }
-            var newFonts = await _userFontService.PostUserFonts(userFonts);
-            var createdFonts = _mapper.Map<List<UserFontResponseDto>>(newFonts);
-
-            return CreatedAtAction(nameof(GetUserFonts), null, createdFonts);
-        }
+        return CreatedAtAction(nameof(GetUserFonts), null, createdFonts);
     }
 }

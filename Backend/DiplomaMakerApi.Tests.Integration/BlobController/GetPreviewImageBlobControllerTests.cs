@@ -21,7 +21,8 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "test-token");
             _testBlobFolder = apiFactory.TestBlobFolder;
 
-            var loggerFactory = LoggerFactory.Create(builder => {
+            var loggerFactory = LoggerFactory.Create(builder =>
+            {
                 builder.AddXUnit(outputHelper);
             });
             _logger = loggerFactory.CreateLogger<GetPdfBlobControllerTests>();
@@ -38,7 +39,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             var pdfBase64String = Convert.ToBase64String(pdfFile);
             var previewImageRequest = new MultipartFormDataContent
             {
-                { new StringContent(studentSetup.GuidId.ToString()), "StudentGuidId" },
+                { new StringContent(studentSetup.Guid.ToString()), "StudentGuidId" },
                 { new StringContent(pdfBase64String), "Image" }
             };
 
@@ -51,7 +52,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             previewImageSetup.StatusCode.Should().Be(HttpStatusCode.OK);
 
             // Act
-            var response = await _client.GetAsync($"api/Blob/ImagePreviewLQIP/{studentSetup!.GuidId}.webp");
+            var response = await _client.GetAsync($"api/Blob/ImagePreviewLQIP/{studentSetup!.Guid}.webp");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -80,7 +81,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             var pdfBase64String = Convert.ToBase64String(pdfFile);
             var previewImageRequest = new MultipartFormDataContent
             {
-                { new StringContent(studentSetup.GuidId.ToString()), "StudentGuidId" },
+                { new StringContent(studentSetup.Guid.ToString()), "StudentGuidId" },
                 { new StringContent(pdfBase64String), "Image" }
             };
 
@@ -88,7 +89,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             previewImageSetup.StatusCode.Should().Be(HttpStatusCode.OK);
 
             // Act
-            var response = await _client.GetAsync($"api/Blob/ImagePreview/{studentSetup!.GuidId}.webp");
+            var response = await _client.GetAsync($"api/Blob/ImagePreview/{studentSetup!.Guid}.webp");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);

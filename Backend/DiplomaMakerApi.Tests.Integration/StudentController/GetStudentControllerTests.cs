@@ -1,14 +1,14 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
 
 namespace DiplomaMakerApi.Tests.Integration.StudentController
 {
     public class GetStudentControllerTests : IClassFixture<DiplomaMakerApiFactory>
-    { 
+    {
         private readonly HttpClient _client;
         public GetStudentControllerTests(DiplomaMakerApiFactory apiFactory)
         {
@@ -24,7 +24,7 @@ namespace DiplomaMakerApi.Tests.Integration.StudentController
             var studentSetupResponse = await studentSetup.Content.ReadFromJsonAsync<List<StudentResponseDto>>();
 
             // Act
-            var response = await _client.GetAsync($"api/Students/{studentSetupResponse![0].GuidId}");
+            var response = await _client.GetAsync($"api/Students/{studentSetupResponse![0].Guid}");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);

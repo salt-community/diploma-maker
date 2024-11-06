@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using Bogus;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
 
@@ -13,7 +13,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         private readonly string _testBlobFolder;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
-                .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
+                .RuleFor(x => x.TemplateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
         public DeleteTemplateControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
@@ -34,7 +34,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-            TestUtil.CheckFileDoesNotExist(setupTemplate.templateName, ".pdf", _testBlobFolder, "DiplomaPdfs");
+            TestUtil.CheckFileDoesNotExist(setupTemplate.TemplateName, ".pdf", _testBlobFolder, "DiplomaPdfs");
         }
 
         [Fact]

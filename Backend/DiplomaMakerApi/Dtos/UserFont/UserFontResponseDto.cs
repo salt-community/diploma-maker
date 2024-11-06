@@ -1,22 +1,12 @@
 using DiplomaMakerApi.Models;
 
-namespace DiplomaMakerApi.Dtos.UserFont
+namespace DiplomaMakerApi.Dtos;
+
+public class UserFontResponseDto
 {
-    public class UserFontResponseDto
-    {
-        public required string Name { get; set; }
-        public required FontType FontType { get; set; }
-        public string FileName
-        {
-            get
-            {
-                if(FontType == FontType.regular){
-                    return Name;
-                }
-                else{
-                    return $"{Name}-{FontType}";
-                }
-            }
-        }
-    }
+    public required string Name { get; set; }
+    public required FontType FontType { get; set; }
+    public string FileName => FontType == FontType.regular 
+        ? Name 
+        : $"{Name}-{FontType}";
 }

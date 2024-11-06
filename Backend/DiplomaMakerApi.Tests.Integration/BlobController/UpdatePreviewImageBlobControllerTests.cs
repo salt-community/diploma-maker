@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using DiplomaMakerApi.Dtos;
 using DiplomaMakerApi.MIddleware;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -32,7 +32,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             var pdfBase64String = Convert.ToBase64String(pdfFile);
             var previewImageRequest = new MultipartFormDataContent
             {
-                { new StringContent(studentSetup.GuidId.ToString()), "StudentGuidId" },
+                { new StringContent(studentSetup.Guid.ToString()), "StudentGuidId" },
                 { new StringContent(pdfBase64String), "Image" }
             };
 
@@ -42,8 +42,8 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var studentResponse = await response.Content.ReadFromJsonAsync<StudentResponseDto>();
-            studentResponse!.GuidId.Should().Be(studentSetup.GuidId);
-            TestUtil.CheckFileExists(studentSetup.GuidId.ToString(), ".webp", _testBlobFolder, "ImagePreview");
+            studentResponse!.Guid.Should().Be(studentSetup.Guid);
+            TestUtil.CheckFileExists(studentSetup.Guid.ToString(), ".webp", _testBlobFolder, "ImagePreview");
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             var studentSetup = bootcampSetupResponse![0].Students.First();
             var previewImageRequest = new MultipartFormDataContent
             {
-                { new StringContent(studentSetup.GuidId.ToString()), "StudentGuidId" },
+                { new StringContent(studentSetup.Guid.ToString()), "StudentGuidId" },
                 { new StringContent("badData"), "Image" }
             };
 
@@ -98,7 +98,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             for (int i = 0; i < students.Count; i++)
             {
                 var student = students[i];
-                previewImageRequest.Add(new StringContent(student.GuidId.ToString()), $"PreviewImageRequests[{i}].StudentGuidId");
+                previewImageRequest.Add(new StringContent(student.Guid.ToString()), $"PreviewImageRequests[{i}].StudentGuidId");
                 previewImageRequest.Add(new StringContent(pdfBase64String), $"PreviewImageRequests[{i}].Image");
             }
 
@@ -111,9 +111,9 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
             studentsResponse!.Count.Should().Be(students.Count);
             foreach (var student in students)
             {
-                var studentResponse = studentsResponse.FirstOrDefault(s => s.GuidId == student.GuidId);
+                var studentResponse = studentsResponse.FirstOrDefault(s => s.Guid == student.Guid);
                 studentResponse.Should().NotBeNull();
-                TestUtil.CheckFileExists(student.GuidId.ToString(), ".webp", _testBlobFolder, "ImagePreview");
+                TestUtil.CheckFileExists(student.Guid.ToString(), ".webp", _testBlobFolder, "ImagePreview");
             }
         }
 
@@ -129,7 +129,7 @@ namespace DiplomaMakerApi.Tests.Integration.BlobController
                 previewImageRequest.Add(new StringContent(Guid.NewGuid().ToString()), $"PreviewImageRequests[{i}].StudentGuidId");
                 previewImageRequest.Add(new StringContent(pdfBase64String), $"PreviewImageRequests[{i}].Image");
             }
-            
+
             // Act
             var response = await _client.PutAsync("api/Blob/UpdateBundledStudentsPreviewImages", previewImageRequest);
 

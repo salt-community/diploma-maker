@@ -1,5 +1,5 @@
 using System.Text;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 
 namespace DiplomaMakerApi.Tests.Integration
 {
@@ -13,9 +13,9 @@ namespace DiplomaMakerApi.Tests.Integration
         {
             return new TemplateRequestDto()
             {
-                templateName = "jfs2025",
-                footer = "has successfully completed\nthe {classname} Bootcamp of \n {datebootcamp} at School of Applied Technology.",
-                footerStyling = new TemplateStyle
+                TemplateName = "jfs2025",
+                Footer = "has successfully completed\nthe {classname} Bootcamp of \n {datebootcamp} at School of Applied Technology.",
+                FooterStyling = new TemplateStyle
                 {
                     XPos = 41.17,
                     YPos = 165.35,
@@ -26,8 +26,8 @@ namespace DiplomaMakerApi.Tests.Integration
                     FontName = "notoSerifJP-regular",
                     Alignment = "center"
                 },
-                intro = "This certifies that\n",
-                introStyling = new TemplateStyle
+                Intro = "This certifies that\n",
+                IntroStyling = new TemplateStyle
                 {
                     XPos = 83.106014341953,
                     YPos = 115.83,
@@ -38,8 +38,8 @@ namespace DiplomaMakerApi.Tests.Integration
                     FontName = "notoSerifJP-regular-italic",
                     Alignment = "center"
                 },
-                main = "{studentname}",
-                mainStyling = new TemplateStyle
+                Main = "{studentname}",
+                MainStyling = new TemplateStyle
                 {
                     XPos = 43.28,
                     YPos = 42.76,
@@ -62,7 +62,7 @@ namespace DiplomaMakerApi.Tests.Integration
                     FontName = "notoSerifJP-regular",
                     Alignment = "center"
                 },
-                basePdf = "data:application/pdf;base64,testdata",
+                BasePdf = "data:application/pdf;base64,testdata",
             };
         }
     }

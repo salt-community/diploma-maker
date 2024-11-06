@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using Bogus;
 using DiplomaMakerApi.Dtos;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -28,8 +28,8 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
                 .RuleFor(s => s.Email, faker => faker.Internet.Email());
 
             _bootcampStudentRequestGenerator = new Faker<BootcampRequestUpdateDto>()
-                .RuleFor(b => b.templateId, faker => 1)
-                .RuleFor(b => b.students, faker => _studentRequestsGenerator.GenerateBetween(10, 15));
+                .RuleFor(b => b.TemplateId, faker => 1)
+                .RuleFor(b => b.Students, faker => _studentRequestsGenerator.GenerateBetween(10, 15));
         }
 
         [Fact]
@@ -46,10 +46,10 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var updatedStudentsResponse = await response.Content.ReadFromJsonAsync<BootcampResponseDto>();
-            updatedStudentsRequest.students
+            updatedStudentsRequest.Students
                 .All(updatedStudent => updatedStudentsResponse!.Students
                     .Any(student =>
-                        student.GuidId == updatedStudent.GuidId &&
+                        student.Guid == updatedStudent.GuidId &&
                         student.Name == updatedStudent.Name &&
                         student.VerificationCode == updatedStudent.VerificationCode &&
                         student.Email == updatedStudent.Email))
@@ -70,20 +70,20 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
                 (new { templateId = 1, students = new List<object>() }, new[] {
                     "At least one student must be provided."
                 }),
-                (new { templateId = 1, students = new List<object> 
-                    { 
+                (new { templateId = 1, students = new List<object>
+                    {
                         new { Name = "", VerificationCode = "abc123", Email = "bob.ryder@gmail.com" }
-                    }}, 
-                    new[] { 
-                        "Name is required." 
+                    }},
+                    new[] {
+                        "Name is required."
                     }
                 ),
-                (new { templateId = 1, students = new List<object> 
-                    { 
+                (new { templateId = 1, students = new List<object>
+                    {
                         new { Name = "John Doe", VerificationCode = "", Email = "bob.ryder@gmail.com" }
-                    }}, 
-                    new[] { 
-                        "VerificationCode is required." 
+                    }},
+                    new[] {
+                        "VerificationCode is required."
                     }
                 ),
                 // (new { templateId = 1, students = new List<object> 
@@ -99,13 +99,13 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             {
                 // Act
                 var response = await _client.PutAsJsonAsync($"api/Bootcamps/dynamicfields/{bootcampSetupResponse![0].GuidId}", data);
-            
+
                 // Assert
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var error = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
                 error!.Status.Should().Be(400);
                 error.Title.Should().Be("One or more validation errors occurred.");
-                
+
                 var allErrorMessages = error.Errors.SelectMany(kvp => kvp.Value).ToArray();
                 allErrorMessages.Should().Contain(message => expectedErrorMessages.Any(expected => message.Contains(expected)));
             }
@@ -130,7 +130,7 @@ namespace DiplomaMakerApi.Tests.Integration.BootcampsController
             // Arrange
             var updatedStudentsRequest = _bootcampStudentRequestGenerator.Generate();
             _client.DefaultRequestHeaders.Authorization = null;
-            
+
             // Act
             var response = await _client.PutAsJsonAsync($"api/Bootcamps/dynamicfields/{Guid.NewGuid()}", updatedStudentsRequest);
 

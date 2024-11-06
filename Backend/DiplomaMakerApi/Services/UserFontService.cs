@@ -1,49 +1,49 @@
-using DiplomaMakerApi.Dtos.UserFont;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace DiplomaMakerApi.Services
+using DiplomaMakerApi.Dtos;
+using DiplomaMakerApi.Data;
+using DiplomaMakerApi.Models;
+
+namespace DiplomaMakerApi.Services;
+
+public class UserFontService(
+    DiplomaMakingContext _context,
+    IStorageService _storageService
+)
 {
-    public class UserFontService(DiplomaMakingContext context, LocalFileStorageService localFileStorageService, IConfiguration configuration, GoogleCloudStorageService googleCloudStorageService)
+    public async Task<List<UserFont>> GetUserFonts()
     {
-        private readonly DiplomaMakingContext _context = context;
-        private readonly LocalFileStorageService _localFileStorageService = localFileStorageService;
-        private readonly GoogleCloudStorageService _googleCloudStorageService = googleCloudStorageService;
-        private readonly bool _useBlobStorage = bool.Parse(configuration["Blob:UseBlobStorage"]
-            ?? throw new InvalidOperationException("Blob:UseBlobStorage configuration is missing"));
-        public async Task<List<UserFont>> GetUserFonts(){
-            return await _context.UserFonts
-                .ToListAsync();
+        return await _context.UserFonts
+            .ToListAsync();
+    }
+
+    public async Task<List<UserFont>> PostUserFonts(List<UserFontRequestDto> userFontRequestsDto)
+    {
+        var firstFontRequest = userFontRequestsDto[0];
+        var newFonts = new List<UserFont>();
+
+        if (firstFontRequest.File is null)
+        {
+            throw new ArgumentException("Normal Font Missing.");
         }
 
-        public async Task<List<UserFont>> PostUserFonts(UserFontRequestsDto userFontRequestsDto)
-        {   
-            var firstFontRequest = userFontRequestsDto.UserFontRequests[0];
-            var newFonts = new List<UserFont>();
+        foreach (var userFont in userFontRequestsDto)
+        {
+            if (userFont.File is null)
+                continue;
+                
+            await _storageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}");
 
-            if(firstFontRequest.File is null){
-                throw new ArgumentException("Normal Font Missing.");
-            }
-
-            foreach (var userFont in userFontRequestsDto.UserFontRequests)
+            newFonts.Add(new UserFont()
             {
-                if(userFont.File != null)
-                {
-                    await ((!_useBlobStorage)
-                        ? _localFileStorageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}")
-                        : _googleCloudStorageService.SaveFile(userFont.File, userFont.FileName, $"UserFonts/{userFont.Name}"));
-                        
-                    newFonts.Add(new UserFont(){
-                        Name = userFont.Name,
-                        FontType = userFont.FontType,
-                    });
-                }
-            }
-
-            await _context.UserFonts.AddRangeAsync(newFonts);
-            await _context.SaveChangesAsync();
-
-            return newFonts;
+                Name = userFont.Name,
+                FontType = userFont.FontType,
+            });
         }
+
+        await _context.UserFonts.AddRangeAsync(newFonts);
+        await _context.SaveChangesAsync();
+
+        return newFonts;
     }
 }

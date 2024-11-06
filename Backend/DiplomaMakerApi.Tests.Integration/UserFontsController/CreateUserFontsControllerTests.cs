@@ -44,11 +44,11 @@ namespace DiplomaMakerApi.Tests.Integration.UserFontsController
             response.StatusCode.Should().Be(HttpStatusCode.Created);
             var fontResponse = await response.Content.ReadFromJsonAsync<List<UserFontResponseDto>>();
             fontResponse![0].Name.Should().Be("testFont");
-            fontResponse![0].FontType.Should().Be(Models.FontType.regular);
+            fontResponse![0].FontType.Should().Be(Dtos.FontType.regular);
             fontResponse![1].Name.Should().Be("testFont");
-            fontResponse![1].FontType.Should().Be(Models.FontType.bold);
+            fontResponse![1].FontType.Should().Be(Dtos.FontType.bold);
             fontResponse![2].Name.Should().Be("testFont");
-            fontResponse![2].FontType.Should().Be(Models.FontType.italic);
+            fontResponse![2].FontType.Should().Be(Dtos.FontType.italic);
 
             TestUtil.CheckFileExists(fontResponse![0].Name, ".woff", _testBlobFolder, $"UserFonts/{fontResponse![0].Name}");
             TestUtil.CheckFileExists($"{fontResponse![0].Name}-bold", ".woff", _testBlobFolder, $"UserFonts/{fontResponse![0].Name}");
@@ -65,14 +65,14 @@ namespace DiplomaMakerApi.Tests.Integration.UserFontsController
                     {
                         { new StringContent(""), "UserFontRequests[0].Name" },
                         { new StringContent("regular"), "UserFontRequests[0].FontType" }
-                    }, 
+                    },
                     new[] { "The Name field is required." }),
 
                 (new MultipartFormDataContent
                     {
-                        { new StringContent("testFont"), "UserFontRequests[0].Name" }, 
+                        { new StringContent("testFont"), "UserFontRequests[0].Name" },
                         { new StringContent("invalidType"), "UserFontRequests[0].FontType" },
-                    }, 
+                    },
                     new[] { "The value 'invalidType' is not valid for FontType." }),
 
                 (new MultipartFormDataContent

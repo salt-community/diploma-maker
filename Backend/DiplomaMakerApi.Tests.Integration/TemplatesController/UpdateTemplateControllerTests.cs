@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Bogus;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
 
@@ -13,14 +13,14 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
         private readonly HttpClient _client;
         private readonly Faker<TemplatePostRequestDto> _templateRequestGenerator =
             new Faker<TemplatePostRequestDto>()
-                .RuleFor(x => x.templateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
+                .RuleFor(x => x.TemplateName, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()));
 
         public UpdateTemplateControllerTests(DiplomaMakerApiFactory apiFactory)
         {
             _client = apiFactory.CreateClient();
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "test-token");
         }
-        
+
         [Fact]
         public async Task PutTemplate_UpdatesTemplate_WhenDataIsValid()
         {
@@ -38,7 +38,7 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var templateResponse = await response.Content.ReadFromJsonAsync<TemplateResponseDto>();
             templateResponse!.LinkStyling.Should().BeEquivalentTo(putTemplateRequest.LinkStyling, opt => opt.Excluding(ls => ls!.Id));
-            templateResponse!.Footer.Should().BeEquivalentTo(putTemplateRequest.footer);
+            templateResponse!.Footer.Should().BeEquivalentTo(putTemplateRequest.Footer);
         }
 
         [Fact]
@@ -52,8 +52,8 @@ namespace DiplomaMakerApi.Tests.Integration.TemplatesController
 
             // Act
             var putTemplateRequest = TestData.getPutTemplateData();
-            putTemplateRequest.basePdf = (string)null!;
-            putTemplateRequest.templateName = (string)null!;
+            putTemplateRequest.BasePdf = (string)null!;
+            putTemplateRequest.TemplateName = (string)null!;
             var response = await _client.PutAsJsonAsync($"api/Templates/{setupTemplateResponse.Id}", putTemplateRequest);
 
             // Assert

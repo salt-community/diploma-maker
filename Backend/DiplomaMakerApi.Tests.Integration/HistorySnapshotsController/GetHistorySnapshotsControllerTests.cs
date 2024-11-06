@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Bogus;
 using DiplomaMakerApi.Dtos;
-using DiplomaMakerApi.Models;
+using DiplomaMakerApi.Dtos;
 using FluentAssertions;
 using Xunit;
 
@@ -26,8 +26,8 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
                 .RuleFor(s => s.Email, faker => faker.Internet.Email());
 
             _bootcampStudentRequestGenerator = new Faker<BootcampRequestUpdateDto>()
-                .RuleFor(b => b.templateId, faker => 1)
-                .RuleFor(b => b.students, faker => _studentRequestsGenerator.GenerateBetween(10, 20));
+                .RuleFor(b => b.TemplateId, faker => 1)
+                .RuleFor(b => b.Students, faker => _studentRequestsGenerator.GenerateBetween(10, 20));
         }
 
         [Fact]
@@ -36,18 +36,18 @@ namespace DiplomaMakerApi.Tests.Integration.HistorySnapshotsController
             // Arrange
             var bootcampSetupRequest = await _client.GetAsync("api/Bootcamps");
             var bootcampSetupResponse = await bootcampSetupRequest.Content.ReadFromJsonAsync<List<BootcampResponseDto>>();
-            var updatedStudentsRequest = _bootcampStudentRequestGenerator.Generate(); 
-            
+            var updatedStudentsRequest = _bootcampStudentRequestGenerator.Generate();
+
             await _client.PutAsJsonAsync($"api/Bootcamps/dynamicfields/{bootcampSetupResponse![0].GuidId}", updatedStudentsRequest);
 
-            foreach (var student in updatedStudentsRequest.students)
+            foreach (var student in updatedStudentsRequest.Students)
             {
                 // Act
                 var response = await _client.GetAsync($"api/HistorySnapshots/{student.VerificationCode}");
 
                 // Assert
                 response.StatusCode.Should().Be(HttpStatusCode.OK);
-                var historySnapshotsResponse = await response.Content.ReadFromJsonAsync<List<DiplomaSnapshotResponseDto>>();
+                var historySnapshotsResponse = await response.Content.ReadFromJsonAsync<List<SnapshotResponseDto>>();
                 historySnapshotsResponse![0].VerificationCode.Should().Be(student.VerificationCode);
             }
         }
