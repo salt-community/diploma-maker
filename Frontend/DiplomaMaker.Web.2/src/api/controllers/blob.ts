@@ -13,8 +13,7 @@ export async function getTemplateBackground(filename: string) {
         }
     });
 
-    if (error)
-        throw new Error("BadRequest");
+    if (error) throw error;
 
     return data;
 }
@@ -34,8 +33,7 @@ export async function getDiploma(filename: string) {
         }
     });
 
-    if (error)
-        throw new Error("BadRequest");
+    if (error) throw error;
 
     return data;
 }
@@ -49,8 +47,7 @@ export async function getDiplomaThumbnail(filename: string) {
         }
     });
 
-    if (error)
-        throw new Error("BadRequest");
+    if (error) throw error;
 
     return data;
 }

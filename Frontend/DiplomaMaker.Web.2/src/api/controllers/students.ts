@@ -1,58 +1,73 @@
-import createClient from "openapi-fetch"
-import type { paths } from "../open-api-schema";
-import { StudentResponseDto, StudentUpdateRequestDto } from "../types";
+import createClient from "openapi-fetch";
+import type { paths, components } from "../openApiSchema";
+import { StudentResponse, StudentUpdateRequest } from "../dtos/students";
 
 const client = createClient<paths>({ baseUrl: "http://localhost:5258/api/" });
 
-export async function updateStudents(guidId: string, request: StudentUpdateRequestDto) {
-    const { data } = await client.PUT('/api/Students/{GuidID}', {
-        params: {
-            path: {
-                GuidID: guidId,
-            }
-        },
-        body: request
-    });
-
-    return data as StudentResponseDto;
-}
-
 export async function getStudents() {
-    const { data } = await client.GET('/api/Students');
+  const { data } = await client.GET("/api/Students/GetStudents");
 
-    return data as StudentResponseDto[];
+  return data as unknown as StudentResponse[];
 }
 
-export async function getStudentByGuidId(guidId: string) {
-    const { data } = await client.PUT('/api/Students/{GuidID}', {
-        params: {
-            path: {
-                GuidID: guidId,
-            }
-        },
-    });
+export async function getStudentByGuid(guid: string) {
+  const { data, error } = await client.GET("/api/Students/GetStudent/{guid}", {
+    params: {
+      path: {
+        guid: guid,
+      },
+    },
+  });
 
-    return data as StudentResponseDto;
-}
+  if (error) throw error;
 
-export async function deleteStudent(guidId: string) {
-    await client.DELETE('/api/Students/{guidId}', {
-        params: {
-            path: {
-                guidId,
-            }
-        },
-    });
+  return data as unknown as StudentResponse;
 }
 
 export async function getStudentByVerificationCode(verificationCode: string) {
-    const { data } = await client.GET('/api/Students/verificationCode/{verificationCode}', {
-        params: {
-            path: {
-                verificationCode
-            }
+  const { data, error } = await client.GET(
+    "/api/Students/GetStudentByVericationCode/{verificationCode}",
+    {
+      params: {
+        path: {
+          verificationCode,
         },
-    });
+      },
+    }
+  );
 
-    return data as StudentResponseDto;
+  if (error) throw error;
+
+  return data as unknown as StudentResponse;
+}
+
+export async function updateStudent(
+  guid: string,
+  request: StudentUpdateRequest
+) {
+  const { data, error } = await client.PUT(
+    "/api/Students/UpdateStudent/{guid}",
+    {
+      params: {
+        path: {
+          guid: guid,
+        },
+      },
+      body: request as unknown as components["schemas"]["StudentUpdateRequestDto"],
+    }
+  );
+
+  if (error) throw error;
+
+  return data as StudentResponse;
+}
+
+export async function deleteStudent(guid: string) {
+  await client.DELETE("/api/Students/DeleteStudent/{guid}", {
+    params: {
+      path: {
+        guid: guid,
+      },
+    },
+  });
 }

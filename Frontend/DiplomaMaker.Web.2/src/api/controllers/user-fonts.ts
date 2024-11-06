@@ -1,21 +1,22 @@
-import createClient from "openapi-fetch"
-import type { paths } from "../open-api-schema";
-import { UserFontRequestDto, UserFontResponseDto } from "../types";
+import createClient from "openapi-fetch";
+import type { components, paths } from "../openApiSchema";
+import { UserFontRequest, UserFontResponse } from "../dtos/userFonts";
 
 const client = createClient<paths>({ baseUrl: "http://localhost:5258/api/" });
 
 export async function getUserFonts() {
-    const { data } = await client.GET('/api/UserFonts');
+  const { data } = await client.GET("/api/UserFonts/GetUserFonts");
 
-    return data as UserFontResponseDto[];
+  return data as unknown as UserFontResponse[];
 }
 
-export async function postUserFonts(request: UserFontRequestDto) {
-    const { data } = await client.POST('/api/UserFonts', {
-        body: {
-            UserFontRequests: request
-        }
-    });
+export async function postUserFonts(request: UserFontRequest[]) {
+  const { data } = await client.POST("/api/UserFonts/PostUserFonts", {
+    body: {
+      userFonts:
+        request as unknown as components["schemas"]["UserFontRequestDto"][],
+    },
+  });
 
-    return data as UserFontResponseDto[];
+  return data as unknown as UserFontResponse[];
 }

@@ -33,6 +33,17 @@ export interface paths {
                         "text/json": string;
                     };
                 };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
             };
         };
         put?: never;
@@ -109,6 +120,17 @@ export interface paths {
                         "text/json": string;
                     };
                 };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
             };
         };
         put?: never;
@@ -146,6 +168,17 @@ export interface paths {
                         "text/plain": string;
                         "application/json": string;
                         "text/json": string;
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
                     };
                 };
             };
@@ -716,6 +749,17 @@ export interface paths {
                         "text/json": components["schemas"]["StudentResponseDto"];
                     };
                 };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
             };
         };
         put?: never;
@@ -1191,9 +1235,9 @@ export interface paths {
             };
             requestBody?: {
                 content: {
-                    "multipart/form-data": {
-                        userFonts?: components["schemas"]["UserFontRequestDto"][];
-                    };
+                    "application/json": components["schemas"]["UserFontRequestDto"][];
+                    "text/json": components["schemas"]["UserFontRequestDto"][];
+                    "application/*+json": components["schemas"]["UserFontRequestDto"][];
                 };
             };
             responses: {

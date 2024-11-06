@@ -44,8 +44,7 @@ export async function putBootcamp(guid: string, request: BootcampRequestUpdate) 
         body: request as unknown as components['schemas']['BootcampRequestUpdateDto'] 
     });
 
-    if (error)
-        throw new Error("NotFound");
+    if (error) throw error;
 
     return data as unknown as BootcampResponse;
 }
