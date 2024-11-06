@@ -9,11 +9,12 @@ import { client } from "./client";
 
 export async function getTemplates() {
   const { data } = await client.GET("/api/Templates/GetTemplates");
-
   return data as unknown as TemplateResponse[];
 }
 
-export async function getTemplateById(id: number) {
+export async function getTemplateById(id?: number) {
+  if (!id) throw new Error("Undefined template id");
+
   const { data, error } = await client.GET("/api/Templates/GetTemplate/{id}", {
     params: {
       path: {
@@ -22,7 +23,7 @@ export async function getTemplateById(id: number) {
     },
   });
 
-  if (error) throw error;
+  if (error) throw new Error("404 NotFound: " + error.detail);
 
   return data as TemplateResponse;
 }
@@ -52,7 +53,7 @@ export async function putTemplate(id: number, request: TemplateRequest) {
   return data as TemplateResponse;
 }
 
-export async function deleteTemple(id: number) {
+export async function deleteTemplate(id: number) {
   const { error } = await client.DELETE("/api/Templates/DeleteTemplate/{id}", {
     params: {
       path: {
