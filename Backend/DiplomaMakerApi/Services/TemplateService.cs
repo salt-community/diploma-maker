@@ -26,7 +26,7 @@ public class TemplateService
     }
 
     public async Task<DiplomaTemplate?> GetTemplate(int id) => await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
-    
+
     public async Task<DiplomaTemplate> PostTemplate(TemplatePostRequestDto templateRequest)
     {
         var newTemplate = new DiplomaTemplate()
