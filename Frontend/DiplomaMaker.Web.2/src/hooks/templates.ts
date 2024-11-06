@@ -30,7 +30,7 @@ export function useTemplates() {
     const deleteTemplateMutation = useMutation({
         mutationFn: async (id: number) => await Endpoints.Templates.deleteTemplate(id),
         onSuccess: (_, id) => deleteTemplateFromCache(id)
-    })
+    });
 
     const updateTemplateCacheWith = (template: TemplateResponse) => {
         console.log(template);
@@ -38,26 +38,29 @@ export function useTemplates() {
             ["templates"],
             [...templates.filter((existingTemplate) => existingTemplate.id != template.id), template]
         );
-    }
+    };
 
     const deleteTemplateFromCache = (id: number) => {
         client.setQueryData(
             ["templates"],
             [...templates.filter((template) => template.id != id)]
         );
-    }
+    };
 
     const templateById = (id: number) => {
         const template = templates.find((template) => template.id == id);
         if (template) return template;
         getTemplateQuery.mutate(id);
-    }
+    };
 
     return {
         templates,
-        postTemplate: (template: TemplatePostRequest) => postTemplateQuery.mutate(template),
-        putTemplate: (id: number, template: TemplateRequest) => putTemplateQuery.mutate({ id, request: template }),
+        postTemplate: (template: TemplatePostRequest) =>
+            postTemplateQuery.mutate(template),
+        putTemplate: (id: number, template: TemplateRequest) =>
+            putTemplateQuery.mutate({ id, request: template }),
         templateById,
-        deleteTemplate: (id: number) => deleteTemplateMutation.mutate(id)
+        deleteTemplate: (id: number) =>
+            deleteTemplateMutation.mutate(id)
     }
 }
