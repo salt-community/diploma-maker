@@ -33,7 +33,6 @@ export function useTemplates() {
     });
 
     const updateTemplateCacheWith = (template: TemplateResponse) => {
-        console.log(template);
         client.setQueryData(
             ["templates"],
             [...templates.filter((existingTemplate) => existingTemplate.id != template.id), template]

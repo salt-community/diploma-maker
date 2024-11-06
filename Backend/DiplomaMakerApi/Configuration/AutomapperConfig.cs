@@ -18,6 +18,7 @@ public class AutomapperConfig : Profile
         CreateMap<TemplateResponseDto, DiplomaTemplate>()
             .ForMember(d => d.Name, opt => opt.MapFrom(src => src.TemplateName))
             .ReverseMap();
+        CreateMap<TemplateStyle, TemplateFieldStyleDto>().ReverseMap();
         CreateMap<StudentUpdateRequestDto, Student>().ReverseMap();
         CreateMap<Track, TracksResponseDto>();
         CreateMap<TemplateStyle, TemplateFieldStyleDto>();
