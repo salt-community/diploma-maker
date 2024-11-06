@@ -46,6 +46,7 @@ export function useTemplates() {
         );
     };
 
+    //TODO: this causes infinite recursion in react rerenders
     const templateById = (id: number) => {
         const template = templates.find((template) => template.id == id);
         if (template) return template;

@@ -6,7 +6,7 @@ import { useState } from "react";
 type FormValues = TemplateRequest;
 
 export default function TemplatesTest() {
-  const [currentTemplateId, setCurrentTemplateId] = useState<number>(1);
+  const [currentTemplateId, setCurrentTemplateId] = useState<number | null>(null);
   const {
     templates,
     postTemplate,
@@ -16,7 +16,11 @@ export default function TemplatesTest() {
   } = useTemplates();
 
   const { register, handleSubmit } = useForm<FormValues>();
+
   const onSubmit: SubmitHandler<FormValues> = template => {
+    if (currentTemplateId == null)
+      return;
+
     console.log(template);
     const request = {
       ...currentTemplate,
@@ -26,6 +30,11 @@ export default function TemplatesTest() {
     console.log(request);
     putTemplate(currentTemplateId, request);
   };
+
+  if (currentTemplateId == null && templates.length > 0)
+    setCurrentTemplateId(templates[0].id ?? null);
+
+  console.log("currentTemplateId: " + currentTemplateId);
 
   // if (watch("currentId") != currentTemplateId) setCurrentTemplateId(watch("currentId"));
   const currentTemplate = templates.find(template => template.id == currentTemplateId);
@@ -38,9 +47,15 @@ export default function TemplatesTest() {
       <button onClick={() => postTemplate("New template")}>
         New template
       </button>
-      <button onClick={() => deleteTemplate(currentTemplateId)}>
+      <button onClick={() => {
+        if (currentTemplateId == null)
+          return;
+
+        deleteTemplate(currentTemplateId);
+        setCurrentTemplateId(templates.length > 1 ? templates[0].id : null);
+      }}>
         Delete template
-      </button>
+      </button >
       <select onChange={(e) => {
         if (currentTemplateId != parseInt(e.currentTarget.value))
           setCurrentTemplateId(parseInt(e.currentTarget.value));
