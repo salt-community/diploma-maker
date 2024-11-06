@@ -16,7 +16,6 @@ export type StudentResponse = {
 }
 
 export type StudentUpdateRequest = {
-    guidId: string;
-    studentName: string;
-    emailAddress: string;
+    name: string;
+    email: string;
 }

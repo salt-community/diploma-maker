@@ -3,12 +3,12 @@ import { StudentResponse, StudentUpdateRequest } from "../dtos/students";
 import { client } from "./client";
 
 export async function getStudents() {
-  const { data } = await client.GET("/api/Students/GetStudents"); 
+  const { data } = await client.GET("/api/Students/GetStudents");
 
   return data as unknown as StudentResponse[];
 }
 
-export async function getStudentByGuid(guid: string) {
+export async function getStudent(guid: string) {
   const { data, error } = await client.GET("/api/Students/GetStudent/{guid}", {
     params: {
       path: {
@@ -17,7 +17,14 @@ export async function getStudentByGuid(guid: string) {
     },
   });
 
-  if (error) throw new Error("Test error");
+  if (error) {
+    switch (error.status) {
+      case 404:
+        throw new Error("Student not found.");
+      default:
+        throw new Error("Error retrieving student.");
+    }
+  }
 
   return data as unknown as StudentResponse;
 }
@@ -34,7 +41,14 @@ export async function getStudentByVerificationCode(verificationCode: string) {
     }
   );
 
-  if (error) throw error;
+  if (error) {
+    switch (error.status) {
+      case 404:
+        throw new Error("Student not found.");
+      default:
+        throw new Error("Error retrieving student.");
+    }
+  }
 
   return data as unknown as StudentResponse;
 }
@@ -55,7 +69,16 @@ export async function updateStudent(
     }
   );
 
-  if (error) throw error;
+  if (error) {
+    switch (error.status) {
+      case 400:
+        throw new Error(
+          "Could not update student. One or more fields was incorrect."
+        );
+      default:
+        throw new Error("Error updating student.");
+    }
+  }
 
   return data as StudentResponse;
 }

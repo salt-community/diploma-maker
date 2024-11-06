@@ -1,16 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { Endpoints } from "../../api";
 
-const guid = "c519f3b3-f378-483c-802e-68c090a717cc";
+const verificationCode = "5d7f8";
 
-export default function GetStudent() {
+export default function GetStudentByVerificationCode() {
   const {
     data: student,
     isLoading,
     error,
   } = useQuery({
-    queryKey: [guid],
-    queryFn: async () => Endpoints.Students.getStudent(guid),
+    queryKey: [verificationCode],
+    queryFn: async () =>
+      Endpoints.Students.getStudentByVerificationCode(verificationCode),
   });
 
   const renderContent = () => {
@@ -40,7 +41,7 @@ export default function GetStudent() {
 
   return (
     <div>
-      <h4>GetStudent</h4>
+      <h4>GetStudentByVerificationCode</h4>
       {renderContent()}
     </div>
   );
