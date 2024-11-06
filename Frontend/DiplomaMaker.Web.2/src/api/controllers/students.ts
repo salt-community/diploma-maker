@@ -1,8 +1,7 @@
-import createClient from "openapi-fetch";
-import type { paths, components } from "../openApiSchema";
+import type { components } from "../openApiSchema";
 import { StudentResponse, StudentUpdateRequest } from "../dtos/students";
+import { client } from "./client";
 
-const client = createClient<paths>({ baseUrl: "http://localhost:5258/api/" });
 
 export async function getStudents() {
   const { data } = await client.GET("/api/Students/GetStudents");

@@ -1,12 +1,11 @@
-import createClient from "openapi-fetch";
-import type { components, paths } from "../openApiSchema";
+import type { components } from "../openApiSchema";
 import {
   TemplatePostRequest,
   TemplateRequest,
   TemplateResponse,
 } from "../dtos/templates";
+import { client } from "./client";
 
-const client = createClient<paths>({ baseUrl: "http://localhost:5258/api/" });
 
 export async function getTemplates() {
   const { data } = await client.GET("/api/Templates/GetTemplates");

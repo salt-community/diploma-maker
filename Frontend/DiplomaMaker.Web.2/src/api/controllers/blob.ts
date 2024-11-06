@@ -1,8 +1,5 @@
-import createClient from "openapi-fetch"
-import type { paths } from "../openApiSchema";
 import { DiplomatePutRequest } from "../dtos/diploma";
-
-const client = createClient<paths>({ baseUrl: "http://localhost:5258/api/" });
+import { client } from "./client";
 
 export async function getTemplateBackground(filename: string) {
     const { data, error } = await client.GET("/api/Blob/GetTemplateBackground/{filename}", {

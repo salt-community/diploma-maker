@@ -11,37 +11,61 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as EndpointtestsImport } from './routes/endpointtests'
 
 // Create/Update Routes
+
+const EndpointtestsRoute = EndpointtestsImport.update({
+  id: '/endpointtests',
+  path: '/endpointtests',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {}
+  interface FileRoutesByPath {
+    '/endpointtests': {
+      id: '/endpointtests'
+      path: '/endpointtests'
+      fullPath: '/endpointtests'
+      preLoaderRoute: typeof EndpointtestsImport
+      parentRoute: typeof rootRoute
+    }
+  }
 }
 
 // Create and export the route tree
 
-export interface FileRoutesByFullPath {}
+export interface FileRoutesByFullPath {
+  '/endpointtests': typeof EndpointtestsRoute
+}
 
-export interface FileRoutesByTo {}
+export interface FileRoutesByTo {
+  '/endpointtests': typeof EndpointtestsRoute
+}
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
+  '/endpointtests': typeof EndpointtestsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: never
+  fullPaths: '/endpointtests'
   fileRoutesByTo: FileRoutesByTo
-  to: never
-  id: '__root__'
+  to: '/endpointtests'
+  id: '__root__' | '/endpointtests'
   fileRoutesById: FileRoutesById
 }
 
-export interface RootRouteChildren {}
+export interface RootRouteChildren {
+  EndpointtestsRoute: typeof EndpointtestsRoute
+}
 
-const rootRouteChildren: RootRouteChildren = {}
+const rootRouteChildren: RootRouteChildren = {
+  EndpointtestsRoute: EndpointtestsRoute,
+}
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
@@ -52,7 +76,12 @@ export const routeTree = rootRoute
   "routes": {
     "__root__": {
       "filePath": "__root.tsx",
-      "children": []
+      "children": [
+        "/endpointtests"
+      ]
+    },
+    "/endpointtests": {
+      "filePath": "endpointtests.tsx"
     }
   }
 }
