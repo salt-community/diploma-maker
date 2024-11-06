@@ -2,9 +2,8 @@ import type { components } from "../openApiSchema";
 import { StudentResponse, StudentUpdateRequest } from "../dtos/students";
 import { client } from "./client";
 
-
 export async function getStudents() {
-  const { data } = await client.GET("/api/Students/GetStudents");
+  const { data } = await client.GET("/api/Students/GetStudents"); 
 
   return data as unknown as StudentResponse[];
 }
@@ -18,7 +17,7 @@ export async function getStudentByGuid(guid: string) {
     },
   });
 
-  if (error) throw error;
+  if (error) throw new Error("Test error");
 
   return data as unknown as StudentResponse;
 }
