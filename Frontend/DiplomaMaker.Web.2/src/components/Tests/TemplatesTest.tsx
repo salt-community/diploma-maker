@@ -11,6 +11,7 @@ export default function TemplatesTest() {
     templates,
     postTemplate,
     putTemplate,
+    deleteTemplate,
     templateById
   } = useTemplates();
 
@@ -34,8 +35,11 @@ export default function TemplatesTest() {
 
   return (
     <>
-      <button onClick={() => postTemplate({ templateName: "New template" })}>
+      <button onClick={() => postTemplate("New template")}>
         New template
+      </button>
+      <button onClick={() => deleteTemplate(currentTemplateId)}>
+        Delete template
       </button>
       <select onChange={(e) => {
         if (currentTemplateId != parseInt(e.currentTarget.value))

@@ -54,8 +54,8 @@ export function useTemplates() {
 
     return {
         templates,
-        postTemplate: (template: TemplatePostRequest) =>
-            postTemplateQuery.mutate(template),
+        postTemplate: (templateName: string) =>
+            postTemplateQuery.mutate({ templateName }),
         putTemplate: (id: number, template: TemplateRequest) =>
             putTemplateQuery.mutate({ id, request: template }),
         templateById,
