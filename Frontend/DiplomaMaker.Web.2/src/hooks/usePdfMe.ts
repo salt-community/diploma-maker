@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
 
-import { FileService, PdfMe, PdfMeTypes } from "../services";
+import { FileService, PdfMe, PdfMeTypes, TemplateService } from "../services";
 import { TemplateSubstitutions } from "../types/types";
-import { substitutePlaceholders } from "../services/templatesService";
 
 export function usePdfMe(
     designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
@@ -36,7 +35,7 @@ export function usePdfMe(
         const template = designer.current.getTemplate();
 
         console.log(template);
-        const substitutedInputs = substitutePlaceholders(template, inputs);
+        const substitutedInputs = TemplateService.substitutePlaceholders(template, inputs);
         console.log(substitutedInputs);
 
         const pdf = await PdfMe.generate({
@@ -60,7 +59,7 @@ export function usePdfMe(
         if (!event.target?.files)
             throw new Error("Files are not defined");
 
-        const template = await getTemplateFromJsonFile(event.target.files[0]);
+        const template = await TemplateService.getTemplateFromJsonFile(event.target.files[0]);
         designer.current.updateTemplate(template);
     }
 
@@ -104,9 +103,3 @@ export function usePdfMe(
         onResetTemplate
     }
 }
-
-async function getTemplateFromJsonFile(file: File) {
-    const template: PdfMeTypes.Template = JSON.parse(await FileService.readTextFile(file));
-    PdfMe.checkTemplate(template);
-    return template;
-};

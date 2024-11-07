@@ -1,4 +1,4 @@
-import { PdfMeTypes } from ".";
+import { FileService, PdfMe, PdfMeTypes } from ".";
 import { TemplateInputs, TemplateSubstitutions } from "../types/types";
 
 export function substitutePlaceholders(template: PdfMeTypes.Template, substitutions: TemplateSubstitutions) {
@@ -19,4 +19,10 @@ export function substitutePlaceholders(template: PdfMeTypes.Template, substituti
     });
 
     return [inputs] as TemplateInputs;
+}
+
+export async function getTemplateFromJsonFile(file: File) {
+    const template: PdfMeTypes.Template = JSON.parse(await FileService.readTextFile(file));
+    PdfMe.checkTemplate(template);
+    return template;
 }
