@@ -1,9 +1,9 @@
-import { BLANK_PDF, checkTemplate, Template } from "@pdfme/common";
+import { Template } from "@pdfme/common";
 import { Designer } from "@pdfme/ui";
-import { text, barcodes, image } from "@pdfme/schemas"
+
 import { useEffect, useRef } from "react";
-import { downloadJsonFile, readDataUrlFile, readTextFile } from "../services/fileService";
-import { generate } from "@pdfme/generator";
+
+import { FileService, PdfMe } from "../services";
 
 export function usePdfMe(
     designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
@@ -11,12 +11,12 @@ export function usePdfMe(
 ) {
     const designer = useRef<Designer | null>(null);
 
-    const defaultTemplate: Template = { basePdf: BLANK_PDF, schemas: [[]] };
+    const defaultTemplate: Template = { basePdf: PdfMe.BLANK_PDF, schemas: [[]] };
 
     const plugins = {
-        Text: text,
-        QR: barcodes.qrcode,
-        Image: image,
+        Text: PdfMe.text,
+        QR: PdfMe.barcodes.qrcode,
+        Image: PdfMe.image,
     };
 
     useEffect(() => {
@@ -36,7 +36,7 @@ export function usePdfMe(
 
         const template = designer.current.getTemplate();
 
-        const pdf = await generate({
+        const pdf = await PdfMe.generate({
             template,
             plugins,
             inputs
@@ -64,7 +64,7 @@ export function usePdfMe(
         if (!designer.current)
             throw new Error("Designer is not initialized");
 
-        const basePdf = await readDataUrlFile(event.target.files[0])
+        const basePdf = await FileService.readDataUrlFile(event.target.files[0])
         const currentTemplate = designer.current.getTemplate();
 
         designer.current.updateTemplate(
@@ -78,7 +78,7 @@ export function usePdfMe(
         if (!designer.current)
             throw new Error("Designer is not initialized");
 
-        downloadJsonFile(designer.current.getTemplate(), "template");
+        FileService.downloadJsonFile(designer.current.getTemplate(), "template");
     };
 
     function onResetTemplate() {
@@ -99,7 +99,7 @@ export function usePdfMe(
 }
 
 async function getTemplateFromJsonFile(file: File) {
-    const template: Template = JSON.parse(await readTextFile(file));
-    checkTemplate(template);
+    const template: Template = JSON.parse(await FileService.readTextFile(file));
+    PdfMe.checkTemplate(template);
     return template;
 };
