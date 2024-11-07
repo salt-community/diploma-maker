@@ -1,5 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useTemplates } from "../../hooks/templates";
+import { useTemplates } from "../../hooks/useTemplates";
 import { TemplateRequest, TemplateResponse } from "../../api/dtos/templates";
 import { useState } from "react";
 

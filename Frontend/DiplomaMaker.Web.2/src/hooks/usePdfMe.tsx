@@ -5,9 +5,9 @@ import { useEffect, useRef } from "react";
 import { downloadJsonFile, readDataUrlFile, readTextFile } from "../services/fileService";
 import { generate } from "@pdfme/generator";
 
-export function useDesigner(
-    containerRef?: React.MutableRefObject<HTMLDivElement | null>,
-    template?: Template
+export function usePdfMe(
+    designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
+    initialTemplate?: Template
 ) {
     const designer = useRef<Designer | null>(null);
 
@@ -20,12 +20,12 @@ export function useDesigner(
     };
 
     useEffect(() => {
-        if (containerRef) {
-            const domContainer = containerRef.current;
+        if (designerContainerRef) {
+            const domContainer = designerContainerRef.current;
 
             if (domContainer)
                 designer.current = new Designer({
-                    domContainer, template: template ?? defaultTemplate, plugins
+                    domContainer, template: initialTemplate ?? defaultTemplate, plugins
                 });
         }
     });
@@ -85,7 +85,7 @@ export function useDesigner(
         if (!designer.current)
             throw new Error("Designer is not initialized");
 
-        designer.current.updateTemplate(template ?? defaultTemplate);
+        designer.current.updateTemplate(initialTemplate ?? defaultTemplate);
     };
 
     return {

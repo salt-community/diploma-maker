@@ -1,12 +1,12 @@
 import { Template } from "@pdfme/common";
 import { useRef } from "react";
-import { useDesigner } from "../../hooks/useDesigner";
+import { usePdfMe } from "../../hooks/usePdfMe";
 
 interface Props {
     template?: Template
 }
 
-export default function Designer({ template }: Props) {
+export default function TemplateDesigner({ template }: Props) {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     const {
@@ -14,7 +14,7 @@ export default function Designer({ template }: Props) {
         onResetTemplate,
         handleLoadTemplate,
         onChangeBasePdf,
-        generatePdf } = useDesigner(containerRef, template);
+        generatePdf } = usePdfMe(containerRef, template);
 
     const DownloadTemplateButton = (
         <button
@@ -52,7 +52,7 @@ export default function Designer({ template }: Props) {
         <button
             className=''
             onClick={() => {
-                generatePdf([{ a: 'a1' }]);
+                generatePdf([{ field1: 'substituted string' }]);
             }
             }>
             Generate Pdf

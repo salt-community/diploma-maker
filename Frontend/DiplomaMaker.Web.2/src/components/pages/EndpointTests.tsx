@@ -1,9 +1,9 @@
-import Designer from "../PdfMe/Designer";
+import TemplateDesigner from "../PdfMe/TemplateDesigner";
 
 export function EndpointTests() {
   return (
     <>
-      <Designer />
+      <TemplateDesigner />
     </>
   );
 }
