@@ -51,6 +51,7 @@ export function useTemplates() {
     const templateById = (id: number) => {
         const template = templates.find((template) => template.id == id);
         if (template) return template;
+        console.log("call mutate");
         getTemplateMutation.mutate(id);
     };
 
