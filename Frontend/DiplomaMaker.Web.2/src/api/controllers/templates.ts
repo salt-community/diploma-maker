@@ -9,6 +9,7 @@ import { client } from "./client";
 
 export async function getTemplates() {
   const { data } = await client.GET("/api/Templates/GetTemplates");
+
   return data as unknown as TemplateResponse[];
 }
 
@@ -23,9 +24,9 @@ export async function getTemplateById(id?: number) {
     },
   });
 
-  if (!error) throw new Error("404 NotFound: " + error.detail);
+  if (!error && data) return data as TemplateResponse;
 
-  return data as TemplateResponse;
+  throw new Error(`${error.status}: ${error.detail}`);
 }
 
 export async function postTemplate(request: TemplatePostRequest) {
@@ -33,9 +34,9 @@ export async function postTemplate(request: TemplatePostRequest) {
     body: request,
   });
 
-  if (error) throw error;
+  if (!error && data) return data as unknown as TemplateResponse;
 
-  return data as unknown as TemplateResponse;
+  throw new Error(`${error.status}: ${error.detail}`);
 }
 
 export async function putTemplate(id: number, request: TemplateRequest) {
@@ -48,9 +49,7 @@ export async function putTemplate(id: number, request: TemplateRequest) {
     body: request as unknown as components["schemas"]["TemplateRequestDto"],
   });
 
-  if (error) throw error;
-
-  return data as TemplateResponse;
+  if (!error && data) return data as TemplateResponse;
 }
 
 export async function deleteTemplate(id: number) {
@@ -62,5 +61,7 @@ export async function deleteTemplate(id: number) {
     },
   });
 
-  if (error) throw error;
+  if (!error) return;
+
+  throw new Error(`${error.status}: ${error.detail}`);
 }
