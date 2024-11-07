@@ -6,7 +6,7 @@ import { downloadJsonFile, readDataUrlFile, readTextFile } from "../services/fil
 import { generate } from "@pdfme/generator";
 
 export function useDesigner(
-    containerRef: React.MutableRefObject<HTMLDivElement | null>,
+    containerRef?: React.MutableRefObject<HTMLDivElement | null>,
     template?: Template
 ) {
     const designer = useRef<Designer | null>(null);
