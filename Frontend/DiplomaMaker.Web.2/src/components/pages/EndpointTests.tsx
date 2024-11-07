@@ -1,8 +1,4 @@
-import DeleteStudent from "../Tests/DeleteStudent";
-import GetStudent from "../Tests/GetStudent";
-import GetStudentByVerificationCode from "../Tests/GetStudentByVerificationCode";
-import GetStudents from "../Tests/GetStudents";
-import UpdateStudent from "../Tests/UpdateStudent";
+import TemplatesTest from "../Tests/TemplatesTest";
 
 export function EndpointTests() {
   return (
@@ -12,13 +8,13 @@ export function EndpointTests() {
         <h2>Templates</h2>
         <TemplatesTest />
         <hr />
-        <h2>Students</h2>
+        {/* <h2>Students</h2>
         <hr />
         <GetStudents />
         <GetStudent />
         <GetStudentByVerificationCode />
         <UpdateStudent />
-        <DeleteStudent />
+        <DeleteStudent /> */}
       </div>
     </div>
   );

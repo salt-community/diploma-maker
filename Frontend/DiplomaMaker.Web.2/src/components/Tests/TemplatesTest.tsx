@@ -1,12 +1,12 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useTemplates } from "../../hooks/templates";
-import { TemplateRequest, TemplateResponse } from "../../api/dtos/templates";
+import { TemplateFieldStyle, TemplateRequest, TemplateResponse } from "../../api/dtos/templates";
 import { useState } from "react";
 
 type FormValues = TemplateRequest;
 
 export default function TemplatesTest() {
-  const [currentTemplateId, setCurrentTemplateId] = useState<number | null>(null);
+  const [currentTemplateId, setCurrentTemplateId] = useState<number>(1);
   const {
     templates,
     postTemplate,
@@ -31,16 +31,50 @@ export default function TemplatesTest() {
     putTemplate(currentTemplateId, request);
   };
 
-  if (currentTemplateId == null && templates.length > 0)
-    setCurrentTemplateId(templates[0].id ?? null);
-
-  console.log("currentTemplateId: " + currentTemplateId);
-
-  // if (watch("currentId") != currentTemplateId) setCurrentTemplateId(watch("currentId"));
   const currentTemplate = templates.find(template => template.id == currentTemplateId);
-  // const currentTemplate = templateById(currentTemplateId);
-  // const currentTemplate = templateById(watch("currentId"));
 
+  if (!currentTemplate) {
+    console.error("Could not set currentTemplate");
+    return;
+  }
+
+  const templateNameFormField = (
+    <input {...register("templateName")}
+      placeholder="template name..."
+      defaultValue={currentTemplate?.templateName}>
+    </input>
+  );
+
+  type DynamicField = {
+    textContent: string,
+    style: TemplateFieldStyle
+  }
+
+  type TemplateDynamicFields = {
+    footer: DynamicField,
+    intro: DynamicField,
+    main: DynamicField,
+    link: DynamicField
+  }
+
+  const dynamicFields: TemplateDynamicFields = {
+    footer: {
+      textContent: currentTemplate.footer,
+      style: currentTemplate.footerStyling
+    },
+    intro: {
+      textContent: currentTemplate.intro,
+      style: currentTemplate.introStyling
+    },
+    main: {
+      textContent: currentTemplate.main,
+      style: currentTemplate.mainStyling
+    },
+    link: {
+      textContent: currentTemplate.link,
+      style: currentTemplate.linkStyling
+    },
+  };
 
   return (
     <>
@@ -48,11 +82,7 @@ export default function TemplatesTest() {
         New template
       </button>
       <button onClick={() => {
-        if (currentTemplateId == null)
-          return;
-
         deleteTemplate(currentTemplateId);
-        setCurrentTemplateId(templates.length > 1 ? templates[0].id : null);
       }}>
         Delete template
       </button >
@@ -62,13 +92,12 @@ export default function TemplatesTest() {
       }}>
         {templates.map(template => <option key={template.id}>{template.id}</option>)}
       </select >
+
       <form onSubmit={handleSubmit(onSubmit)}>
-
-        <input {...register("templateName")} placeholder="template name..." defaultValue={currentTemplate?.templateName}>
-
-        </input>
+        {templateNameFormField}
 
         <button type="submit">Submit changes</button>
+        {/* <input type="file" accept="application/pdf"></input> */}
       </form>
     </>
   );

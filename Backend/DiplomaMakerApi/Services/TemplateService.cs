@@ -45,6 +45,7 @@ public class TemplateService
 
         await _context.DiplomaTemplates.AddAsync(newTemplate);
         await _context.SaveChangesAsync();
+
         return newTemplate;
     }
 
@@ -52,7 +53,7 @@ public class TemplateService
     {
         var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
         if (template == null)
-            return null;
+            return template;
 
         template.Name = templateRequest.TemplateName;
         template.Footer = templateRequest.Footer;
@@ -79,11 +80,8 @@ public class TemplateService
 
     public async Task<DiplomaTemplate> DeleteTemplate(int id)
     {
-        var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
-        if (template == null)
-        {
-            throw new NotFoundByIdException("Template", id);
-        }
+        var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id) 
+            ?? throw new NotFoundByIdException("Template", id);
 
         await _storageService.DeleteFile(template.Name);
 
@@ -98,6 +96,7 @@ public class TemplateService
 
         byte[] byteArray = Convert.FromBase64String(base64Data);
         var stream = new MemoryStream(byteArray);
+        
         return new FormFile(stream, 0, byteArray.Length, fileName, $"{fileName}.pdf")
         {
             Headers = new HeaderDictionary(),

@@ -4,28 +4,28 @@ export type TemplatePostRequest = {
 
 export type TemplateFieldStyle = {
     id: number,
-    xPos?: number,
-    yPos?: number,
-    width?: number,
-    height?: number,
-    fontSize?: number,
-    fontColor?: string,
-    fontName?: string,
-    alignment?: string
+    xPos: number,
+    yPos: number,
+    width: number,
+    height: number,
+    fontSize: number,
+    fontColor: string,
+    fontName: string,
+    alignment: string
 }
 
 export type TemplateRequest = {
     templateName: string,
     footer: string,
-    footerStyling?: TemplateFieldStyle,
+    footerStyling: TemplateFieldStyle,
     intro: string,
-    introStyling?: TemplateFieldStyle,
+    introStyling: TemplateFieldStyle,
     main: string,
-    mainStyling?: TemplateFieldStyle,
+    mainStyling: TemplateFieldStyle,
     link: string,
-    linkStyling?: TemplateFieldStyle,
+    linkStyling: TemplateFieldStyle,
     basePdf: string,
-    pdfBackgroundLastUpdated?: boolean
+    pdfBackgroundLastUpdated?: Date
 }
 
 export type TemplateResponse = TemplateRequest & {
