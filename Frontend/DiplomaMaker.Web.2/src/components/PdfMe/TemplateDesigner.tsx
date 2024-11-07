@@ -1,9 +1,9 @@
-import { Template } from "@pdfme/common";
 import { useRef } from "react";
 import { usePdfMe } from "../../hooks/usePdfMe";
+import { PdfMeTypes } from "../../services";
 
 interface Props {
-    template?: Template
+    template?: PdfMeTypes.Template
 }
 
 export default function TemplateDesigner({ template }: Props) {
@@ -52,7 +52,7 @@ export default function TemplateDesigner({ template }: Props) {
         <button
             className=''
             onClick={() => {
-                generatePdf([{ field1: 'substituted string' }]);
+                generatePdf([{ '{studentName}': 'Adam', '{bootCamp}': 'JS   ' }]);
             }
             }>
             Generate Pdf

@@ -1,16 +1,28 @@
-import { Template } from "@pdfme/common";
+import { PdfMeTypes } from ".";
+import { TemplateInputs, TemplateSubstitutions } from "../types/types";
 
-export function substitutePlaceholders(template: Template, substitutions: Record<string, string>[]) {
-    return Object.entries(template).map(([schemaName, content]) => {
-        let stringValue = JSON.stringify(content);
+export function substitutePlaceholders(template: PdfMeTypes.Template, substitutions: TemplateSubstitutions) {
+    console.log(substitutions);
+    const inputs: Record<string, unknown> = {};
 
-        substitutions.forEach(substitution => {
-            stringValue = stringValue.replace(substitution[0], substitution[1]);
+    Object.entries(template.schemas[0]).forEach(entry => {
+        const fieldName = entry[1]['name'];
+        let content = entry[1]['content'];
+
+        Object.entries(substitutions[0]).forEach(([placeholder, substitution]) => {
+            content = content!.replace(placeholder, substitution);
         });
 
-        const record: Record<string, unknown> = {};
-        record[schemaName] = stringValue;
+        console.log(content);
 
-        return record;
+        Object.defineProperty(inputs, fieldName, {
+            value: content
+        });
+        // const record: Record<string, unknown> = {};
+        // record[fieldName] = content;
     });
+
+    console.log(inputs[0]);
+
+    return [inputs] as TemplateInputs;
 }

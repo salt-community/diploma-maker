@@ -1,17 +1,16 @@
-import { Template } from "@pdfme/common";
-import { Designer } from "@pdfme/ui";
-
 import { useEffect, useRef } from "react";
 
-import { FileService, PdfMe } from "../services";
+import { FileService, PdfMe, PdfMeTypes } from "../services";
+import { TemplateSubstitutions } from "../types/types";
+import { substitutePlaceholders } from "../services/templatesService";
 
 export function usePdfMe(
     designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
-    initialTemplate?: Template
+    initialTemplate?: PdfMeTypes.Template
 ) {
-    const designer = useRef<Designer | null>(null);
+    const designer = useRef<PdfMeTypes.Designer | null>(null);
 
-    const defaultTemplate: Template = { basePdf: PdfMe.BLANK_PDF, schemas: [[]] };
+    const defaultTemplate: PdfMeTypes.Template = { basePdf: PdfMe.BLANK_PDF, schemas: [[]] };
 
     const plugins = {
         Text: PdfMe.text,
@@ -24,26 +23,34 @@ export function usePdfMe(
             const domContainer = designerContainerRef.current;
 
             if (domContainer)
-                designer.current = new Designer({
+                designer.current = new PdfMeTypes.Designer({
                     domContainer, template: initialTemplate ?? defaultTemplate, plugins
                 });
         }
     });
 
-    async function generatePdf(inputs: Record<string, unknown>[]) {
+    async function generatePdf(inputs: TemplateSubstitutions) {
         if (!designer.current)
             throw new Error("Designer is not initialized");
 
         const template = designer.current.getTemplate();
 
+        console.log(template);
+        const substitutedInputs = substitutePlaceholders(template, inputs);
+        console.log(substitutedInputs);
+
         const pdf = await PdfMe.generate({
             template,
             plugins,
-            inputs
+            inputs: substitutedInputs
         });
 
         const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+
+        //temporary, should not work like this by default later
         window.open(URL.createObjectURL(blob));
+
+        return blob;
     };
 
     async function handleLoadTemplate(event: React.ChangeEvent<HTMLInputElement>) {
@@ -99,7 +106,7 @@ export function usePdfMe(
 }
 
 async function getTemplateFromJsonFile(file: File) {
-    const template: Template = JSON.parse(await FileService.readTextFile(file));
+    const template: PdfMeTypes.Template = JSON.parse(await FileService.readTextFile(file));
     PdfMe.checkTemplate(template);
     return template;
 };

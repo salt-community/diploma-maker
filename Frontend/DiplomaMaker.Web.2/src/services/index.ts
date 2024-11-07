@@ -12,3 +12,8 @@ export const PdfMe = {
     ...PdfMeUi,
     ...PdfMeSchemas
 }
+
+export namespace PdfMeTypes {
+    export type Template = PdfMeCommon.Template;
+    export class Designer extends PdfMeUi.Designer { };
+}
