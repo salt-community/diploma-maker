@@ -30,7 +30,66 @@ public static class SeedData
         _context.Database.EnsureDeleted();
         _context.Database.EnsureCreated();
 
-        var diploma = new DiplomaTemplate() { Name = "Default" };
+        //Template Styles
+        TemplateStyle DefaultFooter = new()
+        {
+            XPos = 0,
+            YPos = 0,
+            Width = 0,
+            Height = 0,
+            FontSize = 0,
+            FontColor = "black",
+            FontName = "arial",
+            Alignment = "center"
+        };
+
+        TemplateStyle DefaultIntro = new()
+        {
+            XPos = 0,
+            YPos = 0,
+            Width = 0,
+            Height = 0,
+            FontSize = 0,
+            FontColor = "black",
+            FontName = "arial",
+            Alignment = "center"
+        };
+
+        TemplateStyle DefaultMain = new()
+        {
+            XPos = 0,
+            YPos = 0,
+            Width = 0,
+            Height = 0,
+            FontSize = 0,
+            FontColor = "black",
+            FontName = "arial",
+            Alignment = "center"
+        };
+
+        TemplateStyle DefaultLink = new()
+        {
+            XPos = 0,
+            YPos = 0,
+            Width = 0,
+            Height = 0,
+            FontSize = 0,
+            FontColor = "black",
+            FontName = "arial",
+            Alignment = "center"
+        };
+
+        _context.AddRange([DefaultFooter, DefaultIntro, DefaultMain, DefaultLink]);
+        _context.SaveChanges();
+
+        var diploma = new DiplomaTemplate()
+        {
+            Name = "Default",
+            FooterStyling = DefaultFooter,
+            IntroStyling = DefaultIntro,
+            MainStyling = DefaultMain,
+            LinkStyling = DefaultLink
+        };
 
         var Dotnet = new Track { Name = "C# Dotnet", Tag = "dnfs" };
         var Java = new Track { Name = "Java", Tag = "jfs" };

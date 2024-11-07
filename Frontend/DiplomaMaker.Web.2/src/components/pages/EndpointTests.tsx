@@ -9,6 +9,9 @@ export function EndpointTests() {
     <div className="p-2">
       <h3>Endpoint tests!</h3>
       <div className="bg-slate-500">
+        <h2>Templates</h2>
+        <TemplatesTest />
+        <hr />
         <h2>Students</h2>
         <hr />
         <GetStudents />

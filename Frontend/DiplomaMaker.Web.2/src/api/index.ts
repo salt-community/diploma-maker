@@ -27,7 +27,7 @@ export const Endpoints = {
 };
 
 export const Dtos = {
-    Blob: { ...BlobTypes },
+    Blob: BlobTypes,
     Bootcamp: { ...BootcampTypes },
     Email: { ...EmailTypes },
     HistorySnapshots: { ...HistorySnapshotsTypes },

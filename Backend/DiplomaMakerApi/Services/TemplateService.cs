@@ -24,12 +24,21 @@ public class TemplateService
             .Include(t => t.LinkStyling)
             .ToListAsync();
     }
-    public async Task<DiplomaTemplate?> GetTemplate(int id) => await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
+
+    public async Task<DiplomaTemplate?> GetTemplate(int id) =>
+        await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
+
     public async Task<DiplomaTemplate> PostTemplate(TemplatePostRequestDto templateRequest)
     {
+        var styles = _context.TemplateStyles.ToList();
+
         var newTemplate = new DiplomaTemplate()
         {
             Name = templateRequest.TemplateName,
+            FooterStyling = styles[0],
+            IntroStyling = styles[1],
+            MainStyling = styles[2],
+            LinkStyling = styles[3]
         };
 
         await _storageService.InitFileFromNewTemplate(templateRequest.TemplateName, "DiplomaPdfs");
@@ -42,7 +51,8 @@ public class TemplateService
     public async Task<DiplomaTemplate?> PutTemplate(int id, TemplateRequestDto templateRequest)
     {
         var template = await _context.DiplomaTemplates.FirstOrDefaultAsync(t => t.Id == id);
-        if (template == null) return null;
+        if (template == null)
+            return null;
 
         template.Name = templateRequest.TemplateName;
         template.Footer = templateRequest.Footer;
