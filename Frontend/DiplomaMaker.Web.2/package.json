@@ -13,7 +13,7 @@
     "dependencies": {
         "@pdfme/common": "^5.1.6",
         "@pdfme/generator": "^5.1.6",
-        "@pdfme/ui": "^3.2.1",
+        "@pdfme/ui": "^5.1.6",
         "@tanstack/react-query": "^5.59.19",
         "@tanstack/react-query-devtools": "^5.59.19",
         "@tanstack/react-router": "^1.78.3",
