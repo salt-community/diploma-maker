@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useTemplates } from "../../hooks/templates";
-import { TemplateFieldStyle, TemplateRequest, TemplateResponse } from "../../api/dtos/templates";
+import { TemplateRequest, TemplateResponse } from "../../api/dtos/templates";
 import { useState } from "react";
 
 type FormValues = TemplateRequest;
@@ -12,7 +12,6 @@ export default function TemplatesTest() {
     postTemplate,
     putTemplate,
     deleteTemplate,
-    templateById
   } = useTemplates();
 
   const { register, handleSubmit } = useForm<FormValues>();
@@ -44,37 +43,6 @@ export default function TemplatesTest() {
       defaultValue={currentTemplate?.templateName}>
     </input>
   );
-
-  type DynamicField = {
-    textContent: string,
-    style: TemplateFieldStyle
-  }
-
-  type TemplateDynamicFields = {
-    footer: DynamicField,
-    intro: DynamicField,
-    main: DynamicField,
-    link: DynamicField
-  }
-
-  const dynamicFields: TemplateDynamicFields = {
-    footer: {
-      textContent: currentTemplate.footer,
-      style: currentTemplate.footerStyling
-    },
-    intro: {
-      textContent: currentTemplate.intro,
-      style: currentTemplate.introStyling
-    },
-    main: {
-      textContent: currentTemplate.main,
-      style: currentTemplate.mainStyling
-    },
-    link: {
-      textContent: currentTemplate.link,
-      style: currentTemplate.linkStyling
-    },
-  };
 
   return (
     <>
