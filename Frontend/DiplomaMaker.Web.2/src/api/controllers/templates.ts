@@ -23,7 +23,7 @@ export async function getTemplateById(id?: number) {
     },
   });
 
-  if (error) throw new Error("404 NotFound: " + error.detail);
+  if (!error) throw new Error("404 NotFound: " + error.detail);
 
   return data as TemplateResponse;
 }

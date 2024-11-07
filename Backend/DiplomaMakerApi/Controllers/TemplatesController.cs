@@ -57,13 +57,20 @@ public class TemplatesController(IMapper _mapper, TemplateService _templateServi
     [HttpDelete("DeleteTemplate/{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> DeleteTemplate(int id)
     {
-        var template = await _templateService.DeleteTemplate(id);
-
-        return template != null
-            ? NoContent()
-            : NotFound();
+        try
+        {
+            var template = await _templateService.DeleteTemplate(id);
+            return template != null
+                ? NoContent()
+                : NotFound();
+        }
+        catch (Exception exception)
+        {
+            return BadRequest(exception.Message);
+        }
     }
 
     [HttpPut("PutTemplate/{id}")]
