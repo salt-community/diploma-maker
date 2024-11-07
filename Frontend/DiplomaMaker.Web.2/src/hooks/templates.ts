@@ -12,24 +12,25 @@ export function useTemplates() {
 
     const templates = getAllTemplatesQuery.data ?? [];
 
-    const getTemplateQuery = useMutation({
+    const getTemplateMutation = useMutation({
         mutationFn: async (id: number) => await Endpoints.Templates.getTemplateById(id),
         onSuccess: (templateResponse) => updateTemplateCacheWith(templateResponse)
     });
 
-    const postTemplateQuery = useMutation({
+    const postTemplateMutation = useMutation({
         mutationFn: async (request: TemplatePostRequest) => await Endpoints.Templates.postTemplate(request),
         onSuccess: (templateResponse) => updateTemplateCacheWith(templateResponse)
     });
 
-    const putTemplateQuery = useMutation({
+    const putTemplateMutation = useMutation({
         mutationFn: async ({ id, request }: { id: number, request: TemplateRequest }) => await Endpoints.Templates.putTemplate(id, request),
-        onSuccess: (templateResponse) => updateTemplateCacheWith(templateResponse)
+        onSuccess: (templateResponse) => updateTemplateCacheWith(templateResponse!)
     });
 
     const deleteTemplateMutation = useMutation({
         mutationFn: async (id: number) => await Endpoints.Templates.deleteTemplate(id),
-        onSuccess: (_, id) => deleteTemplateFromCache(id)
+        onSuccess: (_, id) => deleteTemplateFromCache(id),
+        onError: (error) => console.error(error)
     });
 
     const updateTemplateCacheWith = (template: TemplateResponse) => {
@@ -50,15 +51,15 @@ export function useTemplates() {
     const templateById = (id: number) => {
         const template = templates.find((template) => template.id == id);
         if (template) return template;
-        getTemplateQuery.mutate(id);
+        getTemplateMutation.mutate(id);
     };
 
     return {
         templates,
         postTemplate: (templateName: string) =>
-            postTemplateQuery.mutate({ templateName }),
+            postTemplateMutation.mutate({ templateName }),
         putTemplate: (id: number, template: TemplateRequest) =>
-            putTemplateQuery.mutate({ id, request: template }),
+            putTemplateMutation.mutate({ id, request: template }),
         templateById,
         deleteTemplate: (id: number) =>
             deleteTemplateMutation.mutate(id)

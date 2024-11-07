@@ -63,5 +63,5 @@ export async function deleteTemplate(id: number) {
 
   if (!error) return;
 
-  throw new Error(`${error.status}: ${error.detail}`);
+  throw new Error(`${error.status}: ${error}`);
 }
