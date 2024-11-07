@@ -13,7 +13,8 @@ export default function Designer({ template }: Props) {
         onDownloadTemplate,
         onResetTemplate,
         handleLoadTemplate,
-        onChangeBasePdf } = useDesigner(containerRef, template);
+        onChangeBasePdf,
+        generatePdf } = useDesigner(containerRef, template);
 
     const DownloadTemplateButton = (
         <button
@@ -47,6 +48,17 @@ export default function Designer({ template }: Props) {
             onChange={onChangeBasePdf} />
     );
 
+    const GeneratePdfButton = (
+        <button
+            className=''
+            onClick={() => {
+                generatePdf([{ a: 'a1' }]);
+            }
+            }>
+            Generate Pdf
+        </button >
+    )
+
     const DesignerContainer = (
         <div ref={containerRef}></div>
     );
@@ -55,6 +67,7 @@ export default function Designer({ template }: Props) {
         <>
             {DownloadTemplateButton}
             {ResetTemplateButton}
+            {GeneratePdfButton}
             {LoadTemplateInput}
             {ChangeBasePdfInput}
             {DesignerContainer}

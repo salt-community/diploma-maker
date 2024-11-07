@@ -10,7 +10,9 @@ export function useDesigner(
     template?: Template
 ) {
     const designer = useRef<Designer | null>(null);
+
     const defaultTemplate: Template = { basePdf: BLANK_PDF, schemas: [[]] };
+
     const plugins = {
         Text: text,
         QR: barcodes.qrcode,
@@ -40,7 +42,8 @@ export function useDesigner(
             inputs
         });
 
-        return new Blob([pdf.buffer], { type: "application/pdf" });
+        const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+        window.open(URL.createObjectURL(blob));
     };
 
     async function handleLoadTemplate(event: React.ChangeEvent<HTMLInputElement>) {
@@ -63,6 +66,7 @@ export function useDesigner(
 
         const basePdf = await readDataUrlFile(event.target.files[0])
         const currentTemplate = designer.current.getTemplate();
+
         designer.current.updateTemplate(
             Object.assign(JSON.parse(JSON.stringify(currentTemplate)), {
                 basePdf
