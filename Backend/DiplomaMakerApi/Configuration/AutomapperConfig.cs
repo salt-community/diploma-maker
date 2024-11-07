@@ -15,7 +15,10 @@ public class AutomapperConfig : Profile
         CreateMap<Student, StudentResponseDto>()
              .ForMember(d => d.Guid, opt => opt.MapFrom(src => src.GuidId))
              .ReverseMap();
-        CreateMap<TemplateResponseDto, DiplomaTemplate>().ReverseMap();
+        CreateMap<TemplateResponseDto, DiplomaTemplate>()
+            .ForMember(d => d.Name, opt => opt.MapFrom(src => src.TemplateName))
+            .ReverseMap();
+        CreateMap<TemplateStyle, TemplateFieldStyleDto>().ReverseMap();
         CreateMap<StudentUpdateRequestDto, Student>().ReverseMap();
         CreateMap<Track, TracksResponseDto>();
         CreateMap<TemplateStyle, TemplateFieldStyleDto>();

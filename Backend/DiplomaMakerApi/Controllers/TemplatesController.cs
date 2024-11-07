@@ -16,7 +16,14 @@ public class TemplatesController(IMapper _mapper, TemplateService _templateServi
     public async Task<ActionResult<List<TemplateResponseDto>>> GetTemplates()
     {
         var templates = await _templateService.GetTemplates();
+
+        foreach (var template in templates)
+            Console.WriteLine(template.Name);
+
         var templateResponseDtos = _mapper.Map<List<TemplateResponseDto>>(templates);
+
+        foreach (var template in templateResponseDtos)
+            Console.WriteLine(template.TemplateName);
 
         return Ok(templateResponseDtos);
     }
