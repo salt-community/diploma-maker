@@ -91,7 +91,7 @@ export function usePdfMe(
         if (!designer.current)
             throw new Error("Designer is not initialized");
 
-        // FileService.downloadJsonFile(designer.current.getTemplate(), "template");
+        FileService.downloadJsonFile(designer.current.getTemplate(), "template");
         onSaveTemplateToBackend();
     };
 

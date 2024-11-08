@@ -21,6 +21,23 @@ export function substitutePlaceholders(template: PdfMeTypes.Template, substituti
     return [inputs] as TemplateInputs;
 }
 
+export function substituteImageDataInTemplateWithPlaceholders(template: PdfMeTypes.Template, guids: string[]) {
+    let guidIndex = 0;
+
+    Object.entries(template.schemas[0]).forEach(entry => {
+        if (guidIndex >= guids.length)
+            return;
+
+        const typeName = entry[1]['type'];
+        if (typeName == 'image') {
+            entry[1]['content'] = `{${guids[guidIndex]}}`;
+            guidIndex++;
+        }
+    });
+
+    return template;
+}
+
 export async function getTemplateFromJsonFile(file: File) {
     const template: PdfMeTypes.Template = JSON.parse(await FileService.readTextFile(file));
     PdfMe.checkTemplate(template);
