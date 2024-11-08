@@ -28,8 +28,8 @@ export interface paths {
                 };
             };
             responses: {
-                /** @description Success */
-                200: {
+                /** @description Created */
+                201: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -47,7 +47,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/File/GetFile": {
+    "/api/File/GetFile/{guid}": {
         parameters: {
             query?: never;
             header?: never;
@@ -56,11 +56,11 @@ export interface paths {
         };
         get: {
             parameters: {
-                query?: {
-                    guid?: string;
-                };
+                query?: never;
                 header?: never;
-                path?: never;
+                path: {
+                    guid: string;
+                };
                 cookie?: never;
             };
             requestBody?: never;
@@ -71,9 +71,20 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["StringFile"][];
-                        "application/json": components["schemas"]["StringFile"][];
-                        "text/json": components["schemas"]["StringFile"][];
+                        "text/plain": components["schemas"]["StringFile"];
+                        "application/json": components["schemas"]["StringFile"];
+                        "text/json": components["schemas"]["StringFile"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
                     };
                 };
             };
@@ -90,6 +101,16 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        ProblemDetails: {
+            type?: string | null;
+            title?: string | null;
+            /** Format: int32 */
+            status?: number | null;
+            detail?: string | null;
+            instance?: string | null;
+        } & {
+            [key: string]: unknown;
+        };
         StringFile: {
             /** Format: int32 */
             id?: number;

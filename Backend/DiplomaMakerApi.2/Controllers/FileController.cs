@@ -26,7 +26,7 @@ public class FileController(DiplomaMakerContext _context) : ControllerBase
         return Ok(stringFile.Guid);
     }
 
-    [HttpGet("GetFile")]
+    [HttpGet("GetFile/{guid}")]
     [ProducesResponseType<StringFile>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<List<StringFile>> GetFile(string guid)
