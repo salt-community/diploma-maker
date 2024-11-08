@@ -79,6 +79,19 @@ export function usePdfMe(
         );
     };
 
+    async function onUploadPdf(event: React.ChangeEvent<HTMLInputElement>) {
+        if (!event.target?.files)
+            throw new Error("Files are not defined");
+
+        const pdf = await FileService.readDataUrlFile(event.target.files[0]);
+
+        await client.POST("/api/File/SaveTemplate", {
+            body: {
+                content: JSON.stringify(pdf)
+            }
+        });
+    }
+
     function onDownloadTemplate() {
         if (!designer.current)
             throw new Error("Designer is not initialized");
@@ -115,6 +128,7 @@ export function usePdfMe(
         handleLoadTemplate,
         onChangeBasePdf,
         onDownloadTemplate,
-        onResetTemplate
+        onResetTemplate,
+        onUploadPdf
     }
 }
