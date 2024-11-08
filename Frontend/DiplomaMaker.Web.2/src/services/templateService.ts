@@ -1,3 +1,10 @@
+/*
+    TemplateService
+    
+    A collection of methods that manipulates PdfMe templates
+    and pdf generation.
+*/
+
 import { FileService, PdfMe, PdfMeTypes } from ".";
 import { Types } from "../types";
 
@@ -48,7 +55,7 @@ export function substitutePlaceholdersWithContent(
 }
 
 /*
-    Takes a PdeMe Template created in the designer and
+    Accepts a PdeMe Template created in the designer and
     removes all dynamic non-text content and replaces it
     with guid placeholders.
 

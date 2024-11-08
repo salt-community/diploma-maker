@@ -1,4 +1,11 @@
 /*
+    FileService
+    
+    A collection of methods that supports downloading
+    and uploading files.
+*/
+
+/*
     Accepts a File object from an <input type="file"> element
     and returns a string.
 */
