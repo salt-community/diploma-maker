@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomaMakerApi", "DiplomaM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomaMakerApi.Tests.Integration", "DiplomaMakerApi.Tests.Integration\DiplomaMakerApi.Tests.Integration.csproj", "{8732A8F6-0BCC-4AF6-993F-B228514BFCB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomaMakerApi.2", "DiplomaMakerApi.2\DiplomaMakerApi.2.csproj", "{484DB36D-4773-44E8-922F-D04DD886204D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{8732A8F6-0BCC-4AF6-993F-B228514BFCB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8732A8F6-0BCC-4AF6-993F-B228514BFCB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8732A8F6-0BCC-4AF6-993F-B228514BFCB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{484DB36D-4773-44E8-922F-D04DD886204D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{484DB36D-4773-44E8-922F-D04DD886204D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{484DB36D-4773-44E8-922F-D04DD886204D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{484DB36D-4773-44E8-922F-D04DD886204D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
