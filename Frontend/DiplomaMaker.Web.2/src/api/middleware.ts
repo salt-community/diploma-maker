@@ -1,3 +1,10 @@
+/*
+    Middleware
+
+    Defines OpenApi TypeScript middleware for use with the client.
+*/
+
+
 import { Middleware } from "openapi-fetch";
 
 export const throwOnError: Middleware = {

@@ -1,3 +1,10 @@
+/*
+    usePdfMe
+
+    A hook that serves as a layer between PdfMe and any component
+    that wishes to use its functionality.
+*/
+
 import { useEffect, useRef } from "react";
 
 import { FileService, PdfMe, PdfMeTypes, TemplateService } from "../services";

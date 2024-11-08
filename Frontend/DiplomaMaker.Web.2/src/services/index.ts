@@ -1,3 +1,9 @@
+/*
+    Services
+
+    A collection of methods that simplifies other code.
+*/
+
 export * as FileService from './fileService'
 export * as TemplateService from './templateService'
 

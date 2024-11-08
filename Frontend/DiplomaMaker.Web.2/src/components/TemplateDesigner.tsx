@@ -1,6 +1,13 @@
+/*
+    TemplateDesigner
+
+    A component that instantiates the UI for interacting 
+    with PdfMe Templates.
+*/
+
 import { useRef } from "react";
-import { usePdfMe } from "../../hooks/usePdfMe";
-import { PdfMeTypes } from "../../services";
+import { usePdfMe } from "../hooks/usePdfMe";
+import { PdfMeTypes } from "../services";
 
 interface Props {
     template?: PdfMeTypes.Template

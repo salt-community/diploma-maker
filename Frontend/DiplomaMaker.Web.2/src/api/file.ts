@@ -1,3 +1,11 @@
+/*
+    File
+
+    Methods that directly corresponds to the endpoints of the
+    FileController in the backend.
+*/
+
+
 import { client } from "./client";
 
 export async function UploadFile(fileType: string, content: string) {
