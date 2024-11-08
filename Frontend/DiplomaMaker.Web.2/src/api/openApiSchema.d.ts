@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/Template/SaveTemplate": {
+    "/api/File/SaveTemplate": {
         parameters: {
             query?: never;
             header?: never;
@@ -43,10 +43,52 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/File/GetTemplates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["StringFile"][];
+                        "application/json": components["schemas"]["StringFile"][];
+                        "text/json": components["schemas"]["StringFile"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        StringFile: {
+            /** Format: int32 */
+            id?: number;
+            content?: string | null;
+        };
         StringFileDto: {
             content?: string | null;
         };

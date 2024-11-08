@@ -3,7 +3,6 @@ import { useEffect, useRef } from "react";
 import { FileService, PdfMe, PdfMeTypes, TemplateService } from "../services";
 import { TemplateSubstitutions } from "../types/types";
 import { client } from "../api/controllers/client";
-import { components } from '../api/openApiSchema';
 
 export function usePdfMe(
     designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
@@ -94,11 +93,14 @@ export function usePdfMe(
 
         const template = designer.current.getTemplate();
 
-        await client.POST("/api/Template/SaveTemplate", {
+        await client.POST("/api/File/SaveTemplate", {
             body: {
-                content: "sdfafsa"
+                content: JSON.stringify(template)
             }
         });
+
+        const { data } = await client.GET("/api/File/GetTemplates");
+        console.log(data);
     }
 
     function onResetTemplate() {

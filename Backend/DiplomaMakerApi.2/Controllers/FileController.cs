@@ -9,7 +9,7 @@ public record StringFileDto(string Content);
 
 [Route("api/[controller]")]
 [ApiController]
-public class TemplateController(DiplomaMakerContext _context) : ControllerBase
+public class FileController(DiplomaMakerContext _context) : ControllerBase
 {
     [HttpPost("SaveTemplate")]
     public IActionResult SaveTemplate(StringFileDto file)
@@ -22,5 +22,11 @@ public class TemplateController(DiplomaMakerContext _context) : ControllerBase
         _context.Add(stringFile);
         _context.SaveChanges();
         return Ok();
+    }
+
+    [HttpGet("GetTemplates")]
+    public ActionResult<List<StringFile>> GetTemplates()
+    {
+        return _context.StringFiles.ToList();
     }
 }
