@@ -53,7 +53,7 @@ export default function TemplateDesigner({ template }: Props) {
         <button
             className=''
             onClick={() => {
-                generatePdf({ '{studentName}': 'Adam', '{bootCamp}': 'JS   ' });
+                generatePdf({ '{studentName}': 'Adam', '{bootCamp}': 'JS' });
             }
             }>
             Generate Pdf
