@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { FileService, PdfMe, PdfMeTypes, TemplateService } from "../services";
 import { TemplateSubstitutions } from "../types/types";
 import { client } from "../api/controllers/client";
+import { components } from "../api/openApiSchema";
 
 export function usePdfMe(
     designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
@@ -84,12 +85,15 @@ export function usePdfMe(
             throw new Error("Files are not defined");
 
         const pdf = await FileService.readDataUrlFile(event.target.files[0]);
-
-        await client.POST("/api/File/SaveTemplate", {
-            body: {
-                content: JSON.stringify(pdf)
-            }
+        const body: components['schemas']['StringFileDto'] = {
+            fileType: "pdf",
+            content: JSON.stringify(pdf)
+        }
+        const { data } = await client.POST("/api/File/UploadFile", {
+            body
         });
+
+        console.log(data);
     }
 
     function onDownloadTemplate() {
@@ -106,7 +110,7 @@ export function usePdfMe(
 
         const template = designer.current.getTemplate();
 
-        await client.POST("/api/File/SaveTemplate", {
+        await client.POST("/api/File/UploadFile", {
             body: {
                 content: JSON.stringify(template)
             }

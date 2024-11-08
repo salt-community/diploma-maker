@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/File/SaveTemplate": {
+    "/api/File/UploadFile": {
         parameters: {
             query?: never;
             header?: never;
@@ -33,7 +33,11 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "text/plain": string;
+                        "application/json": string;
+                        "text/json": string;
+                    };
                 };
             };
         };
@@ -43,7 +47,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/File/GetTemplates": {
+    "/api/File/GetFile": {
         parameters: {
             query?: never;
             header?: never;
@@ -52,7 +56,9 @@ export interface paths {
         };
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    guid?: string;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -87,9 +93,13 @@ export interface components {
         StringFile: {
             /** Format: int32 */
             id?: number;
+            /** Format: uuid */
+            guid?: string;
+            type?: string | null;
             content?: string | null;
         };
         StringFileDto: {
+            fileType?: string | null;
             content?: string | null;
         };
     };

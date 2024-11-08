@@ -5,28 +5,32 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomaMakerApi._2.Controllers;
 
-public record StringFileDto(string Content);
+public record StringFileDto(string FileType, string Content);
 
 [Route("api/[controller]")]
 [ApiController]
 public class FileController(DiplomaMakerContext _context) : ControllerBase
 {
-    [HttpPost("SaveTemplate")]
-    public IActionResult SaveTemplate(StringFileDto file)
+    [HttpPost("UploadFile")]
+    public ActionResult<string> UploadFile(StringFileDto file)
     {
-        Console.WriteLine(file);
         var stringFile = new StringFile()
         {
+            Type = file.FileType,
             Content = file.Content
         };
-        _context.Add(stringFile);
+
+        _context.Files.Add(stringFile);
         _context.SaveChanges();
-        return Ok();
+        return Ok(stringFile.Guid);
     }
 
-    [HttpGet("GetTemplates")]
-    public ActionResult<List<StringFile>> GetTemplates()
+    [HttpGet("GetFile")]
+    public ActionResult<List<StringFile>> GetFile(string guid)
     {
-        return _context.StringFiles.ToList();
+        var file = _context.Files.FirstOrDefault(file => file.Guid.ToString() == guid);
+        return file is not null
+            ? Ok(file)
+            : NotFound($"A file with guid {guid} doesn't exist");
     }
 }
