@@ -10,7 +10,6 @@ using DiplomaMakerApi.Middleware;
 using DiplomaMakerApi.Configuration;
 using DiplomaMakerApi.Data;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 var logger = LoggerFactory.Create(loggingBuilder =>

@@ -1,17 +1,25 @@
-using DiplomaMakerApi._2.Models;
+using DiplomaMakerApi._2.Database;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+string connectionString = (builder.Environment.IsDevelopment()
+    ? builder.Configuration["PostgreSQLConnectionLocal"]
+    : Environment.GetEnvironmentVariable("PostgreConnection"))
+        ?? throw new InvalidOperationException("Connection string 'DiplomaMakerContext' not found.");
+
+builder.Services.AddDbContext<DiplomaMakerContext>(options =>
+    options.UseNpgsql(connectionString));
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using var scope = app.Services.CreateScope();
+scope.ServiceProvider.GetRequiredService<DiplomaMakerContext>().SeedData();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

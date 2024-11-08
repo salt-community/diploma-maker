@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>DiplomaMakerApi._2</RootNamespace>
+    <UserSecretsId>95a013e5-283a-4dd1-b81c-f202721a73f4</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
