@@ -35,7 +35,7 @@ export function usePdfMe(
 
         const template = designer.current.getTemplate();
 
-        const substitutedInputs = TemplateService.substitutePlaceholders(template, inputs);
+        const substitutedInputs = TemplateService.substitutePlaceholdersWithContent(template, inputs);
 
         const pdf = await PdfMe.generate({
             template,
