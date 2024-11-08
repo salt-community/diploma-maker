@@ -85,6 +85,23 @@ export function usePdfMe(
         FileService.downloadJsonFile(designer.current.getTemplate(), "template");
     };
 
+    async function onSaveTemplateToBackend() {
+        if (!designer.current)
+            throw new Error("Designer is not initialized");
+
+        const template = designer.current.getTemplate();
+        
+        const result = await fetch("http://localhost:5171/api/Template/SaveTemplate", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({
+                content: JSON.stringify(template)
+            })
+        });
+    }
+
     function onResetTemplate() {
         if (!designer.current)
             throw new Error("Designer is not initialized");
