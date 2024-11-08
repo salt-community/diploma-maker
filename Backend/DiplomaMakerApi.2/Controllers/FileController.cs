@@ -1,25 +1,21 @@
-using DiplomaMakerApi._2.Database;
-using DiplomaMakerApi._2.Models;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+
+using DiplomaMakerApi._2.Database;
+using DiplomaMakerApi._2.Dto;
+using DiplomaMakerApi._2.Models;
 
 namespace DiplomaMakerApi._2.Controllers;
 
-public record StringFileDto(string FileType, string Content);
-
 [Route("api/[controller]")]
 [ApiController]
-public class FileController(DiplomaMakerContext _context) : ControllerBase
+public class FileController(DiplomaMakerContext _context, IMapper _mapper) : ControllerBase
 {
     [HttpPost("UploadFile")]
     [ProducesResponseType<string>(StatusCodes.Status201Created)]
     public ActionResult<string> UploadFile(StringFileDto file)
     {
-        var stringFile = new StringFile()
-        {
-            Type = file.FileType,
-            Content = file.Content
-        };
-
+        var stringFile = _mapper.Map<StringFile>(file);
         _context.Files.Add(stringFile);
         _context.SaveChanges();
 
@@ -27,13 +23,19 @@ public class FileController(DiplomaMakerContext _context) : ControllerBase
     }
 
     [HttpGet("GetFile/{guid}")]
-    [ProducesResponseType<StringFile>(StatusCodes.Status200OK)]
+    [ProducesResponseType<StringFileDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<List<StringFile>> GetFile(string guid)
+    public ActionResult<StringFileDto> GetFile(string guid)
     {
         var file = _context.Files.FirstOrDefault(file => file.Guid.ToString() == guid);
+
         return file is not null
             ? Ok(file)
             : NotFound($"A file with guid {guid} doesn't exist");
     }
+
+    [HttpGet("GetAllFilesOfType/{fileType}")]
+    [ProducesResponseType<List<StringFileDto>>(StatusCodes.Status200OK)]
+    public List<StringFileDto> GetAllFilesOfType(string fileType) =>
+        _mapper.Map<List<StringFileDto>>(_context.Files.Where(file => file.FileType == fileType));
 }
