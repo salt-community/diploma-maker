@@ -1,5 +1,5 @@
 export * as FileService from './fileService'
-export * as TemplateService from './templatesService'
+export * as TemplateService from './templateService'
 
 import * as PdfMeCommon from '@pdfme/common'
 import * as PdfMeGenerator from '@pdfme/generator'
