@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 
 import { FileService, PdfMe, PdfMeTypes, TemplateService } from "../services";
 import { TemplateSubstitutions } from "../types/types";
+import { client } from "../api/controllers/client";
+import { components } from '../api/openApiSchema';
 
 export function usePdfMe(
     designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
@@ -82,7 +84,8 @@ export function usePdfMe(
         if (!designer.current)
             throw new Error("Designer is not initialized");
 
-        FileService.downloadJsonFile(designer.current.getTemplate(), "template");
+        // FileService.downloadJsonFile(designer.current.getTemplate(), "template");
+        onSaveTemplateToBackend();
     };
 
     async function onSaveTemplateToBackend() {
@@ -90,15 +93,11 @@ export function usePdfMe(
             throw new Error("Designer is not initialized");
 
         const template = designer.current.getTemplate();
-        
-        const result = await fetch("http://localhost:5171/api/Template/SaveTemplate", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json"
-            },
-            body: JSON.stringify({
-                content: JSON.stringify(template)
-            })
+
+        await client.POST("/api/Template/SaveTemplate", {
+            body: {
+                content: "sdfafsa"
+            }
         });
     }
 

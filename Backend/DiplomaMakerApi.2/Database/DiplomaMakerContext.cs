@@ -11,6 +11,7 @@ public class DiplomaMakerContext(DbContextOptions<DiplomaMakerContext> options) 
     public DbSet<Template> Templates { get; set; }
     public DbSet<Diploma> Diplomas { get; set; }
     public DbSet<Track> Tracks { get; set; }
+    public DbSet<StringFile> StringFiles { get; set; }
 
     public void SeedData()
     {

@@ -1,18 +1,26 @@
+using DiplomaMakerApi._2.Database;
+using DiplomaMakerApi._2.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DiplomaMakerApi._2.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TemplateController : ControllerBase
-    {
-        [HttpPost("SaveTemplate")]
-        public void SaveTemplate([FromBody] StringWrapper template)
-        {
-            Console.WriteLine(template);
-        }
+namespace DiplomaMakerApi._2.Controllers;
 
-        public record StringWrapper(string Content);
+public record StringFileDto(string Content);
+
+[Route("api/[controller]")]
+[ApiController]
+public class TemplateController(DiplomaMakerContext _context) : ControllerBase
+{
+    [HttpPost("SaveTemplate")]
+    public IActionResult SaveTemplate(StringFileDto file)
+    {
+        Console.WriteLine(file);
+        var stringFile = new StringFile()
+        {
+            Content = file.Content
+        };
+        _context.Add(stringFile);
+        _context.SaveChanges();
+        return Ok();
     }
 }
