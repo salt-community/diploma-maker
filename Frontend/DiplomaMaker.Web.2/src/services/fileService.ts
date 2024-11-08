@@ -1,3 +1,7 @@
+/*
+    Accepts a File object from an <input type="file"> element
+    and returns a string.
+*/
 export async function readTextFile(file: File) {
     return new Promise<string>((resolve) => {
         const fileReader = new FileReader();
@@ -13,6 +17,10 @@ export async function readTextFile(file: File) {
     });
 }
 
+/*
+    Accepts a File object from an <input type="file"> element
+    and returns a string.
+*/
 export async function readDataUrlFile(file: File) {
     return new Promise<string>((resolve) => {
         const fileReader = new FileReader();
@@ -28,6 +36,10 @@ export async function readDataUrlFile(file: File) {
     });
 }
 
+/*
+    Accepts any object and downloads it to the clients computer 
+    as a json file.
+*/
 export const downloadJsonFile = (fileObject: unknown, title: string) => {
     const blob = new Blob([JSON.stringify(fileObject)], {
         type: "application/json",
