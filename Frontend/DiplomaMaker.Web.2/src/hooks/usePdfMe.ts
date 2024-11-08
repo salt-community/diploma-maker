@@ -18,7 +18,7 @@ export function usePdfMe(
     };
 
     useEffect(() => {
-        if (designerContainerRef) {
+        if (designerContainerRef && !designer.current) {
             const domContainer = designerContainerRef.current;
 
             if (domContainer)
@@ -34,9 +34,7 @@ export function usePdfMe(
 
         const template = designer.current.getTemplate();
 
-        console.log(template);
         const substitutedInputs = TemplateService.substitutePlaceholders(template, inputs);
-        console.log(substitutedInputs);
 
         const pdf = await PdfMe.generate({
             template,
@@ -95,7 +93,6 @@ export function usePdfMe(
     };
 
     return {
-        designer: designer.current,
         generatePdf,
         handleLoadTemplate,
         onChangeBasePdf,

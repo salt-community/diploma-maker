@@ -28,8 +28,8 @@ export async function readDataUrlFile(file: File) {
     });
 }
 
-export const downloadJsonFile = (json: unknown, title: string) => {
-    const blob = new Blob([JSON.stringify(json)], {
+export const downloadJsonFile = (fileObject: unknown, title: string) => {
+    const blob = new Blob([JSON.stringify(fileObject)], {
         type: "application/json",
     });
 
