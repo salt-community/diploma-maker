@@ -38,6 +38,7 @@ public class Template() : BaseEntity<Template>()
 
 public class Bootcamp() : BaseEntity<Bootcamp>()
 {
+    public DateTime GraduationDate { get; set; } = DateTime.Now;
     public List<Student>? Students { get; set; } = [];
     public Track? Track { get; set; } = new();
 };

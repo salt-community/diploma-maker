@@ -9,7 +9,6 @@
     patched directly from dtos.
 */
 
-
 using DiplomaMakerApi._2.Models;
 
 namespace DiplomaMakerApi._2.Dto;

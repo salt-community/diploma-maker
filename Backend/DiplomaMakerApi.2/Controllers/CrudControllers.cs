@@ -1,3 +1,10 @@
+/*
+    CrudControllers
+
+    A collection of controllers that map one-to-one to entities.
+    All inherits functionality from CrudControllerBase.
+*/
+
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 

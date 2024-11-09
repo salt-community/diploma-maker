@@ -36,7 +36,7 @@ public static class MockerService
 
     public static List<Student> MockStudents(int count) =>
         new Faker<Student>()
-            .RuleFor(student => student.Name, f => f.Person.Name)
+            .RuleFor(student => student.Name, f => f.Person.FullName)
             .RuleFor(student => student.Email, f => f.Person.Email)
             .Generate(count).ToList();
 
@@ -48,7 +48,7 @@ public static class MockerService
     public static List<StringFile> MockStringFiles(List<string> fileTypes, int count) =>
         new Faker<StringFile>()
             .RuleFor(stringFile => stringFile.FileType, f => RandomElement(fileTypes))
-            .RuleFor(stringFile => stringFile.Content, f => f.Image.Image())
+            .RuleFor(stringFile => stringFile.Content, f => f.Lorem.Paragraphs(50))
             .Generate(count).ToList();
 
     public static List<Bootcamp> MockBootcamps(
@@ -56,6 +56,7 @@ public static class MockerService
         List<Track> tracks,
         int count) =>
         new Faker<Bootcamp>()
+            .RuleFor(bootcamp => bootcamp.GraduationDate, f => f.Date.Between(new DateTime(2015, 1, 1), DateTime.Now))
             .RuleFor(bootcamp => bootcamp.Students, f => RandomSubset(students))
             .RuleFor(bootcamp => bootcamp.Track, f => RandomElement(tracks))
             .Generate(count).ToList();

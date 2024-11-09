@@ -1,7 +1,18 @@
+/*
+    CrudControllerBase
+
+    Defines a base controller from which all crud controllers inherit.
+    The base provides basic crud functionality for one specific 
+    entity/entityDto pair.
+
+    TODO: Find a what to annotate each method specific to the entity type in the derived controller
+*/
+
+using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+
 using DiplomaMakerApi._2.Database;
 using DiplomaMakerApi._2.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomaMakerApi._2.Controllers;
 
