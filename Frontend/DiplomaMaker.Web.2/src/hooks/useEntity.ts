@@ -7,11 +7,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ControllerName, Dto, Endpoints } from "../api";
 
-interface Props {
-    controller: ControllerName
-}
-
-export default function useEntity<TEntity extends Dto>({ controller }: Props) {
+export default function useEntity<TEntity extends Dto>(controller: ControllerName) {
     const client = useQueryClient();
 
     const getAllEntitiesQuery = useQuery({

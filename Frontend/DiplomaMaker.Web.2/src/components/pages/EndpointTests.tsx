@@ -1,9 +1,10 @@
-import TemplateDesigner from "../TemplateDesigner";
+import { Student } from "../../api";
+import EntityTable from "../EntityTable";
 
 export function EndpointTests() {
   return (
     <>
-      <TemplateDesigner />
+      <EntityTable<Student> controller={'Student'} />
     </>
   );
 }
