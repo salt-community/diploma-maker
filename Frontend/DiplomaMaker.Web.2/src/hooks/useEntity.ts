@@ -5,19 +5,22 @@
 */
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ControllerName, Endpoints } from "../api";
+import { ControllerName, Dto, Endpoints } from "../api";
 
 interface Props {
     controller: ControllerName
 }
 
-export default function useEntity({ controller }: Props) {
+export default function useEntity<TEntity extends Dto>({ controller }: Props) {
     const getAllQuery = useQuery({
         queryKey: [controller],
-        queryFn: async () => await Endpoints.GetAll(controller)
+        queryFn: async () => await Endpoints.GetAll(controller) as TEntity[]
     });
 
     const getByGuidMutation = useMutation({
-        mutationFn: async (variables) => await Endpoints.GetByGuid(controller)
+        mutationFn: async (guid: string) => await Endpoints.GetByGuid(controller, guid) as TEntity,
+        onSuccess: (dto: TEntity) => {
+            
+        }
     });
 }
