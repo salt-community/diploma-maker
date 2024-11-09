@@ -27,6 +27,8 @@ public static class MockerService
             set.Remove(randomElement);
         }
 
+        Console.WriteLine(subset.Count);
+
         return subset;
     }
 

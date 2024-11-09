@@ -14,6 +14,29 @@ public class DiplomaMakerContext(DbContextOptions<DiplomaMakerContext> options) 
     public DbSet<Track> Tracks { get; set; }
     public DbSet<StringFile> Files { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        /*
+            Auto includes nested properties in entities. This is done 
+            here so that the controllers don't have to specify these
+            properties when getting entities from the database,
+            allowing all of them to inherit their functionality from 
+            CrudControllerBase.
+        */
+        
+        modelBuilder.Entity<Diploma>()
+            .Navigation(e => e.Student).AutoInclude();
+        modelBuilder.Entity<Diploma>()
+            .Navigation(e => e.Template).AutoInclude();
+        modelBuilder.Entity<Diploma>()
+            .Navigation(e => e.Bootcamp).AutoInclude();
+
+        modelBuilder.Entity<Bootcamp>()
+            .Navigation(e => e.Students).AutoInclude();
+        modelBuilder.Entity<Bootcamp>()
+            .Navigation(e => e.Track).AutoInclude();
+    }
+
     public void SeedData()
     {
         Database.EnsureDeleted();

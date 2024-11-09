@@ -18,38 +18,38 @@ namespace DiplomaMakerApi._2.Models;
 
 public class Track() : BaseEntity<Track>()
 {
-    public string? Name { get; set; } = string.Empty;
+    public string? Name { get; set; }
 };
 
 public class Student() : BaseEntity<Student>()
 {
-    public string? Name { get; set; } = string.Empty;
-    public string? Email { get; set; } = string.Empty;
+    public string? Name { get; set; }
+    public string? Email { get; set; }
 }
 
 public class StringFile() : BaseEntity<StringFile>()
 {
-    public string? FileType { get; set; } = string.Empty;
-    public string? Content { get; set; } = string.Empty;
+    public string? FileType { get; set; }
+    public string? Content { get; set; }
 }
 
 public class Template() : BaseEntity<Template>()
 {
-    public Guid? BasePdfGuid { get; set; } = null;
+    public Guid? BasePdfGuid { get; set; }
 }
 
 public class Bootcamp() : BaseEntity<Bootcamp>()
 {
     // Needed to store date in PostgreSQL, see: https://stackoverflow.com/questions/73693917/net-postgres-ef-core-cannot-write-datetime-with-kind-local-to-postgresql-type
-    [Column(TypeName = "timestamp(6)")] 
-    public DateTime GraduationDate { get; set; } = DateTime.Now;
-    public List<Student>? Students { get; set; } = [];
-    public Track? Track { get; set; } = new();
+    [Column(TypeName = "timestamp(6)")]
+    public DateTime GraduationDate { get; set; }
+    public List<Student>? Students { get; set; }
+    public Track? Track { get; set; }
 };
 
 public class Diploma() : BaseEntity<Diploma>()
 {
-    public Student? Student { get; set; } = new();
-    public Bootcamp? Bootcamp { get; set; } = new();
-    public Template? Template { get; set; } = new();
+    public Student? Student { get; set; }
+    public Bootcamp? Bootcamp { get; set; }
+    public Template? Template { get; set; }
 }
