@@ -4,7 +4,7 @@
     Generic hook for working with CRUD entities on the backend.
 */
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ControllerName, Dto, Endpoints } from "../api";
 
 interface Props {
@@ -12,15 +12,67 @@ interface Props {
 }
 
 export default function useEntity<TEntity extends Dto>({ controller }: Props) {
-    const getAllQuery = useQuery({
+    const client = useQueryClient();
+
+    const getAllEntitiesQuery = useQuery({
         queryKey: [controller],
-        queryFn: async () => await Endpoints.GetAll(controller) as TEntity[]
+        queryFn: async () => await Endpoints.GetAll(controller),
     });
 
-    const getByGuidMutation = useMutation({
+    const entities = getAllEntitiesQuery.data ?? [];
+
+    const getEntityMutation = useMutation({
         mutationFn: async (guid: string) => await Endpoints.GetByGuid(controller, guid) as TEntity,
-        onSuccess: (dto: TEntity) => {
-            
-        }
+        onSuccess: (response: TEntity) => updateCacheWith(response)
     });
+
+    const postEntityMutation = useMutation({
+        mutationFn: async (entity: TEntity) => await Endpoints.Post(controller, entity) as TEntity,
+        onSuccess: (response) => updateCacheWith(response)
+    });
+
+    const putEntityMutation = useMutation({
+        mutationFn: async (entity: TEntity) => await Endpoints.Put(controller, entity) as TEntity,
+        onSuccess: (response) => updateCacheWith(response)
+    });
+
+    const deleteEntityMutation = useMutation({
+        mutationFn: async (guid: string) => await Endpoints.Delete(controller, guid),
+        onSuccess: (_, guid) => deleteEntityFromCache(guid),
+        onError: (error) => console.error(error)
+    });
+
+    const updateCacheWith = (entity: TEntity) => {
+        client.setQueryData(
+            [controller],
+            [...entities.filter((existingEntity) => existingEntity.id != entity.id), entity]
+        );
+    };
+
+    const deleteEntityFromCache = (guid: string) => {
+        client.setQueryData(
+            [controller],
+            [...entities.filter((entity) => entity.guid != guid)]
+        );
+    };
+
+    //TODO: this causes infinite recursion in react rerenders
+    const entityByGuid = (guid: string) => {
+        const entity = entities.find((entity) => entity.guid == guid);
+
+        if (entity) return entity;
+
+        getEntityMutation.mutate(guid);
+    };
+
+    return {
+        entities,
+        postEntity: (entity: TEntity) =>
+            postEntityMutation.mutate(entity),
+        putEntity: (entity: TEntity) =>
+            putEntityMutation.mutate(entity),
+        entityByGuid: entityByGuid,
+        deleteEntity: (guid: string) =>
+            deleteEntityMutation.mutate(guid)
+    }
 }
