@@ -5,6 +5,7 @@
 */
 
 using Bogus;
+
 using DiplomaMakerApi._2.Models;
 
 namespace DiplomaMakerApi._2.Services;
@@ -12,7 +13,7 @@ namespace DiplomaMakerApi._2.Services;
 public static class MockerService
 {
     private static T RandomElement<T>(List<T> set) =>
-        set[Random.Shared.Next(set.Count())];
+        set[Random.Shared.Next(set.Count)];
 
     private static List<T> RandomSubset<T>(List<T> set)
     {

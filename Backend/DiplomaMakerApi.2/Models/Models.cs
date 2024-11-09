@@ -12,6 +12,8 @@
     The entities are sorted from least coupled to most.
 */
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace DiplomaMakerApi._2.Models;
 
 public class Track() : BaseEntity<Track>()
@@ -38,6 +40,8 @@ public class Template() : BaseEntity<Template>()
 
 public class Bootcamp() : BaseEntity<Bootcamp>()
 {
+    // Needed to store date in PostgreSQL, see: https://stackoverflow.com/questions/73693917/net-postgres-ef-core-cannot-write-datetime-with-kind-local-to-postgresql-type
+    [Column(TypeName = "timestamp(6)")] 
     public DateTime GraduationDate { get; set; } = DateTime.Now;
     public List<Student>? Students { get; set; } = [];
     public Track? Track { get; set; } = new();
