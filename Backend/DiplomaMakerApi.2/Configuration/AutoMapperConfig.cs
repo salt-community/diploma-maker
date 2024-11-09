@@ -8,6 +8,7 @@ public class AutomapperConfig : Profile
 {
     public AutomapperConfig()
     {
+        // Direct conversion from entity to dto
         CreateMap<BootcampDto, Bootcamp>().ReverseMap();
         CreateMap<DiplomaDto, Diploma>().ReverseMap();
         CreateMap<StringFileDto, StringFile>().ReverseMap();

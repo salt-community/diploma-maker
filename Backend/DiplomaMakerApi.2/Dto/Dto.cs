@@ -1,59 +1,33 @@
+using DiplomaMakerApi._2.Models;
+
 namespace DiplomaMakerApi._2.Dto;
 
-public record BaseDto()
+public class BootcampDto() : Bootcamp()
 {
-    public Guid? Guid { get; set; }
+    public override int Id { get { return -1; } }
 }
 
-public record BootcampDto(
-    List<StudentDto> Students,
-    TrackDto Track
-) : BaseDto();
+public class DiplomaDto() : Diploma()
+{
+    public override int Id { get { return -1; } }
+}
 
-public record BootcampPatchDto(
-    List<StudentDto>? Students,
-    TrackDto? Track
-) : BaseDto();
+public class StringFileDto() : StringFile()
+{
+    public override int Id { get { return -1; } }
+}
 
-public record DiplomaDto(
-    StudentDto Student,
-    BootcampDto Bootcamp,
-    TemplateDto Template
-) : BaseDto();
+public class StudentDto() : Student()
+{
+    public override int Id { get { return -1; } }
+}
 
-public record DiplomaPatchDto(
-    StudentDto? Student,
-    BootcampDto? Bootcamp,
-    TemplateDto? Template
-) : BaseDto();
+public class TemplateDto() : Template()
+{
+    public override int Id { get { return -1; } }
+}
 
-public record StringFileDto(
-    string FileType,
-    string Content
-) : BaseDto();
-
-public record StudentDto(
-    string Name,
-    string Email
-) : BaseDto();
-
-public record StudentPatchDto(
-    string? Name,
-    string? Email
-) : BaseDto();
-
-public record TemplateDto(
-    Guid? BasePdfGuid
-) : BaseDto();
-
-public record TemplatePatchDto(
-    Guid? BasePdfGuid
-) : BaseDto();
-
-public record TrackDto(
-    string Name
-) : BaseDto();
-
-public record TrackPatchDto(
-    string? Name
-) : BaseDto();
+public class TrackDto() : Track()
+{
+    public override int Id { get { return -1; } }
+}

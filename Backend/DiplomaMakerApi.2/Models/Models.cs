@@ -1,60 +1,36 @@
 namespace DiplomaMakerApi._2.Models;
 
-public record BaseEntity()
+public class Bootcamp() : BaseEntity<Bootcamp>()
 {
-    public int Id { get; init; }
-    public Guid Guid { get; init; } = Guid.NewGuid();
-}
-
-public record Bootcamp(
-    List<Student> Students,
-    Track Track
-) : BaseEntity()
-{
-    public Bootcamp() : this([], Track.Default) { }
-    public static readonly Bootcamp Default = new([], Track.Default);
+    public List<Student>? Students { get; set; } = [];
+    public Track? Track { get; set; } = new();
 };
 
-public record Diploma(
-    Student Student,
-    Bootcamp Bootcamp,
-    Template Template
-) : BaseEntity()
+public class Diploma() : BaseEntity<Diploma>()
 {
-    public Diploma() : this(Default) { }
-    public static readonly Diploma Default = new(Student.Default, Bootcamp.Default, Template.Default);
+    public Student? Student { get; set; } = new();
+    public Bootcamp? Bootcamp { get; set; } = new();
+    public Template? Template { get; set; } = new();
 }
 
-public record StringFile(
-    string FileType,
-    string Content
-) : BaseEntity()
+public class StringFile() : BaseEntity<StringFile>()
 {
-    public StringFile() : this(Default) { }
-    public static readonly StringFile Default = new(string.Empty, string.Empty);
+    public string? FileType { get; set; } = string.Empty;
+    public string? Content { get; set; } = string.Empty;
 }
 
-public record Student(
-    string Name,
-    string Email
-) : BaseEntity()
+public class Student() : BaseEntity<Student>()
 {
-    public Student() : this(Default) { }
-    public static readonly Student Default = new(string.Empty, string.Empty);
+    public string? Name { get; set; } = string.Empty;
+    public string? Email { get; set; } = string.Empty;
 }
 
-public record Template(
-    Guid? BasePdfGuid
-) : BaseEntity()
+public class Template() : BaseEntity<Template>()
 {
-    public Template() : this(Default) { }
-    public static readonly Template Default = new(Guid.NewGuid());
+    public Guid? BasePdfGuid { get; set; } = null;
 }
 
-public record Track(
-    string Name
-) : BaseEntity()
+public class Track() : BaseEntity<Track>()
 {
-    public Track() : this(Default) { }
-    public static readonly Track Default = new(string.Empty);
+    public string? Name { get; set; } = string.Empty;
 };
