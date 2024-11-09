@@ -4,50 +4,44 @@
  */
 
 export interface paths {
-    "/api/File/UploadFile": {
+    "/api/Bootcamp/GetEntities": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
-        post: {
+        get: {
             parameters: {
                 query?: never;
                 header?: never;
                 path?: never;
                 cookie?: never;
             };
-            requestBody?: {
-                content: {
-                    "application/json": components["schemas"]["StringFileDto"];
-                    "text/json": components["schemas"]["StringFileDto"];
-                    "application/*+json": components["schemas"]["StringFileDto"];
-                };
-            };
+            requestBody?: never;
             responses: {
-                /** @description Created */
-                201: {
+                /** @description Success */
+                200: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": string;
-                        "application/json": string;
-                        "text/json": string;
+                        "text/plain": components["schemas"]["BootcampDto"][];
+                        "application/json": components["schemas"]["BootcampDto"][];
+                        "text/json": components["schemas"]["BootcampDto"][];
                     };
                 };
             };
         };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/File/GetFile/{guid}": {
+    "/api/Bootcamp/GetEntityByGuid/{guid}": {
         parameters: {
             query?: never;
             header?: never;
@@ -71,20 +65,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["StringFile"];
-                        "application/json": components["schemas"]["StringFile"];
-                        "text/json": components["schemas"]["StringFile"];
-                    };
-                };
-                /** @description Not Found */
-                404: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "text/plain": components["schemas"]["ProblemDetails"];
-                        "application/json": components["schemas"]["ProblemDetails"];
-                        "text/json": components["schemas"]["ProblemDetails"];
+                        "text/plain": components["schemas"]["BootcampDto"];
+                        "application/json": components["schemas"]["BootcampDto"];
+                        "text/json": components["schemas"]["BootcampDto"];
                     };
                 };
             };
@@ -97,31 +80,1215 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/Bootcamp/PostEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["BootcampDto"];
+                    "text/json": components["schemas"]["BootcampDto"];
+                    "application/*+json": components["schemas"]["BootcampDto"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["BootcampDto"];
+                        "application/json": components["schemas"]["BootcampDto"];
+                        "text/json": components["schemas"]["BootcampDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Bootcamp/PutEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["Bootcamp"];
+                    "text/json": components["schemas"]["Bootcamp"];
+                    "application/*+json": components["schemas"]["Bootcamp"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["BootcampDto"];
+                        "application/json": components["schemas"]["BootcampDto"];
+                        "text/json": components["schemas"]["BootcampDto"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Bootcamp/DeleteEntity/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Diploma/GetEntities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["DiplomaDto"][];
+                        "application/json": components["schemas"]["DiplomaDto"][];
+                        "text/json": components["schemas"]["DiplomaDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Diploma/GetEntityByGuid/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["DiplomaDto"];
+                        "application/json": components["schemas"]["DiplomaDto"];
+                        "text/json": components["schemas"]["DiplomaDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Diploma/PostEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["DiplomaDto"];
+                    "text/json": components["schemas"]["DiplomaDto"];
+                    "application/*+json": components["schemas"]["DiplomaDto"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["DiplomaDto"];
+                        "application/json": components["schemas"]["DiplomaDto"];
+                        "text/json": components["schemas"]["DiplomaDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Diploma/PutEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["Diploma"];
+                    "text/json": components["schemas"]["Diploma"];
+                    "application/*+json": components["schemas"]["Diploma"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["DiplomaDto"];
+                        "application/json": components["schemas"]["DiplomaDto"];
+                        "text/json": components["schemas"]["DiplomaDto"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Diploma/DeleteEntity/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/StringFile/GetEntities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["StringFileDto"][];
+                        "application/json": components["schemas"]["StringFileDto"][];
+                        "text/json": components["schemas"]["StringFileDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/StringFile/GetEntityByGuid/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["StringFileDto"];
+                        "application/json": components["schemas"]["StringFileDto"];
+                        "text/json": components["schemas"]["StringFileDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/StringFile/PostEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["StringFileDto"];
+                    "text/json": components["schemas"]["StringFileDto"];
+                    "application/*+json": components["schemas"]["StringFileDto"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["StringFileDto"];
+                        "application/json": components["schemas"]["StringFileDto"];
+                        "text/json": components["schemas"]["StringFileDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/StringFile/PutEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["StringFile"];
+                    "text/json": components["schemas"]["StringFile"];
+                    "application/*+json": components["schemas"]["StringFile"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["StringFileDto"];
+                        "application/json": components["schemas"]["StringFileDto"];
+                        "text/json": components["schemas"]["StringFileDto"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/StringFile/DeleteEntity/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Student/GetEntities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["StudentDto"][];
+                        "application/json": components["schemas"]["StudentDto"][];
+                        "text/json": components["schemas"]["StudentDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Student/GetEntityByGuid/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["StudentDto"];
+                        "application/json": components["schemas"]["StudentDto"];
+                        "text/json": components["schemas"]["StudentDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Student/PostEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["StudentDto"];
+                    "text/json": components["schemas"]["StudentDto"];
+                    "application/*+json": components["schemas"]["StudentDto"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["StudentDto"];
+                        "application/json": components["schemas"]["StudentDto"];
+                        "text/json": components["schemas"]["StudentDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Student/PutEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["Student"];
+                    "text/json": components["schemas"]["Student"];
+                    "application/*+json": components["schemas"]["Student"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["StudentDto"];
+                        "application/json": components["schemas"]["StudentDto"];
+                        "text/json": components["schemas"]["StudentDto"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Student/DeleteEntity/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Template/GetEntities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TemplateDto"][];
+                        "application/json": components["schemas"]["TemplateDto"][];
+                        "text/json": components["schemas"]["TemplateDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Template/GetEntityByGuid/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TemplateDto"];
+                        "application/json": components["schemas"]["TemplateDto"];
+                        "text/json": components["schemas"]["TemplateDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Template/PostEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["TemplateDto"];
+                    "text/json": components["schemas"]["TemplateDto"];
+                    "application/*+json": components["schemas"]["TemplateDto"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TemplateDto"];
+                        "application/json": components["schemas"]["TemplateDto"];
+                        "text/json": components["schemas"]["TemplateDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Template/PutEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["Template"];
+                    "text/json": components["schemas"]["Template"];
+                    "application/*+json": components["schemas"]["Template"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TemplateDto"];
+                        "application/json": components["schemas"]["TemplateDto"];
+                        "text/json": components["schemas"]["TemplateDto"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Template/DeleteEntity/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Track/GetEntities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TrackDto"][];
+                        "application/json": components["schemas"]["TrackDto"][];
+                        "text/json": components["schemas"]["TrackDto"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Track/GetEntityByGuid/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TrackDto"];
+                        "application/json": components["schemas"]["TrackDto"];
+                        "text/json": components["schemas"]["TrackDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Track/PostEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["TrackDto"];
+                    "text/json": components["schemas"]["TrackDto"];
+                    "application/*+json": components["schemas"]["TrackDto"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TrackDto"];
+                        "application/json": components["schemas"]["TrackDto"];
+                        "text/json": components["schemas"]["TrackDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Track/PutEntity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["Track"];
+                    "text/json": components["schemas"]["Track"];
+                    "application/*+json": components["schemas"]["Track"];
+                };
+            };
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TrackDto"];
+                        "application/json": components["schemas"]["TrackDto"];
+                        "text/json": components["schemas"]["TrackDto"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Track/DeleteEntity/{guid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    guid: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        ProblemDetails: {
-            type?: string | null;
-            title?: string | null;
+        Bootcamp: {
             /** Format: int32 */
-            status?: number | null;
-            detail?: string | null;
-            instance?: string | null;
-        } & {
-            [key: string]: unknown;
+            id?: number;
+            /** Format: uuid */
+            guid?: string;
+            /** Format: date-time */
+            graduationDate?: string;
+            students?: components["schemas"]["Student"][] | null;
+            track?: components["schemas"]["Track"];
+        };
+        BootcampDto: {
+            /** Format: uuid */
+            guid?: string;
+            /** Format: date-time */
+            graduationDate?: string;
+            students?: components["schemas"]["Student"][] | null;
+            track?: components["schemas"]["Track"];
+            /** Format: int32 */
+            readonly id?: number;
+        };
+        Diploma: {
+            /** Format: int32 */
+            id?: number;
+            /** Format: uuid */
+            guid?: string;
+            student?: components["schemas"]["Student"];
+            bootcamp?: components["schemas"]["Bootcamp"];
+            template?: components["schemas"]["Template"];
+        };
+        DiplomaDto: {
+            /** Format: uuid */
+            guid?: string;
+            student?: components["schemas"]["Student"];
+            bootcamp?: components["schemas"]["Bootcamp"];
+            template?: components["schemas"]["Template"];
+            /** Format: int32 */
+            readonly id?: number;
         };
         StringFile: {
             /** Format: int32 */
             id?: number;
             /** Format: uuid */
             guid?: string;
-            type?: string | null;
+            fileType?: string | null;
             content?: string | null;
         };
         StringFileDto: {
+            /** Format: uuid */
+            guid?: string;
             fileType?: string | null;
             content?: string | null;
+            /** Format: int32 */
+            readonly id?: number;
+        };
+        Student: {
+            /** Format: int32 */
+            id?: number;
+            /** Format: uuid */
+            guid?: string;
+            name?: string | null;
+            email?: string | null;
+        };
+        StudentDto: {
+            /** Format: uuid */
+            guid?: string;
+            name?: string | null;
+            email?: string | null;
+            /** Format: int32 */
+            readonly id?: number;
+        };
+        Template: {
+            /** Format: int32 */
+            id?: number;
+            /** Format: uuid */
+            guid?: string;
+            /** Format: uuid */
+            basePdfGuid?: string | null;
+        };
+        TemplateDto: {
+            /** Format: uuid */
+            guid?: string;
+            /** Format: uuid */
+            basePdfGuid?: string | null;
+            /** Format: int32 */
+            readonly id?: number;
+        };
+        Track: {
+            /** Format: int32 */
+            id?: number;
+            /** Format: uuid */
+            guid?: string;
+            name?: string | null;
+        };
+        TrackDto: {
+            /** Format: uuid */
+            guid?: string;
+            name?: string | null;
+            /** Format: int32 */
+            readonly id?: number;
         };
     };
     responses: never;
