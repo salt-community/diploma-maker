@@ -7,12 +7,12 @@
 using Bogus;
 using DiplomaMakerApi._2.Models;
 
-namespace DiplomaMakerApi._2.Database;
+namespace DiplomaMakerApi._2.Services;
 
 public static class MockerService
 {
     private static T RandomElement<T>(List<T> set) =>
-        set[Random.Shared.Next(set.Count)];
+        set[Random.Shared.Next(set.Count())];
 
     private static List<T> RandomSubset<T>(List<T> set)
     {
@@ -29,38 +29,38 @@ public static class MockerService
         return subset;
     }
 
-    public static IEnumerable<Track> MockTracks(int count) =>
+    public static List<Track> MockTracks(int count) =>
         new Faker<Track>()
         .RuleFor(track => track.Name, f => f.Lorem.Words(1)[0])
-            .Generate(count);
+            .Generate(count).ToList();
 
-    public static IEnumerable<Student> MockStudents(int count) =>
+    public static List<Student> MockStudents(int count) =>
         new Faker<Student>()
             .RuleFor(student => student.Name, f => f.Person.Name)
             .RuleFor(student => student.Email, f => f.Person.Email)
-            .Generate(count);
+            .Generate(count).ToList();
 
-    public static IEnumerable<Template> MockTemplates(List<Guid> basePdfGuids, int count) =>
+    public static List<Template> MockTemplates(int count) =>
         new Faker<Template>()
-            .RuleFor(template => template.BasePdfGuid, f => RandomElement(basePdfGuids))
-            .Generate(count);
+            .RuleFor(template => template.BasePdfGuid, f => Guid.NewGuid())
+            .Generate(count).ToList();
 
-    public static IEnumerable<StringFile> MockStringFiles(List<string> fileTypes, int count) =>
+    public static List<StringFile> MockStringFiles(List<string> fileTypes, int count) =>
         new Faker<StringFile>()
             .RuleFor(stringFile => stringFile.FileType, f => RandomElement(fileTypes))
             .RuleFor(stringFile => stringFile.Content, f => f.Image.Image())
-            .Generate(count);
+            .Generate(count).ToList();
 
-    public static IEnumerable<Bootcamp> MockBootcamp(
+    public static List<Bootcamp> MockBootcamps(
         List<Student> students,
         List<Track> tracks,
         int count) =>
         new Faker<Bootcamp>()
             .RuleFor(bootcamp => bootcamp.Students, f => RandomSubset(students))
             .RuleFor(bootcamp => bootcamp.Track, f => RandomElement(tracks))
-            .Generate(count);
+            .Generate(count).ToList();
 
-    public static IEnumerable<Diploma> MockDiploma(
+    public static List<Diploma> MockDiplomas(
         List<Student> students,
         List<Bootcamp> bootcamps,
         List<Template> templates,
@@ -69,5 +69,5 @@ public static class MockerService
             .RuleFor(diploma => diploma.Student, f => RandomElement(students))
             .RuleFor(diploma => diploma.Bootcamp, f => RandomElement(bootcamps))
             .RuleFor(diploma => diploma.Template, f => RandomElement(templates))
-            .Generate(count);
+            .Generate(count).ToList();
 }
