@@ -39,14 +39,19 @@ where TEntity : BaseEntity<TEntity>
     public TEntity HideIds()
     {
         var json = JsonConvert.SerializeObject(this, Formatting.Indented);
+
         string searchPattern = """
         "Id": [\d]+
         """;
+
         string replacePattern = """
         "Id": -1
         """;
-        var result = Regex.Replace(this.ToString(), searchPattern, replacePattern);
-        var newEntity = JsonConvert.DeserializeObject<TEntity>(result);
+
+        var result = Regex.Replace(ToString(), searchPattern, replacePattern);
+        var newEntity = JsonConvert.DeserializeObject<TEntity>(result)
+            ?? throw new Exception("Entity could not hide its Ids");
+
         return newEntity;
     }
 }

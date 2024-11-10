@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
 using DiplomaMakerApi._2.Database;
-using DiplomaMakerApi._2.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +8,6 @@ builder.Services.AddCors();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddAutoMapper(typeof(AutomapperConfig));
 
 string connectionString = (builder.Environment.IsDevelopment()
     ? builder.Configuration["PostgreSQLConnectionLocal"]
