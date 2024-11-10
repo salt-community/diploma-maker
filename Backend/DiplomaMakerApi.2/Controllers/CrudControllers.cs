@@ -14,6 +14,13 @@ namespace DiplomaMakerApi._2.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+public class StudentController(
+    DiplomaMakerContext _context)
+    : CrudControllerBase<Student>(_context)
+{ }
+
+[ApiController]
+[Route("api/[controller]")]
 public class BootcampController(
     DiplomaMakerContext _context)
     : CrudControllerBase<Bootcamp>(_context)

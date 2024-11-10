@@ -22,12 +22,10 @@ public class CrudControllerBase<TEntity>(DiplomaMakerContext _context)
 where TEntity : BaseEntity<TEntity>
 {
     [HttpGet("GetEntities")]
-    public IEnumerable<TEntity> GetEntities()
-    {
-        var entities = _context.Set<TEntity>();
+    public IEnumerable<TEntity> GetEntities() =>
+        _context.Set<TEntity>()
+            .Select(entity => entity.HideIds());
 
-        return entities.Select(entity => entity.HideIds());
-    }
 
     [HttpGet("GetEntityByGuid/{guid}")]
     public ActionResult<TEntity> GetEntity(string guid)
@@ -36,10 +34,9 @@ where TEntity : BaseEntity<TEntity>
             .Set<TEntity>()
             .FirstOrDefault(entity => entity.Guid.ToString() == guid);
 
-        if (entity is null)
-            return NotFound($"Entity with guid {guid} could not be found");
-
-        return entity;
+        return entity is not null
+            ? entity.HideIds()
+            : NotFound($"Entity with guid {guid} could not be found");
     }
 
     [HttpPost("PostEntity")]
@@ -50,7 +47,7 @@ where TEntity : BaseEntity<TEntity>
         _context.Add(entity);
         _context.SaveChanges();
 
-        return Ok(entity);
+        return Ok(entity.HideIds());
     }
 
     [HttpPut("PutEntity")]
@@ -67,7 +64,7 @@ where TEntity : BaseEntity<TEntity>
 
         _context.SaveChanges();
 
-        return Ok(entity);
+        return Ok(entity.HideIds());
     }
 
     [HttpDelete("DeleteEntity/{guid}")]
