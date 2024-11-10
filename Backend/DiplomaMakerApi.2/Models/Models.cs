@@ -29,6 +29,7 @@ public class Student() : BaseEntity<Student>()
 
 public class StringFile() : BaseEntity<StringFile>()
 {
+    public string? Name { get; set; }
     public string? FileType { get; set; }
     public string? Content { get; set; }
 }

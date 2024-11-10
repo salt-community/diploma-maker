@@ -91,7 +91,8 @@ export function usePdfMe(
             throw new Error("Files are not defined");
 
         const pdf = await FileService.readDataUrlFile(event.target.files[0]);
-        await Endpoints.File.UploadFile('pdf', JSON.stringify(pdf));
+        // await Endpoints.S.UploadFile('pdf', JSON.stringify(pdf));
+
     }
 
     function onDownloadTemplate() {

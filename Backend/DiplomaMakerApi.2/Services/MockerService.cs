@@ -48,6 +48,7 @@ public static class MockerService
 
     public static List<StringFile> MockStringFiles(List<string> fileTypes, int count) =>
         new Faker<StringFile>()
+            .RuleFor(stringFile => stringFile.Name, f => f.Lorem.Word())
             .RuleFor(stringFile => stringFile.FileType, f => RandomElement(fileTypes))
             .RuleFor(stringFile => stringFile.Content, f => f.Lorem.Paragraphs(50))
             .Generate(count).ToList();

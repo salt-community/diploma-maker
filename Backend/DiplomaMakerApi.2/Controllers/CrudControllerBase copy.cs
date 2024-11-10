@@ -44,6 +44,8 @@ where TEntityDto : TEntity
     {
         var entity = _mapper.Map<TEntity>(dto);
 
+        Console.WriteLine(entity);
+
         _context.Add(entity);
         _context.SaveChanges();
 
@@ -51,7 +53,7 @@ where TEntityDto : TEntity
     }
 
     [HttpPut("PutEntity")]
-    public ActionResult<TEntityDto> PutEntity(TEntity dto)
+    public ActionResult<TEntityDto> PutEntity(TEntityDto dto)
     {
         var entity = _context
             .Set<TEntity>()

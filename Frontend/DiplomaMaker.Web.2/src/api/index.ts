@@ -101,6 +101,7 @@ export const Endpoints = {
     },
 
     Post: async <TEntity extends Dto>(controller: ControllerName, body: TEntity) => {
+        console.log(body);
         switch (controller) {
             case 'Bootcamp':
                 return (await client.POST(

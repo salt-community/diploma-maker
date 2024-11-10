@@ -1233,12 +1233,14 @@ export interface components {
             id?: number;
             /** Format: uuid */
             guid?: string;
+            name?: string | null;
             fileType?: string | null;
             content?: string | null;
         };
         StringFileDto: {
             /** Format: uuid */
             guid?: string;
+            name?: string | null;
             fileType?: string | null;
             content?: string | null;
             /** Format: int32 */

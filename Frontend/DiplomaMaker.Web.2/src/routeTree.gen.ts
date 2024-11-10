@@ -11,13 +11,13 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as EndpointtestsImport } from './routes/endpointtests'
+import { Route as FilemanagerImport } from './routes/filemanager'
 
 // Create/Update Routes
 
-const EndpointtestsRoute = EndpointtestsImport.update({
-  id: '/endpointtests',
-  path: '/endpointtests',
+const FilemanagerRoute = FilemanagerImport.update({
+  id: '/filemanager',
+  path: '/filemanager',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -25,11 +25,11 @@ const EndpointtestsRoute = EndpointtestsImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/endpointtests': {
-      id: '/endpointtests'
-      path: '/endpointtests'
-      fullPath: '/endpointtests'
-      preLoaderRoute: typeof EndpointtestsImport
+    '/filemanager': {
+      id: '/filemanager'
+      path: '/filemanager'
+      fullPath: '/filemanager'
+      preLoaderRoute: typeof FilemanagerImport
       parentRoute: typeof rootRoute
     }
   }
@@ -38,33 +38,33 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/endpointtests': typeof EndpointtestsRoute
+  '/filemanager': typeof FilemanagerRoute
 }
 
 export interface FileRoutesByTo {
-  '/endpointtests': typeof EndpointtestsRoute
+  '/filemanager': typeof FilemanagerRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/endpointtests': typeof EndpointtestsRoute
+  '/filemanager': typeof FilemanagerRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/endpointtests'
+  fullPaths: '/filemanager'
   fileRoutesByTo: FileRoutesByTo
-  to: '/endpointtests'
-  id: '__root__' | '/endpointtests'
+  to: '/filemanager'
+  id: '__root__' | '/filemanager'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  EndpointtestsRoute: typeof EndpointtestsRoute
+  FilemanagerRoute: typeof FilemanagerRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  EndpointtestsRoute: EndpointtestsRoute,
+  FilemanagerRoute: FilemanagerRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +77,11 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/endpointtests"
+        "/filemanager"
       ]
     },
-    "/endpointtests": {
-      "filePath": "endpointtests.tsx"
+    "/filemanager": {
+      "filePath": "filemanager.tsx"
     }
   }
 }
