@@ -23,7 +23,7 @@ public class DiplomaMakerContext(DbContextOptions<DiplomaMakerContext> options) 
             allowing all of them to inherit their functionality from 
             CrudControllerBase.
         */
-        
+
         modelBuilder.Entity<Diploma>()
             .Navigation(e => e.Student).AutoInclude();
         modelBuilder.Entity<Diploma>()
@@ -43,10 +43,10 @@ public class DiplomaMakerContext(DbContextOptions<DiplomaMakerContext> options) 
         Database.EnsureCreated();
 
         var tracks = MockerService.MockTracks(5);
-        var students = MockerService.MockStudents(100);
+        var students = MockerService.MockStudents(1);
         var templates = MockerService.MockTemplates(5);
-        var stringFiles = MockerService.MockStringFiles(["pdf", "webp", "json"], 50);
-        var bootcamps = MockerService.MockBootcamps(students, tracks, 10);
+        var stringFiles = MockerService.MockStringFiles(["application/pdf", "image/webp", "application/json"], 50);
+        var bootcamps = MockerService.MockBootcamps(students, tracks, 1);
         var diplomas = MockerService.MockDiplomas(students, bootcamps, templates, 50);
 
         AddRange(tracks);

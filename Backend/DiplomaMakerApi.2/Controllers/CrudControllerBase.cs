@@ -9,7 +9,6 @@
 */
 
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
 
 using DiplomaMakerApi._2.Database;
 using DiplomaMakerApi._2.Models;
@@ -18,42 +17,44 @@ namespace DiplomaMakerApi._2.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CrudControllerBase<TEntity, TEntityDto>(DiplomaMakerContext _context, IMapper _mapper)
+public class CrudControllerBase<TEntity>(DiplomaMakerContext _context)
 : ControllerBase
 where TEntity : BaseEntity<TEntity>
-where TEntityDto : TEntity
 {
     [HttpGet("GetEntities")]
-    public IEnumerable<TEntityDto> GetEntities() =>
-        _mapper.Map<List<TEntityDto>>(_context.Set<TEntity>());
+    public IEnumerable<TEntity> GetEntities()
+    {
+        var entities = _context.Set<TEntity>();
+
+        return entities.Select(entity => entity.HideIds());
+    }
 
     [HttpGet("GetEntityByGuid/{guid}")]
-    public ActionResult<TEntityDto> GetEntity(string guid)
+    public ActionResult<TEntity> GetEntity(string guid)
     {
         var entity = _context
             .Set<TEntity>()
             .FirstOrDefault(entity => entity.Guid.ToString() == guid);
 
-        return entity is not null
-            ? Ok(_mapper.Map<TEntityDto>(entity))
-            : NotFound($"Entity with guid {guid} could not be found");
+        if (entity is null)
+            return NotFound($"Entity with guid {guid} could not be found");
+
+        return entity;
     }
 
     [HttpPost("PostEntity")]
-    public ActionResult<TEntityDto> PostEntity(TEntityDto dto)
+    public ActionResult<TEntity> PostEntity(TEntity dto)
     {
-        var entity = _mapper.Map<TEntity>(dto);
-
-        Console.WriteLine(entity);
+        var entity = dto;
 
         _context.Add(entity);
         _context.SaveChanges();
 
-        return CreatedAtAction(nameof(GetEntity), entity);
+        return Ok(entity);
     }
 
     [HttpPut("PutEntity")]
-    public ActionResult<TEntityDto> PutEntity(TEntityDto dto)
+    public ActionResult<TEntity> PutEntity(TEntity dto)
     {
         var entity = _context
             .Set<TEntity>()
@@ -66,7 +67,7 @@ where TEntityDto : TEntity
 
         _context.SaveChanges();
 
-        return Ok(_mapper.Map<TEntityDto>(entity));
+        return Ok(entity);
     }
 
     [HttpDelete("DeleteEntity/{guid}")]
