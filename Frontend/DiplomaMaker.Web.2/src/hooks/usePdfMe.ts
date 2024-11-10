@@ -9,7 +9,6 @@ import { useEffect, useRef } from "react";
 
 import { FileService, PdfMe, PdfMeTypes, TemplateService } from "../services";
 import { TemplateSubstitutions } from "../types/types";
-import { Endpoints } from "../api";
 
 export function usePdfMe(
     designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
@@ -86,15 +85,6 @@ export function usePdfMe(
         );
     };
 
-    async function onUploadPdf(event: React.ChangeEvent<HTMLInputElement>) {
-        if (!event.target?.files)
-            throw new Error("Files are not defined");
-
-        const pdf = await FileService.readDataUrlFile(event.target.files[0]);
-        // await Endpoints.S.UploadFile('pdf', JSON.stringify(pdf));
-
-    }
-
     function onDownloadTemplate() {
         if (!designer.current)
             throw new Error("Designer is not initialized");
@@ -107,9 +97,7 @@ export function usePdfMe(
         if (!designer.current)
             throw new Error("Designer is not initialized");
 
-        const template = designer.current.getTemplate();
-
-        await Endpoints.File.UploadFile('pdf', JSON.stringify(template));
+        // const template = designer.current.getTemplate();
     }
 
     function onResetTemplate() {
@@ -125,6 +113,5 @@ export function usePdfMe(
         onChangeBasePdf,
         onDownloadTemplate,
         onResetTemplate,
-        onUploadPdf
     }
 }

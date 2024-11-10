@@ -1,4 +1,4 @@
-import { StringFile } from "../api";
+import { StringFile } from "../fetchApi/types";
 import useEntity from "../hooks/useEntity";
 import UploadFileForm from "./UploadFileForm";
 
@@ -22,7 +22,7 @@ export default function FileManager() {
                         {files.map(file => (
                             <tr key={file.guid}>
                                 <td>{file.name}</td>
-                                <td>{file.fileType}</td>
+                                <td>{file.mimeType}</td>
                                 <td>
                                     <button
                                         className='btn'

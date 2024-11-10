@@ -1,4 +1,4 @@
-import { StringFile } from "../api";
+import { StringFile } from "../fetchApi/types";
 import useEntity from "../hooks/useEntity";
 import { FileService } from "../services";
 import { MimeType } from "../types/types";
@@ -16,8 +16,8 @@ export default function UploadFileForm({ mimeType }: Props) {
 
         for (const file of event.target.files)
             postEntity({
-                guid: undefined,
-                fileType: mimeType,
+                guid: '',
+                mimeType,
                 content: await FileService.readDataUrlFile(file),
                 name: file.name
             });

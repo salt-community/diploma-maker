@@ -21,8 +21,7 @@ export default function TemplateDesigner({ template }: Props) {
         onResetTemplate,
         handleLoadTemplate,
         onChangeBasePdf,
-        generatePdf,
-        onUploadPdf } = usePdfMe(containerRef, template);
+    } = usePdfMe(containerRef, template);
 
     const DownloadTemplateButton = (
         <button
@@ -56,24 +55,6 @@ export default function TemplateDesigner({ template }: Props) {
             onChange={onChangeBasePdf} />
     );
 
-    const GeneratePdfButton = (
-        <button
-            className=''
-            onClick={() => {
-                generatePdf({ '{studentName}': 'Adam', '{bootCamp}': 'JS' });
-            }
-            }>
-            Generate Pdf
-        </button >
-    )
-    const UploadPdfButton = (
-        <input
-            className=''
-            type="file"
-            accept="application/pdf"
-            onChange={onUploadPdf} />
-    )
-
     const DesignerContainer = (
         <div ref={containerRef}></div>
     );
@@ -82,10 +63,8 @@ export default function TemplateDesigner({ template }: Props) {
         <>
             {DownloadTemplateButton}
             {ResetTemplateButton}
-            {GeneratePdfButton}
             {LoadTemplateInput}
             {ChangeBasePdfInput}
-            {UploadPdfButton}
             {DesignerContainer}
         </>
     );
