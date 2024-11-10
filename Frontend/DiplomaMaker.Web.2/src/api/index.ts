@@ -167,9 +167,7 @@ export const Endpoints = {
                 return (await client.PUT('/api/Track/PutEntity', {
                     body
                 })).data as Track;
-
         }
-
     },
 
     Delete: async (controller: ControllerName, guid: string) => {

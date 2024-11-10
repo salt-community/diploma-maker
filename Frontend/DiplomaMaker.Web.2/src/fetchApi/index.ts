@@ -1,6 +1,6 @@
 import { Bootcamp, Diploma, StringFile, Student, Template, Track } from "./types";
 
-type ControllerName =
+export type ControllerName =
     'Bootcamp' |
     'Diploma' |
     'StringFile' |
@@ -10,7 +10,7 @@ type ControllerName =
 
 const baseUrl = 'http://localhost:5171/api';
 
-type Dto =
+export type Dto =
     Bootcamp | Diploma | StringFile | Student | Template | Track;
 
 export const Endpoints = {

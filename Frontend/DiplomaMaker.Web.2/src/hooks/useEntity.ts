@@ -5,35 +5,35 @@
 */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ControllerName, Dto, Endpoints } from "../api";
+import { ControllerName, Dto, Endpoints } from "../fetchApi";
 
 export default function useEntity<TEntity extends Dto>(controller: ControllerName) {
     const client = useQueryClient();
 
     const getAllEntitiesQuery = useQuery({
         queryKey: [controller],
-        queryFn: async () => await Endpoints.GetAll(controller),
+        queryFn: async () => await Endpoints.GetEntities<TEntity>(controller),
     });
 
     const entities = getAllEntitiesQuery.data ?? [];
 
     const getEntityMutation = useMutation({
-        mutationFn: async (guid: string) => await Endpoints.GetByGuid(controller, guid) as TEntity,
+        mutationFn: async (guid: string) => await Endpoints.GetEntity(controller, guid) as TEntity,
         onSuccess: (response: TEntity) => updateCacheWith(response)
     });
 
     const postEntityMutation = useMutation({
-        mutationFn: async (entity: TEntity) => await Endpoints.Post(controller, entity) as TEntity,
+        mutationFn: async (entity: TEntity) => await Endpoints.PostEntity(controller, entity),
         onSuccess: (response) => updateCacheWith(response)
     });
 
     const putEntityMutation = useMutation({
-        mutationFn: async (entity: TEntity) => await Endpoints.Put(controller, entity) as TEntity,
+        mutationFn: async (entity: TEntity) => await Endpoints.PutEntity(controller, entity),
         onSuccess: (response) => updateCacheWith(response)
     });
 
     const deleteEntityMutation = useMutation({
-        mutationFn: async (guid: string) => await Endpoints.Delete(controller, guid),
+        mutationFn: async (guid: string) => await Endpoints.DeleteEntity(controller, guid),
         onSuccess: (_, guid) => deleteEntityFromCache(guid),
         onError: (error) => console.error(error)
     });
@@ -41,7 +41,7 @@ export default function useEntity<TEntity extends Dto>(controller: ControllerNam
     const updateCacheWith = (entity: TEntity) => {
         client.setQueryData(
             [controller],
-            [...entities.filter((existingEntity) => existingEntity.id != entity.id), entity]
+            [...entities.filter((existingEntity) => existingEntity.guid != entity.guid), entity]
         );
     };
 
