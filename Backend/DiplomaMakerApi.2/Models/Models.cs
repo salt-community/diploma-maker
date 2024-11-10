@@ -9,6 +9,11 @@
     allowing an entity to be updated by the same entity type,
     skipping null values in the patch entity.
 
+    All fields of the entities must be nullable in order for patching with
+    the same entity type to work.
+    TODO: Maybe use non-nullable entities instead, and replace the whole object except for Id and Guid
+    (This has implications for the frontend, but might simplify things in the end)
+
     The entities are sorted from least coupled to most.
 */
 
@@ -30,7 +35,7 @@ public class Student() : BaseEntity<Student>()
 public class StringFile() : BaseEntity<StringFile>()
 {
     public string? Name { get; set; }
-    public string? FileType { get; set; }
+    public string? MimeType { get; set; }
     public string? Content { get; set; }
 }
 
