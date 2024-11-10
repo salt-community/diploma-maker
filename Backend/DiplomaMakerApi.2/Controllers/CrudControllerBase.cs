@@ -21,6 +21,8 @@ public class CrudControllerBase<TEntity>(DiplomaMakerContext _context)
 : ControllerBase
 where TEntity : BaseEntity<TEntity>
 {
+    private static readonly string _entityName = typeof(TEntity).Name;
+
     [HttpGet("GetEntities")]
     public IEnumerable<TEntity> GetEntities() =>
         _context.Set<TEntity>()
@@ -36,7 +38,7 @@ where TEntity : BaseEntity<TEntity>
 
         return entity is not null
             ? entity.HideIds()
-            : NotFound($"Entity with guid {guid} could not be found");
+            : NotFound($"{_entityName} with guid {guid} could not be found");
     }
 
     [HttpPost("PostEntity")]
@@ -58,7 +60,7 @@ where TEntity : BaseEntity<TEntity>
             .FirstOrDefault(entity => entity.Guid == dto.Guid);
 
         if (entity is null)
-            return NotFound($"Entity with guid {dto.Guid} could not be found");
+            return NotFound($"{_entityName} with guid {dto.Guid} could not be found");
 
         entity.Patch(dto);
 
@@ -75,7 +77,7 @@ where TEntity : BaseEntity<TEntity>
             .FirstOrDefault(entity => entity.Guid.ToString() == guid);
 
         if (entity is null)
-            return NotFound($"Entity with guid {guid} could not be found");
+            return NotFound($"{_entityName} with guid {guid} could not be found");
 
         _context.Remove(entity);
         _context.SaveChanges();

@@ -7,6 +7,9 @@
     a guid which can be exposed to the frontend, as well
     as a generic Patch method which updates the value of one entity
     with the non-null values of another entity of the same type.
+
+    TODO: Use reflection to hide ids recursively
+    TODO: Use reflection to patch objects recursively (figure out implications for db storage)
 */
 
 using System.Text.RegularExpressions;
@@ -20,10 +23,17 @@ where TEntity : BaseEntity<TEntity>
     public int Id { get; set; }
     public Guid Guid { get; init; } = Guid.NewGuid();
 
+    /* 
+        Accepts a patch object of the same type with all fields nullable
+        and updates the values of this object with the patch objects non-null values.
+    */
     public void Patch(TEntity patch)
     {
         foreach (var property in typeof(TEntity).GetProperties())
         {
+            if (property.Name == "Id" || property.Name == "Guid")
+                continue;
+
             object? patchValue = property.GetValue(patch);
             property.SetValue(this, patchValue is not null
                 ? patchValue
@@ -36,10 +46,11 @@ where TEntity : BaseEntity<TEntity>
         return JsonConvert.SerializeObject(this, Formatting.Indented);
     }
 
+    /*
+        Sets the Id of each member of this entity, including nested entites, to -1.
+    */
     public TEntity HideIds()
     {
-        var json = JsonConvert.SerializeObject(this, Formatting.Indented);
-
         string searchPattern = """
         "Id": [\d]+
         """;
