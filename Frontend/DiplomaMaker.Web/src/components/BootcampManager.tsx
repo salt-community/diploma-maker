@@ -6,8 +6,8 @@ export default function BootcampManager() {
     const bootcampEntities = useEntity<Bootcamp>('Bootcamp');
     const trackEntities = useEntity<Track>('Track');
 
-    const bootcamps = bootcampEntities.entities.sort((bootcampA, bootcampB) =>
-        bootcampA.graduationDate.getTime() - bootcampB.graduationDate.getTime());
+    // const bootcamps = bootcampEntities.entities.sort((bootcampA, bootcampB) =>
+    //     bootcampA.graduationDate.getTime() - bootcampB.graduationDate.getTime());
 
     const headers = ['Track', 'Graduation Date', 'Students'];
 

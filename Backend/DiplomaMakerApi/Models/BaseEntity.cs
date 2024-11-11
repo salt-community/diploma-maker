@@ -9,7 +9,6 @@
     with the values of another entity of the same type (except Id and Guid).
 */
 
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
 namespace DiplomaMakerApi.Models;

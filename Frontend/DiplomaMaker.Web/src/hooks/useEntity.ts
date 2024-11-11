@@ -19,7 +19,7 @@ export default function useEntity<TEntity extends Backend.Dto>(controller: Backe
 
     const getAllEntitiesMutation = useMutation({
         mutationFn: async () => await Endpoints.GetEntities<TEntity>(controller),
-        onSuccess: (entities: TEntity[]) => client.setQueryData([controller], entities)
+        onSuccess: (entities: TEntity[]) => client.setQueryData([controller], entities),
     });
 
     const getEntitiesByGuidsMutation = useMutation({
