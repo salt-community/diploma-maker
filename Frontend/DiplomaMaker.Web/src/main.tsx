@@ -1,27 +1,34 @@
-import React from 'react'
+import './index.css'
+
+import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import { BrowserRouter } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from "react-query";
-import { LoadingMessageProvider } from './components/Contexts/LoadingMessageContext.tsx';
-import { LoadingBGMessageProvider } from './components/Contexts/LoadingBGMessageContext.tsx';
-import { ClerkProvider } from '@clerk/clerk-react';
+import { RouterProvider, createRouter } from '@tanstack/react-router'
 
-const queryClient = new QueryClient();
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+// Import the generated route tree
+import { routeTree } from './routeTree.gen'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-      <BrowserRouter>
-        <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-          <QueryClientProvider client={queryClient}>
-            <LoadingMessageProvider>
-              <LoadingBGMessageProvider>
-                <App />
-              </LoadingBGMessageProvider>
-            </LoadingMessageProvider>
-          </QueryClientProvider>
-        </ClerkProvider>
-      </BrowserRouter>
-  </React.StrictMode>
-)
+// Create a new router instance
+const router = createRouter({ routeTree })
+
+// Register the router instance for type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
+
+const queryClient = new QueryClient()
+
+// Render the app
+const rootElement = document.getElementById('root')!
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement)
+  root.render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </StrictMode>
+  )
+}
