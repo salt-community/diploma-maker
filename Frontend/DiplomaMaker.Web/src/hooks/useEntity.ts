@@ -5,9 +5,9 @@
 */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ControllerName, Dto, Endpoints } from "../api";
+import { Backend, Endpoints } from "../api";
 
-export default function useEntity<TEntity extends Dto>(controller: ControllerName) {
+export default function useEntity<TEntity extends Backend.Dto>(controller: Backend.ControllerName) {
     const client = useQueryClient();
 
     const getAllEntitiesQuery = useQuery({

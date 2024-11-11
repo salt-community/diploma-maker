@@ -19,6 +19,7 @@ export const PdfMe = {
     ...PdfMeSchemas
 }
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace PdfMeTypes {
     export type Template = PdfMeCommon.Template;
     export class Designer extends PdfMeUi.Designer { };

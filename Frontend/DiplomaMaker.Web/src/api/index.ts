@@ -1,7 +1,7 @@
 import * as BackendModels from "./models";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
-namespace Backend {
+export namespace Backend {
     export type ControllerName =
         'Bootcamp' |
         'Diploma' |
@@ -21,8 +21,7 @@ namespace Backend {
         Bootcamp | Diploma | StringFile | Student | Template | Track;
 }
 
-//Todo: Set as environment variable
-const baseUrl = 'http://localhost:5171/api';
+const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
 
 
 export const Endpoints = {
