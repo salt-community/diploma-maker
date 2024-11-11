@@ -20,11 +20,28 @@ public class DiplomaMakerContext(DbContextOptions<DiplomaMakerContext> options) 
         Database.EnsureCreated();
 
         var tracks = MockerService.MockTracks(5);
+        var trackGuids = tracks
+            .Select(track => track.Guid)
+            .ToList();
+
         var students = MockerService.MockStudents(1);
+        var studentGuids = students
+            .Select(student => student.Guid)
+            .ToList();
+
         var templates = MockerService.MockTemplates(5);
+        var templateGuids = templates
+            .Select(template => template.Guid)
+            .ToList();
+
         var stringFiles = MockerService.MockStringFiles(["application/pdf", "image/webp", "application/json"], 50);
-        var bootcamps = MockerService.MockBootcamps(students, tracks, 1);
-        var diplomas = MockerService.MockDiplomas(students, bootcamps, templates, 50);
+        
+        var bootcamps = MockerService.MockBootcamps(studentGuids, trackGuids, 1);
+        var bootcampGuids = bootcamps
+            .Select(bootcamp => bootcamp.Guid)
+            .ToList();
+
+        var diplomas = MockerService.MockDiplomas(studentGuids, bootcampGuids, templateGuids, 50);
 
         AddRange(tracks);
         AddRange(students);

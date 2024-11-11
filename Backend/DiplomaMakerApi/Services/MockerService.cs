@@ -54,23 +54,23 @@ public static class MockerService
             .Generate(count).ToList();
 
     public static List<Bootcamp> MockBootcamps(
-        List<Student> students,
-        List<Track> tracks,
+        List<Guid> studentGuids,
+        List<Guid> trackGuids,
         int count) =>
         new Faker<Bootcamp>()
             .RuleFor(bootcamp => bootcamp.GraduationDate, f => f.Date.Between(new DateTime(2015, 1, 1), DateTime.Now))
-            .RuleFor(bootcamp => bootcamp.Students, f => RandomSubset(students))
-            .RuleFor(bootcamp => bootcamp.Track, f => RandomElement(tracks))
+            .RuleFor(bootcamp => bootcamp.StudentGuids, f => RandomSubset(studentGuids))
+            .RuleFor(bootcamp => bootcamp.TrackGuid, f => RandomElement(trackGuids))
             .Generate(count).ToList();
 
     public static List<Diploma> MockDiplomas(
-        List<Student> students,
-        List<Bootcamp> bootcamps,
-        List<Template> templates,
+        List<Guid> studentGuids,
+        List<Guid> bootcampGuids,
+        List<Guid> templateGuids,
         int count) =>
         new Faker<Diploma>()
-            .RuleFor(diploma => diploma.Student, f => RandomElement(students))
-            .RuleFor(diploma => diploma.Bootcamp, f => RandomElement(bootcamps))
-            .RuleFor(diploma => diploma.Template, f => RandomElement(templates))
+            .RuleFor(diploma => diploma.StudentGuid, f => RandomElement(studentGuids))
+            .RuleFor(diploma => diploma.BootcampGuid, f => RandomElement(bootcampGuids))
+            .RuleFor(diploma => diploma.TemplateGuid, f => RandomElement(templateGuids))
             .Generate(count).ToList();
 }
