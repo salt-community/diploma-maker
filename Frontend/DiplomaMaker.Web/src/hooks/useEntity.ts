@@ -2,6 +2,7 @@
     UseEntity
 
     Generic hook for working with CRUD entities on the backend.
+    Responsible for managing cache for a particular entity.
 */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,12 +11,11 @@ import { Backend, Endpoints } from "../api";
 export default function useEntity<TEntity extends Backend.Dto>(controller: Backend.ControllerName) {
     const client = useQueryClient();
 
-    useQuery({
+    const getAllEntitiesQuery = useQuery({
         queryKey: [controller],
-        queryFn: async () => [],
-        enabled: false
+        queryFn: async () => await Endpoints.GetEntities<TEntity>(controller),
     });
-    const entities = (client.getQueryData([controller]) ?? []) as TEntity[];
+    const entities = (getAllEntitiesQuery.data ?? []) as TEntity[];
 
     const getAllEntitiesMutation = useMutation({
         mutationFn: async () => await Endpoints.GetEntities<TEntity>(controller),

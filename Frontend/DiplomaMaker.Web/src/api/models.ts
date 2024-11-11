@@ -2,17 +2,17 @@ type BaseEntity = {
     guid: string
 }
 
-export type Track = BaseEntity & {
+export type NamedEntity = BaseEntity & {
     name: string
-}
+};
 
-export type Student = BaseEntity & {
-    name: string
+export type Track = NamedEntity;
+
+export type Student = NamedEntity & {
     enail: string
 }
 
-export type StringFile = BaseEntity & {
-    name: string,
+export type StringFile = NamedEntity & {
     mimeType: string,
     content: string
 }
@@ -24,7 +24,7 @@ export type Template = BaseEntity & {
 export type Bootcamp = BaseEntity & {
     graduationDate: Date,
     studentGuids: string[],
-    trackGuids: string[]
+    trackGuid: string
 }
 
 export type Diploma = BaseEntity & {

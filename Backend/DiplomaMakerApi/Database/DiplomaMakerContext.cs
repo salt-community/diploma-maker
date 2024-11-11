@@ -24,7 +24,7 @@ public class DiplomaMakerContext(DbContextOptions<DiplomaMakerContext> options) 
             .Select(track => track.Guid)
             .ToList();
 
-        var students = MockerService.MockStudents(1);
+        var students = MockerService.MockStudents(100);
         var studentGuids = students
             .Select(student => student.Guid)
             .ToList();
@@ -35,8 +35,8 @@ public class DiplomaMakerContext(DbContextOptions<DiplomaMakerContext> options) 
             .ToList();
 
         var stringFiles = MockerService.MockStringFiles(["application/pdf", "image/webp", "application/json"], 50);
-        
-        var bootcamps = MockerService.MockBootcamps(studentGuids, trackGuids, 1);
+
+        var bootcamps = MockerService.MockBootcamps(studentGuids, trackGuids, 20);
         var bootcampGuids = bootcamps
             .Select(bootcamp => bootcamp.Guid)
             .ToList();
