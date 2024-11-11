@@ -29,6 +29,21 @@ export const Endpoints = {
         return await response.json() as TEntity[];
     },
 
+    GetEntitiesByGuids: async <TEntity extends Dto>(controller: ControllerName, guids: string[]) => {
+        const endpoint = 'GetEntitiesByGuids';
+
+        const response = await fetch(`${baseUrl}/${controller}/${endpoint}`, {
+            method: 'GET',
+            body: JSON.stringify(guids)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        return await response.json() as TEntity[];
+    },
+
     GetEntity: async <TEntity extends Dto>(controller: ControllerName, guid: string) => {
         const endpoint = 'GetEntity';
 
