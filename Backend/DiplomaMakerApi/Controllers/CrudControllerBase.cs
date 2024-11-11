@@ -28,6 +28,12 @@ where TEntity : BaseEntity<TEntity>
         _context.Set<TEntity>()
             .Select(entity => entity.HideIds());
 
+    [HttpGet("GetEntitiesByGuids")]
+    public IEnumerable<TEntity> GetEntitiesByGuids([FromBody] List<string> guids) =>
+        _context.Set<TEntity>()
+            .Where(entity => guids.Contains(entity.Guid.ToString()))
+            .Select(entity => entity.HideIds());
+
 
     [HttpGet("GetEntityByGuid/{guid}")]
     public ActionResult<TEntity> GetEntity(string guid)
