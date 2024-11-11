@@ -1,201 +1,119 @@
-/*
-    API
+import * as BackendModels from "./models";
 
-    A collection of methods that directly interact with
-    backend API. This forms a layer of isolation between
-    the backend API and the rest of the app.
-*/
+// eslint-disable-next-line @typescript-eslint/no-namespace
+namespace Backend {
+    export type ControllerName =
+        'Bootcamp' |
+        'Diploma' |
+        'StringFile' |
+        'Student' |
+        'Template' |
+        'Track';
 
-import { components } from './openApiSchema';
-import { client } from './client';
+    export type Track = BackendModels.Track;
+    export type Student = BackendModels.Student;
+    export type StringFile = BackendModels.StringFile;
+    export type Template = BackendModels.Template;
+    export type Bootcamp = BackendModels.Bootcamp;
+    export type Diploma = BackendModels.Diploma;
 
-export type ControllerName =
-    'Bootcamp' |
-    'Diploma' |
-    'StringFile' |
-    'Student' |
-    'Template' |
-    'Track';
+    export type Dto =
+        Bootcamp | Diploma | StringFile | Student | Template | Track;
+}
 
-export type Bootcamp = components['schemas']['Bootcamp'];
-export type Diploma = components['schemas']['Diploma'];
-export type StringFile = components['schemas']['StringFile'];
-export type Student = components['schemas']['Student'];
-export type Template = components['schemas']['Template'];
-export type Track = components['schemas']['Track'];
-export type Dto =
-    Bootcamp | Diploma | StringFile | Student | Template | Track;
+//Todo: Set as environment variable
+const baseUrl = 'http://localhost:5171/api';
+
 
 export const Endpoints = {
-    GetAll: async (controller: ControllerName) => {
-        switch (controller) {
-            case 'Bootcamp':
-                return (await client.GET(
-                    '/api/Bootcamp/GetEntities')
-                ).data as Bootcamp[];
+    GetEntities: async <TEntity extends Backend.Dto>(controller: Backend.ControllerName) => {
+        const endpoint = 'GetEntities';
 
-            case 'Diploma':
-                return (await client.GET(
-                    '/api/Diploma/GetEntities')
-                ).data as Diploma[];
+        const response = await fetch(`${baseUrl}/${controller}/${endpoint}`, {
+            method: 'GET'
+        });
 
-            case 'StringFile':
-                return (await client.GET(
-                    '/api/StringFile/GetEntities')
-                ).data as StringFile[];
-
-            case 'Student':
-                return (await client.GET(
-                    '/api/Student/GetEntities')
-                ).data as Student[];
-
-            case 'Template':
-                return (await client.GET(
-                    '/api/Template/GetEntities')
-                ).data as Template[];
-
-            case 'Track':
-                return (await client.GET(
-                    '/api/Track/GetEntities')).data as Track[];
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
         }
+
+        return await response.json() as TEntity[];
     },
 
-    GetByGuid: async (controller: ControllerName, guid: string) => {
-        switch (controller) {
-            case 'Bootcamp':
-                return (await client.GET(
-                    '/api/Bootcamp/GetEntityByGuid/{guid}',
-                    { params: { path: { guid } } })
-                ).data as Bootcamp;
+    GetEntitiesByGuids: async <TEntity extends Backend.Dto>(controller: Backend.ControllerName, guids: string[]) => {
+        const endpoint = 'GetEntitiesByGuids';
 
-            case 'Diploma':
-                return (await client.GET(
-                    '/api/Diploma/GetEntityByGuid/{guid}',
-                    { params: { path: { guid } } })
-                ).data as Diploma;
+        const response = await fetch(`${baseUrl}/${controller}/${endpoint}`, {
+            method: 'GET',
+            body: JSON.stringify(guids)
+        });
 
-            case 'StringFile':
-                return (await client.GET(
-                    '/api/StringFile/GetEntityByGuid/{guid}',
-                    { params: { path: { guid } } })
-                ).data as StringFile;
-
-            case 'Student':
-                return (await client.GET(
-                    '/api/Student/GetEntityByGuid/{guid}',
-                    { params: { path: { guid } } })
-                ).data as Student;
-
-            case 'Template':
-                return (await client.GET(
-                    '/api/Template/GetEntityByGuid/{guid}',
-                    { params: { path: { guid } } })
-                ).data as Template;
-
-            case 'Track':
-                return (await client.GET(
-                    '/api/Track/GetEntityByGuid/{guid}',
-                    { params: { path: { guid } } })
-                ).data as Track;
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
         }
+
+        return await response.json() as TEntity[];
     },
 
-    Post: async <TEntity extends Dto>(controller: ControllerName, body: TEntity) => {
-        console.log(body);
-        switch (controller) {
-            case 'Bootcamp':
-                return (await client.POST(
-                    '/api/Bootcamp/PostEntity', { body })
-                ).data as Bootcamp;
+    GetEntity: async <TEntity extends Backend.Dto>(controller: Backend.ControllerName, guid: string) => {
+        const endpoint = 'GetEntity';
 
-            case 'Diploma':
-                return (await client.POST(
-                    '/api/Diploma/PostEntity', { body })
-                ).data as Diploma;
+        const response = await fetch(`${baseUrl}/${controller}/${endpoint}/${guid}`, {
+            method: 'GET',
+        });
 
-            case 'StringFile':
-                return (await client.POST(
-                    '/api/StringFile/PostEntity', { body })
-                ).data as StringFile;
-
-            case 'Student':
-                return (await client.POST(
-                    '/api/Student/PostEntity', { body })
-                ).data as Student;
-
-            case 'Template':
-                return (await client.POST(
-                    '/api/Template/PostEntity', { body })
-                ).data as Template;
-
-            case 'Track':
-                return (await client.POST(
-                    '/api/Track/PostEntity', { body })
-                ).data as Track;
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
         }
 
+        return await response.json() as TEntity;
     },
 
-    Put: async <TEntity extends Dto>(controller: ControllerName, body: TEntity) => {
-        switch (controller) {
-            case 'Bootcamp':
-                return (await client.PUT('/api/Bootcamp/PutEntity', {
-                    body
-                })).data as Bootcamp;
+    PostEntity: async <TEntity extends Backend.Dto>(controller: Backend.ControllerName, body: TEntity) => {
+        const endpoint = 'PostEntity';
 
-            case 'Diploma':
-                return (await client.PUT('/api/Diploma/PutEntity', {
-                    body
-                })).data as Diploma;
+        const response = await fetch(`${baseUrl}/${controller}/${endpoint}`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body)
+        });
 
-            case 'StringFile':
-                return (await client.PUT('/api/StringFile/PutEntity', {
-                    body
-                })).data as StringFile;
-
-            case 'Student':
-                return (await client.PUT('/api/Student/PutEntity', {
-                    body
-                })).data as Student;
-
-            case 'Template':
-                return (await client.PUT('/api/Template/PutEntity', {
-                    body
-                })).data as Template;
-
-            case 'Track':
-                return (await client.PUT('/api/Track/PutEntity', {
-                    body
-                })).data as Track;
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
         }
+
+        return await response.json() as TEntity;
     },
 
-    Delete: async (controller: ControllerName, guid: string) => {
-        switch (controller) {
-            case 'Bootcamp':
-                await client.DELETE('/api/Bootcamp/DeleteEntity/{guid}', { params: { path: { guid } } });
-                break;
+    PutEntity: async <TEntity extends Backend.Dto>(controller: Backend.ControllerName, body: TEntity) => {
+        const endpoint = 'PutEntity';
 
-            case 'Diploma':
-                await client.DELETE('/api/Diploma/DeleteEntity/{guid}', { params: { path: { guid } } });
-                break;
+        const response = await fetch(`${baseUrl}/${controller}/${endpoint}`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body)
+        });
 
-            case 'StringFile':
-                await client.DELETE('/api/StringFile/DeleteEntity/{guid}', { params: { path: { guid } } });
-                break;
-
-            case 'Student':
-                await client.DELETE('/api/Student/DeleteEntity/{guid}', { params: { path: { guid } } });
-                break;
-
-            case 'Template':
-                await client.DELETE('/api/Template/DeleteEntity/{guid}', { params: { path: { guid } } });
-                break;
-
-            case 'Track':
-                await client.DELETE('/api/Track/DeleteEntity/{guid}', { params: { path: { guid } } });
-                break;
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
         }
 
+        return await response.json() as TEntity;
+    },
+
+    DeleteEntity: async (controller: Backend.ControllerName, guid: string) => {
+        const endpoint = 'DeleteEntity';
+
+        const response = await fetch(`${baseUrl}/${controller}/${endpoint}/${guid}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
     }
-};
+}

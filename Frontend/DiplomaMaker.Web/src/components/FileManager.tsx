@@ -1,4 +1,4 @@
-import { StringFile } from "../fetchApi/types";
+import { StringFile } from "../api/models";
 import useEntity from "../hooks/useEntity";
 import UploadFileForm from "./UploadFileForm";
 
