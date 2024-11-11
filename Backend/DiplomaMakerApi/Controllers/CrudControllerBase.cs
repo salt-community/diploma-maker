@@ -26,13 +26,13 @@ where TEntity : BaseEntity<TEntity>
     [HttpGet("GetEntities")]
     public IEnumerable<TEntity> GetEntities() =>
         _context.Set<TEntity>()
-            .Select(entity => entity.HideIds());
+            .Select(entity => entity.HideId());
 
     [HttpGet("GetEntitiesByGuids")]
     public IEnumerable<TEntity> GetEntitiesByGuids([FromBody] List<string> guids) =>
         _context.Set<TEntity>()
             .Where(entity => guids.Contains(entity.Guid.ToString()))
-            .Select(entity => entity.HideIds());
+            .Select(entity => entity.HideId());
 
 
     [HttpGet("GetEntityByGuid/{guid}")]
@@ -43,7 +43,7 @@ where TEntity : BaseEntity<TEntity>
             .FirstOrDefault(entity => entity.Guid.ToString() == guid);
 
         return entity is not null
-            ? entity.HideIds()
+            ? entity.HideId()
             : NotFound($"{_entityName} with guid {guid} could not be found");
     }
 
@@ -55,7 +55,7 @@ where TEntity : BaseEntity<TEntity>
         _context.Add(entity);
         _context.SaveChanges();
 
-        return Ok(entity.HideIds());
+        return Ok(entity.HideId());
     }
 
     [HttpPut("PutEntity")]
@@ -72,7 +72,7 @@ where TEntity : BaseEntity<TEntity>
 
         _context.SaveChanges();
 
-        return Ok(entity.HideIds());
+        return Ok(entity.HideId());
     }
 
     [HttpDelete("DeleteEntity/{guid}")]
