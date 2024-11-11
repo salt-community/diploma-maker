@@ -8,6 +8,7 @@ export type ControllerName =
     'Template' |
     'Track';
 
+//Todo: Set as environment variable
 const baseUrl = 'http://localhost:5171/api';
 
 export type Dto =
