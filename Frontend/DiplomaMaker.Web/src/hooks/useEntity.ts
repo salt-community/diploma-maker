@@ -10,12 +10,22 @@ import { Backend, Endpoints } from "../api";
 export default function useEntity<TEntity extends Backend.Dto>(controller: Backend.ControllerName) {
     const client = useQueryClient();
 
-    const getAllEntitiesQuery = useQuery({
+    useQuery({
         queryKey: [controller],
-        queryFn: async () => await Endpoints.GetEntities<TEntity>(controller),
+        queryFn: async () => [],
+        enabled: false
+    });
+    const entities = (client.getQueryData([controller]) ?? []) as TEntity[];
+
+    const getAllEntitiesMutation = useMutation({
+        mutationFn: async () => await Endpoints.GetEntities<TEntity>(controller),
+        onSuccess: (entities: TEntity[]) => client.setQueryData([controller], entities)
     });
 
-    const entities = getAllEntitiesQuery.data ?? [];
+    const getEntitiesByGuidsMutation = useMutation({
+        mutationFn: async (guids: string[]) => await Endpoints.GetEntitiesByGuids<TEntity>(controller, guids),
+        onSuccess: (entities: TEntity[]) => updateCacheWithMany(entities)
+    });
 
     const getEntityMutation = useMutation({
         mutationFn: async (guid: string) => await Endpoints.GetEntity(controller, guid) as TEntity,
@@ -45,6 +55,11 @@ export default function useEntity<TEntity extends Backend.Dto>(controller: Backe
         );
     };
 
+    const updateCacheWithMany = (entities: TEntity[]) => {
+        const existingEntities = entities.filter((existingEntity) => !entities.includes(existingEntity));
+        client.setQueryData([controller], [...existingEntities, entities]);
+    }
+
     const deleteEntityFromCache = (guid: string) => {
         client.setQueryData(
             [controller],
@@ -63,6 +78,8 @@ export default function useEntity<TEntity extends Backend.Dto>(controller: Backe
 
     return {
         entities,
+        getAllEntities: () => getAllEntitiesMutation.mutate(),
+        getEntitiesByGuids: (guids: string[]) => getEntitiesByGuidsMutation.mutate(guids),
         postEntity: (entity: TEntity) =>
             postEntityMutation.mutate(entity),
         putEntity: (entity: TEntity) =>

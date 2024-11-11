@@ -23,13 +23,13 @@ export type Template = BaseEntity & {
 
 export type Bootcamp = BaseEntity & {
     graduationDate: Date,
-    students: Student[],
-    track: Track[]
+    studentGuids: string[],
+    trackGuids: string[]
 }
 
 export type Diploma = BaseEntity & {
-    students: Student,
-    bootcamp: Bootcamp,
-    template: Template
+    studentGuid: string,
+    bootcampGuid: string,
+    templateGuid: string
 }
 

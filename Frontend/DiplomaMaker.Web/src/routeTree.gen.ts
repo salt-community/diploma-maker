@@ -11,13 +11,13 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as FilemanagerImport } from './routes/filemanager'
+import { Route as BootcampmanagerImport } from './routes/bootcampmanager'
 
 // Create/Update Routes
 
-const FilemanagerRoute = FilemanagerImport.update({
-  id: '/filemanager',
-  path: '/filemanager',
+const BootcampmanagerRoute = BootcampmanagerImport.update({
+  id: '/bootcampmanager',
+  path: '/bootcampmanager',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -25,11 +25,11 @@ const FilemanagerRoute = FilemanagerImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/filemanager': {
-      id: '/filemanager'
-      path: '/filemanager'
-      fullPath: '/filemanager'
-      preLoaderRoute: typeof FilemanagerImport
+    '/bootcampmanager': {
+      id: '/bootcampmanager'
+      path: '/bootcampmanager'
+      fullPath: '/bootcampmanager'
+      preLoaderRoute: typeof BootcampmanagerImport
       parentRoute: typeof rootRoute
     }
   }
@@ -38,33 +38,33 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/filemanager': typeof FilemanagerRoute
+  '/bootcampmanager': typeof BootcampmanagerRoute
 }
 
 export interface FileRoutesByTo {
-  '/filemanager': typeof FilemanagerRoute
+  '/bootcampmanager': typeof BootcampmanagerRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/filemanager': typeof FilemanagerRoute
+  '/bootcampmanager': typeof BootcampmanagerRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/filemanager'
+  fullPaths: '/bootcampmanager'
   fileRoutesByTo: FileRoutesByTo
-  to: '/filemanager'
-  id: '__root__' | '/filemanager'
+  to: '/bootcampmanager'
+  id: '__root__' | '/bootcampmanager'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  FilemanagerRoute: typeof FilemanagerRoute
+  BootcampmanagerRoute: typeof BootcampmanagerRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  FilemanagerRoute: FilemanagerRoute,
+  BootcampmanagerRoute: BootcampmanagerRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +77,11 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/filemanager"
+        "/bootcampmanager"
       ]
     },
-    "/filemanager": {
-      "filePath": "filemanager.tsx"
+    "/bootcampmanager": {
+      "filePath": "bootcampmanager.tsx"
     }
   }
 }
