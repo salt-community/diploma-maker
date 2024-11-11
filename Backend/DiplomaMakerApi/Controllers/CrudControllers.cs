@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using DiplomaMakerApi.Database;
 using DiplomaMakerApi.Models;
 
-namespace DiplomaMakerApi._2.Controllers;
+namespace DiplomaMakerApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
