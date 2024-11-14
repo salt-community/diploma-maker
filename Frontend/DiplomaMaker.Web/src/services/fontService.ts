@@ -1,10 +1,9 @@
 import { PdfMe, PdfMeTypes } from '.';
-import { GoogleFont, GoogleFontsResponse } from '../types/types';
 
 /* 
   Font Service
 
-  Collection of functions related to managing user fonts to be used in PdfMe.
+ Collection of functions related to managing user fonts to be used in PdfMe.
 
 */
 
@@ -15,6 +14,17 @@ type PdfMeFont = {
   label: string;
   data: string | ArrayBuffer;
 };
+
+export type GoogleFont = {
+  family: string;
+  variants: Record<number, string>;
+  files: Record<string, string>;
+};
+
+export type GoogleFontsResponse = {
+  items: GoogleFont[];
+};
+
 
 // Fetches all available fonts(urls) from Google Fonts
 export async function fetchGoogleFonts() {

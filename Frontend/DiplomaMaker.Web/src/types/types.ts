@@ -14,13 +14,3 @@ export type TemplateImageSubstitutions = {
 export type TemplateInputs = Record<string, unknown>[];
 
 export type MimeType = 'application/pdf' | 'image/webp' | 'application/json';
-
-export type GoogleFont = {
-  family: string;
-  variants: Record<number, string>;
-  files: Record<string, string>;
-};
-
-export type GoogleFontsResponse = {
-  items: GoogleFont[];
-};

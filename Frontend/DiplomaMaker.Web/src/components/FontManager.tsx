@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { fetchGoogleFonts, saveFont } from '../services/fontService';
-import { GoogleFont } from '../types/types';
+import { GoogleFont, saveFont } from '../services/fontService';
 import { useState } from 'react';
+import useDebounce from '../hooks/useDebounce';
+import useGoogleFonts from '../hooks/useGoogleFonts';
 
 export const FONT_MANAGER_ID = 'font_manager_modal';
 
@@ -10,19 +10,15 @@ export default function FontManager({
 }: {
   onReloadFonts: () => void;
 }) {
-  const {
-    data: fonts,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ['google_fonts'],
-    queryFn: fetchGoogleFonts,
-  });
+  const { fonts, isLoading, isError } = useGoogleFonts();
 
   const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 300);
 
   const filteredFonts = fonts
-    ? fonts.filter((f) => f.family.includes(searchText))
+    ? fonts.filter((f) =>
+        f.family.toLowerCase().includes(debouncedSearchText.toLowerCase())
+      )
     : [];
 
   const handleSaveFont = (font: GoogleFont) => {
