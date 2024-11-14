@@ -1,15 +1,58 @@
-import { GoogleFont, saveFont } from '../services/fontService';
+import {
+  getSavedFonts,
+  GoogleFont,
+  removeFont,
+  saveFont,
+} from '../services/fontService';
 import { useState } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import useGoogleFonts from '../hooks/useGoogleFonts';
 
 export const FONT_MANAGER_ID = 'font_manager_modal';
 
-export default function FontManager({
-  onReloadFonts,
-}: {
+type FontManagerProps = {
   onReloadFonts: () => void;
-}) {
+};
+
+export default function FontManager({ onReloadFonts }: FontManagerProps) {
+  return (
+    <dialog id={FONT_MANAGER_ID} className="modal modal-bottom sm:modal-middle">
+      <div className="modal-box sm:max-w-screen-lg h-full pt-12">
+        <form method="dialog">
+          <button className="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">
+            ✕
+          </button>
+        </form>
+        <div className="flex h-full gap-8">
+          <UserFontsView />
+          <AddFontView onReloadFonts={onReloadFonts} />
+        </div>
+      </div>
+    </dialog>
+  );
+}
+
+function UserFontsView() {
+  const fonts = getSavedFonts();
+
+  return (
+    <section className="w-1/2 flex flex-col gap-4">
+      <h2 className="font-bold text-xl mb-4">My Fonts</h2>
+      <ul className="flex-1 overflow-y-scroll">
+        {fonts.map((font, index) => (
+          <ListItem
+            key={index}
+            text={font.family}
+            onClick={() => removeFont(font)}
+            mode="remove"
+          />
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function AddFontView({ onReloadFonts }: FontManagerProps) {
   const { fonts, isLoading, isError } = useGoogleFonts();
 
   const [searchText, setSearchText] = useState('');
@@ -28,56 +71,67 @@ export default function FontManager({
   };
 
   return (
-    <dialog id={FONT_MANAGER_ID} className="modal modal-bottom sm:modal-middle">
-      <div className="modal-box h-full max-h-[600px]">
-        <form method="dialog">
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-            ✕
-          </button>
-        </form>
-        <h3 className="font-bold text-xl mb-4">Manage Fonts</h3>
-        <div className="flex flex-col gap-4 h-full">
-          <label className="input input-bordered flex items-center gap-2">
-            <input
-              type="text"
-              className="grow"
-              placeholder="Search Google Fonts"
-              defaultValue={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
+    <section className="w-1/2 flex flex-col gap-4">
+      <h2 className="font-bold text-xl mb-4">Add new Font</h2>
+      <label className="input input-bordered flex items-center gap-2">
+        <input
+          type="text"
+          className="grow"
+          placeholder="Search Google Font"
+          defaultValue={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          className="h-4 w-4 opacity-70"
+        >
+          <path
+            fillRule="evenodd"
+            d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </label>
+      {fonts && (
+        <ul className="flex-1 overflow-y-scroll">
+          {filteredFonts.map((font, index) => (
+            <ListItem
+              key={index}
+              text={font.family}
+              onClick={() => handleSaveFont(font)}
+              mode="add"
             />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 opacity-70"
-            >
-              <path
-                fillRule="evenodd"
-                d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </label>
-          {fonts && (
-            <ul className="flex-1 overflow-y-scroll">
-              {filteredFonts.map((font, index) => (
-                <li
-                  className="group flex items-center justify-between py-2 hover:text-white cursor-pointer transition-colors"
-                  key={index}
-                  onClick={() => handleSaveFont(font)}
-                >
-                  <span>{font.family}</span>
-                  <button className="opacity-0 group-hover:opacity-100 btn btn-xs btn-primary">
-                    + Add
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+          ))}
+        </ul>
+      )}
+      {isError && <p>Could not load fonts from Google.</p>}
+      {isLoading && <p>Loading fonts...</p>}
+    </section>
+  );
+}
+
+type ListItemProps = {
+  text: string;
+  onClick: () => void;
+  mode: 'add' | 'remove';
+};
+
+function ListItem({ text, onClick, mode }: ListItemProps) {
+  return (
+    <li>
+      <button
+        onClick={onClick}
+        className="btn-ghost btn-block hover:bg-neutral group flex items-center justify-between p-3 transition-colors rounded-lg"
+      >
+        <span className="font-medium text-lg">{text}</span>
+        <div
+          className={`opacity-0 group-hover:opacity-100 btn btn-sm ${mode == 'add' ? 'btn-primary' : 'btn-error'}`}
+        >
+          {mode == 'add' ? '+ Add' : '- Remove'}
         </div>
-        {isError && <p>Could not load fonts from Google.</p>}
-        {isLoading && <p>Loading fonts...</p>}
-      </div>
-    </dialog>
+      </button>
+    </li>
   );
 }
