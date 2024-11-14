@@ -25,7 +25,6 @@ export type GoogleFontsResponse = {
   items: GoogleFont[];
 };
 
-
 // Fetches all available fonts(urls) from Google Fonts
 export async function fetchGoogleFonts() {
   const apiResponse = await fetch(
@@ -47,6 +46,12 @@ export function saveFont(font: GoogleFont) {
   savedFonts.push(font);
 
   localStorage.setItem(SAVED_FONTS_KEY, JSON.stringify(savedFonts));
+}
+
+export function removeFont(font: GoogleFont) {
+  const savedFonts = getSavedFonts();
+  const filteredFonts = savedFonts.filter((f) => f.family != font.family);
+  localStorage.setItem(SAVED_FONTS_KEY, JSON.stringify(filteredFonts));
 }
 
 // Returns saved user fonts in a format that PdfMe expects.
@@ -75,7 +80,7 @@ export function getPdfMeFonts() {
   );
 }
 
-function getSavedFonts(): GoogleFont[] {
+export function getSavedFonts(): GoogleFont[] {
   const savedFontsRaw = localStorage.getItem(SAVED_FONTS_KEY);
   return savedFontsRaw ? JSON.parse(savedFontsRaw) : [];
 }
