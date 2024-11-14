@@ -1,12 +1,8 @@
-import {
-  getSavedFonts,
-  GoogleFont,
-  removeFont,
-  saveFont,
-} from '../services/fontService';
+import { GoogleFont } from '../services/fontService';
 import { useState } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import useGoogleFonts from '../hooks/useGoogleFonts';
+import useUserFonts from '../hooks/useUserFonts';
 
 export const FONT_MANAGER_ID = 'font_manager_modal';
 
@@ -16,7 +12,11 @@ type FontManagerProps = {
 
 export default function FontManager({ onReloadFonts }: FontManagerProps) {
   return (
-    <dialog id={FONT_MANAGER_ID} className="modal modal-bottom sm:modal-middle">
+    <dialog
+      id={FONT_MANAGER_ID}
+      className="modal modal-bottom sm:modal-middle"
+      onClose={onReloadFonts}
+    >
       <div className="modal-box sm:max-w-screen-lg h-full pt-12">
         <form method="dialog">
           <button className="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">
@@ -25,7 +25,7 @@ export default function FontManager({ onReloadFonts }: FontManagerProps) {
         </form>
         <div className="flex h-full gap-8">
           <UserFontsView />
-          <AddFontView onReloadFonts={onReloadFonts} />
+          <AddFontView />
         </div>
       </div>
     </dialog>
@@ -33,7 +33,7 @@ export default function FontManager({ onReloadFonts }: FontManagerProps) {
 }
 
 function UserFontsView() {
-  const fonts = getSavedFonts();
+  const { fonts, removeFont } = useUserFonts();
 
   return (
     <section className="w-1/2 flex flex-col gap-4">
@@ -52,8 +52,9 @@ function UserFontsView() {
   );
 }
 
-function AddFontView({ onReloadFonts }: FontManagerProps) {
+function AddFontView() {
   const { fonts, isLoading, isError } = useGoogleFonts();
+  const { saveFont } = useUserFonts();
 
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 300);
@@ -66,8 +67,6 @@ function AddFontView({ onReloadFonts }: FontManagerProps) {
 
   const handleSaveFont = (font: GoogleFont) => {
     saveFont(font);
-    onReloadFonts();
-    alert('Font added!');
   };
 
   return (
