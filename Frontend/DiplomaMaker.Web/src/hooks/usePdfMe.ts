@@ -9,6 +9,7 @@ import { useEffect, useRef } from "react";
 
 import { FileService, PdfMe, PdfMeTypes, TemplateService } from "../services";
 import { TemplateSubstitutions } from "../types/types";
+import { getPdfMeFonts } from "../services/fontService";
 
 export function usePdfMe(
     designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
@@ -30,7 +31,12 @@ export function usePdfMe(
 
             if (domContainer)
                 designer.current = new PdfMeTypes.Designer({
-                    domContainer, template: initialTemplate ?? defaultTemplate, plugins
+                    domContainer,
+                    template: initialTemplate ?? defaultTemplate,
+                    options: {
+                        font: getPdfMeFonts()
+                    },
+                    plugins
                 });
         }
     });
@@ -107,11 +113,19 @@ export function usePdfMe(
         designer.current.updateTemplate(initialTemplate ?? defaultTemplate);
     };
 
+    function handleReloadFonts() {
+        if (!designer.current)
+            throw new Error("Designer is not initialized");
+
+        designer.current.updateOptions({ font: getPdfMeFonts() });
+    }
+
     return {
         generatePdf,
         handleLoadTemplate,
         onChangeBasePdf,
         onDownloadTemplate,
         onResetTemplate,
+        handleReloadFonts,
     }
 }
