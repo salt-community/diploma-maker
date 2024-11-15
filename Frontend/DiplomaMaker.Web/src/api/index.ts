@@ -1,4 +1,5 @@
 import * as BackendModels from "./models";
+import { getFullDiplomaByGuid } from "./fullDiploma";
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Backend {
@@ -25,6 +26,8 @@ const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
 
 
 export const Endpoints = {
+    getFullDiplomaByGuid,
+
     GetEntities: async <TEntity extends Backend.Dto>(controller: Backend.ControllerName) => {
         const endpoint = 'GetEntities';
 
