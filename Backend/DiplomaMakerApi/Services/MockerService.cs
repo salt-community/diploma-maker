@@ -118,11 +118,13 @@ public static class MockerService
         var template = new Template()
         {
             Guid = templateGuid,
-            BasePdfGuid = basePdfGuid
+            BasePdfGuid = basePdfGuid,
+            TemplateJsonFileGuid = templateFileGuid
         };
 
         var bootcamp = new Bootcamp()
         {
+            Guid = bootcampGuid,
             GraduationDate = DateTime.Now,
             StudentGuids = [studentGuid],
             TrackGuid = trackGuid

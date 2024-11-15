@@ -15,6 +15,7 @@ export default function useEntity<TEntity extends Backend.Dto>(controller: Backe
         queryKey: [controller],
         queryFn: async () => [],
     });
+
     const entities = (getAllEntitiesQuery.data ?? []) as TEntity[];
 
     const getAllEntitiesMutation = useMutation({
@@ -68,7 +69,6 @@ export default function useEntity<TEntity extends Backend.Dto>(controller: Backe
         );
     };
 
-    //TODO: this causes infinite recursion in react rerenders
     const entityByGuid = (guid: string) => {
         const entity = entities.find((entity) => entity.guid == guid);
 
