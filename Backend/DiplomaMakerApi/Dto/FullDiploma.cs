@@ -5,10 +5,12 @@ namespace DiplomaMakerApi.Dto;
 
 public class FullDiploma
 {
+    public Guid DiplomaGuid { get; set; }
     public string StudentName { get; set; }
     public string TrackName { get; set; }
     public DateTime GraduationDate { get; set; }
     public string TemplateJson { get; set; }
+    public string BasePdf { get; set; }
 
     public FullDiploma(Diploma diploma, DiplomaMakerContext context)
     {
@@ -27,10 +29,14 @@ public class FullDiploma
         var templateFile = context.Files.FirstOrDefault(file => file.Guid == template.TemplateJsonFileGuid)
             ?? throw new Exception("Could not find template file");
 
-        TemplateJson = templateFile.Content;
+        var basePdfFile = context.Files.FirstOrDefault(file => file.Guid == template.BasePdfGuid)
+            ?? throw new Exception("Could not find basePdf file");
 
+        DiplomaGuid = diploma.Guid;
+        TemplateJson = templateFile.Content;
         StudentName = student.Name;
         TrackName = track.Name;
         GraduationDate = bootcamp.GraduationDate;
+        BasePdf = basePdfFile.Content;
     }
 }

@@ -25,8 +25,8 @@ export function substitutePlaceholdersWithContent(
         let content = entry[1]['content'];
 
         const imageIndex = 0;
-
         switch (typeName) {
+            case 'qrcode':
             case 'text':
                 Object.entries(substitutions.text).forEach(([placeholder, substitution]) => {
                     content = content!.replace(placeholder, substitution);
@@ -51,6 +51,8 @@ export function substitutePlaceholdersWithContent(
         value: substitutions.basePdf
     });
 
+    template.basePdf = PdfMe.BLANK_PDF;
+
     return [inputs] as Types.TemplateInputs;
 }
 
@@ -69,7 +71,7 @@ export function substituteContentWithPlaceholders(
     let imageGuidIndex = 0;
 
     Object.entries(template.schemas[0]).forEach(entry => {
-        if (imageGuidIndex >= substitutions.images[imageGuidIndex].length)
+        if (imageGuidIndex >= substitutions.images.length)
             return;
 
         const typeName = entry[1]['type'];

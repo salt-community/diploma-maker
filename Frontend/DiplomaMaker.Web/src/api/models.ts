@@ -34,8 +34,10 @@ export type Diploma = BaseEntity & {
 }
 
 export type FullDiploma = {
+    diplomaGuid: string,
     studentName: string,
     trackName: string,
     graduationDate: Date,
-    templateJson: string
+    templateJson: string,
+    basePdf: string
 }

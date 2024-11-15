@@ -8,7 +8,7 @@ namespace DiplomaMakerApi.Controllers;
 [Route("api/[controller]")]
 public class FullDiplomaController(DiplomaMakerContext _context) : ControllerBase
 {
-    [HttpGet("FullDiploma/{diplomaGuid}")]
+    [HttpGet("{diplomaGuid}")]
     public ActionResult<FullDiploma> GetFullDiplomaByGuid(string diplomaGuid)
     {
         var diploma = _context.Diplomas.FirstOrDefault(diploma => diploma.Guid.ToString() == diplomaGuid);
