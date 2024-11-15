@@ -1,5 +1,5 @@
 type BaseEntity = {
-    guid: string
+    guid?: string
 }
 
 export type NamedEntity = BaseEntity & {

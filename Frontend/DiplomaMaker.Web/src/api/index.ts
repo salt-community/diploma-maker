@@ -87,6 +87,10 @@ export const Endpoints = {
     },
 
     PutEntity: async <TEntity extends Backend.Dto>(controller: Backend.ControllerName, body: TEntity) => {
+        if (!body.guid) {
+            throw new Error(`${controller} requires property 'guid' to be set on entity`);
+        }
+
         const endpoint = 'PutEntity';
 
         const response = await fetch(`${baseUrl}/${controller}/${endpoint}`, {

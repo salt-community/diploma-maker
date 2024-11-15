@@ -39,7 +39,8 @@ export default function useEntity<TEntity extends Backend.Dto>(controller: Backe
 
     const putEntityMutation = useMutation({
         mutationFn: async (entity: TEntity) => await Endpoints.PutEntity(controller, entity),
-        onSuccess: (response) => updateCacheWith(response)
+        onSuccess: (response) => updateCacheWith(response),
+        onError: (error) => console.log(error)
     });
 
     const deleteEntityMutation = useMutation({
