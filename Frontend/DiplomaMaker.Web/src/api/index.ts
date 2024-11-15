@@ -55,7 +55,7 @@ export const Endpoints = {
     },
 
     GetEntity: async <TEntity extends Backend.Dto>(controller: Backend.ControllerName, guid: string) => {
-        const endpoint = 'GetEntity';
+        const endpoint = 'GetEntityByGuid';
 
         const response = await fetch(`${baseUrl}/${controller}/${endpoint}/${guid}`, {
             method: 'GET',

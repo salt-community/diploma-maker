@@ -11,10 +11,17 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ValidateDiplomaImport } from './routes/validate-diploma'
 import { Route as TemplateDesignerImport } from './routes/template-designer'
 import { Route as BootcampmanagerImport } from './routes/bootcampmanager'
 
 // Create/Update Routes
+
+const ValidateDiplomaRoute = ValidateDiplomaImport.update({
+  id: '/validate-diploma',
+  path: '/validate-diploma',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const TemplateDesignerRoute = TemplateDesignerImport.update({
   id: '/template-designer',
@@ -46,6 +53,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TemplateDesignerImport
       parentRoute: typeof rootRoute
     }
+    '/validate-diploma': {
+      id: '/validate-diploma'
+      path: '/validate-diploma'
+      fullPath: '/validate-diploma'
+      preLoaderRoute: typeof ValidateDiplomaImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -54,36 +68,45 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/bootcampmanager': typeof BootcampmanagerRoute
   '/template-designer': typeof TemplateDesignerRoute
+  '/validate-diploma': typeof ValidateDiplomaRoute
 }
 
 export interface FileRoutesByTo {
   '/bootcampmanager': typeof BootcampmanagerRoute
   '/template-designer': typeof TemplateDesignerRoute
+  '/validate-diploma': typeof ValidateDiplomaRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/bootcampmanager': typeof BootcampmanagerRoute
   '/template-designer': typeof TemplateDesignerRoute
+  '/validate-diploma': typeof ValidateDiplomaRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/bootcampmanager' | '/template-designer'
+  fullPaths: '/bootcampmanager' | '/template-designer' | '/validate-diploma'
   fileRoutesByTo: FileRoutesByTo
-  to: '/bootcampmanager' | '/template-designer'
-  id: '__root__' | '/bootcampmanager' | '/template-designer'
+  to: '/bootcampmanager' | '/template-designer' | '/validate-diploma'
+  id:
+  | '__root__'
+  | '/bootcampmanager'
+  | '/template-designer'
+  | '/validate-diploma'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   BootcampmanagerRoute: typeof BootcampmanagerRoute
   TemplateDesignerRoute: typeof TemplateDesignerRoute
+  ValidateDiplomaRoute: typeof ValidateDiplomaRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   BootcampmanagerRoute: BootcampmanagerRoute,
   TemplateDesignerRoute: TemplateDesignerRoute,
+  ValidateDiplomaRoute: ValidateDiplomaRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,7 +120,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/bootcampmanager",
-        "/template-designer"
+        "/template-designer",
+        "/validate-diploma"
       ]
     },
     "/bootcampmanager": {
@@ -105,6 +129,9 @@ export const routeTree = rootRoute
     },
     "/template-designer": {
       "filePath": "template-designer.tsx"
+    },
+    "/validate-diploma": {
+      "filePath": "validate-diploma.tsx"
     }
   }
 }

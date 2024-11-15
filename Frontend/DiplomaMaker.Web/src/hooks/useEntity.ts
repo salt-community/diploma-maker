@@ -13,7 +13,7 @@ export default function useEntity<TEntity extends Backend.Dto>(controller: Backe
 
     const getAllEntitiesQuery = useQuery({
         queryKey: [controller],
-        queryFn: async () => await Endpoints.GetEntities<TEntity>(controller),
+        queryFn: async () => [],
     });
     const entities = (getAllEntitiesQuery.data ?? []) as TEntity[];
 
@@ -74,7 +74,7 @@ export default function useEntity<TEntity extends Backend.Dto>(controller: Backe
 
         if (entity) return entity;
 
-        getEntityMutation.mutate(guid);
+        if (getEntityMutation.status != "pending") getEntityMutation.mutate(guid);
     };
 
     return {

@@ -50,6 +50,8 @@ public class DiplomaMakerContext(DbContextOptions<DiplomaMakerContext> options) 
         AddRange(bootcamps);
         AddRange(diplomas);
 
+        MockerService.FullDiplomaSeed(this);
+
         SaveChanges();
     }
 }
