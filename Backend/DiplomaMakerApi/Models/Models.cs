@@ -1,4 +1,4 @@
-/*
+/*  
     Models
 
     The models used in the backend to form the database.
@@ -23,19 +23,20 @@ public class Student() : BaseEntity<Student>()
 {
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-}
+};
 
 public class StringFile() : BaseEntity<StringFile>()
 {
     public string Name { get; set; } = string.Empty;
     public string MimeType { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
-}
+};
 
 public class Template() : BaseEntity<Template>()
 {
     public Guid? BasePdfGuid { get; set; }
-}
+    public Guid TemplateJsonFileGuid { get; set; }
+};
 
 public class Bootcamp() : BaseEntity<Bootcamp>()
 {
@@ -51,4 +52,4 @@ public class Diploma() : BaseEntity<Diploma>()
     public Guid StudentGuid { get; set; }
     public Guid BootcampGuid { get; set; }
     public Guid TemplateGuid { get; set; }
-}
+};
