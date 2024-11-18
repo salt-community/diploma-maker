@@ -11,6 +11,7 @@
     "openapi": "npx openapi-typescript http://localhost:5171/swagger/v1/swagger.json -o ./src/api/openApiSchema.d.ts"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.16.0",
     "@pdfme/common": "^5.1.6",
     "@pdfme/generator": "^5.1.6",
     "@pdfme/ui": "^5.1.6",
