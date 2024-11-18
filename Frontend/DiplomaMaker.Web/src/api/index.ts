@@ -5,15 +5,13 @@ import { getFullDiplomaByGuid } from "./fullDiploma";
 export namespace Backend {
     export type ControllerName =
         'Diploma' |
-        'StringFile' |
         'Template';
 
-    export type StringFile = BackendModels.StringFile;
     export type Template = BackendModels.Template;
     export type Diploma = BackendModels.Diploma;
 
     export type Dto =
-        Diploma | StringFile | Template;
+        Diploma | Template;
 }
 
 const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;

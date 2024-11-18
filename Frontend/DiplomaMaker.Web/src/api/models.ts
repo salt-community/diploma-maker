@@ -6,13 +6,8 @@ export type NamedEntity = BaseEntity & {
     name: string
 };
 
-export type StringFile = NamedEntity & {
-    mimeType: string,
-    content: string
-}
-
 export type Template = BaseEntity & {
-    basePdfGuid?: string
+    templateJson: string
 }
 
 export type Diploma = BaseEntity & {
@@ -21,11 +16,10 @@ export type Diploma = BaseEntity & {
     templateGuid: string
 }
 
-export type FullDiploma = {
-    diplomaGuid: string,
+export type DiplomaWithContent = {
     studentName: string,
-    trackName: string,
+    track: string,
+    studentEmail: string,
     graduationDate: Date,
     templateJson: string,
-    basePdf: string
 }
