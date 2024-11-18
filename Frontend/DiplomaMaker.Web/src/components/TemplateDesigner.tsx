@@ -23,11 +23,29 @@ export default function TemplateDesigner({ template }: Props) {
         handleLoadTemplate,
         onChangeBasePdf,
         handleReloadFonts,
+        onSaveTemplate,
+        onLoadTemplate,
     } = usePdfMe(containerRef, template);
 
     const {
         openFontManager,
         FontManagerComponent } = useFontManager();
+    
+    const SaveTemplateButton = (
+        <button
+            className='btn'
+            onClick={onSaveTemplate}>
+            Save Template
+        </button>
+    );
+    
+    const LoadTemplateButton = (
+        <button
+            className='btn'
+            onClick={onLoadTemplate}>
+            Load Template
+        </button>
+    );
 
     const DownloadTemplateButton = (
         <button
@@ -76,6 +94,8 @@ export default function TemplateDesigner({ template }: Props) {
     return (
         <>
             {OpenFontManagerButton}
+            {SaveTemplateButton}
+            {LoadTemplateButton}
             {DownloadTemplateButton}
             {ResetTemplateButton}
             {LoadTemplateInput}

@@ -69,7 +69,7 @@ export function substituteContentWithPlaceholders(
     let imageGuidIndex = 0;
 
     Object.entries(template.schemas[0]).forEach(entry => {
-        if (imageGuidIndex >= substitutions.images[imageGuidIndex].length)
+        if (imageGuidIndex >= substitutions.images.length)
             return;
 
         const typeName = entry[1]['type'];
