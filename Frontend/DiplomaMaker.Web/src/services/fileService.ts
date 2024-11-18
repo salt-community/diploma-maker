@@ -67,13 +67,13 @@ export function downloadJsonFile(fileObject: unknown, title: string) {
 export type Student = {
     name: string,
     email: string
-}
+};
 
 export type Bootcamp = {
     track: string,
     graduationDate: Date,
     students: Student[]
-}
+};
 
 export function parseCSVFileIntoStudents(file: File) {
     return new Promise<Student[]>((resolve) => {
