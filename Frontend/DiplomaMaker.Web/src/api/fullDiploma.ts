@@ -1,7 +1,7 @@
-import { FullDiploma } from "./models";
+import { DiplomaWithContent } from "./models";
 
-export async function getFullDiplomaByGuid(guid: string) {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/FullDiploma/${guid}`, {
+export async function getDiplomaWithContentByGuid(guid: string) {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/DiplomaWithContent/${guid}`, {
         method: 'GET',
     });
 
@@ -9,5 +9,5 @@ export async function getFullDiplomaByGuid(guid: string) {
         throw new Error(`Response status: ${response.status}`);
     }
 
-    return await response.json() as FullDiploma;
+    return await response.json() as DiplomaWithContent;
 }

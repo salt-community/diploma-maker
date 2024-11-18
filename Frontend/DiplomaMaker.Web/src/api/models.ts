@@ -11,9 +11,11 @@ export type Template = BaseEntity & {
 }
 
 export type Diploma = BaseEntity & {
-    studentGuid: string,
-    bootcampGuid: string,
-    templateGuid: string
+    studentName: string,
+    studentEmail: string
+    track: string,
+    graduationDate: Date,
+    templateJson: string,
 }
 
 export type DiplomaWithContent = {
