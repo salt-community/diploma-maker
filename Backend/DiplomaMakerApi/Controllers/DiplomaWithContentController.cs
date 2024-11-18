@@ -6,16 +6,23 @@ namespace DiplomaMakerApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class FullDiplomaController(DiplomaMakerContext _context) : ControllerBase
+public class DiplomaWithContentController(DiplomaMakerContext _context) : ControllerBase
 {
     [HttpGet("{diplomaGuid}")]
-    public ActionResult<FullDiploma> GetFullDiplomaByGuid(string diplomaGuid)
+    public ActionResult<DiplomaWithContent> GetFullDiplomaByGuid(string diplomaGuid)
     {
         var diploma = _context.Diplomas.FirstOrDefault(diploma => diploma.Guid.ToString() == diplomaGuid);
 
         if (diploma is null)
             return NotFound($"Diploma with guid {diplomaGuid} could not be found");
 
-        return new FullDiploma(diploma, _context);
+        try
+        {
+            return new DiplomaWithContent(diploma, _context);
+        }
+        catch (Exception)
+        {
+            return NotFound("Diploma template could not be found");
+        }
     }
 }

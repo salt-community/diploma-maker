@@ -21,13 +21,6 @@ public class DiplomaController(
 
 [ApiController]
 [Route("api/[controller]")]
-public class StringFileController(
-    DiplomaMakerContext _context)
-    : CrudControllerBase<StringFile>(_context)
-{ }
-
-[ApiController]
-[Route("api/[controller]")]
 public class TemplateController(
     DiplomaMakerContext _context)
     : CrudControllerBase<Template>(_context)
