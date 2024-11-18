@@ -14,20 +14,6 @@ namespace DiplomaMakerApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class StudentController(
-    DiplomaMakerContext _context)
-    : CrudControllerBase<Student>(_context)
-{ }
-
-[ApiController]
-[Route("api/[controller]")]
-public class BootcampController(
-    DiplomaMakerContext _context)
-    : CrudControllerBase<Bootcamp>(_context)
-{ }
-
-[ApiController]
-[Route("api/[controller]")]
 public class DiplomaController(
     DiplomaMakerContext _context)
     : CrudControllerBase<Diploma>(_context)
@@ -45,11 +31,4 @@ public class StringFileController(
 public class TemplateController(
     DiplomaMakerContext _context)
     : CrudControllerBase<Template>(_context)
-{ }
-
-[ApiController]
-[Route("api/[controller]")]
-public class TrackController(
-    DiplomaMakerContext _context)
-    : CrudControllerBase<Track>(_context)
 { }

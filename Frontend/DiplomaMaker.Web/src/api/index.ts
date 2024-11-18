@@ -4,22 +4,16 @@ import { getFullDiplomaByGuid } from "./fullDiploma";
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Backend {
     export type ControllerName =
-        'Bootcamp' |
         'Diploma' |
         'StringFile' |
-        'Student' |
-        'Template' |
-        'Track';
+        'Template';
 
-    export type Track = BackendModels.Track;
-    export type Student = BackendModels.Student;
     export type StringFile = BackendModels.StringFile;
     export type Template = BackendModels.Template;
-    export type Bootcamp = BackendModels.Bootcamp;
     export type Diploma = BackendModels.Diploma;
 
     export type Dto =
-        Bootcamp | Diploma | StringFile | Student | Template | Track;
+        Diploma | StringFile | Template;
 }
 
 const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;

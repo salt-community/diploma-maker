@@ -8,7 +8,7 @@
 import { useRef } from "react";
 import { usePdfMe } from "../hooks/usePdfMe";
 import { PdfMeTypes } from "../services";
-import { useFontManager } from "../hooks/useFontManger";
+import { useFontManager } from "../hooks/useFontManager";
 
 interface Props {
     template?: PdfMeTypes.Template

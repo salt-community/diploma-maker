@@ -6,12 +6,6 @@ export type NamedEntity = BaseEntity & {
     name: string
 };
 
-export type Track = NamedEntity;
-
-export type Student = NamedEntity & {
-    enail: string
-}
-
 export type StringFile = NamedEntity & {
     mimeType: string,
     content: string
@@ -19,12 +13,6 @@ export type StringFile = NamedEntity & {
 
 export type Template = BaseEntity & {
     basePdfGuid?: string
-}
-
-export type Bootcamp = BaseEntity & {
-    graduationDate: Date,
-    studentGuids: string[],
-    trackGuid: string
 }
 
 export type Diploma = BaseEntity & {
