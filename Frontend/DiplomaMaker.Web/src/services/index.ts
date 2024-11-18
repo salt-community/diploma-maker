@@ -23,5 +23,6 @@ export const PdfMe = {
 export namespace PdfMeTypes {
     export type Template = PdfMeCommon.Template;
     export class Designer extends PdfMeUi.Designer { };
+    export class Viewer extends PdfMeUi.Viewer { };
     export type Font = PdfMeCommon.Font;
 }
