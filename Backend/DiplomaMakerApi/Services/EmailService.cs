@@ -1,3 +1,6 @@
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
@@ -6,10 +9,59 @@ using MimeKit;
 
 namespace DiplomaMakerApi.Services;
 
-public class EmailService
+public class EmailService(HttpClient _httpClient, IWebHostEnvironment _env, IConfiguration _configuration)
 {
+    private class ClerkOauthGoogleResponse
+    {
+        [JsonPropertyName("object")]
+        public string? Object { get; set; }
+
+        [JsonPropertyName("external_account_id")]
+        public string? ExternalAccountId { get; set; }
+
+        [JsonPropertyName("provider_user_id")]
+        public string? JsonPropertyNameProviderUserId { get; set; }
+
+        [JsonPropertyName("token")]
+        public string? Token { get; set; }
+
+        [JsonPropertyName("provider")]
+        public string? Provider { get; set; }
+
+        [JsonPropertyName("public_metadata")]
+        public Dictionary<string, object>? PublicMetadata { get; set; }
+
+        [JsonPropertyName("label")]
+        public string? Label { get; set; }
+
+        [JsonPropertyName("scopes")]
+        public List<string>? Scopes { get; set; }
+    }
+
+    public async Task<string> GetGoogleOAuthTokenAsync(string userId, string key)
+    {
+        var url = $"https://api.clerk.com/v1/users/{userId}/oauth_access_tokens/oauth_google";
+
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", key);
+
+        var response = await _httpClient.GetAsync(url);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("Failed to retrieve Google OAuth token from Clerk.");
+        }
+
+        var responseData = await response.Content.ReadAsStringAsync();
+        var serializedData = JsonSerializer.Deserialize<List<ClerkOauthGoogleResponse>>(responseData);
+
+        return serializedData![0].Token ?? throw new Exception("Token not found in response.");
+    }
+
     public async Task SendEmail()
     {
+        var secretKey = _env.IsDevelopment() ? _configuration["Clerk:SecretKey"]! : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
+        var googleToken = await GetGoogleOAuthTokenAsync("user_2oFiLzrmt38Z76ysoVWpT2BEoCu", secretKey);
+
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress("Joey", "oshulten@gmail.com"));
         message.To.Add(new MailboxAddress("Alice", "oshulten@gmail.com"));
@@ -28,11 +80,50 @@ Will you be my +1?
 "
         };
 
-        // var service = new GmailService(new BaseClientService.Initializer
-        // {
-        //     HttpClientInitializer = credential,
-        //     ApplicationName = "DiplomaProAPI",
-        // });
+
+        var credentials = GoogleCredential.FromAccessToken(googleToken);
+        Console.WriteLine(credentials);
+        var service = new GmailService(new BaseClientService.Initializer
+        {
+            HttpClientInitializer = credentials,
+            ApplicationName = "DiplomaProAPI",
+        });
+
+        using var stream = new MemoryStream();
+        await message.WriteToAsync(stream);
+
+        var gmailMessage = new Message
+        {
+            Raw = Convert.ToBase64String(stream.ToArray())
+                    .Replace('+', '-')
+                    .Replace('/', '_')
+                    .Replace("=", "")
+        };
+
+        var request = service.Users.Messages.Send(gmailMessage, "me");
+        await request.ExecuteAsync();
+
+        /*
+        try
+            {
+                if (string.IsNullOrEmpty(googleToken))
+                {
+                    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    if (userId == null)
+                    {
+                        throw new Exception("The user does not exist");
+                    }
+
+                    var secretKey = _env.IsDevelopment() ? _configuration["Clerk:SecretKey"]! : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
+                    googleToken = await _clerkService.GetGoogleOAuthTokenAsync(userId, secretKey);
+                }
+                await _emailService.SendEmailWithAttachmentAsync(guidID, req.File, googleToken, req.Title, req.Description);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            */
 
         // using (var stream = new MemoryStream())
         // {

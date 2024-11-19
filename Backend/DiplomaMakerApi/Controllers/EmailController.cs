@@ -23,6 +23,9 @@ public class EmailController(EmailService _emailService) : ControllerBase
     [Authorize]
     public async Task<IActionResult> Test()
     {
+        var token = Request.Headers.Authorization;
+        Console.WriteLine(token);
+        await _emailService.SendEmail();
         // var file = Base64ToImage(basePdf);
         // if (file is null)
         //     Console.WriteLine("File is undefined");
