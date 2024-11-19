@@ -8,7 +8,7 @@ import { Menu02Icon, UserCircleIcon } from "hugeicons-react";
 
 export default function Navbar() {
   return (
-    <header>
+    <header className="sticky top-0 z-50">
       <nav className="navbar bg-neutral shadow-sm">
         <div className="navbar-start">
           <div className="dropdown">

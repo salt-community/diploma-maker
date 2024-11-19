@@ -6,7 +6,12 @@ import typography from "@tailwindcss/typography";
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "secondary-dark": "#092236",
+        "accent-light": "#FFDADA",
+      },
+    },
     fontFamily: {
       display: ["Poppins", ...defaultTheme.fontFamily.sans],
       body: ["Manrope", ...defaultTheme.fontFamily.sans],
@@ -18,14 +23,15 @@ export default {
         salt: {
           primary: "#FF7961",
           secondary: "#042D45",
-          accent: "#ECF7FA",
-          neutral: "#ffffff",
-          "base-100": "#f9f9f9",
+          "secondary-content": "#D5E7F6",
+          accent: "#F35C7E",
+          neutral: "#FFFFFF",
+          "base-100": "#EDEDED",
           "base-content": "#042D45",
-          info: "#FAECF8",
+          info: "#ECF7FA",
           success: "#E1FFED",
-          warning: "#fde68a",
-          error: "#fca5a5",
+          warning: "#FDE68A",
+          error: "#FCA5A5",
         },
       },
     ],
