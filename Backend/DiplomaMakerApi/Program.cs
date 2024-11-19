@@ -6,83 +6,81 @@ using DiplomaMakerApi.Database;
 using DiplomaMakerApi.Services;
 using Microsoft.IdentityModel.Tokens;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddCors();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-string connectionString = (builder.Environment.IsDevelopment()
-    ? builder.Configuration["PostgreSQLConnectionLocal"]
-    : Environment.GetEnvironmentVariable("PostgreConnection"))
-        ?? throw new InvalidOperationException("Connection string 'DiplomaMakerContext' not found.");
-
-builder.Services.AddDbContext<DiplomaMakerContext>(options =>
-    options.UseNpgsql(connectionString));
-
-builder.Services.AddTransient<EmailService>();
-
-builder.Services.AddClerkApiClient(config =>
+internal class Program
 {
-    config.SecretKey = builder.Environment.IsDevelopment()
-        ? builder.Configuration["Clerk:SecretKey"]!
-        : Environment.GetEnvironmentVariable("Clerk:SecretKey")!;
-});
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+    private static void Main(string[] args)
     {
-        options.Authority = "https://wired-buck-47.clerk.accounts.dev/";
-        options.TokenValidationParameters = new TokenValidationParameters()
+        var builder = WebApplication.CreateBuilder(args);
+
+        var configurationVariables = GetConfigurationVariables(builder);
+
+        builder.Services.AddCors();
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+        builder.Services.AddDbContext<DiplomaMakerContext>(options =>
+            options.UseNpgsql(configurationVariables.DBConnectionString)
+        );
+        builder.Services.AddTransient<EmailService>();
+        builder.Services.AddClerkApiClient(options =>
+            options.SecretKey = configurationVariables.ClerkSecretKey
+        );
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Authority = configurationVariables.ClerkAuthority;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateAudience = false
+                };
+            });
+
+        var app = builder.Build();
+
+        using var scope = app.Services.CreateScope();
+        scope.ServiceProvider.GetRequiredService<DiplomaMakerContext>().SeedData();
+
+        if (app.Environment.IsDevelopment())
         {
-            ValidateAudience = false
-        };
-        // options.Authority = builder.Environment.IsDevelopment()
-        //     ? builder.Configuration["Clerk:Authority"]
-        //     : Environment.GetEnvironmentVariable("Clerk:Authority")!;
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
-        // options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+        app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        app.UseHttpsRedirection();
+        app.UseAuthorization();
+        app.MapControllers();
+        app.Run();
+    }
 
-        // options.TokenValidationParameters = new TokenValidationParameters()
-        // {
-        //     ValidateAudience = false,
-        //     NameClaimType = ClaimTypes.NameIdentifier
-        // };
+    private record ConfigurationVariables(
+        string DBConnectionString,
+        string ClerkSecretKey,
+        string ClerkAuthority);
 
-        // options.Events = new JwtBearerEvents()
-        // {
-        //     OnTokenValidated = context =>
-        //     {
-        //         var azp = context.Principal?.FindFirstValue("azp");
+    private static ConfigurationVariables GetConfigurationVariables(WebApplicationBuilder builder)
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            Console.WriteLine("Environment: Development");
 
-        //         if (string.IsNullOrEmpty(azp) || !azp.Equals(builder.Environment.IsDevelopment()
-        //                 ? builder.Configuration["Clerk:AuthorizedParty"]
-        //                 : Environment.GetEnvironmentVariable("Clerk:AuthorizedParty")!))
-        //             context.Fail("AZP Claim is invalid or missing");
+            return new ConfigurationVariables(
+                builder.Configuration["PostgreSQLConnectionLocal"]
+                    ?? throw new Exception("PostgreSQLConnectionLocal is not defined"),
+                builder.Configuration["Clerk:SecretKey"]
+                    ?? throw new Exception("Clerk:SecretKey is not defined"),
+                builder.Configuration["Clerk:Authority"]
+                    ?? throw new Exception("Clerk:Authority is not defined")
+            );
+        }
 
-        //         return Task.CompletedTask;
-        //     }
-        // };
-    });
-
-var app = builder.Build();
-
-using var scope = app.Services.CreateScope();
-scope.ServiceProvider.GetRequiredService<DiplomaMakerContext>().SeedData();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+        return new ConfigurationVariables(
+            Environment.GetEnvironmentVariable("PostgreConnection")
+                ?? throw new Exception("PostgreConnection is not defined"),
+            Environment.GetEnvironmentVariable("Clerk:SecretKey")
+                ?? throw new Exception("Clerk:SecretKey is not defined"),
+            Environment.GetEnvironmentVariable("Clerk:Authority")
+                ?? throw new Exception("Clerk:Authority is not defined")
+        );
+    }
 }
-
-app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

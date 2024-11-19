@@ -35,10 +35,10 @@ export default function Authentication() {
     );
 }
 
-export async function testEndpoint(token: string) {
+export async function testEndpoint(jwt: string) {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/Email/Test`, {
         method: 'GET',
-        headers: { 'Authorization': `Bearer ${""}` }
+        headers: { 'Authorization': `Bearer ${jwt}` }
     });
 
     if (!response.ok) {
