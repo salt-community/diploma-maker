@@ -28,26 +28,26 @@ Will you be my +1?
 "
         };
 
-        var service = new GmailService(new BaseClientService.Initializer
-        {
-            HttpClientInitializer = credential,
-            ApplicationName = "DiplomaProAPI",
-        });
+        // var service = new GmailService(new BaseClientService.Initializer
+        // {
+        //     HttpClientInitializer = credential,
+        //     ApplicationName = "DiplomaProAPI",
+        // });
 
-        using (var stream = new MemoryStream())
-        {
-            await message.WriteToAsync(stream);
-            var gmailMessage = new Message
-            {
-                Raw = Convert.ToBase64String(stream.ToArray())
-                    .Replace('+', '-')
-                    .Replace('/', '_')
-                    .Replace("=", "")
-            };
+        // using (var stream = new MemoryStream())
+        // {
+        //     await message.WriteToAsync(stream);
+        //     var gmailMessage = new Message
+        //     {
+        //         Raw = Convert.ToBase64String(stream.ToArray())
+        //             .Replace('+', '-')
+        //             .Replace('/', '_')
+        //             .Replace("=", "")
+        //     };
 
-            var request = service.Users.Messages.Send(gmailMessage, "me");
-            await request.ExecuteAsync();
-        }
+        //     var request = service.Users.Messages.Send(gmailMessage, "me");
+        //     await request.ExecuteAsync();
+        // }
     }
     public async Task SendEmailWithAttachmentAsync(IFormFile file, string oauthToken, string title, string description)
     {

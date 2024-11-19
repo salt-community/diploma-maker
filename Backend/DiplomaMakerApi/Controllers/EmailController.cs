@@ -1,4 +1,5 @@
 using DiplomaMakerApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomaMakerApi.Controllers;
@@ -18,13 +19,14 @@ public class EmailController(EmailService _emailService) : ControllerBase
         return file;
     }
 
-    [HttpGet]
+    [HttpGet("Test")]
+    [Authorize]
     public async Task<IActionResult> Test()
     {
-        var file = Base64ToImage(basePdf);
-        if (file is null)
-            Console.WriteLine("File is undefined");
-        Console.WriteLine(file.ContentDisposition);
+        // var file = Base64ToImage(basePdf);
+        // if (file is null)
+        //     Console.WriteLine("File is undefined");
+        // Console.WriteLine(file.ContentDisposition);
         // Console.WriteLine(file.ContentType);
         // Console.WriteLine(file.FileName);
         // Console.WriteLine(file.Headers);

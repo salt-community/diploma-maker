@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Clerk.Net.DependencyInjection;
 
 using DiplomaMakerApi.Database;
 using DiplomaMakerApi.Services;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,32 +33,37 @@ builder.Services.AddClerkApiClient(config =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Environment.IsDevelopment()
-            ? builder.Configuration["Clerk:Authority"]
-            : Environment.GetEnvironmentVariable("Clerk:Authority")!;
-
-        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
-
+        options.Authority = "https://wired-buck-47.clerk.accounts.dev/";
         options.TokenValidationParameters = new TokenValidationParameters()
         {
-            ValidateAudience = false,
-            NameClaimType = ClaimTypes.NameIdentifier
+            ValidateAudience = false
         };
+        // options.Authority = builder.Environment.IsDevelopment()
+        //     ? builder.Configuration["Clerk:Authority"]
+        //     : Environment.GetEnvironmentVariable("Clerk:Authority")!;
 
-        options.Events = new JwtBearerEvents()
-        {
-            OnTokenValidated = context =>
-            {
-                var azp = context.Principal?.FindFirstValue("azp");
+        // options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
 
-                if (string.IsNullOrEmpty(azp) || !azp.Equals(builder.Environment.IsDevelopment()
-                        ? builder.Configuration["Clerk:AuthorizedParty"]
-                        : Environment.GetEnvironmentVariable("Clerk:AuthorizedParty")!))
-                    context.Fail("AZP Claim is invalid or missing");
+        // options.TokenValidationParameters = new TokenValidationParameters()
+        // {
+        //     ValidateAudience = false,
+        //     NameClaimType = ClaimTypes.NameIdentifier
+        // };
 
-                return Task.CompletedTask;
-            }
-        };
+        // options.Events = new JwtBearerEvents()
+        // {
+        //     OnTokenValidated = context =>
+        //     {
+        //         var azp = context.Principal?.FindFirstValue("azp");
+
+        //         if (string.IsNullOrEmpty(azp) || !azp.Equals(builder.Environment.IsDevelopment()
+        //                 ? builder.Configuration["Clerk:AuthorizedParty"]
+        //                 : Environment.GetEnvironmentVariable("Clerk:AuthorizedParty")!))
+        //             context.Fail("AZP Claim is invalid or missing");
+
+        //         return Task.CompletedTask;
+        //     }
+        // };
     });
 
 var app = builder.Build();

@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as ValidateDiplomaImport } from './routes/validate-diploma'
 import { Route as TemplateDesignerImport } from './routes/template-designer'
+import { Route as EmailImport } from './routes/email'
 import { Route as BootcampmanagerImport } from './routes/bootcampmanager'
 
 // Create/Update Routes
@@ -26,6 +27,12 @@ const ValidateDiplomaRoute = ValidateDiplomaImport.update({
 const TemplateDesignerRoute = TemplateDesignerImport.update({
   id: '/template-designer',
   path: '/template-designer',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EmailRoute = EmailImport.update({
+  id: '/email',
+  path: '/email',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -44,6 +51,13 @@ declare module '@tanstack/react-router' {
       path: '/bootcampmanager'
       fullPath: '/bootcampmanager'
       preLoaderRoute: typeof BootcampmanagerImport
+      parentRoute: typeof rootRoute
+    }
+    '/email': {
+      id: '/email'
+      path: '/email'
+      fullPath: '/email'
+      preLoaderRoute: typeof EmailImport
       parentRoute: typeof rootRoute
     }
     '/template-designer': {
@@ -67,12 +81,14 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/bootcampmanager': typeof BootcampmanagerRoute
+  '/email': typeof EmailRoute
   '/template-designer': typeof TemplateDesignerRoute
   '/validate-diploma': typeof ValidateDiplomaRoute
 }
 
 export interface FileRoutesByTo {
   '/bootcampmanager': typeof BootcampmanagerRoute
+  '/email': typeof EmailRoute
   '/template-designer': typeof TemplateDesignerRoute
   '/validate-diploma': typeof ValidateDiplomaRoute
 }
@@ -80,31 +96,39 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/bootcampmanager': typeof BootcampmanagerRoute
+  '/email': typeof EmailRoute
   '/template-designer': typeof TemplateDesignerRoute
   '/validate-diploma': typeof ValidateDiplomaRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/bootcampmanager' | '/template-designer' | '/validate-diploma'
+  fullPaths:
+    | '/bootcampmanager'
+    | '/email'
+    | '/template-designer'
+    | '/validate-diploma'
   fileRoutesByTo: FileRoutesByTo
-  to: '/bootcampmanager' | '/template-designer' | '/validate-diploma'
+  to: '/bootcampmanager' | '/email' | '/template-designer' | '/validate-diploma'
   id:
-  | '__root__'
-  | '/bootcampmanager'
-  | '/template-designer'
-  | '/validate-diploma'
+    | '__root__'
+    | '/bootcampmanager'
+    | '/email'
+    | '/template-designer'
+    | '/validate-diploma'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   BootcampmanagerRoute: typeof BootcampmanagerRoute
+  EmailRoute: typeof EmailRoute
   TemplateDesignerRoute: typeof TemplateDesignerRoute
   ValidateDiplomaRoute: typeof ValidateDiplomaRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   BootcampmanagerRoute: BootcampmanagerRoute,
+  EmailRoute: EmailRoute,
   TemplateDesignerRoute: TemplateDesignerRoute,
   ValidateDiplomaRoute: ValidateDiplomaRoute,
 }
@@ -120,12 +144,16 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/bootcampmanager",
+        "/email",
         "/template-designer",
         "/validate-diploma"
       ]
     },
     "/bootcampmanager": {
       "filePath": "bootcampmanager.tsx"
+    },
+    "/email": {
+      "filePath": "email.tsx"
     },
     "/template-designer": {
       "filePath": "template-designer.tsx"
