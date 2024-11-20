@@ -18,10 +18,3 @@ public class DiplomaController(
     DiplomaMakerContext _context)
     : CrudControllerBase<Diploma>(_context)
 { }
-
-[ApiController]
-[Route("api/[controller]")]
-public class TemplateController(
-    DiplomaMakerContext _context)
-    : CrudControllerBase<Template>(_context)
-{ }
