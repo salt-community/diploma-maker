@@ -24,7 +24,7 @@ function GenerateDiplomaLink() {
   return (
     <Link
       to="/"
-      className="bg-accent-light group col-span-full grid h-64 place-items-center rounded-2xl no-underline"
+      className="group col-span-full grid h-64 place-items-center rounded-2xl bg-accent-light no-underline"
     >
       <div className="flex flex-col items-center gap-4 transition-transform group-hover:scale-105">
         <PlusSignIcon size={46} className="text-primary" />

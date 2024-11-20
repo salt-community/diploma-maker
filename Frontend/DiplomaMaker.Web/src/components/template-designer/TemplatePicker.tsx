@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
 import { useState } from "react";
-import { Template } from "./types";
+import { Template } from "./TemplateDesigner";
 
 type TemplatePickerProps = {
   templates: Template[];
@@ -55,7 +55,7 @@ export default function TemplatePicker({
       >
         {renderSelectItems()}
         <li className="pt-1">
-          <button className="hocus:bg-primary-focus bg-primary text-primary-content">
+          <button className="bg-primary text-primary-content hocus:bg-primary-focus">
             <Add01Icon size={16} />
             Create new Template
           </button>
@@ -63,7 +63,7 @@ export default function TemplatePicker({
         <li className="pt-1">
           <Link
             to="/"
-            className="hocus:bg-secondary-focus bg-secondary text-secondary-content"
+            className="bg-secondary text-secondary-content hocus:bg-secondary-focus"
           >
             <PencilEdit01Icon size={16} />
             Manage Templates

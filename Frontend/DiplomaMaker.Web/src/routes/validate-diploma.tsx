@@ -1,10 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
-import ValidateDiploma from '../components/ValidateDiploma'
+import { createFileRoute } from "@tanstack/react-router";
+//import ValidateDiploma from '../components/ValidateDiploma'
 
-export const Route = createFileRoute('/validate-diploma')({
+export const Route = createFileRoute("/validate-diploma")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  return <ValidateDiploma />
+  return <div>Validate Diploma</div>;
+  //return <ValidateDiploma />
 }

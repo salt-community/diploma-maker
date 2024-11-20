@@ -1,5 +1,9 @@
 import TemplatePicker from "./TemplatePicker";
-import { Template } from "./types";
+
+export type Template = {
+  id: string;
+  name: string;
+};
 
 const templates: Template[] = [
   { id: "1", name: "Default Template" },

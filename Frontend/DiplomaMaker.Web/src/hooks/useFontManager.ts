@@ -1,4 +1,4 @@
-import FontManager, { FONT_MANAGER_ID } from '../components/FontManager';
+import { FONT_MANAGER_ID, FontManager } from "@/components";
 
 export function useFontManager() {
   const openManager = () =>
