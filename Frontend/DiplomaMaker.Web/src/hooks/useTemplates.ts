@@ -15,7 +15,7 @@ export function useTemplates() {
     const peekTemplatesQuery = useQuery({
         queryKey: ["TemplatePeeks"],
         queryFn: async () => await Endpoints.peekTemplates()
-    })
+    });
 
     return {
         ...templateEntities,

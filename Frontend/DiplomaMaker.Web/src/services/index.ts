@@ -6,6 +6,7 @@
 
 export * as FileService from './fileService'
 export * as TemplateService from './templateService'
+export * as FontService from './fontService'
 
 import * as PdfMeCommon from '@pdfme/common'
 import * as PdfMeGenerator from '@pdfme/generator'
