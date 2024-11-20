@@ -3,16 +3,20 @@ import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
 import { useState } from "react";
 import { useTemplates } from "@/hooks/useTemplates";
 import { NamedEntity } from "@/api/models";
+import { useModal } from "@/hooks/useModal";
+import NewTemplateModal from "../NewTemplateModal";
 
 type TemplatePickerProps = {
   onTemplateSelect: (templateGuid: string) => void;
+  onNewTemplate: () => void;
 };
 
 export default function TemplatePicker({
   onTemplateSelect,
+  onNewTemplate
 }: TemplatePickerProps) {
   const { templatePeeks } = useTemplates();
-
+  const { openModal } = useModal(import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID)
   const [selectedTemplate, setSelectedTemplate] = useState<NamedEntity | null>(null);
 
   const handleSelectTemplate = (templatePeek: NamedEntity) => {
@@ -57,7 +61,12 @@ export default function TemplatePicker({
       >
         {renderSelectItems()}
         <li className="pt-1">
-          <button className="bg-primary text-primary-content hocus:bg-primary-focus">
+          <button
+            className="bg-primary text-primary-content hocus:bg-primary-focus"
+            onClick={() => {
+              onNewTemplate();
+              openModal();
+            }}>
             <Add01Icon size={16} />
             Create new Template
           </button>
@@ -72,6 +81,7 @@ export default function TemplatePicker({
           </Link>
         </li>
       </ul>
+      <NewTemplateModal />
     </div>
   );
 }

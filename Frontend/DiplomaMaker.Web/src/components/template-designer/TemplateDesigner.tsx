@@ -2,13 +2,14 @@ import { usePdfMe } from "@/hooks/usePdfMe";
 import { useTemplates } from "@/hooks/useTemplates";
 import { useRef, useState } from "react";
 import TemplatePicker from "./TemplatePicker";
+import { useModal } from "@/hooks/useModal";
 
 export default function TemplateDesigner() {
   const designerDiv = useRef<HTMLDivElement | null>(null);
   const templateHook = useTemplates();
 
   const [templateGuid, setTemplateGuid] = useState<string | undefined>();
-  const { onSaveTemplate, onLoadTemplate } = usePdfMe(designerDiv);
+  const { onSaveTemplate, onLoadTemplate, onNewTemplate } = usePdfMe(designerDiv);
 
   if (templateGuid) {
     const template = templateHook.templateByGuid(templateGuid);
@@ -28,6 +29,7 @@ export default function TemplateDesigner() {
               console.log(templateGuid);
               setTemplateGuid(templateGuid);
             }}
+            onNewTemplate={onNewTemplate}
           />
         </div>
         <div className="navbar-end">

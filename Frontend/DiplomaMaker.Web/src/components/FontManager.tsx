@@ -4,16 +4,14 @@ import useDebounce from '../hooks/useDebounce';
 import useGoogleFonts from '../hooks/useGoogleFonts';
 import useUserFonts from '../hooks/useUserFonts';
 
-export const FONT_MANAGER_ID = 'font_manager_modal';
-
 type FontManagerProps = {
   onReloadFonts: () => void;
 };
-
+  
 export default function FontManager({ onReloadFonts }: FontManagerProps) {
   return (
     <dialog
-      id={FONT_MANAGER_ID}
+      id={import.meta.env.VITE_FONT_MANAGER_ID}
       className="modal modal-bottom sm:modal-middle"
       onClose={onReloadFonts}
     >

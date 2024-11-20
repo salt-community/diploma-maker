@@ -15,8 +15,6 @@ import {
   TemplateService,
 } from "../services";
 import { Template } from "../api/models";
-import { Endpoints } from "../api";
-import useEntity from "./useEntity";
 import { useTemplates } from "./useTemplates";
 
 export function usePdfMe(
@@ -106,13 +104,6 @@ export function usePdfMe(
     );
   }
 
-  //TODO: remove as templates should only be saved in backend
-  function onDownloadTemplate() {
-    if (!designer.current) throw new Error("Designer is not initialized");
-
-    FileService.downloadJsonFile(designer.current.getTemplate(), "template");
-  }
-
   async function onSaveTemplate() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
@@ -147,6 +138,12 @@ export function usePdfMe(
     designer.current.updateTemplate(initialTemplate ?? defaultTemplate);
   }
 
+  function onNewTemplate() {
+    if (!designer.current) throw new Error("Designer is not initialized");
+
+    designer.current.updateTemplate(defaultTemplate);
+  }
+
   function handleReloadFonts() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
@@ -157,10 +154,10 @@ export function usePdfMe(
     generatePdf,
     handleLoadTemplate,
     onChangeBasePdf,
-    onDownloadTemplate,
     onResetTemplate,
     handleReloadFonts,
     onSaveTemplate,
+    onNewTemplate,
     onLoadTemplate,
   };
 }
