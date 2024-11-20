@@ -7,16 +7,23 @@
 
 import { useEffect, useRef } from "react";
 
-import { FileService, FontService, PdfMe, PdfMeTypes, TemplateService } from "../services";
+import {
+  FileService,
+  FontService,
+  PdfMe,
+  PdfMeTypes,
+  TemplateService,
+} from "../services";
 import { Template } from "../api/models";
 import { Endpoints } from "../api";
 import useEntity from "./useEntity";
+import { useTemplates } from "./useTemplates";
 
 export function usePdfMe(
   designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
   initialTemplate?: PdfMeTypes.Template,
 ) {
-  const templateEntities = useEntity<Template>("Template");
+  const templatesHook = useTemplates();
   const designer = useRef<PdfMeTypes.Designer | null>(null);
 
   const defaultTemplate: PdfMeTypes.Template = {
@@ -111,7 +118,7 @@ export function usePdfMe(
 
     const template = designer.current.getTemplate();
 
-    await Endpoints.PostEntity<Template>("Template", {
+    templatesHook.postTemplate({
       name: "Unnamed template",
       templateJson: JSON.stringify(template),
     });
@@ -125,7 +132,9 @@ export function usePdfMe(
       return;
     }
 
-    const pdfMeTemplate: PdfMeTypes.Template = JSON.parse(template.templateJson);
+    const pdfMeTemplate: PdfMeTypes.Template = JSON.parse(
+      template.templateJson,
+    );
 
     PdfMe.checkTemplate(pdfMeTemplate);
 

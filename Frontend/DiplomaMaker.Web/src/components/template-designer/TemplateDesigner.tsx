@@ -1,19 +1,17 @@
-import useEntity from "@/hooks/useEntity";
-import TemplatePicker from "./TemplatePicker";
-import { Template } from "@/api/models";
 import { usePdfMe } from "@/hooks/usePdfMe";
+import { useTemplates } from "@/hooks/useTemplates";
 import { useRef, useState } from "react";
+import TemplatePicker from "./TemplatePicker";
 
 export default function TemplateDesigner() {
-  const designerDiv = useRef<HTMLDivElement | null>(null)
-  const templateHook = useEntity<Template>("Template");
+  const designerDiv = useRef<HTMLDivElement | null>(null);
+  const templateHook = useTemplates();
 
   const [templateGuid, setTemplateGuid] = useState<string | undefined>();
   const { onSaveTemplate, onLoadTemplate } = usePdfMe(designerDiv);
 
-
   if (templateGuid) {
-    const template = templateHook.entityByGuid(templateGuid);
+    const template = templateHook.templateByGuid(templateGuid);
 
     if (template) {
       setTemplateGuid(undefined);
@@ -33,8 +31,13 @@ export default function TemplateDesigner() {
           />
         </div>
         <div className="navbar-end">
-          <button className="btn"
-            onClick={onSaveTemplate}>
+          <button
+            className="btn"
+            onClick={() => {
+              onSaveTemplate();
+              templateHook.peekTemplates();
+            }}
+          >
             Save Changes
           </button>
         </div>
