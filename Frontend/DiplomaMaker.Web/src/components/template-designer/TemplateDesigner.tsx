@@ -1,22 +1,26 @@
+import { NamedEntity } from "@/api/models";
 import { usePdfMe } from "@/hooks/usePdfMe";
 import { useTemplates } from "@/hooks/useTemplates";
 import { useRef, useState } from "react";
 import TemplatePicker from "./TemplatePicker";
-import { useModal } from "@/hooks/useModal";
 
 export default function TemplateDesigner() {
   const designerDiv = useRef<HTMLDivElement | null>(null);
   const templateHook = useTemplates();
 
-  const [templateGuid, setTemplateGuid] = useState<string | undefined>();
-  const { onSaveTemplate, onLoadTemplate, onNewTemplate } = usePdfMe(designerDiv);
+  const [template, setTemplate] = useState<NamedEntity | undefined>();
 
-  if (templateGuid) {
-    const template = templateHook.templateByGuid(templateGuid);
+  const { onSaveTemplate, onLoadTemplate, onNewTemplate } =
+    usePdfMe(designerDiv);
 
-    if (template) {
-      setTemplateGuid(undefined);
-      onLoadTemplate(template);
+  if (template?.guid) {
+    const templateWithContent = templateHook.templateByGuid(template.guid);
+
+    if (templateWithContent) {
+      setTemplate({
+        name: "Default Template",
+      });
+      onLoadTemplate(templateWithContent);
     }
   }
 
@@ -25,18 +29,22 @@ export default function TemplateDesigner() {
       <div className="navbar z-40 bg-neutral">
         <div className="navbar-start">
           <TemplatePicker
-            onTemplateSelect={async (templateGuid) => {
-              console.log(templateGuid);
-              setTemplateGuid(templateGuid);
+            onTemplateSelect={async (template) => {
+              console.log(template);
+              setTemplate(template);
             }}
-            onNewTemplate={onNewTemplate}
+            onNewTemplate={(template: NamedEntity) => {
+              console.log(template);
+              setTemplate(template);
+              onNewTemplate();
+            }}
           />
         </div>
         <div className="navbar-end">
           <button
             className="btn"
             onClick={() => {
-              onSaveTemplate();
+              onSaveTemplate(template!.name);
               templateHook.peekTemplates();
             }}
           >

@@ -104,13 +104,13 @@ export function usePdfMe(
     );
   }
 
-  async function onSaveTemplate() {
+  async function onSaveTemplate(name: string) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     const template = designer.current.getTemplate();
 
     templatesHook.postTemplate({
-      name: "Unnamed template",
+      name: name,
       templateJson: JSON.stringify(template),
     });
   }

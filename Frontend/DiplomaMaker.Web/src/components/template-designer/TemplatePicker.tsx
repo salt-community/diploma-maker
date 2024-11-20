@@ -7,26 +7,27 @@ import { useModal } from "@/hooks/useModal";
 import NewTemplateModal from "../NewTemplateModal";
 
 type TemplatePickerProps = {
-  onTemplateSelect: (templateGuid: string) => void;
-  onNewTemplate: () => void;
+  onTemplateSelect: (template: NamedEntity) => void;
+  onNewTemplate: (template: NamedEntity) => void;
 };
 
 export default function TemplatePicker({
   onTemplateSelect,
-  onNewTemplate
+  onNewTemplate,
 }: TemplatePickerProps) {
   const { templatePeeks } = useTemplates();
-  const { openModal } = useModal(import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID)
-  const [selectedTemplate, setSelectedTemplate] = useState<NamedEntity | null>(null);
+  const { openModal } = useModal(import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID);
+  const [selectedTemplate, setSelectedTemplate] = useState<NamedEntity | null>(
+    null,
+  );
 
   const handleSelectTemplate = (templatePeek: NamedEntity) => {
-    onTemplateSelect(templatePeek.guid!);
+    onTemplateSelect(templatePeek);
     setSelectedTemplate(templatePeek);
   };
 
   const renderSelectItems = () => {
-    if (!templatePeeks)
-      return <></>
+    if (!templatePeeks) return <></>;
 
     return templatePeeks.map(
       (nameGuid) =>
@@ -64,9 +65,9 @@ export default function TemplatePicker({
           <button
             className="bg-primary text-primary-content hocus:bg-primary-focus"
             onClick={() => {
-              onNewTemplate();
               openModal();
-            }}>
+            }}
+          >
             <Add01Icon size={16} />
             Create new Template
           </button>
@@ -81,7 +82,9 @@ export default function TemplatePicker({
           </Link>
         </li>
       </ul>
-      <NewTemplateModal />
+      <NewTemplateModal
+        onCreateNewTemplate={(template) => onNewTemplate(template)}
+      />
     </div>
   );
 }
