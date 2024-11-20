@@ -25,3 +25,5 @@ export type DiplomaWithContent = {
     graduationDate: Date,
     templateJson: string,
 }
+
+export type TemplatePeek = NamedEntity;
