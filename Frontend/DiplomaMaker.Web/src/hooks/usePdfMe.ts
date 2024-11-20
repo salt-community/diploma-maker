@@ -7,18 +7,16 @@
 
 import { useEffect, useRef } from "react";
 
-import { FileService, PdfMe, PdfMeTypes, TemplateService } from "../services";
-import { TemplateSubstitutions } from "../types/types";
-import { getPdfMeFonts } from "../services/fontService";
-import useEntity from "./useEntity";
-import { StringFile, Template } from "../api/models";
+import { FileService, FontService, PdfMe, PdfMeTypes, TemplateService } from "../services";
+import { Template } from "../api/models";
 import { Endpoints } from "../api";
+import useEntity from "./useEntity";
 
 export function usePdfMe(
   designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
   initialTemplate?: PdfMeTypes.Template,
 ) {
-  const stringFile = useEntity<StringFile>("StringFile");
+  const templateEntities = useEntity<Template>("Template");
   const designer = useRef<PdfMeTypes.Designer | null>(null);
 
   const defaultTemplate: PdfMeTypes.Template = {
@@ -41,14 +39,14 @@ export function usePdfMe(
           domContainer,
           template: initialTemplate ?? defaultTemplate,
           options: {
-            font: getPdfMeFonts(),
+            font: FontService.getPdfMeFonts(),
           },
           plugins,
         });
     }
   });
 
-  async function generatePdf(inputs: TemplateSubstitutions) {
+  async function generatePdf(inputs: Record<string, string>) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     const template = designer.current.getTemplate();
@@ -82,6 +80,7 @@ export function usePdfMe(
     const template = await TemplateService.getTemplateFromJsonFile(
       event.target.files[0],
     );
+
     designer.current.updateTemplate(template);
   }
 
@@ -100,6 +99,7 @@ export function usePdfMe(
     );
   }
 
+  //TODO: remove as templates should only be saved in backend
   function onDownloadTemplate() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
@@ -111,15 +111,15 @@ export function usePdfMe(
 
     const template = designer.current.getTemplate();
 
-    const result = await Endpoints.PostEntity<Template>("Template", {
+    await Endpoints.PostEntity<Template>("Template", {
       templateJson: JSON.stringify(template),
     });
   }
 
-  async function onLoadTemplate() {
+  async function onLoadTemplate(guid: string) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
-    const templateEntity = stringFile.entityByGuid(
+    const templateEntity = templateEntities.entityByGuid(
       "ee0b62a1-685b-42b6-adb0-7f16b978bb31",
     );
 
@@ -128,7 +128,7 @@ export function usePdfMe(
       return;
     }
 
-    const template: PdfMeTypes.Template = JSON.parse(templateEntity.content);
+    const template: PdfMeTypes.Template = JSON.parse(templateEntity.templateJson);
 
     //PdfMe.checkTemplate(template);
 
@@ -144,7 +144,7 @@ export function usePdfMe(
   function handleReloadFonts() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
-    designer.current.updateOptions({ font: getPdfMeFonts() });
+    designer.current.updateOptions({ font: FontService.getPdfMeFonts() });
   }
 
   return {
