@@ -2,6 +2,7 @@ import './index.css'
 
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
+import { ClerkProvider } from '@clerk/clerk-react'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 
 // Import the generated route tree
@@ -18,7 +19,7 @@ declare module '@tanstack/react-router' {
   }
 }
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 // Render the app
 const rootElement = document.getElementById('root')!
@@ -26,9 +27,11 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
+      <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY} afterSignOutUrl="/">
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </ClerkProvider>
     </StrictMode>
   )
 }
