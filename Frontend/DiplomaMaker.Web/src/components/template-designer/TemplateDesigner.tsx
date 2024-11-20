@@ -30,11 +30,9 @@ export default function TemplateDesigner() {
         <div className="navbar-start">
           <TemplatePicker
             onTemplateSelect={async (template) => {
-              console.log(template);
               setTemplate(template);
             }}
             onNewTemplate={(template: NamedEntity) => {
-              console.log(template);
               setTemplate(template);
               onNewTemplate();
             }}
