@@ -2,12 +2,15 @@
 import daisyui from "daisyui";
 import defaultTheme from "tailwindcss/defaultTheme";
 import typography from "@tailwindcss/typography";
+import plugin from "tailwindcss/plugin";
 
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
+        "primary-focus": "#ffa292",
+        "secondary-focus": "#064569",
         "secondary-dark": "#092236",
         "accent-light": "#FFDADA",
       },
@@ -36,5 +39,11 @@ export default {
       },
     ],
   },
-  plugins: [daisyui, typography],
+  plugins: [
+    daisyui,
+    typography,
+    plugin(function ({ addVariant }) {
+      addVariant("hocus", ["&:hover", "&:focus"]);
+    }),
+  ],
 };
