@@ -1,4 +1,4 @@
-import { NamedEntity } from "@/api/models";
+import { NamedEntity } from "@/services/backendService/models";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 type NewTemplateModalProps = {

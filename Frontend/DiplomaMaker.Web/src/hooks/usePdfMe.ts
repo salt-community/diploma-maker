@@ -14,7 +14,7 @@ import {
   PdfMeTypes,
   TemplateService,
 } from "../services";
-import { Template } from "../api/models";
+import { Template } from "../services/backendService/models";
 import { useTemplates } from "./useTemplates";
 
 export function usePdfMe(

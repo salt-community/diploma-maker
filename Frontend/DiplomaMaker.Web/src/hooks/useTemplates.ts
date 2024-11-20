@@ -4,8 +4,8 @@
     Extension of useEntity<Template> that adds endpoints beyond base CRUD.
 */
 
-import { Endpoints } from "@/api";
-import { Template } from "@/api/models";
+import { BackendService } from "@/services/backendService";
+import { Template } from "@/services/backendService/models";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useTemplates() {
@@ -20,12 +20,12 @@ export function useTemplates() {
 
   const peekTemplatesQuery = useQuery({
     queryKey: ["TemplatePeeks"],
-    queryFn: async () => await Endpoints.peekTemplates(),
+    queryFn: async () => await BackendService.Endpoints.peekTemplates(),
   });
 
   const getTemplateMutation = useMutation({
     mutationFn: async (guid: string) =>
-      (await Endpoints.GetEntity("Template", guid)) as Template,
+      (await BackendService.Endpoints.GetEntity("Template", guid)) as Template,
     onSuccess: (response: Template) => {
       updateCacheWith(response);
       peekTemplatesQuery.refetch();
@@ -34,7 +34,7 @@ export function useTemplates() {
 
   const postTemplateMutation = useMutation({
     mutationFn: async (entity: Template) =>
-      await Endpoints.PostEntity("Template", entity),
+      await BackendService.Endpoints.PostEntity("Template", entity),
     onSuccess: (response) => {
       updateCacheWith(response);
       peekTemplatesQuery.refetch();
@@ -43,7 +43,7 @@ export function useTemplates() {
 
   const putTemplateMutation = useMutation({
     mutationFn: async (entity: Template) =>
-      await Endpoints.PutEntity("Template", entity),
+      await BackendService.Endpoints.PutEntity("Template", entity),
     onSuccess: (response) => {
       updateCacheWith(response);
       peekTemplatesQuery.refetch();
@@ -53,7 +53,7 @@ export function useTemplates() {
 
   const deleteTemplateMutation = useMutation({
     mutationFn: async (guid: string) =>
-      await Endpoints.DeleteEntity("Template", guid),
+      await BackendService.Endpoints.DeleteEntity("Template", guid),
     onSuccess: (_, guid) => {
       deleteTemplateFromCache(guid);
       peekTemplatesQuery.refetch();

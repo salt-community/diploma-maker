@@ -5,7 +5,7 @@
 import { Viewer } from "@pdfme/ui";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
-import { Endpoints } from "../api";
+import { BackendService } from "../services/backendService";
 import { PdfMe, PdfMeTypes, TemplateService } from "../services";
 
 export default function useDiplomaViewer(
@@ -16,7 +16,7 @@ export default function useDiplomaViewer(
 
     const getDiplomaWithContentQuery = useQuery({
         queryKey: ["DiplomaWithContent"],
-        queryFn: async () => Endpoints.getDiplomaWithContentByGuid(guid),
+        queryFn: async () => BackendService.Endpoints.getDiplomaWithContentByGuid(guid),
     });
 
     useEffect(() => {
@@ -31,16 +31,11 @@ export default function useDiplomaViewer(
         ) as PdfMeTypes.Template;
 
         const substitions: Record<string, string> = {
-            text: {
-                "{studentName}": diplomaWithContent.studentName,
-                "{graduationDate}": "Some date",
-                "{track}": diplomaWithContent.track,
-                "{diplomaGuid}": diplomaWithContent.guid,
-                "{qrLink}": `${import.meta.env.VITE_FRONTEND_BASE_URL}/verication?diplomaGuid=${diplomaWithContent.diplomaGuid}`,
-            },
-            images: {},
-            qrCodes: {},
-            basePdf: diplomaWithContent.basePdf,
+            "{studentName}": diplomaWithContent.studentName,
+            "{graduationDate}": "Some date",
+            "{track}": diplomaWithContent.track,
+            "{diplomaGuid}": diplomaWithContent.guid,
+            "{qrLink}": `${import.meta.env.VITE_FRONTEND_BASE_URL}/verication?diplomaGuid=${diplomaWithContent.guid}`,
         };
 
         const inputs = TemplateService.substitutePlaceholdersWithContent(

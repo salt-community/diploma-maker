@@ -20,6 +20,7 @@ export type Diploma = BaseEntity & {
 }
 
 export type DiplomaWithContent = {
+    guid: string,
     studentName: string,
     track: string,
     studentEmail: string,

@@ -1,4 +1,4 @@
-import { NamedEntity } from "@/api/models";
+import { NamedEntity } from "@/services/backendService/models";
 import { usePdfMe } from "@/hooks/usePdfMe";
 import { useTemplates } from "@/hooks/useTemplates";
 import { useRef, useState } from "react";

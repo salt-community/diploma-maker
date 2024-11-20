@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
 import { useState } from "react";
 import { useTemplates } from "@/hooks/useTemplates";
-import { NamedEntity } from "@/api/models";
+import { NamedEntity } from "@/services/backendService/models";
 import { useModal } from "@/hooks/useModal";
 import NewTemplateModal from "../NewTemplateModal";
 
@@ -30,7 +30,7 @@ export default function TemplatePicker({
     if (!templatePeeks) return <></>;
 
     return templatePeeks.map(
-      (nameGuid) =>
+      (nameGuid: NamedEntity) =>
         nameGuid.guid !== selectedTemplate?.guid && (
           <li key={nameGuid.guid}>
             <button onClick={() => handleSelectTemplate(nameGuid!)}>

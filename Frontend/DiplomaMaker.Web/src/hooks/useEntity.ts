@@ -6,9 +6,9 @@
 */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Backend, Endpoints } from "../api";
+import { BackendService } from "../services/backendService";
 
-export default function useEntity<TEntity extends Backend.Dto>(controller: Backend.ControllerName) {
+export default function useEntity<TEntity extends BackendService.Dto>(controller: BackendService.ControllerName) {
     const client = useQueryClient();
 
     const getAllEntitiesQuery = useQuery({
@@ -19,33 +19,33 @@ export default function useEntity<TEntity extends Backend.Dto>(controller: Backe
     const entities = (getAllEntitiesQuery.data ?? []) as TEntity[];
 
     const getAllEntitiesMutation = useMutation({
-        mutationFn: async () => await Endpoints.GetEntities<TEntity>(controller),
+        mutationFn: async () => await BackendService.Endpoints.GetEntities<TEntity>(controller),
         onSuccess: (entities: TEntity[]) => client.setQueryData([controller], entities),
     });
 
     const getEntitiesByGuidsMutation = useMutation({
-        mutationFn: async (guids: string[]) => await Endpoints.GetEntitiesByGuids<TEntity>(controller, guids),
+        mutationFn: async (guids: string[]) => await BackendService.Endpoints.GetEntitiesByGuids<TEntity>(controller, guids),
         onSuccess: (entities: TEntity[]) => updateCacheWithMany(entities)
     });
 
     const getEntityMutation = useMutation({
-        mutationFn: async (guid: string) => await Endpoints.GetEntity(controller, guid) as TEntity,
+        mutationFn: async (guid: string) => await BackendService.Endpoints.GetEntity(controller, guid) as TEntity,
         onSuccess: (response: TEntity) => updateCacheWith(response)
     });
 
     const postEntityMutation = useMutation({
-        mutationFn: async (entity: TEntity) => await Endpoints.PostEntity(controller, entity),
+        mutationFn: async (entity: TEntity) => await BackendService.Endpoints.PostEntity(controller, entity),
         onSuccess: (response) => updateCacheWith(response)
     });
 
     const putEntityMutation = useMutation({
-        mutationFn: async (entity: TEntity) => await Endpoints.PutEntity(controller, entity),
+        mutationFn: async (entity: TEntity) => await BackendService.Endpoints.PutEntity(controller, entity),
         onSuccess: (response) => updateCacheWith(response),
         onError: (error) => console.log(error)
     });
 
     const deleteEntityMutation = useMutation({
-        mutationFn: async (guid: string) => await Endpoints.DeleteEntity(controller, guid),
+        mutationFn: async (guid: string) => await BackendService.Endpoints.DeleteEntity(controller, guid),
         onSuccess: (_, guid) => deleteEntityFromCache(guid),
         onError: (error) => console.error(error)
     });
