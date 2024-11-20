@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router';
-import TemplateDesigner from '../components/TemplateDesigner';
+import TemplateDesigner from "@/components/TemplateDesigner";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/template-designer')({
-    component: TemplateDesigner,
+export const Route = createFileRoute("/template-designer")({
+  component: TemplateDesigner,
 });
