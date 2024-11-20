@@ -14,6 +14,7 @@ namespace DiplomaMakerApi.Models;
 
 public class Template() : BaseEntity<Template>()
 {
+    public string Name { get; set; } = string.Empty;
     public string TemplateJson { get; set; } = string.Empty;
 };
 
