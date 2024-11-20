@@ -1,33 +1,35 @@
 import { Link } from "@tanstack/react-router";
 import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
 import { useState } from "react";
-import { Template } from "./TemplateDesigner";
+import { useTemplates } from "@/hooks/useTemplates";
+import { NamedEntity } from "@/api/models";
 
 type TemplatePickerProps = {
-  templates: Template[];
-  onTemplateSelect: (template: Template) => void;
+  onTemplateSelect: (templateGuid: string) => void;
 };
 
 export default function TemplatePicker({
-  templates,
   onTemplateSelect,
 }: TemplatePickerProps) {
-  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
-    templates[0],
-  );
+  const { templatePeeks } = useTemplates();
 
-  const handleSelectTemplate = (template: Template) => {
-    onTemplateSelect(template);
-    setSelectedTemplate(template);
+  const [selectedTemplate, setSelectedTemplate] = useState<NamedEntity | null>(null);
+
+  const handleSelectTemplate = (templatePeek: NamedEntity) => {
+    onTemplateSelect(templatePeek.guid!);
+    setSelectedTemplate(templatePeek);
   };
 
   const renderSelectItems = () => {
-    return templates.map(
-      (template) =>
-        template.id !== selectedTemplate?.id && (
-          <li key={template.id}>
-            <button onClick={() => handleSelectTemplate(template)}>
-              {template.name}
+    if (!templatePeeks)
+      return <></>
+
+    return templatePeeks.map(
+      (nameGuid) =>
+        nameGuid.guid !== selectedTemplate?.guid && (
+          <li key={nameGuid.guid}>
+            <button onClick={() => handleSelectTemplate(nameGuid!)}>
+              {nameGuid.name}
             </button>
           </li>
         ),

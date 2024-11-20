@@ -7,6 +7,7 @@ export type NamedEntity = BaseEntity & {
 };
 
 export type Template = BaseEntity & {
+    name: string,
     templateJson: string
 }
 

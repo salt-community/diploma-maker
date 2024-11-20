@@ -112,27 +112,24 @@ export function usePdfMe(
     const template = designer.current.getTemplate();
 
     await Endpoints.PostEntity<Template>("Template", {
+      name: "Unnamed template",
       templateJson: JSON.stringify(template),
     });
   }
 
-  async function onLoadTemplate(guid: string) {
+  async function onLoadTemplate(template: Template) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
-    const templateEntity = templateEntities.entityByGuid(
-      "ee0b62a1-685b-42b6-adb0-7f16b978bb31",
-    );
-
-    if (!templateEntity) {
+    if (!template) {
       console.log("Template dosen't exist!");
       return;
     }
 
-    const template: PdfMeTypes.Template = JSON.parse(templateEntity.templateJson);
+    const pdfMeTemplate: PdfMeTypes.Template = JSON.parse(template.templateJson);
 
-    //PdfMe.checkTemplate(template);
+    PdfMe.checkTemplate(pdfMeTemplate);
 
-    designer.current.updateTemplate(template);
+    designer.current.updateTemplate(pdfMeTemplate);
   }
 
   function onResetTemplate() {

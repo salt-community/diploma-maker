@@ -1,29 +1,45 @@
+import useEntity from "@/hooks/useEntity";
 import TemplatePicker from "./TemplatePicker";
-
-export type Template = {
-  id: string;
-  name: string;
-};
-
-const templates: Template[] = [
-  { id: "1", name: "Default Template" },
-  { id: "2", name: "jsfs" },
-  { id: "3", name: "dnfs" },
-];
+import { Template } from "@/api/models";
+import { usePdfMe } from "@/hooks/usePdfMe";
+import { useRef, useState } from "react";
 
 export default function TemplateDesigner() {
+  const designerDiv = useRef<HTMLDivElement | null>(null)
+  const templateHook = useEntity<Template>("Template");
+
+  const [templateGuid, setTemplateGuid] = useState<string | undefined>();
+  const { onSaveTemplate, onLoadTemplate } = usePdfMe(designerDiv);
+
+
+  if (templateGuid) {
+    const template = templateHook.entityByGuid(templateGuid);
+
+    if (template) {
+      setTemplateGuid(undefined);
+      onLoadTemplate(template);
+    }
+  }
+
   return (
     <div className="flex h-full flex-col">
       <div className="navbar z-40 bg-neutral">
         <div className="navbar-start">
           <TemplatePicker
-            templates={templates}
-            onTemplateSelect={(template) => console.log(template.name)}
+            onTemplateSelect={async (templateGuid) => {
+              console.log(templateGuid);
+              setTemplateGuid(templateGuid);
+            }}
           />
         </div>
-        <div className="navbar-end">Save Changes</div>
+        <div className="navbar-end">
+          <button className="btn"
+            onClick={onSaveTemplate}>
+            Save Changes
+          </button>
+        </div>
       </div>
-      <div className="h-100 flex-1 overflow-auto">Template Designer</div>
+      <div ref={designerDiv} />
     </div>
   );
 }
