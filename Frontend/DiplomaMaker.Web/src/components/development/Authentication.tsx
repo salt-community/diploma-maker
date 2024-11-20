@@ -9,20 +9,11 @@ export default function Authentication() {
         queryFn: async () => await auth.getToken()
     });
 
-    const userReturn = useUser();
-    const clerk = useClerk();
-
-    auth.getToken();
-
-    console.log(userReturn);
-
     const test = async () => {
         if (!query.data) {
             console.error("No token");
             return;
         }
-
-        console.log(`Testing with token ${query.data}`);
 
         await testEndpoint(query.data);
     }
@@ -36,8 +27,8 @@ export default function Authentication() {
 }
 
 export async function testEndpoint(jwt: string) {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/Email/Test`, {
-        method: 'GET',
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/Email/SendDiplomaEmail`, {
+        method: 'POST',
         headers: { 'Authorization': `Bearer ${jwt}` }
     });
 

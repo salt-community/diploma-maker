@@ -25,6 +25,7 @@ internal class Program
         builder.Services.AddClerkApiClient(options =>
             options.SecretKey = configurationVariables.ClerkSecretKey
         );
+        
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -56,8 +57,13 @@ internal class Program
     private record ConfigurationVariables(
         string DBConnectionString,
         string ClerkSecretKey,
-        string ClerkAuthority);
+        string ClerkAuthority,
+        string ClerkOAuthGoogleUrl);
 
+    /*
+        Collects all configuration variables together in one object.
+        TODO: Make this available through dependency injection to simplify EmailService
+    */
     private static ConfigurationVariables GetConfigurationVariables(WebApplicationBuilder builder)
     {
         if (builder.Environment.IsDevelopment())
@@ -70,9 +76,13 @@ internal class Program
                 builder.Configuration["Clerk:SecretKey"]
                     ?? throw new Exception("Clerk:SecretKey is not defined"),
                 builder.Configuration["Clerk:Authority"]
-                    ?? throw new Exception("Clerk:Authority is not defined")
+                    ?? throw new Exception("Clerk:Authority is not defined"),
+                builder.Configuration["Clerk:OAuthGoogleUrl"]
+                    ?? throw new Exception("Clerk:OAuthGoogleUrl is not defined")
             );
         }
+
+        Console.WriteLine("Environment: Production");
 
         return new ConfigurationVariables(
             Environment.GetEnvironmentVariable("PostgreConnection")
@@ -80,7 +90,8 @@ internal class Program
             Environment.GetEnvironmentVariable("Clerk:SecretKey")
                 ?? throw new Exception("Clerk:SecretKey is not defined"),
             Environment.GetEnvironmentVariable("Clerk:Authority")
-                ?? throw new Exception("Clerk:Authority is not defined")
+                ?? throw new Exception("Clerk:Authority is not defined"),
+            ""
         );
     }
 }

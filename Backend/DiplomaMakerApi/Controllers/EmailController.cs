@@ -1,3 +1,4 @@
+using DiplomaMakerApi.Dto;
 using DiplomaMakerApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,33 +9,19 @@ namespace DiplomaMakerApi.Controllers;
 [Route("api/[controller]")]
 public class EmailController(EmailService _emailService) : ControllerBase
 {
-    private IFormFile Base64ToImage(string base64)
-    {
-        byte[] bytes = Convert.FromBase64String(base64);
-        Console.WriteLine(bytes);
-        MemoryStream stream = new(bytes);
-        Console.WriteLine(stream);
-        IFormFile file = new FormFile(stream, 0, bytes.Length, "pdf", "pdf.pdf");
-        Console.WriteLine(file);
-        return file;
-    }
-
-    [HttpGet("Test")]
+    [HttpPost("SendDiplomaEmail")]
     [Authorize]
-    public async Task<IActionResult> Test()
+    public async Task<IActionResult> SendDiplomaEmail()
     {
-        var token = Request.Headers.Authorization;
-        Console.WriteLine(token);
-        await _emailService.SendEmail();
-        // var file = Base64ToImage(basePdf);
-        // if (file is null)
-        //     Console.WriteLine("File is undefined");
-        // Console.WriteLine(file.ContentDisposition);
-        // Console.WriteLine(file.ContentType);
-        // Console.WriteLine(file.FileName);
-        // Console.WriteLine(file.Headers);
-        // Console.WriteLine(file.Name);
-        // await _emailService.SendEmailWithAttachmentAsync(Base64ToImage(pdf), "jklfa", "jklsfa", "jkleaf");
+        var emailRequest = new SendEmailRequest()
+        {
+            StudenEmail = "oshulten@gmail.com",
+            StudentName = "Oscar Hultén",
+            Track = "C#",
+            DiplomaPdfBase64 = basePdf
+        };
+
+        await _emailService.SendEmail(emailRequest);
         return Ok();
     }
 
