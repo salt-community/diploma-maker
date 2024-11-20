@@ -15,7 +15,7 @@ import { Types } from "../types";
 */
 export function substitutePlaceholdersWithContent(
     template: PdfMeTypes.Template,
-    substitutions: Types.TemplateSubstitutions) {
+    substitutions: Types.TemplateTextSubstitions) {
 
     const inputs: Record<string, unknown> = {};
 
@@ -24,7 +24,6 @@ export function substitutePlaceholdersWithContent(
         const typeName = entry[1]['type'];
         let content = entry[1]['content'];
 
-        const imageIndex = 0;
         switch (typeName) {
             case 'qrcode':
             case 'text':
@@ -34,13 +33,6 @@ export function substitutePlaceholdersWithContent(
 
                 Object.defineProperty(inputs, fieldName, {
                     value: content
-                });
-
-                break;
-
-            case 'image':
-                Object.defineProperty(inputs, fieldName, {
-                    value: substitutions.images[imageIndex]
                 });
 
                 break;
@@ -54,36 +46,6 @@ export function substitutePlaceholdersWithContent(
     template.basePdf = PdfMe.BLANK_PDF;
 
     return [inputs] as Types.TemplateInputs;
-}
-
-/*
-    Accepts a PdeMe Template created in the designer and
-    removes all dynamic non-text content and replaces it
-    with guid placeholders.
-
-    This is used to remove direct dependencies from a template
-    to its image content, minifying its size for storage in the backend.
-*/
-export function substituteContentWithPlaceholders(
-    template: PdfMeTypes.Template,
-    substitutions: Types.TemplateImageSubstitutions) {
-
-    let imageGuidIndex = 0;
-
-    Object.entries(template.schemas[0]).forEach(entry => {
-        if (imageGuidIndex >= substitutions.images.length)
-            return;
-
-        const typeName = entry[1]['type'];
-        if (typeName == 'image') {
-            entry[1]['content'] = `{${substitutions.images[imageGuidIndex]}}`;
-            imageGuidIndex++;
-        }
-    });
-
-    template.basePdf = `{${substitutions.basePdf}`;
-
-    return template;
 }
 
 /*

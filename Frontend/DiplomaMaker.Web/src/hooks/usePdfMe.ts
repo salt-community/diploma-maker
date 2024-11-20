@@ -8,17 +8,17 @@
 import { useEffect, useRef } from "react";
 
 import { FileService, PdfMe, PdfMeTypes, TemplateService } from "../services";
-import { TemplateSubstitutions } from "../types/types";
 import { getPdfMeFonts } from "../services/fontService";
-import useEntity from "./useEntity";
-import { StringFile, Template } from "../api/models";
+import { Template } from "../api/models";
 import { Endpoints } from "../api";
+import { TemplateTextSubstitions } from "@/types/types";
+import useEntity from "./useEntity";
 
 export function usePdfMe(
   designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
   initialTemplate?: PdfMeTypes.Template,
 ) {
-  const stringFile = useEntity<StringFile>("StringFile");
+  const templateEntities = useEntity<Template>("Template");
   const designer = useRef<PdfMeTypes.Designer | null>(null);
 
   const defaultTemplate: PdfMeTypes.Template = {
@@ -48,7 +48,7 @@ export function usePdfMe(
     }
   });
 
-  async function generatePdf(inputs: TemplateSubstitutions) {
+  async function generatePdf(inputs: TemplateTextSubstitions) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     const template = designer.current.getTemplate();
@@ -82,6 +82,7 @@ export function usePdfMe(
     const template = await TemplateService.getTemplateFromJsonFile(
       event.target.files[0],
     );
+
     designer.current.updateTemplate(template);
   }
 
@@ -119,7 +120,7 @@ export function usePdfMe(
   async function onLoadTemplate() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
-    const templateEntity = stringFile.entityByGuid(
+    const templateEntity = templateEntities.entityByGuid(
       "ee0b62a1-685b-42b6-adb0-7f16b978bb31",
     );
 
@@ -128,7 +129,7 @@ export function usePdfMe(
       return;
     }
 
-    const template: PdfMeTypes.Template = JSON.parse(templateEntity.content);
+    const template: PdfMeTypes.Template = JSON.parse(templateEntity.templateJson);
 
     //PdfMe.checkTemplate(template);
 
