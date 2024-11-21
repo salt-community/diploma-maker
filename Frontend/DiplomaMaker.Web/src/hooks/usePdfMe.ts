@@ -140,9 +140,17 @@ export function usePdfMe(
     const blob = new Blob([pdf.buffer], { type: "application/pdf" });
 
     //temporary, should not work like this by default later
-    window.open(URL.createObjectURL(blob));
+    // window.open(URL.createObjectURL(blob));
 
     return blob;
+  }
+
+  async function downloadTemplate() {
+    if (!designer.current) throw new Error("Designer is not initialized");
+
+    const template = designer.current.getTemplate();
+
+    FileService.downloadJsonFile(template, "template");
   }
 
   return {
@@ -153,5 +161,7 @@ export function usePdfMe(
     onSaveTemplate,
     onNewTemplate,
     onLoadTemplate,
+    generatePdf,
+    downloadTemplate
   };
 }

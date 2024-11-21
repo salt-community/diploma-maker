@@ -12,7 +12,7 @@ export default function TemplateDesigner() {
 
   const [selectedTemplate, _] = useCache<NamedEntity>(selectedTemplateKey);
 
-  const { onSaveTemplate, onLoadTemplate, onNewTemplate } =
+  const { onSaveTemplate, onLoadTemplate, onNewTemplate, generatePdf, downloadTemplate } =
     usePdfMe(designerDiv);
 
   if (selectedTemplate?.guid) {
@@ -33,12 +33,9 @@ export default function TemplateDesigner() {
           />
         </div>
         <div className="navbar-end">
-        <button
+          <button
             className="btn"
-            onClick={() => {
-              onSaveTemplate(selectedTemplate.name);
-              templateHook.peekTemplates();
-            }}
+            onClick={() => downloadTemplate()}
           >
             Download Template
           </button>
