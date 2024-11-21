@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
 import { useTemplates } from "@/hooks/useTemplates";
 import { NamedEntity } from "@/services/backendService/models";
@@ -72,7 +71,7 @@ export default function TemplatePicker({
               Create new Template
             </button>
           </li>
-          
+
           <li className="pt-1">
             <button
               className="bg-secondary text-secondary-content hocus:bg-secondary-focus"
