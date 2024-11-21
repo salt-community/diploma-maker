@@ -13,14 +13,17 @@ export default function BootcampForm() {
 
     const rows = bootcamp && bootcamp.students.map(student => (
         <tr key={student.email}>
-            <td>{student.name}</td>
-            <td>{student.email}
-
-                {/* <button
-                    className="btn bg-warning hocus:bg-error"
-                    onClick={() => deleteTemplate(student.guid!)}>
-                    <Delete04Icon size={24} />
-                </button> */}
+            <td>
+                <input
+                    type="text"
+                    placeholder={student.name}
+                    className="input input-bordered w-full max-w-xs"
+                    onChange={(event) => {
+                        console.log(event.target.value);
+                    }} />
+            </td>
+            <td>
+                <input type="text" placeholder={student.email} className="input input-bordered w-full max-w-xs" />
             </td>
         </tr>
     ));
@@ -38,6 +41,20 @@ export default function BootcampForm() {
                 </tbody>
 
             </table>
-        </div>
+
+            <button
+                className="btn bg-warning hocus:bg-error"
+                onClick={() => {
+                    setBootcamp({
+                        ...bootcamp,
+                        students: [...bootcamp.students, {
+                            name: "John Doe",
+                            email: "john.doe@appliedtechonology.se"
+                        }]
+                    })
+                }}>
+                Add Student
+            </button>
+        </div >
     );
 }
