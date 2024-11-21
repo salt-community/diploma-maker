@@ -9,20 +9,22 @@ import { Template } from "@/services/backendService/models";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useTemplates() {
-  const client = useQueryClient();
-  const queryKey = ["Template"];
+  const queryKeyTemplate = ["Template"];
+  const queryKeyTemplatePeek = ["TemplatePeek"];
   const controller = "Template";
   type TEntity = Template;
 
+  const client = useQueryClient();
+
   const getTemplatesQuery = useQuery({
-    queryKey,
+    queryKey: queryKeyTemplate,
     queryFn: async () => [],
   });
 
   const templates = (getTemplatesQuery.data ?? []) as TEntity[];
 
   const peekTemplatesQuery = useQuery({
-    queryKey,
+    queryKey: queryKeyTemplatePeek,
     queryFn: async () => await BackendService.Endpoints.peekTemplates(),
   });
 
@@ -75,7 +77,7 @@ export function useTemplates() {
 
   const updateCacheWith = (entity: TEntity) => {
     client.setQueryData(
-      queryKey,
+      queryKeyTemplate,
       [
         ...templates.filter(
           (existingEntity) => existingEntity.guid != entity.guid,
@@ -87,7 +89,7 @@ export function useTemplates() {
 
   const deleteTemplateFromCache = (guid: string) => {
     client.setQueryData(
-      queryKey,
+      queryKeyTemplate,
       [...templates.filter((entity) => entity.guid != guid)],
     );
   };
