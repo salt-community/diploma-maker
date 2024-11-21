@@ -3,7 +3,7 @@ import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
 import { useTemplates } from "@/hooks/useTemplates";
 import { NamedEntity } from "@/services/backendService/models";
 import { useModal } from "@/hooks/useModal";
-import NewTemplateModal from "./NewTemplateModal.1";
+import NewTemplateModal from "./NewTemplateModal";
 import useCache from "@/hooks/useCache";
 import { selectedTemplateKey } from "./cacheKeys";
 
