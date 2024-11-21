@@ -34,7 +34,7 @@ export default function NewTemplateModal({
   return (
     <Modal
       id={import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID}
-      title={"New Template"}>
+      title={"Create New Template"}>
       <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
         <input
           className="input input-bordered w-full"

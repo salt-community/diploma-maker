@@ -5,8 +5,14 @@
     and pdf generation.
 */
 
-import { FileService, PdfMe, PdfMeTypes } from ".";
+import { BLANK_PDF, checkTemplate, Template } from "@pdfme/common";
+import { FileService, PdfMeTypes } from ".";
 import { Types } from "../types";
+
+export const defaultTemplate: Template = {
+    basePdf: BLANK_PDF,
+    schemas: [[]],
+};
 
 /*
     Accepts a PdfMe Template with placeholders and 
@@ -43,7 +49,7 @@ export function substitutePlaceholdersWithContent(
         value: substitutions.basePdf
     });
 
-    template.basePdf = PdfMe.BLANK_PDF;
+    template.basePdf = BLANK_PDF;
 
     return [inputs] as Types.TemplateInputs;
 }
@@ -55,7 +61,7 @@ export function substitutePlaceholdersWithContent(
 export async function getTemplateFromJsonFile(file: File) {
     const template: PdfMeTypes.Template = JSON.parse(await FileService.readTextFile(file));
 
-    PdfMe.checkTemplate(template);
+    checkTemplate(template);
 
     return template;
 }

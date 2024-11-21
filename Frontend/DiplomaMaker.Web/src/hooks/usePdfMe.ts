@@ -24,11 +24,6 @@ export function usePdfMe(
   const templatesHook = useTemplates();
   const designer = useRef<PdfMeTypes.Designer | null>(null);
 
-  const defaultTemplate: PdfMeTypes.Template = {
-    basePdf: PdfMe.BLANK_PDF,
-    schemas: [[]],
-  };
-
   const plugins = {
     Text: PdfMe.text,
     QR: PdfMe.barcodes.qrcode,
@@ -42,7 +37,7 @@ export function usePdfMe(
       if (domContainer)
         designer.current = new PdfMeTypes.Designer({
           domContainer,
-          template: initialTemplate ?? defaultTemplate,
+          template: initialTemplate ?? TemplateService.defaultTemplate,
           options: {
             font: FontService.getPdfMeFonts(),
           },
@@ -135,13 +130,13 @@ export function usePdfMe(
   function onResetTemplate() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
-    designer.current.updateTemplate(initialTemplate ?? defaultTemplate);
+    designer.current.updateTemplate(initialTemplate ?? TemplateService.defaultTemplate);
   }
 
   function onNewTemplate() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
-    designer.current.updateTemplate(defaultTemplate);
+    designer.current.updateTemplate(TemplateService.defaultTemplate);
   }
 
   function handleReloadFonts() {
