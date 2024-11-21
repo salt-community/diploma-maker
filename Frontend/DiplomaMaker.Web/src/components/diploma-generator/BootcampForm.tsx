@@ -1,3 +1,4 @@
+import useCache from "@/hooks/useCache";
 import { Bootcamp } from "@/services/fileService";
 import { useFieldArray, useForm } from "react-hook-form";
 
@@ -10,7 +11,17 @@ type Student = {
     email: string
 }
 
-export default function BootcampForm({ bootcamp }: Props) {
+export default function BootcampForm({ }: Props) {
+    const [bootcamp, setBootcamp] = useCache<Bootcamp>(["Bootcamp"]);
+
+    if (!bootcamp) {
+        setBootcamp({
+            graduationDate: new Date(Date.now()),
+            track: "CSharp",
+            students: []
+        });
+    }
+
     const formValues = bootcamp
         ?? {
             track: "Track",
@@ -21,6 +32,7 @@ export default function BootcampForm({ bootcamp }: Props) {
     const { register, control, handleSubmit } = useForm<Bootcamp>({
         values: formValues
     });
+
     const { fields, append, remove } = useFieldArray<Bootcamp>({
         control,
         name: 'students',
@@ -35,8 +47,8 @@ export default function BootcampForm({ bootcamp }: Props) {
         </tr>
     );
 
-    const rows = bootcamp && bootcamp.students.map((student, i) => (
-        <tr key={student.email}>
+    const rows = bootcamp && fields.map((student, i) => (
+        <tr key={student.id}>
             <td>
                 <input
                     {...register(`students.${i}.name`)}
