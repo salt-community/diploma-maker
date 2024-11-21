@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useTemplates } from "@/hooks/useTemplates";
 import { NamedEntity } from "@/services/backendService/models";
 import { useModal } from "@/hooks/useModal";
-import NewTemplateModal from "../NewTemplateModal";
+import NewTemplateModal from "./NewTemplateModal";
+import useSynchronousCache from "@/hooks/useSynchronousCache";
 
 type TemplatePickerProps = {
   onTemplateSelect: (template: NamedEntity) => void;
@@ -17,9 +18,7 @@ export default function TemplatePicker({
 }: TemplatePickerProps) {
   const { templatePeeks } = useTemplates();
   const { openModal } = useModal(import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID);
-  const [selectedTemplate, setSelectedTemplate] = useState<NamedEntity | null>(
-    null,
-  );
+  const { get: getSelectedTemplate, set: setSelectedTemplate } = useSynchronousCache<NamedEntity>("SelectedTemplate");
 
   const handleSelectTemplate = (templatePeek: NamedEntity) => {
     onTemplateSelect(templatePeek);
@@ -31,7 +30,7 @@ export default function TemplatePicker({
 
     return templatePeeks.map(
       (nameGuid: NamedEntity) =>
-        nameGuid.guid !== selectedTemplate?.guid && (
+        nameGuid.guid !== getSelectedTemplate()?.guid && (
           <li key={nameGuid.guid}>
             <button onClick={() => handleSelectTemplate(nameGuid!)}>
               {nameGuid.name}
@@ -51,7 +50,7 @@ export default function TemplatePicker({
         <div className="flex-1">
           <span className="font-medium">Template</span>
           <p className="font-display text-base font-semibold">
-            {selectedTemplate ? selectedTemplate.name : "Select a template"}
+            {getSelectedTemplate() ? getSelectedTemplate()!.name : "Select a template"}
           </p>
         </div>
         <ArrowDown01Icon size={18} />

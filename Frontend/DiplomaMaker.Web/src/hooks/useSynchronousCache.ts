@@ -5,25 +5,17 @@ export default function useSynchronousCache<T>(cacheKey: string) {
 
     useQuery({
         queryKey: [cacheKey],
-        queryFn: () => [] as T
+        queryFn: () => null as T | null
     });
 
-    const getAll = () =>
-        client.getQueryData([cacheKey]) as T[];
+    const get = () =>
+        client.getQueryData([cacheKey]) as T | null;
 
-    const add = (entity: T) =>
-        client.setQueryData([cacheKey], [...getAll(), entity]);
-
-    const remove = (entity: T) =>
-        client.setQueryData([cacheKey], getAll().filter(e => e != entity));
-
-    const removeAll = () =>
-        client.setQueryData([cacheKey], []);
+    const set = (entity: T) =>
+        client.setQueryData([cacheKey], entity);
 
     return {
-        getAll,
-        add,
-        remove,
-        removeAll
+        get,
+        set
     };
 }

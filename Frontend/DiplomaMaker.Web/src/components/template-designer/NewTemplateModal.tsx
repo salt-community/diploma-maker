@@ -1,6 +1,7 @@
 import { NamedEntity } from "@/services/backendService/models";
 import { SubmitHandler, useForm } from "react-hook-form";
-import Modal from "./layout/Modal";
+import { Modal } from "@/components/layout";
+import useSynchronousCache from "@/hooks/useSynchronousCache";
 
 type NewTemplateModalProps = {
   onCreateNewTemplate: (template: NamedEntity) => void;
@@ -14,12 +15,19 @@ export default function NewTemplateModal({
   onCreateNewTemplate,
 }: NewTemplateModalProps) {
   const {
+    set: setSelectedTemplate
+  } = useSynchronousCache<NamedEntity>("SelectedTemplate");
+
+  const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     onCreateNewTemplate({ name: data.templateName });
+    setSelectedTemplate({ name: data.templateName });
+
     console.log(data.templateName);
     (
       document.getElementById(
@@ -27,6 +35,7 @@ export default function NewTemplateModal({
       ) as HTMLDialogElement
     ).close();
   };
+
   return (
     <Modal id={import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID}>
       <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
