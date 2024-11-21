@@ -31,8 +31,8 @@ export type DiplomaWithContent = {
 export type TemplatePeek = NamedEntity;
 
 export type SendEmailRequest = {
-    "studenEmail": "string",
-    "studentName": "string",
-    "track": "string",
-    "diplomaPdfBase64": "string"
+    studenEmail: string,
+    studentName: string,
+    track: string,
+    diplomaPdfBase64: string
 }

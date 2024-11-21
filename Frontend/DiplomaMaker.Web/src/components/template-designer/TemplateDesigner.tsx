@@ -5,8 +5,7 @@ import { useRef } from "react";
 import TemplatePicker from "./TemplatePicker";
 import useCache from "@/hooks/useCache";
 import { selectedTemplateKey } from "./cacheKeys";
-import { UploadJson } from "../diploma-generator/UploadJson";
-import { FileService, TemplateService } from "@/services";
+import { TemplateService } from "@/services";
 
 export default function TemplateDesigner() {
   const designerDiv = useRef<HTMLDivElement | null>(null);

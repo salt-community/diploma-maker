@@ -24,6 +24,14 @@ export async function readTextFile(file: File) {
   });
 }
 
+export function blobToBase64(blob: Blob) {
+  return new Promise((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.readAsDataURL(blob);
+  });
+}
+
 /*
     Accepts a File object from an <input type="file"> element
     and returns a string.

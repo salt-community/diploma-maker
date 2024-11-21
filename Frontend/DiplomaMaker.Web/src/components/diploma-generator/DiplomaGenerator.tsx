@@ -8,6 +8,7 @@ import { usePdfMeViewer } from "@/hooks/usePdfMeViewer";
 import { useRef } from "react";
 import { Bootcamp } from "@/services/fileService";
 import BootcampForm from "./BootcampForm";
+import { BackendService } from "@/services/backendService";
 
 export default function DiplomaGenerator() {
     const viewerContainerRef = useRef<HTMLDivElement | null>(null);
@@ -46,12 +47,24 @@ export default function DiplomaGenerator() {
                     <UploadJson onDrop={(bootcamp) => setBootcamp(bootcamp)} />
                 </div>
             </div>
-            <BootcampForm onSubmit={() => generatePdf({
-                studentName: bootcamp?.students[0].name!,
-                track: bootcamp!.track,
-                graduationDate: bootcamp!.graduationDate!.toISOString().split("T")[0],
-                qrLink: "www.google.com"
-            })} />
+            <BootcampForm onSubmit={async () => {
+                if (!bootcamp)
+                    throw new Error("No bootcamp");
+
+                const blob = await generatePdf({
+                    studentName: bootcamp?.students[0].name!,
+                    track: bootcamp!.track,
+                    graduationDate: bootcamp!.graduationDate!.toISOString().split("T")[0],
+                    qrLink: "www.google.com"
+                });
+
+                BackendService.Endpoints.sendDiplomaEmail({
+                    track: bootcamp.track,
+                    diplomaPdfBase64: blob,
+
+                })
+
+            }} />
             <div ref={viewerContainerRef} />
         </div>
     );
