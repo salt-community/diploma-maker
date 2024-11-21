@@ -19,6 +19,7 @@ export default function TemplatePicker({
   const { templatePeeks } = useTemplates();
   const { openModal: openNewTemplatesModal } = useModal(import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID);
   const { openModal: openManageTemplatesModal } = useModal(import.meta.env.VITE_MANAGE_TEMPLATES_MODAL_ID);
+ 
   const [selectedTemplate, setSelectedTemplate] = useCache<NamedEntity>(selectedTemplateKey);
 
   const handleSelectTemplate = (template: NamedEntity) => {
