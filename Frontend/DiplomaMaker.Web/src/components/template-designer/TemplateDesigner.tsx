@@ -1,10 +1,12 @@
-import { NamedEntity } from "@/services/backendService/models";
+import { NamedEntity, Template } from "@/services/backendService/models";
 import { usePdfMe } from "@/hooks/usePdfMe";
 import { useTemplates } from "@/hooks/useTemplates";
 import { useRef } from "react";
 import TemplatePicker from "./TemplatePicker";
 import useCache from "@/hooks/useCache";
 import { selectedTemplateKey } from "./cacheKeys";
+import { UploadJson } from "../diploma-generator/UploadJson";
+import { FileService, TemplateService } from "@/services";
 
 export default function TemplateDesigner() {
   const designerDiv = useRef<HTMLDivElement | null>(null);
@@ -39,6 +41,23 @@ export default function TemplateDesigner() {
           >
             Download Template
           </button>
+
+          <label className="p-4 form-control w-full max-w-xs">
+            <input
+              className="file-input file-input-bordered w-full max-w-xs"
+              type="file"
+              accept="application/json"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                const template = await TemplateService.getTemplateFromJsonFile(file!);
+                onLoadTemplate({
+                  name: "...",
+                  templateJson: JSON.stringify(template)
+                } as Template);
+                onSaveTemplate(file!.name);
+              }} />
+          </label>
+
           <button
             className="btn"
             onClick={() => {
