@@ -14,5 +14,5 @@ export default function useCache<T>(cacheKey: string[]) {
     return [
         entity,
         set
-    ] as [T, (entity: T) => void];
+    ] as [T | null, (entity: T) => void];
 }
