@@ -1,25 +1,24 @@
 import { NamedEntity } from "@/services/backendService/models";
 import { usePdfMe } from "@/hooks/usePdfMe";
 import { useTemplates } from "@/hooks/useTemplates";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import TemplatePicker from "./TemplatePicker";
+import useCache from "@/hooks/useCache";
+import { selectedTemplateKey } from "./cacheKeys";
 
 export default function TemplateDesigner() {
   const designerDiv = useRef<HTMLDivElement | null>(null);
   const templateHook = useTemplates();
 
-  const [template, setTemplate] = useState<NamedEntity | undefined>();
+  const [selectedTemplate, _] = useCache<NamedEntity>(selectedTemplateKey);
 
   const { onSaveTemplate, onLoadTemplate, onNewTemplate } =
     usePdfMe(designerDiv);
 
-  if (template?.guid) {
-    const templateWithContent = templateHook.templateByGuid(template.guid);
+  if (selectedTemplate?.guid) {
+    const templateWithContent = templateHook.templateByGuid(selectedTemplate?.guid);
 
     if (templateWithContent) {
-      setTemplate({
-        name: "Default Template",
-      });
       onLoadTemplate(templateWithContent);
     }
   }
@@ -29,20 +28,15 @@ export default function TemplateDesigner() {
       <div className="navbar z-40 bg-neutral">
         <div className="navbar-start">
           <TemplatePicker
-            onTemplateSelect={async (template) => {
-              setTemplate(template);
-            }}
-            onNewTemplate={(template: NamedEntity) => {
-              setTemplate(template);
-              onNewTemplate();
-            }}
+            onTemplateSelect={() => console.log("Selected template")}
+            onNewTemplate={() => onNewTemplate()}
           />
         </div>
         <div className="navbar-end">
           <button
             className="btn"
             onClick={() => {
-              onSaveTemplate(template!.name);
+              onSaveTemplate(selectedTemplate.name);
               templateHook.peekTemplates();
             }}
           >

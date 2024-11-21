@@ -1,15 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
-import { useState } from "react";
 import { useTemplates } from "@/hooks/useTemplates";
 import { NamedEntity } from "@/services/backendService/models";
 import { useModal } from "@/hooks/useModal";
-import NewTemplateModal from "./NewTemplateModal";
-import useSynchronousCache from "@/hooks/useSynchronousCache";
+import NewTemplateModal from "./NewTemplateModal.1";
+import useCache from "@/hooks/useCache";
+import { selectedTemplateKey } from "./cacheKeys";
 
 type TemplatePickerProps = {
-  onTemplateSelect: (template: NamedEntity) => void;
-  onNewTemplate: (template: NamedEntity) => void;
+  onTemplateSelect: () => void;
+  onNewTemplate: () => void;
 };
 
 export default function TemplatePicker({
@@ -18,26 +18,27 @@ export default function TemplatePicker({
 }: TemplatePickerProps) {
   const { templatePeeks } = useTemplates();
   const { openModal } = useModal(import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID);
-  const { get: getSelectedTemplate, set: setSelectedTemplate } = useSynchronousCache<NamedEntity>("SelectedTemplate");
+  const [selectedTemplate, setSelectedTemplate] = useCache<NamedEntity>(selectedTemplateKey);
 
-  const handleSelectTemplate = (templatePeek: NamedEntity) => {
-    onTemplateSelect(templatePeek);
-    setSelectedTemplate(templatePeek);
+  const handleSelectTemplate = (template: NamedEntity) => {
+    onTemplateSelect();
+    setSelectedTemplate(template);
   };
 
   const renderSelectItems = () => {
     if (!templatePeeks) return <></>;
 
-    return templatePeeks.map(
-      (nameGuid: NamedEntity) =>
-        nameGuid.guid !== getSelectedTemplate()?.guid && (
+    return templatePeeks
+      .filter(template => selectedTemplate ? template.name != selectedTemplate.name : true)
+      .map(nameGuid =>
+        nameGuid.guid !== selectedTemplate?.guid && (
           <li key={nameGuid.guid}>
             <button onClick={() => handleSelectTemplate(nameGuid!)}>
               {nameGuid.name}
             </button>
           </li>
         ),
-    );
+      );
   };
 
   return (
@@ -50,23 +51,19 @@ export default function TemplatePicker({
         <div className="flex-1">
           <span className="font-medium">Template</span>
           <p className="font-display text-base font-semibold">
-            {getSelectedTemplate() ? getSelectedTemplate()!.name : "Select a template"}
+            {selectedTemplate ? selectedTemplate.name : "Select a template"}
           </p>
         </div>
         <ArrowDown01Icon size={18} />
       </div>
       <ul
         tabIndex={0}
-        className="menu dropdown-content z-[1] w-full rounded-box bg-base-100 p-2 text-base shadow"
-      >
+        className="menu dropdown-content z-[1] w-full rounded-box bg-base-100 p-2 text-base shadow">
         {renderSelectItems()}
         <li className="pt-1">
           <button
             className="bg-primary text-primary-content hocus:bg-primary-focus"
-            onClick={() => {
-              openModal();
-            }}
-          >
+            onClick={() => openModal()}>
             <Add01Icon size={16} />
             Create new Template
           </button>
@@ -74,16 +71,13 @@ export default function TemplatePicker({
         <li className="pt-1">
           <Link
             to="/"
-            className="bg-secondary text-secondary-content hocus:bg-secondary-focus"
-          >
+            className="bg-secondary text-secondary-content hocus:bg-secondary-focus">
             <PencilEdit01Icon size={16} />
             Manage Templates
           </Link>
         </li>
       </ul>
-      <NewTemplateModal
-        onCreateNewTemplate={(template) => onNewTemplate(template)}
-      />
+      <NewTemplateModal onCreateNewTemplate={onNewTemplate} />
     </div>
   );
 }
