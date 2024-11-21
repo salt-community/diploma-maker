@@ -3,7 +3,27 @@ import { Modal } from "../layout";
 import { useTemplates } from "@/hooks";
 
 export default function ManageTemplatesModal() {
-  const { templatePeeks } = useTemplates();
+  const { templatePeeks, deleteTemplate } = useTemplates();
+
+  const header = (
+    <tr>
+      <th>Template Name</th>
+      <th></th>
+    </tr>
+  );
+
+  const rows = templatePeeks?.map(template => template.guid && (
+    <tr key={template.guid}>
+      <td>{template.name}</td>
+      <td>
+        <button
+          className="btn bg-warning hocus:bg-error"
+          onClick={() => deleteTemplate(template.guid!)}>
+          <Delete04Icon size={24} />
+        </button>
+      </td>
+    </tr>
+  ));
 
   return (
     <Modal
@@ -13,22 +33,11 @@ export default function ManageTemplatesModal() {
         <table className="table">
 
           <thead>
-            <tr>
-              <th>Template Name</th>
-              <th></th>
-            </tr>
+            {header}
           </thead>
 
           <tbody>
-            <tr>
-              <td>My Template</td>
-              <td>
-                <button
-                  className="btn bg-warning hocus:bg-error" >
-                  <Delete04Icon size={24} />
-                </button>
-              </td>
-            </tr>
+            {rows}
           </tbody>
 
         </table>
