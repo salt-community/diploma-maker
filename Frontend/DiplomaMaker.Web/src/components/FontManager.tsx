@@ -7,7 +7,7 @@ import useUserFonts from '../hooks/useUserFonts';
 type FontManagerProps = {
   onReloadFonts: () => void;
 };
-  
+
 export default function FontManager({ onReloadFonts }: FontManagerProps) {
   return (
     <dialog
@@ -59,8 +59,8 @@ function AddFontView() {
 
   const filteredFonts = fonts
     ? fonts.filter((f) =>
-        f.family.toLowerCase().includes(debouncedSearchText.toLowerCase())
-      )
+      f.family.toLowerCase().includes(debouncedSearchText.toLowerCase())
+    )
     : [];
 
   const handleSaveFont = (font: GoogleFont) => {

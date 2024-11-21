@@ -6,8 +6,15 @@
     and the UI layer.
 */
 
-import { usePdfMe } from './usePdfMe'
-
-export const Hooks = {
-    usePdfMe
-}
+export * from './usePdfMe'
+export * from './useDebounce'
+export * from './useDiplomaViewer'
+export * from './useEntity'
+export * from './useGeneratePdfFromFullDiploma'
+export * from './useGoogleFonts'
+export * from './useModal'
+export * from './useSynchronousCache'
+export * from './useTemplates'
+export * from './useTemplates'
+export * from './useToken'
+export * from './useUserFonts'
