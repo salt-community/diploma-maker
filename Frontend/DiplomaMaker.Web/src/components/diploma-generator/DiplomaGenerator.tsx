@@ -13,14 +13,16 @@ export default function DiplomaGenerator() {
     const viewerContainerRef = useRef<HTMLDivElement | null>(null);
     const templateHook = useTemplates();
     const [bootcamp, setBootcamp] = useCache<Bootcamp>(["Bootcamp"]);
-
     const [selectedTemplate, _] = useCache<NamedEntity>(selectedTemplateDiplomaKey);
+
     const {
         loadViewer,
+        generatePdf
     } = usePdfMeViewer(viewerContainerRef);
 
     if (selectedTemplate?.guid && bootcamp) {
         const templateWithContent = templateHook.templateByGuid(selectedTemplate?.guid);
+        console.log(bootcamp);
         if (templateWithContent) {
             loadViewer(templateWithContent, {
                 graduationDate: bootcamp.graduationDate.toDateString(),
@@ -44,7 +46,12 @@ export default function DiplomaGenerator() {
                     <UploadJson onDrop={(bootcamp) => setBootcamp(bootcamp)} />
                 </div>
             </div>
-            <BootcampForm bootcamp={bootcamp} />
+            <BootcampForm onSubmit={() => generatePdf({
+                studentName: bootcamp?.students[0].name!,
+                track: bootcamp!.track,
+                graduationDate: bootcamp!.graduationDate!.toISOString().split("T")[0],
+                qrLink: "www.google.com"
+            })} />
             <div ref={viewerContainerRef} />
         </div>
     );

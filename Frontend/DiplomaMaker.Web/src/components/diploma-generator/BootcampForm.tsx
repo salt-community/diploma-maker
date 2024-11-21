@@ -3,12 +3,14 @@ import { Bootcamp } from "@/services/fileService";
 import { Add01Icon, Delete04Icon } from "hugeicons-react";
 import { useFieldArray, useForm } from "react-hook-form";
 
+//TODO: Make sure that at least one student is assigned before submitting
+
 type BootcampStringDate = Omit<Bootcamp, "graduationDate"> & {
     graduationDate: string
 }
 
 interface Props {
-    bootcamp: Bootcamp;
+    onSubmit: () => void
 }
 
 const defaultStudent = {
@@ -19,14 +21,14 @@ const defaultStudent = {
 const defaultFormBootcamp: BootcampStringDate = {
     graduationDate: formatDate(new Date(Date.now())),
     track: "Coding Quest",
-    students: []
+    students: [defaultStudent]
 }
 
 function formatDate(date: Date) {
     return date.toISOString().split('T')[0];
 }
 
-export default function BootcampForm({ }: Props) {
+export default function BootcampForm({ onSubmit }: Props) {
     const [bootcamp, setBootcamp] = useCache<Bootcamp>(["Bootcamp"]);
 
     const formBootcamp: BootcampStringDate = !bootcamp
@@ -46,13 +48,14 @@ export default function BootcampForm({ }: Props) {
         name: 'students',
     });
 
-    const onSubmit = (data: BootcampStringDate) => {
+    const onFormSubmit = (bootcamp: BootcampStringDate) => {
         const updatedBootcamp: Bootcamp = {
-            track: data.track,
-            graduationDate: new Date(data.graduationDate),
-            students: data.students
+            track: bootcamp.track,
+            graduationDate: new Date(bootcamp.graduationDate),
+            students: bootcamp.students
         };
         setBootcamp(updatedBootcamp);
+        onSubmit();
     };
 
     const header = (
@@ -67,14 +70,14 @@ export default function BootcampForm({ }: Props) {
         <tr key={student.id}>
             <td>
                 <input
-                    {...register(`students.${index}.name`)}
+                    {...register(`students.${index}.name`, { required: true, minLength: 3 })}
                     type="text"
                     className="input input-bordered w-full max-w-xs"
                 />
             </td>
             <td>
                 <input
-                    {...register(`students.${index}.email`)}
+                    {...register(`students.${index}.email`, { required: true, minLength: 3 })}
                     type="text"
                     className="input input-bordered w-full max-w-xs"
                 />
@@ -92,8 +95,8 @@ export default function BootcampForm({ }: Props) {
     ));
 
     return (
-        <div className="overflow-x-auto p-4">
-            <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="overflow-x-auto p-4 max-w-screen-lg">
+            <form onSubmit={handleSubmit(onFormSubmit)}>
                 <label className="form-control w-full max-w-xs">
                     <div className="label">
                         <span className="label-text">Track</span>
