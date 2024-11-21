@@ -12,13 +12,14 @@ export function useTemplates() {
   const client = useQueryClient();
   const queryKey = ["Template"];
   const controller = "Template";
+  type TEntity = Template;
 
   const getTemplatesQuery = useQuery({
     queryKey,
     queryFn: async () => [],
   });
 
-  const templates = (getTemplatesQuery.data ?? []) as Template[];
+  const templates = (getTemplatesQuery.data ?? []) as TEntity[];
 
   const peekTemplatesQuery = useQuery({
     queryKey,
@@ -27,15 +28,15 @@ export function useTemplates() {
 
   const getTemplateMutation = useMutation({
     mutationFn: async (guid: string) =>
-      (await BackendService.Endpoints.GetEntity(controller, guid)) as Template,
-    onSuccess: (response: Template) => {
+      (await BackendService.Endpoints.GetEntity(controller, guid)) as TEntity,
+    onSuccess: (response: TEntity) => {
       updateCacheWith(response);
       peekTemplatesQuery.refetch();
     },
   });
 
   const postTemplateMutation = useMutation({
-    mutationFn: async (entity: Template) =>
+    mutationFn: async (entity: TEntity) =>
       await BackendService.Endpoints.PostEntity(controller, entity),
     onSuccess: (response) => {
       updateCacheWith(response);
@@ -44,7 +45,7 @@ export function useTemplates() {
   });
 
   const putTemplateMutation = useMutation({
-    mutationFn: async (entity: Template) =>
+    mutationFn: async (entity: TEntity) =>
       await BackendService.Endpoints.PutEntity(controller, entity),
     onSuccess: (response) => {
       updateCacheWith(response);
@@ -72,7 +73,7 @@ export function useTemplates() {
       getTemplateMutation.mutate(guid);
   };
 
-  const updateCacheWith = (entity: Template) => {
+  const updateCacheWith = (entity: TEntity) => {
     client.setQueryData(
       queryKey,
       [
@@ -95,8 +96,8 @@ export function useTemplates() {
     templates,
     templatePeeks: peekTemplatesQuery.data,
     peekTemplates: peekTemplatesQuery.refetch,
-    postTemplate: (template: Template) => postTemplateMutation.mutate(template),
-    putTemplate: (template: Template) => putTemplateMutation.mutate(template),
+    postTemplate: (template: TEntity) => postTemplateMutation.mutate(template),
+    putTemplate: (template: TEntity) => putTemplateMutation.mutate(template),
     deleteTemplate: (guid: string) => deleteTemplateMutation.mutate(guid),
     templateByGuid,
   };
