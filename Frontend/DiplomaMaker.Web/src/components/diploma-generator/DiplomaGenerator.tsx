@@ -9,6 +9,7 @@ import { useRef } from "react";
 import { Bootcamp } from "@/services/fileService";
 import BootcampForm from "./BootcampForm";
 import { BackendService } from "@/services/backendService";
+import { FileService } from "@/services";
 
 export default function DiplomaGenerator() {
     const viewerContainerRef = useRef<HTMLDivElement | null>(null);
@@ -47,6 +48,7 @@ export default function DiplomaGenerator() {
                     <UploadJson onDrop={(bootcamp) => setBootcamp(bootcamp)} />
                 </div>
             </div>
+
             <BootcampForm onSubmit={async () => {
                 if (!bootcamp)
                     throw new Error("No bootcamp");
@@ -58,12 +60,14 @@ export default function DiplomaGenerator() {
                     qrLink: "www.google.com"
                 });
 
+                const blobString = (await FileService.blobToBase64(blob)).split(",")[1];
+                
                 BackendService.Endpoints.sendDiplomaEmail({
                     track: bootcamp.track,
-                    diplomaPdfBase64: blob,
-
-                })
-
+                    diplomaPdfBase64: blobString,
+                    studenEmail: "oshulten@gmail.com",
+                    studentName: bootcamp.students[0].name
+                });
             }} />
             <div ref={viewerContainerRef} />
         </div>
