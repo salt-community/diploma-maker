@@ -1,16 +1,20 @@
 import { FileService } from "@/services";
+import { Bootcamp } from "@/services/fileService";
 import { FileUploader } from "react-drag-drop-files";
 
 const fileTypes = ["JSON"];
 
-export function DropJson() {
+interface Props {
+    onDrop: (bootcamp: Bootcamp) => void
+}
+
+export function DropJson({ onDrop }: Props) {
     const handleChange = async (file: File) => {
-        const bootcamp = await FileService.parseJsonFileIntoBootcamp(file);
-        console.log(bootcamp);
+        onDrop(await FileService.parseJsonFileIntoBootcamp(file));
     };
 
     return (
-        // This component causes an error in the devconsole
-        <FileUploader onChange={handleChange} multiple={true} label={"Drop Json file"} types={fileTypes} />
+        // This component causes an error in the dev console
+        <FileUploader handleChange={handleChange} label={"Drop Json file"} types={fileTypes} />
     );
 }

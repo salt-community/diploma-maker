@@ -6,24 +6,26 @@ import { selectedTemplateDiplomaKey } from "./cacheKeys";
 import { DropJson } from "./DropJson";
 import { usePdfMeViewer } from "@/hooks/usePdfMeViewer";
 import { useRef } from "react";
+import { Bootcamp } from "@/services/fileService";
 
 export default function DiplomaGenerator() {
     const viewerContainerRef = useRef<HTMLDivElement | null>(null);
     const templateHook = useTemplates();
+    const [bootcamp, setBootcamp] = useCache<Bootcamp>(["Bootcamp"]);
 
     const [selectedTemplate, _] = useCache<NamedEntity>(selectedTemplateDiplomaKey);
     const {
         loadViewer,
     } = usePdfMeViewer(viewerContainerRef);
 
-    if (selectedTemplate?.guid) {
+    if (selectedTemplate?.guid && bootcamp) {
         const templateWithContent = templateHook.templateByGuid(selectedTemplate?.guid);
         if (templateWithContent) {
             loadViewer(templateWithContent, {
-                graduationDate: new Date(Date.now()).toDateString(),
-                studentName: "Fredrik",
+                graduationDate: bootcamp.graduationDate.toDateString(),
+                studentName: bootcamp.students[0].name,
                 qrLink: "www.google.com",
-                track: "Coding"
+                track: bootcamp.track
             });
         }
     }
@@ -38,7 +40,7 @@ export default function DiplomaGenerator() {
                 </div>
 
                 <div className="navbar-end">
-                    <DropJson />
+                    <DropJson onDrop={(bootcamp) => setBootcamp(bootcamp)} />
                 </div>
             </div>
             <div ref={viewerContainerRef} />
