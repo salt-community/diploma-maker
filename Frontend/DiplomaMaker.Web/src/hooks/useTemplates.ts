@@ -11,6 +11,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export function useTemplates() {
   const client = useQueryClient();
   const queryKey = ["Template"];
+  const controller = "Template";
 
   const getTemplatesQuery = useQuery({
     queryKey,
@@ -26,7 +27,7 @@ export function useTemplates() {
 
   const getTemplateMutation = useMutation({
     mutationFn: async (guid: string) =>
-      (await BackendService.Endpoints.GetEntity("Template", guid)) as Template,
+      (await BackendService.Endpoints.GetEntity(controller, guid)) as Template,
     onSuccess: (response: Template) => {
       updateCacheWith(response);
       peekTemplatesQuery.refetch();
@@ -35,7 +36,7 @@ export function useTemplates() {
 
   const postTemplateMutation = useMutation({
     mutationFn: async (entity: Template) =>
-      await BackendService.Endpoints.PostEntity("Template", entity),
+      await BackendService.Endpoints.PostEntity(controller, entity),
     onSuccess: (response) => {
       updateCacheWith(response);
       peekTemplatesQuery.refetch();
@@ -44,7 +45,7 @@ export function useTemplates() {
 
   const putTemplateMutation = useMutation({
     mutationFn: async (entity: Template) =>
-      await BackendService.Endpoints.PutEntity("Template", entity),
+      await BackendService.Endpoints.PutEntity(controller, entity),
     onSuccess: (response) => {
       updateCacheWith(response);
       peekTemplatesQuery.refetch();
@@ -54,7 +55,7 @@ export function useTemplates() {
 
   const deleteTemplateMutation = useMutation({
     mutationFn: async (guid: string) =>
-      await BackendService.Endpoints.DeleteEntity("Template", guid),
+      await BackendService.Endpoints.DeleteEntity(controller, guid),
     onSuccess: (_, guid) => {
       deleteTemplateFromCache(guid);
       peekTemplatesQuery.refetch();
