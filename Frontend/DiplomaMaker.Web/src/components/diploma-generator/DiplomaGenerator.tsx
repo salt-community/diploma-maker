@@ -44,7 +44,7 @@ export default function DiplomaGenerator() {
                     <DropJson onDrop={(bootcamp) => setBootcamp(bootcamp)} />
                 </div>
             </div>
-            <BootcampForm />
+            <BootcampForm bootcamp={bootcamp}/>
             <div ref={viewerContainerRef} />
         </div>
     );

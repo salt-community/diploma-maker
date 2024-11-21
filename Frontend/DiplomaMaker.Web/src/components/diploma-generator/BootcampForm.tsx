@@ -1,38 +1,64 @@
-import useCache from "@/hooks/useCache";
 import { Bootcamp } from "@/services/fileService";
 import { useFieldArray, useForm } from "react-hook-form";
 
-export type Inputs = {
-    templateName: string;
-};
+interface Props {
+    bootcamp: Bootcamp;
+}
 
 type Student = {
     name: string,
     email: string
 }
 
-export default function BootcampForm(bootcamp) {
-    const { register, control, handleSubmit } = useForm({
-        defaultValues: {
-            items: bootcamp ? bootcamp.students : [],
-        },
+export default function BootcampForm({ bootcamp }: Props) {
+    console.log(bootcamp);
+    const studentsDefaultValues = bootcamp
+        ? bootcamp.students.map(student => ({
+            name: student.name,
+            email: student.email
+        } as Student))
+        : [];
+
+    console.log(studentsDefaultValues);
+
+    const { register, control, handleSubmit } = useForm<Bootcamp>({
+        values: {
+            track: "CSharp",
+            students: studentsDefaultValues,
+            graduationDate: new Date(Date.now())
+            // students: [
+            //     {
+            //         name: "jfsklöa",
+            //         email: "jfkslöa"
+            //     },
+            //     {
+            //         name: "jfssegklöa",
+            //         email: "jfgeskslöa"
+            //     },
+            // ]
+        }
     });
-    const { fields, append, remove } = useFieldArray({
+    const { fields, append, remove } = useFieldArray<Bootcamp>({
         control,
-        name: 'items',
+        name: 'students',
     });
+
     const onSubmit = (data) => console.log(data);
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
+            <input
+                className="input input-bordered w-full max-w-xs"
+                type="text" {...register('track')} />
             {fields.map((field, index) => (
                 <div key={field.id}>
                     <input
-                        {...register(`items.${index}.name`)}
+                        {...register(`students.${index}.name`)}
                         className="input input-bordered w-full max-w-xs"
                         defaultValue={field.name}
                     />
                     <input
-                        {...register(`items.${index}.email`)}
+                        {...register(`students.${index}.email`)}
                         className="input input-bordered w-full max-w-xs"
                         defaultValue={field.email}
                     />
@@ -41,10 +67,12 @@ export default function BootcampForm(bootcamp) {
                     </button>
                 </div>
             ))}
-            <button type="button" onClick={() => append({ name: '', email: 0 })}>
+
+            <button className="btn" type="button" onClick={() => append({ name: '', email: 0 })}>
                 Add Item
             </button>
-            <button type="submit">Submit</button>
+
+            <button className="btn" type="submit">Submit</button>
         </form>
     );
     // const [bootcamp, setBootcamp] = useCache<Bootcamp>(["Bootcamp"]);
