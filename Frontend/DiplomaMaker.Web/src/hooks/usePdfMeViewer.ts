@@ -31,6 +31,8 @@ export function usePdfMeViewer(
       inputs,
     );
 
+    console.log(substitutedInputs);
+
     const pdf = await PdfMe.generate({
       template,
       plugins,

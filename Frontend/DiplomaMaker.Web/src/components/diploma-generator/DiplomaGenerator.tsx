@@ -61,13 +61,13 @@ export default function DiplomaGenerator() {
                 });
 
                 const blobString = (await FileService.blobToBase64(blob)).split(",")[1];
-                
-                BackendService.Endpoints.sendDiplomaEmail({
-                    track: bootcamp.track,
-                    diplomaPdfBase64: blobString,
-                    studenEmail: "oshulten@gmail.com",
-                    studentName: bootcamp.students[0].name
-                });
+
+                // BackendService.Endpoints.sendDiplomaEmail({
+                //     track: bootcamp.track,
+                //     diplomaPdfBase64: blobString,
+                //     studenEmail: bootcamp.students[0].email,
+                //     studentName: bootcamp.students[0].name
+                // });
             }} />
             <div ref={viewerContainerRef} />
         </div>
