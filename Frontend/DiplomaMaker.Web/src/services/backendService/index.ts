@@ -1,6 +1,7 @@
 import * as BackendModels from "./models";
 import { getDiplomaWithContentByGuid } from "./getDiplomaWithContentByGuid";
 import { peekTemplates } from "./peekTemplates";
+import { sendDiplomaEmail } from "./sendEmail";
 
 export namespace BackendServiceTypes {
     export type ControllerName =
@@ -20,6 +21,7 @@ export const BackendService = {
     Endpoints: {
         getDiplomaWithContentByGuid,
         peekTemplates,
+        sendDiplomaEmail,
 
         GetEntities: async <TEntity extends BackendServiceTypes.Dto>(controller: BackendServiceTypes.ControllerName) => {
             const endpoint = 'GetEntities';

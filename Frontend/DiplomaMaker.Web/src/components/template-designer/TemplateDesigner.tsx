@@ -33,6 +33,15 @@ export default function TemplateDesigner() {
           />
         </div>
         <div className="navbar-end">
+        <button
+            className="btn"
+            onClick={() => {
+              onSaveTemplate(selectedTemplate.name);
+              templateHook.peekTemplates();
+            }}
+          >
+            Download Template
+          </button>
           <button
             className="btn"
             onClick={() => {

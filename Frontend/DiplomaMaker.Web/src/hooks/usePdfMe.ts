@@ -121,6 +121,30 @@ export function usePdfMe(
     designer.current.updateOptions({ font: FontService.getPdfMeFonts() });
   }
 
+  async function generatePdf(inputs: TemplateService.Substitions) {
+    if (!designer.current) throw new Error("Designer is not initialized");
+
+    const template = designer.current.getTemplate();
+
+    const substitutedInputs = TemplateService.substitutePlaceholdersWithContent(
+      template,
+      inputs,
+    );
+
+    const pdf = await PdfMe.generate({
+      template,
+      plugins,
+      inputs: substitutedInputs,
+    });
+
+    const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+
+    //temporary, should not work like this by default later
+    window.open(URL.createObjectURL(blob));
+
+    return blob;
+  }
+
   return {
     handleLoadTemplate,
     onChangeBasePdf,
