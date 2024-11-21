@@ -7,6 +7,7 @@ import { DropJson } from "./DropJson";
 import { usePdfMeViewer } from "@/hooks/usePdfMeViewer";
 import { useRef } from "react";
 import { Bootcamp } from "@/services/fileService";
+import BootcampForm from "./BootcampForm";
 
 export default function DiplomaGenerator() {
     const viewerContainerRef = useRef<HTMLDivElement | null>(null);
@@ -43,6 +44,7 @@ export default function DiplomaGenerator() {
                     <DropJson onDrop={(bootcamp) => setBootcamp(bootcamp)} />
                 </div>
             </div>
+            <BootcampForm />
             <div ref={viewerContainerRef} />
         </div>
     );
