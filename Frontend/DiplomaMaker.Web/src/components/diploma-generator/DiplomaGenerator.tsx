@@ -3,7 +3,7 @@ import { useTemplates } from "@/hooks/useTemplates";
 import useCache from "@/hooks/useCache";
 import TemplatePicker from "./TemplatePicker";
 import { selectedTemplateDiplomaKey } from "./cacheKeys";
-import { DropJson } from "./DropJson";
+import { UploadJson } from "./UploadJson";
 import { usePdfMeViewer } from "@/hooks/usePdfMeViewer";
 import { useRef } from "react";
 import { Bootcamp } from "@/services/fileService";
@@ -41,10 +41,10 @@ export default function DiplomaGenerator() {
                 </div>
 
                 <div className="navbar-end">
-                    <DropJson onDrop={(bootcamp) => setBootcamp(bootcamp)} />
+                    <UploadJson onDrop={(bootcamp) => setBootcamp(bootcamp)} />
                 </div>
             </div>
-            <BootcampForm bootcamp={bootcamp}/>
+            <BootcampForm bootcamp={bootcamp} />
             <div ref={viewerContainerRef} />
         </div>
     );

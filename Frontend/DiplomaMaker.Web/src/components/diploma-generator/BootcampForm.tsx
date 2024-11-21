@@ -55,9 +55,9 @@ export default function BootcampForm({ bootcamp }: Props) {
     ));
 
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto p-4">
             <form onSubmit={handleSubmit(onSubmit)}>
-
+                <h2>Students</h2>
 
                 <table className="table">
 
@@ -71,19 +71,12 @@ export default function BootcampForm({ bootcamp }: Props) {
 
                 </table>
 
-                {/* <button
-                    className="btn bg-warning hocus:bg-error"
-                    onClick={() => {
-                        setBootcamp({
-                            ...bootcamp,
-                            students: [...bootcamp.students, {
-                                name: "John Doe",
-                                email: "john.doe@appliedtechonology.se"
-                            }]
-                        })
-                    }}>
+                <button
+                    className="btn bg-primary text-primary-content hocus:bg-primary-focus"
+                    onClick={() => append({ name: 'Student Name', email: "student.name@appliedtechnology.se" })}
+                >
                     Add Student
-                </button> */}
+                </button>
             </form>
         </div >
     );
