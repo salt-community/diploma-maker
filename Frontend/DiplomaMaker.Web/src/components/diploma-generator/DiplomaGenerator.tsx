@@ -13,18 +13,18 @@ export default function DiplomaGenerator() {
 
     const [selectedTemplate, _] = useCache<NamedEntity>(selectedTemplateDiplomaKey);
     const {
-        generatePdf,
-        handleLoadTemplate,
-        onResetTemplate,
-        handleReloadFonts,
-        onNewTemplate,
-        onLoadTemplate,
+        loadViewer,
     } = usePdfMeViewer(viewerContainerRef);
 
     if (selectedTemplate?.guid) {
         const templateWithContent = templateHook.templateByGuid(selectedTemplate?.guid);
         if (templateWithContent) {
-            onLoadTemplate(templateWithContent);
+            loadViewer(templateWithContent, {
+                graduationDate: new Date(Date.now()).toDateString(),
+                studentName: "Fredrik",
+                qrLink: "www.google.com",
+                track: "Coding"
+            });
         }
     }
 

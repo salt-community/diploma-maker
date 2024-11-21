@@ -46,30 +46,6 @@ export function usePdfMe(
     }
   });
 
-  async function generatePdf(inputs: Record<string, string>) {
-    if (!designer.current) throw new Error("Designer is not initialized");
-
-    const template = designer.current.getTemplate();
-
-    const substitutedInputs = TemplateService.substitutePlaceholdersWithContent(
-      template,
-      inputs,
-    );
-
-    const pdf = await PdfMe.generate({
-      template,
-      plugins,
-      inputs: substitutedInputs,
-    });
-
-    const blob = new Blob([pdf.buffer], { type: "application/pdf" });
-
-    //temporary, should not work like this by default later
-    window.open(URL.createObjectURL(blob));
-
-    return blob;
-  }
-
   async function handleLoadTemplate(
     event: React.ChangeEvent<HTMLInputElement>,
   ) {
@@ -146,7 +122,6 @@ export function usePdfMe(
   }
 
   return {
-    generatePdf,
     handleLoadTemplate,
     onChangeBasePdf,
     onResetTemplate,

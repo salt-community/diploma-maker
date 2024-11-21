@@ -7,14 +7,13 @@
 
 import { BLANK_PDF, checkTemplate, Template } from "@pdfme/common";
 import { FileService, PdfMeTypes } from ".";
-import { Types } from "../types";
 
 export const defaultTemplate: Template = {
     basePdf: BLANK_PDF,
     schemas: [[]],
 };
 
-type Substitions = {
+export type Substitions = {
     studentName: string,
     track: string,
     graduationDate: string,
@@ -57,7 +56,7 @@ export function substitutePlaceholdersWithContent(
         }
     });
 
-    return [inputs] as Types.TemplateInputs;
+    return [inputs] as Record<string, any>[];
 }
 
 /*
