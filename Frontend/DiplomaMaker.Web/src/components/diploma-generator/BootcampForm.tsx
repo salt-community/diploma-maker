@@ -29,14 +29,6 @@ function formatDate(date: Date) {
 export default function BootcampForm({ }: Props) {
     const [bootcamp, setBootcamp] = useCache<Bootcamp>(["Bootcamp"]);
 
-    if (!bootcamp) {
-        setBootcamp({
-            graduationDate: new Date(Date.now()),
-            track: "CSharp",
-            students: []
-        });
-    }
-
     const formBootcamp: BootcampStringDate = !bootcamp
         ? defaultFormBootcamp
         : {
@@ -44,8 +36,6 @@ export default function BootcampForm({ }: Props) {
             track: bootcamp.track,
             students: bootcamp.students
         }
-
-    console.log(formBootcamp);
 
     const { register, control, handleSubmit } = useForm<BootcampStringDate>({
         values: formBootcamp
@@ -56,7 +46,14 @@ export default function BootcampForm({ }: Props) {
         name: 'students',
     });
 
-    const onSubmit = (data: BootcampStringDate) => console.log(data);
+    const onSubmit = (data: BootcampStringDate) => {
+        const updatedBootcamp: Bootcamp = {
+            track: data.track,
+            graduationDate: new Date(data.graduationDate),
+            students: data.students
+        };
+        setBootcamp(updatedBootcamp);
+    };
 
     const header = (
         <tr>
@@ -137,6 +134,14 @@ export default function BootcampForm({ }: Props) {
                 >
                     <Add01Icon size={16} />
                     Add Student
+                </button>
+
+                <button
+                    type="submit"
+                    className="btn bg-primary text-primary-content hocus:bg-primary-focus"
+                >
+                    <Add01Icon size={16} />
+                    Submit
                 </button>
             </form>
         </div >
