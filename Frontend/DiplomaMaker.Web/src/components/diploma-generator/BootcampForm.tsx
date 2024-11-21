@@ -1,5 +1,6 @@
 import useCache from "@/hooks/useCache";
 import { Bootcamp } from "@/services/fileService";
+import { Add01Icon, Delete04Icon } from "hugeicons-react";
 import { useFieldArray, useForm } from "react-hook-form";
 
 interface Props {
@@ -44,24 +45,34 @@ export default function BootcampForm({ }: Props) {
         <tr>
             <th>Name</th>
             <th>Email</th>
+            <th></th>
         </tr>
     );
 
-    const rows = bootcamp && fields.map((student, i) => (
+    const rows = bootcamp && fields.map((student, index) => (
         <tr key={student.id}>
             <td>
                 <input
-                    {...register(`students.${i}.name`)}
+                    {...register(`students.${index}.name`)}
                     type="text"
                     className="input input-bordered w-full max-w-xs"
                 />
             </td>
             <td>
                 <input
-                    {...register(`students.${i}.email`)}
+                    {...register(`students.${index}.email`)}
                     type="text"
                     className="input input-bordered w-full max-w-xs"
                 />
+            </td>
+            <td>
+                <button
+                    className="btn bg-primary text-primary-content hocus:bg-primary-focus"
+                    onClick={() => remove(index)}
+                >
+                    <Delete04Icon size={16} />
+                    Remove
+                </button>
             </td>
         </tr>
     ));
@@ -87,6 +98,7 @@ export default function BootcampForm({ }: Props) {
                     className="btn bg-primary text-primary-content hocus:bg-primary-focus"
                     onClick={() => append({ name: 'Student Name', email: "student.name@appliedtechnology.se" })}
                 >
+                    <Add01Icon size={16} />
                     Add Student
                 </button>
             </form>
