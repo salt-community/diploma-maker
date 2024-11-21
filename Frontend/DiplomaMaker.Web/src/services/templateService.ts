@@ -14,6 +14,20 @@ export const defaultTemplate: Template = {
     schemas: [[]],
 };
 
+type Substitions = {
+    studentName: string,
+    track: string,
+    graduationDate: string,
+    qrLink: string
+}
+
+export const placeholders = {
+    studentName: "{studentName}",
+    track: "{track}",
+    graduationDate: "{graduationDate}",
+    qrLink: "{qrLink}"
+}
+
 /*
     Accepts a PdfMe Template with placeholders and 
     constructs an input object to be used with PdfMe.generate()
@@ -21,7 +35,7 @@ export const defaultTemplate: Template = {
 */
 export function substitutePlaceholdersWithContent(
     template: PdfMeTypes.Template,
-    substitutions: Types.TemplateTextSubstitions) {
+    substitutions: Substitions) {
 
     const inputs: Record<string, unknown> = {};
 
@@ -33,23 +47,15 @@ export function substitutePlaceholdersWithContent(
         switch (typeName) {
             case 'qrcode':
             case 'text':
-                Object.entries(substitutions.text).forEach(([placeholder, substitution]) => {
-                    content = content!.replace(placeholder, substitution);
+                Object.entries(placeholders).forEach(([key, placeholder]) => {
+                    content = content!.replace(placeholder, substitutions[key as keyof typeof placeholders])
                 });
 
-                Object.defineProperty(inputs, fieldName, {
-                    value: content
-                });
+                inputs[fieldName] = content;
 
                 break;
         }
     });
-
-    Object.defineProperty(inputs, "basePdf", {
-        value: substitutions.basePdf
-    });
-
-    template.basePdf = BLANK_PDF;
 
     return [inputs] as Types.TemplateInputs;
 }

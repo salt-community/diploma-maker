@@ -1,20 +1,31 @@
 import { NamedEntity } from "@/services/backendService/models";
-import { usePdfMe } from "@/hooks/usePdfMe";
 import { useTemplates } from "@/hooks/useTemplates";
-import { useRef } from "react";
 import useCache from "@/hooks/useCache";
 import TemplatePicker from "./TemplatePicker";
 import { selectedTemplateDiplomaKey } from "./cacheKeys";
 import { DropJson } from "./DropJson";
+import { usePdfMeViewer } from "@/hooks/usePdfMeViewer";
+import { useRef } from "react";
 
 export default function DiplomaGenerator() {
+    const viewerContainerRef = useRef<HTMLDivElement | null>(null);
     const templateHook = useTemplates();
 
     const [selectedTemplate, _] = useCache<NamedEntity>(selectedTemplateDiplomaKey);
-
+    const {
+        generatePdf,
+        handleLoadTemplate,
+        onResetTemplate,
+        handleReloadFonts,
+        onNewTemplate,
+        onLoadTemplate,
+    } = usePdfMeViewer(viewerContainerRef);
 
     if (selectedTemplate?.guid) {
         const templateWithContent = templateHook.templateByGuid(selectedTemplate?.guid);
+        if (templateWithContent) {
+            onLoadTemplate(templateWithContent);
+        }
     }
 
     return (
@@ -25,11 +36,12 @@ export default function DiplomaGenerator() {
                         onTemplateSelect={() => console.log("Selected template")}
                     />
                 </div>
-                
+
                 <div className="navbar-end">
                     <DropJson />
                 </div>
             </div>
+            <div ref={viewerContainerRef} />
         </div>
     );
 }

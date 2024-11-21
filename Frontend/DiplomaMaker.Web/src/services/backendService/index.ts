@@ -2,7 +2,7 @@ import * as BackendModels from "./models";
 import { getDiplomaWithContentByGuid } from "./getDiplomaWithContentByGuid";
 import { peekTemplates } from "./peekTemplates";
 
-export namespace BackendService {
+export namespace BackendServiceTypes {
     export type ControllerName =
         'Diploma' |
         'Template';
@@ -21,7 +21,7 @@ export const BackendService = {
         getDiplomaWithContentByGuid,
         peekTemplates,
 
-        GetEntities: async <TEntity extends BackendService.Dto>(controller: BackendService.ControllerName) => {
+        GetEntities: async <TEntity extends BackendServiceTypes.Dto>(controller: BackendServiceTypes.ControllerName) => {
             const endpoint = 'GetEntities';
 
             const response = await fetch(`${baseUrl}/${controller}/${endpoint}`, {
@@ -35,7 +35,7 @@ export const BackendService = {
             return await response.json() as TEntity[];
         },
 
-        GetEntitiesByGuids: async <TEntity extends BackendService.Dto>(controller: BackendService.ControllerName, guids: string[]) => {
+        GetEntitiesByGuids: async <TEntity extends BackendServiceTypes.Dto>(controller: BackendServiceTypes.ControllerName, guids: string[]) => {
             const endpoint = 'GetEntitiesByGuids';
 
             const response = await fetch(`${baseUrl}/${controller}/${endpoint}`, {
@@ -50,7 +50,7 @@ export const BackendService = {
             return await response.json() as TEntity[];
         },
 
-        GetEntity: async <TEntity extends BackendService.Dto>(controller: BackendService.ControllerName, guid: string) => {
+        GetEntity: async <TEntity extends BackendServiceTypes.Dto>(controller: BackendServiceTypes.ControllerName, guid: string) => {
             const endpoint = 'GetEntityByGuid';
 
             const response = await fetch(`${baseUrl}/${controller}/${endpoint}/${guid}`, {
@@ -64,7 +64,7 @@ export const BackendService = {
             return await response.json() as TEntity;
         },
 
-        PostEntity: async <TEntity extends BackendService.Dto>(controller: BackendService.ControllerName, body: TEntity) => {
+        PostEntity: async <TEntity extends BackendServiceTypes.Dto>(controller: BackendServiceTypes.ControllerName, body: TEntity) => {
             const endpoint = 'PostEntity';
 
             const response = await fetch(`${baseUrl}/${controller}/${endpoint}`, {
@@ -82,7 +82,7 @@ export const BackendService = {
             return await response.json() as TEntity;
         },
 
-        PutEntity: async <TEntity extends BackendService.Dto>(controller: BackendService.ControllerName, body: TEntity) => {
+        PutEntity: async <TEntity extends BackendServiceTypes.Dto>(controller: BackendServiceTypes.ControllerName, body: TEntity) => {
             if (!body.guid) {
                 throw new Error(`${controller} requires property 'guid' to be set on entity`);
             }
@@ -104,7 +104,7 @@ export const BackendService = {
             return await response.json() as TEntity;
         },
 
-        DeleteEntity: async (controller: BackendService.ControllerName, guid: string) => {
+        DeleteEntity: async (controller: BackendServiceTypes.ControllerName, guid: string) => {
             const endpoint = 'DeleteEntity';
 
             const response = await fetch(`${baseUrl}/${controller}/${endpoint}/${guid}`, {
