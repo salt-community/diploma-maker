@@ -1,49 +1,50 @@
-import useCache from "@/hooks/useCache";
-import { NamedEntity } from "@/services/backendService/models";
-import { useForm, SubmitHandler } from "react-hook-form";
 import { Modal } from "../layout";
-import { selectedTemplateKey } from "./cacheKeys";
+import { useTemplates } from "@/hooks";
 
 
-export type Props = {
-};
-
-export type Inputs = {
-  templateName: string;
-};
-
-export default function ManageTemplatesModal({ }: Props) {
-  const [_, setSelectedTemplate] = useCache<NamedEntity>(selectedTemplateKey);
-
-  const {
-    register, handleSubmit, formState: { errors },
-  } = useForm<Inputs>();
-
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    setSelectedTemplate({ name: data.templateName });
-
-    (document.getElementById(
-      import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID
-    ) as HTMLDialogElement).close();
-  };
+export default function ManageTemplatesModal() {
+  const { } = useTemplates();
 
   return (
-    <Modal id={import.meta.env.VITE_MANAGE_TEMPLATES_MODAL_ID}>
-      <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
-        <input
-          className="input input-bordered w-full"
-          type="text"
-          placeholder="Template Name"
-          {...register("templateName", { required: true, minLength: 3 })} />
-        <button
-          className="btn btn-primary mt-4"
-          type="submit"
-          disabled={errors.templateName != undefined}
-        >
-          Create
-        </button>
-        {errors.templateName && <span>This field is required</span>}
-      </form>
+    <Modal
+      id={import.meta.env.VITE_MANAGE_TEMPLATES_MODAL_ID}
+      title={"Manage Templates"}>
+      <div className="overflow-x-auto">
+        <table className="table">
+          {/* head */}
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Job</th>
+              <th>Favorite Color</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* row 1 */}
+            <tr>
+              <th>1</th>
+              <td>Cy Ganderton</td>
+              <td>Quality Control Specialist</td>
+              <td>Blue</td>
+            </tr>
+            {/* row 2 */}
+            <tr>
+              <th>2</th>
+              <td>Hart Hagerty</td>
+              <td>Desktop Support Technician</td>
+              <td>Purple</td>
+            </tr>
+            {/* row 3 */}
+            <tr>
+              <th>3</th>
+              <td>Brice Swyre</td>
+              <td>Tax Accountant</td>
+              <td>Red</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </Modal>
   );
 }

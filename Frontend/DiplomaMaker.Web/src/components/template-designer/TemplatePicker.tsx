@@ -63,6 +63,7 @@ export default function TemplatePicker({
           tabIndex={0}
           className="menu dropdown-content z-[1] w-full rounded-box bg-base-100 p-2 text-base shadow">
           {renderSelectItems()}
+
           <li className="pt-1">
             <button
               className="bg-primary text-primary-content hocus:bg-primary-focus"
@@ -71,6 +72,7 @@ export default function TemplatePicker({
               Create new Template
             </button>
           </li>
+          
           <li className="pt-1">
             <button
               className="bg-secondary text-secondary-content hocus:bg-secondary-focus"
