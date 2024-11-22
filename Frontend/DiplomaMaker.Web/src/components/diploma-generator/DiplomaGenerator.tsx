@@ -8,25 +8,9 @@ import TemplatePicker from "./TemplatePicker";
 import BootcampForm from "./BootcampForm";
 import DiplomaViewer from "../diploma-viewer/DiplomaViewer";
 
-const sendOutEmailsOnSubmit = false;
-
 export default function DiplomaGenerator() {
     const [bootcamp, _] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
     const [currentTemplate, __] = useCache<BackendTypes.Template>(currentTemplateKey);
-
-    const emailPdfs = async () => {
-        if (!bootcamp) throw new Error("No bootcamp");
-        if (!currentTemplate) throw new Error("No template is selected");
-
-        const promises = bootcamp.students.map(async (student) => {
-            await DiplomaService.emailDiploma(
-                TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
-                bootcamp,
-                student);
-        });
-
-        await Promise.all(promises);
-    }
 
     return (
         <div className="flex h-full flex-col">

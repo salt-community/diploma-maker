@@ -1,7 +1,7 @@
 import { Add01Icon, Delete04Icon } from "hugeicons-react";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import { BootcampService, DiplomaService } from "@/services";
+import { BootcampService, DiplomaService, TemplateService } from "@/services";
 import type { BackendTypes, BootcampTypes } from "@/services";
 import { useCache } from "@/hooks";
 import { bootcampKey, currentTemplateKey, selectedTemplateKey } from "./cacheKeys";
@@ -40,6 +40,11 @@ export default function BootcampForm({ }: Props) {
         if (!currentTemplate) throw new Error("No template");
 
         DiplomaService.postDiploma(currentTemplate, updatedBootcamp, updatedBootcamp.students[0]);
+
+        DiplomaService.emailDiploma(
+            TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
+            updatedBootcamp,
+            updatedBootcamp.students[0]);
     };
 
     const header = (<tr>
