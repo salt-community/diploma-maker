@@ -1,10 +1,10 @@
 import Navbar from "../Navbar";
 
-export default function PageLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+interface Props {
+  children?: React.ReactNode
+}
+
+export default function PageLayout({ children }: Props) {
   return (
     <div className="flex h-screen flex-col">
       <Navbar />

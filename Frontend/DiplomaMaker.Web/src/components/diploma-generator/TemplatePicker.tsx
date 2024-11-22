@@ -1,7 +1,8 @@
 import { ArrowDown01Icon } from "hugeicons-react";
-import { useTemplates } from "@/hooks/useTemplates";
-import { NamedEntity } from "@/services/backendService/models";
-import useCache from "@/hooks/useCache";
+
+import { BackendTypes } from "@/services";
+import { useTemplates, useCache } from "@/hooks";
+
 import { selectedTemplateDiplomaKey } from "./cacheKeys";
 
 type TemplatePickerProps = {
@@ -12,9 +13,9 @@ export default function TemplatePicker({
     onTemplateSelect,
 }: TemplatePickerProps) {
     const { templatePeeks } = useTemplates();
-    const [selectedTemplate, setSelectedTemplate] = useCache<NamedEntity>(selectedTemplateDiplomaKey);
+    const [selectedTemplate, setSelectedTemplate] = useCache<BackendTypes.NamedEntity>(selectedTemplateDiplomaKey);
 
-    const handleSelectTemplate = (template: NamedEntity) => {
+    const handleSelectTemplate = (template: BackendTypes.NamedEntity) => {
         onTemplateSelect();
         setSelectedTemplate(template);
     };

@@ -1,14 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchGoogleFonts } from '../services/fontService';
 
-export default function useGoogleFonts() {
+import { FontService } from '@/services';
+
+export function useGoogleFonts() {
   const {
     data: fonts,
     isLoading,
     isError,
   } = useQuery({
     queryKey: ['google_fonts'],
-    queryFn: fetchGoogleFonts,
+    queryFn: FontService.fetchGoogleFonts,
     staleTime: Infinity,
   });
 

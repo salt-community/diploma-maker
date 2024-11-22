@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-export default function useCache<T>(cacheKey: string[]) {
+export function useCache<T>(cacheKey: string[]) {
     const client = useQueryClient();
 
     useQuery({

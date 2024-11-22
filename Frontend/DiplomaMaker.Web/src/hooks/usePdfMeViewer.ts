@@ -6,22 +6,16 @@
 */
 
 import { useRef } from "react";
-import { FontService, PdfMe, PdfMeTypes, TemplateService } from "../services";
-import { BackendServiceTypes } from "../services/backendService";
-import { Viewer } from "@pdfme/ui";
+
+import { FontService, PdfMeService, TemplateService } from "../services";
+import type { PdfMeTypes, BackendTypes, TemplateTypes } from "../services";
 
 export function usePdfMeViewer(
   viewerContainerRef: React.MutableRefObject<HTMLDivElement | null>,
 ) {
   const viewer = useRef<PdfMeTypes.Viewer | null>(null);
 
-  const plugins = {
-    Text: PdfMe.text,
-    QR: PdfMe.barcodes.qrcode,
-    Image: PdfMe.image,
-  };
-
-  async function generatePdf(inputs: TemplateService.Substitions) {
+  async function generatePdf(inputs: TemplateTypes.Substitions) {
     if (!viewer.current) throw new Error("Designer is not initialized");
 
     const template = viewer.current.getTemplate();
@@ -33,9 +27,9 @@ export function usePdfMeViewer(
 
     console.log(substitutedInputs);
 
-    const pdf = await PdfMe.generate({
+    const pdf = await PdfMeService.generate({
       template,
-      plugins,
+      plugins: PdfMeService.plugins,
       inputs: substitutedInputs,
     });
 
@@ -47,7 +41,7 @@ export function usePdfMeViewer(
     return blob;
   }
 
-  async function loadViewer(template: BackendServiceTypes.Template, substitions: TemplateService.Substitions) {
+  async function loadViewer(template: BackendTypes.Template, substitions: TemplateTypes.Substitions) {
     if (!viewerContainerRef.current)
       throw new Error("Viewer container element is not referenced");
 
@@ -55,17 +49,17 @@ export function usePdfMeViewer(
       template.templateJson,
     );
 
-    PdfMe.checkTemplate(pdfMeTemplate);
+    PdfMeService.checkTemplate(pdfMeTemplate);
 
     const inputs = TemplateService.substitutePlaceholdersWithContent(
       pdfMeTemplate,
       substitions
     ) as Record<string, any>[];
 
-    viewer.current = new Viewer({
+    viewer.current = new PdfMeService.Viewer({
       template: pdfMeTemplate,
       inputs,
-      plugins,
+      plugins: PdfMeService.plugins,
       domContainer: viewerContainerRef.current
     });
   }

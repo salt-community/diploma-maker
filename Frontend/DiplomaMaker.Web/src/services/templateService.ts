@@ -5,20 +5,23 @@
     and pdf generation.
 */
 
-import { BLANK_PDF, checkTemplate, Template } from "@pdfme/common";
-import { FileService, PdfMeTypes } from ".";
+import { FileService, PdfMeService } from '@/services';
+import type { PdfMeTypes } from '@/services';
 
-export const defaultTemplate: Template = {
-    basePdf: BLANK_PDF,
+//Types
+export namespace TemplateTypes {
+    export type Substitions = {
+        studentName: string,
+        track: string,
+        graduationDate: string,
+        qrLink: string
+    }
+}
+
+export const defaultTemplate: PdfMeTypes.Template = {
+    basePdf: PdfMeService.BLANK_PDF,
     schemas: [[]],
 };
-
-export type Substitions = {
-    studentName: string,
-    track: string,
-    graduationDate: string,
-    qrLink: string
-}
 
 export const placeholders = {
     studentName: "{studentName}",
@@ -34,7 +37,7 @@ export const placeholders = {
 */
 export function substitutePlaceholdersWithContent(
     template: PdfMeTypes.Template,
-    substitutions: Substitions) {
+    substitutions: TemplateTypes.Substitions) {
 
     const inputs: Record<string, unknown> = {};
 
@@ -66,7 +69,7 @@ export function substitutePlaceholdersWithContent(
 export async function getTemplateFromJsonFile(file: File) {
     const template: PdfMeTypes.Template = JSON.parse(await FileService.readTextFile(file));
 
-    checkTemplate(template);
+    PdfMeService.checkTemplate(template);
 
     return template;
 }

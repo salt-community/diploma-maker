@@ -1,21 +1,21 @@
-import { NamedEntity } from "@/services/backendService/models";
-import { useTemplates } from "@/hooks/useTemplates";
-import useCache from "@/hooks/useCache";
-import TemplatePicker from "./TemplatePicker";
-import { selectedTemplateDiplomaKey } from "./cacheKeys";
-import { UploadJson } from "./UploadJson";
-import { usePdfMeViewer } from "@/hooks/usePdfMeViewer";
 import { useRef } from "react";
-import { Bootcamp } from "@/services/fileService";
+
+import { StringService, BackendService } from "@/services";
+import type { FileTypes, BackendTypes } from "@/services";
+import { useTemplates, useCache, usePdfMeViewer } from "@/hooks";
+
+import { selectedTemplateDiplomaKey } from "./cacheKeys";
+import UploadJson from "./UploadJson";
+import TemplatePicker from "./TemplatePicker";
 import BootcampForm from "./BootcampForm";
-import { BackendService } from "@/services/backendService";
-import { FileService } from "@/services";
+
+const sendOutEmailsOnSubmit = false;
 
 export default function DiplomaGenerator() {
     const viewerContainerRef = useRef<HTMLDivElement | null>(null);
     const templateHook = useTemplates();
-    const [bootcamp, setBootcamp] = useCache<Bootcamp>(["Bootcamp"]);
-    const [selectedTemplate, _] = useCache<NamedEntity>(selectedTemplateDiplomaKey);
+    const [bootcamp, setBootcamp] = useCache<FileTypes.Bootcamp>(["Bootcamp"]);
+    const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateDiplomaKey);
 
     const {
         loadViewer,
@@ -60,14 +60,19 @@ export default function DiplomaGenerator() {
                     qrLink: "www.google.com"
                 });
 
-                const blobString = (await FileService.blobToBase64(blob)).split(",")[1];
+                const blobString = StringService.base64StringWithoutMetaData(
+                    await StringService.blobToBase64String(blob)
+                );
 
-                // BackendService.Endpoints.sendDiplomaEmail({
-                //     track: bootcamp.track,
-                //     diplomaPdfBase64: blobString,
-                //     studenEmail: bootcamp.students[0].email,
-                //     studentName: bootcamp.students[0].name
-                // });
+                if (!sendOutEmailsOnSubmit)
+                    return;
+
+                BackendService.sendDiplomaEmail({
+                    track: bootcamp.track,
+                    diplomaPdfBase64: blobString,
+                    studenEmail: bootcamp.students[0].email,
+                    studentName: bootcamp.students[0].name
+                });
             }} />
             <div ref={viewerContainerRef} />
         </div>

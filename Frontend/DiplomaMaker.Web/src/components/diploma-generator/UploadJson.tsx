@@ -1,11 +1,11 @@
 import { FileService } from "@/services";
-import { Bootcamp } from "@/services/fileService";
+import type { FileTypes } from "@/services";
 
 interface Props {
-    onDrop: (bootcamp: Bootcamp) => void
+    onDrop: (bootcamp: FileTypes.Bootcamp) => void
 }
 
-export function UploadJson({ onDrop }: Props) {
+export default function UploadJson({ onDrop }: Props) {
     const handleChange = async (file?: File) => {
         if (!file)
             throw new Error("File is undefined");

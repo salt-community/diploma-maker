@@ -1,19 +1,19 @@
-import { NamedEntity, Template } from "@/services/backendService/models";
-import { usePdfMe } from "@/hooks/usePdfMe";
-import { useTemplates } from "@/hooks/useTemplates";
 import { useRef } from "react";
-import TemplatePicker from "./TemplatePicker";
-import useCache from "@/hooks/useCache";
-import { selectedTemplateKey } from "./cacheKeys";
+
 import { TemplateService } from "@/services";
+import type { BackendTypes } from "@/services";
+import { usePdfMe, useTemplates, useCache } from "@/hooks";
+
+import { selectedTemplateKey } from "./cacheKeys";
+import TemplatePicker from "./TemplatePicker";
 
 export default function TemplateDesigner() {
   const designerDiv = useRef<HTMLDivElement | null>(null);
   const templateHook = useTemplates();
 
-  const [selectedTemplate, _] = useCache<NamedEntity>(selectedTemplateKey);
+  const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
 
-  const { onSaveTemplate, onLoadTemplate, onNewTemplate, generatePdf, downloadTemplate } =
+  const { onSaveTemplate, onLoadTemplate, onNewTemplate, downloadTemplate } =
     usePdfMe(designerDiv);
 
   if (selectedTemplate?.guid) {
@@ -52,7 +52,7 @@ export default function TemplateDesigner() {
                 onLoadTemplate({
                   name: "...",
                   templateJson: JSON.stringify(template)
-                } as Template);
+                } as BackendTypes.Template);
                 onSaveTemplate(file!.name);
               }} />
           </label>
@@ -60,6 +60,9 @@ export default function TemplateDesigner() {
           <button
             className="btn"
             onClick={() => {
+              if (!selectedTemplate)
+                throw new Error("Selected template is undefined");
+
               onSaveTemplate(selectedTemplate.name);
               templateHook.peekTemplates();
             }}

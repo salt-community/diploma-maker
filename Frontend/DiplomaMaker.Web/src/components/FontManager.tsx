@@ -1,8 +1,7 @@
-import { GoogleFont } from '../services/fontService';
 import { useState } from 'react';
-import useDebounce from '../hooks/useDebounce';
-import useGoogleFonts from '../hooks/useGoogleFonts';
-import useUserFonts from '../hooks/useUserFonts';
+
+import type { FontTypes } from '../services';
+import { useDebounce, useGoogleFonts, useUserFonts } from '@/hooks'
 
 type FontManagerProps = {
   onReloadFonts: () => void;
@@ -63,7 +62,7 @@ function AddFontView() {
     )
     : [];
 
-  const handleSaveFont = (font: GoogleFont) => {
+  const handleSaveFont = (font: FontTypes.GoogleFont) => {
     saveFont(font);
   };
 

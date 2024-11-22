@@ -7,15 +7,9 @@
 
 import { useEffect, useRef } from "react";
 
-import {
-  FileService,
-  FontService,
-  PdfMe,
-  PdfMeTypes,
-  TemplateService,
-} from "../services";
-import { Template } from "../services/backendService/models";
-import { useTemplates } from "./useTemplates";
+import { FileService, FontService, PdfMeService, TemplateService } from "@/services";
+import type { BackendTypes, PdfMeTypes, TemplateTypes } from "@/services";
+import { useTemplates } from '@/hooks';
 
 export function usePdfMe(
   designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
@@ -24,24 +18,18 @@ export function usePdfMe(
   const templatesHook = useTemplates();
   const designer = useRef<PdfMeTypes.Designer | null>(null);
 
-  const plugins = {
-    Text: PdfMe.text,
-    QR: PdfMe.barcodes.qrcode,
-    Image: PdfMe.image,
-  };
-
   useEffect(() => {
     if (designerContainerRef && !designer.current) {
       const domContainer = designerContainerRef.current;
 
       if (domContainer)
-        designer.current = new PdfMeTypes.Designer({
+        designer.current = new PdfMeService.Designer({
           domContainer,
           template: initialTemplate ?? TemplateService.defaultTemplate,
           options: {
             font: FontService.getPdfMeFonts(),
           },
-          plugins,
+          plugins: PdfMeService.plugins
         });
     }
   });
@@ -86,7 +74,7 @@ export function usePdfMe(
     });
   }
 
-  async function onLoadTemplate(template: Template) {
+  async function onLoadTemplate(template: BackendTypes.Template) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     if (!template) {
@@ -98,7 +86,7 @@ export function usePdfMe(
       template.templateJson,
     );
 
-    PdfMe.checkTemplate(pdfMeTemplate);
+    PdfMeService.checkTemplate(pdfMeTemplate);
 
     designer.current.updateTemplate(pdfMeTemplate);
   }
@@ -121,7 +109,7 @@ export function usePdfMe(
     designer.current.updateOptions({ font: FontService.getPdfMeFonts() });
   }
 
-  async function generatePdf(inputs: TemplateService.Substitions) {
+  async function generatePdf(inputs: TemplateTypes.Substitions) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     const template = designer.current.getTemplate();
@@ -131,9 +119,9 @@ export function usePdfMe(
       inputs,
     );
 
-    const pdf = await PdfMe.generate({
+    const pdf = await PdfMeService.generate({
       template,
-      plugins,
+      plugins: PdfMeService.plugins,
       inputs: substitutedInputs,
     });
 

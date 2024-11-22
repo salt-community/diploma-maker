@@ -1,7 +1,7 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useToken() {
+export function useToken() {
   const auth = useAuth();
 
   const query = useQuery({

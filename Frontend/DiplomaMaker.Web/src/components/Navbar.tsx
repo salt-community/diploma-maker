@@ -1,5 +1,6 @@
-import AppLogo from "@/assets/app-logo.svg";
 import { Menu02Icon, UserCircleIcon } from "hugeicons-react";
+
+import AppLogo from "@/assets/app-logo.svg";
 
 /**
  * TODO 1: Update menu with actual routes

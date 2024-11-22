@@ -1,8 +1,10 @@
-import useCache from "@/hooks/useCache";
-import { NamedEntity } from "@/services/backendService/models";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Modal } from "../layout";
+
+import type { BackendTypes } from "@/services";
+import { useCache } from "@/hooks";
+
 import { selectedTemplateKey } from "./cacheKeys";
+import { Modal } from "../layout";
 
 
 export type Props = {
@@ -16,7 +18,7 @@ export type Inputs = {
 export default function NewTemplateModal({
   onCreateNewTemplate,
 }: Props) {
-  const [_, setSelectedTemplate] = useCache<NamedEntity>(selectedTemplateKey);
+  const [_, setSelectedTemplate] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
 
   const {
     register, handleSubmit, formState: { errors },

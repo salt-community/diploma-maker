@@ -1,6 +1,8 @@
 import { Delete04Icon } from "hugeicons-react";
-import { Modal } from "../layout";
+
 import { useTemplates } from "@/hooks";
+
+import { Modal } from "../layout";
 
 export default function ManageTemplatesModal() {
   const { templatePeeks, deleteTemplate } = useTemplates();

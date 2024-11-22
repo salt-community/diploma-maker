@@ -4,15 +4,15 @@
     Extension of useEntity<Template> that adds endpoints beyond base CRUD.
 */
 
-import { BackendService } from "@/services/backendService";
-import { Template } from "@/services/backendService/models";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { BackendService, BackendTypes } from "@/services";
 
 export function useTemplates() {
   const queryKeyTemplate = ["Template"];
   const queryKeyTemplatePeek = ["TemplatePeek"];
   const controller = "Template";
-  type TEntity = Template;
+  type TEntity = BackendTypes.Template;
 
   const client = useQueryClient();
 
@@ -25,13 +25,13 @@ export function useTemplates() {
 
   const peekTemplatesQuery = useQuery({
     queryKey: queryKeyTemplatePeek,
-    queryFn: async () => await BackendService.Endpoints.peekTemplates(),
+    queryFn: async () => await BackendService.peekTemplates(),
   });
 
 
   const getTemplateMutation = useMutation({
     mutationFn: async (guid: string) =>
-      (await BackendService.Endpoints.GetEntity(controller, guid)) as TEntity,
+      (await BackendService.getEntity(controller, guid)) as TEntity,
     onSuccess: (response: TEntity) => {
       updateCacheWith(response);
       peekTemplatesQuery.refetch();
@@ -40,7 +40,7 @@ export function useTemplates() {
 
   const postTemplateMutation = useMutation({
     mutationFn: async (entity: TEntity) =>
-      await BackendService.Endpoints.PostEntity(controller, entity),
+      await BackendService.postEntity(controller, entity),
     onSuccess: (response) => {
       updateCacheWith(response);
       peekTemplatesQuery.refetch();
@@ -49,7 +49,7 @@ export function useTemplates() {
 
   const putTemplateMutation = useMutation({
     mutationFn: async (entity: TEntity) =>
-      await BackendService.Endpoints.PutEntity(controller, entity),
+      await BackendService.putEntity(controller, entity),
     onSuccess: (response) => {
       updateCacheWith(response);
       peekTemplatesQuery.refetch();
@@ -59,7 +59,7 @@ export function useTemplates() {
 
   const deleteTemplateMutation = useMutation({
     mutationFn: async (guid: string) =>
-      await BackendService.Endpoints.DeleteEntity(controller, guid),
+      await BackendService.deleteEntity(controller, guid),
     onSuccess: (_, guid) => {
       deleteTemplateFromCache(guid);
       peekTemplatesQuery.refetch();

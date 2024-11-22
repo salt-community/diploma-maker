@@ -1,11 +1,13 @@
-import useCache from "@/hooks/useCache";
-import { Bootcamp } from "@/services/fileService";
 import { Add01Icon, Delete04Icon } from "hugeicons-react";
 import { useFieldArray, useForm } from "react-hook-form";
 
+import { useCache } from "@/hooks";
+import { StringService } from "@/services";
+import type { FileTypes } from "@/services";
+
 //TODO: Make sure that at least one student is assigned before submitting
 
-type BootcampStringDate = Omit<Bootcamp, "graduationDate"> & {
+type BootcampStringDate = Omit<FileTypes.Bootcamp, "graduationDate"> & {
     graduationDate: string
 }
 
@@ -19,22 +21,18 @@ const defaultStudent = {
 }
 
 const defaultFormBootcamp: BootcampStringDate = {
-    graduationDate: formatDate(new Date(Date.now())),
+    graduationDate: StringService.formatDate_YYYY_mm_dd(new Date(Date.now())),
     track: "Coding Quest",
     students: [defaultStudent]
 }
 
-function formatDate(date: Date) {
-    return date.toISOString().split('T')[0];
-}
-
 export default function BootcampForm({ onSubmit }: Props) {
-    const [bootcamp, setBootcamp] = useCache<Bootcamp>(["Bootcamp"]);
+    const [bootcamp, setBootcamp] = useCache<FileTypes.Bootcamp>(["Bootcamp"]);
 
     const formBootcamp: BootcampStringDate = !bootcamp
         ? defaultFormBootcamp
         : {
-            graduationDate: formatDate(bootcamp.graduationDate),
+            graduationDate: StringService.formatDate_YYYY_mm_dd(bootcamp.graduationDate),
             track: bootcamp.track,
             students: bootcamp.students
         }
@@ -49,7 +47,7 @@ export default function BootcampForm({ onSubmit }: Props) {
     });
 
     const onFormSubmit = (bootcamp: BootcampStringDate) => {
-        const updatedBootcamp: Bootcamp = {
+        const updatedBootcamp: FileTypes.Bootcamp = {
             track: bootcamp.track,
             graduationDate: new Date(bootcamp.graduationDate),
             students: bootcamp.students

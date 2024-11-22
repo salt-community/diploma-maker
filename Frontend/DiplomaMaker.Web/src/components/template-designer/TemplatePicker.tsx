@@ -1,11 +1,11 @@
 import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
-import { useTemplates } from "@/hooks/useTemplates";
-import { NamedEntity } from "@/services/backendService/models";
-import { useModal } from "@/hooks/useModal";
-import NewTemplateModal from "./NewTemplateModal";
-import useCache from "@/hooks/useCache";
+
+import type { BackendTypes } from "@/services";
+import { useCache, useModal, useTemplates } from "@/hooks";
+
 import { selectedTemplateKey } from "./cacheKeys";
 import ManageTemplatesModal from "./ManageTemplatesModal";
+import NewTemplateModal from "./NewTemplateModal";
 
 type TemplatePickerProps = {
   onTemplateSelect: () => void;
@@ -19,10 +19,10 @@ export default function TemplatePicker({
   const { templatePeeks } = useTemplates();
   const { openModal: openNewTemplatesModal } = useModal(import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID);
   const { openModal: openManageTemplatesModal } = useModal(import.meta.env.VITE_MANAGE_TEMPLATES_MODAL_ID);
- 
-  const [selectedTemplate, setSelectedTemplate] = useCache<NamedEntity>(selectedTemplateKey);
 
-  const handleSelectTemplate = (template: NamedEntity) => {
+  const [selectedTemplate, setSelectedTemplate] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
+
+  const handleSelectTemplate = (template: BackendTypes.NamedEntity) => {
     onTemplateSelect();
     setSelectedTemplate(template);
   };

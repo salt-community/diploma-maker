@@ -5,6 +5,20 @@
     and uploading files.
 */
 
+//Types
+export namespace FileTypes {
+  export type Student = {
+    name: string;
+    email: string;
+  };
+
+  export type Bootcamp = {
+    track: string;
+    graduationDate: Date;
+    students: Student[];
+  };
+}
+
 /*
     Accepts a File object from an <input type="file"> element
     and returns a string.
@@ -21,14 +35,6 @@ export async function readTextFile(file: File) {
     });
 
     fileReader.readAsText(file);
-  });
-}
-
-export function blobToBase64(blob: Blob): Promise<string> {
-  return new Promise((resolve, _) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.readAsDataURL(blob);
   });
 }
 
@@ -69,17 +75,6 @@ export function downloadJsonFile(fileObject: unknown, title: string) {
   URL.revokeObjectURL(url);
 }
 
-export type Student = {
-  name: string;
-  email: string;
-};
-
-export type Bootcamp = {
-  track: string;
-  graduationDate: Date;
-  students: Student[];
-};
-
 export async function parseJsonFileIntoBootcamp(file: File) {
   const jsonObject = JSON.parse(await readTextFile(file));
   const track = Object.values(jsonObject)[0] as string;
@@ -104,10 +99,10 @@ export async function parseJsonFileIntoBootcamp(file: File) {
     return {
       name,
       email,
-    } as Student;
+    } as FileTypes.Student;
   });
 
-  const bootcamp: Bootcamp = {
+  const bootcamp: FileTypes.Bootcamp = {
     track,
     graduationDate,
     students,
