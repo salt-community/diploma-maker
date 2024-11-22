@@ -8,7 +8,7 @@
 import { BLANK_PDF } from '@pdfme/common';
 
 import { FileService, PdfMeService } from '@/services';
-import type { PdfMeTypes } from '@/services';
+import type { BackendTypes, PdfMeTypes } from '@/services';
 
 //Types
 export namespace TemplateTypes {
@@ -43,6 +43,9 @@ export function substitutePlaceholdersWithContent(
 
     const inputs: Record<string, unknown> = {};
 
+    console.log(template);
+    console.log(substitutions);
+
     Object.entries(template.schemas[0]).forEach(entry => {
         const fieldName = entry[1]['name'];
         const typeName = entry[1]['type'];
@@ -74,4 +77,8 @@ export async function getTemplateFromJsonFile(file: File) {
     PdfMeService.checkTemplate(template);
 
     return template;
+}
+
+export function backendTemplateToPdfMeTemplate(template: BackendTypes.Template) {
+    return JSON.parse(template.templateJson) as PdfMeTypes.Template;
 }

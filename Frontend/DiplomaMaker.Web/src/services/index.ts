@@ -8,6 +8,12 @@
 export { BackendService } from './backendService'
 export type { BackendTypes } from './backendService'
 
+export * as BootcampService from './bootcampService'
+export type { BootcampTypes } from './bootcampService'
+
+export * as DiplomaService from './diplomaService'
+export type { DiplomaTypes } from './diplomaService'
+
 export * as FileService from './fileService'
 export type { FileTypes } from './fileService'
 
@@ -16,9 +22,6 @@ export type { TemplateTypes } from './templateService'
 
 export * as FontService from './fontService'
 export type { FontTypes } from './fontService'
-
-export * as BootcampService from './bootcampService'
-export type { BootcampTypes } from './bootcampService'
 
 export * as StringService from './stringService'
 

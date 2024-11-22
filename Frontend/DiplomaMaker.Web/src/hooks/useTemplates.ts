@@ -1,7 +1,5 @@
 /*
     UseTemplates
-
-    Extension of useEntity<Template> that adds endpoints beyond base CRUD.
 */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -102,6 +100,6 @@ export function useTemplates() {
     postTemplate: (template: TEntity) => postTemplateMutation.mutate(template),
     putTemplate: (template: TEntity) => putTemplateMutation.mutate(template),
     deleteTemplate: (guid: string) => deleteTemplateMutation.mutate(guid),
-    templateByGuid,
+    templateByGuid
   };
 }

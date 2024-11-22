@@ -1,16 +1,18 @@
-import { FileService } from "@/services";
-import type { FileTypes } from "@/services";
+import { useCache } from "@/hooks";
+import { BootcampTypes, FileService } from "@/services";
+import { bootcampKey } from "./cacheKeys";
 
 interface Props {
-    onDrop: (bootcamp: FileTypes.Bootcamp) => void
 }
 
-export default function UploadJson({ onDrop }: Props) {
+export default function UploadBootcamp({}: Props) {
+    const [_, setBootcamp] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
+
     const handleChange = async (file?: File) => {
         if (!file)
             throw new Error("File is undefined");
 
-        onDrop(await FileService.parseJsonFileIntoBootcamp(file));
+        setBootcamp(await FileService.parseJsonFileIntoBootcamp(file))
     };
 
     return (

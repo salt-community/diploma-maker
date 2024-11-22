@@ -2,6 +2,8 @@ import * as PdfMeCommon from '@pdfme/common'
 import * as PdfMeGenerator from '@pdfme/generator'
 import * as PdfMeUi from '@pdfme/ui'
 import * as PdfMeSchemas from '@pdfme/schemas'
+import { TemplateTypes } from './templateService';
+import { TemplateService, FontService } from '.';
 
 export namespace PdfMeTypes {
     export type Template = PdfMeCommon.Template;
@@ -20,4 +22,28 @@ export const PdfMeService = {
     ...PdfMeCommon,
     ...PdfMeGenerator,
     ...PdfMeUi,
+
+    createPdfMeViewer: (
+        domContainer: HTMLDivElement,
+        template: PdfMeTypes.Template,
+        substitions: TemplateTypes.Substitions) => {
+        PdfMeService.checkTemplate(template);
+
+        const inputs = TemplateService.substitutePlaceholdersWithContent(
+            template,
+            substitions
+        ) as Record<string, any>[];
+
+        new PdfMeService.Viewer({
+            template,
+            inputs,
+            plugins: PdfMeService.plugins,
+            domContainer,
+            options: {
+                font: FontService.getPdfMeFonts(),
+            },
+        });
+    }
 }
+
+

@@ -1,62 +1,28 @@
-import { useRef } from "react";
+import { BackendService, DiplomaService, TemplateService } from "@/services";
+import type { PdfMeTypes, BootcampTypes, TemplateTypes, BackendTypes } from "@/services";
+import { useCache } from "@/hooks";
 
-import { StringService, BackendService } from "@/services";
-import type { FileTypes, BackendTypes } from "@/services";
-import { useTemplates, useCache, usePdfMeViewer } from "@/hooks";
-
-import { selectedTemplateDiplomaKey } from "./cacheKeys";
-import UploadJson from "./UploadJson";
+import { bootcampKey, currentTemplateKey } from "./cacheKeys";
+import UploadBootcamp from "./UploadBootcamp";
 import TemplatePicker from "./TemplatePicker";
 import BootcampForm from "./BootcampForm";
+import DiplomaViewer from "../diploma-viewer/DiplomaViewer";
 
 const sendOutEmailsOnSubmit = false;
 
 export default function DiplomaGenerator() {
-    const viewerContainerRef = useRef<HTMLDivElement | null>(null);
-    const templateHook = useTemplates();
-    const [bootcamp, setBootcamp] = useCache<FileTypes.Bootcamp>(["Bootcamp"]);
-    const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateDiplomaKey);
-
-    const {
-        loadViewer,
-        generatePdf
-    } = usePdfMeViewer(viewerContainerRef);
-
-    if (selectedTemplate?.guid && bootcamp) {
-        const templateWithContent = templateHook.templateByGuid(selectedTemplate?.guid);
-        console.log(bootcamp);
-        if (templateWithContent) {
-            loadViewer(templateWithContent, {
-                graduationDate: bootcamp.graduationDate.toDateString(),
-                studentName: bootcamp.students[0].name,
-                qrLink: "www.google.com",
-                track: bootcamp.track
-            });
-        }
-    }
+    const [bootcamp, _] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
+    const [currentTemplate, __] = useCache<BackendTypes.Template>(currentTemplateKey);
 
     const emailPdfs = async () => {
-        if (!bootcamp)
-            throw new Error("No bootcamp");
+        if (!bootcamp) throw new Error("No bootcamp");
+        if (!currentTemplate) throw new Error("No template is selected");
 
         const promises = bootcamp.students.map(async (student) => {
-            const blob = await generatePdf({
-                studentName: student.name,
-                track: bootcamp.track,
-                graduationDate: StringService.formatDate_YYYY_mm_dd(bootcamp.graduationDate),
-                qrLink: "www.google.com"
-            });
-
-            const blobString = StringService.base64StringWithoutMetaData(
-                await StringService.blobToBase64String(blob)
-            );
-
-            await BackendService.sendDiplomaEmail({
-                track: bootcamp.track,
-                diplomaPdfBase64: blobString,
-                studenEmail: bootcamp.students[0].email,
-                studentName: bootcamp.students[0].name
-            });
+            await DiplomaService.emailDiploma(
+                TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
+                bootcamp,
+                student);
         });
 
         await Promise.all(promises);
@@ -72,7 +38,7 @@ export default function DiplomaGenerator() {
                 </div>
 
                 <div className="navbar-end">
-                    <UploadJson onDrop={(bootcamp) => setBootcamp(bootcamp)} />
+                    <UploadBootcamp />
                 </div>
             </div>
 
@@ -85,7 +51,11 @@ export default function DiplomaGenerator() {
 
                 emailPdfs();
             }} />
-            <div ref={viewerContainerRef} />
+
+            {(currentTemplate && bootcamp != null) &&
+                <DiplomaViewer
+                    template={TemplateService.backendTemplateToPdfMeTemplate(currentTemplate)}
+                    substitions={DiplomaService.createSubstitions(bootcamp, bootcamp.students[0])} />}
         </div>
     );
 }

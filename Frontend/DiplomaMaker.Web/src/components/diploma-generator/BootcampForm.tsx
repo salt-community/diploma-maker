@@ -4,24 +4,22 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { BootcampService } from "@/services";
 import type { BackendTypes, BootcampTypes } from "@/services";
 import { useCache } from "@/hooks";
-import { selectedTemplateDiplomaKey } from "./cacheKeys";
-
-//TODO: Make sure a template is selected before submitting
+import { bootcampKey, selectedTemplateKey } from "./cacheKeys";
 
 interface Props {
     onSubmit: () => void
 }
 
 export default function BootcampForm({ onSubmit }: Props) {
-    const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(["Bootcamp"]);
-    const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateDiplomaKey);
+    const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
+    const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
+
+    if (bootcamp == null)
+        setBootcamp(BootcampService.defaultBootcamp);
 
     const formBootcamp = bootcamp
         ? BootcampService.bootcampToFormBootcamp(bootcamp)
         : BootcampService.defaultFormBootcamp;
-
-    console.log("formBootcamp");
-    console.log(formBootcamp);
 
     if (!formBootcamp)
         throw new Error("formBootcamp could not be initialized");
@@ -124,7 +122,8 @@ export default function BootcampForm({ onSubmit }: Props) {
 
                 <button
                     className="btn bg-primary text-primary-content hocus:bg-primary-focus"
-                    disabled={selectedTemplate == null}>
+                    disabled={selectedTemplate == null}
+                >
                     <Add01Icon size={16} />
                     Preview Diploma
                 </button>
