@@ -1,18 +1,18 @@
 import { Add01Icon, Delete04Icon } from "hugeicons-react";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import { BootcampService } from "@/services";
+import { BootcampService, DiplomaService } from "@/services";
 import type { BackendTypes, BootcampTypes } from "@/services";
 import { useCache } from "@/hooks";
-import { bootcampKey, selectedTemplateKey } from "./cacheKeys";
+import { bootcampKey, currentTemplateKey, selectedTemplateKey } from "./cacheKeys";
 
 interface Props {
-    onSubmit: () => void
 }
 
-export default function BootcampForm({ onSubmit }: Props) {
+export default function BootcampForm({ }: Props) {
     const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
     const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
+    const [currentTemplate, __] = useCache<BackendTypes.Template>(currentTemplateKey);
 
     if (bootcamp == null)
         setBootcamp(BootcampService.defaultBootcamp);
@@ -36,7 +36,10 @@ export default function BootcampForm({ onSubmit }: Props) {
     const onFormSubmit = (bootcamp: BootcampTypes.FormBootcamp) => {
         const updatedBootcamp = BootcampService.formBootcampToBootcamp(bootcamp);
         setBootcamp(updatedBootcamp);
-        onSubmit();
+
+        if (!currentTemplate) throw new Error("No template");
+
+        DiplomaService.postDiploma(currentTemplate, updatedBootcamp, updatedBootcamp.students[0]);
     };
 
     const header = (<tr>

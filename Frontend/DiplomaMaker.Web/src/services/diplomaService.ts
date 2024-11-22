@@ -1,12 +1,11 @@
 /*
     DiplomaService
     
-    A collection of methods that manipulates helps creating and displaying diplomas
+    A collection of methods that helps creating, posting, emailing and displaying diplomas
 */
 
-
 import { BackendService, PdfMeService, StringService, TemplateService } from '@/services';
-import type { BootcampTypes, PdfMeTypes, TemplateTypes } from '@/services';
+import type { BootcampTypes, PdfMeTypes, TemplateTypes, BackendTypes } from '@/services';
 
 //Types
 export namespace DiplomaTypes {
@@ -56,4 +55,23 @@ export async function emailDiploma(
         studenEmail: bootcamp.students[0].email,
         studentName: bootcamp.students[0].name
     });
+}
+
+export async function postDiploma(
+    template: BackendTypes.Template,
+    bootcamp: BootcampTypes.Bootcamp,
+    student: BootcampTypes.Student
+) {
+    if (!template.guid)
+        throw new Error("Template lacks guid");
+
+    const diploma: BackendTypes.Diploma = {
+        studentName: student.name,
+        studentEmail: student.email,
+        track: bootcamp.track,
+        graduationDate: bootcamp.graduationDate,
+        templateGuid: template.guid
+    };
+
+    await BackendService.postEntity<BackendTypes.Diploma>("Diploma", diploma);
 }

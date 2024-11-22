@@ -21,8 +21,8 @@ public class Template() : BaseEntity<Template>()
 public class Diploma() : BaseEntity<Diploma>()
 {
     public string StudentName { get; set; } = string.Empty;
-    public string Track { get; set; } = string.Empty;
     public string StudentEmail { get; set; } = string.Empty;
+    public string Track { get; set; } = string.Empty;
     public DateTime GraduationDate { get; set; }
     public Guid TemplateGuid { get; set; }
 };

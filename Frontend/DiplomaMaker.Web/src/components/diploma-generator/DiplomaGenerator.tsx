@@ -1,5 +1,5 @@
-import { BackendService, DiplomaService, TemplateService } from "@/services";
-import type { PdfMeTypes, BootcampTypes, TemplateTypes, BackendTypes } from "@/services";
+import { DiplomaService, TemplateService } from "@/services";
+import type { BootcampTypes, BackendTypes } from "@/services";
 import { useCache } from "@/hooks";
 
 import { bootcampKey, currentTemplateKey } from "./cacheKeys";
@@ -32,9 +32,7 @@ export default function DiplomaGenerator() {
         <div className="flex h-full flex-col">
             <div className="navbar z-40 bg-neutral">
                 <div className="navbar-start">
-                    <TemplatePicker
-                        onTemplateSelect={() => console.log("Selected template")}
-                    />
+                    <TemplatePicker />
                 </div>
 
                 <div className="navbar-end">
@@ -42,15 +40,7 @@ export default function DiplomaGenerator() {
                 </div>
             </div>
 
-            <BootcampForm onSubmit={async () => {
-                if (!bootcamp)
-                    throw new Error("No bootcamp");
-
-                if (!sendOutEmailsOnSubmit)
-                    return;
-
-                emailPdfs();
-            }} />
+            <BootcampForm />
 
             {(currentTemplate && bootcamp != null) &&
                 <DiplomaViewer

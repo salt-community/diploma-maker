@@ -17,7 +17,7 @@ export namespace BackendTypes {
         studentEmail: string
         track: string,
         graduationDate: Date,
-        templateJson: string,
+        templateGuid: string,
     }
 
     export type DiplomaWithContent = {

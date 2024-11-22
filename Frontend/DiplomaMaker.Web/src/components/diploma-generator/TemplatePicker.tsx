@@ -5,11 +5,10 @@ import { useTemplates, useCache } from "@/hooks";
 
 import { currentTemplateKey, selectedTemplateKey } from "./cacheKeys";
 
-type TemplatePickerProps = {
-    onTemplateSelect: () => void;
+type Props = {
 };
 
-export default function TemplatePicker({ onTemplateSelect }: TemplatePickerProps) {
+export default function TemplatePicker({ }: Props) {
     const { templatePeeks, templateByGuid } = useTemplates();
     const [selectedTemplate, setSelectedTemplate] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
     const [currentTemplate, setCurrentTemplate] = useCache<BackendTypes.Template>(currentTemplateKey)
@@ -28,9 +27,7 @@ export default function TemplatePicker({ onTemplateSelect }: TemplatePickerProps
     }
 
     const handleSelectTemplate = (template: BackendTypes.NamedEntity) => {
-        onTemplateSelect();
         setSelectedTemplate(template);
-
         templateByGuid(template.guid!);
     };
 
@@ -62,6 +59,7 @@ export default function TemplatePicker({ onTemplateSelect }: TemplatePickerProps
                         {selectedTemplate ? selectedTemplate.name : "Select a template"}
                     </p>
                 </div>
+                
                 <ArrowDown01Icon size={18} />
             </div>
 
