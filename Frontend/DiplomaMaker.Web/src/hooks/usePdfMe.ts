@@ -110,7 +110,7 @@ export function usePdfMe(
     });
   }
 
-  async function onLoadTemplate(template: Template) {
+  async function loadTemplate(template: Template) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     if (!template) {
@@ -130,7 +130,9 @@ export function usePdfMe(
   function onResetTemplate() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
-    designer.current.updateTemplate(initialTemplate ?? TemplateService.defaultTemplate);
+    designer.current.updateTemplate(
+      initialTemplate ?? TemplateService.defaultTemplate,
+    );
   }
 
   function onNewTemplate() {
@@ -145,6 +147,12 @@ export function usePdfMe(
     designer.current.updateOptions({ font: FontService.getPdfMeFonts() });
   }
 
+  const getTemplateJson = () => {
+    if (!designer.current) throw new Error("Designer is not initialized");
+
+    return JSON.stringify(designer.current.getTemplate());
+  };
+
   return {
     generatePdf,
     handleLoadTemplate,
@@ -153,6 +161,7 @@ export function usePdfMe(
     handleReloadFonts,
     onSaveTemplate,
     onNewTemplate,
-    onLoadTemplate,
+    loadTemplate,
+    getTemplateJson,
   };
 }

@@ -1,46 +1,39 @@
+import { useTemplatePeeks } from "@/hooks/template";
+import { TemplatePeek } from "@/services/backendService/models";
 import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
-import { useTemplates } from "@/hooks/useTemplates";
-import { NamedEntity } from "@/services/backendService/models";
-import { useModal } from "@/hooks/useModal";
-import NewTemplateModal from "./NewTemplateModal";
-import useCache from "@/hooks/useCache";
-import { selectedTemplateKey } from "./cacheKeys";
+import { useState } from "react";
 import ManageTemplatesModal from "./ManageTemplatesModal";
+import NewTemplateModal from "./NewTemplateModal";
 
 type TemplatePickerProps = {
-  onTemplateSelect: () => void;
+  onTemplateSelected: (id: string) => void;
   onNewTemplate: () => void;
 };
 
 export default function TemplatePicker({
-  onTemplateSelect,
+  onTemplateSelected,
   onNewTemplate,
 }: TemplatePickerProps) {
-  const { templatePeeks } = useTemplates();
-  const { openModal: openNewTemplatesModal } = useModal(import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID);
-  const { openModal: openManageTemplatesModal } = useModal(import.meta.env.VITE_MANAGE_TEMPLATES_MODAL_ID);
-  const [selectedTemplate, setSelectedTemplate] = useCache<NamedEntity>(selectedTemplateKey);
+  const { data: templatePeeks } = useTemplatePeeks();
 
-  const handleSelectTemplate = (template: NamedEntity) => {
-    onTemplateSelect();
-    setSelectedTemplate(template);
-  };
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<TemplatePeek | null>();
 
-  const renderSelectItems = () => {
-    if (!templatePeeks) return <></>;
-
-    return templatePeeks
-      .filter(template => selectedTemplate ? template.name != selectedTemplate.name : true)
-      .map(nameGuid =>
-        nameGuid.guid !== selectedTemplate?.guid && (
-          <li key={nameGuid.guid}>
-            <button onClick={() => handleSelectTemplate(nameGuid!)}>
-              {nameGuid.name}
-            </button>
-          </li>
-        ),
-      );
-  };
+  const renderTemplateItems = () =>
+    templatePeeks?.map((template) =>
+      template != selectedTemplate ? (
+        <li key={template.guid}>
+          <button
+            onClick={() => {
+              onTemplateSelected(template.guid!);
+              setSelectedTemplate(template);
+            }}
+          >
+            {template.name}
+          </button>
+        </li>
+      ) : null,
+    );
 
   return (
     <>
@@ -60,13 +53,15 @@ export default function TemplatePicker({
         </div>
         <ul
           tabIndex={0}
-          className="menu dropdown-content z-[1] w-full rounded-box bg-base-100 p-2 text-base shadow">
-          {renderSelectItems()}
+          className="menu dropdown-content z-[1] w-full rounded-box bg-base-100 p-2 text-base shadow"
+        >
+          {renderTemplateItems()}
 
           <li className="pt-1">
             <button
               className="bg-primary text-primary-content hocus:bg-primary-focus"
-              onClick={() => openNewTemplatesModal()}>
+              onClick={() => {}}
+            >
               <Add01Icon size={16} />
               Create new Template
             </button>
@@ -75,7 +70,8 @@ export default function TemplatePicker({
           <li className="pt-1">
             <button
               className="bg-secondary text-secondary-content hocus:bg-secondary-focus"
-              onClick={() => openManageTemplatesModal()}>
+              onClick={() => {}}
+            >
               <PencilEdit01Icon size={16} />
               Manage Templates
             </button>

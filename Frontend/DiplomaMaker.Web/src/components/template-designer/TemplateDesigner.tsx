@@ -1,50 +1,52 @@
-import { NamedEntity } from "@/services/backendService/models";
 import { usePdfMe } from "@/hooks/usePdfMe";
-import { useTemplates } from "@/hooks/useTemplates";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import TemplatePicker from "./TemplatePicker";
-import useCache from "@/hooks/useCache";
-import { selectedTemplateKey } from "./cacheKeys";
+import { useTemplate, useUpdateTemplateMutation } from "@/hooks/template";
 
 export default function TemplateDesigner() {
-  const designerDiv = useRef<HTMLDivElement | null>(null);
-  const templateHook = useTemplates();
+  const designerRef = useRef<HTMLDivElement | null>(null);
 
-  const [selectedTemplate, _] = useCache<NamedEntity>(selectedTemplateKey);
+  const { getTemplateJson, loadTemplate } = usePdfMe(designerRef);
 
-  const { onSaveTemplate, onLoadTemplate, onNewTemplate } =
-    usePdfMe(designerDiv);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>();
 
-  if (selectedTemplate?.guid) {
-    const templateWithContent = templateHook.templateByGuid(selectedTemplate?.guid);
+  const { data: template } = useTemplate(selectedTemplateId!);
 
-    if (templateWithContent) {
-      onLoadTemplate(templateWithContent);
+  const { mutate: updateTemplate } = useUpdateTemplateMutation();
+
+  useEffect(() => {
+    if (template) {
+      loadTemplate(template);
     }
-  }
+  }, [template]);
+
+  const handleSaveTemplate = () =>
+    updateTemplate({
+      guid: template!.guid,
+      name: template!.name,
+      templateJson: getTemplateJson(),
+    });
 
   return (
     <div className="flex h-full flex-col">
       <div className="navbar z-40 bg-neutral">
         <div className="navbar-start">
           <TemplatePicker
-            onTemplateSelect={() => console.log("Selected template")}
-            onNewTemplate={() => onNewTemplate()}
+            onNewTemplate={() => {}}
+            onTemplateSelected={setSelectedTemplateId}
           />
         </div>
         <div className="navbar-end">
           <button
             className="btn"
-            onClick={() => {
-              onSaveTemplate(selectedTemplate.name);
-              templateHook.peekTemplates();
-            }}
+            onClick={handleSaveTemplate}
+            disabled={!template}
           >
             Save Changes
           </button>
         </div>
       </div>
-      <div ref={designerDiv} />
+      <div ref={designerRef} />
     </div>
   );
 }
