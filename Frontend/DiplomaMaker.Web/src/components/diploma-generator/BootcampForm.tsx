@@ -2,10 +2,10 @@ import { Add01Icon, Delete04Icon } from "hugeicons-react";
 import { useFieldArray, useForm } from "react-hook-form";
 
 import { BootcampService } from "@/services";
-import type { BootcampTypes } from "@/services";
+import type { BackendTypes, BootcampTypes } from "@/services";
 import { useCache } from "@/hooks";
+import { selectedTemplateDiplomaKey } from "./cacheKeys";
 
-//TODO: Make sure that at least one student is assigned before submitting
 //TODO: Make sure a template is selected before submitting
 
 interface Props {
@@ -14,6 +14,7 @@ interface Props {
 
 export default function BootcampForm({ onSubmit }: Props) {
     const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(["Bootcamp"]);
+    const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateDiplomaKey);
 
     const formBootcamp = bootcamp
         ? BootcampService.bootcampToFormBootcamp(bootcamp)
@@ -102,7 +103,7 @@ export default function BootcampForm({ onSubmit }: Props) {
 
                 <span className="label-text">Students</span>
 
-                <table className="table">
+                <table className="table my-4">
 
                     <thead>
                         {header}
@@ -116,18 +117,24 @@ export default function BootcampForm({ onSubmit }: Props) {
 
                 <button
                     className="btn bg-primary text-primary-content hocus:bg-primary-focus"
-                    onClick={() => append(BootcampService.defaultStudent)}
-                >
+                    onClick={() => append(BootcampService.defaultStudent)}>
                     <Add01Icon size={16} />
                     Add Student
                 </button>
 
                 <button
+                    className="btn bg-primary text-primary-content hocus:bg-primary-focus"
+                    disabled={selectedTemplate == null}>
+                    <Add01Icon size={16} />
+                    Preview Diploma
+                </button>
+
+                <button
                     type="submit"
                     className="btn bg-primary text-primary-content hocus:bg-primary-focus"
-                >
+                    disabled={selectedTemplate == null}>
                     <Add01Icon size={16} />
-                    Submit
+                    Send Out Diplomas
                 </button>
             </form>
         </div >
