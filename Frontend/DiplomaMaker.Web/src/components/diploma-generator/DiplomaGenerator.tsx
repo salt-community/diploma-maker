@@ -35,6 +35,33 @@ export default function DiplomaGenerator() {
         }
     }
 
+    const emailPdfs = async () => {
+        if (!bootcamp)
+            throw new Error("No bootcamp");
+
+        const promises = bootcamp.students.map(async (student) => {
+            const blob = await generatePdf({
+                studentName: student.name,
+                track: bootcamp.track,
+                graduationDate: StringService.formatDate_YYYY_mm_dd(bootcamp.graduationDate),
+                qrLink: "www.google.com"
+            });
+
+            const blobString = StringService.base64StringWithoutMetaData(
+                await StringService.blobToBase64String(blob)
+            );
+
+            await BackendService.sendDiplomaEmail({
+                track: bootcamp.track,
+                diplomaPdfBase64: blobString,
+                studenEmail: bootcamp.students[0].email,
+                studentName: bootcamp.students[0].name
+            });
+        });
+
+        await Promise.all(promises);
+    }
+
     return (
         <div className="flex h-full flex-col">
             <div className="navbar z-40 bg-neutral">
@@ -53,26 +80,10 @@ export default function DiplomaGenerator() {
                 if (!bootcamp)
                     throw new Error("No bootcamp");
 
-                const blob = await generatePdf({
-                    studentName: bootcamp?.students[0].name!,
-                    track: bootcamp!.track,
-                    graduationDate: bootcamp!.graduationDate!.toISOString().split("T")[0],
-                    qrLink: "www.google.com"
-                });
-
-                const blobString = StringService.base64StringWithoutMetaData(
-                    await StringService.blobToBase64String(blob)
-                );
-
                 if (!sendOutEmailsOnSubmit)
                     return;
 
-                BackendService.sendDiplomaEmail({
-                    track: bootcamp.track,
-                    diplomaPdfBase64: blobString,
-                    studenEmail: bootcamp.students[0].email,
-                    studentName: bootcamp.students[0].name
-                });
+                emailPdfs();
             }} />
             <div ref={viewerContainerRef} />
         </div>

@@ -1,70 +1,50 @@
 import { Add01Icon, Delete04Icon } from "hugeicons-react";
 import { useFieldArray, useForm } from "react-hook-form";
 
+import { BootcampService } from "@/services";
+import type { BootcampTypes } from "@/services";
 import { useCache } from "@/hooks";
-import { StringService } from "@/services";
-import type { FileTypes } from "@/services";
 
 //TODO: Make sure that at least one student is assigned before submitting
-
-type BootcampStringDate = Omit<FileTypes.Bootcamp, "graduationDate"> & {
-    graduationDate: string
-}
+//TODO: Make sure a template is selected before submitting
 
 interface Props {
     onSubmit: () => void
 }
 
-const defaultStudent = {
-    name: 'Student Name',
-    email: "student.name@appliedtechnology.se"
-}
-
-const defaultFormBootcamp: BootcampStringDate = {
-    graduationDate: StringService.formatDate_YYYY_mm_dd(new Date(Date.now())),
-    track: "Coding Quest",
-    students: [defaultStudent]
-}
-
 export default function BootcampForm({ onSubmit }: Props) {
-    const [bootcamp, setBootcamp] = useCache<FileTypes.Bootcamp>(["Bootcamp"]);
+    const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(["Bootcamp"]);
 
-    const formBootcamp: BootcampStringDate = !bootcamp
-        ? defaultFormBootcamp
-        : {
-            graduationDate: StringService.formatDate_YYYY_mm_dd(bootcamp.graduationDate),
-            track: bootcamp.track,
-            students: bootcamp.students
-        }
+    const formBootcamp = bootcamp
+        ? BootcampService.bootcampToFormBootcamp(bootcamp)
+        : BootcampService.defaultFormBootcamp;
 
-    const { register, control, handleSubmit } = useForm<BootcampStringDate>({
+    console.log("formBootcamp");
+    console.log(formBootcamp);
+
+    if (!formBootcamp)
+        throw new Error("formBootcamp could not be initialized");
+
+    const { register, control, handleSubmit } = useForm<BootcampTypes.FormBootcamp>({
         values: formBootcamp
     });
 
-    const { fields, append, remove } = useFieldArray<BootcampStringDate>({
+    const { fields: studentFields, append, remove } = useFieldArray<BootcampTypes.FormBootcamp>({
         control,
         name: 'students',
     });
 
-    const onFormSubmit = (bootcamp: BootcampStringDate) => {
-        const updatedBootcamp: FileTypes.Bootcamp = {
-            track: bootcamp.track,
-            graduationDate: new Date(bootcamp.graduationDate),
-            students: bootcamp.students
-        };
+    const onFormSubmit = (bootcamp: BootcampTypes.FormBootcamp) => {
+        const updatedBootcamp = BootcampService.formBootcampToBootcamp(bootcamp);
         setBootcamp(updatedBootcamp);
         onSubmit();
     };
 
-    const header = (
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th></th>
-        </tr>
-    );
+    const header = (<tr>
+        <th>Name</th><th>Email</th><th></th>
+    </tr>);
 
-    const rows = bootcamp && fields.map((student, index) => (
+    const rows = studentFields.map((student, index) => (
         <tr key={student.id}>
             <td>
                 <input
@@ -73,6 +53,7 @@ export default function BootcampForm({ onSubmit }: Props) {
                     className="input input-bordered w-full max-w-xs"
                 />
             </td>
+
             <td>
                 <input
                     {...register(`students.${index}.email`, { required: true, minLength: 3 })}
@@ -80,11 +61,15 @@ export default function BootcampForm({ onSubmit }: Props) {
                     className="input input-bordered w-full max-w-xs"
                 />
             </td>
+
             <td>
                 <button
                     className="btn bg-primary text-primary-content hocus:bg-primary-focus"
-                    onClick={() => remove(index)}
-                >
+                    onClick={() => {
+                        remove(index);
+
+                    }}
+                    disabled={studentFields.length <= 1}>
                     <Delete04Icon size={16} />
                     Remove
                 </button>
@@ -131,7 +116,7 @@ export default function BootcampForm({ onSubmit }: Props) {
 
                 <button
                     className="btn bg-primary text-primary-content hocus:bg-primary-focus"
-                    onClick={() => append(defaultStudent)}
+                    onClick={() => append(BootcampService.defaultStudent)}
                 >
                     <Add01Icon size={16} />
                     Add Student

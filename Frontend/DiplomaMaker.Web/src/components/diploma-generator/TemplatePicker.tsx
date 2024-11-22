@@ -9,9 +9,7 @@ type TemplatePickerProps = {
     onTemplateSelect: () => void;
 };
 
-export default function TemplatePicker({
-    onTemplateSelect,
-}: TemplatePickerProps) {
+export default function TemplatePicker({ onTemplateSelect }: TemplatePickerProps) {
     const { templatePeeks } = useTemplates();
     const [selectedTemplate, setSelectedTemplate] = useCache<BackendTypes.NamedEntity>(selectedTemplateDiplomaKey);
 
