@@ -5,6 +5,8 @@
     and pdf generation.
 */
 
+import { BLANK_PDF } from '@pdfme/common';
+
 import { FileService, PdfMeService } from '@/services';
 import type { PdfMeTypes } from '@/services';
 
@@ -19,7 +21,7 @@ export namespace TemplateTypes {
 }
 
 export const defaultTemplate: PdfMeTypes.Template = {
-    basePdf: PdfMeService.BLANK_PDF,
+    basePdf: BLANK_PDF,
     schemas: [[]],
 };
 
