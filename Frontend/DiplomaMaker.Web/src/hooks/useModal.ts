@@ -1,8 +1,10 @@
-export function useModal(id: string) {
-  const openModal = () =>
-    (document.getElementById(id) as HTMLDialogElement).showModal();
+import { useState } from "react";
 
-  return {
-    openModal,
-  };
+export function useModal() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const open = () => setIsOpen(true);
+  const close = () => setIsOpen(false);
+
+  return { isOpen, open, close };
 }

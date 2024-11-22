@@ -2,8 +2,6 @@ import { useTemplatePeeks } from "@/hooks/template";
 import { TemplatePeek } from "@/services/backendService/models";
 import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
 import { useState } from "react";
-import ManageTemplatesModal from "./ManageTemplatesModal";
-import NewTemplateModal from "./NewTemplateModal";
 
 type TemplatePickerProps = {
   onTemplateSelected: (id: string) => void;
@@ -60,7 +58,7 @@ export default function TemplatePicker({
           <li className="pt-1">
             <button
               className="bg-primary text-primary-content hocus:bg-primary-focus"
-              onClick={() => {}}
+              onClick={onNewTemplate}
             >
               <Add01Icon size={16} />
               Create new Template
@@ -78,10 +76,6 @@ export default function TemplatePicker({
           </li>
         </ul>
       </div>
-
-      {/* Modals */}
-      <NewTemplateModal onCreateNewTemplate={onNewTemplate} />
-      <ManageTemplatesModal />
     </>
   );
 }

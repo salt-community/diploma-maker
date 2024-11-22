@@ -5,3 +5,4 @@
 */
 
 export { default as FontManager } from "./FontManager";
+export { default as Modal } from "./Modal";
