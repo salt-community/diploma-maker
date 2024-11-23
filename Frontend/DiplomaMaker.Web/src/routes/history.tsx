@@ -1,7 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { BackendService, type BackendTypes } from '@/services';
+import { BackendService, DiplomaService, PdfMeTypes, type BackendTypes } from '@/services';
 import { useCache, useEntity } from '@/hooks';
 import { useEffect } from 'react';
+import DiplomaViewer from '@/components/diploma-viewer/DiplomaViewer';
 
 export const Route = createFileRoute('/history')({
   component: Page,
@@ -40,5 +41,18 @@ function Page() {
     getDiplomasWithContent();
   }, [diplomas]);
 
-  return 'Hello /history!'
+  return (<>
+    {diplomasWithContent && diplomasWithContent.map(diplomaWithContent => {
+      return <DiplomaViewer template={
+        JSON.parse(diplomaWithContent.templateJson) as PdfMeTypes.Template}
+        substitions={DiplomaService.createSubstitions({
+          graduationDate: diplomaWithContent.graduationDate,
+          students: [],
+          track: diplomaWithContent.track
+        }, {
+          email: diplomaWithContent.studentEmail,
+          name: diplomaWithContent.studentName
+        })} />
+    })}
+  </>)
 }
