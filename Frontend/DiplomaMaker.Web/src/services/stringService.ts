@@ -1,4 +1,5 @@
 export function formatDate_YYYY_mm_dd(date: Date) {
+    date = new Date(date);
     return date.toISOString().split('T')[0];
 }
 

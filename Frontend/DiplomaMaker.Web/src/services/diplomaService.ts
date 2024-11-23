@@ -29,7 +29,6 @@ export async function generatePdf(template: PdfMeTypes.Template, substitions: Te
 export function createSubstitions(
     bootcamp: BootcampTypes.Bootcamp,
     student: BootcampTypes.Student) {
-
     return {
         studentName: student.name,
         track: bootcamp.track,
