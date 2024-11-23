@@ -1,26 +1,36 @@
 import { useModal } from "@/hooks";
-import { useTemplate, useUpdateTemplateMutation } from "@/hooks/template";
+import {
+  useCreateTemplateMutation,
+  useTemplate,
+  useUpdateTemplateMutation,
+} from "@/hooks/template";
 import { usePdfMe } from "@/hooks/usePdfMe";
 import { useEffect, useRef, useState } from "react";
 import Modal from "../Modal";
+import SaveTemplateModalContent from "./SaveTemplateModalContent";
 import TemplatePicker from "./TemplatePicker";
-import NewTemplateModalContent from "./NewTemplateModalContent";
 
 export default function TemplateDesigner() {
   const designerRef = useRef<HTMLDivElement | null>(null);
 
-  const { getTemplateJson, loadTemplate } = usePdfMe(designerRef);
+  const { getTemplateJson, loadTemplate, loadBlankTemplate } =
+    usePdfMe(designerRef);
 
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>();
+  const [selectedTemplateId, setSelectedTemplateId] = useState<
+    string | undefined
+  >();
 
   const { data: template } = useTemplate(selectedTemplateId!);
 
   const { mutate: updateTemplate } = useUpdateTemplateMutation();
+  const { mutate: createTemplate } = useCreateTemplateMutation((newTemplate) =>
+    setSelectedTemplateId(newTemplate.guid),
+  );
 
   const {
-    isOpen: isNewTemplateModalOpen,
-    open: openNewTemplateModal,
-    close: closeNewTemplateModal,
+    isOpen: isSaveModalOpen,
+    open: openSaveModal,
+    close: closeSaveModal,
   } = useModal();
 
   useEffect(() => {
@@ -29,17 +39,19 @@ export default function TemplateDesigner() {
     }
   }, [template]);
 
-  const handleSaveTemplate = () =>
+  const handleSaveTemplateChanges = () =>
     updateTemplate({
       guid: template!.guid,
       name: template!.name,
       templateJson: getTemplateJson(),
     });
 
-  const handleCreateTemplate = (name: string) => {
-    // TODO: Create a new template
-    console.log("Creating new template with name: ", name);
-    closeNewTemplateModal();
+  const handleSaveNewTemplate = (name: string) => {
+    createTemplate({
+      name,
+      templateJson: getTemplateJson(),
+    });
+    closeSaveModal();
   };
 
   return (
@@ -47,30 +59,35 @@ export default function TemplateDesigner() {
       <div className="navbar z-40 bg-neutral">
         <div className="navbar-start">
           <TemplatePicker
-            onNewTemplate={openNewTemplateModal}
-            onTemplateSelected={setSelectedTemplateId}
+            selectedTemplateId={selectedTemplateId}
+            onSetSelectedTemplateId={setSelectedTemplateId}
+            onNewTemplate={() => {
+              loadBlankTemplate();
+              setSelectedTemplateId(undefined);
+            }}
           />
         </div>
         <div className="navbar-end">
           <button
             className="btn"
-            onClick={handleSaveTemplate}
-            disabled={!template}
+            onClick={
+              selectedTemplateId ? handleSaveTemplateChanges : openSaveModal
+            }
           >
-            Save Changes
+            {selectedTemplateId ? "Save Changes" : "Save Template"}
           </button>
         </div>
       </div>
       <div ref={designerRef} />
       <Modal
-        id="create-template-modal"
-        title="Create Template"
-        isOpen={isNewTemplateModalOpen}
-        onClose={closeNewTemplateModal}
+        id="save-template-modal"
+        title="Save Template"
+        isOpen={isSaveModalOpen}
+        onClose={closeSaveModal}
       >
-        <NewTemplateModalContent
-          onNewTemplate={handleCreateTemplate}
-          onCancel={closeNewTemplateModal}
+        <SaveTemplateModalContent
+          onSave={handleSaveNewTemplate}
+          onCancel={closeSaveModal}
         />
       </Modal>
     </div>

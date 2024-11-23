@@ -135,7 +135,7 @@ export function usePdfMe(
     );
   }
 
-  function onNewTemplate() {
+  function loadBlankTemplate() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     designer.current.updateTemplate(TemplateService.defaultTemplate);
@@ -160,7 +160,7 @@ export function usePdfMe(
     onResetTemplate,
     handleReloadFonts,
     onSaveTemplate,
-    onNewTemplate,
+    loadBlankTemplate,
     loadTemplate,
     getTemplateJson,
   };

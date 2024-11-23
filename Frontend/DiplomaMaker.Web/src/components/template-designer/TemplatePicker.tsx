@@ -1,37 +1,33 @@
 import { useTemplatePeeks } from "@/hooks/template";
-import { TemplatePeek } from "@/services/backendService/models";
 import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
-import { useState } from "react";
 
 type TemplatePickerProps = {
-  onTemplateSelected: (id: string) => void;
+  selectedTemplateId?: string;
+  onSetSelectedTemplateId: (id?: string) => void;
   onNewTemplate: () => void;
 };
 
 export default function TemplatePicker({
-  onTemplateSelected,
+  selectedTemplateId,
+  onSetSelectedTemplateId,
   onNewTemplate,
 }: TemplatePickerProps) {
   const { data: templatePeeks } = useTemplatePeeks();
 
-  const [selectedTemplate, setSelectedTemplate] =
-    useState<TemplatePeek | null>();
-
   const renderTemplateItems = () =>
     templatePeeks?.map((template) =>
-      template != selectedTemplate ? (
+      template.guid != selectedTemplateId ? (
         <li key={template.guid}>
-          <button
-            onClick={() => {
-              onTemplateSelected(template.guid!);
-              setSelectedTemplate(template);
-            }}
-          >
+          <button onClick={() => onSetSelectedTemplateId(template.guid!)}>
             {template.name}
           </button>
         </li>
       ) : null,
     );
+
+  const selectedTemplate = templatePeeks?.find(
+    (t) => t.guid === selectedTemplateId,
+  );
 
   return (
     <>
@@ -44,7 +40,7 @@ export default function TemplatePicker({
           <div className="flex-1">
             <span className="font-medium">Template</span>
             <p className="font-display text-base font-semibold">
-              {selectedTemplate ? selectedTemplate.name : "Select a template"}
+              {selectedTemplate ? selectedTemplate.name : "Blank Template"}
             </p>
           </div>
           <ArrowDown01Icon size={18} />
@@ -61,7 +57,7 @@ export default function TemplatePicker({
               onClick={onNewTemplate}
             >
               <Add01Icon size={16} />
-              Create new Template
+              New Blank Template
             </button>
           </li>
 

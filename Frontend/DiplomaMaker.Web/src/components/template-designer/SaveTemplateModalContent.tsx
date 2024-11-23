@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 export type Props = {
-  onNewTemplate: (name: string) => void;
+  onSave: (name: string) => void;
   onCancel: () => void;
 };
 
@@ -10,18 +10,14 @@ export type Inputs = {
   templateName: string;
 };
 
-export default function NewTemplateModalContent({
-  onNewTemplate,
-  onCancel,
-}: Props) {
+export default function SaveTemplateModalContent({ onSave, onCancel }: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) =>
-    onNewTemplate(data.templateName);
+  const onSubmit: SubmitHandler<Inputs> = (data) => onSave(data.templateName);
 
   const templateNameClass = clsx("input input-bordered w-full", {
     "input-error": errors.templateName,
@@ -55,7 +51,7 @@ export default function NewTemplateModalContent({
       </label>
       <div className="mt-4 flex gap-2">
         <button className="btn btn-primary" type="submit">
-          Create
+          Save
         </button>
         <button className="btn btn-secondary" onClick={onCancel}>
           Cancel
