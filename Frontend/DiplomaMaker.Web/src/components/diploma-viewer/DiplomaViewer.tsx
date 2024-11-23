@@ -14,10 +14,6 @@ export default function DiplomaViewer({ template, substitions }: Props) {
 
     useEffect(() => {
         if (diplomaViewerRef.current) {
-            console.log("Initializing viewer");
-            console.log(diplomaViewerRef.current);
-            console.log(template);
-            console.log(substitions);
             loadViewer(diplomaViewerRef.current, template, substitions);
         }
     }, [diplomaViewerRef]);

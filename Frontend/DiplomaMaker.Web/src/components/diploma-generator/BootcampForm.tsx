@@ -39,12 +39,13 @@ export default function BootcampForm({ }: Props) {
 
         if (!currentTemplate) throw new Error("No template");
 
-        DiplomaService.postDiploma(currentTemplate, updatedBootcamp, updatedBootcamp.students[0]);
-
-        DiplomaService.emailDiploma(
-            TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
-            updatedBootcamp,
-            updatedBootcamp.students[0]);
+        updatedBootcamp.students.map(async (student) => {
+            await DiplomaService.postDiploma(currentTemplate, updatedBootcamp, student);
+            await DiplomaService.emailDiploma(
+                TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
+                updatedBootcamp,
+                student);
+        });
     };
 
     const header = (<tr>
@@ -74,7 +75,6 @@ export default function BootcampForm({ }: Props) {
                     className="btn bg-primary text-primary-content hocus:bg-primary-focus"
                     onClick={() => {
                         remove(index);
-
                     }}
                     disabled={studentFields.length <= 1}>
                     <Delete04Icon size={16} />
