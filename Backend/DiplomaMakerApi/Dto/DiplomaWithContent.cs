@@ -3,7 +3,7 @@ using DiplomaMakerApi.Models;
 
 namespace DiplomaMakerApi.Dto;
 
-public class DiplomaWithContent()
+public class HistoricDiploma()
 {
     public Guid Guid { get; set; }
     public string StudentName { get; set; } = string.Empty;
@@ -12,7 +12,7 @@ public class DiplomaWithContent()
     public DateTime GraduationDate { get; set; }
     public string TemplateJson { get; set; } = string.Empty;
 
-    public DiplomaWithContent(Diploma diploma, DiplomaMakerContext context) : this()
+    public HistoricDiploma(Diploma diploma, DiplomaMakerContext context) : this()
     {
         var template = context.Templates.FirstOrDefault(template => template.Guid == diploma.TemplateGuid)
             ?? throw new Exception("Template could not be found");

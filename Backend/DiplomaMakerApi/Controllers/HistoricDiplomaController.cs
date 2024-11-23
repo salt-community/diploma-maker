@@ -6,10 +6,10 @@ namespace DiplomaMakerApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DiplomaWithContentController(DiplomaMakerContext _context) : ControllerBase
+public class HistoricDiploma(DiplomaMakerContext _context) : ControllerBase
 {
-    [HttpGet("{diplomaGuid}")]
-    public ActionResult<DiplomaWithContent> GetFullDiplomaByGuid(string diplomaGuid)
+    [HttpGet("GetHistoricDiploma/{diplomaGuid}")]
+    public ActionResult<Dto.HistoricDiploma> GetHistoricDiplomaByGuid(string diplomaGuid)
     {
         var diploma = _context.Diplomas.FirstOrDefault(diploma => diploma.Guid.ToString() == diplomaGuid);
 
@@ -18,7 +18,7 @@ public class DiplomaWithContentController(DiplomaMakerContext _context) : Contro
 
         try
         {
-            return new DiplomaWithContent(diploma, _context);
+            return new Dto.HistoricDiploma(diploma, _context);
         }
         catch (Exception)
         {

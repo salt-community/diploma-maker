@@ -3,7 +3,7 @@ import { BackendService, DiplomaService } from '@/services';
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react';
 import type { BackendTypes, PdfMeTypes } from '@/services';
-import DiplomaViewer from '@/components/diploma-viewer/DiplomaViewer';
+import PreviewDiplomaViewer from '@/components/diploma-viewer/PreviewDiplomaViewer';
 
 export const Route = createFileRoute('/validate-diploma/$diplomaGuid')({
   component: Page,
@@ -11,13 +11,13 @@ export const Route = createFileRoute('/validate-diploma/$diplomaGuid')({
 
 function Page() {
   const { diplomaGuid } = Route.useParams();
-  const [diploma, setDiploma] = useCache<BackendTypes.DiplomaWithContent>(["DiplomaWithContent"]);
+  const [diploma, setDiploma] = useCache<BackendTypes.HistoricDiploma>(["DiplomaWithContent"]);
   const navigate = useNavigate()
 
   useEffect(() => {
     const getDiploma = async () => {
       try {
-        setDiploma(await BackendService.getDiplomaWithContentByGuid(diplomaGuid));
+        setDiploma(await BackendService.getHistoricDiplomaByGuid(diplomaGuid));
       } catch (error) {
         console.log((error as Error).message);
         console.log("Could not find diploma");
@@ -33,7 +33,7 @@ function Page() {
   return (
     <>
       {diploma != null &&
-        <DiplomaViewer template={
+        <PreviewDiplomaViewer template={
           JSON.parse(diploma.templateJson) as PdfMeTypes.Template}
           substitions={DiplomaService.createSubstitions({
             graduationDate: diploma.graduationDate,

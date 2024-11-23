@@ -6,7 +6,7 @@ import { bootcampKey, currentTemplateKey } from "./cacheKeys";
 import UploadBootcamp from "./UploadBootcamp";
 import TemplatePicker from "./TemplatePicker";
 import BootcampForm from "./BootcampForm";
-import DiplomaViewer from "../diploma-viewer/DiplomaViewer";
+import PreviewDiplomaViewer from "../diploma-viewer/PreviewDiplomaViewer";
 
 export default function DiplomaGenerator() {
     const [bootcamp, _] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
@@ -27,7 +27,7 @@ export default function DiplomaGenerator() {
             <BootcampForm />
 
             {(currentTemplate && bootcamp != null) &&
-                <DiplomaViewer
+                <PreviewDiplomaViewer
                     template={TemplateService.backendTemplateToPdfMeTemplate(currentTemplate)}
                     substitions={DiplomaService.createSubstitions(bootcamp, bootcamp.students[0])} />}
         </div>

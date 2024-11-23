@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DiplomaMakerApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+    [Route("api/[controller]")]
 public class TemplateController(
     DiplomaMakerContext _context)
     : CrudControllerBase<Template>(_context)

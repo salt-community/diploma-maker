@@ -1,58 +1,51 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { BackendService, DiplomaService, PdfMeTypes, type BackendTypes } from '@/services';
-import { useCache, useEntity } from '@/hooks';
-import { useEffect } from 'react';
-import DiplomaViewer from '@/components/diploma-viewer/DiplomaViewer';
+import { useCache, useHistoricDiploma } from '@/hooks';
+import { StringService } from '@/services';
+import HistoricDiplomaViewer from '@/components/diploma-viewer/HistoricDiplomaViewer';
 
 export const Route = createFileRoute('/history')({
   component: Page,
 })
 
 function Page() {
-  const { entities: diplomas, getAllEntities: getAllDiplomas } = useEntity<BackendTypes.Diploma>("Diploma");
-  const [diplomasWithContent, setDiplomasWithContent] = useCache<BackendTypes.DiplomaWithContent[]>(["DiplomaWithContent"]);
+  const { diplomas, getHistoricDiploma } = useHistoricDiploma();
+  const [diplomaGuid, setDiplomaGuid] = useCache<string>(["SelectedDiplomaGuid"]);
 
-  useEffect(() => {
-    getAllDiplomas();
-  }, []);
+  const headerTitles = ['Student Name', 'Student Email', 'Track', 'Graduation Date', ''];
+  const header = (
+    <thead>
+      <tr>{headerTitles.map(title => <th key={title}>{title}</th>)}</tr>
+    </thead>);
 
-  useEffect(() => {
-    const getDiplomasWithContent = async () => {
-      if (diplomasWithContent == null)
-        setDiplomasWithContent([]);
-
-      try {
-        const fullDiplomaPromises = diplomas.map(async (diploma) => {
-          const diplomaWithContent = await BackendService.getDiplomaWithContentByGuid(diploma.guid!);
-          console.log(diplomaWithContent);
-          if (diplomasWithContent == null) {
-            setDiplomasWithContent([diplomaWithContent]);
-          } else {
-            setDiplomasWithContent([...diplomasWithContent, diplomaWithContent]);
-          }
-        });
-
-        await Promise.all(fullDiplomaPromises);
-      } catch (error) {
-        console.log((error as Error).message)
-      }
-    };
-
-    getDiplomasWithContent();
-  }, [diplomas]);
+  const rows = diplomas.map(diploma => (
+    <tr key={diploma.guid}>
+      <td>{diploma.studentName}</td>
+      <td>{diploma.studentEmail}</td>
+      <td>{diploma.track}</td>
+      <td>{StringService.formatDate_YYYY_mm_dd(diploma.graduationDate)}</td>
+      <td>
+        <button
+          className="btn"
+          onClick={() => {
+            setDiplomaGuid(diploma.guid!);
+          }}>
+          Preview Diploma
+        </button>
+      </td>
+    </tr>
+  ));
 
   return (<>
-    {diplomasWithContent && diplomasWithContent.map(diplomaWithContent => {
-      return <DiplomaViewer template={
-        JSON.parse(diplomaWithContent.templateJson) as PdfMeTypes.Template}
-        substitions={DiplomaService.createSubstitions({
-          graduationDate: diplomaWithContent.graduationDate,
-          students: [],
-          track: diplomaWithContent.track
-        }, {
-          email: diplomaWithContent.studentEmail,
-          name: diplomaWithContent.studentName
-        })} />
-    })}
-  </>)
+    <div className="overflow-x-auto">
+      <table className="table">
+        {header}
+        <tbody>
+          {rows}
+        </tbody>
+      </table>
+    </div>
+    {diplomaGuid &&
+      <HistoricDiplomaViewer diplomaGuid={diplomaGuid} />
+    }
+  </>);
 }

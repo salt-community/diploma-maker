@@ -9,12 +9,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { BackendService, BackendTypes } from "@/services";
 
-export function useEntity<TEntity extends BackendTypes.Dto>(controller: BackendTypes.ControllerName) {
+export function useEntity<TEntity extends BackendTypes.Dto>(controller: BackendTypes.ControllerName, getAllImmediately = false) {
     const client = useQueryClient();
 
     const getAllEntitiesQuery = useQuery({
         queryKey: [controller],
-        queryFn: async () => [],
+        queryFn: async () => {
+            if (!getAllImmediately)
+                return []
+
+            return await BackendService.getEntities<TEntity>(controller)
+        }
     });
 
     const entities = (getAllEntitiesQuery.data ?? []) as TEntity[];

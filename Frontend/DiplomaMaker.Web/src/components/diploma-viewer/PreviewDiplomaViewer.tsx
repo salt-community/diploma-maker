@@ -8,7 +8,7 @@ interface Props {
     substitions: TemplateTypes.Substitions
 }
 
-export default function DiplomaViewer({ template, substitions }: Props) {
+export default function PreviewDiplomaViewer({ template, substitions }: Props) {
     const diplomaViewerRef = useRef<HTMLDivElement | null>(null);
     const { loadViewer } = usePdfMeViewer();
 

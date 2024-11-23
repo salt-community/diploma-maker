@@ -20,7 +20,7 @@ export namespace BackendTypes {
         templateGuid: string,
     }
 
-    export type DiplomaWithContent = {
+    export type HistoricDiploma = {
         guid: string,
         studentName: string,
         track: string,

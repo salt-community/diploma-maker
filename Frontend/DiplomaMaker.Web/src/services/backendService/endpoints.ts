@@ -2,8 +2,8 @@ import { BackendTypes } from '@/services'
 
 const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
 
-export async function getDiplomaWithContentByGuid(guid: string) {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/DiplomaWithContent/${guid}`, {
+export async function getHistoricDiplomaByGuid(guid: string) {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/HistoricDiploma/GetHistoricDiploma/${guid}`, {
         method: 'GET',
     });
 
@@ -11,7 +11,7 @@ export async function getDiplomaWithContentByGuid(guid: string) {
         throw new Error(`Response status: ${response.status}`);
     }
 
-    return await response.json() as BackendTypes.DiplomaWithContent;
+    return await response.json() as BackendTypes.HistoricDiploma;
 }
 
 export async function sendDiplomaEmail(request: BackendTypes.SendEmailRequest) {

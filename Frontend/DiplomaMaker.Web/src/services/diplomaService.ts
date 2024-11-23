@@ -74,3 +74,16 @@ export async function postDiploma(
 
     await BackendService.postEntity<BackendTypes.Diploma>("Diploma", diploma);
 }
+
+export function historicDiplomaToTemplateAndSubstitutions(historicDiploma: BackendTypes.HistoricDiploma) {
+    const template = JSON.parse(historicDiploma.templateJson) as PdfMeTypes.Template;
+
+    const substitions = {
+        studentName: historicDiploma.studentName,
+        track: historicDiploma.track,
+        graduationDate: StringService.formatDate_YYYY_mm_dd(historicDiploma.graduationDate),
+        qrLink: "www.google.com"
+    } as TemplateTypes.Substitions;
+
+    return [template, substitions] as [PdfMeTypes.Template, TemplateTypes.Substitions];
+}
