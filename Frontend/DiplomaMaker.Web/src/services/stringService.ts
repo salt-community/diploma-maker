@@ -1,6 +1,5 @@
 export function formatDate_YYYY_mm_dd(date: Date) {
-    date = new Date(date);
-    return date.toISOString().split('T')[0];
+    return new Date(date).toISOString().split('T')[0];
 }
 
 export function blobToBase64String(blob: Blob): Promise<string> {
