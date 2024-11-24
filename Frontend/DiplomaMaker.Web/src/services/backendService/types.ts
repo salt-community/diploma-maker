@@ -12,7 +12,7 @@ export namespace BackendTypes {
         templateJson: string
     }
 
-    export type Diploma = BaseEntity & {
+    export type DiplomaRecord = BaseEntity & {
         studentName: string,
         studentEmail: string
         track: string,
@@ -39,10 +39,10 @@ export namespace BackendTypes {
     }
 
     export type ControllerName =
-        'Diploma' |
+        'DiplomaRecord' |
         'Template';
 
     export type Dto =
-        Diploma | Template;
+        DiplomaRecord | Template;
 }
 

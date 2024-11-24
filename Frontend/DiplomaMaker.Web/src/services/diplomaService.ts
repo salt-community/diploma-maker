@@ -64,7 +64,7 @@ export async function postDiploma(
     if (!template.guid)
         throw new Error("Template lacks guid");
 
-    const diploma: BackendTypes.Diploma = {
+    const diploma: BackendTypes.DiplomaRecord = {
         studentName: student.name,
         studentEmail: student.email,
         track: bootcamp.track,
@@ -72,7 +72,7 @@ export async function postDiploma(
         templateGuid: template.guid
     };
 
-    await BackendService.postEntity<BackendTypes.Diploma>("Diploma", diploma);
+    await BackendService.postEntity<BackendTypes.DiplomaRecord>("DiplomaRecord", diploma);
 }
 
 export function historicDiplomaToTemplateAndSubstitutions(historicDiploma: BackendTypes.HistoricDiploma) {

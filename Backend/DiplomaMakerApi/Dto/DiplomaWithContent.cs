@@ -12,7 +12,7 @@ public class HistoricDiploma()
     public DateTime GraduationDate { get; set; }
     public string TemplateJson { get; set; } = string.Empty;
 
-    public HistoricDiploma(Diploma diploma, DiplomaMakerContext context) : this()
+    public HistoricDiploma(DiplomaRecord diploma, DiplomaMakerContext context) : this()
     {
         var template = context.Templates.FirstOrDefault(template => template.Guid == diploma.TemplateGuid)
             ?? throw new Exception("Template could not be found");

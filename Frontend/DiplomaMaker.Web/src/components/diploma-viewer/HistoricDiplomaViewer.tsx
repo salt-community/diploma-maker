@@ -14,7 +14,7 @@ export default function HistoricDiplomaViewer({ diplomaGuid }: Props) {
 
     useEffect(() => {
         const historicDiploma = getHistoricDiploma(diplomaGuid);
-
+        
         if (!historicDiploma) return;
 
         console.log(historicDiploma);

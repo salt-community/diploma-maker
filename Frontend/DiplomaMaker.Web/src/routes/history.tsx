@@ -8,7 +8,7 @@ export const Route = createFileRoute('/history')({
 })
 
 function Page() {
-  const { diplomas, getHistoricDiploma } = useHistoricDiploma();
+  const { diplomas } = useHistoricDiploma();
   const [diplomaGuid, setDiplomaGuid] = useCache<string>(["SelectedDiplomaGuid"]);
 
   const headerTitles = ['Student Name', 'Student Email', 'Track', 'Graduation Date', ''];

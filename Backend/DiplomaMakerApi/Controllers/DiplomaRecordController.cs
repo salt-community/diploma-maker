@@ -7,7 +7,7 @@ namespace DiplomaMakerApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DiplomaController(
+public class DiplomaRecord(
     DiplomaMakerContext _context)
-    : CrudControllerBase<Diploma>(_context)
+    : CrudControllerBase<Models.DiplomaRecord>(_context)
 { }

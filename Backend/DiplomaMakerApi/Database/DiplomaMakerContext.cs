@@ -7,7 +7,7 @@ namespace DiplomaMakerApi.Database;
 public class DiplomaMakerContext(DbContextOptions<DiplomaMakerContext> options) : DbContext(options)
 {
     public DbSet<Template> Templates { get; set; }
-    public DbSet<Diploma> Diplomas { get; set; }
+    public DbSet<DiplomaRecord> Diplomas { get; set; }
 
     public void SeedData()
     {
