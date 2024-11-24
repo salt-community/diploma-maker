@@ -3,7 +3,7 @@ import { Add01Icon, Delete04Icon } from "hugeicons-react";
 
 import { BootcampService, DiplomaService, TemplateService } from "@/services";
 import type { BackendTypes, BootcampTypes } from "@/services";
-import { useCache, useModal } from "@/hooks";
+import { useCache, useModal, useToken } from "@/hooks";
 import { Modal } from "@/components/layout";
 
 import { bootcampKey, currentTemplateKey, selectedTemplateKey } from "./cacheKeys";
@@ -13,6 +13,7 @@ export default function BootcampForm() {
     const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
     const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
     const [currentTemplate, __] = useCache<BackendTypes.Template>(currentTemplateKey);
+    const { token } = useToken();
     const { openModal: openPreviewDiplomaViewerModal } = useModal(import.meta.env.VITE_PREVIEW_DIPLOMA_VIEWER_MODAL_ID);
 
     if (bootcamp == null)
@@ -42,10 +43,14 @@ export default function BootcampForm() {
 
         updatedBootcamp.students.map(async (student) => {
             await DiplomaService.postDiploma(currentTemplate, updatedBootcamp, student);
+
+            if (!token) return;
+
             await DiplomaService.emailDiploma(
                 TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
                 updatedBootcamp,
-                student);
+                student,
+                token);
         });
     };
 

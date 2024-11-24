@@ -40,7 +40,8 @@ export function createSubstitions(
 export async function emailDiploma(
     template: PdfMeTypes.Template,
     bootcamp: BootcampTypes.Bootcamp,
-    student: BootcampTypes.Student) {
+    student: BootcampTypes.Student,
+    jwt: string) {
 
     const blob = await generatePdf(template, createSubstitions(bootcamp, student));
 
@@ -53,7 +54,7 @@ export async function emailDiploma(
         diplomaPdfBase64: blobString,
         studenEmail: bootcamp.students[0].email,
         studentName: bootcamp.students[0].name
-    });
+    }, jwt);
 }
 
 export async function postDiploma(

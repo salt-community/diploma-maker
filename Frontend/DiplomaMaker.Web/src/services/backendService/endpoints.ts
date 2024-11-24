@@ -14,11 +14,12 @@ export async function getHistoricDiplomaByGuid(guid: string) {
     return await response.json() as BackendTypes.HistoricDiploma;
 }
 
-export async function sendDiplomaEmail(request: BackendTypes.SendEmailRequest) {
+export async function sendDiplomaEmail(request: BackendTypes.SendEmailRequest, jwt: string) {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/Email/SendDiplomaEmail`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`
         },
         body: JSON.stringify(request)
     });

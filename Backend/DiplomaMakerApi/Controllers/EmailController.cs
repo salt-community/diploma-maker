@@ -1,11 +1,13 @@
 using DiplomaMakerApi.Dto;
 using DiplomaMakerApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiplomaMakerApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class EmailController(EmailService _emailService) : ControllerBase
 {
     [HttpPost("SendDiplomaEmail")]
