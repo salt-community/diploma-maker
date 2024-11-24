@@ -4,9 +4,10 @@
     Corresponds to the HistoricDiplomaController in backend.
 */
 
-import { BackendService, BackendTypes } from "@/services";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEntity } from "../../hooks/useEntity";
+
+import { BackendService, BackendTypes } from "@/services";
+import { useEntity } from "@/hooks/useEntity";
 
 export function useHistoricDiploma() {
     const client = useQueryClient();

@@ -1,6 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import HistoricDiplomaViewer from '@/components/diploma-viewer/HistoricDiplomaViewer';
+
 import { PageLayout } from '@/components/layout';
+import { HistoricDiplomaViewer } from '@/components/diploma-viewer';
+
+//TODO: give feedback if diploma could not be validated
 
 export const Route = createFileRoute('/validate-diploma/$diplomaGuid')({
   component: Page,

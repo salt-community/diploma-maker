@@ -1,7 +1,8 @@
-import { useHistoricDiploma, useCache, useModal } from "@/hooks";
+import { useCache, useModal } from "@/hooks";
 import { StringService } from "@/services";
-import HistoricDiplomaViewer from "./diploma-viewer/HistoricDiplomaViewer";
-import { Modal } from "./layout";
+import { HistoricDiplomaViewer } from "@/components/diploma-viewer";
+import { Modal } from "@/components/layout";
+import { useHistoricDiploma } from "./diploma-viewer/useHistoricDiploma";
 
 export default function DiplomaHistory() {
     const { diplomas } = useHistoricDiploma();

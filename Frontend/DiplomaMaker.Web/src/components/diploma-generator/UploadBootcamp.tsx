@@ -1,11 +1,9 @@
-import { useCache } from "@/hooks";
 import { BootcampTypes, FileService } from "@/services";
+import { useCache } from "@/hooks";
+
 import { bootcampKey } from "./cacheKeys";
 
-interface Props {
-}
-
-export default function UploadBootcamp({}: Props) {
+export default function UploadBootcamp() {
     const [_, setBootcamp] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
 
     const handleChange = async (file?: File) => {

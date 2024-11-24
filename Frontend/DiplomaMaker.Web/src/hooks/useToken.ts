@@ -14,6 +14,8 @@ export function useToken() {
   };
 }
 
+//TODO: Post token directly with all authorized endpoints
+
 // export async function testEndpoint(jwt: string) {
 //   const response = await fetch(
 //     `${import.meta.env.VITE_BACKEND_BASE_URL}/Email/SendDiplomaEmail`,

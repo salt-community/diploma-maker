@@ -1,17 +1,15 @@
-import { Add01Icon, Delete04Icon } from "hugeicons-react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { Add01Icon, Delete04Icon } from "hugeicons-react";
 
 import { BootcampService, DiplomaService, TemplateService } from "@/services";
 import type { BackendTypes, BootcampTypes } from "@/services";
 import { useCache, useModal } from "@/hooks";
+import { Modal } from "@/components/layout";
+
 import { bootcampKey, currentTemplateKey, selectedTemplateKey } from "./cacheKeys";
-import { Modal } from "../layout";
 import PreviewDiplomaViewer from "../diploma-viewer/PreviewDiplomaViewer";
 
-interface Props {
-}
-
-export default function BootcampForm({ }: Props) {
+export default function BootcampForm() {
     const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
     const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
     const [currentTemplate, __] = useCache<BackendTypes.Template>(currentTemplateKey);

@@ -1,8 +1,9 @@
-import { PageContainer } from "@/components/layout";
 import { Link } from "@tanstack/react-router";
 import { FileEditIcon, Files01Icon, PlusSignIcon } from "hugeicons-react";
 
-function Dashboard() {
+import { PageContainer } from "@/components/layout";
+
+export default function Dashboard() {
   return (
     <PageContainer>
       <h1>Welcome John Doe!</h1>
@@ -16,7 +17,7 @@ function Dashboard() {
   );
 }
 
-  function GenerateDiplomaLink() {
+function GenerateDiplomaLink() {
   return (
     <Link
       to="/diploma-generator"
@@ -63,5 +64,3 @@ function ViewDiplomasLink() {
     </Link>
   );
 }
-
-export default Dashboard;

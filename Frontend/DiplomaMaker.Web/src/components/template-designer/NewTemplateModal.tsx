@@ -4,14 +4,14 @@ import type { BackendTypes } from "@/services";
 import { useCache } from "@/hooks";
 
 import { selectedTemplateKey } from "./cacheKeys";
-import { Modal } from "../layout";
+import { Modal } from "@/components/layout";
 
 
 export type Props = {
   onCreateNewTemplate: () => void;
 };
 
-export type Inputs = {
+type Inputs = {
   templateName: string;
 };
 

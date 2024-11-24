@@ -1,8 +1,8 @@
+import { SignedIn, UserButton } from "@clerk/clerk-react";
 import { Link } from "@tanstack/react-router";
 import { Menu02Icon } from "hugeicons-react";
 
 import AppLogo from "@/assets/app-logo.svg";
-import { SignedIn, UserButton } from "@clerk/clerk-react";
 
 export default function Navbar() {
   return (

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { FontTypes } from '../services';
+import type { FontTypes } from '@/services';
 import { useDebounce, useGoogleFonts, useUserFonts } from '@/hooks'
 
 type FontManagerProps = {

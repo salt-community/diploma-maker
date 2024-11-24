@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 
 import { DiplomaService } from '@/services';
-import { useHistoricDiploma } from "@/hooks";
 import { usePdfMeViewer } from "./usePdfMeViewer";
+import { useHistoricDiploma } from "./useHistoricDiploma";
 
 interface Props {
     diplomaGuid: string,
