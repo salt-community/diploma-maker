@@ -7,10 +7,10 @@ namespace DiplomaMakerApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class EmailController(EmailService _emailService) : ControllerBase
 {
     [HttpPost("SendDiplomaEmail")]
+    [Authorize]
     public async Task<IActionResult> SendDiplomaEmail(SendEmailRequest request)
     {
         await _emailService.SendEmail(request);

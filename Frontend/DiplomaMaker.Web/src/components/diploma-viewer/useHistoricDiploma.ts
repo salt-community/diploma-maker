@@ -20,5 +20,6 @@ export function useHistoricDiploma(diplomaGuid: string) {
 
     return {
         historicDiploma,
+        status: historicDiplomaQuery.status
     }
 }
