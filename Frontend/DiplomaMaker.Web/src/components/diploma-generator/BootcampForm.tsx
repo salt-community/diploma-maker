@@ -3,8 +3,10 @@ import { useFieldArray, useForm } from "react-hook-form";
 
 import { BootcampService, DiplomaService, TemplateService } from "@/services";
 import type { BackendTypes, BootcampTypes } from "@/services";
-import { useCache } from "@/hooks";
+import { useCache, useModal } from "@/hooks";
 import { bootcampKey, currentTemplateKey, selectedTemplateKey } from "./cacheKeys";
+import { Modal } from "../layout";
+import PreviewDiplomaViewer from "../diploma-viewer/PreviewDiplomaViewer";
 
 interface Props {
 }
@@ -13,6 +15,7 @@ export default function BootcampForm({ }: Props) {
     const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
     const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
     const [currentTemplate, __] = useCache<BackendTypes.Template>(currentTemplateKey);
+    const { openModal: openPreviewDiplomaViewerModal } = useModal(import.meta.env.VITE_PREVIEW_DIPLOMA_VIEWER_MODAL_ID);
 
     if (bootcamp == null)
         setBootcamp(BootcampService.defaultBootcamp);
@@ -131,6 +134,7 @@ export default function BootcampForm({ }: Props) {
                 <button
                     className="btn bg-primary text-primary-content hocus:bg-primary-focus"
                     disabled={selectedTemplate == null}
+                    onClick={openPreviewDiplomaViewerModal}
                 >
                     <Add01Icon size={16} />
                     Preview Diploma
@@ -144,6 +148,12 @@ export default function BootcampForm({ }: Props) {
                     Send Out Diplomas
                 </button>
             </form>
+            <Modal id={import.meta.env.VITE_PREVIEW_DIPLOMA_VIEWER_MODAL_ID}>
+                {(currentTemplate && bootcamp != null) &&
+                    <PreviewDiplomaViewer
+                        template={TemplateService.backendTemplateToPdfMeTemplate(currentTemplate)}
+                        substitions={DiplomaService.createSubstitions(bootcamp, bootcamp.students[0])} />}
+            </Modal>
         </div >
     );
 }

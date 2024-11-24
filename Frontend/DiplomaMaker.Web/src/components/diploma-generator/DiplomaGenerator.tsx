@@ -25,11 +25,6 @@ export default function DiplomaGenerator() {
             </div>
 
             <BootcampForm />
-
-            {(currentTemplate && bootcamp != null) &&
-                <PreviewDiplomaViewer
-                    template={TemplateService.backendTemplateToPdfMeTemplate(currentTemplate)}
-                    substitions={DiplomaService.createSubstitions(bootcamp, bootcamp.students[0])} />}
         </div>
     );
 }

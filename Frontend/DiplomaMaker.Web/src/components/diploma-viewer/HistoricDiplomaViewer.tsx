@@ -18,8 +18,6 @@ export default function HistoricDiplomaViewer({ diplomaGuid }: Props) {
 
         if (!historicDiploma) return;
 
-        console.log(historicDiploma);
-
         const [template, substitions] = DiplomaService
             .historicDiplomaToTemplateAndSubstitutions(historicDiploma);
 
