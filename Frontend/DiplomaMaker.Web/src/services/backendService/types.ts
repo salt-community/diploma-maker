@@ -32,9 +32,8 @@ export namespace BackendTypes {
     export type TemplatePeek = NamedEntity;
 
     export type SendEmailRequest = {
-        studenEmail: string,
-        studentName: string,
-        track: string,
+        messageHtml: string,
+        studentEmail: string,
         diplomaPdfBase64: string
     }
 

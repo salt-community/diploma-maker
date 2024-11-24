@@ -37,6 +37,17 @@ export function createSubstitions(
     } as TemplateTypes.Substitions;
 }
 
+function generateEmailHTML(studentName: string, track: string) {
+    return (
+        `
+        <h1>${studentName}</h1>
+        <p>Congratulations, you have completed the ${track} bootcamp at<p>
+        <p>School of Applied Technology!</p>
+        <p>Attached is your diploma. Now, let's start your career in tech!</p>
+        `
+    );
+}
+
 export async function emailDiploma(
     template: PdfMeTypes.Template,
     bootcamp: BootcampTypes.Bootcamp,
@@ -50,10 +61,9 @@ export async function emailDiploma(
     );
 
     await BackendService.sendDiplomaEmail({
-        track: bootcamp.track,
+        messageHtml: generateEmailHTML(student.name, bootcamp.track),
+        studentEmail: student.email,
         diplomaPdfBase64: blobString,
-        studenEmail: bootcamp.students[0].email,
-        studentName: bootcamp.students[0].name
     }, jwt);
 }
 

@@ -58,7 +58,7 @@ public class EmailService(HttpClient _httpClient, IWebHostEnvironment _env, ICon
 
         var body = new TextPart("html")
         {
-            Text = $"<h1>{emailRequest.StudentName}!</h1><p>You are okay at {emailRequest.Track}</p>",
+            Text = emailRequest.MessageHtml
         };
 
         MemoryStream pdfStream = new(Convert.FromBase64String(emailRequest.DiplomaPdfBase64));
@@ -68,7 +68,7 @@ public class EmailService(HttpClient _httpClient, IWebHostEnvironment _env, ICon
             Content = new MimeContent(pdfStream, ContentEncoding.Default),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
             ContentTransferEncoding = ContentEncoding.Base64,
-            FileName = $"Diploma-{emailRequest.Track}.pdf"
+            FileName = $"Salt Diploma.pdf"
         };
 
         multipart.Add(attachment);
