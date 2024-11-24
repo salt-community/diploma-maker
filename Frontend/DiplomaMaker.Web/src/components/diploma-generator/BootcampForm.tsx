@@ -148,6 +148,7 @@ export default function BootcampForm({ }: Props) {
                     Send Out Diplomas
                 </button>
             </form>
+
             <Modal id={import.meta.env.VITE_PREVIEW_DIPLOMA_VIEWER_MODAL_ID}>
                 {(currentTemplate && bootcamp != null) &&
                     <PreviewDiplomaViewer

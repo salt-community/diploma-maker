@@ -1,8 +1,8 @@
 import { createFileRoute, Navigate } from '@tanstack/react-router'
-import { useCache, useHistoricDiploma } from '@/hooks';
+import { useCache, useHistoricDiploma, useModal } from '@/hooks';
 import { StringService } from '@/services';
 import HistoricDiplomaViewer from '@/components/diploma-viewer/HistoricDiplomaViewer';
-import { PageLayout } from '@/components/layout';
+import { Modal, PageLayout } from '@/components/layout';
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
 
 export const Route = createFileRoute('/history')({
@@ -12,6 +12,7 @@ export const Route = createFileRoute('/history')({
 function Page() {
   const { diplomas } = useHistoricDiploma();
   const [diplomaGuid, setDiplomaGuid] = useCache<string>(["SelectedDiplomaGuid"]);
+  const { openModal: openHistoricDiplomaViewerModal } = useModal(import.meta.env.VITE_HISTORIC_DIPLOMA_VIEWER_MODAL_ID);
 
   const headerTitles = ['Student Name', 'Student Email', 'Track', 'Graduation Date', ''];
   const header = (
@@ -30,6 +31,7 @@ function Page() {
           className="btn"
           onClick={() => {
             setDiplomaGuid(diploma.guid!);
+            openHistoricDiplomaViewerModal();
           }}>
           Preview Diploma
         </button>
@@ -47,9 +49,11 @@ function Page() {
           </tbody>
         </table>
       </div>
-      {diplomaGuid &&
-        <HistoricDiplomaViewer diplomaGuid={diplomaGuid} />
-      }
+      <Modal id={import.meta.env.VITE_HISTORIC_DIPLOMA_VIEWER_MODAL_ID}>
+        {diplomaGuid &&
+          <HistoricDiplomaViewer diplomaGuid={diplomaGuid} />
+        }
+      </Modal>
     </SignedIn>
 
     <SignedOut>
