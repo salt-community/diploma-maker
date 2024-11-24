@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 
 import { DiplomaService } from '@/services';
-import { useHistoricDiploma, usePdfMeViewer } from "@/hooks";
+import { useHistoricDiploma } from "@/hooks";
+import { usePdfMeViewer } from "./usePdfMeViewer";
 
 interface Props {
     diplomaGuid: string,
@@ -14,7 +15,7 @@ export default function HistoricDiplomaViewer({ diplomaGuid }: Props) {
 
     useEffect(() => {
         const historicDiploma = getHistoricDiploma(diplomaGuid);
-        
+
         if (!historicDiploma) return;
 
         console.log(historicDiploma);

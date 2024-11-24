@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import HistoricDiplomaViewer from '@/components/diploma-viewer/HistoricDiplomaViewer';
 import { PageLayout } from '@/components/layout';
 
@@ -8,7 +8,7 @@ export const Route = createFileRoute('/validate-diploma/$diplomaGuid')({
 
 function Page() {
   const { diplomaGuid } = Route.useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   console.log(diplomaGuid);
 

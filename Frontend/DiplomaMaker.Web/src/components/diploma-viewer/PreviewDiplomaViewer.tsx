@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
-import { usePdfMeViewer } from "@/hooks";
 import { PdfMeTypes, TemplateTypes } from "@/services";
+import { usePdfMeViewer } from "./usePdfMeViewer";
 
 interface Props {
     template: PdfMeTypes.Template,

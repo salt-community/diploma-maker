@@ -1,9 +1,9 @@
+import { Link } from "@tanstack/react-router";
 import { Menu02Icon, UserCircleIcon } from "hugeicons-react";
 
 import AppLogo from "@/assets/app-logo.svg";
 
 /**
- * TODO 1: Update menu with actual routes
  * TODO 2: Update user icon with Clerk component
  */
 
@@ -25,16 +25,24 @@ export default function Navbar() {
               className="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
             >
               <li>
-                <a>Dashboard</a>
+                <Link
+                  to="/"
+                >Dashboard</Link>
               </li>
               <li>
-                <a>Generate Diplomas</a>
+                <Link
+                  to="/diploma-generator"
+                >Generate Diplomas</Link>
               </li>
               <li>
-                <a>Manage Templates</a>
+                <Link
+                  to="/template-designer"
+                >Design Templates</Link>
               </li>
               <li>
-                <a>View Diplomas</a>
+                <Link
+                  to="/history"
+                >History</Link>
               </li>
             </ul>
           </div>

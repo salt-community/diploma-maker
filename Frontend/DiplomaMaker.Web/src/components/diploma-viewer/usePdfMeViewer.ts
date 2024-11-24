@@ -6,8 +6,8 @@
 
 import { useRef } from "react";
 
-import { PdfMeService, TemplateService } from "../services";
-import type { PdfMeTypes, TemplateTypes } from "../services";
+import { PdfMeService, TemplateService } from "@/services";
+import type { PdfMeTypes, TemplateTypes } from "@/services";
 
 export function usePdfMeViewer() {
   const viewer = useRef<PdfMeTypes.Viewer | null>(null);
