@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
 using DiplomaMakerApi.Database;
-using DiplomaMakerApi.Models;
 
 namespace DiplomaMakerApi.Controllers;
 

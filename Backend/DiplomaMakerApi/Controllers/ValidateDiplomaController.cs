@@ -1,15 +1,17 @@
 using DiplomaMakerApi.Database;
-using DiplomaMakerApi.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using DiplomaMakerApi.Dto;
 
 namespace DiplomaMakerApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class HistoricDiplomaController(DiplomaMakerContext _context) : ControllerBase
+[Authorize]
+public class ValidateDiplomaController(DiplomaMakerContext _context) : ControllerBase
 {
-    [HttpGet("GetHistoricDiploma/{diplomaGuid}")]
-    public ActionResult<HistoricDiploma> GetHistoricDiplomaByGuid(string diplomaGuid)
+    [HttpGet("ValidateDiploma/{diplomaGuid}")]
+    public ActionResult<HistoricDiploma> ValidateDiploma(string diplomaGuid)
     {
         var diploma = _context.Diplomas.FirstOrDefault(diploma => diploma.Guid.ToString() == diplomaGuid);
 
