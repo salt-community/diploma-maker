@@ -16,14 +16,10 @@ function Dashboard() {
   );
 }
 
-/* 
-  TODO: Update with actual route path
-*/
-
-function GenerateDiplomaLink() {
+  function GenerateDiplomaLink() {
   return (
     <Link
-      to="/"
+      to="/diploma-generator"
       className="group col-span-full grid h-64 place-items-center rounded-2xl bg-accent-light no-underline"
     >
       <div className="flex flex-col items-center gap-4 transition-transform group-hover:scale-105">
@@ -36,14 +32,10 @@ function GenerateDiplomaLink() {
   );
 }
 
-/* 
-  TODO: Update with actual route path
-*/
-
 function ManageTemplatesLink() {
   return (
     <Link
-      to="/"
+      to="/template-designer"
       className="group grid h-64 place-items-center rounded-2xl bg-secondary no-underline"
     >
       <div className="flex flex-col items-center gap-4 transition-transform group-hover:scale-105">
@@ -56,14 +48,10 @@ function ManageTemplatesLink() {
   );
 }
 
-/* 
-  TODO: Update with actual route path
-*/
-
 function ViewDiplomasLink() {
   return (
     <Link
-      to="/"
+      to="/history"
       className="group grid h-64 place-items-center rounded-2xl bg-info no-underline"
     >
       <div className="flex flex-col items-center gap-4 transition-transform group-hover:scale-105">
