@@ -1,18 +1,23 @@
-import { useCache, useModal } from "@/hooks";
 import { StringService } from "@/services";
+import type { BackendTypes } from '@/services';
+import { useCache, useEntity, useModal } from "@/hooks";
+
 import { HistoricDiplomaViewer } from "@/components/diploma-viewer";
 import { Modal } from "@/components/layout";
-import { useHistoricDiploma } from "./diploma-viewer/useHistoricDiploma";
 
 export default function DiplomaHistory() {
-    const { diplomas } = useHistoricDiploma();
-    const [diplomaGuid, setDiplomaGuid] = useCache<string>(["SelectedDiplomaGuid"]);
+    const { entities: diplomas } = useEntity<BackendTypes.DiplomaRecord>("DiplomaRecord", true);
     const { openModal: openHistoricDiplomaViewerModal } = useModal(import.meta.env.VITE_HISTORIC_DIPLOMA_VIEWER_MODAL_ID);
+    const [diplomaGuid, setDiplomaGuid] = useCache<string>(["SelectedDiplomaGuid"]);
 
-    const headerTitles = ['Student Name', 'Student Email', 'Track', 'Graduation Date', ''];
     const header = (
         <thead>
-            <tr>{headerTitles.map(title => <th key={title}>{title}</th>)}</tr>
+            <tr>
+                {
+                    ['Student Name', 'Student Email', 'Track', 'Graduation Date', ''].map(title =>
+                        <th key={title}>{title}</th>
+                    )}
+            </tr>
         </thead>);
 
     const rows = diplomas.map(diploma => (
