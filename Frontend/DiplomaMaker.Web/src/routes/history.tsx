@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useCache, useHistoricDiploma } from '@/hooks';
 import { StringService } from '@/services';
 import HistoricDiplomaViewer from '@/components/diploma-viewer/HistoricDiplomaViewer';
+import { PageLayout } from '@/components/layout';
 
 export const Route = createFileRoute('/history')({
   component: Page,
@@ -35,7 +36,7 @@ function Page() {
     </tr>
   ));
 
-  return (<>
+  return (<PageLayout>
     <div className="overflow-x-auto">
       <table className="table">
         {header}
@@ -47,5 +48,5 @@ function Page() {
     {diplomaGuid &&
       <HistoricDiplomaViewer diplomaGuid={diplomaGuid} />
     }
-  </>);
+  </PageLayout>);
 }

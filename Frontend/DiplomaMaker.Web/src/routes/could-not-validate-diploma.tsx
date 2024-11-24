@@ -1,3 +1,4 @@
+import { PageLayout } from '@/components/layout';
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/could-not-validate-diploma')({
@@ -5,5 +6,7 @@ export const Route = createFileRoute('/could-not-validate-diploma')({
 })
 
 function RouteComponent() {
-  return <p>Could not validate diploma</p>
+  return (<PageLayout>
+    <p>Could not validate diploma</p>
+  </PageLayout>);
 }
