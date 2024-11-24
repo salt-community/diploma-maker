@@ -50,17 +50,18 @@ export default function TemplatePicker({
           className="menu dropdown-content z-[1] w-full rounded-box bg-base-100 p-2 text-base shadow"
         >
           {renderTemplateItems()}
-
           <li className="pt-1">
             <button
               className="bg-primary text-primary-content hocus:bg-primary-focus"
-              onClick={onNewTemplate}
+              onClick={(e) => {
+                onNewTemplate();
+                (e.target as HTMLButtonElement).blur();
+              }}
             >
               <Add01Icon size={16} />
               New Blank Template
             </button>
           </li>
-
           <li className="pt-1">
             <button
               className="bg-secondary text-secondary-content hocus:bg-secondary-focus"
