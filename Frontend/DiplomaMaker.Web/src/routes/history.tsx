@@ -1,9 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Navigate } from '@tanstack/react-router'
 import { useCache, useHistoricDiploma } from '@/hooks';
 import { StringService } from '@/services';
 import HistoricDiplomaViewer from '@/components/diploma-viewer/HistoricDiplomaViewer';
 import { PageLayout } from '@/components/layout';
-import { SignedIn } from '@clerk/clerk-react';
+import { SignedIn, SignedOut } from '@clerk/clerk-react';
 
 export const Route = createFileRoute('/history')({
   component: Page,
@@ -51,5 +51,9 @@ function Page() {
         <HistoricDiplomaViewer diplomaGuid={diplomaGuid} />
       }
     </SignedIn>
+
+    <SignedOut>
+      <Navigate to={"/"} />
+    </SignedOut>
   </PageLayout>);
 }
