@@ -1,12 +1,15 @@
+import { useUser } from "@clerk/clerk-react";
 import { Link } from "@tanstack/react-router";
 import { FileEditIcon, Files01Icon, PlusSignIcon } from "hugeicons-react";
 
 import { PageContainer } from "@/components/layout";
 
 export default function Dashboard() {
+  const { user } = useUser();
+
   return (
     <PageContainer>
-      <h1>Welcome John Doe!</h1>
+      <h1>Welcome {user?.fullName}!</h1>
       <p className="text-lg font-bold">What would you like to do?</p>
       <div className="mt-16 grid grid-cols-2 gap-8">
         <GenerateDiplomaLink />
