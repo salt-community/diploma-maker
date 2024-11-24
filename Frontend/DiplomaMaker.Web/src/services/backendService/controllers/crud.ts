@@ -2,57 +2,6 @@ import { BackendTypes } from '@/services'
 
 const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
 
-export async function validateDiploma(guid: string) {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/ValidateDiploma/ValidateDiploma/${guid}`, {
-        method: 'GET',
-    });
-
-    if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-    }
-
-    return await response.json() as BackendTypes.HistoricDiploma;
-}
-
-export async function getHistoricDiplomaByGuid(guid: string) {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/HistoricDiploma/GetHistoricDiploma/${guid}`, {
-        method: 'GET',
-    });
-
-    if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-    }
-
-    return await response.json() as BackendTypes.HistoricDiploma;
-}
-
-export async function sendDiplomaEmail(request: BackendTypes.SendEmailRequest, jwt: string) {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/Email/SendDiplomaEmail`, {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`
-        },
-        body: JSON.stringify(request)
-    });
-
-    if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-    }
-}
-
-export async function peekTemplates() {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/Template/PeekTemplates`, {
-        method: 'GET',
-    });
-
-    if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-    }
-
-    return await response.json() as BackendTypes.TemplatePeek[];
-}
-
 export async function getEntities<TEntity extends BackendTypes.Dto>(controller: BackendTypes.ControllerName) {
     const endpoint = 'GetEntities';
 
@@ -147,4 +96,3 @@ export async function deleteEntity(controller: BackendTypes.ControllerName, guid
         throw new Error(`Response status: ${response.status}`);
     }
 }
-
