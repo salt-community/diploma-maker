@@ -28,16 +28,19 @@ export default function Navbar() {
                   to="/"
                 >Dashboard</Link>
               </li>
-              <li>
-                <Link
-                  to="/diploma-generator"
-                >Generate Diplomas</Link>
-              </li>
+
               <li>
                 <Link
                   to="/template-designer"
                 >Design Templates</Link>
               </li>
+
+              <li>
+                <Link
+                  to="/diploma-generator"
+                >Generate Diplomas</Link>
+              </li>
+
               <li>
                 <Link
                   to="/history"
