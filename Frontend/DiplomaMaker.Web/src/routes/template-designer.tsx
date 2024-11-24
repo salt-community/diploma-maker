@@ -1,5 +1,6 @@
 import { PageLayout } from "@/components/layout";
 import { TemplateDesigner } from "@/components/template-designer";
+import { SignedIn } from "@clerk/clerk-react";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/template-designer")({
@@ -9,7 +10,11 @@ export const Route = createFileRoute("/template-designer")({
 function Page() {
   return (
     <PageLayout>
-      <TemplateDesigner />
+
+      <SignedIn>
+        <TemplateDesigner />
+      </SignedIn>
+
     </PageLayout>
   );
 }

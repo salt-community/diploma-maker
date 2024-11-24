@@ -3,6 +3,7 @@ import { useCache, useHistoricDiploma } from '@/hooks';
 import { StringService } from '@/services';
 import HistoricDiplomaViewer from '@/components/diploma-viewer/HistoricDiplomaViewer';
 import { PageLayout } from '@/components/layout';
+import { SignedIn } from '@clerk/clerk-react';
 
 export const Route = createFileRoute('/history')({
   component: Page,
@@ -37,16 +38,18 @@ function Page() {
   ));
 
   return (<PageLayout>
-    <div className="overflow-x-auto">
-      <table className="table">
-        {header}
-        <tbody>
-          {rows}
-        </tbody>
-      </table>
-    </div>
-    {diplomaGuid &&
-      <HistoricDiplomaViewer diplomaGuid={diplomaGuid} />
-    }
+    <SignedIn>
+      <div className="overflow-x-auto">
+        <table className="table">
+          {header}
+          <tbody>
+            {rows}
+          </tbody>
+        </table>
+      </div>
+      {diplomaGuid &&
+        <HistoricDiplomaViewer diplomaGuid={diplomaGuid} />
+      }
+    </SignedIn>
   </PageLayout>);
 }

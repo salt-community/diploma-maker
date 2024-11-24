@@ -1,11 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Menu02Icon, UserCircleIcon } from "hugeicons-react";
+import { Menu02Icon } from "hugeicons-react";
 
 import AppLogo from "@/assets/app-logo.svg";
-
-/**
- * TODO 2: Update user icon with Clerk component
- */
+import { UserButton } from "@clerk/clerk-react";
 
 export default function Navbar() {
   return (
@@ -42,7 +39,7 @@ export default function Navbar() {
               <li>
                 <Link
                   to="/history"
-                >History</Link>
+                >Diploma History</Link>
               </li>
             </ul>
           </div>
@@ -53,9 +50,7 @@ export default function Navbar() {
           </a>
         </div>
         <div className="navbar-end">
-          <button className="btn btn-circle btn-ghost">
-            <UserCircleIcon size={24} />
-          </button>
+          <UserButton />
         </div>
       </nav>
     </header>
