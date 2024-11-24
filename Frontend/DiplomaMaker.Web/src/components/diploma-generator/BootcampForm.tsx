@@ -149,7 +149,7 @@ export default function BootcampForm({ }: Props) {
                 </button>
             </form>
 
-            <Modal id={import.meta.env.VITE_PREVIEW_DIPLOMA_VIEWER_MODAL_ID}>
+            <Modal id={import.meta.env.VITE_PREVIEW_DIPLOMA_VIEWER_MODAL_ID} title="Preview Diploma">
                 {(currentTemplate && bootcamp != null) &&
                     <PreviewDiplomaViewer
                         template={TemplateService.backendTemplateToPdfMeTemplate(currentTemplate)}

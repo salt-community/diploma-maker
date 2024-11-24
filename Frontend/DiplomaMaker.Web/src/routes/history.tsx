@@ -49,7 +49,7 @@ function Page() {
           </tbody>
         </table>
       </div>
-      <Modal id={import.meta.env.VITE_HISTORIC_DIPLOMA_VIEWER_MODAL_ID}>
+      <Modal id={import.meta.env.VITE_HISTORIC_DIPLOMA_VIEWER_MODAL_ID} title="Historic Diploma">
         {diplomaGuid &&
           <HistoricDiplomaViewer diplomaGuid={diplomaGuid} />
         }
