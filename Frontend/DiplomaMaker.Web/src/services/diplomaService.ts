@@ -7,10 +7,6 @@
 import { BackendService, PdfMeService, StringService, TemplateService } from '@/services';
 import type { BootcampTypes, PdfMeTypes, TemplateTypes, BackendTypes } from '@/services';
 
-//Types
-export namespace DiplomaTypes {
-}
-
 export async function generatePdf(template: PdfMeTypes.Template, substitions: TemplateTypes.Substitions) {
     const inputs = TemplateService.substitutePlaceholdersWithContent(
         template,
@@ -26,22 +22,20 @@ export async function generatePdf(template: PdfMeTypes.Template, substitions: Te
     return new Blob([pdf.buffer], { type: "application/pdf" });
 }
 
-export function createSubstitions(
-    bootcamp: BootcampTypes.Bootcamp,
-    student: BootcampTypes.Student) {
+export function createSubstitions(diploma: BackendTypes.DiplomaRecord) {
     return {
-        studentName: student.name,
-        track: bootcamp.track,
-        graduationDate: StringService.formatDate_YYYY_mm_dd(bootcamp.graduationDate),
-        qrLink: "www.google.com"
+        studentName: diploma.studentName,
+        track: diploma.track,
+        graduationDate: StringService.formatDate_YYYY_mm_dd(diploma.graduationDate),
+        qrLink: `${import.meta.env.VITE_VALIDATE_DIPLOMA_URL}/${diploma.guid ?? "previewDiploma"}}`
     } as TemplateTypes.Substitions;
 }
 
-function generateEmailHTML(studentName: string, track: string) {
+function generateEmailHtml(diploma: BackendTypes.DiplomaRecord) {
     return (
         `
-        <h1>${studentName}</h1>
-        <p>Congratulations, you have completed the ${track} bootcamp at<p>
+        <h1>${diploma.studentName}</h1>
+        <p>Congratulations, you have completed the ${diploma.track} bootcamp at<p>
         <p>School of Applied Technology!</p>
         <p>Attached is your diploma. Now, let's start your career in tech!</p>
         `
@@ -50,19 +44,18 @@ function generateEmailHTML(studentName: string, track: string) {
 
 export async function emailDiploma(
     template: PdfMeTypes.Template,
-    bootcamp: BootcampTypes.Bootcamp,
-    student: BootcampTypes.Student,
+    diploma: BackendTypes.DiplomaRecord,
     jwt: string) {
 
-    const blob = await generatePdf(template, createSubstitions(bootcamp, student));
+    const blob = await generatePdf(template, createSubstitions(diploma));
 
     const blobString = StringService.base64StringWithoutMetaData(
         await StringService.blobToBase64String(blob)
     );
 
     await BackendService.sendDiplomaEmail({
-        messageHtml: generateEmailHTML(student.name, bootcamp.track),
-        studentEmail: student.email,
+        messageHtml: generateEmailHtml(diploma),
+        studentEmail: diploma.studentEmail,
         diplomaPdfBase64: blobString,
     }, jwt);
 }
@@ -83,7 +76,7 @@ export async function postDiploma(
         templateGuid: template.guid
     };
 
-    await BackendService.postEntity<BackendTypes.DiplomaRecord>("DiplomaRecord", diploma);
+    return await BackendService.postEntity<BackendTypes.DiplomaRecord>("DiplomaRecord", diploma);
 }
 
 export function historicDiplomaToTemplateAndSubstitutions(historicDiploma: BackendTypes.HistoricDiploma) {

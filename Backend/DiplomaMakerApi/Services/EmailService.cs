@@ -50,9 +50,9 @@ public class EmailService(HttpClient _httpClient, IWebHostEnvironment _env, ICon
 
         var message = new MimeMessage();
 
-        message.To.Add(new MailboxAddress("Salt Graduate", emailRequest.StudenEmail));
+        message.To.Add(new MailboxAddress("Salt Graduate", emailRequest.StudentEmail));
 
-        message.Subject = "Salt Diploma";
+        message.Subject = "</Salt> Diploma";
 
         var multipart = new Multipart("mixed");
 
@@ -72,7 +72,6 @@ public class EmailService(HttpClient _httpClient, IWebHostEnvironment _env, ICon
         };
 
         multipart.Add(attachment);
-
         multipart.Add(body);
 
         message.Body = multipart;

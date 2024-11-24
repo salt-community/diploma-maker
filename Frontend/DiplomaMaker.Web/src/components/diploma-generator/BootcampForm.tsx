@@ -39,17 +39,16 @@ export default function BootcampForm() {
         const updatedBootcamp = BootcampService.formBootcampToBootcamp(bootcamp);
         setBootcamp(updatedBootcamp);
 
-        if (!currentTemplate) throw new Error("No template");
+        if (!currentTemplate)
+            throw new Error("No template");
 
         updatedBootcamp.students.map(async (student) => {
-            await DiplomaService.postDiploma(currentTemplate, updatedBootcamp, student);
-
+            const diploma = await DiplomaService.postDiploma(currentTemplate, updatedBootcamp, student);
             if (!token) return;
 
             await DiplomaService.emailDiploma(
                 TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
-                updatedBootcamp,
-                student,
+                diploma,
                 token);
         });
     };
@@ -135,15 +134,6 @@ export default function BootcampForm() {
                 </button>
 
                 <button
-                    className="btn bg-primary text-primary-content hocus:bg-primary-focus"
-                    disabled={selectedTemplate == null}
-                    onClick={openPreviewDiplomaViewerModal}
-                >
-                    <Add01Icon size={16} />
-                    Preview Diploma
-                </button>
-
-                <button
                     type="submit"
                     className="btn bg-primary text-primary-content hocus:bg-primary-focus"
                     disabled={selectedTemplate == null}>
@@ -152,11 +142,26 @@ export default function BootcampForm() {
                 </button>
             </form>
 
+            <button
+                className="btn bg-primary text-primary-content hocus:bg-primary-focus"
+                disabled={selectedTemplate == null}
+                onClick={openPreviewDiplomaViewerModal}
+            >
+                <Add01Icon size={16} />
+                Preview Diploma
+            </button>
+
             <Modal id={import.meta.env.VITE_PREVIEW_DIPLOMA_VIEWER_MODAL_ID} title="Preview Diploma">
                 {(currentTemplate && bootcamp != null) &&
                     <PreviewDiplomaViewer
                         template={TemplateService.backendTemplateToPdfMeTemplate(currentTemplate)}
-                        substitions={DiplomaService.createSubstitions(bootcamp, bootcamp.students[0])} />}
+                        substitions={DiplomaService.createSubstitions({
+                            graduationDate: bootcamp.graduationDate,
+                            studentEmail: bootcamp.students[0].email,
+                            studentName: bootcamp.students[0].name,
+                            templateGuid: 'n/a',
+                            track: bootcamp.track,
+                        } as BackendTypes.DiplomaRecord)} />}
             </Modal>
         </div >
     );
