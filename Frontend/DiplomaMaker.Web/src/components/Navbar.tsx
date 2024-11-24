@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu02Icon } from "hugeicons-react";
 
 import AppLogo from "@/assets/app-logo.svg";
-import { UserButton } from "@clerk/clerk-react";
+import { SignedIn, UserButton } from "@clerk/clerk-react";
 
 export default function Navbar() {
   return (
@@ -10,13 +10,15 @@ export default function Navbar() {
       <nav className="navbar bg-neutral shadow-sm">
         <div className="navbar-start">
           <div className="dropdown">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-circle btn-ghost"
-            >
-              <Menu02Icon size={24} />
-            </div>
+            <SignedIn>
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-circle btn-ghost"
+              >
+                <Menu02Icon size={24} />
+              </div>
+            </SignedIn>
             <ul
               tabIndex={0}
               className="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
