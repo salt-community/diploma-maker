@@ -6,8 +6,7 @@ import {
 } from "@/hooks/template";
 import { usePdfMe } from "@/hooks/usePdfMe";
 import { useEffect, useRef, useState } from "react";
-import Modal from "../Modal";
-import SaveTemplateModalContent from "./SaveTemplateModalContent";
+import SaveTemplateModal, { SAVE_TEMPLATE_MODAL_ID } from "./SaveTemplateModal";
 import TemplatePicker from "./TemplatePicker";
 
 export default function TemplateDesigner() {
@@ -27,11 +26,9 @@ export default function TemplateDesigner() {
     setSelectedTemplateId(newTemplate.guid),
   );
 
-  const {
-    isOpen: isSaveModalOpen,
-    open: openSaveModal,
-    close: closeSaveModal,
-  } = useModal();
+  const { open: openSaveModal, close: closeSaveModal } = useModal(
+    SAVE_TEMPLATE_MODAL_ID,
+  );
 
   useEffect(() => {
     if (template) {
@@ -79,17 +76,10 @@ export default function TemplateDesigner() {
         </div>
       </div>
       <div ref={designerRef} />
-      <Modal
-        id="save-template-modal"
-        title="Save Template"
-        isOpen={isSaveModalOpen}
-        onClose={closeSaveModal}
-      >
-        <SaveTemplateModalContent
-          onSave={handleSaveNewTemplate}
-          onCancel={closeSaveModal}
-        />
-      </Modal>
+      <SaveTemplateModal
+        onSave={handleSaveNewTemplate}
+        onCancel={closeSaveModal}
+      />
     </div>
   );
 }
