@@ -10,13 +10,12 @@ interface Props {
 
 export default function HistoricDiplomaViewer({ diplomaGuid }: Props) {
     const diplomaViewerRef = useRef<HTMLDivElement | null>(null);
-    const { getHistoricDiploma } = useHistoricDiploma();
+    const { historicDiploma } = useHistoricDiploma(diplomaGuid);
     const { loadViewer } = usePdfMeViewer();
 
     useEffect(() => {
-        const historicDiploma = getHistoricDiploma(diplomaGuid);
-
-        if (!historicDiploma) return;
+        if (!historicDiploma)
+            return;
 
         const [template, substitions] = DiplomaService
             .historicDiplomaToTemplateAndSubstitutions(historicDiploma);
@@ -27,5 +26,9 @@ export default function HistoricDiplomaViewer({ diplomaGuid }: Props) {
         loadViewer(diplomaViewerRef.current, template, substitions);
     });
 
-    return (<div ref={diplomaViewerRef} />);
+    return (<>
+        {historicDiploma && <div ref={diplomaViewerRef} />}
+        {!historicDiploma && <span className="loading loading-spinner loading-lg"></span>}
+
+    </>);
 }

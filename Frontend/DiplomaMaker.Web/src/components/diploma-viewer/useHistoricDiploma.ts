@@ -13,7 +13,7 @@ export function useHistoricDiploma(diplomaGuid: string) {
 
     const historicDiplomaQuery = useQuery({
         queryKey,
-        queryFn: async () => await BackendService.getHistoricDiplomaByGuid(diplomaGuid);
+        queryFn: async () => await BackendService.getHistoricDiplomaByGuid(diplomaGuid)
     });
 
     const historicDiploma = historicDiplomaQuery.data as BackendTypes.HistoricDiploma | null;
