@@ -6,11 +6,8 @@ type ModalProps = {
 
 export default function Modal({ id, title, children }: ModalProps) {
   return (
-    <dialog
-      className="modal modal-bottom overflow-hidden overflow-y-hidden sm:modal-middle"
-      id={id}
-    >
-      <div className="sm:max-w-screen-xs modal-box overflow-hidden">
+    <dialog className="modal" id={id}>
+      <div className="sm:max-w-screen-xs modal-box">
         <h3 className="font-display text-lg font-bold">{title}</h3>
         <form method="dialog">
           <button className="btn btn-circle btn-ghost absolute right-2 top-2">
@@ -19,6 +16,9 @@ export default function Modal({ id, title, children }: ModalProps) {
         </form>
         <div className="mt-4">{children}</div>
       </div>
+      <form method="dialog" className="modal-backdrop">
+        <button>close</button>
+      </form>
     </dialog>
   );
 }
