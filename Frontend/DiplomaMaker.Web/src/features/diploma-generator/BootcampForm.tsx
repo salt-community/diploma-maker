@@ -4,10 +4,10 @@ import { Add01Icon, Delete04Icon } from "hugeicons-react";
 import { BootcampService, DiplomaService, TemplateService } from "@/services";
 import type { BackendTypes, BootcampTypes } from "@/services";
 import { useCache, useModal, useToken } from "@/hooks";
-import { Modal } from "@/components";
 
 import { bootcampKey, currentTemplateKey, selectedTemplateKey } from "./cacheKeys";
 import PreviewDiplomaViewer from "../diploma-viewer/PreviewDiplomaViewer";
+import { Modal } from "@/components";
 
 export default function BootcampForm() {
     const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(bootcampKey);

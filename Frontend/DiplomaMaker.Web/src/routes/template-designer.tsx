@@ -1,5 +1,4 @@
-import { PageLayout } from "@/components/layout";
-import { TemplateDesigner } from "@/components/template-designer";
+import { TemplateDesigner } from "@/features/template-designer";
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 
@@ -9,8 +8,7 @@ export const Route = createFileRoute("/template-designer")({
 
 function Page() {
   return (
-    <PageLayout>
-
+    <>
       <SignedIn>
         <TemplateDesigner />
       </SignedIn>
@@ -18,7 +16,6 @@ function Page() {
       <SignedOut>
         <Navigate to={"/"} />
       </SignedOut>
-
-    </PageLayout>
+    </>
   );
 }

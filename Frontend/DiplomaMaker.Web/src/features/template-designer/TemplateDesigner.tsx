@@ -4,9 +4,9 @@ import {
   useCreateTemplateMutation,
   useTemplate,
   useUpdateTemplateMutation,
-} from "@/hooks/template";
+} from "@/features/template-designer/template";
 
-import { usePdfMe } from "@/hooks/usePdfMe";
+import { usePdfMe } from "@/features/template-designer/usePdfMe";
 import { useEffect, useRef, useState } from "react";
 import SaveTemplateModal, { SAVE_TEMPLATE_MODAL_ID } from "./SaveTemplateModal";
 import TemplatePicker from "./TemplatePicker";

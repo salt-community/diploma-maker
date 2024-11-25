@@ -2,7 +2,7 @@ import { StringService } from "@/services";
 import type { BackendTypes } from '@/services';
 import { useCache, useEntity, useModal } from "@/hooks";
 
-import { HistoricDiplomaViewer } from "@/components/diploma-viewer";
+import { HistoricDiplomaViewer } from "@/features/diploma-viewer";
 import { Modal } from "@/components";
 
 export default function DiplomaHistory() {

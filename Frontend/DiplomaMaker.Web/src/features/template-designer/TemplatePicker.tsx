@@ -1,4 +1,4 @@
-import { useTemplatePeeks } from "@/hooks/template";
+import { useTemplatePeeks } from "@/features/template-designer/template";
 import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
 import ManageTemplatesModal, {
   MANAGE_TEMPLATES_MODAL_ID,

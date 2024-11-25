@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { SubmitHandler, useForm } from "react-hook-form";
-import Modal from "../Modal";
+import Modal from "../../components/Modal";
 
 type SaveTemplateModalProps = {
   onSave: (name: string) => void;

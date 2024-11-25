@@ -1,7 +1,6 @@
 import { createFileRoute, Navigate } from '@tanstack/react-router'
-import DiplomaGenerator from '@/components/diploma-generator/DiplomaGenerator'
-import { PageLayout } from '@/components/layout'
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
+import { DiplomaGenerator } from '@/features/diploma-generator';
 
 export const Route = createFileRoute('/diploma-generator')({
   component: Page,
@@ -9,8 +8,7 @@ export const Route = createFileRoute('/diploma-generator')({
 
 function Page() {
   return (
-    <PageLayout>
-
+    <>
       <SignedIn>
         <DiplomaGenerator />
       </SignedIn>
@@ -18,7 +16,7 @@ function Page() {
       <SignedOut>
         <Navigate to={"/"} />
       </SignedOut>
-    </PageLayout>);
+    </>);
 }
 
 

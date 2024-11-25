@@ -1,6 +1,6 @@
-import { useTemplatePeeks } from "@/hooks/template";
+import { useTemplatePeeks } from "@/features/template-designer/template";
 import { Delete02Icon, File02Icon, PencilEdit01Icon } from "hugeicons-react";
-import Modal from "../Modal";
+import Modal from "../../components/Modal";
 
 export const MANAGE_TEMPLATES_MODAL_ID = "manage-templates-modal";
 

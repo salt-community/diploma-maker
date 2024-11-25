@@ -1,5 +1,4 @@
 import { createFileRoute, Navigate } from '@tanstack/react-router'
-import { PageLayout } from '@/components/layout';
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
 import DiplomaHistory from '@/components/DiplomaHistory';
 
@@ -9,7 +8,7 @@ export const Route = createFileRoute('/history')({
 
 function Page() {
   return (
-    <PageLayout>
+    <>
       <SignedIn>
         <DiplomaHistory />
       </SignedIn>
@@ -17,6 +16,6 @@ function Page() {
       <SignedOut>
         <Navigate to={"/"} />
       </SignedOut>
-    </PageLayout>
+    </>
   );
 }
