@@ -7,9 +7,15 @@
 
 import { useEffect, useRef } from "react";
 
-import { FileService, FontService, PdfMeService, TemplateService } from "@/services";
+import {
+  FileService,
+  FontService,
+  PdfMeService,
+  TemplateService,
+} from "@/services";
 import type { BackendTypes, PdfMeTypes, TemplateTypes } from "@/services";
-import { useTemplates } from '@/hooks';
+import { useTemplates } from "@/hooks";
+import { Template } from "@pdfme/common";
 
 export function usePdfMe(
   designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
@@ -29,7 +35,7 @@ export function usePdfMe(
           options: {
             font: FontService.getPdfMeFonts(),
           },
-          plugins: PdfMeService.plugins
+          plugins: PdfMeService.plugins,
         });
     }
   });
@@ -74,7 +80,7 @@ export function usePdfMe(
     });
   }
 
-  async function onLoadTemplate(template: BackendTypes.Template) {
+  async function loadTemplate(template: Template) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     if (!template) {
@@ -94,10 +100,12 @@ export function usePdfMe(
   function onResetTemplate() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
-    designer.current.updateTemplate(initialTemplate ?? TemplateService.defaultTemplate);
+    designer.current.updateTemplate(
+      initialTemplate ?? TemplateService.defaultTemplate,
+    );
   }
 
-  function onNewTemplate() {
+  function loadBlankTemplate() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     designer.current.updateTemplate(TemplateService.defaultTemplate);
@@ -141,15 +149,22 @@ export function usePdfMe(
     FileService.downloadJsonFile(template, "template");
   }
 
+  const getTemplateJson = () => {
+    if (!designer.current) throw new Error("Designer is not initialized");
+
+    return JSON.stringify(designer.current.getTemplate());
+  };
+
   return {
     handleLoadTemplate,
     onChangeBasePdf,
     onResetTemplate,
     handleReloadFonts,
     onSaveTemplate,
-    onNewTemplate,
-    onLoadTemplate,
+    loadBlankTemplate,
+    loadTemplate,
     generatePdf,
-    downloadTemplate
+    downloadTemplate,
+    getTemplateJson,
   };
 }

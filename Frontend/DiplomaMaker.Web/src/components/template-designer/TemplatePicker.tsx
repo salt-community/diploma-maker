@@ -1,47 +1,41 @@
+import { useTemplatePeeks } from "@/hooks/template";
 import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
-
-import type { BackendTypes } from "@/services";
-import { useCache, useModal, useTemplates } from "@/hooks";
-
-import { selectedTemplateKey } from "./cacheKeys";
-import ManageTemplatesModal from "./ManageTemplatesModal";
-import NewTemplateModal from "./NewTemplateModal";
+import ManageTemplatesModal, {
+  MANAGE_TEMPLATES_MODAL_ID,
+} from "./ManageTemplatesModal";
+import { useModal } from "@/hooks";
 
 type TemplatePickerProps = {
-  onTemplateSelect: () => void;
+  selectedTemplateId?: string;
+  onSetSelectedTemplateId: (id?: string) => void;
   onNewTemplate: () => void;
 };
 
 export default function TemplatePicker({
-  onTemplateSelect,
+  selectedTemplateId,
+  onSetSelectedTemplateId,
   onNewTemplate,
 }: TemplatePickerProps) {
-  const { templatePeeks } = useTemplates();
-  const { openModal: openNewTemplatesModal } = useModal(import.meta.env.VITE_NEW_TEMPLATE_MODAL_ID);
-  const { openModal: openManageTemplatesModal } = useModal(import.meta.env.VITE_MANAGE_TEMPLATES_MODAL_ID);
+  const { open: openManageTemplatesModal } = useModal(
+    MANAGE_TEMPLATES_MODAL_ID,
+  );
 
-  const [selectedTemplate, setSelectedTemplate] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
+  const { data: templatePeeks } = useTemplatePeeks();
 
-  const handleSelectTemplate = (template: BackendTypes.NamedEntity) => {
-    onTemplateSelect();
-    setSelectedTemplate(template);
-  };
+  const renderTemplateItems = () =>
+    templatePeeks?.map((template) =>
+      template.guid != selectedTemplateId ? (
+        <li key={template.guid}>
+          <button onClick={() => onSetSelectedTemplateId(template.guid!)}>
+            {template.name}
+          </button>
+        </li>
+      ) : null,
+    );
 
-  const renderSelectItems = () => {
-    if (!templatePeeks) return <></>;
-
-    return templatePeeks
-      .filter(template => selectedTemplate ? template.name != selectedTemplate.name : true)
-      .map(nameGuid =>
-        nameGuid.guid !== selectedTemplate?.guid && (
-          <li key={nameGuid.guid}>
-            <button onClick={() => handleSelectTemplate(nameGuid!)}>
-              {nameGuid.name}
-            </button>
-          </li>
-        ),
-      );
-  };
+  const selectedTemplate = templatePeeks?.find(
+    (t) => t.guid === selectedTemplateId,
+  );
 
   return (
     <>
@@ -54,38 +48,39 @@ export default function TemplatePicker({
           <div className="flex-1">
             <span className="font-medium">Template</span>
             <p className="font-display text-base font-semibold">
-              {selectedTemplate ? selectedTemplate.name : "Select a template"}
+              {selectedTemplate ? selectedTemplate.name : "Blank Template"}
             </p>
           </div>
           <ArrowDown01Icon size={18} />
         </div>
         <ul
           tabIndex={0}
-          className="menu dropdown-content z-[1] w-full rounded-box bg-base-100 p-2 text-base shadow">
-          {renderSelectItems()}
-
+          className="menu dropdown-content z-[1] w-full rounded-box bg-base-100 p-2 text-base shadow"
+        >
+          {renderTemplateItems()}
           <li className="pt-1">
             <button
               className="bg-primary text-primary-content hocus:bg-primary-focus"
-              onClick={() => openNewTemplatesModal()}>
+              onClick={(e) => {
+                onNewTemplate();
+                (e.target as HTMLButtonElement).blur();
+              }}
+            >
               <Add01Icon size={16} />
-              Create new Template
+              New Blank Template
             </button>
           </li>
-
           <li className="pt-1">
             <button
               className="bg-secondary text-secondary-content hocus:bg-secondary-focus"
-              onClick={() => openManageTemplatesModal()}>
+              onClick={openManageTemplatesModal}
+            >
               <PencilEdit01Icon size={16} />
               Manage Templates
             </button>
           </li>
         </ul>
       </div>
-
-      {/* Modals */}
-      <NewTemplateModal onCreateNewTemplate={onNewTemplate} />
       <ManageTemplatesModal />
     </>
   );
