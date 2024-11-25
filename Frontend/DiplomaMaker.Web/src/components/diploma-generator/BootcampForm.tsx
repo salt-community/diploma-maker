@@ -4,7 +4,7 @@ import { Add01Icon, Delete04Icon } from "hugeicons-react";
 import { BootcampService, DiplomaService, TemplateService } from "@/services";
 import type { BackendTypes, BootcampTypes } from "@/services";
 import { useCache, useModal, useToken } from "@/hooks";
-import { Modal } from "@/components/layout";
+import { Modal } from "@/components";
 
 import { bootcampKey, currentTemplateKey, selectedTemplateKey } from "./cacheKeys";
 import PreviewDiplomaViewer from "../diploma-viewer/PreviewDiplomaViewer";
@@ -14,7 +14,7 @@ export default function BootcampForm() {
     const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
     const [currentTemplate, __] = useCache<BackendTypes.Template>(currentTemplateKey);
     const { token } = useToken();
-    const { openModal: openPreviewDiplomaViewerModal } = useModal(import.meta.env.VITE_PREVIEW_DIPLOMA_VIEWER_MODAL_ID);
+    const { open: openPreviewDiplomaViewerModal } = useModal(import.meta.env.VITE_PREVIEW_DIPLOMA_VIEWER_MODAL_ID);
 
     if (bootcamp == null)
         setBootcamp(BootcampService.defaultBootcamp);

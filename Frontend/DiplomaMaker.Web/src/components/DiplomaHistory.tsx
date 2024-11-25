@@ -3,11 +3,11 @@ import type { BackendTypes } from '@/services';
 import { useCache, useEntity, useModal } from "@/hooks";
 
 import { HistoricDiplomaViewer } from "@/components/diploma-viewer";
-import { Modal } from "@/components/layout";
+import { Modal } from "@/components";
 
 export default function DiplomaHistory() {
     const { entities: diplomas } = useEntity<BackendTypes.DiplomaRecord>("DiplomaRecord", true);
-    const { openModal: openHistoricDiplomaViewerModal } = useModal(import.meta.env.VITE_HISTORIC_DIPLOMA_VIEWER_MODAL_ID);
+    const { open: openHistoricDiplomaViewerModal } = useModal(import.meta.env.VITE_HISTORIC_DIPLOMA_VIEWER_MODAL_ID);
     const [diplomaGuid, setDiplomaGuid] = useCache<string>(["SelectedDiplomaGuid"]);
 
     const header = (

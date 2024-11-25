@@ -1,15 +1,15 @@
 import { BackendService } from "@/services/backendService";
-import { Template } from "@/services/backendService/models";
+import type { BackendTypes } from "@/services/";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function useCreateTemplateMutation(
-  onTemplateCreated?: (template: Template) => void,
+  onTemplateCreated?: (template: BackendTypes.Template) => void,
 ) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (template: Template) =>
-      BackendService.Endpoints.PostEntity<Template>("Template", template),
+    mutationFn: (template: BackendTypes.Template) =>
+      BackendService.postEntity<BackendTypes.Template>("Template", template),
     onSuccess: (template) => {
       queryClient.setQueryData(["templates", template.guid], template);
       queryClient.invalidateQueries({ queryKey: ["templatePeeks"] });

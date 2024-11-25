@@ -13,9 +13,9 @@ import {
   PdfMeService,
   TemplateService,
 } from "@/services";
+
 import type { BackendTypes, PdfMeTypes, TemplateTypes } from "@/services";
 import { useTemplates } from "@/hooks";
-import { Template } from "@pdfme/common";
 
 export function usePdfMe(
   designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
@@ -80,7 +80,7 @@ export function usePdfMe(
     });
   }
 
-  async function loadTemplate(template: Template) {
+  async function loadTemplate(template: BackendTypes.Template) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     if (!template) {

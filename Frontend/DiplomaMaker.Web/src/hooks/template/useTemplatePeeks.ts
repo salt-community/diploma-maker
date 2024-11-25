@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 export default function useTemplatePeeks() {
   return useQuery({
     queryKey: ["templatePeeks"],
-    queryFn: () => BackendService.Endpoints.peekTemplates(),
+    queryFn: () => BackendService.peekTemplates(),
     staleTime: Infinity,
   });
 }

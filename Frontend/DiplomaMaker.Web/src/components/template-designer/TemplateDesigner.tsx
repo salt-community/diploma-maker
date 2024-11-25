@@ -1,18 +1,21 @@
 import { useModal } from "@/hooks";
+
 import {
   useCreateTemplateMutation,
   useTemplate,
   useUpdateTemplateMutation,
 } from "@/hooks/template";
+
 import { usePdfMe } from "@/hooks/usePdfMe";
 import { useEffect, useRef, useState } from "react";
 import SaveTemplateModal, { SAVE_TEMPLATE_MODAL_ID } from "./SaveTemplateModal";
 import TemplatePicker from "./TemplatePicker";
+import { BackendTypes, TemplateService } from "@/services";
 
 export default function TemplateDesigner() {
   const designerRef = useRef<HTMLDivElement | null>(null);
 
-  const { getTemplateJson, loadTemplate, loadBlankTemplate } =
+  const { getTemplateJson, loadTemplate, loadBlankTemplate, downloadTemplate } =
     usePdfMe(designerRef);
 
   const [selectedTemplateId, setSelectedTemplateId] = useState<
@@ -79,11 +82,10 @@ export default function TemplateDesigner() {
                 const template = await TemplateService.getTemplateFromJsonFile(
                   file!,
                 );
-                onLoadTemplate({
+                loadTemplate({
                   name: "...",
                   templateJson: JSON.stringify(template),
                 } as BackendTypes.Template);
-                onSaveTemplate(file!.name);
               }}
             />
           </label>

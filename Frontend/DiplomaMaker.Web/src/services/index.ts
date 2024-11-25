@@ -12,7 +12,6 @@ export * as BootcampService from './bootcampService'
 export type { BootcampTypes } from './bootcampService'
 
 export * as DiplomaService from './diplomaService'
-export type { DiplomaTypes } from './diplomaService'
 
 export * as FileService from './fileService'
 export type { FileTypes } from './fileService'
