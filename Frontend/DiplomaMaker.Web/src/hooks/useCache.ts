@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-export default function useCache<T>(cacheKey: string[]) {
+export function useCache<T>(cacheKey: string[]) {
     const client = useQueryClient();
 
     useQuery({
@@ -14,5 +14,5 @@ export default function useCache<T>(cacheKey: string[]) {
     return [
         entity,
         set
-    ] as [T, (entity: T) => void];
+    ] as [T | null, (entity: T) => void];
 }

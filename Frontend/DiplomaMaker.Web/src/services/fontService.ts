@@ -1,29 +1,31 @@
-import { PdfMe, PdfMeTypes } from '.';
-
 /* 
-  Font Service
+Font Service
 
- Collection of functions related to managing user fonts to be used in PdfMe.
-
+Collection of functions related to managing user fonts to be used in PdfMe.
 */
 
+import { PdfMeService } from '@/services';
+import type { PdfMeTypes } from '@/services';
+
+export namespace FontTypes {
+  export type PdfMeFont = {
+    fallback: boolean;
+    label: string;
+    data: string | ArrayBuffer;
+  };
+
+  export type GoogleFont = {
+    family: string;
+    variants: Record<number, string>;
+    files: Record<string, string>;
+  };
+
+  export type GoogleFontsResponse = {
+    items: GoogleFont[];
+  };
+}
+
 const SAVED_FONTS_KEY = 'fonts';
-
-type PdfMeFont = {
-  fallback: boolean;
-  label: string;
-  data: string | ArrayBuffer;
-};
-
-export type GoogleFont = {
-  family: string;
-  variants: Record<number, string>;
-  files: Record<string, string>;
-};
-
-export type GoogleFontsResponse = {
-  items: GoogleFont[];
-};
 
 // Fetches all available fonts(urls) from Google Fonts
 export async function fetchGoogleFonts() {
@@ -35,18 +37,18 @@ export async function fetchGoogleFonts() {
     throw new Error('Could not fetch Google Fonts.');
   }
 
-  const fontsResponse = (await apiResponse.json()) as GoogleFontsResponse;
+  const fontsResponse = (await apiResponse.json()) as FontTypes.GoogleFontsResponse;
   return fontsResponse.items;
 }
 
 // Returns saved fonts from localstorage
-export function getSavedFonts(): GoogleFont[] {
+export function getSavedFonts(): FontTypes.GoogleFont[] {
   const savedFontsRaw = localStorage.getItem(SAVED_FONTS_KEY);
   return savedFontsRaw ? JSON.parse(savedFontsRaw) : [];
 }
 
 // Saves font info to localstorage to be used when loading fonts to PdfMe.
-export async function saveFont(font: GoogleFont) {
+export async function saveFont(font: FontTypes.GoogleFont) {
   const savedFonts = getSavedFonts();
 
   savedFonts.push(font);
@@ -55,7 +57,7 @@ export async function saveFont(font: GoogleFont) {
 }
 
 // Removes saved font from localstorage
-export async function removeFont(font: GoogleFont) {
+export async function removeFont(font: FontTypes.GoogleFont) {
   const savedFonts = getSavedFonts();
 
   const filteredFonts = savedFonts.filter((f) => f.family != font.family);
@@ -68,7 +70,7 @@ export function getPdfMeFonts() {
   const savedFonts = getSavedFonts();
 
   // Translate saved font and all its variants to PdfMe type
-  const fonts: PdfMeFont[] = savedFonts.flatMap((font) =>
+  const fonts: FontTypes.PdfMeFont[] = savedFonts.flatMap((font) =>
     Object.entries(font.files).map(([key, value]) => ({
       fallback: false,
       label: `${font.family}-${key}`,
@@ -79,8 +81,8 @@ export function getPdfMeFonts() {
   // Adds default PdfMe Roboto font as fallback.
   fonts.push({
     fallback: true,
-    label: PdfMe.DEFAULT_FONT_NAME,
-    data: PdfMe.getDefaultFont()[PdfMe.DEFAULT_FONT_NAME].data,
+    label: PdfMeService.DEFAULT_FONT_NAME,
+    data: PdfMeService.getDefaultFont()[PdfMeService.DEFAULT_FONT_NAME].data,
   });
 
   return fonts.reduce(

@@ -1,5 +1,6 @@
 import { Dashboard } from "@/components/dashboard";
 import { PageLayout } from "@/components/layout";
+import { SignedIn, SignedOut, SignIn } from "@clerk/clerk-react";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -9,7 +10,15 @@ export const Route = createFileRoute("/")({
 function Page() {
   return (
     <PageLayout>
-      <Dashboard />
+
+      <SignedIn>
+        <Dashboard />
+      </SignedIn>
+
+      <SignedOut>
+        <SignIn />
+      </SignedOut>
+
     </PageLayout>
   );
 }

@@ -1,24 +1,22 @@
 import { createFileRoute, Navigate } from '@tanstack/react-router'
-import DiplomaGenerator from '@/components/diploma-generator/DiplomaGenerator'
-import { PageLayout } from '@/components/layout'
+import { PageLayout } from '@/components/layout';
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
+import DiplomaHistory from '@/components/DiplomaHistory';
 
-export const Route = createFileRoute('/diploma-generator')({
+export const Route = createFileRoute('/history')({
   component: Page,
 })
 
 function Page() {
   return (
     <PageLayout>
-
       <SignedIn>
-        <DiplomaGenerator />
+        <DiplomaHistory />
       </SignedIn>
 
       <SignedOut>
         <Navigate to={"/"} />
       </SignedOut>
-    </PageLayout>);
+    </PageLayout>
+  );
 }
-
-

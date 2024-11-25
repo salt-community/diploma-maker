@@ -18,11 +18,11 @@ public class Template() : BaseEntity<Template>()
     public string TemplateJson { get; set; } = string.Empty;
 };
 
-public class Diploma() : BaseEntity<Diploma>()
+public class DiplomaRecord() : BaseEntity<DiplomaRecord>()
 {
     public string StudentName { get; set; } = string.Empty;
-    public string Track { get; set; } = string.Empty;
     public string StudentEmail { get; set; } = string.Empty;
+    public string Track { get; set; } = string.Empty;
     public DateTime GraduationDate { get; set; }
     public Guid TemplateGuid { get; set; }
 };

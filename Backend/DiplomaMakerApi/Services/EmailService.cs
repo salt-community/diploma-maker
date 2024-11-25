@@ -50,15 +50,15 @@ public class EmailService(HttpClient _httpClient, IWebHostEnvironment _env, ICon
 
         var message = new MimeMessage();
 
-        message.To.Add(new MailboxAddress("Salt Graduate", emailRequest.StudenEmail));
+        message.To.Add(new MailboxAddress("Salt Graduate", emailRequest.StudentEmail));
 
-        message.Subject = "Salt Diploma";
+        message.Subject = "</Salt> Diploma";
 
         var multipart = new Multipart("mixed");
 
         var body = new TextPart("html")
         {
-            Text = $"<h1>{emailRequest.StudentName}!</h1><p>You are okay at {emailRequest.Track}</p>",
+            Text = emailRequest.MessageHtml
         };
 
         MemoryStream pdfStream = new(Convert.FromBase64String(emailRequest.DiplomaPdfBase64));
@@ -68,11 +68,10 @@ public class EmailService(HttpClient _httpClient, IWebHostEnvironment _env, ICon
             Content = new MimeContent(pdfStream, ContentEncoding.Default),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
             ContentTransferEncoding = ContentEncoding.Base64,
-            FileName = $"Diploma-{emailRequest.Track}.pdf"
+            FileName = $"Salt Diploma.pdf"
         };
 
         multipart.Add(attachment);
-
         multipart.Add(body);
 
         message.Body = multipart;

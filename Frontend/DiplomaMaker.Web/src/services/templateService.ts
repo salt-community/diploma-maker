@@ -5,14 +5,32 @@
     and pdf generation.
 */
 
-import { BLANK_PDF, checkTemplate, Template } from "@pdfme/common";
-import { FileService, PdfMeTypes } from ".";
-import { Types } from "../types";
+import { BLANK_PDF } from '@pdfme/common';
 
-export const defaultTemplate: Template = {
+import { FileService, PdfMeService } from '@/services';
+import type { BackendTypes, PdfMeTypes } from '@/services';
+
+//Types
+export namespace TemplateTypes {
+    export type Substitions = {
+        studentName: string,
+        track: string,
+        graduationDate: string,
+        qrLink: string
+    }
+}
+
+export const defaultTemplate: PdfMeTypes.Template = {
     basePdf: BLANK_PDF,
     schemas: [[]],
 };
+
+export const placeholders = {
+    studentName: "{studentName}",
+    track: "{track}",
+    graduationDate: "{graduationDate}",
+    qrLink: "{qrLink}"
+}
 
 /*
     Accepts a PdfMe Template with placeholders and 
@@ -21,9 +39,12 @@ export const defaultTemplate: Template = {
 */
 export function substitutePlaceholdersWithContent(
     template: PdfMeTypes.Template,
-    substitutions: Types.TemplateTextSubstitions) {
+    substitutions: TemplateTypes.Substitions) {
 
     const inputs: Record<string, unknown> = {};
+
+    console.log(template);
+    console.log(substitutions);
 
     Object.entries(template.schemas[0]).forEach(entry => {
         const fieldName = entry[1]['name'];
@@ -33,25 +54,17 @@ export function substitutePlaceholdersWithContent(
         switch (typeName) {
             case 'qrcode':
             case 'text':
-                Object.entries(substitutions.text).forEach(([placeholder, substitution]) => {
-                    content = content!.replace(placeholder, substitution);
+                Object.entries(placeholders).forEach(([key, placeholder]) => {
+                    content = content!.replace(placeholder, substitutions[key as keyof typeof placeholders])
                 });
 
-                Object.defineProperty(inputs, fieldName, {
-                    value: content
-                });
+                inputs[fieldName] = content;
 
                 break;
         }
     });
 
-    Object.defineProperty(inputs, "basePdf", {
-        value: substitutions.basePdf
-    });
-
-    template.basePdf = BLANK_PDF;
-
-    return [inputs] as Types.TemplateInputs;
+    return [inputs] as Record<string, any>[];
 }
 
 /*
@@ -61,7 +74,11 @@ export function substitutePlaceholdersWithContent(
 export async function getTemplateFromJsonFile(file: File) {
     const template: PdfMeTypes.Template = JSON.parse(await FileService.readTextFile(file));
 
-    checkTemplate(template);
+    PdfMeService.checkTemplate(template);
 
     return template;
+}
+
+export function backendTemplateToPdfMeTemplate(template: BackendTypes.Template) {
+    return JSON.parse(template.templateJson) as PdfMeTypes.Template;
 }

@@ -7,15 +7,9 @@
 
 import { useEffect, useRef } from "react";
 
-import {
-  FileService,
-  FontService,
-  PdfMe,
-  PdfMeTypes,
-  TemplateService,
-} from "../services";
-import { Template } from "../services/backendService/models";
-import { useTemplates } from "./useTemplates";
+import { FileService, FontService, PdfMeService, TemplateService } from "@/services";
+import type { BackendTypes, PdfMeTypes, TemplateTypes } from "@/services";
+import { useTemplates } from '@/hooks';
 
 export function usePdfMe(
   designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
@@ -24,51 +18,21 @@ export function usePdfMe(
   const templatesHook = useTemplates();
   const designer = useRef<PdfMeTypes.Designer | null>(null);
 
-  const plugins = {
-    Text: PdfMe.text,
-    QR: PdfMe.barcodes.qrcode,
-    Image: PdfMe.image,
-  };
-
   useEffect(() => {
     if (designerContainerRef && !designer.current) {
       const domContainer = designerContainerRef.current;
 
       if (domContainer)
-        designer.current = new PdfMeTypes.Designer({
+        designer.current = new PdfMeService.Designer({
           domContainer,
           template: initialTemplate ?? TemplateService.defaultTemplate,
           options: {
             font: FontService.getPdfMeFonts(),
           },
-          plugins,
+          plugins: PdfMeService.plugins
         });
     }
   });
-
-  async function generatePdf(inputs: Record<string, string>) {
-    if (!designer.current) throw new Error("Designer is not initialized");
-
-    const template = designer.current.getTemplate();
-
-    const substitutedInputs = TemplateService.substitutePlaceholdersWithContent(
-      template,
-      inputs,
-    );
-
-    const pdf = await PdfMe.generate({
-      template,
-      plugins,
-      inputs: substitutedInputs,
-    });
-
-    const blob = new Blob([pdf.buffer], { type: "application/pdf" });
-
-    //temporary, should not work like this by default later
-    window.open(URL.createObjectURL(blob));
-
-    return blob;
-  }
 
   async function handleLoadTemplate(
     event: React.ChangeEvent<HTMLInputElement>,
@@ -110,7 +74,7 @@ export function usePdfMe(
     });
   }
 
-  async function onLoadTemplate(template: Template) {
+  async function onLoadTemplate(template: BackendTypes.Template) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     if (!template) {
@@ -122,7 +86,7 @@ export function usePdfMe(
       template.templateJson,
     );
 
-    PdfMe.checkTemplate(pdfMeTemplate);
+    PdfMeService.checkTemplate(pdfMeTemplate);
 
     designer.current.updateTemplate(pdfMeTemplate);
   }
@@ -145,8 +109,39 @@ export function usePdfMe(
     designer.current.updateOptions({ font: FontService.getPdfMeFonts() });
   }
 
+  async function generatePdf(inputs: TemplateTypes.Substitions) {
+    if (!designer.current) throw new Error("Designer is not initialized");
+
+    const template = designer.current.getTemplate();
+
+    const substitutedInputs = TemplateService.substitutePlaceholdersWithContent(
+      template,
+      inputs,
+    );
+
+    const pdf = await PdfMeService.generate({
+      template,
+      plugins: PdfMeService.plugins,
+      inputs: substitutedInputs,
+    });
+
+    const blob = new Blob([pdf.buffer], { type: "application/pdf" });
+
+    //temporary, should not work like this by default later
+    // window.open(URL.createObjectURL(blob));
+
+    return blob;
+  }
+
+  async function downloadTemplate() {
+    if (!designer.current) throw new Error("Designer is not initialized");
+
+    const template = designer.current.getTemplate();
+
+    FileService.downloadJsonFile(template, "template");
+  }
+
   return {
-    generatePdf,
     handleLoadTemplate,
     onChangeBasePdf,
     onResetTemplate,
@@ -154,5 +149,7 @@ export function usePdfMe(
     onSaveTemplate,
     onNewTemplate,
     onLoadTemplate,
+    generatePdf,
+    downloadTemplate
   };
 }

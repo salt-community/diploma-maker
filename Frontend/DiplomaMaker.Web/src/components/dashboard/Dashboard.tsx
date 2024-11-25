@@ -1,11 +1,15 @@
-import { PageContainer } from "@/components/layout";
+import { useUser } from "@clerk/clerk-react";
 import { Link } from "@tanstack/react-router";
 import { FileEditIcon, Files01Icon, PlusSignIcon } from "hugeicons-react";
 
-function Dashboard() {
+import { PageContainer } from "@/components/layout";
+
+export default function Dashboard() {
+  const { user } = useUser();
+
   return (
     <PageContainer>
-      <h1>Welcome John Doe!</h1>
+      <h1>Welcome {user?.fullName}!</h1>
       <p className="text-lg font-bold">What would you like to do?</p>
       <div className="mt-16 grid grid-cols-2 gap-8">
         <GenerateDiplomaLink />
@@ -16,14 +20,10 @@ function Dashboard() {
   );
 }
 
-/* 
-  TODO: Update with actual route path
-*/
-
 function GenerateDiplomaLink() {
   return (
     <Link
-      to="/"
+      to="/diploma-generator"
       className="group col-span-full grid h-64 place-items-center rounded-2xl bg-accent-light no-underline"
     >
       <div className="flex flex-col items-center gap-4 transition-transform group-hover:scale-105">
@@ -36,14 +36,10 @@ function GenerateDiplomaLink() {
   );
 }
 
-/* 
-  TODO: Update with actual route path
-*/
-
 function ManageTemplatesLink() {
   return (
     <Link
-      to="/"
+      to="/template-designer"
       className="group grid h-64 place-items-center rounded-2xl bg-secondary no-underline"
     >
       <div className="flex flex-col items-center gap-4 transition-transform group-hover:scale-105">
@@ -56,14 +52,10 @@ function ManageTemplatesLink() {
   );
 }
 
-/* 
-  TODO: Update with actual route path
-*/
-
 function ViewDiplomasLink() {
   return (
     <Link
-      to="/"
+      to="/history"
       className="group grid h-64 place-items-center rounded-2xl bg-info no-underline"
     >
       <div className="flex flex-col items-center gap-4 transition-transform group-hover:scale-105">
@@ -75,5 +67,3 @@ function ViewDiplomasLink() {
     </Link>
   );
 }
-
-export default Dashboard;
