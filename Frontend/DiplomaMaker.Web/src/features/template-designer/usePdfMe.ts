@@ -65,12 +65,10 @@ export function usePdfMe(
     designer.current.updateTemplate(template);
   }
 
-  async function onChangeBasePdf(event: React.ChangeEvent<HTMLInputElement>) {
-    if (!event.target?.files) throw new Error("Files are not defined");
-
+  async function loadBasePDF(file: File) {
     if (!designer.current) throw new Error("Designer is not initialized");
 
-    const basePdf = await FileService.readDataUrlFile(event.target.files[0]);
+    const basePdf = await FileService.readDataUrlFile(file);
     const currentTemplate = designer.current.getTemplate();
 
     designer.current.updateTemplate(
@@ -168,7 +166,7 @@ export function usePdfMe(
 
   return {
     handleLoadTemplate,
-    onChangeBasePdf,
+    loadBasePDF,
     onResetTemplate,
     handleReloadFonts,
     onSaveTemplate,

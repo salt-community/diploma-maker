@@ -8,7 +8,7 @@ import {
 
 import { usePdfMe } from "@/features/template-designer/usePdfMe";
 import { BackendTypes, TemplateService } from "@/services";
-import { FloppyDiskIcon } from "hugeicons-react";
+import { FloppyDiskIcon, Pdf01Icon, TextFontIcon } from "hugeicons-react";
 import { useEffect, useRef, useState } from "react";
 import SaveTemplateModal, { SAVE_TEMPLATE_MODAL_ID } from "./SaveTemplateModal";
 import TemplatePicker from "./TemplatePicker";
@@ -16,8 +16,13 @@ import TemplatePicker from "./TemplatePicker";
 export default function TemplateDesigner() {
   const designerRef = useRef<HTMLDivElement | null>(null);
 
-  const { getTemplateJson, loadTemplate, loadBlankTemplate, downloadTemplate } =
-    usePdfMe(designerRef);
+  const {
+    getTemplateJson,
+    loadTemplate,
+    loadBlankTemplate,
+    loadBasePDF,
+    downloadTemplate,
+  } = usePdfMe(designerRef);
 
   const [selectedTemplateId, setSelectedTemplateId] = useState<
     string | undefined
@@ -55,6 +60,12 @@ export default function TemplateDesigner() {
     closeSaveModal();
   };
 
+  const handleLoadBasePDF = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    loadBasePDF(file);
+  };
+
   return (
     <div className="flex h-full flex-col">
       <div className="navbar z-40 h-[80px] bg-neutral px-4 shadow-sm">
@@ -69,11 +80,11 @@ export default function TemplateDesigner() {
           />
         </div>
         <div className="navbar-end">
-          <button className="btn" onClick={() => downloadTemplate()}>
+          {/* <button className="btn" onClick={() => downloadTemplate()}>
             Download Template
-          </button>
+          </button> */}
 
-          <label className="form-control w-full max-w-xs p-4">
+          {/* <label className="form-control w-full max-w-xs p-4">
             <input
               className="file-input file-input-bordered w-full max-w-xs"
               type="file"
@@ -89,8 +100,24 @@ export default function TemplateDesigner() {
                 } as BackendTypes.Template);
               }}
             />
-          </label>
-
+          </label> */}
+          <div className="flex gap-4">
+            <button className="btn btn-ghost">
+              <TextFontIcon size={24} />
+              Add Font
+            </button>
+            <label className="btn btn-ghost">
+              <Pdf01Icon size={24} />
+              Upload Base PDF
+              <input
+                className="hidden"
+                type="file"
+                accept="application/pdf"
+                onChange={handleLoadBasePDF}
+              />
+            </label>
+          </div>
+          <div className="divider divider-horizontal"></div>
           <button
             className="btn btn-primary"
             onClick={
