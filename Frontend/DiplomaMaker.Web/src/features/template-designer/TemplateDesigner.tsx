@@ -57,7 +57,7 @@ export default function TemplateDesigner() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="navbar z-40 h-16 bg-neutral px-4">
+      <div className="navbar z-40 h-[80px] bg-neutral px-4 shadow-sm">
         <div className="navbar-start">
           <TemplatePicker
             selectedTemplateId={selectedTemplateId}
