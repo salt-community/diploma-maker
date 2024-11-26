@@ -1,1 +1,1 @@
-export { DiplomaForm } from './DiplomaForm'
+export { DiplomaFormSubpage as DiplomaForm } from './DiplomaFormSubpage'

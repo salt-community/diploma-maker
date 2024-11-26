@@ -6,7 +6,7 @@ export function useToken() {
 
   const query = useQuery({
     queryKey: ["token"],
-    queryFn: async () => await auth.getToken(),
+    queryFn: async () => await auth.getToken() as string | null,
   });
 
   return {

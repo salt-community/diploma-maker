@@ -1,16 +1,21 @@
-import { ArrowRight01Icon } from "hugeicons-react";
 import { AddStudentRow } from "./AddStudentRow";
 import { GraduationDateInput } from "./GraduationDateInput";
 import { HeaderRow } from "./HeaderRow";
 import { StudentRows } from "./StudentRows";
 import { TrackInput } from "./TrackInput";
-import { useCache } from "@/hooks";
-import { BootcampTypes, BootcampService } from "@/services";
-import { UseFormReturn, UseFieldArrayReturn, useForm, useFieldArray } from "react-hook-form";
-import { bootcampKey } from "../cacheKeys";
+import { useCache, useToken } from "@/hooks";
+import { BootcampTypes, BootcampService, BackendTypes, DiplomaService, TemplateService } from "@/services";
+import { useForm, useFieldArray } from "react-hook-form";
+import { bootcampKey, currentTemplateKey, selectedTemplateKey } from "../cacheKeys";
 
-export function DiplomaForm() {
+interface Props {
+    display: boolean
+}
+
+export function DiplomaFormSubpage({ display }: Props) {
     const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
+    const [currentTemplate, __] = useCache<BackendTypes.Template>(currentTemplateKey);
+    const { token } = useToken();
 
     if (bootcamp == null)
         setBootcamp(BootcampService.defaultBootcamp);
@@ -29,6 +34,21 @@ export function DiplomaForm() {
     const onFormSubmit = form.handleSubmit((bootcamp: BootcampTypes.FormBootcamp) => {
         const updatedBootcamp = BootcampService.formBootcampToBootcamp(bootcamp);
         setBootcamp(updatedBootcamp);
+
+        if (!currentTemplate)
+            throw new Error("No template");
+
+        if (!token || token == null)
+            throw new Error("No token");
+
+        updatedBootcamp.students.map(async (student) => {
+            const diploma = await DiplomaService.postDiploma(currentTemplate, updatedBootcamp, student);
+
+            await DiplomaService.emailDiploma(
+                TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
+                diploma,
+                token);
+        });
     });
 
     if (!form || !fieldArray)
@@ -36,15 +56,17 @@ export function DiplomaForm() {
 
     return (
         <form
+            className="h-full"
             id={import.meta.env.VITE_DIPLOMA_FORM_ID}
             onSubmit={onFormSubmit}
+            hidden={!display}
         >
 
             <div className="divider">
                 Bootcamp
             </div>
 
-            <div className="flex flex-row">
+            <div className="flex flex-row justify-between">
                 <TrackInput form={form} fieldArray={fieldArray} />
                 <GraduationDateInput form={form} fieldArray={fieldArray} />
             </div>
@@ -52,11 +74,12 @@ export function DiplomaForm() {
             <div className="divider">
                 Students</div>
 
-            <div className="overflow-x-auto h-96">
+            <div className="overflow-x-auto">
                 <table className="table table-xs table-pin-rows table-pin-cols">
 
                     <thead>
                         <HeaderRow headerTitles={["Name", "Email", ""]} />
+
                     </thead>
 
                     <tbody>
@@ -65,16 +88,6 @@ export function DiplomaForm() {
                     </tbody>
 
                 </table>
-
-                <div className="flex flex-row justify-end">
-                    <button
-                        type="submit"
-                        className="btn bg-primary text-primary-content hocus:bg-primary-focus mx-"
-                    >
-                        Select Template
-                        <ArrowRight01Icon size={16} />
-                    </button>
-                </div>
             </div>
         </form>
 

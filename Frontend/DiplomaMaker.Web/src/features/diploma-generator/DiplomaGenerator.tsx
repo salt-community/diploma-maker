@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { DiplomaForm } from "./diploma-form";
+import SelectTemplateSubpage from "./SelectTemplateSubpage";
 
 export default function DiplomaGenerator() {
     const [pageNumber, setPageNumber] = useState<number>(0);
@@ -30,9 +31,10 @@ export default function DiplomaGenerator() {
     }
 
     return (
-        <div className="flex h-full flex-col">
+        <div className="flex h-full w-full px-56 flex-col">
             <DiplomaGeneratorNavbar />
-            <DiplomaForm />
+            <DiplomaForm display={pageNumber == 0} />
+            <SelectTemplateSubpage display={pageNumber == 1} />
         </div >
     );
 }
