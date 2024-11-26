@@ -61,6 +61,10 @@ export function substitutePlaceholdersWithContent(
                 inputs[fieldName] = content;
 
                 break;
+            case 'image':
+                inputs[fieldName] = content;
+
+                break;
         }
     });
 
