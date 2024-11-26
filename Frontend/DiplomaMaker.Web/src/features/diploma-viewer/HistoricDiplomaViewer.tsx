@@ -6,9 +6,10 @@ import { useHistoricDiploma } from "./useHistoricDiploma";
 
 interface Props {
     diplomaGuid: string,
+    className?: string
 }
 
-export default function HistoricDiplomaViewer({ diplomaGuid }: Props) {
+export default function HistoricDiplomaViewer({ diplomaGuid, className }: Props) {
     const diplomaViewerRef = useRef<HTMLDivElement | null>(null);
     const { historicDiploma, status } = useHistoricDiploma(diplomaGuid);
     const { loadViewer } = usePdfMeViewer();
@@ -27,9 +28,8 @@ export default function HistoricDiplomaViewer({ diplomaGuid }: Props) {
     });
 
     return (<>
-        {historicDiploma && <div ref={diplomaViewerRef} />}
+        {historicDiploma && <div ref={diplomaViewerRef} className={className} />}
         {!historicDiploma && status == 'pending' && <span className="loading loading-spinner loading-lg"></span>}
         {!historicDiploma && status == 'error' && <p>Could not find diploma :/</p>}
-
     </>);
 }

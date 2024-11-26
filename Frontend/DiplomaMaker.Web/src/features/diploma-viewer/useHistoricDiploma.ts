@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { BackendService, BackendTypes } from "@/services";
 
+
 export function useHistoricDiploma(diplomaGuid: string) {
     const queryKey = ["HistoricDiploma", diplomaGuid];
 

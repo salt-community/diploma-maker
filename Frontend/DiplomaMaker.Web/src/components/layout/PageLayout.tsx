@@ -6,9 +6,9 @@ interface Props {
 
 export default function PageLayout({ children }: Props) {
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-screen w-screen flex-col">
       <Navbar />
-      <main className="h-100 flex-1 overflow-auto content-center justify-items-center	">{children}</main>
+      <main className="flex-1 overflow-auto content-center justify-items-center	">{children}</main>
     </div>
   );
 }
