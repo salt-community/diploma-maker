@@ -17,6 +17,16 @@ import {
 import type { BackendTypes, PdfMeTypes, TemplateTypes } from "@/services";
 import { useTemplates } from "@/hooks";
 
+// PDFMe Designer Theme
+const theme = {
+  token: {
+    colorPrimary: "#FF7961",
+    colorTextBase: "#042D45",
+    colorBgLayout: "#FFFFFF",
+    colorBgMask: "#042D45",
+  },
+};
+
 export function usePdfMe(
   designerContainerRef?: React.MutableRefObject<HTMLDivElement | null>,
   initialTemplate?: PdfMeTypes.Template,
@@ -34,6 +44,7 @@ export function usePdfMe(
           template: initialTemplate ?? TemplateService.defaultTemplate,
           options: {
             font: FontService.getPdfMeFonts(),
+            theme: theme,
           },
           plugins: PdfMeService.plugins,
         });
