@@ -1,5 +1,5 @@
 import { useFieldArray, useForm } from "react-hook-form";
-import { Add01Icon, Delete04Icon } from "hugeicons-react";
+import { Add01Icon, UserAdd01Icon, ArrowRight01Icon, Delete04Icon } from "hugeicons-react";
 
 import { BootcampService, DiplomaService, TemplateService } from "@/services";
 import type { BackendTypes, BootcampTypes } from "@/services";
@@ -8,8 +8,13 @@ import { useCache, useModal, useToken } from "@/hooks";
 import { bootcampKey, currentTemplateKey, selectedTemplateKey } from "./cacheKeys";
 import PreviewDiplomaViewer from "../diploma-viewer/PreviewDiplomaViewer";
 import { Modal } from "@/components";
+import UploadBootcamp from "./UploadBootcamp";
 
-export default function BootcampForm() {
+interface Props {
+    display?: boolean
+}
+
+export default function BootcampForm({ display }: Props) {
     const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
     const [selectedTemplate, _] = useCache<BackendTypes.NamedEntity>(selectedTemplateKey);
     const [currentTemplate, __] = useCache<BackendTypes.Template>(currentTemplateKey);
@@ -30,7 +35,7 @@ export default function BootcampForm() {
         values: formBootcamp
     });
 
-    const { fields: studentFields, append, remove } = useFieldArray<BootcampTypes.FormBootcamp>({
+    const { fields: studentFields, prepend, remove } = useFieldArray<BootcampTypes.FormBootcamp>({
         control,
         name: 'students',
     });
@@ -38,24 +43,23 @@ export default function BootcampForm() {
     const onFormSubmit = (bootcamp: BootcampTypes.FormBootcamp) => {
         const updatedBootcamp = BootcampService.formBootcampToBootcamp(bootcamp);
         setBootcamp(updatedBootcamp);
-
-        if (!currentTemplate)
-            throw new Error("No template");
-
-        updatedBootcamp.students.map(async (student) => {
-            const diploma = await DiplomaService.postDiploma(currentTemplate, updatedBootcamp, student);
-            if (!token) return;
-
-            await DiplomaService.emailDiploma(
-                TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
-                diploma,
-                token);
-        });
     };
 
     const header = (<tr>
         <th>Name</th><th>Email</th><th></th>
     </tr>);
+
+    const addUserRow = (<tr key={"addStudent"}>
+        <td colSpan={3}>
+            <div className="flex justify-center items-center">
+                <button
+                    className="btn  w-full"
+                    onClick={() => prepend(BootcampService.defaultStudent)}>
+                    <UserAdd01Icon size={16} />Add Student
+                </button>
+            </div>
+        </td>
+    </tr>)
 
     const rows = studentFields.map((student, index) => (
         <tr key={student.id}>
@@ -83,63 +87,76 @@ export default function BootcampForm() {
                     }}
                     disabled={studentFields.length <= 1}>
                     <Delete04Icon size={16} />
-                    Remove
                 </button>
             </td>
         </tr>
     ));
 
+    rows.unshift(addUserRow);
+
+    if (display == false)
+        return;
+
     return (
         <div className="overflow-x-auto p-4 max-w-screen-lg">
-            <form onSubmit={handleSubmit(onFormSubmit)}>
-                <label className="form-control w-full max-w-xs">
-                    <div className="label">
-                        <span className="label-text">Track</span>
+            <div className="divider">Pick a bootcamp .json file to auto-populate the form</div>
+            <UploadBootcamp />
+
+            <form
+                id={import.meta.env.VITE_DIPLOMA_FORM_ID}
+                onSubmit={handleSubmit(onFormSubmit)}
+            >
+
+                <div className="divider">Bootcamp</div>
+
+                <div className="flex flex-row">
+                    <label className="form-control w-full max-w-xs">
+                        <div className="label">
+                            <span className="label-text">Track</span>
+                        </div>
+                        <input {...register('track')}
+                            className="input input-bordered w-full max-w-xs"
+                            type="text"
+                        />
+                    </label>
+
+
+                    <label className="form-control w-full max-w-xs">
+                        <div className="label">
+                            <span className="label-text">Graduation Date</span>
+                        </div>
+                        <input {...register('graduationDate')}
+                            className="input input-bordered w-full max-w-xs"
+                            type="date"
+                        />
+                    </label>
+                </div>
+
+                <div className="divider">Students</div>
+
+                <div className="overflow-x-auto h-96">
+                    <table className="table table-xs table-pin-rows table-pin-cols">
+
+                        <thead>
+                            {header}
+                        </thead>
+
+                        <tbody>
+                            {rows}
+                        </tbody>
+
+                    </table>
+
+                    <div className="flex flex-row justify-end">
+                        <button
+                            type="submit"
+                            className="btn bg-primary text-primary-content hocus:bg-primary-focus mx-"
+                        >
+                            Select Template
+                            <ArrowRight01Icon size={16} />
+                        </button>
                     </div>
-                    <input {...register('track')}
-                        className="input input-bordered w-full max-w-xs"
-                        type="text"
-                    />
-                </label>
-
-                <label className="form-control w-full max-w-xs">
-                    <div className="label">
-                        <span className="label-text">Graduation Date</span>
-                    </div>
-                    <input {...register('graduationDate')}
-                        className="input input-bordered w-full max-w-xs"
-                        type="date"
-                    />
-                </label>
-
-                <span className="label-text">Students</span>
-
-                <table className="table my-4">
-
-                    <thead>
-                        {header}
-                    </thead>
-
-                    <tbody>
-                        {rows}
-                    </tbody>
-
-                </table>
-
-                <button
-                    className="btn bg-primary text-primary-content hocus:bg-primary-focus"
-                    onClick={() => append(BootcampService.defaultStudent)}>
-                    <Add01Icon size={16} />
-                    Add Student
-                </button>
-
-                <button
-                    type="submit"
-                    className="btn bg-primary text-primary-content hocus:bg-primary-focus"
-                    disabled={selectedTemplate == null}>
-                    <Add01Icon size={16} />
-                    Send Out Diplomas
-                </button>
+                </div>
             </form>
 
             <button

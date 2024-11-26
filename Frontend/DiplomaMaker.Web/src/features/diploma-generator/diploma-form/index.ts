@@ -1,0 +1,1 @@
+export { DiplomaForm } from './DiplomaForm'
