@@ -7,10 +7,11 @@ import {
 } from "@/features/template-designer/template";
 
 import { usePdfMe } from "@/features/template-designer/usePdfMe";
+import { BackendTypes, TemplateService } from "@/services";
+import { FloppyDiskIcon } from "hugeicons-react";
 import { useEffect, useRef, useState } from "react";
 import SaveTemplateModal, { SAVE_TEMPLATE_MODAL_ID } from "./SaveTemplateModal";
 import TemplatePicker from "./TemplatePicker";
-import { BackendTypes, TemplateService } from "@/services";
 
 export default function TemplateDesigner() {
   const designerRef = useRef<HTMLDivElement | null>(null);
@@ -56,7 +57,7 @@ export default function TemplateDesigner() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="navbar z-40 bg-neutral">
+      <div className="navbar z-40 h-16 bg-neutral px-4">
         <div className="navbar-start">
           <TemplatePicker
             selectedTemplateId={selectedTemplateId}
@@ -91,16 +92,22 @@ export default function TemplateDesigner() {
           </label>
 
           <button
-            className="btn"
+            className="btn btn-primary"
             onClick={
               selectedTemplateId ? handleSaveTemplateChanges : openSaveModal
             }
           >
+            <FloppyDiskIcon size={24} />
             {selectedTemplateId ? "Save Changes" : "Save Template"}
           </button>
         </div>
       </div>
-      <div ref={designerRef} />
+      <div className="flex-1 bg-neutral pl-4">
+        <div
+          ref={designerRef}
+          className="h-full [&>*:first-child]:!bg-base-100"
+        />
+      </div>
       <SaveTemplateModal
         onSave={handleSaveNewTemplate}
         onCancel={closeSaveModal}
