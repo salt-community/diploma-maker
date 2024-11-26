@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DiplomaForm } from "./diploma-form";
+import { DiplomaForm } from "./diploma-form-subpage";
 import SelectTemplateSubpage from "./SelectTemplateSubpage";
 
 export default function DiplomaGenerator() {

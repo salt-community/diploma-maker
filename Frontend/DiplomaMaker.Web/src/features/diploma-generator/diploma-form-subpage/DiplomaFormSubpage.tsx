@@ -7,6 +7,7 @@ import { useCache, useToken } from "@/hooks";
 import { BootcampTypes, BootcampService, BackendTypes, DiplomaService, TemplateService } from "@/services";
 import { useForm, useFieldArray } from "react-hook-form";
 import { bootcampKey, currentTemplateKey, selectedTemplateKey } from "../cacheKeys";
+import UploadBootcamp from "../UploadBootcamp";
 
 interface Props {
     display: boolean
@@ -59,8 +60,15 @@ export function DiplomaFormSubpage({ display }: Props) {
             className="h-full"
             id={import.meta.env.VITE_DIPLOMA_FORM_ID}
             onSubmit={onFormSubmit}
-            hidden={!display}
-        >
+            hidden={!display}>
+
+            <div className="divider">
+                Select a bootcamp .json file to auto-fill the form
+            </div>
+
+            <div className="flex flex-row justify-center" >
+                <UploadBootcamp />
+            </div>
 
             <div className="divider">
                 Bootcamp
@@ -72,7 +80,8 @@ export function DiplomaFormSubpage({ display }: Props) {
             </div>
 
             <div className="divider">
-                Students</div>
+                Students
+            </div>
 
             <div className="overflow-x-auto">
                 <table className="table table-xs table-pin-rows table-pin-cols">
@@ -89,7 +98,7 @@ export function DiplomaFormSubpage({ display }: Props) {
 
                 </table>
             </div>
-        </form>
+        </form >
 
     );
 }

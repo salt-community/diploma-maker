@@ -2,8 +2,8 @@ import { Delete04Icon } from "hugeicons-react";
 import { DiplomaFormProps } from "./DiplomaFormProps";
 
 export function StudentRows({ form, fieldArray }: DiplomaFormProps) {
-
     if (form == null || fieldArray == null) return;
+
     return fieldArray.fields.map((student, index) => (
         <tr key={student.id} >
             <td>

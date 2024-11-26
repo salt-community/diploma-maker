@@ -3,6 +3,7 @@ import { BootcampTypes, BackendTypes, TemplateService, DiplomaService } from "@/
 import { PreviewDiplomaViewer } from "../diploma-viewer";
 import { bootcampKey, currentTemplateKey } from "./cacheKeys";
 import TemplatePicker from "./TemplatePicker";
+import { MailAtSign01Icon } from "hugeicons-react";
 
 interface Props {
     display: boolean
@@ -22,8 +23,10 @@ export default function SelectTemplateSubpage({ display }: Props) {
                 <button
                     type="submit"
                     form={import.meta.env.VITE_DIPLOMA_FORM_ID}
-                    className="btn bg-primary text-primary-content hocus:bg-primary-focus">
+                    className="btn bg-primary text-primary-content hocus:bg-primary-focus"
+                    disabled={!currentTemplate}>
                     Send Out Diplomas
+                    <MailAtSign01Icon size={16} />
                 </button>
             </div >
 

@@ -1,24 +1,9 @@
-import { BootcampService, BootcampTypes } from "@/services";
+import { BootcampService } from "@/services";
 import { UserAdd01Icon } from "hugeicons-react";
-import { useCache } from "@/hooks";
-import { bootcampKey } from "../cacheKeys";
 import { DiplomaFormProps } from "./DiplomaFormProps";
 
 export function AddStudentRow({ fieldArray }: DiplomaFormProps) {
-    const [bootcamp, setBootcamp] = useCache<BootcampTypes.Bootcamp>(bootcampKey);
-
     if (fieldArray == null) return;
-
-    function prependStudentToBootcamp() {
-        if (!bootcamp) return;
-
-        setBootcamp(
-            {
-                ...bootcamp,
-                students: [BootcampService.defaultStudent, ...bootcamp.students]
-            } as BootcampTypes.Bootcamp
-        );
-    }
 
     return (
         <tr key={"addStudent"}>
