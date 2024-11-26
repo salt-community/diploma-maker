@@ -45,6 +45,8 @@ export function DiplomaFormSubpage({ display }: Props) {
         updatedBootcamp.students.map(async (student) => {
             const diploma = await DiplomaService.postDiploma(currentTemplate, updatedBootcamp, student);
 
+            if (import.meta.env.VITE_SEND_DIPLOMAS == 0) return;
+
             await DiplomaService.emailDiploma(
                 TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
                 diploma,
