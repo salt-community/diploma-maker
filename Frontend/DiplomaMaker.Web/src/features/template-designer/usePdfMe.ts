@@ -120,7 +120,7 @@ export function usePdfMe(
     designer.current.updateTemplate(TemplateService.defaultTemplate);
   }
 
-  function handleReloadFonts() {
+  function reloadFonts() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
     designer.current.updateOptions({ font: FontService.getPdfMeFonts() });
@@ -168,7 +168,7 @@ export function usePdfMe(
     handleLoadTemplate,
     loadBasePDF,
     onResetTemplate,
-    handleReloadFonts,
+    reloadFonts,
     onSaveTemplate,
     loadBlankTemplate,
     loadTemplate,

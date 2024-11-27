@@ -1,12 +1,11 @@
 type ModalProps = {
   id: string;
   title: string;
-  children: React.ReactNode;
-};
+} & React.DialogHTMLAttributes<HTMLDialogElement>;
 
-export default function Modal({ id, title, children }: ModalProps) {
+export default function Modal({ id, title, children, ...rest }: ModalProps) {
   return (
-    <dialog className="modal" id={id}>
+    <dialog className="modal" id={id} {...rest}>
       <div className="sm:max-w-screen-xs modal-box">
         <h3 className="font-display text-lg font-bold">{title}</h3>
         <form method="dialog">
