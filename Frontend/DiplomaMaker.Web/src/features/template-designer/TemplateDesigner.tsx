@@ -7,11 +7,13 @@ import {
 } from "@/features/template-designer/template";
 
 import { usePdfMe } from "@/features/template-designer/usePdfMe";
-import { BackendTypes, TemplateService } from "@/services";
 import { FloppyDiskIcon, Pdf01Icon, TextFontIcon } from "hugeicons-react";
 import { useEffect, useRef, useState } from "react";
 import SaveTemplateModal, { SAVE_TEMPLATE_MODAL_ID } from "./SaveTemplateModal";
 import TemplatePicker from "./TemplatePicker";
+import ManageFontsModal, {
+  MANAGE_FONTS_MODAL_ID,
+} from "./font-manager/ManageFontsModal";
 
 export default function TemplateDesigner() {
   const designerRef = useRef<HTMLDivElement | null>(null);
@@ -22,6 +24,7 @@ export default function TemplateDesigner() {
     loadBlankTemplate,
     loadBasePDF,
     downloadTemplate,
+    reloadFonts,
   } = usePdfMe(designerRef);
 
   const [selectedTemplateId, setSelectedTemplateId] = useState<
@@ -37,6 +40,9 @@ export default function TemplateDesigner() {
 
   const { open: openSaveModal, close: closeSaveModal } = useModal(
     SAVE_TEMPLATE_MODAL_ID,
+  );
+  const { open: openFontsModal, close: closeFontsModal } = useModal(
+    MANAGE_FONTS_MODAL_ID,
   );
 
   useEffect(() => {
@@ -102,9 +108,9 @@ export default function TemplateDesigner() {
             />
           </label> */}
           <div className="flex gap-4">
-            <button className="btn btn-ghost">
+            <button className="btn btn-ghost" onClick={openFontsModal}>
               <TextFontIcon size={24} />
-              Add Font
+              Get Fonts
             </button>
             <label className="btn btn-ghost">
               <Pdf01Icon size={24} />
@@ -139,6 +145,7 @@ export default function TemplateDesigner() {
         onSave={handleSaveNewTemplate}
         onCancel={closeSaveModal}
       />
+      <ManageFontsModal onReloadFonts={reloadFonts} />
     </div>
   );
 }
