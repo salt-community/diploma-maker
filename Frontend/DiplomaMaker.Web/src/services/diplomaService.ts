@@ -86,7 +86,7 @@ export function historicDiplomaToTemplateAndSubstitutions(historicDiploma: Backe
         studentName: historicDiploma.studentName,
         track: historicDiploma.track,
         graduationDate: StringService.formatDate_YYYY_mm_dd(historicDiploma.graduationDate),
-        qrLink: "www.google.com"
+        qrLink: `${import.meta.env.VITE_VALIDATE_DIPLOMA_URL}/${historicDiploma.guid}`
     } as TemplateTypes.Substitions;
 
     return [template, substitions] as [PdfMeTypes.Template, TemplateTypes.Substitions];

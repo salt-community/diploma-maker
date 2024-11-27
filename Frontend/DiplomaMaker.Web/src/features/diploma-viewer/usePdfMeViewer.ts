@@ -24,8 +24,6 @@ export function usePdfMeViewer() {
       plugins: PdfMeService.plugins,
       domContainer
     });
-
-    console.log(viewer);
   }
 
   return {

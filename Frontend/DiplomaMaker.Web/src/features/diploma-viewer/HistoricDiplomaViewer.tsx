@@ -15,14 +15,11 @@ export default function HistoricDiplomaViewer({ diplomaGuid, className }: Props)
     const { loadViewer } = usePdfMeViewer();
 
     useEffect(() => {
-        if (!historicDiploma)
+        if (!historicDiploma || !diplomaViewerRef.current)
             return;
 
         const [template, substitions] = DiplomaService
             .historicDiplomaToTemplateAndSubstitutions(historicDiploma);
-
-        if (!diplomaViewerRef.current)
-            return;
 
         loadViewer(diplomaViewerRef.current, template, substitions);
     });
