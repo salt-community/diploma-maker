@@ -91,3 +91,32 @@ export function historicDiplomaToTemplateAndSubstitutions(historicDiploma: Backe
 
     return [template, substitions] as [PdfMeTypes.Template, TemplateTypes.Substitions];
 }
+
+/*
+    Sort diplomas by date and group them by day
+    Then sort each group by studentName
+*/
+export function groupDiplomas(diplomas: BackendTypes.DiplomaRecord[]) {
+    const diplomaGroups: BackendTypes.DiplomaRecord[][] = [];
+
+    diplomas.sort((a, b) => (new Date(b.graduationDate)).getTime() - (new Date(a.graduationDate)).getTime());
+
+    let date = new Date();
+    let groupIndex = -1;
+
+    diplomas.forEach(diploma => {
+        if (diploma.graduationDate != date) {
+            date = diploma.graduationDate;
+
+            if (groupIndex >= 0)
+                diplomaGroups[groupIndex].sort((a, b) => ('' + a.studentName).localeCompare(b.studentName));
+
+            diplomaGroups.push([]);
+            groupIndex++;
+        }
+
+        diplomaGroups[groupIndex].push(diploma);
+    });
+
+    return diplomaGroups;
+}
