@@ -43,8 +43,7 @@ export function substitutePlaceholdersWithContent(
 
     const inputs: Record<string, unknown> = {};
 
-    console.log(template);
-    console.log(substitutions);
+    console.log(substitutions.qrLink)
 
     Object.entries(template.schemas[0]).forEach(entry => {
         const fieldName = entry[1]['name'];
@@ -53,6 +52,9 @@ export function substitutePlaceholdersWithContent(
 
         switch (typeName) {
             case 'qrcode':
+                inputs[fieldName] = substitutions.qrLink
+                break;
+
             case 'text':
                 Object.entries(placeholders).forEach(([key, placeholder]) => {
                     content = content!.replace(placeholder, substitutions[key as keyof typeof placeholders])

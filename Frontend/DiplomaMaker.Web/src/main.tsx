@@ -5,6 +5,8 @@ import ReactDOM from 'react-dom/client'
 import { ClerkProvider } from '@clerk/clerk-react'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 
+console.log(import.meta.env.VITE_SEND_DIPLOMAS == 0)
+
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'

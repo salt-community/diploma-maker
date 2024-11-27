@@ -6,7 +6,7 @@ import { TrackInput } from "./TrackInput";
 import { useCache, useToken } from "@/hooks";
 import { BootcampTypes, BootcampService, BackendTypes, DiplomaService, TemplateService } from "@/services";
 import { useForm, useFieldArray } from "react-hook-form";
-import { bootcampKey, currentTemplateKey, selectedTemplateKey } from "../cacheKeys";
+import { bootcampKey, currentTemplateKey } from "../cacheKeys";
 import UploadBootcamp from "../UploadBootcamp";
 
 interface Props {
@@ -42,13 +42,15 @@ export function DiplomaFormSubpage({ display }: Props) {
         if (!token || token == null)
             throw new Error("No token");
 
-        updatedBootcamp.students.map(async (student) => {
+        updatedBootcamp.students.forEach(async (student) => {
             const diploma = await DiplomaService.postDiploma(currentTemplate, updatedBootcamp, student);
 
-            await DiplomaService.emailDiploma(
-                TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
-                diploma,
-                token);
+            if (import.meta.env.VITE_SEND_DIPLOMAS == 1) {
+                await DiplomaService.emailDiploma(
+                    TemplateService.backendTemplateToPdfMeTemplate(currentTemplate),
+                    diploma,
+                    token);
+            }
         });
     });
 
