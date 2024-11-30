@@ -1,4 +1,4 @@
-import { Modal } from "@/components";
+import { BaseModalProps, Modal } from "@/components";
 import {
   useTemplatePeeks,
   useUpdateTemplateMutation,
@@ -8,9 +8,10 @@ import { File02Icon, PencilEdit01Icon, Tick01Icon } from "hugeicons-react";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-export const MANAGE_TEMPLATES_MODAL_ID = "manage-templates-modal";
-
-export default function ManageTemplatesModal() {
+export default function ManageTemplatesModal({
+  isOpen,
+  onClose,
+}: BaseModalProps) {
   const { data: templatePeeks } = useTemplatePeeks();
 
   const { mutate: updateTemplate } = useUpdateTemplateMutation();
@@ -30,21 +31,26 @@ export default function ManageTemplatesModal() {
   };
 
   return (
-    <>
-      <Modal id={MANAGE_TEMPLATES_MODAL_ID} title="Manage Templates">
-        <div className="p-4">
-          <ul className="flex flex-col gap-4">
-            {templatePeeks?.map((template) => (
-              <TemplateItem
-                key={template.guid}
-                template={template}
-                onSave={handleSaveTemplate}
-              />
-            ))}
-          </ul>
-        </div>
-      </Modal>
-    </>
+    <Modal isOpen={isOpen} onClose={onClose} panelClass="pb-12">
+      <div className="pb-8">
+        <h3 className="font-display text-lg font-bold">Manage Templates</h3>
+        <button
+          onClick={onClose}
+          className="btn btn-circle btn-ghost absolute right-2 top-2"
+        >
+          ✕
+        </button>
+      </div>
+      <ul className="flex flex-col gap-4">
+        {templatePeeks?.map((template) => (
+          <TemplateItem
+            key={template.guid}
+            template={template}
+            onSave={handleSaveTemplate}
+          />
+        ))}
+      </ul>
+    </Modal>
   );
 }
 

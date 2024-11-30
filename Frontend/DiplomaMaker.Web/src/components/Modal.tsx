@@ -1,23 +1,35 @@
-type ModalProps = {
-  id: string;
-  title: string;
-} & React.DialogHTMLAttributes<HTMLDialogElement>;
+import React from "react";
+import { createPortal } from "react-dom";
 
-export default function Modal({ id, title, children, ...rest }: ModalProps) {
-  return (
-    <dialog className="modal" id={id} {...rest}>
-      <div className="sm:max-w-screen-xs modal-box">
-        <h3 className="font-display text-lg font-bold">{title}</h3>
-        <form method="dialog">
-          <button className="btn btn-circle btn-ghost absolute right-2 top-2">
-            ✕
-          </button>
-        </form>
-        <div className="mt-4">{children}</div>
+export type BaseModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+};
+
+type ModalProps = {
+  panelClass?: string;
+  backdropClass?: string;
+} & BaseModalProps &
+  React.HTMLAttributes<HTMLDialogElement>;
+
+export default function Modal({
+  isOpen,
+  onClose,
+  children,
+  className = "",
+  panelClass = "",
+  backdropClass = "",
+  ...rest
+}: ModalProps) {
+  return createPortal(
+    <dialog className={`modal ${className}`} open={isOpen} {...rest}>
+      <div className={`sm:max-w-screen-xs modal-box ${panelClass}`}>
+        {children}
       </div>
-      <form method="dialog" className="modal-backdrop">
-        <button>close</button>
-      </form>
-    </dialog>
+      <div className={`modal-backdrop bg-black/35 ${backdropClass}`}>
+        <button onClick={onClose}>close</button>
+      </div>
+    </dialog>,
+    document.getElementById("root")!,
   );
 }

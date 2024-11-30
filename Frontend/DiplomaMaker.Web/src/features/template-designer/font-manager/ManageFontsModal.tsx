@@ -1,4 +1,3 @@
-import { Modal } from "@/components";
 import { useDebounce } from "@/hooks";
 import { Delete02Icon, Download04Icon, Search01Icon } from "hugeicons-react";
 import { useState } from "react";
@@ -6,40 +5,44 @@ import { useFonts } from "./useFonts";
 import { useGoogleFonts } from "./useGoogleFonts";
 import useRemoveFontMutation from "./useRemoveFontMutation";
 import useSaveFontMutation from "./useSaveFontMutation";
-
-export const MANAGE_FONTS_MODAL_ID = "manage-fonts-modal";
+import { BaseModalProps, Modal } from "@/components";
 
 const tabs = ["Get Google Font", "My Fonts"];
 
-type ManageFontsModalProps = {
-  onReloadFonts: () => void;
-};
-
 // TODO: Show toast message when font is saved or removed
-export default function ManageFontsModal({
-  onReloadFonts,
-}: ManageFontsModalProps) {
+export default function ManageFontsModal({ isOpen, onClose }: BaseModalProps) {
   const [selectedTab, setSelectedTab] = useState<string>(tabs[0]);
 
   return (
-    <Modal id={MANAGE_FONTS_MODAL_ID} title="Fonts" onClose={onReloadFonts}>
-      <div className="flex h-full flex-col gap-8 pt-4">
-        <div role="tablist" className="tabs tabs-lifted">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setSelectedTab(tab)}
-              role="tab"
-              className={`tab ${tab == selectedTab && "tab-active"}`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-        <div className="flex-1">
-          {selectedTab === tabs[0] && <GoogleFontsTab />}
-          {selectedTab === tabs[1] && <MyFontsTab />}
-        </div>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      panelClass="h-full flex flex-col gap-6"
+    >
+      <div className="">
+        <h3 className="font-display text-lg font-bold">Save Template</h3>
+        <button
+          onClick={onClose}
+          className="btn btn-circle btn-ghost absolute right-2 top-2"
+        >
+          ✕
+        </button>
+      </div>
+      <div role="tablist" className="tabs tabs-bordered">
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setSelectedTab(tab)}
+            role="tab"
+            className={`tab ${tab == selectedTab && "tab-active"}`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+      <div className="flex-1 overflow-y-auto">
+        {selectedTab === tabs[0] && <GoogleFontsTab />}
+        {selectedTab === tabs[1] && <MyFontsTab />}
       </div>
     </Modal>
   );
@@ -70,7 +73,7 @@ function GoogleFontsTab() {
         />
         <Search01Icon size={16} />
       </label>
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">
         {filteredFonts.length ? (
           <ul>
             {filteredFonts.map((font, index) => (
@@ -106,7 +109,7 @@ function MyFontsTab() {
   const { mutate: removeFont } = useRemoveFontMutation();
 
   return (
-    <div className="flex h-full flex-col gap-6">
+    <div className="overflow-x-hidden">
       {fonts?.length ? (
         <ul>
           {fonts.map((font, index) => (
