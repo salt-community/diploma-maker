@@ -9,11 +9,9 @@ import {
 import { usePdfMe } from "@/features/template-designer/usePdfMe";
 import { FloppyDiskIcon, Pdf01Icon, TextFontIcon } from "hugeicons-react";
 import { useEffect, useRef, useState } from "react";
-import SaveTemplateModal, { SAVE_TEMPLATE_MODAL_ID } from "./SaveTemplateModal";
+import SaveTemplateModal from "./SaveTemplateModal";
 import TemplatePicker from "./TemplatePicker";
-import ManageFontsModal, {
-  MANAGE_FONTS_MODAL_ID,
-} from "./font-manager/ManageFontsModal";
+import ManageFontsModal from "./font-manager/ManageFontsModal";
 
 export default function TemplateDesigner() {
   const designerRef = useRef<HTMLDivElement | null>(null);
@@ -38,12 +36,17 @@ export default function TemplateDesigner() {
     setSelectedTemplateId(newTemplate.guid),
   );
 
-  const { open: openSaveModal, close: closeSaveModal } = useModal(
-    SAVE_TEMPLATE_MODAL_ID,
-  );
-  const { open: openFontsModal, close: closeFontsModal } = useModal(
-    MANAGE_FONTS_MODAL_ID,
-  );
+  const {
+    isOpen: isSaveModalOpen,
+    open: openSaveModal,
+    close: closeSaveModal,
+  } = useModal();
+
+  const {
+    isOpen: isFontModalOpen,
+    open: openFontModal,
+    close: closeFontModal,
+  } = useModal();
 
   useEffect(() => {
     if (template) {
@@ -108,7 +111,7 @@ export default function TemplateDesigner() {
             />
           </label> */}
           <div className="flex gap-4">
-            <button className="btn btn-ghost" onClick={openFontsModal}>
+            <button className="btn btn-ghost" onClick={openFontModal}>
               <TextFontIcon size={24} />
               Get Fonts
             </button>
@@ -142,10 +145,17 @@ export default function TemplateDesigner() {
         />
       </div>
       <SaveTemplateModal
+        isOpen={isSaveModalOpen}
         onSave={handleSaveNewTemplate}
-        onCancel={closeSaveModal}
+        onClose={closeSaveModal}
       />
-      <ManageFontsModal onReloadFonts={reloadFonts} />
+      <ManageFontsModal
+        isOpen={isFontModalOpen}
+        onClose={() => {
+          closeFontModal();
+          reloadFonts();
+        }}
+      />
     </div>
   );
 }

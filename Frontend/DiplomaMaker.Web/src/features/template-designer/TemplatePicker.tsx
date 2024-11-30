@@ -1,9 +1,7 @@
 import { useTemplatePeeks } from "@/features/template-designer/template";
-import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
-import ManageTemplatesModal, {
-  MANAGE_TEMPLATES_MODAL_ID,
-} from "./ManageTemplatesModal";
 import { useModal } from "@/hooks";
+import { Add01Icon, ArrowDown01Icon, PencilEdit01Icon } from "hugeicons-react";
+import ManageTemplatesModal from "./ManageTemplatesModal";
 
 type TemplatePickerProps = {
   selectedTemplateId?: string;
@@ -16,9 +14,11 @@ export default function TemplatePicker({
   onSetSelectedTemplateId,
   onNewTemplate,
 }: TemplatePickerProps) {
-  const { open: openManageTemplatesModal } = useModal(
-    MANAGE_TEMPLATES_MODAL_ID,
-  );
+  const {
+    isOpen: isManageModalOpen,
+    open: openManageModal,
+    close: closeManageModal,
+  } = useModal();
 
   const { data: templatePeeks } = useTemplatePeeks();
 
@@ -73,7 +73,7 @@ export default function TemplatePicker({
           <li className="pt-1">
             <button
               className="bg-secondary text-secondary-content hocus:bg-secondary-focus"
-              onClick={openManageTemplatesModal}
+              onClick={openManageModal}
             >
               <PencilEdit01Icon size={16} />
               Manage Templates
@@ -81,7 +81,10 @@ export default function TemplatePicker({
           </li>
         </ul>
       </div>
-      <ManageTemplatesModal />
+      <ManageTemplatesModal
+        isOpen={isManageModalOpen}
+        onClose={closeManageModal}
+      />
     </>
   );
 }

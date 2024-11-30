@@ -1,21 +1,19 @@
+import { BaseModalProps, Modal } from "@/components";
 import clsx from "clsx";
 import { SubmitHandler, useForm } from "react-hook-form";
-import Modal from "../../components/Modal";
 
 type SaveTemplateModalProps = {
   onSave: (name: string) => void;
-  onCancel: () => void;
-};
+} & BaseModalProps;
 
 type Inputs = {
   templateName: string;
 };
 
-export const SAVE_TEMPLATE_MODAL_ID = "save-template-modal";
-
 export default function SaveTemplateModal({
+  isOpen,
   onSave,
-  onCancel,
+  onClose,
 }: SaveTemplateModalProps) {
   const {
     register,
@@ -29,17 +27,15 @@ export default function SaveTemplateModal({
     reset();
   };
 
-  const handleCancel = () => {
-    onCancel();
-    reset();
-  };
-
   const templateNameClass = clsx("input input-bordered w-full", {
     "input-error": errors.templateName,
   });
 
   return (
-    <Modal id={SAVE_TEMPLATE_MODAL_ID} title="Save Template">
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="pb-4">
+        <h3 className="font-display text-lg font-bold">Save Template</h3>
+      </div>
       <form onSubmit={handleSubmit(submitHandler)}>
         <label className="form-control w-full">
           <div className="label">
@@ -65,16 +61,19 @@ export default function SaveTemplateModal({
             )}
           </div>
         </label>
-        <div className="mt-4 flex gap-2">
-          <button className="btn btn-primary" type="submit">
-            Save
-          </button>
+        <div className="modal-action">
           <button
             className="btn btn-secondary"
             type="button"
-            onClick={handleCancel}
+            onClick={() => {
+              onClose();
+              reset();
+            }}
           >
             Cancel
+          </button>
+          <button className="btn btn-primary" type="submit">
+            Save
           </button>
         </div>
       </form>
