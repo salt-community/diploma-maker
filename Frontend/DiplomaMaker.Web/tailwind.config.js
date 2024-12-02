@@ -9,10 +9,10 @@ export default {
   theme: {
     extend: {
       colors: {
+        "primary-alt": "#FFDADA",
         "primary-focus": "#ffa292",
         "secondary-focus": "#064569",
         "secondary-dark": "#092236",
-        "accent-light": "#FFDADA",
       },
     },
     fontFamily: {
@@ -26,15 +26,14 @@ export default {
         salt: {
           primary: "#FF7961",
           secondary: "#042D45",
-          "secondary-content": "#D5E7F6",
-          accent: "#F35C7E",
+          accent: "#D9DCFF",
           neutral: "#FFFFFF",
           "base-100": "#EDEDED",
           "base-content": "#042D45",
-          info: "#ECF7FA",
-          success: "#E1FFED",
-          warning: "#FDE68A",
-          error: "#FCA5A5",
+          info: "#EAF6FF",
+          success: "#D9FFE4",
+          warning: "#FFF7D9",
+          error: "#AA6969",
         },
       },
     ],
