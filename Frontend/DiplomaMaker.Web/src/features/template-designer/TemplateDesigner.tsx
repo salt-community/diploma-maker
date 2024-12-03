@@ -21,7 +21,6 @@ export default function TemplateDesigner() {
     loadTemplate,
     loadBlankTemplate,
     loadBasePDF,
-    downloadTemplate,
     reloadFonts,
   } = usePdfMe(designerRef);
 
@@ -77,7 +76,7 @@ export default function TemplateDesigner() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="navbar z-40 h-[80px] bg-neutral px-4 shadow-sm">
+      <div className="navbar z-40 h-[80px] bg-neutral px-[20px] shadow-sm">
         <div className="navbar-start">
           <TemplatePicker
             selectedTemplateId={selectedTemplateId}
@@ -89,27 +88,6 @@ export default function TemplateDesigner() {
           />
         </div>
         <div className="navbar-end">
-          {/* <button className="btn" onClick={() => downloadTemplate()}>
-            Download Template
-          </button> */}
-
-          {/* <label className="form-control w-full max-w-xs p-4">
-            <input
-              className="file-input file-input-bordered w-full max-w-xs"
-              type="file"
-              accept="application/json"
-              onChange={async (e) => {
-                const file = e.target.files?.[0];
-                const template = await TemplateService.getTemplateFromJsonFile(
-                  file!,
-                );
-                loadTemplate({
-                  name: "...",
-                  templateJson: JSON.stringify(template),
-                } as BackendTypes.Template);
-              }}
-            />
-          </label> */}
           <div className="flex gap-4">
             <button className="btn btn-ghost" onClick={openFontModal}>
               <TextFontIcon size={24} />
@@ -138,7 +116,7 @@ export default function TemplateDesigner() {
           </button>
         </div>
       </div>
-      <div className="flex-1 bg-neutral pl-4">
+      <div className="flex-1 bg-neutral pl-4 pr-1">
         <div
           ref={designerRef}
           className="h-full [&>*:first-child]:!bg-base-100"
