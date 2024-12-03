@@ -40,7 +40,7 @@ function DropdownMenu() {
       </div>
       <ul
         tabIndex={0}
-        className="menu dropdown-content menu-sm z-[1] mt-4 w-max rounded-box border bg-neutral p-4 shadow"
+        className="menu dropdown-content menu-sm z-[1] mt-4 w-max rounded-box border bg-neutral p-3 shadow"
       >
         <li>
           <Link
