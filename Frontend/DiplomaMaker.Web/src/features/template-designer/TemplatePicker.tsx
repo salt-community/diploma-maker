@@ -43,7 +43,7 @@ export default function TemplatePicker({
         <div
           tabIndex={0}
           role="button"
-          className="btn m-1 flex min-w-64 justify-start border-none bg-base-100 text-start"
+          className="btn flex min-w-64 justify-start border-none bg-base-100 text-start"
         >
           <div className="flex-1">
             <span className="font-medium">Template</span>
