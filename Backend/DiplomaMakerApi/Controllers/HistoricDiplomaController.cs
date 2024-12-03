@@ -21,4 +21,7 @@ public class HistoricDiplomaController(DiplomaMakerContext _context) : Controlle
 
         return new HistoricDiploma(diploma, template);
     }
+
+    [HttpGet("GetHistoricDiplomasCount")]
+    public ActionResult<int> GetHistoricDiplomasCount() => _context.Diplomas.Count();
 }

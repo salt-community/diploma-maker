@@ -3,10 +3,12 @@ import { Link } from "@tanstack/react-router";
 import { FileEditIcon, Files01Icon, PlusSignIcon } from "hugeicons-react";
 
 import { PageContainer } from "@/components/layout";
+import useGeneratedDiplomasCount from "./useGeneratedDiplomasCount";
 
 // TODO: Update with actual Diploma Count
 export default function Dashboard() {
   const { user } = useUser();
+  const { data: generatedDiplomasCount } = useGeneratedDiplomasCount();
 
   return (
     <PageContainer>
@@ -14,16 +16,16 @@ export default function Dashboard() {
       <p className="mt-6 text-lg font-semibold">What would you like to do?</p>
       <div className="mt-16 grid grid-cols-3 gap-8">
         <GenerateDiplomaLink />
-        <ManageTemplatesLink />
+        <DesignTemplatesLink />
         <ViewDiplomasLink />
       </div>
-      <div className="mt-20 flex items-center gap-12 rounded-2xl border-2 border-base-200 p-12">
-        <Files01Icon size={100} className="text-base-200" />
+      <div className="mt-20 flex items-center gap-8 rounded-2xl border-2 border-base-200 p-10">
+        <Files01Icon size={94} className="text-base-200" />
         <div className="">
           <p className="m-0 font-display text-4xl font-semibold text-primary">
-            3200+
+            {generatedDiplomasCount ? `${generatedDiplomasCount}+` : "0"}
           </p>
-          <p className="m-0 mt-4 text-xl font-semibold">Diplomas Generated</p>
+          <p className="m-0 mt-3 text-xl font-semibold">Diplomas Generated</p>
         </div>
       </div>
     </PageContainer>
@@ -34,7 +36,7 @@ function GenerateDiplomaLink() {
   return (
     <Link
       to="/diploma-generator"
-      className="bg-primary-alt group grid h-64 place-items-center rounded-2xl border border-[#FFA5A5] no-underline transition-colors hocus:bg-[#FFE8E8]"
+      className="group grid h-64 place-items-center rounded-2xl border border-[#FFA5A5] bg-primary-alt no-underline transition-colors hocus:bg-[#FFE8E8]"
     >
       <div className="flex flex-col items-center gap-6">
         <PlusSignIcon size={38} className="text-primary" />
@@ -46,7 +48,7 @@ function GenerateDiplomaLink() {
   );
 }
 
-function ManageTemplatesLink() {
+function DesignTemplatesLink() {
   return (
     <Link
       to="/template-designer"
@@ -55,7 +57,7 @@ function ManageTemplatesLink() {
       <div className="flex flex-col items-center gap-6">
         <FileEditIcon size={38} className="text-primary" />
         <span className="font-display text-lg font-semibold">
-          Manage Templates
+          Design Templates
         </span>
       </div>
     </Link>
