@@ -20,7 +20,7 @@ export default function ManageFontsModal({ isOpen, onClose }: BaseModalProps) {
       panelClass="h-full flex flex-col gap-6"
     >
       <div className="">
-        <h3 className="font-display text-lg font-bold">Save Template</h3>
+        <h3 className="font-display text-lg font-bold">Get Fonts</h3>
         <button
           onClick={onClose}
           className="btn btn-circle btn-ghost absolute right-2 top-2"
