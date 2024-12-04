@@ -68,21 +68,22 @@ export function DiplomaFormSubpage({ display }: Props) {
 
   return (
     <form
-      className="mt-12"
       id={import.meta.env.VITE_DIPLOMA_FORM_ID}
       onSubmit={onFormSubmit}
       hidden={!display}
     >
       <div>
-        <h1 className="text-3xl">Diploma Data</h1>
-        <p>Fill in the data below to be used for generating the diplomas.</p>
+        <h1 className="mb-6 text-3xl font-bold">Diploma Data</h1>
+        <p>Please provide the information below to generate the diplomas.</p>
       </div>
 
       <div className="mt-20 text-center">
-        <h2 className="text-lg font-medium">
+        <h2 className="mb-6 text-lg font-medium">
           Upload a bootcamp.json file to auto-fill the form
+          <span className="mt-3 block text-base font-normal opacity-80">
+            (optional)
+          </span>
         </h2>
-        <p>(optional)</p>
         <UploadBootcamp />
       </div>
 
