@@ -27,7 +27,7 @@ export default function DiplomaGenerator() {
     ));
 
     return (
-      <div className="sticky top-0 z-40 w-full bg-neutral py-4 shadow-sm">
+      <div className="w-full bg-neutral py-2 pr-4 shadow-sm">
         <div className="mx-auto max-w-screen-lg">
           <ul className="steps w-full p-0 font-display">{steps}</ul>
         </div>
@@ -37,7 +37,7 @@ export default function DiplomaGenerator() {
 
   function DiplomaGeneratorBottomNav() {
     return (
-      <div className="sticky bottom-0 z-40 min-h-20 w-full bg-neutral">
+      <div className="min-h-20 w-full bg-neutral pr-4">
         <div className="mx-auto flex h-full max-w-screen-lg items-center justify-between gap-4 px-6">
           <button
             className="btn btn-secondary min-w-32"
@@ -74,10 +74,12 @@ export default function DiplomaGenerator() {
   return (
     <div className="flex h-full flex-col">
       <DiplomaGeneratorSteps />
-      <PageContainer className="flex-1 pt-20">
-        <DiplomaForm display={pageNumber == 0} />
-        <SelectTemplateSubpage display={pageNumber == 1} />
-      </PageContainer>
+      <div className="flex-1 overflow-y-scroll">
+        <PageContainer>
+          <DiplomaForm display={pageNumber == 0} />
+          <SelectTemplateSubpage display={pageNumber == 1} />
+        </PageContainer>
+      </div>
       <DiplomaGeneratorBottomNav />
     </div>
   );
