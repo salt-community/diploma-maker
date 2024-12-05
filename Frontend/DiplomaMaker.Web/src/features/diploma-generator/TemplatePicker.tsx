@@ -48,7 +48,10 @@ export default function TemplatePicker({}: Props) {
       <li key={nameGuid.guid}>
         <button
           className={`${selectedTemplate?.guid == nameGuid.guid && "bg-[#042d451a]"}`}
-          onClick={() => handleSelectTemplate(nameGuid!)}
+          onClick={(e) => {
+            handleSelectTemplate(nameGuid!);
+            (e.target as HTMLButtonElement).blur();
+          }}
         >
           {nameGuid.name}
         </button>

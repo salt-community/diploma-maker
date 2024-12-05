@@ -4,7 +4,7 @@ import { BackendTypes } from "@/services";
 import {
   ArrowLeftDoubleIcon,
   ArrowRightDoubleIcon,
-  SentIcon,
+  MailAtSign01Icon,
 } from "hugeicons-react";
 import { useState } from "react";
 import { currentTemplateKey } from "./cacheKeys";
@@ -19,7 +19,7 @@ export default function DiplomaGenerator() {
   function DiplomaGeneratorSteps() {
     const steps = ["Diploma Data", "Review & Send out"].map((title, index) => (
       <li
-        className={`step mt-0 ${index <= pageNumber && "step-primary"}`}
+        className={`step mt-0 ${index <= pageNumber && "step-primary"} ${index == pageNumber && "font-medium"}`}
         key={index}
       >
         <button onClick={() => setPageNumber(index)}>{title}</button>
@@ -38,31 +38,32 @@ export default function DiplomaGenerator() {
   function DiplomaGeneratorBottomNav() {
     return (
       <div className="min-h-20 w-full bg-neutral pr-4">
-        <div className="mx-auto flex h-full max-w-screen-lg items-center justify-between gap-4 px-6">
-          <button
-            className="btn btn-secondary min-w-32"
-            onClick={() => setPageNumber((prev) => prev - 1)}
-            disabled={pageNumber == 0}
-          >
-            <ArrowLeftDoubleIcon size={24} />
-            Previous
-          </button>
+        <div className="mx-auto flex h-full max-w-screen-lg items-center gap-4 px-6">
+          {pageNumber > 0 && (
+            <button
+              className="btn btn-secondary min-w-32"
+              onClick={() => setPageNumber((prev) => prev - 1)}
+            >
+              <ArrowLeftDoubleIcon size={24} />
+              Back
+            </button>
+          )}
           {pageNumber == 1 ? (
             <button
               type="submit"
               form={import.meta.env.VITE_DIPLOMA_FORM_ID}
-              className="btn btn-primary"
+              className="btn btn-primary ml-auto"
               disabled={!currentTemplate}
             >
               Send Diplomas
-              <SentIcon size={24} />
+              <MailAtSign01Icon size={24} />
             </button>
           ) : (
             <button
-              className="btn btn-primary min-w-32"
+              className="btn btn-primary ml-auto min-w-32"
               onClick={() => setPageNumber((prev) => prev + 1)}
             >
-              Next
+              Continue
               <ArrowRightDoubleIcon size={24} />
             </button>
           )}
@@ -75,7 +76,7 @@ export default function DiplomaGenerator() {
     <div className="flex h-full flex-col">
       <DiplomaGeneratorSteps />
       <div className="flex-1 overflow-y-scroll">
-        <PageContainer>
+        <PageContainer className="pt-12">
           <DiplomaForm display={pageNumber == 0} />
           <SelectTemplateSubpage display={pageNumber == 1} />
         </PageContainer>

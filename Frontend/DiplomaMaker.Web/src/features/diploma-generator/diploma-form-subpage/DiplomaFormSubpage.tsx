@@ -72,12 +72,11 @@ export function DiplomaFormSubpage({ display }: Props) {
       onSubmit={onFormSubmit}
       hidden={!display}
     >
-      <div>
-        <h1 className="mb-6 text-3xl font-bold">Diploma Data</h1>
-        <p>Please provide the information below to generate the diplomas.</p>
-      </div>
+      <p className="text-center">
+        Please provide the information below for generating the diplomas.
+      </p>
 
-      <div className="mt-20 text-center">
+      <div className="mt-12 text-center">
         <h2 className="mb-6 text-lg font-medium">
           Upload a bootcamp.json file to auto-fill the form
           <span className="mt-3 block text-base font-normal opacity-80">
