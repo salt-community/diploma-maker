@@ -14,8 +14,9 @@ export async function getTemplatePdfFile(apiParameters: apiEndpointParameters, u
             return pdfData;
         }
     }
+    var pdfFileFetchUrl = `${apiParameters.endpointUrl}/api/${url}`;
 
-    const pdfResponse = await fetch(`${apiParameters.endpointUrl}/api/${url}`, {
+    const pdfResponse = await fetch(correctBlobUrlIfIncorrect(pdfFileFetchUrl), {
         headers: {'Authorization': `Bearer ${apiParameters.token()}` }
     });
     if (!pdfResponse.ok) {
@@ -41,3 +42,9 @@ export async function getTemplatePdfFile(apiParameters: apiEndpointParameters, u
 
     return pdfData;
 }
+
+
+// *Quick Fix*
+function correctBlobUrlIfIncorrect(url: string): string {
+    return url.replace(/\/Blob\/Blob\//g, '/Blob/');
+  }
