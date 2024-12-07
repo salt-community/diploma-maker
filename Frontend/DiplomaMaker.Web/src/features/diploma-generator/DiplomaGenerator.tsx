@@ -1,87 +1,24 @@
 import { PageContainer } from "@/components/layout";
-import { useCache } from "@/hooks";
-import { BackendTypes } from "@/services";
-import {
-  ArrowLeftDoubleIcon,
-  ArrowRightDoubleIcon,
-  MailAtSign01Icon,
-} from "hugeicons-react";
 import { useState } from "react";
-import { currentTemplateKey } from "./cacheKeys";
-import { DiplomaForm } from "./diploma-form-subpage";
-import SelectTemplateSubpage from "./SelectTemplateSubpage";
+import BottomNav from "./BottomNav";
+import DiplomaDataSubpage from "./DiplomaDataSubpage";
+import ReviewDiplomasSubpage from "./ReviewDiplomasSubpage";
+import { TopNav } from "./TopNav";
+import { Subpage } from "./types";
 
 export default function DiplomaGenerator() {
-  const [currentTemplate, __] =
-    useCache<BackendTypes.Template>(currentTemplateKey);
-  const [pageNumber, setPageNumber] = useState<number>(0);
-
-  function DiplomaGeneratorSteps() {
-    const steps = ["Diploma Data", "Review & Send out"].map((title, index) => (
-      <li
-        className={`step mt-0 ${index <= pageNumber && "step-primary"} ${index == pageNumber && "font-medium"}`}
-        key={index}
-      >
-        <button onClick={() => setPageNumber(index)}>{title}</button>
-      </li>
-    ));
-
-    return (
-      <div className="w-full bg-neutral py-2 pr-4 shadow-sm">
-        <div className="mx-auto max-w-screen-lg">
-          <ul className="steps w-full p-0 font-display">{steps}</ul>
-        </div>
-      </div>
-    );
-  }
-
-  function DiplomaGeneratorBottomNav() {
-    return (
-      <div className="min-h-20 w-full bg-neutral pr-4">
-        <div className="mx-auto flex h-full max-w-screen-lg items-center gap-4 px-6">
-          {pageNumber > 0 && (
-            <button
-              className="btn btn-secondary min-w-32"
-              onClick={() => setPageNumber((prev) => prev - 1)}
-            >
-              <ArrowLeftDoubleIcon size={24} />
-              Back
-            </button>
-          )}
-          {pageNumber == 1 ? (
-            <button
-              type="submit"
-              form={import.meta.env.VITE_DIPLOMA_FORM_ID}
-              className="btn btn-primary ml-auto"
-              disabled={!currentTemplate}
-            >
-              Send Diplomas
-              <MailAtSign01Icon size={24} />
-            </button>
-          ) : (
-            <button
-              className="btn btn-primary ml-auto min-w-32"
-              onClick={() => setPageNumber((prev) => prev + 1)}
-            >
-              Continue
-              <ArrowRightDoubleIcon size={24} />
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }
+  const [currentPage, setCurrentPage] = useState<Subpage>("diploma-data");
 
   return (
     <div className="flex h-full flex-col">
-      <DiplomaGeneratorSteps />
+      <TopNav currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <div className="flex-1 overflow-y-scroll">
         <PageContainer className="!pt-12">
-          <DiplomaForm display={pageNumber == 0} />
-          <SelectTemplateSubpage display={pageNumber == 1} />
+          {currentPage == "diploma-data" && <DiplomaDataSubpage />}
+          {currentPage == "review-diplomas" && <ReviewDiplomasSubpage />}
         </PageContainer>
       </div>
-      <DiplomaGeneratorBottomNav />
+      <BottomNav currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>
   );
 }
