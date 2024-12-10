@@ -1,3 +1,4 @@
+import { BOOTCAMP_DATA_FORM_ID } from "./constants";
 import { Subpage } from "./types";
 
 type Props = {
@@ -11,16 +12,16 @@ export function TopNav({ currentPage, setCurrentPage }: Props) {
       <div className="mx-auto max-w-screen-lg">
         <ul className="steps w-full p-0 font-display">
           <li
-            className={`step step-primary mt-0 ${currentPage == "diploma-data" && "font-medium"}`}
+            className={`step step-primary mt-0 ${currentPage == "bootcamp-data" && "font-medium"}`}
           >
-            <button onClick={() => setCurrentPage("diploma-data")}>
-              Diploma Data
+            <button onClick={() => setCurrentPage("bootcamp-data")}>
+              Bootcamp Data
             </button>
           </li>
           <li
             className={`step mt-0 ${currentPage == "review-diplomas" && "step-primary font-medium"}`}
           >
-            <button onClick={() => setCurrentPage("review-diplomas")}>
+            <button type="submit" form={BOOTCAMP_DATA_FORM_ID}>
               Review Diplomas
             </button>
           </li>

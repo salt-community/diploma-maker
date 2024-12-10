@@ -4,6 +4,7 @@ import {
   MailAtSign01Icon,
 } from "hugeicons-react";
 import { Subpage } from "./types";
+import { BOOTCAMP_DATA_FORM_ID } from "./constants";
 
 type Props = {
   currentPage: Subpage;
@@ -14,10 +15,10 @@ export default function BottomNav({ currentPage, setCurrentPage }: Props) {
   return (
     <div className="min-h-20 w-full bg-neutral pr-4">
       <div className="mx-auto flex h-full max-w-screen-lg items-center gap-4 px-6">
-        {currentPage != "diploma-data" && (
+        {currentPage != "bootcamp-data" && (
           <button
             className="btn btn-secondary min-w-32"
-            onClick={() => setCurrentPage("diploma-data")}
+            onClick={() => setCurrentPage("bootcamp-data")}
           >
             <ArrowLeftDoubleIcon size={24} />
             Back
@@ -30,8 +31,9 @@ export default function BottomNav({ currentPage, setCurrentPage }: Props) {
           </button>
         ) : (
           <button
+            type="submit"
+            form={BOOTCAMP_DATA_FORM_ID}
             className="btn btn-primary ml-auto min-w-32"
-            onClick={() => setCurrentPage("review-diplomas")}
           >
             Continue
             <ArrowRightDoubleIcon size={24} />
