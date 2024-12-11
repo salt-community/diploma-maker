@@ -1,8 +1,8 @@
 import { BackendTypes, DiplomaService, TemplateService } from "@/services";
 import { ArrowLeftDoubleIcon, ArrowRightDoubleIcon } from "hugeicons-react";
 import { useState } from "react";
-import { PreviewDiplomaViewer } from "../diploma-viewer";
-import { BootcampData } from "./types";
+import { PreviewDiplomaViewer } from "../../diploma-viewer";
+import { BootcampData } from "../types";
 
 type Props = {
   bootcampData: BootcampData;

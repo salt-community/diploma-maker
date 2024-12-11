@@ -3,13 +3,13 @@ import { useToken } from "@/hooks";
 import { DiplomaService, TemplateService } from "@/services";
 import { BackendTypes } from "@/services/backendService";
 import { useState } from "react";
-import BootcampDataSubpage from "./bootcamp-data-subpage/BootcampDataSubpage";
-import BottomNav from "./BottomNav";
+import BootcampDataSubpage from "./components/BootcampDataSubpage";
+import BottomNav from "./components/BottomNav";
+import ReviewDiplomasSubpage from "./components/ReviewDiplomasSubpage";
+import { TopNav } from "./components/TopNav";
 import { DEFAULT_BOOTCAMP_DATA } from "./constants";
-import ReviewDiplomasSubpage from "./ReviewDiplomasSubpage";
-import { TopNav } from "./TopNav";
+import useCreateDiplomaMutation from "./hooks/useCreateDiplomaMutation";
 import { BootcampData, Subpage } from "./types";
-import useCreateDiplomaMutation from "./useCreateDiplomaMutation";
 
 export default function DiplomaGenerator() {
   const { token } = useToken();

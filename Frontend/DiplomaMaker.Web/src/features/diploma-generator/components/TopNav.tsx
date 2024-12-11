@@ -1,5 +1,5 @@
-import { BOOTCAMP_DATA_FORM_ID } from "./constants";
-import { Subpage } from "./types";
+import { BOOTCAMP_DATA_FORM_ID } from "../constants";
+import { Subpage } from "../types";
 
 type Props = {
   currentPage: Subpage;

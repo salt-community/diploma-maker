@@ -3,8 +3,8 @@ import {
   ArrowRightDoubleIcon,
   MailAtSign01Icon,
 } from "hugeicons-react";
-import { Subpage } from "./types";
-import { BOOTCAMP_DATA_FORM_ID } from "./constants";
+import { Subpage } from "../types";
+import { BOOTCAMP_DATA_FORM_ID } from "../constants";
 
 type Props = {
   currentPage: Subpage;

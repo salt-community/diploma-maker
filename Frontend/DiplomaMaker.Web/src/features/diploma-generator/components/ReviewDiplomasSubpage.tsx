@@ -1,9 +1,9 @@
 import { BackendTypes } from "@/services";
 import { useEffect } from "react";
+import useTemplates from "../hooks/useTemplates";
+import { BootcampData } from "../types";
 import DiplomaGallery from "./DiplomaGallery";
 import TemplatePicker from "./TemplatePicker";
-import { BootcampData } from "./types";
-import useTemplates from "./useTemplates";
 
 type Props = {
   bootcampData: BootcampData;
