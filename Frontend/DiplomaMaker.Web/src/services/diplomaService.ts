@@ -4,92 +4,121 @@
     A collection of methods that helps creating, posting, emailing and displaying diplomas
 */
 
-import { BackendService, PdfMeService, StringService, TemplateService } from '@/services';
-import type { BootcampTypes, PdfMeTypes, TemplateTypes, BackendTypes } from '@/services';
+import {
+  BackendService,
+  FontService,
+  PdfMeService,
+  StringService,
+  TemplateService,
+} from "@/services";
+import type {
+  BootcampTypes,
+  PdfMeTypes,
+  TemplateTypes,
+  BackendTypes,
+} from "@/services";
 
-export async function generatePdf(template: PdfMeTypes.Template, substitions: TemplateTypes.Substitions) {
-    const inputs = TemplateService.substitutePlaceholdersWithContent(
-        template,
-        substitions,
-    );
+export async function generatePdf(
+  template: PdfMeTypes.Template,
+  substitions: TemplateTypes.Substitions,
+) {
+  const inputs = TemplateService.substitutePlaceholdersWithContent(
+    template,
+    substitions,
+  );
 
-    const pdf = await PdfMeService.generate({
-        template,
-        plugins: PdfMeService.plugins,
-        inputs,
-    });
+  const pdf = await PdfMeService.generate({
+    options: {
+      font: FontService.getPdfMeFonts(),
+    },
+    template,
+    plugins: PdfMeService.plugins,
+    inputs,
+  });
 
-    return new Blob([pdf.buffer], { type: "application/pdf" });
+  return new Blob([pdf.buffer], { type: "application/pdf" });
 }
 
 export function createSubstitions(diploma: BackendTypes.DiplomaRecord) {
-    return {
-        studentName: diploma.studentName,
-        track: diploma.track,
-        graduationDate: StringService.formatDate_YYYY_mm_dd(diploma.graduationDate),
-        qrLink: `${import.meta.env.VITE_VALIDATE_DIPLOMA_URL}/${diploma.guid ?? "previewDiploma"}}`
-    } as TemplateTypes.Substitions;
+  return {
+    studentName: diploma.studentName,
+    track: diploma.track,
+    graduationDate: StringService.formatDate_YYYY_mm_dd(diploma.graduationDate),
+    qrLink: `${import.meta.env.VITE_VALIDATE_DIPLOMA_URL}/${diploma.guid ?? "previewDiploma"}}`,
+  } as TemplateTypes.Substitions;
 }
 
 function generateEmailHtml(diploma: BackendTypes.DiplomaRecord) {
-    return (
-        `
+  return `
         <h1>${diploma.studentName}</h1>
         <p>Congratulations, you have completed the ${diploma.track} bootcamp at<p>
         <p>School of Applied Technology!</p>
         <p>Attached is your diploma. Now, let's start your career in tech!</p>
-        `
-    );
+        `;
 }
 
 export async function emailDiploma(
-    template: PdfMeTypes.Template,
-    diploma: BackendTypes.DiplomaRecord,
-    jwt: string) {
+  template: PdfMeTypes.Template,
+  diploma: BackendTypes.DiplomaRecord,
+  jwt: string,
+) {
+  const blob = await generatePdf(template, createSubstitions(diploma));
 
-    const blob = await generatePdf(template, createSubstitions(diploma));
+  const blobString = StringService.base64StringWithoutMetaData(
+    await StringService.blobToBase64String(blob),
+  );
 
-    const blobString = StringService.base64StringWithoutMetaData(
-        await StringService.blobToBase64String(blob)
-    );
-
-    await BackendService.sendDiplomaEmail({
-        messageHtml: generateEmailHtml(diploma),
-        studentEmail: diploma.studentEmail,
-        diplomaPdfBase64: blobString,
-    }, jwt);
+  await BackendService.sendDiplomaEmail(
+    {
+      messageHtml: generateEmailHtml(diploma),
+      studentEmail: diploma.studentEmail,
+      diplomaPdfBase64: blobString,
+    },
+    jwt,
+  );
 }
 
 export async function postDiploma(
-    template: BackendTypes.Template,
-    bootcamp: BootcampTypes.Bootcamp,
-    student: BootcampTypes.Student
+  template: BackendTypes.Template,
+  bootcamp: BootcampTypes.Bootcamp,
+  student: BootcampTypes.Student,
 ) {
-    if (!template.guid)
-        throw new Error("Template lacks guid");
+  if (!template.guid) throw new Error("Template lacks guid");
 
-    const diploma: BackendTypes.DiplomaRecord = {
-        studentName: student.name,
-        studentEmail: student.email,
-        track: bootcamp.track,
-        graduationDate: bootcamp.graduationDate,
-        templateGuid: template.guid
-    };
+  const diploma: BackendTypes.DiplomaRecord = {
+    studentName: student.name,
+    studentEmail: student.email,
+    track: bootcamp.track,
+    graduationDate: bootcamp.graduationDate,
+    templateGuid: template.guid,
+  };
 
-    return await BackendService.postEntity<BackendTypes.DiplomaRecord>("DiplomaRecord", diploma);
+  return await BackendService.postEntity<BackendTypes.DiplomaRecord>(
+    "DiplomaRecord",
+    diploma,
+  );
 }
 
-export function historicDiplomaToTemplateAndSubstitutions(historicDiploma: BackendTypes.HistoricDiploma) {
-    const template = JSON.parse(historicDiploma.templateJson) as PdfMeTypes.Template;
+export function historicDiplomaToTemplateAndSubstitutions(
+  historicDiploma: BackendTypes.HistoricDiploma,
+) {
+  const template = JSON.parse(
+    historicDiploma.templateJson,
+  ) as PdfMeTypes.Template;
 
-    const substitions = {
-        studentName: historicDiploma.studentName,
-        track: historicDiploma.track,
-        graduationDate: StringService.formatDate_YYYY_mm_dd(historicDiploma.graduationDate),
-        qrLink: `${import.meta.env.VITE_VALIDATE_DIPLOMA_URL}/${historicDiploma.guid}`
-    } as TemplateTypes.Substitions;
+  const substitions = {
+    studentName: historicDiploma.studentName,
+    track: historicDiploma.track,
+    graduationDate: StringService.formatDate_YYYY_mm_dd(
+      historicDiploma.graduationDate,
+    ),
+    qrLink: `${import.meta.env.VITE_VALIDATE_DIPLOMA_URL}/${historicDiploma.guid}`,
+  } as TemplateTypes.Substitions;
 
-    return [template, substitions] as [PdfMeTypes.Template, TemplateTypes.Substitions];
+  return [template, substitions] as [
+    PdfMeTypes.Template,
+    TemplateTypes.Substitions,
+  ];
 }
 
 /*
@@ -97,26 +126,32 @@ export function historicDiplomaToTemplateAndSubstitutions(historicDiploma: Backe
     Then sort each group by studentName
 */
 export function groupDiplomas(diplomas: BackendTypes.DiplomaRecord[]) {
-    const diplomaGroups: BackendTypes.DiplomaRecord[][] = [];
+  const diplomaGroups: BackendTypes.DiplomaRecord[][] = [];
 
-    diplomas.sort((a, b) => (new Date(b.graduationDate)).getTime() - (new Date(a.graduationDate)).getTime());
+  diplomas.sort(
+    (a, b) =>
+      new Date(b.graduationDate).getTime() -
+      new Date(a.graduationDate).getTime(),
+  );
 
-    let date = new Date();
-    let groupIndex = -1;
+  let date = new Date();
+  let groupIndex = -1;
 
-    diplomas.forEach(diploma => {
-        if (diploma.graduationDate != date) {
-            date = diploma.graduationDate;
+  diplomas.forEach((diploma) => {
+    if (diploma.graduationDate != date) {
+      date = diploma.graduationDate;
 
-            if (groupIndex >= 0)
-                diplomaGroups[groupIndex].sort((a, b) => ('' + a.studentName).localeCompare(b.studentName));
+      if (groupIndex >= 0)
+        diplomaGroups[groupIndex].sort((a, b) =>
+          ("" + a.studentName).localeCompare(b.studentName),
+        );
 
-            diplomaGroups.push([]);
-            groupIndex++;
-        }
+      diplomaGroups.push([]);
+      groupIndex++;
+    }
 
-        diplomaGroups[groupIndex].push(diploma);
-    });
+    diplomaGroups[groupIndex].push(diploma);
+  });
 
-    return diplomaGroups;
+  return diplomaGroups;
 }
