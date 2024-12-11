@@ -18,6 +18,7 @@ export function TopNav({ currentPage, setCurrentPage }: Props) {
               Bootcamp Data
             </button>
           </li>
+
           <li
             className={`step mt-0 ${currentPage == "review-diplomas" && "step-primary font-medium"}`}
           >

@@ -9,7 +9,7 @@ import { ArrowLeftDoubleIcon, ArrowRightDoubleIcon } from "hugeicons-react";
 import { useState } from "react";
 import { PreviewDiplomaViewer } from "../diploma-viewer";
 import { bootcampKey, currentTemplateKey } from "./cacheKeys";
-import TemplatePicker from "./TemplatePicker";
+import TemplatePickerOld from "./TemplatePickerOld";
 
 interface Props {
   display: boolean;
@@ -32,7 +32,7 @@ export default function SelectTemplateSubpage({ display }: Props) {
       </p>
 
       <div className="mb-4 mt-12">
-        <TemplatePicker />
+        <TemplatePickerOld />
       </div>
 
       {currentTemplate && bootcamp != null && (

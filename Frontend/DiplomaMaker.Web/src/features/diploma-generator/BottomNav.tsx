@@ -9,9 +9,14 @@ import { BOOTCAMP_DATA_FORM_ID } from "./constants";
 type Props = {
   currentPage: Subpage;
   setCurrentPage: (page: Subpage) => void;
+  onSendDiplomas: () => void;
 };
 
-export default function BottomNav({ currentPage, setCurrentPage }: Props) {
+export default function BottomNav({
+  currentPage,
+  setCurrentPage,
+  onSendDiplomas,
+}: Props) {
   return (
     <div className="min-h-20 w-full bg-neutral pr-4">
       <div className="mx-auto flex h-full max-w-screen-lg items-center gap-4 px-6">
@@ -24,8 +29,9 @@ export default function BottomNav({ currentPage, setCurrentPage }: Props) {
             Back
           </button>
         )}
+
         {currentPage == "review-diplomas" ? (
-          <button className="btn btn-primary ml-auto" onClick={() => {}}>
+          <button className="btn btn-primary ml-auto" onClick={onSendDiplomas}>
             Send Diplomas
             <MailAtSign01Icon size={24} />
           </button>
