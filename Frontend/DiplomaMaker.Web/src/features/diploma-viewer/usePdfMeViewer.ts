@@ -8,21 +8,29 @@ import { useRef } from "react";
 
 import { PdfMeService, TemplateService } from "@/services";
 import type { PdfMeTypes, TemplateTypes } from "@/services";
+import { customPdfMeTheme } from "@/customPdfMeTheme";
 
 export function usePdfMeViewer() {
   const viewer = useRef<PdfMeTypes.Viewer | null>(null);
 
-  async function loadViewer(domContainer: HTMLDivElement, template: PdfMeTypes.Template, substitions: TemplateTypes.Substitions) {
+  async function loadViewer(
+    domContainer: HTMLDivElement,
+    template: PdfMeTypes.Template,
+    substitions: TemplateTypes.Substitions,
+  ) {
     const inputs = TemplateService.substitutePlaceholdersWithContent(
       template,
-      substitions
+      substitions,
     ) as Record<string, any>[];
 
     viewer.current = new PdfMeService.Viewer({
       template,
       inputs,
       plugins: PdfMeService.plugins,
-      domContainer
+      domContainer,
+      options: {
+        theme: customPdfMeTheme,
+      },
     });
   }
 
