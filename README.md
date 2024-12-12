@@ -1,4 +1,4 @@
-# Diploma Pro
+# Diploma Maker
 
 [Trailer](https://youtu.be/cXqTTuOJLXw)
 
