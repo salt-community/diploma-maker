@@ -1,7 +1,6 @@
-import { useDebounce } from "@/hooks";
+import { useDebounce, useFonts } from "@/hooks";
 import { Delete02Icon, Download04Icon, Search01Icon } from "hugeicons-react";
 import { useState } from "react";
-import { useFonts } from "./useFonts";
 import { useGoogleFonts } from "./useGoogleFonts";
 import useRemoveFontMutation from "./useRemoveFontMutation";
 import useSaveFontMutation from "./useSaveFontMutation";

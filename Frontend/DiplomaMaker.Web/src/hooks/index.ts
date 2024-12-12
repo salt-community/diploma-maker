@@ -15,3 +15,5 @@ export { useEntity } from "./useEntity";
 export { useModal } from "./useModal";
 export { useTemplates } from "./useTemplates";
 export { useToken } from "./useToken";
+export { useFonts } from "./useFonts";
+export { usePdfMeFonts } from "./usePdfMeFonts";

@@ -4,23 +4,23 @@
     A collection of methods that helps creating, posting, emailing and displaying diplomas
 */
 
-import {
-  BackendService,
-  FontService,
-  PdfMeService,
-  StringService,
-  TemplateService,
-} from "@/services";
 import type {
+  BackendTypes,
   BootcampTypes,
   PdfMeTypes,
   TemplateTypes,
-  BackendTypes,
+} from "@/services";
+import {
+  BackendService,
+  PdfMeService,
+  StringService,
+  TemplateService,
 } from "@/services";
 
 export async function generatePdf(
   template: PdfMeTypes.Template,
   substitions: TemplateTypes.Substitions,
+  fonts: PdfMeTypes.Font,
 ) {
   const inputs = TemplateService.substitutePlaceholdersWithContent(
     template,
@@ -29,7 +29,7 @@ export async function generatePdf(
 
   const pdf = await PdfMeService.generate({
     options: {
-      font: FontService.getPdfMeFonts(),
+      font: fonts,
     },
     template,
     plugins: PdfMeService.plugins,
@@ -61,8 +61,13 @@ export async function emailDiploma(
   template: PdfMeTypes.Template,
   diploma: BackendTypes.DiplomaRecord,
   jwt: string,
+  pdfMeFonts: PdfMeTypes.Font,
 ) {
-  const blob = await generatePdf(template, createSubstitions(diploma));
+  const blob = await generatePdf(
+    template,
+    createSubstitions(diploma),
+    pdfMeFonts,
+  );
 
   const blobString = StringService.base64StringWithoutMetaData(
     await StringService.blobToBase64String(blob),

@@ -15,7 +15,7 @@ import {
 } from "@/services";
 
 import type { BackendTypes, PdfMeTypes, TemplateTypes } from "@/services";
-import { useTemplates } from "@/hooks";
+import { usePdfMeFonts, useTemplates } from "@/hooks";
 
 // PDFMe Designer Theme
 const theme = {
@@ -34,6 +34,8 @@ export function usePdfMe(
   const templatesHook = useTemplates();
   const designer = useRef<PdfMeTypes.Designer | null>(null);
 
+  const fonts = usePdfMeFonts();
+
   useEffect(() => {
     if (designerContainerRef && !designer.current) {
       const domContainer = designerContainerRef.current;
@@ -43,13 +45,19 @@ export function usePdfMe(
           domContainer,
           template: initialTemplate ?? TemplateService.defaultTemplate,
           options: {
-            font: FontService.getPdfMeFonts(),
+            font: fonts,
             theme: theme,
           },
           plugins: PdfMeService.plugins,
         });
     }
   });
+
+  useEffect(() => {
+    if (designer.current) {
+      designer.current.updateOptions({ font: fonts });
+    }
+  }, [fonts]);
 
   async function handleLoadTemplate(
     event: React.ChangeEvent<HTMLInputElement>,
@@ -123,7 +131,7 @@ export function usePdfMe(
   function reloadFonts() {
     if (!designer.current) throw new Error("Designer is not initialized");
 
-    designer.current.updateOptions({ font: FontService.getPdfMeFonts() });
+    designer.current.updateOptions({ font: fonts });
   }
 
   async function generatePdf(inputs: TemplateTypes.Substitions) {

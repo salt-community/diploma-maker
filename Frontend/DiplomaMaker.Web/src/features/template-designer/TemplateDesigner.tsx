@@ -131,7 +131,7 @@ export default function TemplateDesigner() {
         isOpen={isFontModalOpen}
         onClose={() => {
           closeFontModal();
-          reloadFonts();
+          //reloadFonts();
         }}
       />
     </div>

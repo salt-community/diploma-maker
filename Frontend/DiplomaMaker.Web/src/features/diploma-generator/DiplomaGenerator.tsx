@@ -1,5 +1,5 @@
 import { PageContainer } from "@/components/layout";
-import { useToken } from "@/hooks";
+import { usePdfMeFonts, useToken } from "@/hooks";
 import { DiplomaService, TemplateService } from "@/services";
 import { BackendTypes } from "@/services/backendService";
 import { useState } from "react";
@@ -12,6 +12,8 @@ import useCreateDiplomaMutation from "./hooks/useCreateDiplomaMutation";
 import { BootcampData, Subpage } from "./types";
 
 export default function DiplomaGenerator() {
+  const pdfMeFonts = usePdfMeFonts();
+
   const { token } = useToken();
 
   const { mutate: createDiploma } = useCreateDiplomaMutation();
@@ -48,6 +50,7 @@ export default function DiplomaGenerator() {
             TemplateService.backendTemplateToPdfMeTemplate(selectedTemplate!),
             newDiploma,
             token!,
+            pdfMeFonts,
           );
         },
       });

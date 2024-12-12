@@ -4,14 +4,17 @@
     Renders a pdf preview in the supplied div element.
 */
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { PdfMeService, TemplateService } from "@/services";
 import type { PdfMeTypes, TemplateTypes } from "@/services";
 import { customPdfMeTheme } from "@/customPdfMeTheme";
+import { usePdfMeFonts } from "@/hooks";
 
 export function usePdfMeViewer() {
   const viewer = useRef<PdfMeTypes.Viewer | null>(null);
+
+  const fonts = usePdfMeFonts();
 
   async function loadViewer(
     domContainer: HTMLDivElement,
@@ -30,9 +33,16 @@ export function usePdfMeViewer() {
       domContainer,
       options: {
         theme: customPdfMeTheme,
+        font: fonts,
       },
     });
   }
+
+  useEffect(() => {
+    if (viewer.current) {
+      viewer.current.updateOptions({ font: fonts });
+    }
+  }, [fonts]);
 
   return {
     loadViewer,
