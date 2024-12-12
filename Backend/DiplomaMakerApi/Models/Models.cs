@@ -26,3 +26,10 @@ public class DiplomaRecord() : BaseEntity<DiplomaRecord>()
     public DateTime GraduationDate { get; set; }
     public Guid TemplateGuid { get; set; }
 };
+
+public class Font() : BaseEntity<Font>()
+{
+    public string Family { get; set; } = string.Empty;
+    public List<string> Variants { get; set; } = [];
+    public Dictionary<string, string> Files { get; set; } = [];
+};
